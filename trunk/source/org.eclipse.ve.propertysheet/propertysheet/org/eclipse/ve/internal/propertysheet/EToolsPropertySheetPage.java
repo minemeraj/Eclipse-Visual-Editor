@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:33:36 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-11 17:00:35 $ 
  */
 
 
@@ -95,7 +95,7 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	
 	
 	public IPropertySheetEntry getRootEntry() {
-		TableTree tree = (TableTree) getControl();		
+		Control tree = getControl();		
 		return (tree != null) ?
 			(IPropertySheetEntry) tree.getData() : null;
 	}
@@ -103,18 +103,34 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	public ISelection getSelection() {
 		// If the idiots would just expose the PropertySheetViewer, I could ask it, but they don't. Instead
 		// I have to dig in and get the control, which for now is a TableTree.
-		TableTree tree = (TableTree) getControl();			
-		if (tree == null || tree.getSelectionCount() == 0)
+		Control tree = getControl();
+		// TODO TEMP CODE - Remove TableTree code when we move to an Eclipse 3.1 base
+		if (tree == null || (tree instanceof TableTree && ((TableTree) tree).getSelectionCount() == 0)
+				|| (tree instanceof Tree && ((Tree) tree).getSelectionCount() == 0))
 			return StructuredSelection.EMPTY;
-			
-		TableTreeItem[] sel = tree.getSelection();
-		List entries = new ArrayList(sel.length);
-		for (int i = 0; i < sel.length; i++) {
-			TableTreeItem ti = sel[i];
-			Object data = ti.getData();
-			if (data instanceof IPropertySheetEntry)
-				entries.add(data);
+		
+		// TODO TEMP CODE - emove TableTree code when we move to an Eclipse 3.1 base
+		List entries;
+		if (tree instanceof TableTree) {
+			TableTreeItem[] sel = ((TableTree) tree).getSelection();
+			entries = new ArrayList(sel.length);
+			for (int i = 0; i < sel.length; i++) {
+				TableTreeItem ti = sel[i];
+				Object data = ti.getData();
+				if (data instanceof IPropertySheetEntry)
+					entries.add(data);
+			}
+		} else {
+			TreeItem[] sel = ((Tree) tree).getSelection();
+			entries = new ArrayList(sel.length);
+			for (int i = 0; i < sel.length; i++) {
+				TreeItem ti = sel[i];
+				Object data = ti.getData();
+				if (data instanceof IPropertySheetEntry)
+					entries.add(data);
+			}
 		}
+		
 		return new StructuredSelection(entries);
 	}	
 	
@@ -139,13 +155,17 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 		// be covered up by the vertical scrollbar and not the right-most part of the data
 		// column. So the data column will be completely visible and the buttons on the
 		// right (such as drop-down) can now be selected without scrolling to get to them.
-		TableTree tableTree = (TableTree) getControl();
-		Table table = tableTree.getTable();
-		TableLayout tableLayout = (TableLayout) table.getLayout();
-		new TableColumn(table, 0);
-		// Need to figure out width of scroll bar, kludge is to get the vertical bar and ask it.
-		int width = table.getVerticalBar().getSize().x;
-		tableLayout.addColumnData(new ColumnPixelData(width, false));
+
+		// TODO TEMP CODE - Remove TableTree code when we move to an Eclipse 3.1 base
+		Control tree = getControl();
+		if (tree instanceof TableTree) {
+			Table table = ((TableTree)tree).getTable();
+			TableLayout tableLayout = (TableLayout) table.getLayout();
+			new TableColumn(table, 0);
+			// Need to figure out width of scroll bar, kludge is to get the vertical bar and ask it.
+			int width = table.getVerticalBar().getSize().x;
+			tableLayout.addColumnData(new ColumnPixelData(width, false));
+		}
 		
 		if (!fListeners.isEmpty()) {
 			// Signal the fact that the control has been created to any
@@ -153,7 +173,7 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 			// know the point after which the control has been created
 			Object[] listeners = fListeners.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
-				((Listener) listeners[i]).controlCreated(tableTree);
+				((Listener) listeners[i]).controlCreated(tree);
 			}
 			fListeners.clear();	// Since no longer needed and we are never recreated once disposed.
 		}
@@ -247,14 +267,14 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	private void superSelectionChanged(final IWorkbenchPart part, final ISelection selection) {
 		// TODO This is a total hack but it makes switching between entries snapper because there is no visible washing as the
 		// old items are swapped out for the new ones.  Bugzilla 53997 is entered against the platform to have the inherited behavior changed		
-		TableTree tableTree = (TableTree) getControl();
-		if (tableTree != null) {
-			tableTree.setRedraw(false);
+		Control tree = getControl();
+		if (tree != null) {
+			tree.setRedraw(false);
 			try {
 				super.selectionChanged(part, selection);
 			} finally {
 				// So that even if some exception occurs we will turn tree back on.
-				tableTree.setRedraw(true); 
+				tree.setRedraw(true); 
 			}			
 		} else
 			super.selectionChanged(part, selection);
