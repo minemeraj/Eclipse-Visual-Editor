@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.24 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.25 $  $Date: 2005-02-18 22:02:38 $ 
  */
 
 import org.eclipse.emf.common.util.BasicEMap;
@@ -35,10 +35,7 @@ import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.cde.properties.AbstractAnnotationPropertyDescriptor;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 public class BeanUtilities {

@@ -11,18 +11,10 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeXMLPersistenceAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-18 22:02:38 $ 
  */
 
-import org.eclipse.gef.EditPart;
 import org.eclipse.ui.IEditorPart;
-
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.common.Common;
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
-import org.eclipse.jem.internal.proxy.core.*;
 
 public class CustomizeXMLPersistenceAction extends CustomizeAction {
 

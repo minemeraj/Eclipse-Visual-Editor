@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-16 00:31:58 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-18 22:02:38 $ 
  */
 import java.util.logging.Level;
 
@@ -22,8 +22,6 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-
-import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 

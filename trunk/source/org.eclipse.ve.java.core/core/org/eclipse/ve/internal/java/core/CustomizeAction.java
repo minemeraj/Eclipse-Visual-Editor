@@ -11,25 +11,21 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-18 22:02:38 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.ui.actions.EditorPartAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.*;
-
-import org.eclipse.ve.internal.java.common.Common;
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
-
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 public class CustomizeAction extends SelectionAction {

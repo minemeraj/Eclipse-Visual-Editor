@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-18 22:02:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,10 +18,8 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
