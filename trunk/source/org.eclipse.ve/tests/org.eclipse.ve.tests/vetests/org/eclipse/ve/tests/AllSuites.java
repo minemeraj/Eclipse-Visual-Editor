@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests;
 /*
  *  $RCSfile: AllSuites.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:59:09 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-15 14:17:59 $ 
  */
 
 import org.eclipse.ve.tests.cde.CDESuite;
@@ -30,7 +30,7 @@ public class AllSuites extends TestSuite {
 	// Testa cases to be include in the suite
 	private static Class suitesList[] =
 		{ CDESuite.class, CodegenRulesSuite.class, CodegenJavaTemplatesSuite.class, CodegenUtilSuite.class, VCERulesSuite.class, ModelTestsSuite.class,
-			ResolveSuite.class, PerfSuite.class };
+			ResolveSuite.class};
 
 	public static String pkgName = "Visual Editor jUnit Test Suite";
 
