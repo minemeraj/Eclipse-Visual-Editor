@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.66 $  $Date: 2004-11-19 23:05:31 $ 
+ *  $Revision: 1.67 $  $Date: 2004-11-22 22:23:18 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -80,6 +80,7 @@ import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import org.eclipse.jem.internal.temp.VETimerTests;
 
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
@@ -190,7 +191,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (DO_TIMER_TESTS) {
 			System.out.println("");
 			VETimerTests.basicTest.testState(true);
-			VETimerTests.basicTest.startStep(JVE_STEP, null);
+			VETimerTests.basicTest.startStep(JVE_STEP);
 		}
 	}
 	
@@ -347,24 +348,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// Have to gather them all first because individually set the roots of the viewers to null will
 				// destroy the selection for the following viewers. The viewers may have slightly different selections
 				// if one viewer had an editpart that other didn't. So we need to get each individually.
-				Iterator itr = dom.getViewers().iterator();
+				Iterator itr = editDomain.getViewers().iterator();
 				while (itr.hasNext()) {
 					EditPartViewer viewer = (EditPartViewer) itr.next();
 					List selected = viewer.getSelectedEditParts();
 					if (selected.isEmpty())
-						dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
 					else {
 						List paths = new ArrayList(selected.size());
 						for (int i = 0; i < selected.size(); i++) {
-							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), dom);
+							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
 							if (editPartNamePath == null)
 								continue; // If the root is selected, then treat as not selected.
 							paths.add(editPartNamePath);
 						}
 						if (paths.isEmpty())
-							dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+							editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
 						else
-							dom.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
+							editDomain.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
 					}
 				}
 			} else {
@@ -375,7 +376,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelReady = true;
 			}
 
-			Iterator itr = dom.getViewers().iterator();
+			Iterator itr = editDomain.getViewers().iterator();
 			while (itr.hasNext()) {
 				EditPartViewer viewer = (EditPartViewer) itr.next();
 				EditPart rootEP = viewer.getContents();
@@ -388,14 +389,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			if (root != null) {
 				// We have something, see if anything needs to be selected.
-				Iterator itr1 = dom.getViewers().iterator();
+				Iterator itr1 = editDomain.getViewers().iterator();
 				while (itr1.hasNext()) {
 					EditPartViewer viewer = (EditPartViewer) itr1.next();
-					List paths = (List) dom.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
+					List paths = (List) editDomain.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
 					if (paths != null) {
-						dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // So that doesn't hang around.
+						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // So that doesn't hang around.
 						for (int i = 0; i < paths.size(); i++) {
-							EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, dom);
+							EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, editDomain);
 							if (selected != null)
 								viewer.appendSelection(selected);
 						}
@@ -800,6 +801,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			try {
+				VETimerTests.basicTest.startStep("Initialize Viewers");
 				if (d != null) {
 					editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
 					setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
@@ -808,8 +810,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				setReloadEnablement(true);
 				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
 				
-//				if (doTimerStep)
-				VETimerTests.basicTest.stopStep(SETUP_STEP);
+				VETimerTests.basicTest.stopStep("Initialize Viewers");
+				if (doTimerStep)
 				VETimerTests.basicTest.stopStep(JVE_STEP);
 				VETimerTests.basicTest.printIt();
 				VETimerTests.basicTest.clearTests();
@@ -1009,7 +1011,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			VETimerTests.basicTest.testState(true);
 		VETimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
-			VETimerTests.basicTest.startStep("Dispose", null);
+			VETimerTests.basicTest.startStep("Dispose");
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			
 			if (proxyFactoryRegistry != null) {
@@ -1054,12 +1056,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			if (shell != null && !shell.isDisposed())
 				window.getShell().removeShellListener(activationListener);
 		
-			VETimerTests.basicTest.startStep("Dispose Graphical Action Registry", VETimerTests.CURRENT_PARENT_ID);
 			graphicalActionRegistry.dispose();
-			VETimerTests.basicTest.stopStep("Dispose Graphical Action Registry");
-			VETimerTests.basicTest.startStep("Dispose Common Action Registry", VETimerTests.CURRENT_PARENT_ID);
 			commonActionRegistry.dispose();
-			VETimerTests.basicTest.stopStep("Dispose Common Action Registry");
 			
 			if (!queuedJobDispose)
 				finalDispose();
@@ -1084,7 +1082,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Note: No need to sync(this) to access proxyFactoryRegistry because we are guarenteed that
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
-			VETimerTests.basicTest.startStep("Dispose Proxy Registry", VETimerTests.CURRENT_PARENT_ID);
+			VETimerTests.basicTest.startStep("Dispose Proxy Registry");
 			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
@@ -1092,23 +1090,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			VETimerTests.basicTest.stopStep("Dispose Proxy Registry");
 		}
 
-		VETimerTests.basicTest.startStep("Dispose Model Builder", VETimerTests.CURRENT_PARENT_ID);
 		modelBuilder.dispose();
-		VETimerTests.basicTest.stopStep("Dispose Model Builder");
 		
 		if (modelSynchronizer != null) {
-			VETimerTests.basicTest.startStep("Dispose Model Synchronizer", VETimerTests.CURRENT_PARENT_ID);
 			modelSynchronizer.stopSynchronizer();
-			VETimerTests.basicTest.stopStep("Dispose Model Synchronizer");
 		}
 		
 		EditDomain ed = editDomain;
 		synchronized (this) {
 			editDomain = null;
 		}
-		VETimerTests.basicTest.startStep("Dispose Editdomain", VETimerTests.CURRENT_PARENT_ID);
 		ed.dispose();
-		VETimerTests.basicTest.stopStep("Dispose Editdomain");
 	}
 	
 	protected synchronized boolean isDisposed() {
@@ -1510,7 +1502,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			try {
 				if (DO_TIMER_TESTS)
 					VETimerTests.basicTest.testState(true);
-				VETimerTests.basicTest.startStep(SETUP_STEP, VETimerTests.CURRENT_PARENT_ID);
+				VETimerTests.basicTest.startStep(SETUP_STEP);
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 200);
@@ -1559,7 +1551,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				}
 			
-				VETimerTests.basicTest.startStep("Load Model", VETimerTests.CURRENT_PARENT_ID);				
+				VETimerTests.basicTest.startStep("Load Model");				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
 				
@@ -1592,7 +1584,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
-					VETimerTests.basicTest.startStep("Join with remote vm", VETimerTests.CURRENT_PARENT_ID);
+					VETimerTests.basicTest.startStep("Join with remote vm");
 					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
 					VETimerTests.basicTest.stopStep("Join with remote vm");
 					
@@ -1606,7 +1598,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							new CompositionProxyAdapter();
 						dd.eAdapters().add(a);
 						
-						VETimerTests.basicTest.startStep("Create Bean Instances on Target VM", VETimerTests.CURRENT_PARENT_ID);					
+						VETimerTests.basicTest.startStep("Create Bean Instances on Target VM");					
 						a.initBeanProxy();
 						VETimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						
 					}
@@ -1649,6 +1641,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 			monitor.done();
 			setLoadIsPending(false);
+			VETimerTests.basicTest.stopStep(SETUP_STEP);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
 

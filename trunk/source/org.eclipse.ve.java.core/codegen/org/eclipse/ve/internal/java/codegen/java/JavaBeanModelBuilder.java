@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.18 $  $Date: 2004-11-17 20:06:23 $ 
+ *  $Revision: 1.19 $  $Date: 2004-11-22 22:23:18 $ 
  */
 
 import java.util.*;
@@ -24,13 +24,14 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.ISynchronizable;
 
+import org.eclipse.jem.internal.temp.VETimerTests;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.VETimerTests;
 
 
 
@@ -116,7 +117,7 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 	//       we may consider to turn off some errors ... as we are not interested in
 	//       to compile all of this, but rather bits of pieaces of this
 
-	VETimerTests.basicTest.startStep("AST creation", "Parse");	
+	VETimerTests.basicTest.startStep("AST creation");	
 	try {
 		String sourceBeingParsed = null;
 		CompilationUnit result;
@@ -315,7 +316,7 @@ protected List getInnerTypes() {
 }
 
 protected  void analyzeEvents() {
-	VETimerTests.basicTest.startStep("Parse Events", "Parse");
+	VETimerTests.basicTest.startStep("Parse Events");
 	fMonitor.subTask("Analyzing events");
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
@@ -381,7 +382,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    
 	    // Start visiting our main type
 	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
-	    VETimerTests.basicTest.startStep("Parse expressions", "Parse");
+	    VETimerTests.basicTest.startStep("Parse expressions");
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -436,7 +437,7 @@ private int determineWorkAmount() {
 }
 
 protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor){
-	VETimerTests.basicTest.startStep("Creating Instance Var. BeanParts", "Parse");
+	VETimerTests.basicTest.startStep("Creating Instance Var. BeanParts");
  	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
 	v.setJDTMethods(mthds);
 	v.setProgressMonitor(monitor);
