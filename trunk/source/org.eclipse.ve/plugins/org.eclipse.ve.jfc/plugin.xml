@@ -378,110 +378,87 @@
             loc="last">
       </palette>
    </extension>
-<!-- ======================================================================== -->
-<!-- Contributors for the Visual class sources                                       -->
-<!-- ======================================================================== -->
-   <extension
-         point="org.eclipse.ve.java.core.newsource">
-      <contributor
-            type="javax.swing.JFrame"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JApplet"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
-      </contributor>
-      <contributor
-            type="java.applet.Applet"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JDialog"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JWindow"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JInternalFrame"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JPanel"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JScrollPane"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JSplitPane"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JTabbedPane"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="javax.swing.JDesktopPane"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="java.awt.Window"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
-      </contributor>
-      <contributor
-            type="java.awt.Panel"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="java.awt.Frame"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-      <contributor
-            type="java.awt.Dialog"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
-      </contributor>
-      <contributor
-            type="java.awt.ScrollPane"
-            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
-      </contributor>
-   </extension>
 
+<!-- ======================================================================== -->
 <!-- Contribute to the New Visual wizard to populate the Style tree -->
-
+<!-- ======================================================================== -->
    <extension
 		point="org.eclipse.ve.java.core.newStyleComponent">
 		<category
 			name="Swing"
 			id="org.eclipse.ve.jfc.swing.cat"
 			priority="200"
-			defaultExpand="true">>
+			defaultExpand="false">>
 		</category>
 			<visualElement
-				name="Frame"
-				category="org.eclipse.ve.jfc.swing.cat"
-				type="javax.swing.JFrame"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+         type="javax.swing.JFrame"
+         icon="icons/full/clcl16/frame_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
+         name="Frame">
 			</visualElement>
 			<visualElement
-				name="Panel"
-				category="org.eclipse.ve.jfc.swing.cat"
-				type="javax.swing.JPanel"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+         type="javax.swing.JInternalFrame"
+         icon="icons/full/clcl16/internalframe_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
+         name="InternalFrame">
 			</visualElement>
 			<visualElement
-				name="Applet"
-				category="org.eclipse.ve.jfc.swing.cat"
-				type="javax.swing.JApplet"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+         type="javax.swing.JWindow"
+         icon="icons/full/clcl16/window_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
+         name="Window">
 			</visualElement>
 			<visualElement
-				name="Dialog"
-				category="org.eclipse.ve.jfc.swing.cat"
-				type="javax.swing.JDialog"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+         type="javax.swing.JPanel"
+         icon="icons/full/clcl16/panel_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="Panel">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JApplet"
+         icon="icons/full/clcl16/applet_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
+         name="Applet">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JScrollPane"
+         icon="icons/full/clcl16/scrollpane_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="ScrollPane">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JSplitPane"
+         icon="icons/full/clcl16/splitpane_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="SplitPane">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JTabbedPane"
+         icon="icons/full/clcl16/tabbedpane_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="TabbedPane">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JDesktopPane"
+         icon="icons/full/clcl16/desktoppane_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="DesktopPane">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JDialog"
+         icon="icons/full/clcl16/dialog_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
+         name="Dialog">
 			</visualElement>
 		<category
 			name="AWT"
@@ -490,22 +467,46 @@
 			defaultExpand="false">>
 		</category>
 			<visualElement
-				name="Frame"
-				category="org.eclipse.ve.jfc.awt.cat"
-				type="java.awt.Frame"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+         type="java.awt.Frame"
+         icon="icons/full/clcl16/frame_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="Frame">
 			</visualElement>
 			<visualElement
-				name="Panel"
-				category="org.eclipse.ve.jfc.awt.cat"
-				type="java.awt.Panel"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+         type="java.awt.Panel"
+         icon="icons/full/clcl16/panel_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="Panel">
 			</visualElement>
 			<visualElement
-				name="Dialog"
-				category="org.eclipse.ve.jfc.awt.cat"
-				type="java.awt.Dialog"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
+         type="java.awt.Dialog"
+         icon="icons/full/clcl16/dialog_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor"
+         name="Dialog">
+			</visualElement>
+			<visualElement
+         type="java.awt.Window"
+         icon="icons/full/clcl16/window_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor"
+         name="Window">
+			</visualElement>
+			<visualElement
+         type="java.awt.ScrollPane"
+         icon="icons/full/clcl16/scrollpane_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="ScrollPane">
+			</visualElement>
+			<visualElement
+         type="java.applet.Applet"
+         icon="icons/full/clcl16/applet_obj.gif"
+         category="org.eclipse.ve.jfc.awt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor"
+         name="Applet">
 			</visualElement>
    </extension>
 
