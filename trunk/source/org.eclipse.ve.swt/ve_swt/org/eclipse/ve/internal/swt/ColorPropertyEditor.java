@@ -694,7 +694,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		synchronized(color) {
 			if (color != null) {
 				if (!isNamed) {
-					result = "new Color(org.eclipse.swt.widgets.Display.getDefault(), " + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getDefault(), " + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
 					initializeColorConstants(control.getDisplay());
 					if ( isBasic ) {
