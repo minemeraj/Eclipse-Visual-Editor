@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainer.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-24 15:57:26 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-03 18:37:20 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -87,7 +87,7 @@ class RegisteredClasspathContainer implements IClasspathContainer {
 		// Unfortunately, you can't return class folders from a container, only jars, so in workbench dev mode
 		// we can't reference the bin directory. Therefore we have to have an actual jar sitting in the development
 		// image for it to be found. localize can't use the bin directory.
-		URL url = ProxyPlugin.getPlugin().urlLocalizeFromBundle(bundle, libpath);
+		URL url = ProxyPlugin.getPlugin().urlLocalizeFromBundleOnly(bundle, libpath);
 		if (url != null)
 			return new Path(url.getFile());
 		else
