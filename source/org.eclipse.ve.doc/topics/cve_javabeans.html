@@ -35,14 +35,14 @@ subclasses, and to display the values in the Properties view for unset propertie
 the visual editor, where the Java bean classes used by the editor are loaded,
 instantiated, and sent the <samp class="codeph">get</samp> and <samp class="codeph">set</samp> methods
 as required.</p>
-<p>Typically, you don't need to be concerned with this VM. However, situations
+<p>Typically, you do not need to be concerned with this VM. However, situations
 may arise where you need to analyze or debug behavior specific to it. For
 example, when exceptions are thrown by the Java beans in a target VM, you
 might need to debug.</p>
 <p>Since the target VM is running live code, there is an overhead associated
 with it in terms of performance and fidelity of the application. If you develop
-a Java bean that will be executed in the target VM, and you wish its behavior
-in the visual editor environment to be different in a runtime VM, you can
+a Java bean that will be executed in the target VM, and you want its behavior
+in the visual editor environment to be different in a run-time VM, you can
 query the static method <samp class="codeph">java.beans.Beans.isDesignTime()</samp>.
 This returns the value <tt class="sysout">true</tt> for the visual editor's
 target VM, and <tt class="sysout">false</tt> otherwise.</p>

@@ -35,7 +35,7 @@ part of the visual editor for Java. These define the behavior of classes such
 as javax.swing.JButton or javax.swing.JFrame inside the workbench.</p>
 <p>If you want to override these classes, you can create your own BeanInfo
 classes and add them to the BeanInfo Path. To do this, use the BeanInfo classes
-page of the project you wish to affect.</p>
+page of the project you want to affect.</p>
 <p>The virtual machine that is created for the introspector has its class
 path set up as follows:</p>
 <ol><li>The items in the BeanInfo classes on the BeanInfo Path for the project
@@ -47,8 +47,8 @@ build path.</li>
 <p>When a Java project is created, it has an entry (which is usually the keyword
 JRE_LIB) in its Java build path that points to the location of the JRE.  </p>
 <p>You can change the location of the JRE by opening the class path variables
-used by the workbench and specifying a new default Java runtime environment. The
-default runtime environment is always used as the value of the reserved class
+used by the workbench and specifying a new default Java run-time environment. The
+default run-time environment is always used as the value of the reserved class
 path variable JRE_LIB. The Java beans supplied with the visual editor for
 Java are included in the build path of the introspector only when the JRE_LIB
 entry is present in the Java build path. If you delete the JRE_LIB entry from
@@ -68,7 +68,7 @@ and reopening the project.</p>
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tve_beaninfo.html" title="You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.">Controlling BeanInfo information for plug-in developers</a><br />
-<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and runtime to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
+<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
 </p>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />

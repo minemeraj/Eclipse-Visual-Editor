@@ -46,9 +46,8 @@ the Java Beans view has three modes to show events:</p>
 </ul>
 <p>To view the events on a component:</p>
 </div>
-<ol><li class="skipspace"><span>On the Java Beans view toolbar, select the drop-down menu (arrow
-button).</span></li>
-<li class="skipspace"><span>Select one of the following:</span><ul><li><span class="uicontrol">Show Events</span></li>
+<ol><li class="skipspace"><span>On the Java Beans view toolbar, click the menu (arrow) button.</span></li>
+<li class="skipspace"><span>Select one of the following options:</span><ul><li><span class="uicontrol">Show Events</span></li>
 <li><span class="uicontrol">Expert Events</span></li>
 </ul>
  <p>When <span class="uicontrol">Show Events</span> is selected, the events used
@@ -56,7 +55,7 @@ by each component are shown as children in the tree. For an event to be used
 by a component, there must be a registered listener, and the callback method
 must have some code within it. The list of recognized source code patterns
 used by the visual editor are described in the source code patterns for events
-section. The Java Beans view below shows the events, where the JFrame has
+section. In the following image, the Java Beans view shows the events, where the JFrame has
 a windowOpened event, and the button has an actionPerformedEvent. The button
 also has a PropertyChangeListener for its enabled properties, and this is
 shown with a blue arrow instead of green. <br /><img src="../images/BasicEventsChildren.gif" alt="Basic Events" /><br /></p>
@@ -71,7 +70,7 @@ for property change events.</p>
 each listener for the component is shown as a child tree node, and the events
 are shown beneath each listener. This increases the number of items in the
 tree, but it shows more detail about how the events are attached to the components.
-The option of the two modes lets you decide which level of detail you wish
+The option of the two modes lets you decide which level of detail you want
 to work with.</p>
 <p>In expert mode the icon used for the listener shows the
 type of listener class. If the listener is an anonymous inner class that implements
@@ -84,11 +83,11 @@ anonymous in expert mode, then the icon is <img src="../images/genlistener_obj.g
 the <img src="../images/shrdclass_obj.gif" alt="shared class object" /> is
 used. If the listener class is used by a single event, then these are
 listed as children of the listener. However, if the listener class is used
-by more than one event listener interface for the component, then in Expert
+by more than one event listener interface for the component, in Expert
 mode these listener interfaces are shown as separate children of the listener
-class. This is shown below:<br /><img src="../images/ExpertEvents_Shared.gif" alt="expert events shared" /><br /> </p>
+class, as shown in the following image:<br /><img src="../images/ExpertEvents_Shared.gif" alt="expert events shared" /><br /> </p>
 <p>The source for this
-is shown below.  The inner listener class IvjEventHandler is used once
+is shown in the following code statement. The inner listener class IvjEventHandler is used once
 by the first button (this) for a keyPressedEvent, and twice by the "Cancel"
 button, once for keyPressed (that is part of the key event) and another time
 for actionPerformed (that is part of the action event).</p>
@@ -115,7 +114,7 @@ if (e.getSource() == VCEStyle2.this)    
 <b class="parentlink">Parent topic:</b> <a href="../topics/tve_events.html" title="The Java Beans view helps you to work with events for your visual application.">Handling events with the visual editor</a><br />
 </p>
 <p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_javabeansview.html" title="This Java Beans view shows a tree view of the components, events, and listeners used by the Java class.">The Java Beans view</a><br />
+<a href="../topics/cve_javabeansview.html" title="The Java Beans view of the visual editor for Java shows a tree view of the components, events, and listeners used by the Java class that you are composing.">The Java Beans view</a><br />
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tve_events_add.html" title="You can add an event to a component in the Design view or Java Beans view.">Adding events to a component</a><br />
