@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionFreeFormComponentsEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-10 17:42:43 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -44,9 +44,12 @@ public class CompositionFreeFormComponentsEditPolicy extends AbstractEditPolicy 
 	}
 
 	protected void activateFreeFormEnvironment() {
+		BeanSubclassComposition composition = (BeanSubclassComposition) getHost().getModel();
+		if (composition == null)
+			return;
 		CompositionProxyAdapter compositionAdapter =
 			(CompositionProxyAdapter) EcoreUtil.getExistingAdapter(
-				(Notifier) getHost().getModel(),
+				composition,
 				CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
 		fFreeFormHost =
 			(FreeFormComponentsHostAdapter) EcoreUtil.getExistingAdapter(
@@ -57,7 +60,7 @@ public class CompositionFreeFormComponentsEditPolicy extends AbstractEditPolicy 
 			fFreeFormHost =
 				new FreeFormComponentsHostAdapter(
 					JavaEditDomainHelper.getBeanProxyDomain(EditDomain.getEditDomain(getHost())),
-					(BeanSubclassComposition) getHost().getModel(),
+					composition,
 					fWorkbenchPage);
 			compositionAdapter.eAdapters().add(fFreeFormHost);
 			fFreeFormHost.setTarget(compositionAdapter);
