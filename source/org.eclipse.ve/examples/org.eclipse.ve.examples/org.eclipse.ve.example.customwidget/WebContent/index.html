@@ -1738,7 +1738,11 @@ the property.<br>
 determine the default editor
 for a property based on its type a <span
  style="font-family: monospace;">BasePropertyDecorator </span>on the
-JavaClass EMF definition is used.&nbsp; For example, the <span
+<span style="font-family: monospace;">JavaClass </span>EMF definition
+is used.&nbsp; If no direct decorator can be found annotating the <span
+ style="font-family: monospace;">JavaClass </span>then the superclass
+chain is searched to look for a decorator that provides a custom cell
+editor or label provider. For example, the <span
  style="font-style: italic;">text </span>property is typed to <span
  style="font-family: monospace;">java.lang.String </span>and the
 plugin <span style="font-style: italic;">org.eclipse.ve.java.core</span>
@@ -1805,7 +1809,7 @@ for the EReference and the class we're creating is an instance of <img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
 <font face="Courier New">org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator</font>.&nbsp;
 <img src="images/note.gif" alt="Note: " height="13" width="62"> The
-xsi:type structure does not
+<a name="xsi:type_structure"></a>xsi:type structure does not
 point to the Java package directly.&nbsp; The first portion of
 org.eclipse.ve.internal.cde.decorators points to the name of a
 namespace defined in the&nbsp;<img style="width: 24px; height: 13px;"
@@ -1909,13 +1913,27 @@ available in CVS <a
  href="../src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
 and extends <span style="font-family: monospace;">org.eclipse.swt.Composite</span>
 and was built using the Visual Editor.&nbsp; This has the methods
-public setString(String aString) to set the current value of the
-Strring, and public String getString() to return it.&nbsp; These are
-both called by the CustomLabelEditor when it&nbsp;<img
- style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">
+<span style="font-family: monospace;">public setString(String aString) </span>to
+set the current value of the
+Strring, and <span style="font-family: monospace;">public String
+getString() </span>to return it.&nbsp; These are
+both called by the <span style="font-family: monospace;">CustomLabelEditor
+</span>when it&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_4.gif">
 initializes the content area and&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
 returns the value.&nbsp; <br>
+</p>
+<p>The <img style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif">
+<span style="font-family: monospace;">toString()</span> method is
+specialized to return the value of the LableDialogContent, which
+represents the String entered by the user as the new <span
+ style="font-style: italic;">text </span>property.&nbsp; This is so
+that the value can be referenced by the CustomLabelEditor itself whe it
+<img style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">
+has reate the actual object that will be set into the Visual Editor
+model.<br>
 </p>
 <p>If the TitleAreaDialog isn't cancelled then the JFace cell editor
 needs to return the value of the newly created object representing the
@@ -1925,14 +1943,19 @@ conversion into an IJavaInstance representing the EMF JavaClass
 instance for the Visual Editor's model.&nbsp; This is done with the
 helper method&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag_6.gif"> <span style="font-family: monospace;"><span
- style="color: rgb(153, 0, 0);">public </span>IJavaInstance
+ style="color: rgb(153, 0, 0);"></span>IJavaInstance
 createStringJavaObject(String aString);<br>
 </span></p>
-<p>To create an IJavaInstance requires two steps.&nbsp; First the EMF
-JavaClass needs to be located and then it an instance of IJavaInstance
-is created from this with rules as to how the actual instantion of the
-actual Java object should occur.</p>
-<p>To locate a JavaClass involves looking up for the object on the
+<p>To create an <span style="font-family: monospace;">IJavaInstance </span>requires
+two steps.&nbsp; First the EMF
+<span style="font-family: monospace;">JavaClass </span>needs to be
+located and then it an instance of <span
+ style="font-family: monospace;">IJavaInstance </span>needs to be
+created using this with rules as to how the actual instantion of the
+live Java object should occur (both in code and by the target VM).<br>
+</p>
+<p>To locate a <span style="font-family: monospace;">JavaClass </span>involves
+looking up for the object on the
 current resource set.&nbsp; A resource set is a physical grouping of
 EMF documents and to locate the one being used by the Visual Editor it
 is held on the editorPart's GEF editDomain.&nbsp; The Visual Editor
@@ -1942,18 +1965,20 @@ The editDomain provides a way of passing common objects (such as the
 target VM helper classes, the set of viewers, and the EMF resource set)
 around between different Visual Editor subsystems.&nbsp; For a cell
 editor to be given a reference to the edit domain it should implement
-the interface org.eclipse.ve.internal.propertysheet.INeedData that has
-a single method public void setData(Object data);&nbsp; The argument to
+the interface <span style="font-family: monospace;">org.eclipse.ve.internal.propertysheet.INeedData</span>
+that has
+a single method <span style="font-family: monospace;">public void
+setData(Object data);&nbsp;</span> The argument to
 this will be set by the Visual Editor to the editDomin object and the
-cell editor stores this in an instance variable. <br>
+cell editor should store this in an instance variable. <br>
 </p>
 <pre><span style="color: rgb(153, 0, 0);"></span><span
  style="font-family: monospace;"><span style="color: rgb(153, 0, 0);">  public class</span> CustomLabelEditor <span
  style="color: rgb(153, 0, 0);">extends </span>DialogCellEditor <span
  style="color: rgb(153, 0, 0);">implements </span>INeedData {</span><br
- style="font-family: monospace;"><span style="font-family: monospace;">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span
- style="color: rgb(153, 0, 0);">private </span>EditDomain fEditDomain;	<br><span
- style="color: rgb(51, 204, 0);">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span
+ style="font-family: monospace;"><span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">    private </span>EditDomain fEditDomain;	<span
+ style="color: rgb(51, 204, 0);">                                                  <br>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <span
  style="color: rgb(0, 153, 0);">   // Remainder of class definition ...</span></span><br></span></pre>
 <p>and<br>
 </p>
@@ -1962,15 +1987,20 @@ cell editor stores this in an instance variable. <br>
 static helper method<span style="font-family: monospace;">
 JavaEditDomainHelper.getResourceSet(EditDomain anEditDomain);</span><br>
 </p>
-<p>Now that the CustomLabelEditor has a handle to the Visual Editor's
-model's resource set it can look up JavaClass objects using the API
-org.eclipse.jem.internal.beaninfo.core.Utilities.getJavaClass(String
-className, ResourceSet resourceSet);&nbsp;&nbsp;&nbsp; In EMF to
+<p>Now that the <span style="font-family: monospace;">CustomLabelEditor
+</span>has a handle to the Visual Editor's
+model's resource set it can look up <span
+ style="font-family: monospace;">JavaClass </span>objects using the
+API
+<span style="font-family: monospace;">org.eclipse.jem.internal.beaninfo.core.Utilities.getJavaClass(String
+className, ResourceSet resourceSet);</span>&nbsp;&nbsp;&nbsp; In EMF to
 instantiate actual objects the package's factory should be used, so
 having obtained the <span style="font-family: monospace;">JavaClass </span>to
 get the <span style="font-family: monospace;">IJavaInstance </span>requires
 the method call <span style="font-family: monospace;">javaClass.getEPackage().getEFactoryInstance().create(javaClass);</span>&nbsp;
-Rather than having to do both steps however there is a helper API
+<br>
+</p>
+<p>Rather than having to do both steps however there is a helper API
 method <span style="font-family: monospace;">org.eclipse.ve.internal.java.core.BeanUtilities.createJavaObject(String
 qualifiedClassName, ResourceSet aResourceSet, String initString)</span>;&nbsp;
 Examples of its usage are shown below:<br>
@@ -2046,15 +2076,19 @@ ensure that it displays the current value of the <span
 <p><img style="border: 1px solid ; width: 239px; height: 37px;" alt=""
  src="images/TextCurrentValue.JPG"><br>
 </p>
-<p>This is done by specializing the method doSetValue(Object
-value);&nbsp; This method is given an argument of an IJavaInstance
-which represent the current value of the String object in the Visual
+<p>This is done by specializing the method<span
+ style="font-family: monospace;"> doSetValue(Object
+value);&nbsp;</span> This method is given an argument of an <span
+ style="font-family: monospace;">IJavaInstance
+</span>which represent the current value of the String object in the
+Visual
 Editor's EMF model.&nbsp; To convert from this to this to a<span
  style="font-family: monospace;"> java.lang.String </span>object can
 be done by accessing the target VM to query the value of the live
 String object.<br>
 </p>
-<p>To write the code for the doSetValue(Object value) method requires
+<p>To write the code for the <span style="font-family: monospace;">doSetValue(Object
+value)</span> method requires
 an understanding of the API to work with the Visual Editor target VM
 objects<br>
 </p>
@@ -2172,7 +2206,7 @@ anObject)</span> with arguments representing the nine Java primitives,
 their <span style="font-family: monospace;">java.lang</span> peers as
 well as<span style="font-family: monospace;"> java.lang.String</span>.<br>
 </p>
-<p>The follwoing code samples show how to create an instance of a
+<p>The following code samples show how to create an instance of a
 <span style="font-family: monospace;">java.io.File</span> for the file
 name <span style="font-style: italic;">"C:\temp\foo.txt"</span> (i.e.
 the result of evaluating <span style="font-family: monospace;"><span
@@ -2364,7 +2398,9 @@ that has introduces the types <span style="font-family: monospace;">IPointBeanPr
 can occur safely if you know that the Eclipse workbench's JVM contains
 the classes in its -classpath and that these are a compatible shape
 with the target VM's instances.&nbsp; This and and other advanced
-topics such as handling arrays, exceptions and debugging the target VM
+topics such handling arrays, installing helper class on the target VM's
+-classpath for a classpath container, exceptions and debugging the
+target VM
 are covered in a later tutorial specific to the target VM architecture.<br>
 <h3><a name="Retrieving_the_target_VM_property_value"></a>Retrieving
 the target VM property value<br>
@@ -2498,16 +2534,20 @@ be found, or the one found doesn't have a graphical edit part class
 defined, then the inheritance chain of the EMF <span
  style="font-family: monospace;">JavaClass </span>(that shadows the
 Java type hierarchy) is searched until a graphical edit part class name
-is found.&nbsp; In the absence of any override for MyCustomPrompter the
+is found.&nbsp; following this rule, in the absence of any override for
+<span style="font-family: monospace;">MyCustomPrompter </span>the
 Visual Editor will pick up the inherited edit part class <span
  style="font-family: monospace;">CompositeGraphicalEditPart </span>because
 <span style="font-family: monospace;">MyCustomPrompter </span>extends <span
- style="font-family: monospace;">Composite</span>.<br>
+ style="font-family: monospace;">Composite</span> and this is what
+gives <span style="font-family: monospace;">MyCustomPrompter </span>its
+initial default edit experience.<br>
 </p>
 <p>This section of the tutorial will build a custom graphical edit part
 named
-org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart.&nbsp;
-This will be declared in the MyCustomPrompter.override file as being
+<span style="font-family: monospace;">org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart</span>.&nbsp;
+This will be declared in the <span style="font-style: italic;">MyCustomPrompter.override</span>
+file as being
 the graphical edit part class to use, and the class will be specialized
 to create the draw2D desired effects.<br>
 </p>
@@ -2569,26 +2609,29 @@ the EMF definition of the <span style="font-family: monospace;">MyCustomPrompter
 instance of&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag_3.gif">
 org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator.&nbsp;
-As described earlier<span style="color: rgb(204, 0, 0);"> &lt;&lt;Add
-anchor ref&gt;&gt; </span>the XMI describes this as <span
+As described <a href="#xsi:type_structure">earlier</a><span
+ style="color: rgb(204, 0, 0);"> </span>the XMI describes this as <span
  style="font-style: italic;">EMFPackageName:EMFClassName</span> which
 corresponds to the EMF registered package <span
  style="font-family: monospace;">org.eclipse.ve.internal.cde.decorators.DecoratorsPackage</span>.&nbsp;&nbsp;
 A common coding error with XMI is to declare the element for an
-annotation assuming that it is the packageName:className without having
+annotation assuming that it is the <span style="font-style: italic;">packageName:classNam</span>e
+without having
 the namespace definition&nbsp;<img style="width: 24px; height: 13px;"
- alt="" src="images/tag1.gif"> at the top of the XMI file.&nbsp; <br>
-</p>
-<p><br>
-ClassDescriptorDecorator stores the name of the graphical edit part to
-use by GEF with the syntax of pluginName/qualifiedClassName. For this
+ alt="" src="images/tag1.gif"> at the top of the XMI file.<br>
+&nbsp; <br>
+<span style="font-family: monospace;">ClassDescriptorDecorator </span>stores
+the name of the graphical edit part to
+use by GEF with the syntax of <span style="font-style: italic;">pluginName/qualifiedClassName</span>.
+For this
 tutorial the edit part created is called <span
  style="font-family: monospace;">org.eclipse.ve.example.CustomWidgetGraphicalEditPart</span>
 and in the plugin name <span style="font-style: italic;">org.eclipse.ve.example.,customwidget</span>.
 <br>
 </p>
-<p> the method responsible for creating the draw2D figure shown on the
-GEF canvas is createFigure() and this is overriden to place a draw2L
+<p> The method responsible for creating the draw2D figure shown on the
+GEF canvas is<span style="font-family: monospace;"> createFigure()</span>
+and this is overriden to place a draw2L
 label on top of the inherited behavior (an image of the live
 visual).&nbsp; The method is shown below and the full class list is
 available at<a
@@ -2618,7 +2661,7 @@ Editor uses the class <span style="font-family: monospace;">CompositeGraphicalEd
 defined as extending <img style="width: 24px; height: 13px;" alt=""
  src="images/tag1.gif"> <span style="font-family: monospace;">ControlGraphicalEditPart</span>.&nbsp;
 This is because <span style="font-family: monospace;">CompositeGraphicalEditPart
-</span>contains all of the GEF behaviof to allow dropping of child
+</span>contains all of the GEF behavior to allow dropping of child
 controls and dealing with layout management, and while <span
  style="font-family: monospace;">MyCustomPrompter </span>physically
 extends <span style="font-family: monospace;">Composite </span>to
@@ -2637,7 +2680,7 @@ the text <span style="color: rgb(255, 0, 0);">VE Rules</span> drawn in
 red.&nbsp; The Label is <img style="width: 24px; height: 13px;" alt=""
  src="images/tag_3.gif"> created with the text and image and its&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">
-foreground color and details about how t&nbsp;<img
+foreground color and details about how to <img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
 place the text (below the icon) are specified.&nbsp; The size of the
 figure is set to its preferred size, and because this involves
@@ -2653,12 +2696,65 @@ workbench target and verify the the image of a MyCustomPrompter class
 now renders itself with an image of the live visual covered with the <span
  style="color: rgb(255, 0, 0);">VE R</span><span
  style="color: rgb(255, 0, 0);">ules </span>text and icon <img
- style="width: 16px; height: 16px;" alt="" src="images/custom.gif"></p>
-<img style="border: 1px solid ; width: 539px; height: 277px;" alt=""
- src="images/index.25.jpg">
-<p>&nbsp;The next step in the tutorial is to look at how to affect the
-code generation subsystem of the Visual Editor. <br>
+ style="width: 16px; height: 16px;" alt="" src="images/custom.gif">.&nbsp;
+<br>
 </p>
+<img style="border: 1px solid ; width: 356px; height: 180px;" alt=""
+ src="images/GraphicalEditPart.JPG"><br>
+<br>
+<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The original default behavior for
+MyCustomPrompter in the absence of its specific graphical edit part was
+to render the live visual with a border drawn around it. however the
+figure above shows that there is no border drawn.&nbsp; The border is
+not part of the natural behavior of an SWT composite (although one can
+be specified with the style bit of SWT.BORDER) and it drawn by the
+Visual Editor around a CompositeGraphicalEditPart so that an empty
+Composite with no children isn't otherwise invisible (as if it were the
+same color as its background it'd blend in and be hard to see on the
+design canvas).&nbsp; The behavior to render a design time border
+around a GEF figure is done by ConttrolGraphicalEditPart (which
+CustomWidgetGraphicalEditPart extends) by having initializationData
+supplied as part of its definition.&nbsp; InitializationData is used by
+the Visual Editor as a way of supplying parameters to a class so that
+different usages can supply custom implementations.&nbsp; It occurs by
+having the class defined in the .override file implement the interface <span
+ style="font-family: monospace;">org.eclipse.core.runtime.IExecutableExtension</span>.&nbsp;
+This has a single method <span style="font-family: monospace;">setInitializationData(IConfigurationElement
+config, String propertyName, Object data).&nbsp; </span><br>
+<br>
+When the Visual Editor parses a class name defined in a .override file
+if there is a colon symbol<span style="font-weight: bold;"> :</span>
+after the class name then anything following this is parsed and passed
+into the setInitializationDataMethod(....).&nbsp; An example of this is
+the class ControlGraphicalEditPart implements the IExecutableExtension
+interface and uses the initData to determine whether a border should be
+drawn around the figure or not as follows:<br>
+<br>
+<pre><span style="color: rgb(153, 0, 0);">public void</span> setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {<br>  <span
+ style="color: rgb(153, 0, 0);">if </span>(data <span
+ style="color: rgb(153, 0, 0);">instanceof </span>String)<br>    border = Boolean.<span
+ style="font-style: italic;">valueOf</span>((String) data).booleanValue();<br>}<br></pre>
+and in the <span style="font-style: italic;">Composite.override</span>
+file in <span style="font-style: italic;">org.eclipse.ve.swt/overrides/org/eclipse/swt/widgets</span>
+<br>
+<pre>    &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">true"<br><span
+ style="color: rgb(0, 153, 0);">      ...</span><br>    &lt;/addedEObjects&gt;<br></pre>
+The&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> graphViewClassname is defined as
+pluginName/qualifiedClassNane:initData and the value of <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"><span
+ style="font-style: italic;"> true </span>specifies that an SWT
+composite is drawn by the Visual Editor with the border.&nbsp; Because<span
+ style="font-style: italic;"> MyCustomPrompter.override</span> does not
+specify the initData of <span style="font-style: italic;">true </span>it
+is drawn with the live widget as is.<br>
+<br>
+The next step in the tutorial is to look at how to affect the
+code generation subsystem of the Visual Editor. <br>
 <h2><a name="Overriding_an_Expression_Decoder">Custom code generation
 for the <span style="font-style: italic;">text </span>property<br>
 </a></h2>
