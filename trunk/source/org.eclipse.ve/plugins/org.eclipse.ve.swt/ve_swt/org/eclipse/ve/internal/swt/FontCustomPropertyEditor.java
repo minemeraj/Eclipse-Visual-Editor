@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-03-29 16:17:15 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-29 18:50:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,7 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.ui.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -36,8 +35,8 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class FontCustomPropertyEditor extends Composite {
 
@@ -423,8 +422,8 @@ public class FontCustomPropertyEditor extends Composite {
 		if (isJFaceProject()) {
 			createComposite1();
 			TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
-			tabItem2.setControl(jfaceFontsTab);
-			tabItem2.setText("JFace Fonts");
+		tabItem2.setControl(jfaceFontsTab);
+		tabItem2.setText("JFace Fonts");
 			initializeJfaceLists();
 		}
 		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -646,20 +645,7 @@ public class FontCustomPropertyEditor extends Composite {
 	 * This is used to determine whether or not to add the JFace page to the property editor. 
 	 */
 	protected boolean isJFaceProject() {
-		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", fExistingValue); //$NON-NLS-1$
-		if (jfaceObjectClass == null) {
-			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (window != null) {
-				IWorkbenchPage activePage = window.getActivePage();
-				if (activePage != null) {
-					IEditorPart editor = activePage.getActiveEditor();
-					if (editor instanceof JavaVisualEditorPart) {
-//						EditPartViewer viewer = editor
-					}
-				}
-			}
-			
-		}
+		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
 		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
 	}
 
