@@ -4,17 +4,17 @@ package org.eclipse.ve.example.customwidget.prompter;
 import java.beans.*;
 
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class MyCustomPrompterBeanInfo extends SimpleBeanInfo {
 	
-//	public BeanInfo[] getAdditionalBeanInfo() {
-//		try{
-//			return new BeanInfo[]{Introspector.getBeanInfo(Composite.class)}; 
-//		} catch (IntrospectionException e){
-//			return new BeanInfo[0];
-//		}
-//	}
+	public BeanInfo[] getAdditionalBeanInfo() {
+		try{
+			return new BeanInfo[]{Introspector.getBeanInfo(Control.class)}; 
+		} catch (IntrospectionException e){
+			return new BeanInfo[0];
+		}
+	}
 	
 	public PropertyDescriptor[] getPropertyDescriptors() {
 		

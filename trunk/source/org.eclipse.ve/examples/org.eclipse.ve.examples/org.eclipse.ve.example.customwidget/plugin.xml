@@ -7,7 +7,7 @@
       <classpathContainerPage
             name="Custom Prompter"
             class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"
-            id="org.eclipse.ve.tutorial1.CustomPrompter">
+            id="org.eclipse.ve.example.PrompterContainer">
       </classpathContainerPage>
    </extension>  
    
@@ -15,14 +15,14 @@
          point="org.eclipse.jdt.core.classpathContainerInitializer">
       <classpathContainerInitializer
             class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"
-            id="org.eclipse.ve.tutorial1.CustomPrompter">
+            id="org.eclipse.ve.example.PrompterContainer">
       </classpathContainerInitializer>
    </extension>   
    
   <extension
          point="org.eclipse.ve.java.core.registrations">
       <registration
-            container="org.eclipse.ve.tutorial1.CustomPrompter"
+            container="org.eclipse.ve.example.PrompterContainer"
             description="Custom Prompter">
          <library runtime="customwidgets.jar"/>
       </registration>
@@ -31,18 +31,19 @@
    <extension
          point="org.eclipse.ve.java.core.contributors">
       <palette
-            container="org.eclipse.ve.tutorial1.CustomPrompter"
+            container="org.eclipse.ve.example.PrompterContainer"
             categories="customprompter.xmi"/>
-   </extension>   
-
+   </extension> 
+   
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <registration
-            container="org.eclipse.ve.tutorial1.CustomPrompter">
+            container="org.eclipse.ve.example.PrompterContainer">
          <override
                package="org.eclipse.ve.example.customwidget.prompter"
                path="overrides/org/eclipse/ve/example/customwidget/prompter">
          </override>
       </registration>     
     </extension>
+
 </plugin>
