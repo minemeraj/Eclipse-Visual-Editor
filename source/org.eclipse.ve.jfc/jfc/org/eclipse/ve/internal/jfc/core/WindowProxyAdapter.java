@@ -11,16 +11,18 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-03-18 18:27:48 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-18 18:46:00 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.swt.widgets.Display;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.swt.widgets.Display;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.DimensionJavaClassCellEditor;

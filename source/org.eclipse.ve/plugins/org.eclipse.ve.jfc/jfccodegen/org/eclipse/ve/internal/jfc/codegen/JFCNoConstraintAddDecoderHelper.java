@@ -11,15 +11,17 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-18 18:36:02 $ 
+ *  $Revision: 1.13 $  $Date: 2005-03-18 18:47:57 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
