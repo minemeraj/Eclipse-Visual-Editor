@@ -14,4 +14,12 @@ if (!($f2=fopen("public/tests.new","w+")))
 fwrite($f2,"Testing\n");
 fclose($f2);
 
+
+if (!($f2=fopen("public/tests.new","r")))
+                  exit("Unable to open file.");
+$string = fread($f2,8);
+fclose($f2);
+
+echo "File read: " . $string;
+
 ?>
