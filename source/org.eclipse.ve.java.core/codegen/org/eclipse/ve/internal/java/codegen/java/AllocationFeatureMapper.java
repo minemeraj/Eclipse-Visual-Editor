@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationFeatureMapper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-28 15:55:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,11 +34,8 @@ public class AllocationFeatureMapper extends AbstractFeatureMapper {
 	public EStructuralFeature getFeature (Statement expr) {
 		if (fSF != null) 
 			return fSF ;
-		if (fRefObj == null || expr==null) 
-			return null ;
-		getMethodName(expr)  ;
 		fSF = ((EObject)fRefObj).eClass().getEStructuralFeature(ALLOCATION_FEATURE) ;
-		fSFname = fMethodName ;
+		fSFname = fSF.getName() ;
 		return fSF ;		
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.13 $  $Date: 2004-03-09 17:40:57 $ 
+ *  $Revision: 1.14 $  $Date: 2004-04-28 15:55:01 $ 
  */
 
 import java.util.Iterator;
@@ -179,7 +179,7 @@ public CodeExpressionRef getExistingExpressionRef(Object[] args) {
 	while (itr.hasNext()) {
 		CodeExpressionRef exp = (CodeExpressionRef) itr.next() ;
 		if (exp.getExpDecoder() != null &&
-		    exp.getExpDecoder().getSF().equals(fSF) &&
+		    fSF.equals(exp.getExpDecoder().getSF()) &&
 		    ((exp.getArgs() == null && args==null) ||
 		      exp.getArgs() != null && exp.getArgs().equals(args))) {
 		    	fExpr = exp ;
