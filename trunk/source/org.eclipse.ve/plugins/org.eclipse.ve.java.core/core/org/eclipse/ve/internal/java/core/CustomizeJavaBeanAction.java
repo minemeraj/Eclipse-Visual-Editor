@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-10 21:35:19 $ 
  */
 import java.util.*;
 
@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -99,12 +101,19 @@ public void run(){
 		IBeanProxy windowLauncherProxy = ctor.newInstance(new IBeanProxy[] {customizerProxy});
 		//
 
-		WindowLauncher launcher = new WindowLauncher(windowLauncherProxy, org.eclipse.swt.widgets.Display.getDefault().getActiveShell());
+		final Display display = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay();
+		WindowLauncher launcher = new WindowLauncher(windowLauncherProxy, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		launcher.addListener(new WindowLauncher.Listener(){
 			public void propertyChange(String eventName){
 				// To revalidate the bean being customized we need to get its BeanProxyAdapter
 				// and revalidate this - this will cause a repaint on the VCE viewer if required
-				beanProxyHost.revalidateBeanProxy();
+				// TODO For now we need to put the revalidate onto the UI thread. (Actually it needs to
+				// be on AWT's UI queue, but we don't have an interface for that yet. We need to address this whole problem of threading).
+				display.asyncExec(new Runnable() {
+					public void run() {
+						beanProxyHost.revalidateBeanProxy();
+					}
+				});
 			}
 		});
 		
