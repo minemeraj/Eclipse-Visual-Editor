@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-05 03:38:38 $ 
+ *  $Revision: 1.9 $  $Date: 2004-04-07 14:40:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -90,15 +90,15 @@ public class BDMMerger {
 				
 				// Model is build (but annotations).   Turn the model on, as the EditParts may slam dunc
 				// new element (e.g., a content pane).  We need to react and generate the appropriate code.
-				boolean previousUPDATINGJVEMODELState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL) ;
-				boolean previousUPANDRUNNINGState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING) ;
-				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
-				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
+//				boolean previousUPDATINGJVEMODELState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL) ;
+//				boolean previousUPANDRUNNINGState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING) ;
+//				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
+//				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 				
 				connectBeanToBSC(bean,mainModel.getCompositionModel().getModelRoot()) ;
 
-				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, previousUPDATINGJVEMODELState) ;
-				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING, previousUPANDRUNNINGState) ;
+//				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, previousUPDATINGJVEMODELState) ;
+//				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING, previousUPANDRUNNINGState) ;
 				
 				if(	bean.getSimpleName().equals(BeanPart.THIS_NAME) ||
 						bean.isInstanceVar()){
