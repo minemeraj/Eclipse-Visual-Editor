@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.22 $  $Date: 2005-03-09 23:23:09 $ 
+ *  $Revision: 1.23 $  $Date: 2005-04-01 21:01:07 $ 
  */
 
 import java.util.*;
@@ -697,14 +697,14 @@ public String _debugExpressions() {
  */
 public JCMMethod getCompMethod() {
 	if (fcompMethod == null) {
-	  fcompMethod = JCMFactory.eINSTANCE.createJCMMethod() ;	  
-	  fTypeRef.getBeanComposition().getMethods().add(fcompMethod) ;	
+	  fcompMethod = JCMFactory.eINSTANCE.createJCMMethod() ;	  	  	
 	  fcompMethod.setName(getMethodName()) ;
 	  // Start listining to changes in its membership
 	  MemberDecoderAdapter a = new MemberDecoderAdapter(fModel) ;
 	  a.setMethodRef(this) ;
 	  a.setTarget(fcompMethod) ;
       fcompMethod.eAdapters().add(a) ;
+      fTypeRef.getBeanComposition().getMethods().add(fcompMethod) ;
 	}
 	return fcompMethod;
 }
