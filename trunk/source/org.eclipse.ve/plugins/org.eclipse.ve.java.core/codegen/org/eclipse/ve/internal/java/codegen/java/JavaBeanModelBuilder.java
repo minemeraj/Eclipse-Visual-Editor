@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.19 $  $Date: 2004-11-22 22:23:18 $ 
+ *  $Revision: 1.20 $  $Date: 2004-12-01 17:09:08 $ 
  */
 
 import java.util.*;
@@ -382,7 +382,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    
 	    // Start visiting our main type
 	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
-	    VETimerTests.basicTest.startStep("Parse expressions");
+//	    VETimerTests.basicTest.startStep("Parse expressions");
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -390,7 +390,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    	visitor.setNoRetry() ;
 	    	visitor.visit() ;
 	    }
-	    VETimerTests.basicTest.stopStep("Parse expressions");
+//	    VETimerTests.basicTest.stopStep("Parse expressions");
 
 	    analyzeEvents() ;
 	    fMonitor.worked(100);
