@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JFCLauncher.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-03 21:55:30 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-08 18:48:02 $ 
  */
 
 import java.applet.Applet;
@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,40 @@ public class JFCLauncher implements ILauncher {
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#launch(java.lang.Class, java.lang.Object, java.lang.String[])
 	 */
 		
-	public void launch(Class clazz, Object javaBean, String[] args) {
+	public void launch(Class clazz, String[] args) {
+		Object javaBean = null;
+		try {
+			// new up an instance of the java bean
+			Constructor ctor = clazz.getDeclaredConstructor(null);
+			// Make sure we can intantiate it in case the class it not public
+			ctor.setAccessible(true);
+			javaBean = ctor.newInstance(null);
+		} catch (SecurityException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();	
+			System.exit(0);	
+		} catch (IllegalArgumentException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();		
+			System.exit(0);	
+		} catch (NoSuchMethodException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();	
+			System.exit(0);	
+		} catch (InstantiationException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();	
+			System.exit(0);	
+		} catch (IllegalAccessException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();		
+			System.exit(0);	
+		} catch (InvocationTargetException e1) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e1.printStackTrace();	
+			System.exit(0);	
+		}
+		
 		// Set the look and feel if required	
 		String lookAndFeelArg = System.getProperty("vce.launcher.lookandfeel"); //$NON-NLS-1$
 		// <default> means don't change the L&F from the one the JVM has used

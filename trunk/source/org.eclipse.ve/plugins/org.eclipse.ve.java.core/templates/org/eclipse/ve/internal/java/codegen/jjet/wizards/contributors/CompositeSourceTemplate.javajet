@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: CompositeSourceTemplate.javajet,v $
- *  $Revision: 1.1 $ $Date: 2004-07-15 13:04:30 $
+ *  $Revision: 1.2 $ $Date: 2004-09-08 18:48:02 $
  */
 %>
 <%@ jet 
@@ -12,8 +12,8 @@
 
 public class <%=typeName%> extends Composite {
 
-	public <%=typeName%>(Composite arg0, int arg1) {
-		super(arg0, arg1);
+	public <%=typeName%>(Composite parent, int style) {
+		super(parent, style);
 		initialize();
 	}
 	private void initialize() {
@@ -30,6 +30,7 @@ public class <%=typeName%> extends Composite {
 		 */
 		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();		
 		org.eclipse.swt.widgets.Shell shell = new org.eclipse.swt.widgets.Shell(display);
+		shell.setLayout(new org.eclipse.swt.layout.FillLayout());
 		shell.setSize(new org.eclipse.swt.graphics.Point(300,200));
 		<%=typeName%> thisClass = new <%=typeName%>(shell, org.eclipse.swt.SWT.NONE);
 		shell.open();

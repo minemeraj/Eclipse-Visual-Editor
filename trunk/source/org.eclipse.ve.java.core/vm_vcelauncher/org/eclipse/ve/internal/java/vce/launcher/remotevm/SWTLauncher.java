@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.6 $  $Date: 2004-09-03 21:55:30 $ 
+ *  $Revision: 1.7 $  $Date: 2004-09-08 18:48:02 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -32,6 +32,14 @@ import org.eclipse.swt.widgets.List;
 public class SWTLauncher implements ILauncher {
 		
 	protected ArrayList shellList = null;
+	protected Constructor controlCtor = null;
+	protected int controlCtorType = NOCTOR;
+	private static final int 
+		NOCTOR = 0,
+		DEFAULTCTOR = 1,		// shell()
+		DISPLAYCTOR = 2,		// shell(display)
+		PARENTCTOR = 3,			// control(parent)
+		PARENTSTYLECTOR = 4;	// control(parent, style)
 	
 	private class ShellInfo implements Comparable {
 		public Field shellField = null; 
@@ -55,6 +63,37 @@ public class SWTLauncher implements ILauncher {
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
 	 */
 	public boolean supportsLaunching(Class clazz) {
+		
+		if (Control.class.isAssignableFrom(clazz)) {
+			// This is a control subclass, so we need a constructor so that we can put a shell around it.
+			// We will search in this priority: ctor(), ctor(Display) <- these only valid for shell, ctor(parent), ctor(parent, style)
+			Constructor[] ctors = clazz.getDeclaredConstructors();
+			boolean isShell = Shell.class.isAssignableFrom(clazz);
+			for (int i = 0; i < ctors.length; i++) {
+				Class[] parms = ctors[i].getParameterTypes();
+				if (parms.length == 0 && isShell) {
+					controlCtor = ctors[i];
+					controlCtorType = DEFAULTCTOR;
+					break;	// ctor() has priority for shells.
+				}
+				if (parms.length == 1 && isShell && Display.class.isAssignableFrom(parms[0])) {
+					controlCtor = ctors[i];
+					controlCtorType = DISPLAYCTOR;
+					break;	// ctor(Display) has priority for shells.
+				}
+				if (parms.length == 1 && Composite.class.isAssignableFrom(parms[0])) {
+					controlCtor = ctors[i];
+					controlCtorType = PARENTCTOR;
+					break;	// ctor{parent) has priority for all others.
+				}
+				if (parms.length == 2 && Composite.class.isAssignableFrom(parms[0]) && parms[1] == Integer.TYPE) {
+					controlCtor = ctors[i];	// ctor(parent, style)
+					controlCtorType = PARENTSTYLECTOR;
+				}
+			}
+			return controlCtorType != NOCTOR;
+		}
+		
 		shellList = new ArrayList();
 		String methodName;
 		Method createMethod = null;
@@ -91,7 +130,7 @@ public class SWTLauncher implements ILauncher {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#launch(java.lang.Class, java.lang.Object, java.lang.String[])
 	 */
-	public void launch(Class clazz, Object bean, String[] args) {	
+	public void launch(Class clazz, String[] args) {
 		Method mainMethod = null;
 		try {
 			mainMethod = clazz.getDeclaredMethod("main", new Class[] {String[].class}); //$NON-NLS-1$
@@ -117,6 +156,10 @@ public class SWTLauncher implements ILauncher {
 			}
 		}
 		
+		if (controlCtorType != NOCTOR) {
+			runControl(clazz);
+			return;
+		}
 		// should already be initialized by supportsLaunching, but be safe.
 		if (shellList == null) {
 			if (!supportsLaunching(clazz)) {
@@ -125,15 +168,47 @@ public class SWTLauncher implements ILauncher {
 		}
 		
 		if (!shellList.isEmpty()) {
-			if (shellList.size() == 1) {
-				runShell((ShellInfo)shellList.get(0), bean);
-				return;
-			}
-			// There's more than one shell, display a prompt to the user to
-			// choose which to run.
-			ShellInfo info = chooseShell(shellList, bean);
-			if (info != null) {
-				runShell(info, bean);
+			try {
+				// new up an instance of the java bean
+				Constructor ctor = clazz.getDeclaredConstructor(null);
+				// Make sure we can intantiate it in case the class it not public
+				ctor.setAccessible(true);
+				Object bean = ctor.newInstance(null);
+				
+				if (shellList.size() == 1) {
+					runShell((ShellInfo)shellList.get(0), bean);
+					return;
+				}
+				// There's more than one shell, display a prompt to the user to
+				// choose which to run.
+				ShellInfo info = chooseShell(shellList, bean);
+				if (info != null) {
+					runShell(info, bean);
+				}
+			} catch (SecurityException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();	
+				System.exit(0);	
+			} catch (IllegalArgumentException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();		
+				System.exit(0);	
+			} catch (NoSuchMethodException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();	
+				System.exit(0);	
+			} catch (InstantiationException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();	
+				System.exit(0);	
+			} catch (IllegalAccessException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();		
+				System.exit(0);	
+			} catch (InvocationTargetException e1) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+				e1.printStackTrace();	
+				System.exit(0);	
 			}
 		}
 	}
@@ -300,7 +375,65 @@ public class SWTLauncher implements ILauncher {
 			return className;
 		}
 	}
-		
+	
+	protected void runControl(Class clazz) {
+		controlCtor.setAccessible(true);
+		try {
+			switch (controlCtorType) {
+				case DEFAULTCTOR:
+					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+					Shell shell = (Shell) controlCtor.newInstance(null);
+					runEventLoop(shell);
+					break;
+					
+				case DISPLAYCTOR:
+					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithShellMethod_INFO_"), new Object[]{clazz.getName(), controlCtor.toString()})); //$NON-NLS-1$
+					Display display = Display.getDefault();
+					shell = (Shell) controlCtor.newInstance(new Object[] {display});
+					runEventLoop(shell);
+					break;
+					
+				case PARENTCTOR:
+					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithShellMethod_INFO_"), new Object[]{clazz.getName(), controlCtor.toString()})); //$NON-NLS-1$
+					Shell parentShell = createParentShell(clazz);
+					controlCtor.newInstance(new Object[] {parentShell});
+					runEventLoop(parentShell);
+					break;
+					
+				case PARENTSTYLECTOR:
+					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithShellMethod_INFO_"), new Object[]{clazz.getName(), controlCtor.toString()})); //$NON-NLS-1$
+					parentShell = createParentShell(clazz);
+					controlCtor.newInstance(new Object[] {parentShell, new Integer(SWT.NONE)});
+					runEventLoop(parentShell);
+					break;
+					
+			}
+		} catch (IllegalArgumentException e) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e.printStackTrace();		
+			System.exit(0);	
+		} catch (InstantiationException e) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e.printStackTrace();	
+			System.exit(0);	
+		} catch (IllegalAccessException e) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e.printStackTrace();		
+			System.exit(0);	
+		} catch (InvocationTargetException e) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+			e.printStackTrace();	
+			System.exit(0);	
+		}
+	}
+	
+	protected Shell createParentShell(Class clazz) {
+		Shell parentShell = new Shell(Display.getDefault());
+		parentShell.setText(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchComponent"), new Object[] {clazz.getName()})); //$NON-NLS-1$
+		parentShell.setLayout(new FillLayout());
+		return parentShell;
+	}
+	
 	protected void runShell(ShellInfo info, Object bean) {
 		info.shellField.setAccessible(true);
 		info.createMethod.setAccessible(true);

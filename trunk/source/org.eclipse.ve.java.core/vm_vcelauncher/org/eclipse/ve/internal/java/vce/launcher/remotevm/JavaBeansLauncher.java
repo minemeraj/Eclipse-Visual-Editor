@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JavaBeansLauncher.java,v $
- *  $Revision: 1.6 $  $Date: 2004-09-03 21:55:30 $ 
+ *  $Revision: 1.7 $  $Date: 2004-09-08 18:48:02 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -73,14 +73,8 @@ public static void main(String[] args){
 				break;
 			}
 		}
-		if (selected != null) {
-			// new up an instance of the java bean
-			Constructor ctor = aClass.getDeclaredConstructor(null);
-			// Make sure we can intantiate it in case the class it not public
-			ctor.setAccessible(true);
-			Object javaBean = ctor.newInstance(null);
-			
-			selected.launch(aClass, javaBean, args);
+		if (selected != null) {			
+			selected.launch(aClass, args);
 		} else {
 			Method mainMethod = null;
 			try {
@@ -96,7 +90,7 @@ public static void main(String[] args){
 				Constructor ctor = aClass.getDeclaredConstructor(null);
 				// Make sure we can intantiate it in case the class it not public
 				ctor.setAccessible(true);
-				Object javaBean = ctor.newInstance(null);
+				ctor.newInstance(null);
 			}
 		}
 	} catch ( ClassNotFoundException exc ){

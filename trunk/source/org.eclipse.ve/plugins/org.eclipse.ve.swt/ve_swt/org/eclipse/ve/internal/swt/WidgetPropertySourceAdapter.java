@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.17 $ $Date: 2004-06-15 21:24:56 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.18 $ $Date: 2004-09-08 18:48:05 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -33,6 +33,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
@@ -194,10 +196,18 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		for (int i = 0; i < propertyDescriptors.length; i++) {
 			descriptorsList.add(propertyDescriptors[i]);
 		}
-		mergeStyleBits(descriptorsList, ((EObject) getTarget()).eClass());
-		IPropertyDescriptor[] resultArray = new IPropertyDescriptor[descriptorsList.size()];
-		descriptorsList.toArray(resultArray);
-		return resultArray;
+		
+		// KLUDGE: We don't want style bits if we are "this" (subclassing) because style bits are contributed
+		// by the constructors. And we don't have an allocation statement (i.e. no new ThisClass(parent,style))
+		// to generate the style into. So we just remove it.
+		// TODO A better way would to do this maybe would be to generate a "private checkStyle()" method that can
+		// be called in the ctor's super(parent, checkStyle(style)). And this checkStyle method would take the
+		// incoming style and add in the style's selected from the property sheet and return the merged styles.
+		// Of course doing this means these styles CAN'T be turned off by users of the class.
+		if (((EObject) getTarget()).eContainmentFeature() != JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())
+			mergeStyleBits(descriptorsList, ((EObject) getTarget()).eClass());
+		
+		return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
 
 	}
 
