@@ -80,15 +80,17 @@ public void addComponentListener(IVisualComponentListener aListener){
 public void removeComponentListener(IVisualComponentListener aListener){
 	vcSupport.removeComponentListener(aListener);
 }
-public void release(){
-	if(fControlManagerProxy != null && fControlBeanProxy != null){
-		invoke_setControlManager(fControlManagerProxy,null);
+
+	public void release() {
+		if (fControlManagerProxy != null && fControlManagerProxy.isValid()) {
+			if (fControlBeanProxy != null) {
+				invoke_setControlManager(fControlManagerProxy, null);
+			}
+			fControlManagerProxy.getProxyFactoryRegistry().getCallbackRegistry().deregisterCallback(fControlManagerProxy);
+		}
 	}
-	if(fControlManagerProxy != null){
-		fControlManagerProxy.getProxyFactoryRegistry().getCallbackRegistry().deregisterCallback(fControlManagerProxy);
-	}
-}
-/**
+
+	/**
  * Set the bean proxy of the component that we are listening to
  */
 public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
