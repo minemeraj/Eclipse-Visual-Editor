@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-02 14:34:34 $ 
  */
 
 import java.util.*;
@@ -26,7 +26,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -56,7 +55,6 @@ public class BeanDeclModel implements IBeanDeclModel {
 	IVEModelInstance		fCompositionModel = null ;
 	String                      fLineSeperator = null ;
 	int                         fState = BDM_STATE_DOWN ;
-	ICodeGenStatus				fStatus = null ;
 	EditDomain					fDomain = null ; 
 	
 //  The following will suport a working copy for the working copy	
@@ -556,22 +554,6 @@ public void updateBeanNameChange(BeanPart bp) {
 
 
 	/**
-	 * Returns the fStatus.
-	 * @return ICodeGenStatus
-	 */
-	public ICodeGenStatus getFStatus() {
-		return fStatus;
-	}
-
-	/**
-	 * Sets the fStatus.
-	 * @param fStatus The fStatus to set
-	 */
-	public void setFStatus(ICodeGenStatus fStatus) {
-		this.fStatus = fStatus;
-	}
-
-	/**
 	 * Returns the domain.
 	 * @return EditDomain
 	 */
@@ -708,7 +690,7 @@ public void updateBeanNameChange(BeanPart bp) {
 	public void refreshMethods () {
 		try {
 			if (!getCompilationUnit().isConsistent()) 
-				   getCompilationUnit().reconcile() ;
+				   getCompilationUnit().reconcile(false, false, null, null) ;
 		}
 		catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(getCompilationUnit());
