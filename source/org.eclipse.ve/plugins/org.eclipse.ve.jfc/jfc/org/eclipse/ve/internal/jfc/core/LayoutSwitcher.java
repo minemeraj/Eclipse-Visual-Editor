@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 14:09:40 $ 
  */
 
 import java.util.*;
@@ -62,7 +62,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.
 			IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(containerBean);			
-			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, policy.getEditDomain());
+			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, policy.getEditDomain());
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}
@@ -102,7 +102,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.
 			IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(containerBean);			
-			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, policy.getEditDomain());
+			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, policy.getEditDomain());
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}
