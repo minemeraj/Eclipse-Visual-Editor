@@ -11,26 +11,25 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FrameConstructorCreationPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.4 $  $Date: 2004-07-16 15:37:25 $ 
  */
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 
-import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.PTClassInstanceCreation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.Method;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
@@ -38,18 +37,27 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 
 	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
 
-		Command setInitStringCommand = new CommandWrapper() {
+		IJavaObjectInstance newJavaObject = (IJavaObjectInstance) aCreateRequest.getNewObject();
+		if (newJavaObject.getAllocation() != null)
+			return aCommand;	// There is already an allocation. We don't want to touch it.
+		
+		Command setAllocationCommand = new CommandWrapper() {
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper#execute()
+			 */
 			public void execute() {
 				JavaClass javaClass = (JavaClass) aCreateRequest.getNewObjectType();
+				JavaClass frameClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("java.awt.Frame", javaClass);
 				// Look at the constructors to see whether there is a null constructor or not
-				// If so then just leasve the initString blank
+				// If so then just leasve the allocation alone.
 				// Remember that the absence of any contructors means that there is an implicit null constructor
-				Iterator behaviors = javaClass.getEOperations().iterator();
+				Iterator methods = javaClass.getMethods().iterator();
 				boolean hasNullConstructor = false;
-				while (behaviors.hasNext()) {
-					Method javaMethod = ((MethodProxy) behaviors.next()).getMethod();
+				while (methods.hasNext()) {
+					Method javaMethod = (Method) methods.next();
 					// If we have a constructor then flag this
-					if (javaMethod.isConstructor()) {
+					if (javaMethod.isConstructor() && JavaVisibilityKind.PUBLIC_LITERAL == javaMethod.getJavaVisibility()) {
 						List methodInputParms = javaMethod.getParameters();
 						// See whether we have a null constructor
 						if (methodInputParms.isEmpty()) {
@@ -57,8 +65,11 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 							break;
 						} else if (methodInputParms.size() == 1) {
 							// See whether or not there is a constructor that takes a frame argument						
-							Object inputParm = methodInputParms.iterator().next();
-							inputParm.toString();
+							JavaParameter inputParm = (JavaParameter) methodInputParms.iterator().next();
+							JavaHelpers type = inputParm.getJavaType(); 
+							if (type.isAssignableFrom(frameClass)) {
+								break;	// Found out we have one that will work.
+							}
 						}
 					}
 				}
@@ -66,29 +77,31 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 				if (hasNullConstructor)
 					return;
 				// Create the frame argument constructor
-				// For some reason the behaviors does not return anything other than set methods - it has no constructors
-				// so right now always do this
+				PTClassInstanceCreation newFrame = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Frame", null);
+				PTClassInstanceCreation newExpr = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(javaClass.getQualifiedNameForReflection(), Collections.singletonList(newFrame));
 				IJavaObjectInstance newJavaObject = (IJavaObjectInstance) aCreateRequest.getNewObject();
-				// For a dialog or window set the initializationString to be new java.awt.Dialog(new java.awt.Frame());
-				String qualifiedClassName = newJavaObject.getJavaType().getQualifiedNameForReflection();
-				String initString = "new " + qualifiedClassName + "(new java.awt.Frame())"; //$NON-NLS-1$ //$NON-NLS-2$
 				ApplyAttributeSettingCommand applycommand = new ApplyAttributeSettingCommand();
 				applycommand.setTarget(newJavaObject);
 				applycommand.setAttribute(JavaInstantiation.getAllocationFeature(newJavaObject));
-				applycommand.setAttributeSettingValue(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
+				applycommand.setAttributeSettingValue(InstantiationFactory.eINSTANCE.createParseTreeAllocation(newExpr));
 				command = applycommand;
 				command.execute();
 			}
-
+			
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand#canExecute()
+			 */
 			public boolean canExecute() {
-				return true;
+				return true;	// Override super because we don't want to go through the effort of creating the command everytime we move. Just when we execute.
 			}
+
 		};
 
 		// Put the command to set the initString BEFORE the other commands, so that by the time the BeanProxyAdapter
 		// is called the correct string is in place
 		CompoundCommand result = new CompoundCommand(aCommand.getLabel());
-		result.append(setInitStringCommand);
+		result.append(setAllocationCommand);
 		result.append(aCommand);
 		return result;
 	}
@@ -97,33 +110,39 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 	 * @see CreationPolicy#getDefaultSuperString(EClass)
 	 */
 	public String getDefaultSuperString(EClass superClass) {
-		// Look for a null constructor up the stack, if there is one,
-		// return super(), else return Frame() constructor
-		Iterator behaviors = superClass.getEOperations().iterator();
-		boolean hasNullConstructor = false;
-		boolean hasAnyConstructors = false;
-		while (behaviors.hasNext()) {
-			Method javaMethod = ((MethodProxy) behaviors.next()).getMethod();
-			// If we have a constructor then flag this
-			if (javaMethod.isConstructor()) {
-				hasAnyConstructors = true;
-				List methodInputParms = javaMethod.getParameters();
-				// See whether we have a null constructor
-				if (methodInputParms == null || methodInputParms.isEmpty()) {
-					hasNullConstructor = true;
-					break;
+		if (superClass instanceof JavaClass) {
+			// Look for a null constructor up the stack, if there is one,
+			// return super(), else return Frame() constructor
+			Iterator methods = ((JavaClass) superClass).getMethods().iterator();
+			boolean hasNullConstructor = false;
+			boolean hasAnyConstructors = false;
+			while (methods.hasNext()) {
+				Method javaMethod = (Method) methods.next();
+				// If we have a constructor then flag this. Need to check for visiblity of the constructor.
+				// Assuming not in same package so not checking for package protected.
+				JavaVisibilityKind visibility = javaMethod.getJavaVisibility();
+				if (javaMethod.isConstructor() && (visibility == JavaVisibilityKind.PROTECTED_LITERAL || visibility == JavaVisibilityKind.PUBLIC_LITERAL)) {
+					hasAnyConstructors = true;
+					List methodInputParms = javaMethod.getParameters();
+					// See whether we have a null constructor
+					if (methodInputParms.isEmpty()) {
+						hasNullConstructor = true;
+						break;
+					}
 				}
 			}
+			if (!hasNullConstructor) {
+				// No null constructor
+				// TODO This isn't really right. You can't go to the super.super and look at its CTOR's. You
+				// can't bypass the first super. If there are no ctors at all, then just use super().
+				// If there are any, then see if there is one that takes a frame.
+				if (!hasAnyConstructors && ((JavaClass) superClass).getSupertype() != null)
+					return getDefaultSuperString(((JavaClass) superClass).getSupertype());
+				else
+					return ("super(new java.awt.Frame())"); //$NON-NLS-1$
+			}
 		}
-		if (hasNullConstructor)
-			return ("super()"); //$NON-NLS-1$
-		else { // No null constructor
-			if (!hasAnyConstructors && ((JavaClass) superClass).getSupertype() != null)
-				return getDefaultSuperString(((JavaClass) superClass).getSupertype());
-			else
-				return ("super(new java.awt.Frame())"); //$NON-NLS-1$
-		}
-
+		return ("super()"); //$NON-NLS-1$
 	}
 
 }
