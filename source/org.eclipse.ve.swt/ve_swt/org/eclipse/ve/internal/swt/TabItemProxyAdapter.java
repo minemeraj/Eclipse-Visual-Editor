@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-09-07 14:24:05 $ 
+ *  $Revision: 1.3 $  $Date: 2004-09-07 14:31:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -110,5 +110,4 @@ public class TabItemProxyAdapter extends WidgetProxyAdapter {
 	protected IBeanProxy beanProxyAdapterBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
 		return super.beanProxyAllocation(allocation);
 	}
-
 }

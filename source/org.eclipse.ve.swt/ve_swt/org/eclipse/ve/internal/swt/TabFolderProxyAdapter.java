@@ -10,21 +10,25 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-09-01 16:58:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-09-07 14:31:31 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * 
  * @since 1.0.0
  */
 public class TabFolderProxyAdapter extends CompositeProxyAdapter {
-
+	private EReference sf_items;
 	/**
 	 * @param domain
 	 * 
@@ -32,6 +36,13 @@ public class TabFolderProxyAdapter extends CompositeProxyAdapter {
 	 */
 	public TabFolderProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
+	}
+	
+	public void setTarget(Notifier newTarget) {
+  	  super.setTarget(newTarget);
+	  if (newTarget != null) {
+		sf_items = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TABFOLDER_ITEMS);
+	  }
 	}
 
 	/**
@@ -45,5 +56,16 @@ public class TabFolderProxyAdapter extends CompositeProxyAdapter {
 		BeanSWTUtilities.invoke_tabfolder_setSelection(getBeanProxy(), intProxy);
 		revalidateBeanProxy();
 	}
+	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return;
+		else if (sf == sf_items) {
+			IBeanProxyHost oldHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) oldValue);
+			if (oldHost != null)
+				oldHost.releaseBeanProxy();
+		} else {
+			super.canceled(sf, oldValue, position);
+		}
 
+	}
 }
