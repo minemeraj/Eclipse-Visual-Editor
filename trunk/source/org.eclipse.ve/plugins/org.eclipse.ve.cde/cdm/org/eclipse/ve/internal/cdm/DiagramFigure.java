@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: DiagramFigure.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -20,6 +20,10 @@ import org.eclipse.emf.common.util.EList;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Diagram Figure</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * A figure on the diagram. This is used when the structure of objects in the diagram are not determined by the object model but are specified on a per diagram basis.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -42,6 +46,9 @@ public interface DiagramFigure extends KeyedValueHolder{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Indicate the type of the figure. This is used by the view to know the type of figure. It can be used to prevent the wrong type of figure being dropped on another figure. Or it can be used to determine the type of EditPart to create for it.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
 	 * @see #setType(String)
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagramFigure_Type()

@@ -11,16 +11,13 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
-
-import org.eclipse.ui.*;
 import org.eclipse.gef.ui.actions.*;
-import org.eclipse.gef.ui.actions.RedoRetargetAction;
-import org.eclipse.gef.ui.actions.UndoRetargetAction;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.ui.actions.ActionFactory;
 
 public class ActionBarContributor extends org.eclipse.gef.ui.actions.ActionBarContributor {
 	public ActionBarContributor(){
@@ -38,16 +35,16 @@ protected void buildActions() {
  * @see org.eclipse.gef.ui.actions.ActionBarContributor#declareGlobalActionKeys()
  */
 protected void declareGlobalActionKeys() {
-	addGlobalActionKey(IWorkbenchActionConstants.PRINT);
+	addGlobalActionKey(ActionFactory.PRINT.getId());
 }
 
 /**
  * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToToolBar(IToolBarManager)
  */
 public void contributeToToolBar(IToolBarManager tbm) {
-	tbm.add(getAction(IWorkbenchActionConstants.UNDO));
-	tbm.add(getAction(IWorkbenchActionConstants.REDO));
-	tbm.add(getAction(IWorkbenchActionConstants.DELETE));
+	tbm.add(getAction(ActionFactory.UNDO.getId()));
+	tbm.add(getAction(ActionFactory.REDO.getId()));
+	tbm.add(getAction(ActionFactory.DELETE.getId()));
 // TODO Need to revisit how these actions work.
 //	tbm.add(getAction(ZoomAction.ACTION_ID));
 //	tbm.add(getAction(ZoomInAction.ACTION_ID));

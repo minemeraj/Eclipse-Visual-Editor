@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.visual.*;

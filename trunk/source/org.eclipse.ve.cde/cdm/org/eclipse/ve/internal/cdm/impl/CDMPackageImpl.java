@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import java.util.Map;
 
@@ -269,7 +269,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagramData_Diagrams() {
-		return (EReference)diagramDataEClass.getEReferences().get(0);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -278,7 +278,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagramData_Annotations() {
-		return (EReference)diagramDataEClass.getEReferences().get(1);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagram_Name() {
-		return (EAttribute)diagramEClass.getEAttributes().get(0);
+		return (EAttribute)diagramEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagram_Id() {
-		return (EAttribute)diagramEClass.getEAttributes().get(1);
+		return (EAttribute)diagramEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagram_DiagramData() {
-		return (EReference)diagramEClass.getEReferences().get(0);
+		return (EReference)diagramEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagram_VisualInfos() {
-		return (EReference)diagramEClass.getEReferences().get(1);
+		return (EReference)diagramEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagram_Figures() {
-		return (EReference)diagramEClass.getEReferences().get(2);
+		return (EReference)diagramEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getVisualInfo_Diagram() {
-		return (EReference)visualInfoEClass.getEReferences().get(0);
+		return (EReference)visualInfoEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -368,7 +368,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getKeyedValueHolder_KeyedValues() {
-		return (EReference)keyedValueHolderEClass.getEReferences().get(0);
+		return (EReference)keyedValueHolderEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -386,7 +386,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedLocation_Value() {
-		return (EAttribute)keyedLocationEClass.getEAttributes().get(0);
+		return (EAttribute)keyedLocationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -395,7 +395,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedLocation_Key() {
-		return (EAttribute)keyedLocationEClass.getEAttributes().get(1);
+		return (EAttribute)keyedLocationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -413,7 +413,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedSize_Value() {
-		return (EAttribute)keyedSizeEClass.getEAttributes().get(0);
+		return (EAttribute)keyedSizeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -422,7 +422,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedSize_Key() {
-		return (EAttribute)keyedSizeEClass.getEAttributes().get(1);
+		return (EAttribute)keyedSizeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -440,7 +440,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedConstraint_Value() {
-		return (EAttribute)keyedConstraintEClass.getEAttributes().get(0);
+		return (EAttribute)keyedConstraintEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -449,7 +449,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedConstraint_Key() {
-		return (EAttribute)keyedConstraintEClass.getEAttributes().get(1);
+		return (EAttribute)keyedConstraintEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -467,7 +467,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getAnnotation_VisualInfos() {
-		return (EReference)annotationEClass.getEReferences().get(0);
+		return (EReference)annotationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -485,7 +485,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedPoints_Value() {
-		return (EAttribute)keyedPointsEClass.getEAttributes().get(0);
+		return (EAttribute)keyedPointsEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -494,7 +494,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedPoints_Key() {
-		return (EAttribute)keyedPointsEClass.getEAttributes().get(1);
+		return (EAttribute)keyedPointsEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -512,7 +512,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getAnnotationEMF_Annotates() {
-		return (EReference)annotationEMFEClass.getEReferences().get(0);
+		return (EReference)annotationEMFEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -530,7 +530,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getAnnotationGeneric_AnnotatesID() {
-		return (EAttribute)annotationGenericEClass.getEAttributes().get(0);
+		return (EAttribute)annotationGenericEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -548,7 +548,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagramFigure_Type() {
-		return (EAttribute)diagramFigureEClass.getEAttributes().get(0);
+		return (EAttribute)diagramFigureEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -557,7 +557,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getDiagramFigure_ChildFigures() {
-		return (EReference)diagramFigureEClass.getEReferences().get(0);
+		return (EReference)diagramFigureEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -575,7 +575,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedGeneric_Key() {
-		return (EAttribute)keyedGenericEClass.getEAttributes().get(0);
+		return (EAttribute)keyedGenericEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -584,7 +584,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EReference getKeyedGeneric_Value() {
-		return (EReference)keyedGenericEClass.getEReferences().get(0);
+		return (EReference)keyedGenericEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -602,7 +602,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedInteger_Value() {
-		return (EAttribute)keyedIntegerEClass.getEAttributes().get(0);
+		return (EAttribute)keyedIntegerEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -611,7 +611,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedInteger_Key() {
-		return (EAttribute)keyedIntegerEClass.getEAttributes().get(1);
+		return (EAttribute)keyedIntegerEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -629,7 +629,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getMapEntry_Key() {
-		return (EAttribute)mapEntryEClass.getEAttributes().get(0);
+		return (EAttribute)mapEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -638,7 +638,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getMapEntry_Value() {
-		return (EAttribute)mapEntryEClass.getEAttributes().get(1);
+		return (EAttribute)mapEntryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -656,7 +656,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedDynamic_Key() {
-		return (EAttribute)keyedDynamicEClass.getEAttributes().get(0);
+		return (EAttribute)keyedDynamicEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -665,7 +665,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public EAttribute getKeyedDynamic_Value() {
-		return (EAttribute)keyedDynamicEClass.getEAttributes().get(1);
+		return (EAttribute)keyedDynamicEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -862,69 +862,69 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDiagramData_Diagrams(), this.getDiagram(), this.getDiagram_DiagramData(), "diagrams", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getDiagramData_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getDiagramData_Diagrams(), this.getDiagram(), this.getDiagram_DiagramData(), "diagrams", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getDiagramData_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getDiagram_Id(), ecorePackage.getEString(), "id", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getDiagram_DiagramData(), this.getDiagramData(), this.getDiagramData_Diagrams(), "diagramData", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getDiagram_VisualInfos(), this.getVisualInfo(), this.getVisualInfo_Diagram(), "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getDiagram_Figures(), this.getDiagramFigure(), null, "figures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getDiagram_Id(), ecorePackage.getEString(), "id", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getDiagram_DiagramData(), this.getDiagramData(), this.getDiagramData_Diagrams(), "diagramData", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getDiagram_VisualInfos(), this.getVisualInfo(), this.getVisualInfo_Diagram(), "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getDiagram_Figures(), this.getDiagramFigure(), null, "figures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(visualInfoEClass, VisualInfo.class, "VisualInfo", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getVisualInfo_Diagram(), this.getDiagram(), this.getDiagram_VisualInfos(), "diagram", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getVisualInfo_Diagram(), this.getDiagram(), this.getDiagram_VisualInfos(), "diagram", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedValueHolderEClass, KeyedValueHolder.class, "KeyedValueHolder", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getKeyedValueHolder_KeyedValues(), this.getMapEntry(), null, "keyedValues", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getKeyedValueHolder_KeyedValues(), this.getMapEntry(), null, "keyedValues", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedLocationEClass, Map.Entry.class, "KeyedLocation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedLocation_Value(), this.getViewPoint(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedLocation_Value(), this.getViewPoint(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedSizeEClass, Map.Entry.class, "KeyedSize", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedSize_Value(), this.getViewDimension(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedSize_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedSize_Value(), this.getViewDimension(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedSize_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedConstraintEClass, Map.Entry.class, "KeyedConstraint", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedConstraint_Value(), this.getViewRectangle(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedConstraint_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedConstraint_Value(), this.getViewRectangle(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedConstraint_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(annotationEClass, Annotation.class, "Annotation", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo");
 		addEParameter(op, this.getDiagram(), "aDiagram");
 
 		initEClass(keyedPointsEClass, Map.Entry.class, "KeyedPoints", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedPoints_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedPoints_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(annotationEMFEClass, AnnotationEMF.class, "AnnotationEMF", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAnnotationEMF_Annotates(), theEcorePackage.getEObject(), null, "annotates", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getAnnotationEMF_Annotates(), theEcorePackage.getEObject(), null, "annotates", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(annotationGenericEClass, AnnotationGeneric.class, "AnnotationGeneric", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getAnnotationGeneric_AnnotatesID(), ecorePackage.getEString(), "annotatesID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getAnnotationGeneric_AnnotatesID(), ecorePackage.getEString(), "annotatesID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(diagramFigureEClass, DiagramFigure.class, "DiagramFigure", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDiagramFigure_Type(), ecorePackage.getEString(), "type", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getDiagramFigure_ChildFigures(), this.getDiagramFigure(), null, "childFigures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getDiagramFigure_Type(), ecorePackage.getEString(), "type", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getDiagramFigure_ChildFigures(), this.getDiagramFigure(), null, "childFigures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedGenericEClass, Map.Entry.class, "KeyedGeneric", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedGeneric_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getKeyedGeneric_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getKeyedGeneric_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getKeyedGeneric_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedIntegerEClass, Map.Entry.class, "KeyedInteger", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEIntegerObject(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedInteger_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEIntegerObject(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedInteger_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(mapEntryEClass, Map.Entry.class, "MapEntry", IS_ABSTRACT, IS_INTERFACE);
-		initEAttribute(getMapEntry_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getMapEntry_Value(), ecorePackage.getEString(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getMapEntry_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getMapEntry_Value(), ecorePackage.getEString(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedDynamicEClass, Map.Entry.class, "KeyedDynamic", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedDynamic_Key(), ecorePackage.getEString(), "key", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getKeyedDynamic_Value(), theEcorePackage.getEJavaObject(), "value", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getKeyedDynamic_Key(), ecorePackage.getEString(), "key", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedDynamic_Value(), theEcorePackage.getEJavaObject(), "value", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		// Initialize data types
 		initEDataType(viewDimensionEDataType, Dimension.class, "ViewDimension", IS_SERIALIZABLE);

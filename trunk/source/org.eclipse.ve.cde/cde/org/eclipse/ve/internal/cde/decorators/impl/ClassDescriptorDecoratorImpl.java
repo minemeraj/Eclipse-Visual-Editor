@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import java.util.Collection;
@@ -26,6 +26,12 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EModelElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -62,13 +68,19 @@ import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl implements ClassDescriptorDecorator
 {
 	/*
-	 * This method is here only because generation of KeyedValueHolders implementations
+	 * This methods are here only because generation of KeyedValueHolders implementations
 	 * have an import for MapEntryImpl, even though never actually used. This gets rid
 	 * of the unused import warning that would occur after every generation.
 	 */
 	private static MapEntryImpl dummy() {
 		return null;
 	}
+	
+	ClassDescriptorDecoratorImpl(int notused) {
+		this();
+		dummy();
+	}
+	
 	/**
 	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
 	 * <!-- begin-user-doc -->
@@ -217,7 +229,6 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 */
   protected ClassDescriptorDecoratorImpl() {
 		super();
-		dummy();
 	}
 
 	/**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import java.util.List;
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 

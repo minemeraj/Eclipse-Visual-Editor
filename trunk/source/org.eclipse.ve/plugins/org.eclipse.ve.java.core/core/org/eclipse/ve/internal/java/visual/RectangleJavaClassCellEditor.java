@@ -11,13 +11,13 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.StringTokenizer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.java.core.*;
 

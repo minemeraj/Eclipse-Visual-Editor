@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ASTHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.*;
@@ -19,6 +19,8 @@ import java.util.*;
 import org.eclipse.jdt.internal.compiler.AbstractSyntaxTreeVisitorAdapter;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.lookup.*;
+
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
 /**
  * @author sri
@@ -98,18 +100,19 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 		if(isValuable(assignment.expression)){
 			Expression ref = assignment.lhs;
 			String varName = "?"; //$NON-NLS-1$
+			
 			if (ref instanceof ArrayReference) {
 				ArrayReference arRef = (ArrayReference) ref;
-				varName = arRef.toStringExpression();
+				varName = CodeGenUtil.expressionToString(arRef) ;							
 			}else if (ref instanceof FieldReference) {
 				FieldReference fieldRef = (FieldReference) ref;
-				varName = fieldRef.toStringExpression();
+				varName = CodeGenUtil.expressionToString(fieldRef) ;
 			}else if (ref instanceof NameReference) {
 				NameReference nameRef = (NameReference) ref;
-				varName = nameRef.toStringExpression();
+				varName = CodeGenUtil.expressionToString(nameRef) ;
 			}else if (ref instanceof ThisReference) {
 				ThisReference thisRef = (ThisReference) ref;
-				varName = thisRef.toStringExpression();
+				varName = CodeGenUtil.expressionToString(thisRef) ;
 			}
 			getHash().put(varName, assignment.expression);
 		}
@@ -123,7 +126,7 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 		FieldDeclaration fieldDeclaration,
 		MethodScope scope) {
 		if(isValuable(fieldDeclaration.initialization))
-			getHash().put(fieldDeclaration.name(), fieldDeclaration.initialization);
+			getHash().put(String.valueOf(fieldDeclaration.name), fieldDeclaration.initialization);
 		return super.visit(fieldDeclaration, scope);
 	}
 
@@ -132,7 +135,7 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 	 */
 	public boolean visit(LocalDeclaration localDeclaration, BlockScope scope) {
 		if(isValuable(localDeclaration.initialization))
-			getHash().put(localDeclaration.name(), localDeclaration.initialization);
+			getHash().put(String.valueOf(localDeclaration.name), localDeclaration.initialization);
 		return super.visit(localDeclaration, scope);
 	}
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-11 22:40:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.Method;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.Method;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -107,7 +107,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     	}
     	   
     	if (name != null)
-    	  return (JavaClass) org.eclipse.jem.internal.java.impl.JavaClassImpl.reflect(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
+    	  return (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
     	
     	return null ;
     }
@@ -616,7 +616,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 							MethodDeclaration md = (MethodDeclaration) lt.methods[0] ;
 							if (md.arguments != null && md.arguments.length>0 && (md.arguments[0] instanceof Argument)) {
 								Argument arg = (Argument) md.arguments[0] ;
-								return arg.name();
+								return String.valueOf(arg.name);
 							}
 						}
 					}													

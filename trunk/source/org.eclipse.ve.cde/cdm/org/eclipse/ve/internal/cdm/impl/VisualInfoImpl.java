@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualInfoImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
  
 import java.util.Collection;
@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -79,7 +78,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	public Diagram getDiagram() {
 		if (diagram != null && diagram.eIsProxy()) {
 			Diagram oldDiagram = diagram;
-			diagram = (Diagram)EcoreUtil.resolve(diagram, this);
+			diagram = (Diagram)eResolveProxy((InternalEObject)diagram);
 			if (diagram != oldDiagram) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CDMPackage.VISUAL_INFO__DIAGRAM, oldDiagram, diagram));

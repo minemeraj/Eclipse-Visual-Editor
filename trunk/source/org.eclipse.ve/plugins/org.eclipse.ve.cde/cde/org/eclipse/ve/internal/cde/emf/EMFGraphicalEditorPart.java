@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -56,19 +56,22 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.palette.Palette;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
-import org.eclipse.ve.internal.propertysheet.*;
-import org.eclipse.ve.internal.propertysheet.command.*;
+import org.eclipse.ve.internal.propertysheet.AbstractPropertySheetEntry;
+import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
+import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
 /**
  * Base class to use for MOG Graphical Editors.
  * It is abstract and must be specialized.
@@ -222,17 +225,17 @@ protected KeyHandler getCanvasKeyHandler(){
 	}
 	return canvasKeyHandler;
 }
-protected EditorPartAction fOutlineDeleteAction;
-protected EditorPartAction fCanvasDeleteAction;
+protected WorkbenchPartAction fOutlineDeleteAction;
+protected WorkbenchPartAction fCanvasDeleteAction;
 
-protected EditorPartAction getOutlineDeleteAction(){
+protected WorkbenchPartAction getOutlineDeleteAction(){
 	if (fOutlineDeleteAction == null){
 		fOutlineDeleteAction = new DeleteAction((IWorkbenchPart) this);
 		((DeleteAction) fOutlineDeleteAction).setSelectionProvider(getContentOutlinePage());
 	}
 	return fOutlineDeleteAction;
 }
-protected EditorPartAction getCanvasDeleteAction(){
+protected WorkbenchPartAction getCanvasDeleteAction(){
 	if (fCanvasDeleteAction == null){
 		fCanvasDeleteAction = new DeleteAction((IWorkbenchPart) this);
 		((DeleteAction) fCanvasDeleteAction).setSelectionProvider(getPrimaryViewer());
@@ -333,12 +336,12 @@ protected AnnotationLinkagePolicy createLinkagePolicy() {
 }
 
 protected void addToCanvasContextMenu(IMenuManager menu) {
-	EditorPartAction deleteAction = getCanvasDeleteAction();
+	WorkbenchPartAction deleteAction = getCanvasDeleteAction();
 	if (deleteAction.isEnabled())
 		menu.add(deleteAction);
 }
 protected void addToOutlineContextMenu(IMenuManager menu) {
-	EditorPartAction deleteAction = getOutlineDeleteAction();
+	WorkbenchPartAction deleteAction = getOutlineDeleteAction();
 	if (deleteAction.isEnabled())
 		menu.add(deleteAction);
 }
@@ -598,8 +601,8 @@ protected EToolsPropertySheetPage createPropertySheetPage() {
 			// The menu and toolbars have RetargetActions for UNDO and REDO
 			// Set an action handler to redirect these to the action registry's actions so they work when the property sheet is enabled
 			ActionRegistry registry = getActionRegistry();			
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.UNDO,registry.getAction(IWorkbenchActionConstants.UNDO));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.REDO,registry.getAction(IWorkbenchActionConstants.REDO));
+			actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(),registry.getAction(ActionFactory.UNDO.getId()));
+			actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(),registry.getAction(ActionFactory.REDO.getId()));
 		}		
 	};
 }
@@ -657,9 +660,9 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 		// Set an action handler to redirect these to the action registry's actions so they work
 		// with the content outline without having to separately contribute these
 		// to the outline page's toolbar
-		actionBars.setGlobalActionHandler(IWorkbenchActionConstants.DELETE,getOutlineDeleteAction());
-		actionBars.setGlobalActionHandler(IWorkbenchActionConstants.UNDO,registry.getAction(IWorkbenchActionConstants.UNDO));
-		actionBars.setGlobalActionHandler(IWorkbenchActionConstants.REDO,registry.getAction(IWorkbenchActionConstants.REDO));		
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(),getOutlineDeleteAction());
+		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(),registry.getAction(ActionFactory.UNDO.getId()));
+		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(),registry.getAction(ActionFactory.REDO.getId()));		
 	}
 	
 	/*

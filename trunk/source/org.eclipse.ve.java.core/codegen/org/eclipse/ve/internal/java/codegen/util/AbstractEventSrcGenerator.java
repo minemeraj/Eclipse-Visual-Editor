@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventSrcGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2003-12-01 18:37:44 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 16:16:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.*;
 
-import org.eclipse.jem.internal.java.*;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
 

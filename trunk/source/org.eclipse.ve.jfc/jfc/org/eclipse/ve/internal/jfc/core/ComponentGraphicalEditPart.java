@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import java.util.*;
@@ -37,7 +37,7 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
 import org.eclipse.ve.internal.java.core.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 /**
  * EditPart for a java.awt.Component.
  * The parent editpart is responsible to set transparent.

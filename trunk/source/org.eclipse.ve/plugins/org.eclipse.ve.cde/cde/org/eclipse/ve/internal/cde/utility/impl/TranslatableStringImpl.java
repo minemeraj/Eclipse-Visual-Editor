@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: TranslatableStringImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cde.utility.ResourceBundle;
 import org.eclipse.ve.internal.cde.utility.TranslatableString;
@@ -128,7 +129,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	public ResourceBundle getBundle() {
 		if (bundle != null && bundle.eIsProxy()) {
 			ResourceBundle oldBundle = bundle;
-			bundle = (ResourceBundle)EcoreUtil.resolve(bundle, this);
+			bundle = (ResourceBundle)eResolveProxy((InternalEObject)bundle);
 			if (bundle != oldBundle) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UtilityPackage.TRANSLATABLE_STRING__BUNDLE, oldBundle, bundle));

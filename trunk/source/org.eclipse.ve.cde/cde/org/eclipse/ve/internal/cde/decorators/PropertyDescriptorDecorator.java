@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyDescriptorDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 /**
@@ -32,7 +32,7 @@ package org.eclipse.ve.internal.cde.decorators;
  * @model 
  * @generated
  */
-public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator, BasePropertyDecorator {
+public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator, BasePropertyDecorator{
 
 
 	/**
@@ -43,6 +43,9 @@ public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Whether this property is designtime. If not explicitly set, then ignore this setting. If true then it is shown only on property sheet and not available for connections. If false, then it is available only for connections and not on property sheet.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Designtime Property</em>' attribute.
 	 * @see #isSetDesigntimeProperty()
 	 * @see #unsetDesigntimeProperty()
@@ -96,6 +99,9 @@ public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If true, then when multiple selections of this property is made, they will be considered incompatible.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Always Incompatible</em>' attribute.
 	 * @see #setAlwaysIncompatible(boolean)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator_AlwaysIncompatible()

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 import java.util.*;
 
@@ -73,7 +73,7 @@ public class BeanPart {
 public  BeanPart (AbstractVariableDeclaration decl) {
 	
 	fFieldDecl = decl ;
-	fName = decl.name() ;		
+	fName = String.valueOf(decl.name) ;		
 	setType(decl.type.toString());
 }
 

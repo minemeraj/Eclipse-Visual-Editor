@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.net.URL;
@@ -21,10 +21,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.ui.*;
+import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -126,7 +128,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		return new String(noSpaces,0,count);
 	}
 	
-	protected void merge(IMethod to, IMethod from, ICodeFormatter formatter, IProgressMonitor monitor){
+	protected void merge(IMethod to, IMethod from, CodeFormatter formatter, IProgressMonitor monitor){
 		try {
 			StringBuffer finalSource = new StringBuffer();
 			
@@ -200,7 +202,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			to.delete(true, monitor);
 			String source = finalSource.toString();
 			if(formatter!=null)
-				source = formatter.format(source, 1, null, NEWLINE);
+				source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 			declaringType.createMethod(NEWLINE+source+NEWLINE, sibling, true, monitor);
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
@@ -225,7 +227,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		return null;
 	}
 	
-	protected void merge(ICompilationUnit to, ICompilationUnit from, ICodeFormatter formatter, IProgressMonitor monitor){
+	protected void merge(ICompilationUnit to, ICompilationUnit from, CodeFormatter formatter, IProgressMonitor monitor){
 		try {
 			IType toType = to.getTypes()[0];
 			IType fromType = from.getTypes()[0];
@@ -235,7 +237,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					IField field = (IField) child;
 					String source = getCompleteSource(field.getCompilationUnit(), field);
 					if(formatter!=null)
-						source = formatter.format(source, 1, null, NEWLINE);
+						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();						
 					toType.createField(source+NEWLINE, null, true, monitor);
 				}
 				if (child instanceof IMethod) {
@@ -259,7 +261,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					}else{
 						String source = getCompleteSource(method.getCompilationUnit(), method);
 						if(formatter!=null)
-							source = formatter.format(source, 1, null, NEWLINE);
+							source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 						toType.createMethod(source, null, true, monitor);
 					}
 				}
@@ -267,7 +269,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					IType type = (IType) child;
 					String source = getCompleteSource(type.getCompilationUnit(), type);
 					if(formatter!=null)
-						source = formatter.format(source, 0, null, NEWLINE);
+						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 					toType.createType(source, null, true, monitor);
 				}
 			}
@@ -286,7 +288,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			ICompilationUnit workingCopy = (ICompilationUnit) originalCU.getWorkingCopy() ;
 			workingCopy.getBuffer().setContents(src);
 			workingCopy.reconcile();
-			ICodeFormatter formatter = contributor.needsFormatting()?ToolFactory.createCodeFormatter():null;
+			CodeFormatter formatter = contributor.needsFormatting()?ToolFactory.createCodeFormatter(null):null;
 			merge(originalCU, workingCopy, formatter, monitor);
 			workingCopy.destroy();
 		} catch (JavaModelException e) {
@@ -360,7 +362,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					window.getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							try {
-								activePage.openEditor((IFile) resource, "org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"); //$NON-NLS-1$
+								activePage.openEditor(new FileEditorInput((IFile) resource), "org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"); //$NON-NLS-1$
 							} catch (PartInitException e) {
 								JavaVEPlugin.log(e);
 							}

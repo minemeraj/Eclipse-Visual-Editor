@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.text.MessageFormat;
@@ -25,8 +25,8 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.java.JavaDataType;
-import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.java.JavaDataType;
+import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;

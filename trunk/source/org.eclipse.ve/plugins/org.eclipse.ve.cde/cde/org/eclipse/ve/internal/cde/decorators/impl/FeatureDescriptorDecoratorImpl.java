@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: FeatureDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
@@ -318,7 +317,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	public AbstractString getCategoryString() {
 		if (categoryString != null && categoryString.eIsProxy()) {
 			AbstractString oldCategoryString = categoryString;
-			categoryString = (AbstractString)EcoreUtil.resolve(categoryString, this);
+			categoryString = (AbstractString)eResolveProxy((InternalEObject)categoryString);
 			if (categoryString != oldCategoryString) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__CATEGORY_STRING, oldCategoryString, categoryString));

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteCmp.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -21,6 +21,10 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Cmp</b></em>'.
  * This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp).
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp).
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:

@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:58 $ 
  */
 
 import java.util.*;
@@ -27,8 +27,8 @@ import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 
@@ -60,8 +60,8 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 
 		try {
 			// VAJava legacy
-			if (field.name().startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
-				if (field.name().startsWith("ivjConn")) //$NON-NLS-1$
+			if (String.valueOf(field.name).startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
+				if (String.valueOf(field.name).startsWith("ivjConn")) //$NON-NLS-1$
 					return true;
 				else
 					return false;

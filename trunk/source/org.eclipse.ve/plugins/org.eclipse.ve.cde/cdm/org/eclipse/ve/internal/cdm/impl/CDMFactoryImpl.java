@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import org.eclipse.ve.internal.cdm.*;
@@ -346,10 +346,10 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @deprecated
 	 * @generated
 	 */
 	public static CDMPackage getPackage() {
 		return CDMPackage.eINSTANCE;
 	}
-
 } //CDMFactoryImpl

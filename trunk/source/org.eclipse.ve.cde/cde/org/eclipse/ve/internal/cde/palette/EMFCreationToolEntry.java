@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFCreationToolEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -20,6 +20,10 @@ import java.lang.String;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>EMF Creation Tool Entry</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * Creation for creating EMF instances.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -33,7 +37,7 @@ import java.lang.String;
  * @generated
  */
 
-public interface EMFCreationToolEntry extends CreationToolEntry {
+public interface EMFCreationToolEntry extends CreationToolEntry{
 	/**
 	 * Returns the value of the '<em><b>Creation Class URI</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -42,6 +46,9 @@ public interface EMFCreationToolEntry extends CreationToolEntry {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The URI of the class for which an instance is to be created.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Creation Class URI</em>' attribute.
 	 * @see #setCreationClassURI(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getEMFCreationToolEntry_CreationClassURI()

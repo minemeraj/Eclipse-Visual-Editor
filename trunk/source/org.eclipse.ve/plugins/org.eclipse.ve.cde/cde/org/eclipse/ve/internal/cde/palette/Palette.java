@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: Palette.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -30,6 +30,14 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * 
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This is the abstract base palette. There are two standard implementations of it:
+ * 
+ * PaletteCmp: This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteCmp).
+ * 
+ * PaletteRef: This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -41,7 +49,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * @model abstract="true"
  * @generated
  */
-public interface Palette extends Container {
+public interface Palette extends Container{
 
 
 	/**

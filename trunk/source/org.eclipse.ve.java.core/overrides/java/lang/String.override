@@ -3,7 +3,7 @@
     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:event="event.xmi">
-  <event:Add  featureName="eReferences">
+  <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="bytes">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           hidden="true"/>

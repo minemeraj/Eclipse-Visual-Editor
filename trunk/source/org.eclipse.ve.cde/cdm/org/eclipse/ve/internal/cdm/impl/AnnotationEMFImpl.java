@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationEMFImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.notify.impl.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.notify.impl.NotificationChainImpl;
 import org.eclipse.emf.common.notify.impl.NotifierImpl;
@@ -106,7 +107,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	public EObject getAnnotates() {
 		if (annotates != null && annotates.eIsProxy()) {
 			EObject oldAnnotates = annotates;
-			annotates = (EObject)EcoreUtil.resolve(annotates, this);
+			annotates = (EObject)eResolveProxy((InternalEObject)annotates);
 			if (annotates != oldAnnotates) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CDMPackage.ANNOTATION_EMF__ANNOTATES, oldAnnotates, annotates));
@@ -181,7 +182,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 			msgs = ((AnnotationEMFImpl)oldAnnotation).basicSetAnnotates(null, msgs);
 		
 		a.setParentAnnotation(this);
-		if (((NotifierImpl) newAnnotates).eNotificationRequired()) {
+		if (((BasicNotifierImpl) newAnnotates).eNotificationRequired()) {
 			if (msgs == null) msgs = new NotificationChainImpl(4);
 			msgs.add(new ENotificationImpl((InternalEObject) newAnnotates, Notification.SET, CDMPackage.eINSTANCE.getEObject_ParentAnnotation(), oldAnnotation, this));
 		}		

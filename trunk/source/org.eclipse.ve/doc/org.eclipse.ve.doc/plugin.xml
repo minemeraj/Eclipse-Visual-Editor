@@ -2,11 +2,18 @@
 <plugin
    id="org.eclipse.ve.doc"
    name="%pluginName"
-   version="0.5.0"
+   version="1.0.0"
    provider-name="%providerName">
-   
-   <extension point="org.eclipse.help.toc">
-       <toc file="ve_toc.xml" primary="true" />
-   </extension>   
+
+   <runtime>
+   </runtime>
+
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="ve_toc.xml"
+            primary="true">
+      </toc>
+   </extension>
 
 </plugin>

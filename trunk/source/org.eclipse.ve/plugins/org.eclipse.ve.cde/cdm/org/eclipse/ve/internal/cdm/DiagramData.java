@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: DiagramData.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -21,6 +21,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Diagram Data</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * The diagram data, such as the annotations and viewer data.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:

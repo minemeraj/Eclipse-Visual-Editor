@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
-import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.UndoRetargetAction;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor;
 import org.eclipse.jface.action.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.actions.*;
 import org.eclipse.ui.actions.LabelRetargetAction;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.*;
@@ -167,9 +167,9 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		ITextEditor textEditor = (getActiveEditorPart() instanceof ITextEditor) ? (ITextEditor) getActiveEditorPart() : null;
 		
 		IActionBars bars = getActionBars();
-		bars.setGlobalActionHandler(GEFActionConstants.DELETE, getAction(textEditor, GEFActionConstants.DELETE));
-		bars.setGlobalActionHandler(GEFActionConstants.UNDO, getAction(textEditor, GEFActionConstants.UNDO));
-		bars.setGlobalActionHandler(GEFActionConstants.REDO, getAction(textEditor, GEFActionConstants.REDO));
+		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getAction(textEditor, ActionFactory.DELETE.getId()));
+		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(textEditor, ActionFactory.UNDO.getId()));
+		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(textEditor, ActionFactory.REDO.getId()));
 		bars.setGlobalActionHandler(PALETTE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_MARQUEE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_DROPDOWN_ACTION_ID, getAction(textEditor, PALETTE_DROPDOWN_ACTION_ID));

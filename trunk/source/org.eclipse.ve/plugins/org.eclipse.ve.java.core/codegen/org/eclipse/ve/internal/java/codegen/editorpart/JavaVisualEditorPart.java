@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -74,6 +74,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -208,7 +209,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setHoverImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_HOVER));
 		deleteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		deleteAction.setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
-		deleteAction.setId(GEFActionConstants.DELETE);
+		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
 		
 		// Create the toolbar palette actions that are needed right away.
@@ -561,9 +562,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				openActionGroup.setContext(new ActionContext(primaryViewer.getSelection()));
 				openActionGroup.fillContextMenu(menuMgr);
 				openActionGroup.setContext(null);					
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(GEFActionConstants.UNDO));
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(GEFActionConstants.REDO));														
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, graphicalActionRegistry.getAction(GEFActionConstants.DELETE));
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.UNDO.getId()));
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));														
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, graphicalActionRegistry.getAction(ActionFactory.DELETE.getId()));
 				IAction customize = graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 				if (customize.isEnabled()) 
 					menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, customize);
@@ -834,8 +835,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				super.setActionBars(actionBars);
 				// The menu and toolbars have RetargetActions for UNDO and REDO
 				// Set an action handler to redirect these to the action registry's actions so they work when the property sheet is enabled
-				actionBars.setGlobalActionHandler(GEFActionConstants.UNDO, getAction(GEFActionConstants.UNDO));
-				actionBars.setGlobalActionHandler(GEFActionConstants.REDO, getAction(GEFActionConstants.REDO));
+				actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(ActionFactory.UNDO.getId()));
+				actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(ActionFactory.REDO.getId()));
 			}
 		};
 
@@ -2196,9 +2197,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// to the outline page's toolbar
 			deleteAction = new DeleteAction((IWorkbenchPart) JavaVisualEditorPart.this);
 			
-			actionBars.setGlobalActionHandler(GEFActionConstants.DELETE, deleteAction);	// However, we don't actually add it the beanslist toolbar, we use the retarget from the editor contributor instead.
-			actionBars.setGlobalActionHandler(GEFActionConstants.UNDO, getAction(GEFActionConstants.UNDO));
-			actionBars.setGlobalActionHandler(GEFActionConstants.REDO, getAction(GEFActionConstants.REDO));
+			actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);	// However, we don't actually add it the beanslist toolbar, we use the retarget from the editor contributor instead.
+			actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(ActionFactory.UNDO.getId()));
+			actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(ActionFactory.REDO.getId()));
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID));
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID));
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID));
@@ -2263,8 +2264,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					openActionGroup.setContext(new ActionContext(getViewer().getSelection()));
 					openActionGroup.fillContextMenu(menuMgr);
 					openActionGroup.setContext(null);					
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(GEFActionConstants.UNDO));
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(GEFActionConstants.REDO));										
+					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.UNDO.getId()));
+					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));										
 					menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, deleteAction);
 					IAction customize = graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 					if (customize.isEnabled()) 

@@ -9,7 +9,7 @@
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/optionpane_obj.gif"/>
     </addedEObjects>
   </event:Add>
-  <event:Add  featureName="eReferences">
+  <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="message" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
           cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassCellEditor"/>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: BasePropertyDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -20,8 +20,11 @@ import org.eclipse.emf.ecore.EAnnotation;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Base Property Decorator</b></em>'.
- * This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -60,11 +63,10 @@ public interface BasePropertyDecorator extends EAnnotation{
 	/**
 	 * Returns the value of the '<em><b>Label Provider Classname</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Label Provider Classname</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Label Provider Classname. If set, but is null, then that means there explicitly isn't one and don't use default.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Label Provider Classname</em>' attribute.
 	 * @see #isSetLabelProviderClassname()
 	 * @see #unsetLabelProviderClassname()
@@ -118,6 +120,9 @@ public interface BasePropertyDecorator extends EAnnotation{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Cell Editor Classname. If set, but is null, then that means there explicitly isn't one and don't use default.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cell Editor Classname</em>' attribute.
 	 * @see #isSetCellEditorClassname()
 	 * @see #unsetCellEditorClassname()
@@ -171,6 +176,14 @@ public interface BasePropertyDecorator extends EAnnotation{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Are null settings invalid. If this is true, then they will be prevented. If this is false, then the cell editor and validator will be used to determine if null is valid or not.
+	 * 
+	 * The search order will be find it explicitly set on:
+	 *   1) The BasePropertyDescriptor on the feature, then if not set,
+	 *   2) The BasePropertyDescriptor on the class, then if not set,
+	 *   3) use false as the value.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Null Invalid</em>' attribute.
 	 * @see #isSetNullInvalid()
 	 * @see #unsetNullInvalid()
@@ -224,6 +237,16 @@ public interface BasePropertyDecorator extends EAnnotation{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If this returns true, then the entry will expand in the property sheet if 
+	 * there are child entries. If this returns false then it won't expand. This is useful when the cell editor handles the complete customization
+	 * and it is not desired to allow sub-property customization.
+	 * 
+	 * The search order will be find it explicitly set on:
+	 *   1) The BasePropertyDescriptor on the feature, then if not set,
+	 *   2) The BasePropertyDescriptor on the class, then if not set,
+	 *   3) use true as the value.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Entry Expandable</em>' attribute.
 	 * @see #isSetEntryExpandable()
 	 * @see #unsetEntryExpandable()

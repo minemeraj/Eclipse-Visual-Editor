@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: FeatureDescriptorDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -25,6 +25,10 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * A representation of the model object '<em><b>Feature Descriptor Decorator</b></em>'.
  * This descriptor decorator for any kind of feature. It contains info that is generalized to features.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This descriptor decorator for any kind of feature. It contains info that is generalized to features.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -211,6 +215,9 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Answer whether this filter flag passed in is in this features filterFlags.
+	 * <!-- end-model-doc -->
 	 * @model 
 	 * @generated
 	 */

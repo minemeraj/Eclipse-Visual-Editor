@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -153,7 +152,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	public EObject getReturn() {
 		if (return_ != null && return_.eIsProxy()) {
 			EObject oldReturn = return_;
-			return_ = (EObject)EcoreUtil.resolve(return_, this);
+			return_ = (EObject)eResolveProxy((InternalEObject)return_);
 			if (return_ != oldReturn) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.JCM_METHOD__RETURN, oldReturn, return_));

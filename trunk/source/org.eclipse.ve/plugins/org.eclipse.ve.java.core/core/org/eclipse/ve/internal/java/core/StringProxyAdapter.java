@@ -11,14 +11,14 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.jem.internal.java.JavaParameter;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaParameter;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.proxy.core.*;
 
 public class StringProxyAdapter extends BeanProxyAdapter {
@@ -57,11 +57,11 @@ protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String in
 		// Put a bandAid for the time being...
 		boolean sGetString = false ;  // is there a static getString() method
 		String className = initString.substring(0,indexOfGetString) ;
-		org.eclipse.jem.internal.java.JavaHelpers h = JavaClassImpl.reflect(className,(EObject)target) ;
+		org.eclipse.jem.java.JavaHelpers h = JavaClassImpl.reflect(className,(EObject)target) ;
 		if (h instanceof JavaClassImpl) {
 			 JavaClassImpl clazz = (JavaClassImpl) h ;	
 			 for (Iterator itr=clazz.getMethodsExtended().iterator(); itr.hasNext();) {			 	
-			 	org.eclipse.jem.internal.java.Method m = (org.eclipse.jem.internal.java.Method) itr.next() ;			 	
+			 	org.eclipse.jem.java.Method m = (org.eclipse.jem.java.Method) itr.next() ;			 	
 			 	if (m.isStatic() && m.getName().equals("getString")) { //$NON-NLS-1$
 			 		org.eclipse.emf.common.util.EList params = m.getParameters() ;
 			 		if (params.size() == 1) {

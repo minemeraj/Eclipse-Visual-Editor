@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Collection;
@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
@@ -87,7 +86,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	public BeanEvent getEvent() {
 		if (event != null && event.eIsProxy()) {
 			BeanEvent oldEvent = event;
-			event = (BeanEvent)EcoreUtil.resolve(event, this);
+			event = (BeanEvent)eResolveProxy((InternalEObject)event);
 			if (event != oldEvent) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.EVENT_INVOCATION__EVENT, oldEvent, event));

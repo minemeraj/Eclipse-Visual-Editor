@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ve.sdk"
       label="%featureName"
-      version="2.1.2"
+      version="1.0.0"
       image= "eclipse_update_120.jpg"
       provider-name="%providerName">
 
@@ -21,9 +21,9 @@
       </update>
    </url>
 
-  <includes id="org.eclipse.ve" version="0.5.0" /> 
-  <includes id="org.eclipse.jem.source" version="0.5.0" />  
-  <includes id="org.eclipse.ve.source" version="0.5.0" /> 
+  <includes id="org.eclipse.ve" version="1.0.0" /> 
+  <includes id="org.eclipse.jem.source" version="1.0.0" />  
+  <includes id="org.eclipse.ve.source" version="1.0.0" /> 
  
   
 </feature>

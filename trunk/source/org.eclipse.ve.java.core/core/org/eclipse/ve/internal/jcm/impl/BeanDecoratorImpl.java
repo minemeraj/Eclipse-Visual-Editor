@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Collection;
@@ -19,14 +19,22 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EModelElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
+
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -49,12 +57,16 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	
 	/*
 	 * This method is here only because generation of KeyedValueHolders implementations
-	 * have an import for MapEntryImpl, even though never actually used. This gets rid
+	 * have an import for MapEntryImpl and ECoreEMap, even though never actually used. This gets rid
 	 * of the unused import warning that would occur after every generation.
 	 */
 	private static MapEntryImpl dummy() {
+		dummy2();
 		return null;
 	}	
+	private static EcoreEMap dummy2() {
+		return null;
+	}
 
 	/**
 	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
@@ -375,7 +387,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 		result.append(')');
 		return result.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.emf.ecore.InternalEObject#eObjectForURIFragmentSegment(java.lang.String)
 	 */
@@ -385,3 +397,4 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	}	
 
 } //BeanDecoratorImpl
+

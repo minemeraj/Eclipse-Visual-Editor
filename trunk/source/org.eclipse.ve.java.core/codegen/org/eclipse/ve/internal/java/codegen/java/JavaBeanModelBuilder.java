@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.*;
@@ -144,7 +144,7 @@ protected CompilationUnitDeclaration getModelFromParser(
 	ProblemReporter reporter,
 	CompilationResult result,
 	BasicCompilationUnit cu){
-	Parser aParser = new Parser(reporter,true,true);
+	Parser aParser = new Parser(reporter,true);
 	return aParser.parse(cu,result);	
 }
 	

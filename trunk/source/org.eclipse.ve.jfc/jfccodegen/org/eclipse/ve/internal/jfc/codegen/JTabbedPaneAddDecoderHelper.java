@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -246,7 +246,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 			int index = -1;
 			if (args.length == 5 && args[4] instanceof IntLiteral) {
-				fAddedIndex = ((IntLiteral) args[4]).toStringExpression();
+				fAddedIndex = CodeGenUtil.expressionToString(args[4]);
 				index = Integer.parseInt(fAddedIndex);
 			}
 

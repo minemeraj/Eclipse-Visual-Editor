@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: DecoratorsPackageImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -186,7 +186,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getBasePropertyDecorator_CellEditorValidatorClassnames() {
-		return (EAttribute)basePropertyDecoratorEClass.getEAttributes().get(0);
+		return (EAttribute)basePropertyDecoratorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getBasePropertyDecorator_LabelProviderClassname() {
-		return (EAttribute)basePropertyDecoratorEClass.getEAttributes().get(1);
+		return (EAttribute)basePropertyDecoratorEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getBasePropertyDecorator_CellEditorClassname() {
-		return (EAttribute)basePropertyDecoratorEClass.getEAttributes().get(2);
+		return (EAttribute)basePropertyDecoratorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getBasePropertyDecorator_NullInvalid() {
-		return (EAttribute)basePropertyDecoratorEClass.getEAttributes().get(3);
+		return (EAttribute)basePropertyDecoratorEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getBasePropertyDecorator_EntryExpandable() {
-		return (EAttribute)basePropertyDecoratorEClass.getEAttributes().get(4);
+		return (EAttribute)basePropertyDecoratorEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_CustomizerClassname() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(0);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_TreeViewClassname() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(1);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_GraphViewClassname() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(2);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_ModelAdapterClassname() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(3);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_DefaultPalette() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(4);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EReference getClassDescriptorDecorator_Graphic() {
-		return (EReference)classDescriptorDecoratorEClass.getEReferences().get(0);
+		return (EReference)classDescriptorDecoratorEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getClassDescriptorDecorator_LabelProviderClassname() {
-		return (EAttribute)classDescriptorDecoratorEClass.getEAttributes().get(5);
+		return (EAttribute)classDescriptorDecoratorEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EReference getFeatureDescriptorDecorator_DisplayNameString() {
-		return (EReference)featureDescriptorDecoratorEClass.getEReferences().get(2);
+		return (EReference)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EReference getFeatureDescriptorDecorator_DescriptionString() {
-		return (EReference)featureDescriptorDecoratorEClass.getEReferences().get(3);
+		return (EReference)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getFeatureDescriptorDecorator_Hidden() {
-		return (EAttribute)featureDescriptorDecoratorEClass.getEAttributes().get(0);
+		return (EAttribute)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getFeatureDescriptorDecorator_HelpContextIdsString() {
-		return (EAttribute)featureDescriptorDecoratorEClass.getEAttributes().get(1);
+		return (EAttribute)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getFeatureDescriptorDecorator_Preferred() {
-		return (EAttribute)featureDescriptorDecoratorEClass.getEAttributes().get(2);
+		return (EAttribute)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EReference getFeatureDescriptorDecorator_CategoryString() {
-		return (EReference)featureDescriptorDecoratorEClass.getEReferences().get(0);
+		return (EReference)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -366,7 +366,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EReference getFeatureDescriptorDecorator_FilterFlagStrings() {
-		return (EReference)featureDescriptorDecoratorEClass.getEReferences().get(1);
+		return (EReference)featureDescriptorDecoratorEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getPropertyDescriptorDecorator_DesigntimeProperty() {
-		return (EAttribute)propertyDescriptorDecoratorEClass.getEAttributes().get(0);
+		return (EAttribute)propertyDescriptorDecoratorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -393,7 +393,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getPropertyDescriptorDecorator_AlwaysIncompatible() {
-		return (EAttribute)propertyDescriptorDecoratorEClass.getEAttributes().get(1);
+		return (EAttribute)propertyDescriptorDecoratorEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -411,7 +411,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getPropertySourceAdapterInformation_PropertySourceAdapterClassname() {
-		return (EAttribute)propertySourceAdapterInformationEClass.getEAttributes().get(0);
+		return (EAttribute)propertySourceAdapterInformationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -429,7 +429,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getPropertyDescriptorInformation_Adapter() {
-		return (EAttribute)propertyDescriptorInformationEClass.getEAttributes().get(0);
+		return (EAttribute)propertyDescriptorInformationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -438,7 +438,7 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 	 * @generated
 	 */
 	public EAttribute getPropertyDescriptorInformation_PropertyDescriptorClassname() {
-		return (EAttribute)propertyDescriptorInformationEClass.getEAttributes().get(1);
+		return (EAttribute)propertyDescriptorInformationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -546,43 +546,43 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(basePropertyDecoratorEClass, BasePropertyDecorator.class, "BasePropertyDecorator", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getBasePropertyDecorator_CellEditorValidatorClassnames(), ecorePackage.getEString(), "cellEditorValidatorClassnames", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getBasePropertyDecorator_LabelProviderClassname(), ecorePackage.getEString(), "labelProviderClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getBasePropertyDecorator_CellEditorClassname(), ecorePackage.getEString(), "cellEditorClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getBasePropertyDecorator_NullInvalid(), ecorePackage.getEBoolean(), "nullInvalid", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getBasePropertyDecorator_EntryExpandable(), ecorePackage.getEBoolean(), "entryExpandable", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getBasePropertyDecorator_CellEditorValidatorClassnames(), ecorePackage.getEString(), "cellEditorValidatorClassnames", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBasePropertyDecorator_LabelProviderClassname(), ecorePackage.getEString(), "labelProviderClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBasePropertyDecorator_CellEditorClassname(), ecorePackage.getEString(), "cellEditorClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBasePropertyDecorator_NullInvalid(), ecorePackage.getEBoolean(), "nullInvalid", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBasePropertyDecorator_EntryExpandable(), ecorePackage.getEBoolean(), "entryExpandable", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(propertySourceAdapterInformationEClass, PropertySourceAdapterInformation.class, "PropertySourceAdapterInformation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getPropertySourceAdapterInformation_PropertySourceAdapterClassname(), ecorePackage.getEString(), "propertySourceAdapterClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getPropertySourceAdapterInformation_PropertySourceAdapterClassname(), ecorePackage.getEString(), "propertySourceAdapterClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(propertyDescriptorDecoratorEClass, PropertyDescriptorDecorator.class, "PropertyDescriptorDecorator", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getPropertyDescriptorDecorator_DesigntimeProperty(), ecorePackage.getEBoolean(), "designtimeProperty", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getPropertyDescriptorDecorator_AlwaysIncompatible(), ecorePackage.getEBoolean(), "alwaysIncompatible", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getPropertyDescriptorDecorator_DesigntimeProperty(), ecorePackage.getEBoolean(), "designtimeProperty", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getPropertyDescriptorDecorator_AlwaysIncompatible(), ecorePackage.getEBoolean(), "alwaysIncompatible", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(propertyDescriptorInformationEClass, PropertyDescriptorInformation.class, "PropertyDescriptorInformation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getPropertyDescriptorInformation_Adapter(), ecorePackage.getEBoolean(), "adapter", "true", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getPropertyDescriptorInformation_PropertyDescriptorClassname(), ecorePackage.getEString(), "propertyDescriptorClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getPropertyDescriptorInformation_Adapter(), ecorePackage.getEBoolean(), "adapter", "true", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getPropertyDescriptorInformation_PropertyDescriptorClassname(), ecorePackage.getEString(), "propertyDescriptorClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(featureDescriptorDecoratorEClass, FeatureDescriptorDecorator.class, "FeatureDescriptorDecorator", IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getFeatureDescriptorDecorator_Hidden(), ecorePackage.getEBoolean(), "hidden", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getFeatureDescriptorDecorator_HelpContextIdsString(), ecorePackage.getEString(), "helpContextIdsString", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getFeatureDescriptorDecorator_Preferred(), ecorePackage.getEBoolean(), "preferred", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getFeatureDescriptorDecorator_CategoryString(), theUtilityPackage.getAbstractString(), null, "categoryString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getFeatureDescriptorDecorator_FilterFlagStrings(), theUtilityPackage.getAbstractString(), null, "filterFlagStrings", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getFeatureDescriptorDecorator_DisplayNameString(), theUtilityPackage.getAbstractString(), null, "displayNameString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getFeatureDescriptorDecorator_DescriptionString(), theUtilityPackage.getAbstractString(), null, "descriptionString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getFeatureDescriptorDecorator_Hidden(), ecorePackage.getEBoolean(), "hidden", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getFeatureDescriptorDecorator_HelpContextIdsString(), ecorePackage.getEString(), "helpContextIdsString", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getFeatureDescriptorDecorator_Preferred(), ecorePackage.getEBoolean(), "preferred", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getFeatureDescriptorDecorator_CategoryString(), theUtilityPackage.getAbstractString(), null, "categoryString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getFeatureDescriptorDecorator_FilterFlagStrings(), theUtilityPackage.getAbstractString(), null, "filterFlagStrings", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getFeatureDescriptorDecorator_DisplayNameString(), theUtilityPackage.getAbstractString(), null, "displayNameString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getFeatureDescriptorDecorator_DescriptionString(), theUtilityPackage.getAbstractString(), null, "descriptionString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		EOperation op = addEOperation(featureDescriptorDecoratorEClass, ecorePackage.getEBoolean(), "isFiltered");
 		addEParameter(op, ecorePackage.getEString(), "flag");
 
 		initEClass(classDescriptorDecoratorEClass, ClassDescriptorDecorator.class, "ClassDescriptorDecorator", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getClassDescriptorDecorator_CustomizerClassname(), ecorePackage.getEString(), "customizerClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getClassDescriptorDecorator_TreeViewClassname(), ecorePackage.getEString(), "treeViewClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getClassDescriptorDecorator_GraphViewClassname(), ecorePackage.getEString(), "graphViewClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getClassDescriptorDecorator_ModelAdapterClassname(), ecorePackage.getEString(), "modelAdapterClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getClassDescriptorDecorator_DefaultPalette(), ecorePackage.getEString(), "defaultPalette", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getClassDescriptorDecorator_LabelProviderClassname(), ecorePackage.getEString(), "labelProviderClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getClassDescriptorDecorator_Graphic(), theUtilityPackage.getGraphic(), null, "graphic", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getClassDescriptorDecorator_CustomizerClassname(), ecorePackage.getEString(), "customizerClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getClassDescriptorDecorator_TreeViewClassname(), ecorePackage.getEString(), "treeViewClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getClassDescriptorDecorator_GraphViewClassname(), ecorePackage.getEString(), "graphViewClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getClassDescriptorDecorator_ModelAdapterClassname(), ecorePackage.getEString(), "modelAdapterClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getClassDescriptorDecorator_DefaultPalette(), ecorePackage.getEString(), "defaultPalette", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getClassDescriptorDecorator_LabelProviderClassname(), ecorePackage.getEString(), "labelProviderClassname", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getClassDescriptorDecorator_Graphic(), theUtilityPackage.getGraphic(), null, "graphic", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		// Create resource
 		createResource(eNS_URI);

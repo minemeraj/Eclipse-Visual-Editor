@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.*;
@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
@@ -65,9 +65,10 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 
 		try {
 			// VAJava legacy
-			if (field.name().startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
+			String name = String.valueOf(field.name);
+			if (name.startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
 				// Ignore VCE connections
-				if (field.name().startsWith("ivjConn")) //$NON-NLS-1$
+				if (name.startsWith("ivjConn")) //$NON-NLS-1$
 					return true;
 				else {
 					String type = resolveType(field, resolver);
@@ -89,7 +90,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 					return true; // ignore IvjEventHandler and such //$NON-NLS-1$
 
 				ResourceSet rs = di.getModelResourceSet();
-				EClassifier meta = (EClassifier) org.eclipse.jem.internal.java.impl.JavaClassImpl.reflect(type, rs);
+				EClassifier meta = (EClassifier) org.eclipse.jem.java.impl.JavaClassImpl.reflect(type, rs);
 
 				String pre = InstanceVariableCreationRule.getPrefix(meta, rs);
 				if (pre == null || pre.length() == 0)

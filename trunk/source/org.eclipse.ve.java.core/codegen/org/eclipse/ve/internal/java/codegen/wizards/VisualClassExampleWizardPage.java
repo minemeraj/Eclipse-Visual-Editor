@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.io.*;
@@ -22,7 +22,9 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
@@ -142,7 +144,7 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 				
 				lineDelimiter= StubUtility.getLineDelimiterUsed(enclosingType);
 				StringBuffer content= new StringBuffer();
-				String comment= getTypeComment(parentCU);
+				String comment= getTypeComment(parentCU,lineDelimiter);
 				if (comment != null) {
 					content.append(comment);
 					content.append(lineDelimiter);
@@ -168,7 +170,9 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 			
 			IBuffer buf= cu.getBuffer();
 			String originalContent= buf.getText(range.getOffset(), range.getLength());
-			String formattedContent= StubUtility.codeFormat(originalContent, indent, lineDelimiter);
+			// TODO Temporary
+			String formattedContent= CodeFormatterUtil.format(CodeFormatter.K_COMPILATION_UNIT, originalContent, indent, null, lineDelimiter, null); 
+			                                                                        
 			buf.replace(range.getOffset(), range.getLength(), formattedContent);
 			
 			synchronized(cu) {

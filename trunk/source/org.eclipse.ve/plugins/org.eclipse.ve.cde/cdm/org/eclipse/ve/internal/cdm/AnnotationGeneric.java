@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationGeneric.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
  
  import java.lang.String;
@@ -20,6 +20,10 @@ package org.eclipse.ve.internal.cdm;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Annotation Generic</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is a generic annotation where the ID of the object being annotated is in the attribute annotatesID. This is used when the thing being annotated is not a RefObject, so we can't directly point to it. There will be a factory for each specific model that knows how to map from the id to the actual model object and back.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -32,7 +36,7 @@ package org.eclipse.ve.internal.cdm;
  * @model 
  * @generated
  */
-public interface AnnotationGeneric extends Annotation {
+public interface AnnotationGeneric extends Annotation{
 
 
 	/**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.3 $  $Date: 2003-11-10 21:38:12 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.List;
@@ -30,7 +30,7 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.ve.internal.java.common.Common;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 
 public class CustomizeAction extends SelectionAction {
 	public static final String ACTION_ID = "jcm.CUSTOMIZE"; //$NON-NLS-1$

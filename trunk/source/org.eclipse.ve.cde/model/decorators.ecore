@@ -1,57 +1,135 @@
 <?xml version="1.0" encoding="ASCII"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="decorators"
+<ecore:EPackage xmi:version="2.0"
+  xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="decorators"
     nsURI="http:///org/eclipse/ve/internal/cde/decorators.ecore" nsPrefix="org.eclipse.ve.internal.cde.decorators">
   <eClassifiers xsi:type="ecore:EClass" name="BasePropertyDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
-    <eAttributes name="cellEditorValidatorClassnames" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        upperBound="-1"/>
-    <eAttributes name="labelProviderClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        unsettable="true"/>
-    <eAttributes name="cellEditorClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        unsettable="true"/>
-    <eAttributes name="nullInvalid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        unsettable="true"/>
-    <eAttributes name="entryExpandable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        unsettable="true"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cellEditorValidatorClassnames"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labelProviderClassname"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Label Provider Classname. If set, but is null, then that means there explicitly isn't one and don't use default."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cellEditorClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Cell Editor Classname. If set, but is null, then that means there explicitly isn't one and don't use default."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullInvalid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Are null settings invalid. If this is true, then they will be prevented. If this is false, then the cell editor and validator will be used to determine if null is valid or not.&#xD;&#xA;&#xD;&#xA;The search order will be find it explicitly set on:&#xD;&#xA;  1) The BasePropertyDescriptor on the feature, then if not set,&#xD;&#xA;  2) The BasePropertyDescriptor on the class, then if not set,&#xD;&#xA;  3) use false as the value."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryExpandable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If this returns true, then the entry will expand in the property sheet if &#xD;&#xA;there are child entries. If this returns false then it won't expand. This is useful when the cell editor handles the complete customization&#xD;&#xA;and it is not desired to allow sub-property customization.&#xD;&#xA;&#xD;&#xA;The search order will be find it explicitly set on:&#xD;&#xA;  1) The BasePropertyDescriptor on the feature, then if not set,&#xD;&#xA;  2) The BasePropertyDescriptor on the class, then if not set,&#xD;&#xA;  3) use true as the value."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertySourceAdapterInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
-    <eAttributes name="propertySourceAdapterClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        unsettable="true"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is the information required to establish a PropertySourceAdapter.&#xD;&#xA;&#xD;&#xA;This will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="propertySourceAdapterClassname"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Adapter classname. If explicitly set to null (versus not set, which is a default of null, isSet will return true, but value will be null), then this means there is no PropertySourceAdapter for this class, ever."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorDecorator" eSuperTypes="#//FeatureDescriptorDecorator #//BasePropertyDecorator">
-    <eAttributes name="designtimeProperty" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        unsettable="true"/>
-    <eAttributes name="alwaysIncompatible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is the decorator for a StructuralFeature to supply the information for editing this property."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="designtimeProperty" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Whether this property is designtime. If not explicitly set, then ignore this setting. If true then it is shown only on property sheet and not available for connections. If false, then it is available only for connections and not on property sheet."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alwaysIncompatible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true, then when multiple selections of this property is made, they will be considered incompatible."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
-    <eAttributes name="adapter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is the information required to establish a PropertyDescriptorAdapter or a PropertyDescriptor.&#xD;&#xA;&#xD;&#xA;This will be decorating a RefStructuralFeature to indicate what  PropertyDescriptorAdapter or PropertyDescscriptor  to use for this feature.&#xD;&#xA;&#xD;&#xA;It depends upon whether the type flag is Adapter is true. If the flag is true, then an adapter will be created once for the feature.&#xD;&#xA;&#xD;&#xA;If the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a RefObject and a RefStructuralFeature or one that takes just a RefObject. The RefObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="adapter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
-    <eAttributes name="propertyDescriptorClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="propertyDescriptorClassname"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FeatureDescriptorDecorator" abstract="true"
       eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This descriptor decorator for any kind of feature. It contains info that is generalized to features."/>
+    </eAnnotations>
     <eOperations name="isFiltered" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Answer whether this filter flag passed in is in this features filterFlags."/>
+      </eAnnotations>
       <eParameters name="flag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eReferences name="categoryString" eType="ecore:EClass utility.ecore#//AbstractString"/>
-    <eReferences name="filterFlagStrings" eType="ecore:EClass utility.ecore#//AbstractString"
-        upperBound="-1"/>
-    <eReferences name="displayNameString" eType="ecore:EClass utility.ecore#//AbstractString"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hidden" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="helpContextIdsString" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="preferred" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryString" eType="ecore:EClass utility.ecore#//AbstractString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filterFlagStrings" upperBound="-1"
+        eType="ecore:EClass utility.ecore#//AbstractString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="displayNameString" eType="ecore:EClass utility.ecore#//AbstractString"
         containment="true"/>
-    <eReferences name="descriptionString" eType="ecore:EClass utility.ecore#//AbstractString"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptionString" eType="ecore:EClass utility.ecore#//AbstractString"
         containment="true"/>
-    <eAttributes name="hidden" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eAttributes name="helpContextIdsString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        upperBound="-1"/>
-    <eAttributes name="preferred" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ClassDescriptorDecorator" eSuperTypes="#//FeatureDescriptorDecorator ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
-    <eReferences name="graphic" eType="ecore:EClass utility.ecore#//Graphic" containment="true"/>
-    <eAttributes name="customizerClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="treeViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="graphViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="modelAdapterClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="defaultPalette" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="labelProviderClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassDescriptorDecorator" eSuperTypes="#//FeatureDescriptorDecorator cdm.ecore#//KeyedValueHolder">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The descriptor decorator for a class. Currently it adds nothing over FeatureDescriptorDecortor."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customizerClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Classname string of the Customizer class.&#xD;&#xA;&#xD;&#xA;The format of the string is &quot;classname:initdata&quot; or &quot;plugin/classname:initdata&quot;"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="treeViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Classname of the TreeView EditPart.&#xD;&#xA;&#xD;&#xA;The format of the string is &quot;classname:initdata&quot; or &quot;plugin/classname:initdata&quot;"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="graphViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Classname of the GraphView EditPart.&#xD;&#xA;&#xD;&#xA;The format of the string is &quot;classname:initdata&quot; or &quot;plugin/classname:initdata&quot;"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelAdapterClassname"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Classname of the Model Adapter. This is the class that either implements all of the interfaces required by the model adapter, or it should be an IAdaptable that will return such adapters. See IModelAdapterFactory.&#xD;&#xA;&#xD;&#xA;The format of the string is &quot;classname:initdata&quot; or &quot;plugin/classname:initdata&quot;"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultPalette" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The default palette to use for this class if not specified by other means. It is in the form a MOF reference, i.e. &quot;filename#id of palette&quot;."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labelProviderClassname"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The classname for the label provider to be used for objects of the class that this decorator decorates. This label provider will be used in cases other than property sheet. In that case the labelProvider from the BasePropertyDecorator on this class will be used. (Though the default if there is no BasePropertyDecorator will be to use the string from this label provider, but not the image).&#xD;&#xA;&#xD;&#xA;The format of the string is &quot;classname:initdata&quot; or &quot;plugin/classname:initdata&quot;"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="graphic" eType="ecore:EClass utility.ecore#//Graphic"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

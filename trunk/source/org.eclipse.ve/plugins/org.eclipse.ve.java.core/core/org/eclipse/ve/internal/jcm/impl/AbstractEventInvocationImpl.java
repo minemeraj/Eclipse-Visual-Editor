@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventInvocationImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.emf.ecore.EClass;
@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -116,7 +115,7 @@ public abstract class AbstractEventInvocationImpl extends EObjectImpl implements
 	public Listener getListener() {
 		if (listener != null && listener.eIsProxy()) {
 			Listener oldListener = listener;
-			listener = (Listener)EcoreUtil.resolve(listener, this);
+			listener = (Listener)eResolveProxy((InternalEObject)listener);
 			if (listener != oldListener) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.ABSTRACT_EVENT_INVOCATION__LISTENER, oldListener, listener));

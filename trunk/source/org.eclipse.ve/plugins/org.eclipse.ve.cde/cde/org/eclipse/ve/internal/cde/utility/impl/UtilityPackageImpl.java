@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: UtilityPackageImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -161,18 +161,18 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		EcorePackageImpl.init();
 
 		// Obtain or create and register interdependencies
-		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) : DecoratorsPackageImpl.eINSTANCE);
 		PalettePackageImpl thePalettePackage = (PalettePackageImpl)(EPackage.Registry.INSTANCE.get(PalettePackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(PalettePackage.eNS_URI) : PalettePackageImpl.eINSTANCE);
+		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) : DecoratorsPackageImpl.eINSTANCE);
 
 		// Step 1: create meta-model objects
 		theUtilityPackage.createPackageContents();
-		theDecoratorsPackage.createPackageContents();
 		thePalettePackage.createPackageContents();
+		theDecoratorsPackage.createPackageContents();
 
 		// Step 2: complete initialization
 		theUtilityPackage.initializePackageContents();
-		theDecoratorsPackage.initializePackageContents();
 		thePalettePackage.initializePackageContents();
+		theDecoratorsPackage.initializePackageContents();
 
 		return theUtilityPackage;
 	}
@@ -210,7 +210,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EAttribute getGIFFileGraphic_ResourceName() {
-		return (EAttribute)gifFileGraphicEClass.getEAttributes().get(0);
+		return (EAttribute)gifFileGraphicEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EAttribute getConstantString_String() {
-		return (EAttribute)constantStringEClass.getEAttributes().get(0);
+		return (EAttribute)constantStringEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EAttribute getTranslatableString_Key() {
-		return (EAttribute)translatableStringEClass.getEAttributes().get(0);
+		return (EAttribute)translatableStringEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EReference getTranslatableString_Bundle() {
-		return (EReference)translatableStringEClass.getEReferences().get(0);
+		return (EReference)translatableStringEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -291,7 +291,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EAttribute getURLResourceBundle_BundleName() {
-		return (EAttribute)urlResourceBundleEClass.getEAttributes().get(0);
+		return (EAttribute)urlResourceBundleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public EAttribute getURLResourceBundle_BundleURLs() {
-		return (EAttribute)urlResourceBundleEClass.getEAttributes().get(1);
+		return (EAttribute)urlResourceBundleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -392,22 +392,22 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		initEClass(abstractStringEClass, AbstractString.class, "AbstractString", IS_ABSTRACT, !IS_INTERFACE);
 
 		initEClass(constantStringEClass, ConstantString.class, "ConstantString", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getConstantString_String(), ecorePackage.getEString(), "string", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getConstantString_String(), ecorePackage.getEString(), "string", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(resourceBundleEClass, ResourceBundle.class, "ResourceBundle", IS_ABSTRACT, !IS_INTERFACE);
 
 		initEClass(urlResourceBundleEClass, URLResourceBundle.class, "URLResourceBundle", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getURLResourceBundle_BundleName(), ecorePackage.getEString(), "bundleName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getURLResourceBundle_BundleURLs(), ecorePackage.getEString(), "bundleURLs", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getURLResourceBundle_BundleName(), ecorePackage.getEString(), "bundleName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getURLResourceBundle_BundleURLs(), ecorePackage.getEString(), "bundleURLs", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(graphicEClass, Graphic.class, "Graphic", IS_ABSTRACT, !IS_INTERFACE);
 
 		initEClass(gifFileGraphicEClass, GIFFileGraphic.class, "GIFFileGraphic", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getGIFFileGraphic_ResourceName(), ecorePackage.getEString(), "resourceName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getGIFFileGraphic_ResourceName(), ecorePackage.getEString(), "resourceName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(translatableStringEClass, TranslatableString.class, "TranslatableString", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getTranslatableString_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getTranslatableString_Bundle(), this.getResourceBundle(), null, "bundle", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getTranslatableString_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getTranslatableString_Bundle(), this.getResourceBundle(), null, "bundle", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(iGraphicEClass, IGraphic.class, "IGraphic", IS_ABSTRACT, IS_INTERFACE);
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import java.util.*;
@@ -32,7 +32,7 @@ import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
@@ -407,7 +407,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 				int index = -1;
 				if (indexValueFound)
-					index = Integer.parseInt(((IntLiteral) args[indexValuePosition]).toStringExpression());
+					index = Integer.parseInt((CodeGenUtil.expressionToString(args[indexValuePosition])));
 				EObject CC = getNewCC(fbeanPart.getModel().getCompositionModel());
 				if (defaultConstraintFound) {
 					fisAddedConstraintSet = true;
@@ -422,7 +422,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 					CC.eSet(CodeGenUtil.getConstraintFeature(CC), fAddedConstraintInstance);
 				}
 				if (indexValueFound) {
-					fAddedIndex = ((IntLiteral) args[indexValuePosition]).toStringExpression();
+					fAddedIndex = CodeGenUtil.expressionToString(args[indexValuePosition]);
 				}
 				// Now add it to the model
 				if (fAddedPart != null)

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FontEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import java.awt.*;
@@ -20,8 +20,7 @@ import java.beans.*;
 public class FontEditor extends PropertyEditorSupport {
 	private static java.util.ResourceBundle resabtedit = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.vceedit");  //$NON-NLS-1$
 	FontPropertyEditor customEditor = null;
-	private Object fFont = null;
-public String getAsText() {
+	public String getAsText() {
 	String strStyle;
 	Font font = (Font) getValue();
 	if (font == null || !(font instanceof Font))
@@ -80,7 +79,6 @@ public void setValue(Object newValue) {
 	if (customEditor != null) {
 		customEditor.setFontValue((Font)newValue);
 	}
-	fFont = newValue;
 	super.setValue(newValue);	
 }
 public boolean supportsCustomEditor() {

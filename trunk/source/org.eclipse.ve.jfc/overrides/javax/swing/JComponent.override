@@ -13,7 +13,7 @@
     <keyedValues xsi:type="gridpref:Preference" typedValue="none"/>
     </addedEObjects>
   </event:AddMany>
-  <event:Add  featureName="eReferences">
+  <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="nextFocusableComponent" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
           labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider"

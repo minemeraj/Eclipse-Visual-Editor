@@ -1,37 +1,53 @@
 <?xml version="1.0" encoding="ASCII"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cdm"
+<ecore:EPackage xmi:version="2.0"
+  xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cdm"
     nsURI="http:///org/eclipse/ve/internal/cdm.ecore" nsPrefix="org.eclipse.ve.internal.cdm">
   <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
-    <eReferences name="diagrams" eType="#//Diagram" upperBound="-1" containment="true"
-        eOpposite="#//Diagram/diagramData"/>
-    <eReferences name="annotations" eType="#//Annotation" upperBound="-1" containment="true"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The diagram data, such as the annotations and viewer data."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagrams" upperBound="-1"
+        eType="#//Diagram" containment="true" eOpposite="#//Diagram/diagramData"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
+        eType="#//Annotation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Diagram" eSuperTypes="#//KeyedValueHolder">
-    <eReferences name="diagramData" eType="#//DiagramData" transient="true" eOpposite="#//DiagramData/diagrams"/>
-    <eReferences name="visualInfos" eType="#//VisualInfo" upperBound="-1" eOpposite="#//VisualInfo/diagram"/>
-    <eReferences name="figures" eType="#//DiagramFigure" upperBound="-1" containment="true"/>
-    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=" "/>
-    <eAttributes name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" eType="#//DiagramData"
+        transient="true" eOpposite="#//DiagramData/diagrams"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="visualInfos" upperBound="-1"
+        eType="#//VisualInfo" eOpposite="#//VisualInfo/diagram"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="figures" upperBound="-1"
+        eType="#//DiagramFigure" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VisualInfo" eSuperTypes="#//KeyedValueHolder">
-    <eReferences name="diagram" eType="#//Diagram" lowerBound="1" eOpposite="#//Diagram/visualInfos"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The visual info for a component. The id is used to allow the info to be for a specific viewer, in case the component may be visible in more than one viewer, e.g. the graphViewer and a specialized viewer."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagram" lowerBound="1"
+        eType="#//Diagram" eOpposite="#//Diagram/visualInfos"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedValueHolder" abstract="true">
-    <eReferences name="keyedValues" eType="#//MapEntry" upperBound="-1" containment="true"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This class holds KeyedValues. It is used by mixing it in with multiple inheritance into where it is needed.&#xD;&#xA;&#xD;&#xA;The operations allow treating the KeyedValues as properties. They should be used instead of the generic keyedValues relationship. It allows easier usage of the keyed values.&#xD;&#xA;&#xD;&#xA;Note: KeyedValues should be treated as dataTypes, in other words, individual KeyedValues shouldn't be updated, they should be replaced instead. This is because typically users area listening for new keyed values, not subvalues within individual keyed values being changed. If the users understands this and still listens on individual KeyedValues, that is OK as long thier model handles unlistening when the keyedvalue is removed."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyedValues" upperBound="-1"
+        eType="#//MapEntry" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedLocation" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="value" eType="#//ViewPoint"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="#//ViewPoint"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedSize" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="value" eType="#//ViewDimension"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="#//ViewDimension"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedConstraint" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="value" eType="#//ViewRectangle"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="#//ViewRectangle"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ViewDimension" instanceClassName="org.eclipse.ve.internal.cdm.model.Dimension"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ViewPoint" instanceClassName="org.eclipse.ve.internal.cdm.model.Point"/>
@@ -40,41 +56,63 @@
     <eOperations name="getVisualInfo" eType="#//VisualInfo">
       <eParameters name="aDiagram" eType="#//Diagram"/>
     </eOperations>
-    <eReferences name="visualInfos" eType="#//VisualInfo" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="visualInfos" upperBound="-1"
+        eType="#//VisualInfo" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedPoints" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="value" eType="#//ViewPoint" upperBound="-1"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="List of Points"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" upperBound="-1"
+        eType="#//ViewPoint"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AnnotationEMF" eSuperTypes="#//Annotation">
-    <eReferences name="annotates" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Annotation that can annotate an EMF object (RefObject)."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotates" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AnnotationGeneric" eSuperTypes="#//Annotation">
-    <eAttributes name="annotatesID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is a generic annotation where the ID of the object being annotated is in the attribute annotatesID. This is used when the thing being annotated is not a RefObject, so we can't directly point to it. There will be a factory for each specific model that knows how to map from the id to the actual model object and back."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotatesID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         unsettable="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramFigure" eSuperTypes="#//KeyedValueHolder">
-    <eReferences name="childFigures" eType="#//DiagramFigure" upperBound="-1" containment="true"/>
-    <eAttributes name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A figure on the diagram. This is used when the structure of objects in the diagram are not determined by the object model but are specified on a per diagram basis."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Indicate the type of the figure. This is used by the view to know the type of figure. It can be used to prevent the wrong type of figure being dropped on another figure. Or it can be used to determine the type of EditPart to create for it."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childFigures" upperBound="-1"
+        eType="#//DiagramFigure" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedGeneric" instanceClassName="java.util.Map$Entry">
-    <eReferences name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
         containment="true"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedInteger" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MapEntry" instanceClassName="java.util.Map$Entry"
       abstract="true" interface="true">
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyedDynamic" instanceClassName="java.util.Map$Entry">
-    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is used when the value is a dynamic eobject and you need it to be typed. This is treated as an abstract class. The dynamic model must create a subclass that has a &quot;typedValue&quot; attribute that is typed to a dynamic type. And it needs a &quot;keyString&quot; attribute this is typed to String. This allows the key to be given a default value. This makes it easier to use when there is only one key that makes sense."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         volatile="true" transient="true"/>
-    <eAttributes name="value" eType="ecore:EDataType ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EJavaObject"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EJavaObject"
         volatile="true" transient="true" unsettable="true"/>
   </eClassifiers>
 </ecore:EPackage>
