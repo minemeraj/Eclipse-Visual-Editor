@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-12 19:06:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-15 19:11:50 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -21,7 +21,9 @@ import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.*;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,12 +33,24 @@ import org.eclipse.ui.views.properties.*;
 import org.eclipse.jem.internal.beaninfo.adapters.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
+import org.eclipse.ve.internal.cdm.CDMFactory;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.jcm.*;
 
+import org.eclipse.ve.internal.java.choosebean.*;
 import org.eclipse.ve.internal.java.choosebean.ChooseBeanDialog;
+import org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor;
+import org.eclipse.ve.internal.java.rules.IChildRule;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.vce.rules.*;
+import org.eclipse.ve.internal.java.vce.rules.VCEChildRule;
+import org.eclipse.ve.internal.java.vce.rules.VCEPreSetCommand;
 
 import org.eclipse.ve.internal.propertysheet.*;
  
@@ -64,10 +78,26 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		ChooseBeanDialog chooseBean = new ChooseBeanDialog(
 				cellEditorWindow.getShell(),
 				editDomain,
-				ChooseBeanDialog.determineContributors(),
+				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor("javax.swing.Action","javax.swing", "Action")},
 				-1,
 				false);				
-		chooseBean.open();
+
+		if(chooseBean.open()==Window.OK){
+			Object[] results = chooseBean.getResult();
+			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];
+			// Add this to the BeanSubclassComposition
+			Command addToBeanCompositionCmd = ((VCEChildRule)editDomain.getRuleRegistry().getRule(IChildRule.RULE_ID)).preCreateChild(
+				editDomain,
+				beanComposition,
+				newJavaInstance,
+				JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components());
+			addToBeanCompositionCmd.execute();
+			// Create an annotation for it right now so it gets onto the free form
+			AnnotationEMF emfAnnotation = CDMFactory.eINSTANCE.createAnnotationEMF();
+			emfAnnotation.setAnnotates(newJavaInstance);
+			beanComposition.getAnnotations().add(emfAnnotation);
+			return newJavaInstance;
+		}
 		return null;
 	}
 	protected Control createContents(Composite cell) {
