@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-03-28 19:00:28 $ 
+ *  $Revision: 1.4 $  $Date: 2005-03-29 16:17:15 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,10 +28,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.ui.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
 public class FontCustomPropertyEditor extends Composite {
@@ -80,6 +85,8 @@ public class FontCustomPropertyEditor extends Composite {
 	private Text jfaceStyleField = null;
 	private List jfaceNamesList = null;
 	private List jfaceStylesList = null;
+	private EditDomain fEditDomain = null;
+
 	// Used to perform comparisons on strings ignoring case.
 	public class StringIgnoreCaseComparator implements Comparator {
 
@@ -109,10 +116,11 @@ public class FontCustomPropertyEditor extends Composite {
 		int style = JFACE_NORMAL;
 	}
 	
-	public FontCustomPropertyEditor(Composite parent, int style, Font value, IJavaObjectInstance existingValue) {
+	public FontCustomPropertyEditor(Composite parent, int style, Font value, IJavaObjectInstance existingValue, EditDomain editDomain) {
 		super(parent, style);
 		this.value = value;
 		fExistingValue = existingValue;
+		fEditDomain = editDomain;
 		initialize();
 	}
 
@@ -154,7 +162,9 @@ public class FontCustomPropertyEditor extends Composite {
 		for (int i = 0; i < sizeValues.length; i++) {
 			sizesList.add(String.valueOf(sizeValues[i]));
 		}
+	}
 
+	private void initializeJfaceLists() {
 		jfaceNamesList.setItems(jfaceFontNames);
 		jfaceStylesList.setItems(jfaceStyleNames);
 	}
@@ -406,13 +416,17 @@ public class FontCustomPropertyEditor extends Composite {
 		GridData gridData4 = new org.eclipse.swt.layout.GridData();
 		tabFolder = new TabFolder(this, SWT.NONE);		   
 		createComposite();
-		createComposite1();
 		TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
-		TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
 		tabItem1.setControl(composite);
 		tabItem1.setText("Named Fonts");
-		tabItem2.setControl(jfaceFontsTab);
-		tabItem2.setText("JFace Fonts");
+		// If this project has JFace jars in it's class path, add the JFace page.
+		if (isJFaceProject()) {
+			createComposite1();
+			TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
+			tabItem2.setControl(jfaceFontsTab);
+			tabItem2.setText("JFace Fonts");
+			initializeJfaceLists();
+		}
 		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData4.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData4.grabExcessHorizontalSpace = true;
@@ -626,6 +640,27 @@ public class FontCustomPropertyEditor extends Composite {
 				updateJFaceFont();
 			}
 		});
+	}
+	/*
+	 * Return true if JFace classes are part of the resource set. 
+	 * This is used to determine whether or not to add the JFace page to the property editor. 
+	 */
+	protected boolean isJFaceProject() {
+		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", fExistingValue); //$NON-NLS-1$
+		if (jfaceObjectClass == null) {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (window != null) {
+				IWorkbenchPage activePage = window.getActivePage();
+				if (activePage != null) {
+					IEditorPart editor = activePage.getActiveEditor();
+					if (editor instanceof JavaVisualEditorPart) {
+//						EditPartViewer viewer = editor
+					}
+				}
+			}
+			
+		}
+		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
