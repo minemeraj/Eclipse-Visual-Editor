@@ -499,11 +499,16 @@
    
    <extension
  		point="org.eclipse.ve.java.core.newStyleComponent">
+		<category
+			name="Other"
+			id="org.eclipse.ve.core.other"
+			priority="1000"
+			defaultExpand="true">
+		</category>
 			<visualElement
-				name="Other"
-				category="None"
-				type="java.lang.Object"
-				contributor="none">
+				name="Object"
+				category="org.eclipse.ve.core.other"
+				type="java.lang.Object">
 			</visualElement>
 	</extension>
 
