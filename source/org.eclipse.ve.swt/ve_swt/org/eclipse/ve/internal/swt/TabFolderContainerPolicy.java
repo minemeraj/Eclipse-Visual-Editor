@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-10 21:26:19 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-20 01:08:28 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,6 +23,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
@@ -110,5 +111,30 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 			}
 		};
 		return setTabItemCommand;
+	}
+
+	/**
+	 * Delete the dependent. The child is the component, not the JTabComponent.
+	 */
+	public Command getDeleteDependentCommand(Object child) {
+		return getDeleteTabItemCommand(child).chain(super.getDeleteDependentCommand(child));
+	}
+	private Command getDeleteTabItemCommand(final Object child) {
+		Command deleteTabItemCommand = new CommandWrapper() {
+
+			protected boolean prepare() {
+				return true;
+			}
+
+			public void execute() {
+				EObject tabItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl, (EObject) child);
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+				cb.cancelAttributeSetting((EObject) tabItem, sf_tabItemControl);
+				cb.cancelAttributeSetting((EObject) getContainer(), sf_tabItems);
+				command = cb.getCommand();
+				command.execute();
+			}
+		};
+		return deleteTabItemCommand;
 	}
 }
