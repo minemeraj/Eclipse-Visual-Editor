@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-24 22:26:44 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -94,21 +94,23 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		markAsPartListener(palDropdownAction);
 		
 		reloadAction = new LabelRetargetAction(ReloadAction.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX);
-		reloadAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif")); //$NON-NLS-1$
+		// dbk use ReloadAction.PAUSE_IMAGE_DESCRIPTOR		
+		reloadAction.setHoverImageDescriptor(ReloadAction.PAUSE_IMAGE_DESCRIPTOR);
 		reloadAction.setEnabled(false);
 		markAsPartListener(reloadAction);
 		
+		// dbk use CustomizeJavaBeanAction.IMG_CUSTOMIZE_BEAN
 		customizeAction = new LabelRetargetAction(CustomizeJavaBeanAction.ACTION_ID, ""); //$NON-NLS-1$
-		customizeAction.setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif")); //$NON-NLS-1$
+		customizeAction.setImageDescriptor(CustomizeJavaBeanAction.IMG_CUSTOMIZE_BEAN);
 		customizeAction.setHoverImageDescriptor(customizeAction.getImageDescriptor());
-		customizeAction.setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif")); //$NON-NLS-1$)
+		customizeAction.setDisabledImageDescriptor(CustomizeJavaBeanAction.IMG_CUSTOMIZE_BEAN_DISABLED);
 		customizeAction.setEnabled(false);
 		markAsPartListener(customizeAction);
 		
 		alignmentWindowRetargetAction = new LabelRetargetAction(CustomizeLayoutWindowAction.ACTION_ID, ""); //$NON-NLS-1$
-		alignmentWindowRetargetAction.setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$		
+		alignmentWindowRetargetAction.setImageDescriptor(CustomizeLayoutWindowAction.IMG_CUSTOMIZE_LAYOUT_BEAN);		
 		alignmentWindowRetargetAction.setHoverImageDescriptor(alignmentWindowRetargetAction.getImageDescriptor());
-		alignmentWindowRetargetAction.setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/aligndialog_obj.gif")); //$NON-NLS-1$		
+		alignmentWindowRetargetAction.setDisabledImageDescriptor(CustomizeLayoutWindowAction.IMG_CUSTOMIZE_LAYOUT_BEAN_DISABLED);		
 		alignmentWindowRetargetAction.setChecked(false);
 		markAsPartListener(alignmentWindowRetargetAction);		
 	}

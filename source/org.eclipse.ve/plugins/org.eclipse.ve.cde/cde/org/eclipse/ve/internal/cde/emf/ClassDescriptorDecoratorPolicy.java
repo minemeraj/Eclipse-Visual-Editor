@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-24 22:26:42 $ 
  */
 
 import java.net.URL;
@@ -26,6 +26,7 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.*;
+import org.eclipse.ve.internal.cde.utility.GIFFileGraphic;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -61,6 +62,8 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  * default ClassDescriptorDecorator for classes that don't have a decorator anywhere in their heirarchy.
  */
 public class ClassDescriptorDecoratorPolicy {
+	// dbk cache CLASS_DECOR_GRAPHIC
+	private static final GIFFileGraphic CLASS_DECORATOR_GRAPHIC = UtilityFactory.eINSTANCE.createGIFFileGraphic((Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif")).toString()));
 	public static final String CLASS_DESCRIPTOR_DECORATOR_POLICY_KEY = "org.eclipse.ve.internal.cde.core.classdescriptordecoratorpolicykey"; //$NON-NLS-1$
 
 	/**
@@ -93,8 +96,7 @@ public class ClassDescriptorDecoratorPolicy {
 		ClassDescriptorDecorator classDecor = DecoratorsFactory.eINSTANCE.createClassDescriptorDecorator();
 		classDecor.setGraphViewClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart"); //$NON-NLS-1$
 		classDecor.setTreeViewClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultTreeEditPart"); //$NON-NLS-1$
-		URL url = Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif"));	//$NON-NLS-1$
-		classDecor.setGraphic(UtilityFactory.eINSTANCE.createGIFFileGraphic((url.toString())));	
+		classDecor.setGraphic(CLASS_DECORATOR_GRAPHIC);	
 		classDecor.setLabelProviderClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultLabelProvider"); //$NON-NLS-1$
 		registerDefaultDecorator(ClassDescriptorDecorator.class, classDecor);
 	}

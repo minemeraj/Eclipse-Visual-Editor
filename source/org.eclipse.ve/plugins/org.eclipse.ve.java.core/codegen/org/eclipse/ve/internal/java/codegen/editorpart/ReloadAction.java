@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-04 23:27:17 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-24 22:26:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
@@ -25,6 +26,14 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  * @since 1.0.0
  */
 public class ReloadAction extends Action {
+	// dbk save image descriptors
+	private static final String JVE_STATUS_MSG_ERROR = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR");
+	private static final String JVE_STATUS_BAR_MSG_PARSE_ERROR = CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR_");
+	private static final String JVE_STATUS_MSG_PAUSE = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSE");
+	private static final String JVE_STATUS_MSG_RELOAD = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_RELOAD");
+	private static final ImageDescriptor PLAY_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/play.gif");
+	public static final ImageDescriptor PAUSE_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif");
+	private static final ImageDescriptor ERROR_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif");
 	
 	/**
 	 * Action ID for Reload action.
@@ -88,16 +97,22 @@ public class ReloadAction extends Action {
 	/*
 	 * Set the text correctly according to the current check status.
 	 */
+	private Boolean lastCheckedState = null;	
 	private void setCorrectText() {
+		boolean isChecked = isChecked();
+		// dbk avoid spurious updates
+		if (lastCheckedState != null && lastCheckedState.booleanValue() == isChecked)
+			return;
+		lastCheckedState = new Boolean(isChecked);		
 		// TODO We need full gammit of icons for this.
-		if (isChecked()) {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_RELOAD")); //$NON-NLS-1$
+		if (isChecked) {
+			setToolTipText(JVE_STATUS_MSG_RELOAD);
 			setText(getToolTipText());
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/play.gif")); //$NON-NLS-1$
+			setHoverImageDescriptor(PLAY_IMAGE_DESCRIPTOR);
 		} else {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSE")); //$NON-NLS-1$
+			setToolTipText(JVE_STATUS_MSG_PAUSE);
 			setText(getToolTipText());
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif"));			 //$NON-NLS-1$
+			setHoverImageDescriptor(PAUSE_IMAGE_DESCRIPTOR);
 		}
 	}
 
@@ -108,11 +123,16 @@ public class ReloadAction extends Action {
 	 * 
 	 * @since 1.0.0
 	 */
+	private Boolean lastParseErrorState = null;
 	public void parseError(boolean error) {
+		// dbk avoid spurious updates
+		if (lastParseErrorState != null && lastParseErrorState.booleanValue() == error)
+			return;
+		lastParseErrorState = new Boolean(error);
 		if (error) {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR_")); //$NON-NLS-1$
-			setText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif")); //$NON-NLS-1$
+			setToolTipText(JVE_STATUS_BAR_MSG_PARSE_ERROR);
+			setText(JVE_STATUS_MSG_ERROR);
+			setHoverImageDescriptor(ERROR_IMAGE_DESCRIPTOR);
 			setChecked(true);
 		} else {
 			setChecked(false);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-13 21:43:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-24 22:26:42 $ 
  */
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
@@ -42,6 +43,10 @@ public class CustomizeLayoutWindowAction extends Action {
 	protected final static String WINDOW_TITLE = CDEMessages.getString("CustomizeLayoutWindow.title"); //$NON-NLS-1$
 	
 	protected static final String CUSTOMIZE_LAYOUT_PAGE_KEY = "customizeLayoutPage_Key"; //$NON-NLS-1$
+
+	public static final ImageDescriptor IMG_CUSTOMIZE_LAYOUT_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/aligndialog_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor IMG_CUSTOMIZE_LAYOUT_BEAN = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif"); //$NON-NLS-1$
+	
 	
 	/**
 	 * Add an Layout customization page class to the viewer. The page will be brought to front on the Layout tab whenever it's 
