@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.74 $  $Date: 2005-01-07 20:51:41 $ 
+ *  $Revision: 1.75 $  $Date: 2005-01-10 19:26:52 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -81,8 +81,8 @@ import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
-import org.eclipse.jem.internal.temp.VETimerTests;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
+import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -191,8 +191,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 		if (DO_TIMER_TESTS) {
 			System.out.println("");
-			VETimerTests.basicTest.testState(true);
-			VETimerTests.basicTest.startStep(JVE_STEP);
+			TimerTests.basicTest.testState(true);
+			TimerTests.basicTest.startStep(JVE_STEP);
 		}
 	}
 	
@@ -799,7 +799,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			try {
-				VETimerTests.basicTest.startStep("Initialize Viewers");
+				TimerTests.basicTest.startStep("Initialize Viewers");
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(118);
 				if (d != null) {
@@ -812,11 +812,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(119);
-				VETimerTests.basicTest.stopStep("Initialize Viewers");
-				VETimerTests.basicTest.stopStep(JVE_STEP);
-				VETimerTests.basicTest.printIt();
-				VETimerTests.basicTest.clearTests();
-				VETimerTests.basicTest.testState(false);
+				TimerTests.basicTest.stopStep("Initialize Viewers");
+				TimerTests.basicTest.stopStep(JVE_STEP);
+				TimerTests.basicTest.printIt();
+				TimerTests.basicTest.clearTests();
+				TimerTests.basicTest.testState(false);
 				if (doTimerStep) {
 					doTimerStep = false;	// Done with first load, don't do it again.
 					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.					
@@ -1009,10 +1009,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	public void dispose() {
 		if (DO_TIMER_TESTS)
-			VETimerTests.basicTest.testState(true);
-		VETimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
+			TimerTests.basicTest.testState(true);
+		TimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
-			VETimerTests.basicTest.startStep("Dispose");
+			TimerTests.basicTest.startStep("Dispose");
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			
 			if (proxyFactoryRegistry != null) {
@@ -1064,10 +1064,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				finalDispose();
 		} catch (Exception e) {
 		} finally {
-			VETimerTests.basicTest.stopStep("Dispose");
-			VETimerTests.basicTest.printIt();
+			TimerTests.basicTest.stopStep("Dispose");
+			TimerTests.basicTest.printIt();
 			if (DO_TIMER_TESTS) 
-				VETimerTests.basicTest.testState(false);
+				TimerTests.basicTest.testState(false);
 		}
 		super.dispose();
 	}
@@ -1083,12 +1083,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Note: No need to sync(this) to access proxyFactoryRegistry because we are guarenteed that
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
-			VETimerTests.basicTest.startStep("Dispose Proxy Registry");
+			TimerTests.basicTest.startStep("Dispose Proxy Registry");
 			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
 			proxyFactoryRegistry = null;
-			VETimerTests.basicTest.stopStep("Dispose Proxy Registry");
+			TimerTests.basicTest.stopStep("Dispose Proxy Registry");
 		}
 
 		modelBuilder.dispose();
@@ -1503,12 +1503,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		protected IStatus run(IProgressMonitor monitor) {			
 			try {
 				if (DO_TIMER_TESTS)
-					VETimerTests.basicTest.testState(true);
-				VETimerTests.basicTest.startStep(SETUP_STEP);
-				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
-				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
-				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);
-				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);				
+					TimerTests.basicTest.testState(true);
+				TimerTests.basicTest.startStep(SETUP_STEP);
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);				
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 200);
@@ -1557,7 +1557,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				}
 			
-				VETimerTests.basicTest.startStep("Load Model");				
+				TimerTests.basicTest.startStep("Load Model");				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(114);	// Starting codegen loading for the first time
 				
@@ -1565,7 +1565,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(115);	// Ending codegen loading for the first time
-				VETimerTests.basicTest.stopStep("Load Model");
+				TimerTests.basicTest.stopStep("Load Model");
 				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
@@ -1590,9 +1590,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
-//					VETimerTests.basicTest.startStep("Join with remote vm");
+//					TimerTests.basicTest.startStep("Join with remote vm");
 					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
-//					VETimerTests.basicTest.stopStep("Join with remote vm");
+//					TimerTests.basicTest.stopStep("Join with remote vm");
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
@@ -1604,13 +1604,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							new CompositionProxyAdapter();
 						dd.eAdapters().add(a);
 						
-						VETimerTests.basicTest.startStep("Create Bean Instances on Target VM");					
+						TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					
 						if (doTimerStep)
 							PerformanceMonitorUtil.getMonitor().snapshot(116);
 						a.initBeanProxy();
 						if (doTimerStep)
 							PerformanceMonitorUtil.getMonitor().snapshot(117);
-						VETimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						
+						TimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						
 					}
 					
 					if (!monitor.isCanceled())
@@ -1651,11 +1651,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 			monitor.done();
 			setLoadIsPending(false);
-			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
-			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
-			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
-			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);			
-			VETimerTests.basicTest.stopStep(SETUP_STEP);
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);			
+			TimerTests.basicTest.stopStep(SETUP_STEP);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
 
