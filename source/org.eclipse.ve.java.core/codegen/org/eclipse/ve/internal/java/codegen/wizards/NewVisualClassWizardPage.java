@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.6 $  $Date: 2004-07-16 16:22:18 $ 
+ *  $Revision: 1.7 $  $Date: 2004-07-16 21:33:21 $ 
  */
 
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -39,17 +40,19 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 
 	CategoryModel treeRoot;
 
-	public static final String CREATE_MAIN = "createMain";
+	public static final String CREATE_MAIN = "createMain"; //$NON-NLS-1$
 
-	public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors";
+	public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors"; //$NON-NLS-1$
 
-	public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract";
+	public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract"; //$NON-NLS-1$
 
 	boolean isSettingSuperclass;
 
 	private VisualElementModel selectedElement = null;
 
-	private static final String DEFAULT_ELEMENT_KEY = "org.eclipse.ve.core.other-Object-java.lang.Object";
+	private static final String DEFAULT_ELEMENT_KEY = "org.eclipse.ve.core.other-Object-java.lang.Object"; //$NON-NLS-1$
+
+	private boolean useSuperClass;
 
 	public class TreePrioritySorter extends ViewerSorter {
 
@@ -78,7 +81,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		((GridLayout) labelGroup.getLayout()).marginHeight = 0;
 		GridData labelData = (GridData) labelGroup.getLayoutData();
 		labelData.horizontalSpan = 5;
-		createLabel(labelGroup, "Style:");
+		createLabel(labelGroup, CodegenMessages.getString("NewVisualClassCreationWizard.Style.Tree.Title")); //$NON-NLS-1$
 
 		styleTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.BORDER);
 		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
@@ -156,37 +159,47 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 * @return
 	 */
 	private CategoryModel getInitalStyleInput() {
-
+		/*
+		 * Choosing element model to be selected in the tree viewer is determined by either the super class name passed in from
+		 * wizard or from a previous selection when this page was used earlier which is stored in the JavaVEPlugin preferences.
+		 */
+		String[] previousSelectedElementData = null;
+		if (!useSuperClass) {
+			Preferences preferences = JavaVEPlugin.getPlugin().getPluginPreferences();
+			if (!preferences.getDefaultString(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY).equals(DEFAULT_ELEMENT_KEY))
+				preferences.setDefault(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, DEFAULT_ELEMENT_KEY);
+			String previousSelectedElement = preferences.getString(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY);
+			// Selected element has 3 parts separated by "-". 1-Category, 2-Name, 3-Superclass
+			previousSelectedElementData = previousSelectedElement.split("-"); //$NON-NLS-1$
+		}
+		
+		// Get all the categories and visual elements from the contributors to the "newStyleComponet" extension and store under one root 
 		treeRoot = new CategoryModel();
 		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),
-				"newStyleComponent"); //$NON-NLS-1$
+			"newStyleComponent"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
-		Preferences preferences = JavaVEPlugin.getPlugin().getPluginPreferences();
-		if (!preferences.getDefaultString(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY).equals(DEFAULT_ELEMENT_KEY))
-			preferences.setDefault(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, DEFAULT_ELEMENT_KEY);
-		String previousSelectedElement = preferences.getString(NewVisualClassCreationWizard.VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY);
-		// Selected element has 3 parts separated by "-". 1-Category, 2-Name, 3-Superclass
-		String[] previousSelectedElementData = previousSelectedElement.split("-");
-
 		CategoryModel parentStyle = null;
 		if (extensions != null && extensions.length > 0) {
 			for (int ec = 0; ec < extensions.length; ec++) {
 				IConfigurationElement[] configElms = extensions[ec].getConfigurationElements();
 				for (int cc = 0; cc < configElms.length; cc++) {
 					IConfigurationElement celm = configElms[cc];
-					if (celm.getName().equalsIgnoreCase("Category")) {
+					if (celm.getName().equalsIgnoreCase("Category")) { //$NON-NLS-1$
 						treeRoot.addStyle(new CategoryModel(celm));
 					}
-					if (celm.getName().equalsIgnoreCase("visualElement")) {
-						parentStyle = findParentStyle(celm.getAttribute("category"), treeRoot);
+					if (celm.getName().equalsIgnoreCase("visualElement")) { //$NON-NLS-1$
+						parentStyle = findParentStyle(celm.getAttribute("category"), treeRoot); //$NON-NLS-1$
 						VisualElementModel vem = new VisualElementModel(celm);
 						if (parentStyle != null)
 							parentStyle.addVisualElement(vem);
 						else
 							treeRoot.addVisualElement(vem);
-						// If this visual element was the previous selection, select it so it's highlighted in the tree
-						// and set the super class name field.
-						if (vem.getCategory().equals(previousSelectedElementData[0]) && vem.getName().equals(previousSelectedElementData[1])) {
+						// If this visual element contains the superclass passed into this wizard or was the previous selection,
+						// select it so it's highlighted in the tree viewer.
+						if (useSuperClass) {
+							if (vem.getSuperClass().equals(getSuperClass()))
+								selectedElement = vem;
+						} else if (vem.getCategory().equals(previousSelectedElementData[0]) && vem.getName().equals(previousSelectedElementData[1])) {
 							selectedElement = vem;
 							setSuperClass(previousSelectedElementData[2], true);
 						}
@@ -199,12 +212,11 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		return treeRoot;
 	}
 
-	protected void setSuperClass(String name) {
-		isSettingSuperclass = true;
+	public void setSuperClass(String name) {
+		useSuperClass = true;
 		super.setSuperClass(name, true);
-		isSettingSuperclass = false;
 	}
-
+	
 	protected SelectionButtonDialogFieldGroup fMethodStubsButtonsField;
 
 	protected SelectionButtonDialogFieldGroup getMethodStubsButtonsField() {
@@ -320,9 +332,9 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 */
 	public HashMap getArgumentMatrix() {
 		HashMap argumentMatrix = new HashMap();
-		argumentMatrix.put(CREATE_MAIN, isCreateMain() == true ? "true" : "false");
-		argumentMatrix.put(CREATE_SUPER_CONSTRUCTORS, isCreateConstructors() == true ? "true" : "false");
-		argumentMatrix.put(CREATE_INHERITED_ABSTRACT, isCreateInherited() == true ? "true" : "false");
+		argumentMatrix.put(CREATE_MAIN, isCreateMain() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(CREATE_SUPER_CONSTRUCTORS, isCreateConstructors() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(CREATE_INHERITED_ABSTRACT, isCreateInherited() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 		return argumentMatrix;
 	}
 
