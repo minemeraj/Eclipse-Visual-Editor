@@ -39,7 +39,8 @@ usage() {
 	echo "-mapfiletag: The map file tag to use, or HEAD if omitted. Will be used to determine the base and ve releng directories and download only if needed."
 	echo "-clean: Clear out everything and start from scratch and download base and ve releng directories."
 	echo "-clearbuild: Erase just the last build."
-	echo "  Either clean or clearbuild must be supplied or nothing will occur."
+	echo "-downonly: Only check download files and download as needed. Do not clean or clear."
+	echo "  Either clean, clearbuild, or downonly must be supplied or nothing will occur."
 }
 
 parseMapTags() {
@@ -55,7 +56,7 @@ parseMapTags() {
 		downbase=yes ;
 		mv -f tempmaps/baseTag relengMaps/baseTag;
 	fi
-	
+
 	mv -f tempmaps/basePDE.properties relengMaps/basePDE.properties
 
 	if [ ! -e relengMaps/veTag ] ; then
@@ -69,7 +70,6 @@ parseMapTags() {
 	fi		
 
 	rm -rf tempmaps
-
 }
 
 
@@ -78,10 +78,11 @@ if [ "x$1" == "x" ] ; then
 	exit 0
 fi
 
-cleanmode=noclean
+cleanmode=no
 downbase=no
 downve=no
 clearbuild=no
+downonly=no
 mapfiletag=HEAD
 basetag=HEAD
 vetag=HEAD
@@ -97,6 +98,9 @@ while [ "$#" -gt 0 ]; do
 			mapfiletag=$2
 			shift 1
 			;;
+		'-downonly')
+			downonly=yes
+			;;
 		*) 
 			usage;
 			exit 0;
@@ -105,7 +109,7 @@ while [ "$#" -gt 0 ]; do
 	shift 1
 done
 
-if [[ $cleanmode == "no" && $clearbuild == "no" ]] ; then
+if [[ $cleanmode == "no" && $clearbuild == "no" && downonly == "no"  ]] ; then
 	exit 0
 fi
 
