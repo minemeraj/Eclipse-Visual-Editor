@@ -6,24 +6,21 @@ package org.eclipse.ve.internal.swt;
  * restricted by GSA ADP Schedule Contract with IBM Corp. 
  */
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.rules.*;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
@@ -61,7 +58,6 @@ public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
  * 
  * Rich has not implemented a ref. parsed tree yet, so use this as a deprecated method
  * 
- * @deprecated
  * @param parent
  * @return
  * 
@@ -70,10 +66,21 @@ public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
 
 private Command  createInitStringCommand(IJavaObjectInstance child, IJavaObjectInstance parent) {
   
-	TemporaryPTE pt = new TemporaryPTE() ;
-	pt.setParent(parent);
-	pt.setFlags("org.eclipse.swt.SWT.None") ;
-	JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(pt);
+
+	// Class Creation tree - new Foo(args[])
+	PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
+	ic.setType(child.getJavaType().getJavaName()) ;
+	
+	// set the arguments
+	PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
+	ir.setObject(parent) ;	
+	PTName flags = InstantiationFactory.eINSTANCE.createPTName() ;
+	flags.setName("org.eclipse.swt.SWT.None"); 	// Hard code the flags for now
+	ic.getArguments().add(0,ir);
+	ic.getArguments().add(1,flags) ;
+	
+	
+	JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 	ApplyAttributeSettingCommand applyCmd = new ApplyAttributeSettingCommand();
 	applyCmd.setTarget(child);
 	applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation"));

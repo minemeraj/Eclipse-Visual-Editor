@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-28 17:38:06 $ 
  */
 
 
@@ -40,16 +40,16 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class CodeExpressionRef extends AbstractCodeRef {
 
 
-protected   Statement             fExpr        = null ;
-protected   CodeMethodRef          fMethod      = null ;
-protected   IExpressionDecoder     fDecoder     = null ;   
-protected   BeanPart               fBean        = null ;
-protected   Object[]               fArguments   =null ;   // Some expression involve other components
-private     int                    fInternalState       = 0 ;
-protected   ExpressionParser       fContentParser = null ; 
-protected 	Object               fPriority=null;      
-protected   Object                 fSync = new Object () ;
-protected   CodeExpressionRef  fShadowExp = null;
+protected   Statement				fExpr			= null ;
+protected   CodeMethodRef			fMethod			= null ;
+protected   IExpressionDecoder		fDecoder		= null ;   
+protected   BeanPart				fBean			= null ;
+protected   Object[]				fArguments		= null ;   // Some expression involve other components
+private     int						fInternalState	= 0 ;
+protected   ExpressionParser		fContentParser	= null ; 
+protected 	Object					fPriority		= null;      
+protected   Object					fSync			= new Object () ;
+protected   CodeExpressionRef		fShadowExp		= null;
 
 
 /*********
