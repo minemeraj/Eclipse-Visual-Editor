@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -67,6 +66,141 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass()),
 			VerifyListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// borderWidth
+			super.createPropertyDescriptor(getBeanClass(),"borderWidth", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("borderWidthDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("borderWidthSD"), //$NON-NLS-1$
+			}
+			),
+			// caretLineNumber
+			super.createPropertyDescriptor(getBeanClass(),"caretLineNumber", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("caretLineNumberDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("caretLineNumberSD"), //$NON-NLS-1$
+			}
+			),
+			// caretLocation
+			super.createPropertyDescriptor(getBeanClass(),"caretLocation", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("caretLocationDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("caretLocationSD"), //$NON-NLS-1$
+			}
+			),
+			// caretPosition
+			super.createPropertyDescriptor(getBeanClass(),"caretPosition", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("caretPositionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("caretPositionSD"), //$NON-NLS-1$
+			}
+			),
+			// charCount
+			super.createPropertyDescriptor(getBeanClass(),"charCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("charCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("charCountSD"), //$NON-NLS-1$
+			}
+			),
+			// doubleClickEnabled
+			super.createPropertyDescriptor(getBeanClass(),"doubleClickEnabled", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("doubleClickEnabledDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("doubleClickEnabledSD"), //$NON-NLS-1$
+			}
+			),
+			// echoChar
+			super.createPropertyDescriptor(getBeanClass(),"echoChar", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("echoCharDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("echoCharSD"), //$NON-NLS-1$
+			}
+			),
+			// editable
+			super.createPropertyDescriptor(getBeanClass(),"editable", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("editableDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("editableSD"), //$NON-NLS-1$
+			}
+			),
+			// lineCount
+			super.createPropertyDescriptor(getBeanClass(),"lineCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("lineCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("lineCountSD"), //$NON-NLS-1$
+			}
+			),
+			// lineDelimiter
+			super.createPropertyDescriptor(getBeanClass(),"lineDelimiter", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("lineDelimiterDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("lineDelimiterSD"), //$NON-NLS-1$
+			}
+			),
+			// lineHeight
+			super.createPropertyDescriptor(getBeanClass(),"lineHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("lineHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("lineHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// orientation
+			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("orientationDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("orientationSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionCount
+			super.createPropertyDescriptor(getBeanClass(),"selectionCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("selectionCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("selectionCountSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionText
+			super.createPropertyDescriptor(getBeanClass(),"selectionText", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("selectionTextDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("selectionTextSD"), //$NON-NLS-1$
+			}
+			),
+			// tabs
+			super.createPropertyDescriptor(getBeanClass(),"tabs", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("tabsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("tabsSD"), //$NON-NLS-1$
+			}
+			),
+			// text
+			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("textDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("textSD"), //$NON-NLS-1$
+			}
+			),
+			// textLimit
+			super.createPropertyDescriptor(getBeanClass(),"textLimit", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("textLimitDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("textLimitSD"), //$NON-NLS-1$
+			}
+			),
+			// topIndex
+			super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("topIndexDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("topIndexSD"), //$NON-NLS-1$
+			}
+			),
+			// topPixel
+			super.createPropertyDescriptor(getBeanClass(),"topPixel", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TextMessages.getString("topPixelDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TextMessages.getString("topPixelSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 	
 }

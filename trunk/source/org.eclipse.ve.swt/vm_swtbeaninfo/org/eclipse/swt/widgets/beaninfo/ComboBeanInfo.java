@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -49,14 +49,79 @@ public BeanDescriptor getBeanDescriptor() {
 	return descriptor;
 }
 
-/* (non-Javadoc)
- * @see java.beans.BeanInfo#getEventSetDescriptors()
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
  */
-public EventSetDescriptor[] getEventSetDescriptors() {
-	return new EventSetDescriptor[] {
-			ModifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
-			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// itemCount
+			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("itemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("itemCountSD"), //$NON-NLS-1$
+			}
+			),
+			// itemHeight
+			super.createPropertyDescriptor(getBeanClass(),"itemHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("itemHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("itemHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// items
+			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("itemsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("itemsSD"), //$NON-NLS-1$
+			}
+			),
+			// orientation
+			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("orientationDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("orientationSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionIndex
+			super.createPropertyDescriptor(getBeanClass(),"selectionIndex", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("selectionIndexDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("selectionIndexSD"), //$NON-NLS-1$
+			}
+			),
+			// text
+			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("textDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("textSD"), //$NON-NLS-1$
+			}
+			),
+			// textHeight
+			super.createPropertyDescriptor(getBeanClass(),"textHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("textHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("textHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// textLimit
+			super.createPropertyDescriptor(getBeanClass(),"textLimit", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("textLimitDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("textLimitSD"), //$NON-NLS-1$
+			}
+			),
+			// visibleItemCount
+			super.createPropertyDescriptor(getBeanClass(),"visibleItemCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ComboMessages.getString("visibleItemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ComboMessages.getString("visibleItemCountSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
 	};
+	return null;
 }
 
 }

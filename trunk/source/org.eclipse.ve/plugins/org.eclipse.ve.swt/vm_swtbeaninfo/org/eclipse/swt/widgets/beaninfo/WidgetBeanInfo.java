@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
  
 
 /**
@@ -43,6 +42,40 @@ public class WidgetBeanInfo extends IvjBeanInfo {
 		return new EventSetDescriptor[] {
 				DisposeListenerEventSet.getEventSetDescriptor(getBeanClass())
 		};
+	}
+	
+	/**
+	 * Return the property descriptors for this bean.
+	 * @return java.beans.PropertyDescriptor[]
+	 */
+	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+		try {
+			PropertyDescriptor aDescriptorList[] = {
+				// data
+				super.createPropertyDescriptor(getBeanClass(),"data", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, WidgetMessages.getString("dataDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, WidgetMessages.getString("dataSD"), //$NON-NLS-1$
+				}
+				),
+				// display
+				super.createPropertyDescriptor(getBeanClass(),"display", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, WidgetMessages.getString("displayDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, WidgetMessages.getString("displaySD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE
+				}
+				),
+				// disposed
+				super.createPropertyDescriptor(getBeanClass(),"disposed", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, WidgetMessages.getString("disposedDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, WidgetMessages.getString("disposedSD"), //$NON-NLS-1$
+				}
+				)
+			};
+			return aDescriptorList;
+		} catch (Throwable exception) {
+			handleException(exception);
+		};
+		return null;
 	}
 	
 }

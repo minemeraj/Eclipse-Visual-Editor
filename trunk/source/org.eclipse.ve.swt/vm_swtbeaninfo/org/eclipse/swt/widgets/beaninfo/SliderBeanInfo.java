@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SliderBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-08 16:09:19 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -53,5 +52,62 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[] {
 			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// enabled
+			super.createPropertyDescriptor(getBeanClass(),"enabled", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("enabledDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("enabledSD"), //$NON-NLS-1$
+			}
+			),
+			// increment
+			super.createPropertyDescriptor(getBeanClass(),"increment", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("incrementDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("incrementSD"), //$NON-NLS-1$
+			}
+			),
+			// maximum
+			super.createPropertyDescriptor(getBeanClass(),"maximum", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("maximumDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("maximumSD"), //$NON-NLS-1$
+			}
+			),
+			// minimum
+			super.createPropertyDescriptor(getBeanClass(),"minimum", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("minimumDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("minimumSD"), //$NON-NLS-1$
+			}
+			),
+			// pageIncrement
+			super.createPropertyDescriptor(getBeanClass(),"pageIncrement", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("pageIncrementDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("pageIncrementSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// thumb
+			super.createPropertyDescriptor(getBeanClass(),"thumb", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, SliderMessages.getString("thumbDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, SliderMessages.getString("thumbSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 }
