@@ -16,16 +16,17 @@ public class TestVersionTracker extends DefaultHandler {
 	private String installDirectory;
 	private Hashtable elements;
 	private SAXParser parser;
+	private String xmlFile;
 	
 	//test
 	public static void main(String[] args) {
 		TestVersionTracker Tracker =
 			new TestVersionTracker(args[1]);
 		Tracker.parse(args[0]);
-			Tracker.writeProperties(args[2], true);
+		Tracker.writeProperties(args[2], true);
 	}
 
-	public TestVersionTracker(String install) {
+	public TestVersionTracker(String install, Hashtable elements) {
 		//  Create a Xerces SAX Parser
 		parser = new SAXParser();
         
@@ -36,14 +37,18 @@ public class TestVersionTracker extends DefaultHandler {
 		installDirectory = install;
 
 		//  instantiate hashtable that will hold directory names with versions for elements
-		elements = new Hashtable();
+		this.elements = elements;
+	}
+	
+	public TestVersionTracker(String install) {
+		this(install, new Hashtable());
 	}
 
 	public void parse(String xmlFile){
-			
+		this.xmlFile = xmlFile;	
 		//  Parse the Document      
 		try {
-			parser.parse(xmlFile);
+			parser.parse(this.xmlFile);
 		} catch (SAXException e) {
 			System.err.println (e);
 		} catch (IOException e) {
@@ -66,6 +71,12 @@ public class TestVersionTracker extends DefaultHandler {
 				elements.put(element,element+"_"+version);
 		} else if (local.equals("feature"))
 				elements.put(element+"-feature",element+"_"+version);
+		else if (local.equals("includes")) {
+			File thisFile = new File(xmlFile);
+			String includeFile = thisFile.getParentFile().getParent() + '/' + element+"_"+version + "/feature.xml";
+			TestVersionTracker recurseTracker = new TestVersionTracker(installDirectory, elements);
+			recurseTracker.parse(includeFile);
+		}
 	}
 
 	public void writeProperties(String propertiesFile,boolean append){
