@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-25 22:06:23 $ 
  */
 import java.util.logging.Level;
 
@@ -331,7 +331,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 	public  void dispose() {		
 		if (fhelper != null){
-			if (!isDeleted()) {
+			if (fBeanModel!=null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT) && !isDeleted()) {
 				deleteFromComposition() ;
 			}
 			else
