@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.65 $  $Date: 2004-11-16 22:40:03 $ 
+ *  $Revision: 1.66 $  $Date: 2004-11-19 23:05:31 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -332,30 +332,39 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		Assert.isTrue(Display.getCurrent() != null);
 		boolean acquiredLock = false;
 		try {
+			EditDomain dom = null;
+			// Need to get it under sync because it may go null before getting here since this method was called asymc.
+			// Then check if null and if so exit.
+			synchronized(this) {
+				dom = editDomain;	
+			}
+			if (dom == null)
+				return;
+			
 			if (root == null) {
 				modelReady = false;
 				// We are going away. Try to build the path to the selected editparts so they can be restored later.
 				// Have to gather them all first because individually set the roots of the viewers to null will
 				// destroy the selection for the following viewers. The viewers may have slightly different selections
 				// if one viewer had an editpart that other didn't. So we need to get each individually.
-				Iterator itr = editDomain.getViewers().iterator();
+				Iterator itr = dom.getViewers().iterator();
 				while (itr.hasNext()) {
 					EditPartViewer viewer = (EditPartViewer) itr.next();
 					List selected = viewer.getSelectedEditParts();
 					if (selected.isEmpty())
-						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+						dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
 					else {
 						List paths = new ArrayList(selected.size());
 						for (int i = 0; i < selected.size(); i++) {
-							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
+							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), dom);
 							if (editPartNamePath == null)
 								continue; // If the root is selected, then treat as not selected.
 							paths.add(editPartNamePath);
 						}
 						if (paths.isEmpty())
-							editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+							dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
 						else
-							editDomain.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
+							dom.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
 					}
 				}
 			} else {
@@ -366,7 +375,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelReady = true;
 			}
 
-			Iterator itr = editDomain.getViewers().iterator();
+			Iterator itr = dom.getViewers().iterator();
 			while (itr.hasNext()) {
 				EditPartViewer viewer = (EditPartViewer) itr.next();
 				EditPart rootEP = viewer.getContents();
@@ -379,14 +388,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			if (root != null) {
 				// We have something, see if anything needs to be selected.
-				Iterator itr1 = editDomain.getViewers().iterator();
+				Iterator itr1 = dom.getViewers().iterator();
 				while (itr1.hasNext()) {
 					EditPartViewer viewer = (EditPartViewer) itr1.next();
-					List paths = (List) editDomain.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
+					List paths = (List) dom.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
 					if (paths != null) {
-						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // So that doesn't hang around.
+						dom.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // So that doesn't hang around.
 						for (int i = 0; i < paths.size(); i++) {
-							EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, editDomain);
+							EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, dom);
 							if (selected != null)
 								viewer.appendSelection(selected);
 						}
