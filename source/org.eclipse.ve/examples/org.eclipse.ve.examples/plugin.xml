@@ -100,18 +100,15 @@
    </extension>
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
-      <variable
-            path="JAVA_EXAMPLE">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.examples/vm/javaexamplebeaninfo.jar">
-               <searchpath
-                     package="org.eclipse.ve.examples.java.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </variable>
+      <registration
+            container="JAVA_EXAMPLE">
+        <beaninfo
+              path="/org.eclipse.ve.examples/vm/javaexamplebeaninfo.jar">
+           <searchpath
+                 package="org.eclipse.ve.examples.java.beaninfo">
+           </searchpath>
+        </beaninfo>
+      </registration>
    </extension>
    <extension
          point="org.eclipse.jem.beaninfo.overrides">

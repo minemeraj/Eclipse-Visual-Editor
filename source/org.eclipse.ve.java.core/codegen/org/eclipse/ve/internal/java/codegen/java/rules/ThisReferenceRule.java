@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-12 18:26:51 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;

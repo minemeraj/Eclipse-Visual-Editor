@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.ve.java.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.ve.java.core" id="contributors" name="Java Visual Editor Contributors"/>
+      </appInfo>
+      <documentation>
+         This extension point is used to supply configuration contributors for the Java Visual Editor. You can supply a contributor for a specific classpath container or for a plugin.
+&lt;p&gt;
+The way contributors work is that when a proxy vm for an editor is started or restarted, it goes through the classpath of the project and finds the visible containers (IClasspathContainer). If the container implements IVEContributor, it will be called as a contributor. Then all of the visible container ids and plugin ids will be used to look into this extension point, and if found, the contributor will be created and asked to contribute.
+&lt;p&gt;
+The extensions will be called in plugin order. In other words if plugin A depends on plugin B, the contribution in plugin A will not be called before the contribution in plugin B.
+&lt;p&gt;
+If a plugin is in the classpath of the project (in other words the project is PDE plugin development project and requires a plugin) then the contributor with the given plugin id will be called.
+&lt;p&gt;
+Both container and plugin can be specified, but at least one of them must be specified. If both are specified, then this entry will be used if either the container or the plugin is found in the classpath.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="palette" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a fully qualified identifier of the target extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional identifier of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  an optional name of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contributor">
+      <annotation>
+         <documentation>
+            This is a contributor for the visible container/plugin defined by container and plugin attributes.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="container" type="string">
+            <annotation>
+               <documentation>
+                  contributor is for a container. The value is the container id (e.g. &quot;org.eclispe.jdt.launching.JRE_CONTAINER&quot;).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="plugin" type="string">
+            <annotation>
+               <documentation>
+                  contributor is for a plugin. The value is the plugin id (e.g. &quot;org.eclipse.swt&quot;).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the class that implements this contributor. The class must implement IVEContributor.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="palette">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="categories"/>
+         </appInfo>
+         <documentation>
+            This is for a simple palette category addition for the given plugin or container.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="plugin" type="string">
+            <annotation>
+               <documentation>
+                  contributor is for a plugin. The value is the plugin id (e.g. &quot;org.eclipse.swt&quot;).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="container" type="string">
+            <annotation>
+               <documentation>
+                  contributor is for a container. The value is the container id (e.g. &quot;org.eclispe.jdt.launching.JRE_CONTAINER&quot;).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="loc" use="default" value="first">
+            <annotation>
+               <documentation>
+                  location of the category(s). Default is first.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="first">
+                  </enumeration>
+                  <enumeration value="last">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="categories" type="string" use="required">
+            <annotation>
+               <documentation>
+                  an xmi file containing the categories to be added at &quot;loc&quot;. If in the same plugin as the extension declaration, then it should not start with a &apos;/&apos; and the path will be relative to that plugin. If in a different plugin, then it should be of the form &quot;/plugin-id/path-to-file&quot;, where &quot;plugin-id&quot; is the id of the plugin where the file is found.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         The following is an example of a contributor: 
+
+&lt;p&gt;
+&lt;pre&gt;
+ &lt;extension point=&quot;org.eclipse.ve.java.core.contributors&quot;&gt;
+  &lt;contributor
+   class=&quot;com.example.ContributorImplementation&quot;
+   container=&quot;MY_CONTAINER&quot;&gt;
+  &lt;contributor&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+This will use an instance of &lt;samp&gt;com.example.ContributorImplementation&lt;/samp&gt; to supply contributions for the container &quot;MY_CONTAINER&quot;.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;pre&gt;
+ &lt;extension point=&quot;org.eclipse.ve.java.core.contributors&quot;&gt;
+  &lt;palette
+   container=&quot;MY_OTHER_CONTAINER&quot; plugin=&quot;my.other.plugin&quot; categories=&quot;palette/myOtherCats.xmi&quot;&gt;
+  &lt;/palette&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+This will use the xmi file &quot;palette/myOtherCats.xmi&quot; for both the container &quot;MY_OTHER_CONTAINER&quot; and for plugin &quot;my.other.plugin&quot;.
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         The &lt;samp&gt;class&lt;/samp&gt; attribute must be a fully-qualified class that implements the &lt;samp&gt;org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor&lt;/samp&gt; interface.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         There is &lt;samp&gt;org.eclipse.ve.internal.java.codegen.editorpart.VEContributorAdapter&lt;/samp&gt; available to subclass to provide specific overrides. The default for the adapter is that it doesn&apos;t do anything. It also supplies some helper methods.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Common Public License v1.0 which accompanies 
+this distribution, and is available at 
+&lt;a href=&quot;http://www.eclipse.org/legal/cpl-v10.html&quot;&gt;http://www.eclipse.org/legal/cpl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-22 23:49:37 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 

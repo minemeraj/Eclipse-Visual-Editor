@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-12 18:50:08 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-22 23:48:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 import java.util.logging.Level;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -25,18 +26,13 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.FeatureAttributeValue;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.beaninfo.impl.BeanDecoratorImpl;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.PTClassInstanceCreation;
-import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
-import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
@@ -156,12 +152,12 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
  */
 protected void mergeStyleBits(List propertyDescriptors, EClass eClass){
 
-	BeanDecoratorImpl beanDecor = (BeanDecoratorImpl) Utilities.getBeanDecorator(eClass);
+	BeanDecorator beanDecor = Utilities.getBeanDecorator(eClass);
 	Map styleDetails = getStyleDetails(beanDecor);
 	while(styleDetails == null || styleDetails.size() == 0){
 		eClass = ((JavaClass)eClass).getSupertype();
 		if(eClass == null) return;
-		beanDecor = (BeanDecoratorImpl)Utilities.getBeanDecorator(eClass);
+		beanDecor = Utilities.getBeanDecorator(eClass);
 		styleDetails = getStyleDetails(beanDecor);		
 	}
 	
@@ -247,8 +243,7 @@ public static Map getStyleDetails(BeanDecorator beanDecorator){
 		value.setValueJava(styleDetails);
 		return styleDetails;
 	}
-	if(value == null) return null;
-	return value.isSetValueJava() ? (Map)value.getValueJava() : null;
+	return null;
 }
 private WidgetProxyAdapter widgetProxyAdapter;
 private IJavaObjectInstance javaObjectInstance;

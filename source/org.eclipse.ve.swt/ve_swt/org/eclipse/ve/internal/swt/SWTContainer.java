@@ -49,6 +49,13 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		return containerPath;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
+	 */
+	public void initialize(IConfigurationContributionInfo info) {
+		SWTConfigurationContributor.INSTANCE.initialize(info);
+	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
 	 */

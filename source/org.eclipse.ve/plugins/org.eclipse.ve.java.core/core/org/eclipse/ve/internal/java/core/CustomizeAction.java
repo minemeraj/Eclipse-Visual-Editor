@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.List;
@@ -22,7 +22,7 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -67,7 +67,7 @@ public class EventsParser {
             if (events!= null && events.size()>0) {
 		    for (Iterator iter = events.iterator(); iter.hasNext();) {
 			   JavaEvent e = (JavaEvent) iter.next();
-			   EventSetDecorator ed = org.eclipse.jem.internal.beaninfo.adapters.Utilities.getEventSetDecorator(e) ;
+			   EventSetDecorator ed = org.eclipse.jem.internal.beaninfo.core.Utilities.getEventSetDecorator(e) ;
 			   if (ed != null)
 			      l.add(ed) ;
 		    }

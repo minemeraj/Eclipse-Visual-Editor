@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-24 19:34:08 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.*;
@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import com.ibm.wtp.common.logger.proxy.Logger;
 import com.ibm.wtp.logger.proxyrender.EclipseLogger;
@@ -33,6 +35,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 
 	public static final String PI_JBCF = "org.eclipse.ve.internal.java.core"; // Plugin ID, used for QualifiedName. //$NON-NLS-1$
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
+	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors";
 	// ID of the registrations extension point.
 
 	public static final String PI_VARIABLE = "variable"; // <variable> in extension point. //$NON-NLS-1$
@@ -283,5 +286,49 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public void shutdown() throws CoreException {
 		savePluginPreferences();
 	}
+	
+	/*
+	 * Map of container id's to their ordered array of contribution config elements.
+	 */
+	protected Map containerToContributions = null;
+	/*
+	 * Map of plugin id's to their ordered array of contribution config elements.
+	 */
+	protected Map pluginToContributions = null;
+	
+	/**
+	 * Return the plugin ordered array of configuration elements for the given container, or <code>null</code> if not contributed.
+	 * 
+	 * @param containerid
+	 * @return Array of configuration elements or <code>null</code> if this container has no contributions.
+	 * 
+	 * @since 1.0.0
+	 */
+	public IConfigurationElement[] getContainerConfigurations(String containerid) {
+		if (containerToContributions == null)
+			processProxyContributionExtensionPoint();
+		return (IConfigurationElement[]) containerToContributions.get(containerid);
+	}
+
+	/**
+	 * Return the plugin ordered array of configuration elements for the given plugin, or <code>null</code> if not contributed.
+	 * 
+	 * @param pluginid
+	 * @return Array of configuration elements or <code>null</code> if this plugin has no contributions.
+	 * 
+	 * @since 1.0.0
+	 */
+	public IConfigurationElement[] getPluginConfigurations(String pluginid) {
+		if (pluginToContributions == null)
+			processProxyContributionExtensionPoint();
+		return (IConfigurationElement[]) pluginToContributions.get(pluginid);
+	}
+	
+	protected void processProxyContributionExtensionPoint() {
+		ProxyPlugin.ContributorExtensionPointInfo info = ProxyPlugin.processContributionExtensionPoint(PI_CONTRIBUTION_EXTENSION_POINT);
+		containerToContributions = info.containerToContributions;
+		pluginToContributions = info.pluginToContributions;
+	}
+	
 
 }

@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -52,7 +52,7 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	
 	protected EventSetDecorator getDecorator() {
 		if (fEventDecorator == null)
-		   fEventDecorator = org.eclipse.jem.internal.beaninfo.adapters.Utilities.getEventSetDecorator(((EventInvocation)fEventInvocation).getEvent()) ;
+		   fEventDecorator = org.eclipse.jem.internal.beaninfo.core.Utilities.getEventSetDecorator(((EventInvocation)fEventInvocation).getEvent()) ;
 		return fEventDecorator ;		   
 	}
 

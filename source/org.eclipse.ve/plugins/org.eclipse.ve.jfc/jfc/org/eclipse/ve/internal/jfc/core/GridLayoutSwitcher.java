@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutSwitcher.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-22 23:49:21 $ 
  */
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +20,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;

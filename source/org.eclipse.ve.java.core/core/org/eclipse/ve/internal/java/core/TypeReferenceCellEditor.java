@@ -10,60 +10,57 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-19 12:20:47 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.List;
 
-import org.eclipse.core.runtime.*;
-import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.util.*;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.views.properties.*;
-import org.eclipse.jem.internal.beaninfo.adapters.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
-
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMFactory;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.choosebean.*;
-import org.eclipse.ve.internal.java.choosebean.ChooseBeanDialog;
-import org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor;
-import org.eclipse.ve.internal.java.rules.IChildRule;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.vce.rules.*;
-import org.eclipse.ve.internal.java.vce.rules.VCEChildRule;
-import org.eclipse.ve.internal.java.vce.rules.VCEPreSetCommand;
 
-import org.eclipse.ve.internal.propertysheet.*;
+import org.eclipse.ve.internal.propertysheet.INeedData;
+import org.eclipse.ve.internal.propertysheet.ISourced;
  
 /**
- * 
+ * Cell editor to show base components (i.e. ones that are members of the BeanSubclassComposition and not members
+ * of Methods) that are instances of the java type for this cell editor. Also allows construction of base news ones
+ * if one wanted is not on the BeanComposition.
  * @since 1.0.0
  */
 public class TypeReferenceCellEditor extends DialogCellEditor implements INeedData , ISourced , IExecutableExtension {
 
 	CCombo combo;
 	private EditDomain editDomain;
-	private String qualifiedClassName;
-	protected BeanSubclassComposition beanComposition; // The top level object ( the free form )
+	private JavaClass javaClass;
+	protected BeanComposition beanComposition; // The top level object ( the free form )
 	protected List javaObjects; // Store the java objects on the free form that match the search class
 	protected List javaObjectLabels;
 	protected int selection = -1;
@@ -72,19 +69,17 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	public TypeReferenceCellEditor(Composite parent){
 		super(parent);
 	}
-	public TypeReferenceCellEditor(Composite parent, String aQualifiedClassName){
+	public TypeReferenceCellEditor(JavaHelpers javaType, Composite parent){
 		this(parent);
-		qualifiedClassName = aQualifiedClassName;
+		this.javaClass = (JavaClass) javaType;
 		
 	}
 	
 	protected Object openDialogBox(Control cellEditorWindow) {
-		String[] packageAndClassName = BeanUtilities.getPackageAndUnqualifiedClassName(qualifiedClassName); 
-		// TODO Auto-generated method stub
 		ChooseBeanDialog chooseBean = new ChooseBeanDialog(
 				cellEditorWindow.getShell(),
 				editDomain,
-				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor(qualifiedClassName,packageAndClassName[0],packageAndClassName[1])},
+				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor(javaClass.getQualifiedName(),javaClass.getJavaPackage().getPackageName(), javaClass.getName())},
 				-1,
 				false);				
 		chooseBean.setFilter("*");
@@ -154,18 +149,16 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		javaObjects = new ArrayList();
 		javaObjectLabels = new ArrayList();
 		Iterator components = beanComposition.getMembers().iterator();
-		// To do comparisons that allow for inheritance we need to find the EMF JavaClass that represents the class we are searching for
-		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(qualifiedClassName,firstSource.eResource().getResourceSet());
 		while(components.hasNext()){
 			Object component = components.next();
-			if ( component instanceof IJavaObjectInstance ) { // We might have non java components 
+			if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
 				// Test the class
-				IJavaObjectInstance javaComponent = (IJavaObjectInstance) component;
-				JavaClass componentClass = (JavaClass) javaComponent.getJavaType();
-				if ( javaClass.isAssignableFrom(componentClass)) {
+				IJavaInstance javaComponent = (IJavaObjectInstance) component;
+				JavaHelpers componentType= javaComponent.getJavaType();
+				if ( javaClass.isAssignableFrom(componentType)) {
 					javaObjects.add(component);	
 					// The label used for the icon is the same one used by the JavaBeans tree view
-					ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentClass);
+					ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentType);
 					if ( labelProvider != null ) {
 						javaObjectLabels.add(labelProvider.getText(component));		
 					} else { 
@@ -189,7 +182,8 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	public void setInitializationData(IConfigurationElement element, String data, Object object){
 		// Use this to set the class name passed in
 		if ( object instanceof String ) {
-			qualifiedClassName = (String)object;
+			// TODO get results from Joe if this is even necessary now.
+//			qualifiedClassName = (String)object;
 		}
 	}	
 	

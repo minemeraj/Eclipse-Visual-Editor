@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;

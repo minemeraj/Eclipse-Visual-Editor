@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-22 23:49:21 $ 
  */
 
 import java.util.List;
@@ -24,7 +24,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;

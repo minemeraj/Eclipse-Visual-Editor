@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
