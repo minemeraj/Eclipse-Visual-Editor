@@ -10,7 +10,6 @@ import java.beans.*;
 
 public class StackLayoutBeanInfo extends IvjBeanInfo {
 
-private static java.util.ResourceBundle StackLayoutMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.stacklayout");  //$NON-NLS-1$
 
 /**
  * Gets the bean class.
