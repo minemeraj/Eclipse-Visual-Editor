@@ -29,7 +29,8 @@ public class ControlManager implements ICallback {
 			CO_MOVED = 2,
 			CO_REFRESHED = 3,
 			IMAGE_INITIAL_LENGTH = 4,
-			IMAGE_FINISHED = 5;	
+			IMAGE_FINISHED = 5,
+			IMAGE_COLOR_MASKS = 6;	
 	protected VisualComponentSupport vcSupport = new VisualComponentSupport();
 	protected IBeanProxy fControlManagerProxy;
 	protected IBeanProxy fControlBeanProxy;
@@ -44,6 +45,7 @@ public class ControlManager implements ICallback {
 		int[] data;
 		boolean isComplete;
 		ImageData fImageData;
+		int depth, redMask, greenMask, blueMask;	
 		public void setLength(int length){
 			data = new int[length];
 		}
@@ -52,16 +54,15 @@ public class ControlManager implements ICallback {
 			fHeight = height;
 		}
 		public void write(int i) {
-			// The int is 32 bits which represents 4 bytes of image data
-			data[fPointer] = i;
-			fPointer++;
+				data[fPointer] = i;
+				fPointer++;
 		}
 		public void setComplete(){
 			isComplete = true;
 		}
 		public ImageData getImageData(){
 			if(isComplete && fImageData == null){
-				fImageData = new ImageData(fWidth,fHeight,32,new PaletteData(0xFF00,0xFF0000,0xFF000000));
+				fImageData = new ImageData(fWidth,fHeight,depth,new PaletteData(redMask,greenMask,blueMask));
 				// Convert the int[] to a byte[]
 				byte[] bytes = new byte[data.length];
 				for (int i = 0; i < data.length; i++) {
@@ -197,6 +198,12 @@ public Object calledBack(int msgID, Object[] parms){
 			fDataCollector = new DataCollector();
 			fDataCollector.setLength(((IIntegerBeanProxy)parms[0]).intValue());
 			fDataCollector.setSize(((IIntegerBeanProxy)parms[1]).intValue(),((IIntegerBeanProxy)parms[2]).intValue());
+			break;
+		case IMAGE_COLOR_MASKS :
+			fDataCollector.depth = (((IIntegerBeanProxy)parms[0]).intValue());			
+			fDataCollector.redMask = (((IIntegerBeanProxy)parms[1]).intValue());
+			fDataCollector.greenMask = (((IIntegerBeanProxy)parms[2]).intValue());
+			fDataCollector.blueMask = (((IIntegerBeanProxy)parms[3]).intValue());
 			break;
 	}
 	return null;
