@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDESelectionTool.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-23 23:12:41 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -41,7 +41,7 @@ public class CDESelectionTool extends SelectionTool {
 	 */
 	public void mouseMove(MouseEvent me, EditPartViewer viewer) {
 		super.mouseMove(me, viewer);
-		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != IModelChangeController.READY_STATE)
+		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != ModelChangeController.READY_STATE)
 			refreshCursor();	// Get the appropriate cursor up.		
 	}
 	
@@ -50,7 +50,7 @@ public class CDESelectionTool extends SelectionTool {
 	 */
 	public void mouseDrag(MouseEvent e, EditPartViewer viewer) {
 		super.mouseDrag(e, viewer);
-		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != IModelChangeController.READY_STATE)
+		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != ModelChangeController.READY_STATE)
 			refreshCursor();	// Get the appropriate cursor up.		
 	}
 	
@@ -58,7 +58,7 @@ public class CDESelectionTool extends SelectionTool {
 	 * @see org.eclipse.gef.tools.AbstractTool#refreshCursor()
 	 */
 	protected void refreshCursor() {
-		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != IModelChangeController.READY_STATE) {
+		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != ModelChangeController.READY_STATE) {
 			// Can't use super.refreshCursor because that will send to drag tracker, but while in accessible drag
 			// we don't want drag tracker to put it up if bad cursor.
 			if (isActive())
@@ -72,7 +72,7 @@ public class CDESelectionTool extends SelectionTool {
 	 */
 	protected boolean handleKeyUp(KeyEvent e) {
 		boolean result = super.handleKeyUp(e);
-		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != IModelChangeController.READY_STATE)
+		if (getDragTracker() != null && CDEUtilities.getHoldState((EditDomain) getDomain()) != ModelChangeController.READY_STATE)
 			refreshCursor();	// Get the appropriate cursor up.
 		return result;
 	}

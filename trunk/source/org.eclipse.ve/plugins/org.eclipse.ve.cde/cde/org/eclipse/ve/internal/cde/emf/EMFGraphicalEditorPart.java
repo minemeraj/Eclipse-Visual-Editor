@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-22 13:51:27 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-23 23:12:41 $ 
  */
 
 
@@ -282,68 +282,30 @@ protected DefaultEditDomain createEditDomain(){
 	dom.setRuleRegistry(createRuleRegistry());
 	dom.setAnnotationLinkagePolicy(createLinkagePolicy());
 	// Give it a default do nothing special model controller.
-	dom.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, new IModelChangeController() {
+	dom.setData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, new ModelChangeController() {
 				
 		/* (non-Javadoc)
-         * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getRootPropertySheetEntry()
+         * @see org.eclipse.ve.internal.cde.core.ModelChangeController#getRootPropertySheetEntry()
          */
         protected IDescriptorPropertySheetEntry getRootPropertySheetEntry() {
             return rootPropertySheetEntry;
         }
 		
 		/* (non-Javadoc)
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#inTransaction()
-		 */
-		public synchronized boolean inTransaction() {
-			return compoundChangeCount > 0;
-		}
-		
-		public void setHoldChanges(boolean flag, String msg) {
-			// TODO deprecated - remove when ready
-		}
-
-		public boolean isHoldChanges() {
-			return false;	// TODO deprecated - remove when ready.
-		}
-		
-		/* (non-Javadoc)
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldState()
+		 * @see org.eclipse.ve.internal.cde.core.ModelChangeController#getHoldState()
 		 */	
 		public int getHoldState() {
 			return holdState;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#run(Runnable, boolean)
-		 */	
-		public boolean run(Runnable runnable, boolean updatePS) {
-			if (getHoldState() != IModelChangeController.READY_STATE)
-				return false;	// Not in position to execute.
-			
-			try {
-				startChange();
-				runnable.run();
-				if (updatePS && rootPropertySheetEntry != null)
-					rootPropertySheetEntry.refreshFromRoot();
-			} finally {
-				stopChange();
-			}
-
-			return true;
+		protected synchronized void startChange(boolean nested) {
 		}
 
-		protected synchronized void startChange() {
-			compoundChangeCount++;
-		}
-
-		protected synchronized void stopChange() {
-			if (--compoundChangeCount <= 0) {
-				compoundChangeCount = 0; // In case we get out of sync.
-			}
+		protected synchronized void stopChange(boolean nested) {
 		}
 
 		/* (non-Javadoc)
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
+		 * @see org.eclipse.ve.internal.cde.core.ModelChangeController#getHoldMsg()
 		 */
 		public String getHoldMsg() {
 			return holdMsg;

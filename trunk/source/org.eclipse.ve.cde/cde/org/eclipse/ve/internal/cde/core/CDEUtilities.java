@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-23 23:12:41 $ 
  */
 
 
@@ -257,15 +257,15 @@ public class CDEUtilities {
 	 * @since 1.0.0
 	 */
 	public static Cursor calculateCursor(EditDomain domain) {
-		IModelChangeController mc = (IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+		ModelChangeController mc = (ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 		if (mc != null) {
 			int holdState = mc.getHoldState();
 			switch (holdState) {
-				case IModelChangeController.READY_STATE:
+				case ModelChangeController.READY_STATE:
 					return null;	// Normal state, which means do rest of normal tests.
-				case IModelChangeController.BUSY_STATE:
+				case ModelChangeController.BUSY_STATE:
 					return SharedCursors.WAIT;	// Busy, so wait
-				case IModelChangeController.NO_UPDATE_STATE:
+				case ModelChangeController.NO_UPDATE_STATE:
 				default:
 					// For now default goes in here too. May want to extend capability to have more cursors depending on state.
 					return SharedCursors.NO;	// Update not allowed.
@@ -281,18 +281,18 @@ public class CDEUtilities {
 	 * hold state it doesn't send requests to the tracker and causes a refreshCursor to occur so correct cursor shows up.
 	 * 
 	 * @param domain
-	 * @return the hold state from IModelChangeController
+	 * @return the hold state from ModelChangeController
 	 * 
 	 * @see CDEUtilities#calculateCursor(EditDomain)
-	 * @see IModelChangeController#getHoldState()
+	 * @see ModelChangeController#getHoldState()
 	 * @since 1.0.0
 	 */
 	public static int getHoldState(EditDomain domain) {
-		IModelChangeController mc = (IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+		ModelChangeController mc = (ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 		if (mc != null)
 			return mc.getHoldState();
 		else
-			return IModelChangeController.READY_STATE;
+			return ModelChangeController.READY_STATE;
 	}
 	
 	/**

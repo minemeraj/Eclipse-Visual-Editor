@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-23 23:13:00 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -103,7 +103,7 @@ public class ReloadAction extends Action {
 		// dbk avoid spurious updates
 		if (lastCheckedState != null && lastCheckedState.booleanValue() == isChecked)
 			return;
-		lastCheckedState = new Boolean(isChecked);		
+		lastCheckedState = Boolean.valueOf(isChecked);		
 		// TODO We need full gammit of icons for this.
 		if (isChecked) {
 			setToolTipText(JVE_STATUS_MSG_RELOAD);
@@ -128,13 +128,13 @@ public class ReloadAction extends Action {
 		// dbk avoid spurious updates
 		if (lastParseErrorState != null && lastParseErrorState.booleanValue() == error)
 			return;
-		lastParseErrorState = new Boolean(error);
+		lastParseErrorState = Boolean.valueOf(error);
 		if (error) {
 			setToolTipText(JVE_STATUS_BAR_MSG_PARSE_ERROR);
 			setText(JVE_STATUS_MSG_ERROR);
 			setHoverImageDescriptor(ERROR_IMAGE_DESCRIPTOR);
 			setChecked(true);
-			lastCheckedState = new Boolean(true);			
+			lastCheckedState = Boolean.TRUE;			
 		} else {
 			setChecked(false);
 			setCorrectText();

@@ -11,14 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorCommandStack.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-22 13:42:43 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-23 23:13:00 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.gef.commands.*;
 
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
 /*
  * This is a dummy command stack that executes commands but does not actually keep a stack
@@ -27,7 +27,7 @@ import org.eclipse.ve.internal.cde.core.IModelChangeController;
  * This makes for a more consistent user experiences where GUI changes and also source changes
  * are all undone together
  *
- * It will use the passed in IModelChangeController to process the commands.
+ * It will use the passed in ModelChangeController to process the commands.
  * 
  * <package> protected because only the JavaVisualEditorPart should use it. 
  * 
@@ -36,9 +36,9 @@ import org.eclipse.ve.internal.cde.core.IModelChangeController;
 class JavaVisualEditorCommandStack extends CommandStack {
 
 	protected List fCommandStackListeners;
-	protected IModelChangeController modelChangeController;
+	protected ModelChangeController modelChangeController;
 
-	public JavaVisualEditorCommandStack(IModelChangeController modelChangeController) {
+	public JavaVisualEditorCommandStack(ModelChangeController modelChangeController) {
 		this.modelChangeController = modelChangeController;
 	}
 
