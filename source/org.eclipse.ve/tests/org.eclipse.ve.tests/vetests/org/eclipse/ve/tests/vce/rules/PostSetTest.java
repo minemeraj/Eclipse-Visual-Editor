@@ -11,8 +11,12 @@ package org.eclipse.ve.tests.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: PostSetTest.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-31 20:56:23 $ 
  */
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 
@@ -64,6 +68,22 @@ public class PostSetTest extends TestCase {
 		
 		domain = new EditDomain(null);
 		domain.setAnnotationLinkagePolicy(new EMFAnnotationLinkagePolicy());
+		
+	}
+	
+	/**
+	 * Check that there aren't any dangling refs. I.e. we don't have a ref to something
+	 * that is no longer contained within the resource. This is important because VCEPostSet is 
+	 * not supposed to leave dangling refs.
+	 * 
+	 * @param res
+	 * @throws IOException
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void checkNoDangling(Resource res) throws IOException {
+		ByteArrayOutputStream bo = new ByteArrayOutputStream();
+		res.save(bo, Collections.EMPTY_MAP); 
 	}
 
 	
@@ -71,7 +91,7 @@ public class PostSetTest extends TestCase {
 	 * Test deletion when there is a reference to an
 	 * object within in the same set that is to be deleted.
 	 */
-	public void testCrossRefInDeleteSet() {
+	public void testCrossRefInDeleteSet() throws IOException {
 		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testCrossRefInDelete.xmi"), true);
 		setupResource(testRes);
 		
@@ -87,13 +107,15 @@ public class PostSetTest extends TestCase {
 		assertTrue("Not all members removed.", comp.getMembers().isEmpty());		
 		assertTrue("Not all components removed.", comp.getComponents().isEmpty());		
 		assertTrue("Not all initialize methods removed.", comp.getMethods().isEmpty());
+		
+		checkNoDangling(testRes);
 	}
 	
 	/**
 	 * Test deletion when parent deleted that all children go too.
 	 * This is a simple containment case, no interactions with others.
 	 */
-	public void testParentDelete() {
+	public void testParentDelete() throws IOException {
 		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testParentDelete.xmi"), true);
 		setupResource(testRes);
 		
@@ -109,14 +131,17 @@ public class PostSetTest extends TestCase {
 		assertTrue("Not all members removed.", comp.getMembers().isEmpty());		
 		assertTrue("Not all components removed.", comp.getComponents().isEmpty());		
 		assertTrue("Not all initialize methods removed.", comp.getMethods().isEmpty());
+		
+		checkNoDangling(testRes);
 	}
 
 	/**
 	 * Test deletion when parent deleted that all children go too.
 	 * There is a cross-ref to a child outside of the parent. It should
 	 * still be around afterwards.
+	 * @throws IOException
 	 */
-	public void testParentDeleteCrossRefOutside() {
+	public void testParentDeleteCrossRefOutside() throws IOException {
 		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testParentDeleteCrossRefOutside.xmi"), true);
 		setupResource(testRes);
 		
@@ -146,6 +171,8 @@ public class PostSetTest extends TestCase {
 		
 		EStructuralFeature crossRef = child3.eClass().getEStructuralFeature("crossRef");
 		assertNull("crossRef from Child1 not removed.", InverseMaintenanceAdapter.getFirstReferencedBy(child3, (EReference) crossRef));
+		
+		checkNoDangling(testRes);
 	}
 		
 	/*
@@ -165,5 +192,295 @@ public class PostSetTest extends TestCase {
 		dd.eAdapters().add(ia);
 		ia.propagate();		
 	}
+	
+	/**
+	 * P1-c->C-d->P2
+	 * 
+	 * Delete P1, means C (because child) and P2 (because no other backrefs) goes.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends1() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends1.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer1");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}
+	
+	/**
+	 * P1-c->C-d->P2
+	 * 
+	 * Delete P2, means C (because child of P1) and P1 (because C can't affect it) stay.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends1a() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends1.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer2");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer2"));
+		assertNotNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		
+		checkNoDangling(testRes);
+	}	
+
+	/**
+	 * P1-->C-d->P2
+	 * 
+	 * Delete P1, means C (because no other backrefs) and P2 (because no other backrefs) goes.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends2() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends2.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer1");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}
+	
+	/**
+	 * P1-->C-d->P2
+	 * 
+	 * Delete P2, means C (because depends ref) goes and P1 (because C can't affect it) stays.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends2a() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends2.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer2");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer2"));
+		assertNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		
+		checkNoDangling(testRes);
+	}	
+
+	/**
+	 * P1-->C-d->P2
+	 * 
+	 * Delete C, means P1 (because not part of child chain) stays and P2 (because no other backrefs) goes.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends2c() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends2.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject child = testRes.getEObject("child1");
+		cbld.append(childRule.postDeleteChild(domain, child));
+		cbld.getCommand().execute();
+
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}
+
+	/**
+	 * P1-d->C-d->P2
+	 * 
+	 * Delete P1, means C (because no other backrefs) and P2 (because no other backrefs) goes.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends3() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends3.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer1");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}
+	
+	/**
+	 * P1-d->C-d->P2
+	 * 
+	 * Delete C, means P1 (because depends on C) and P2 (because no other backrefs) goes.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends3b() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends3.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject child = testRes.getEObject("child1");
+		cbld.append(childRule.postDeleteChild(domain, child));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}
+	
+	/**
+	 * P1-d->C-d->P2
+	 * 
+	 * Delete P2, means C (because depends) and P1 (because depends) goes.
+	 * 
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends3c() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends3.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer2");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
+	}	
+
+	/**
+	 * P1-c->C1-d->P2
+	 *       C2-d---^
+	 * 
+	 * Delete P1, means C1 (because child) goes and P2 (because C2 refs) stays.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends4() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends4.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer1");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer2"));
+		assertNotNull(testRes.getEObject("child2"));
+		
+		checkNoDangling(testRes);
+	}
+
+	/**
+	 * P1-c->C1-d->P2
+	 *       C2-d---^
+	 * 
+	 * Delete P2, means C1 (because child) stays and C2 (because depends on P2) goes.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends4a() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends4.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer2");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		assertNotNull(testRes.getEObject("child1"));
+		assertNull(testRes.getEObject("parentContainer2"));
+		assertNull(testRes.getEObject("child2"));
+		
+		checkNoDangling(testRes);
+	}
+	
+	/**
+	 * P1-c->C1-d->P2
+	 *       C2-d---^
+	 * 
+	 * Delete C2, means C1 (because child) stays and P2 (because backrefs) stays.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends4b() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends4.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject child = testRes.getEObject("child2");
+		cbld.append(childRule.postDeleteChild(domain, child));
+		cbld.getCommand().execute();
+
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		assertNotNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer2"));
+		assertNull(testRes.getEObject("child2"));
+		
+		checkNoDangling(testRes);
+	}	
+
+	/**
+	 * P1-c->C1-d->P2
+	 *       C2-d---^
+	 * 
+	 * Delete C1, means C1 (because child) and P2 (because C1 didn't go) and C2 (because P2 didn't go) stays.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDeleteDepends4c() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDepends4.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject child = testRes.getEObject("child1");
+		cbld.append(childRule.postDeleteChild(domain, child));
+		cbld.getCommand().execute();
+
+		assertNotNull(testRes.getEObject("parentContainer1"));
+		assertNotNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer2"));
+		assertNotNull(testRes.getEObject("child2"));
+		
+		checkNoDangling(testRes);
+	}	
 
 }

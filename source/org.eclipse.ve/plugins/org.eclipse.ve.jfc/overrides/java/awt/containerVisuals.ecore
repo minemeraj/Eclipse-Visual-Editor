@@ -17,7 +17,7 @@
                     LayoutManager's shouldn't set constraint, except if it is a string. LayoutManager2's should, if necessary. -->
   <eClassifiers xsi:type="ecore:EClass" xmi:id="ConstraintComponent" name="ConstraintComponent">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" xmi:id="ConstraintComponent/component" eType="java:JavaClass java:/java.awt#Component">
-      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>        
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="CHILD"/>        
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" xmi:id="ConstraintComponent/constraint" eType="java:JavaClass java:/java.lang#Object" unsettable="true"/>
     

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import java.util.*;
@@ -33,6 +33,7 @@ import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.MemberContainer;
@@ -125,7 +126,12 @@ public class VCEPostSetCommand extends CommandWrapper {
 					// There are references.
 					for (int i = 0; i < features.length; i++) {
 						EReference feature = features[i];
-						if (feature != initSF && feature != returnSF && feature != refby && isChildRelationShip(feature)) {
+						if (feature == refby) {
+							// If there are any other refs except from target, then we have another child ref (because this is a child ref).
+							// Test by back ref length, if only one, then it must be the target.
+							if (ai.getReferencedBy(feature).length > 1)
+								return false;
+						} else if (feature != initSF && feature != returnSF && isChildRelationShip(feature)) {
 							// It won't go away. Somebody else references thru child relationship. We leave it here.
 							return false;
 						} 
@@ -137,7 +143,12 @@ public class VCEPostSetCommand extends CommandWrapper {
 					// There are references, check if any other than init/return.
 					for (int i = 0; i < features.length; i++) {
 						EReference feature = features[i];
-						if (feature != initSF && feature != returnSF && feature != refby) {
+						if (feature == refby) {
+							// If there are any other refs except from target, then somebody else references.
+							// Test by back ref length, if only one, then it must be the target.
+							if (ai.getReferencedBy(feature).length > 1)
+								return false;
+						} else if (feature != initSF && feature != returnSF && feature != refby) {
 							// It won't go away. Somebody else references. We leave it here.
 							return false;
 						} 
@@ -154,65 +165,84 @@ public class VCEPostSetCommand extends CommandWrapper {
 		
 		processed.add(oldValue);		
 		// Now walk through the children to have them also removed if necessary.
-		Iterator refsItr = oldValue.eClass().getEAllReferences().iterator();
+		Iterator refsItr = oldValue.eClass().getEAllStructuralFeatures().iterator();
 		List linkRemoveList = null;	// A list for links to remove, used in the loop only.
 		while (refsItr.hasNext()) {
-			EReference ref = (EReference) refsItr.next();
-			if (ref.isChangeable() && oldValue.eIsSet(ref)) {
-				boolean continueChild = continueAsChild(child, ref);
-				if (ref.isMany()) {
-					Iterator kids = ((List) oldValue.eGet(ref)).iterator();
-					while (kids.hasNext()) {
-						Object kid = kids.next();
-						if (kid instanceof EObject && !processed.contains(kid)) {
-							boolean handled = handleValue(cbld, (EObject) kid, ref, oldValue, ref.isContainment(), continueChild, removedValues, processed);
-							if (!handled) {
-								// Not handled, so we add a break of the link to the linkRemoveList so that we can
+			EStructuralFeature sf = (EStructuralFeature) refsItr.next();
+			if (sf instanceof EReference) {
+				EReference ref = (EReference) sf;
+				if (ref.isChangeable() && oldValue.eIsSet(ref)) {
+					boolean continueChild = continueAsChild(child, ref);
+					if (ref.isMany()) {
+						Iterator kids = ((List) oldValue.eGet(ref)).iterator();
+						while (kids.hasNext()) {
+							Object kid = kids.next();
+							if (kid != null && !processed.contains(kid)) {
+								boolean handled = handleValue(cbld, (EObject) kid, ref, oldValue, ref.isContainment(), continueChild, removedValues, processed);
+								if (!handled) {
+									// Not handled, so we add a break of the link to the linkRemoveList so that we can
+									// remove this link since kid may not be going away and we don't want dangling
+									// back references from kid to oldValue in kid's InverseMaintenanceAdapter. It could be processed
+									// again later in the processing tree of this request, so it may be an unnecessary
+									// link break, but that is ok.
+									if (!okToKeepLink(ref, (EObject) kid)) {
+										if (linkRemoveList == null)
+											linkRemoveList = new ArrayList(2);
+										linkRemoveList.add(kid);
+									}
+								}
+							}
+						}
+						if (linkRemoveList != null && !linkRemoveList.isEmpty()) {
+							// Now remove the non-handled links. Couldn't do it at the time because of the iterator.
+							cbld.cancelAttributeSettings(oldValue, ref, linkRemoveList);
+							linkRemoveList.clear();
+						}
+					} else {
+						Object kid = oldValue.eGet(ref);
+						if (kid != null && !processed.contains(kid))
+							if (!handleValue(cbld, (EObject) kid, ref, oldValue, ref.isContainment(), continueChild, removedValues, processed)) {
+								// Not handled, so we add a break of the link to the command builder so that we can
 								// remove this link since kid may not be going away and we don't want dangling
 								// back references from kid to oldValue in kid's InverseMaintenanceAdapter. It could be processed
 								// again later in the processing tree of this request, so it may be an unnecessary
 								// link break, but that is ok.
-								if (!okToKeep(ref, (EObject) kid)) {
-									if (linkRemoveList == null)
-										linkRemoveList = new ArrayList(2);
-									linkRemoveList.add(kid);
-								}
+								if (!okToKeepLink(ref, (EObject) kid))
+									cbld.cancelAttributeSetting(oldValue, ref);
 							}
-						}
 					}
-					if (linkRemoveList != null && !linkRemoveList.isEmpty()) {
-						// Now remove the non-handled links. Couldn't do it at the time because of the iterator.
-						cbld.cancelAttributeSettings(oldValue, ref, linkRemoveList);
-						linkRemoveList.clear();
-					}
-				} else {
-					Object kid = oldValue.eGet(ref);
-					if (kid instanceof EObject && !processed.contains(kid))
-						if (!handleValue(cbld, (EObject) kid, ref, oldValue, ref.isContainment(), continueChild, removedValues, processed)) {
-							// Not handled, so we add a break of the link to the command builder so that we can
-							// remove this link since kid may not be going away and we don't want dangling
-							// back references from kid to oldValue in kid's InverseMaintenanceAdapter. It could be processed
-							// again later in the processing tree of this request, so it may be an unnecessary
-							// link break, but that is ok.
-							if (!okToKeep(ref, (EObject) kid))
-								cbld.cancelAttributeSetting(oldValue, ref);
-						}
+				
 				}
-			
 			}
 		}			
 
 		// We are going away, so get rid of any references to us, except the init and return, those must be handled at the very end when we handle all at once.
+		// If the backref is a DEPENDENCY type link, then the source of the link needs to be treated like a child
 		features = ai != null ? ai.getFeatures() : EMPTY_REFS;	// Reget the list so that we only see what are there (some may of been removed in subprocessing).
 		for (int i = 0; i < features.length; i++) {
 			EReference feature = features[i];
-			EObject[] refs = ai.getReferencedBy(feature);
 			if (feature != initSF && feature != returnSF) {
 				// Delete all references other than the refBy feature from our target that is being removed that caused us to be called,
 				// because that will be handled by the caller to handleValue.
+				EObject[] refs = ai.getReferencedBy(feature);
+				boolean isDependency = isDependencyRelationShip(feature); 
 				for (int j = 0; j < refs.length; j++)
-					if (feature != refby || refs[j] != refTarget)
-						cbld.cancelAttributeSetting(refs[j], feature, oldValue);
+					if (feature != refby || refs[j] != refTarget) {
+						boolean cancelSetting = true;
+						if (isDependency) {
+							// This is a dependency link to us but not from the caller to us on this feature.
+							// So we will treat the back ref as a child link.
+							EObject kid = refs[j];
+							if (kid != null && !processed.contains(kid)) {
+								if (handleValue(cbld, (EObject) kid, null, null, false, true, removedValues, processed)) {
+									// It will be going away, so don't bother breaking this backref.
+									cancelSetting = false;
+								}
+							}
+						}
+						if (cancelSetting)
+							cbld.cancelAttributeSetting(refs[j], feature, oldValue);
+					}
 			}
 		}
 	
@@ -225,9 +255,14 @@ public class VCEPostSetCommand extends CommandWrapper {
 		return true;
 	}
 	
-	private boolean okToKeep(EReference ref, EObject kid) {
+	private boolean okToKeepLink(EReference ref, EObject kid) {
+		// This is called if an object has declared that it is not going way (or at least not yet)
+		// Need to test if ok to keep the link and not break it. 
 		// Check to see if the kid doesn't have an InverseMaintenanceAdapter AND the ref is not bi-directional.
-		// In that case there is no dangling reference from kid back to old value. So it can be kept and not canceled.
+		// If this ref to the kid is bi-directional we need to break the link, otherwise the kid will still point
+		// to the now deleted parent.
+		// If the kid had an inverse adapter, then this ref will be in the backward link, so it would not be
+		// safe to ignore and the link must be broken.
 		return (ref.getEOpposite() == null && EcoreUtil.getExistingAdapter(kid, InverseMaintenanceAdapter.ADAPTER_KEY) == null);
 	}
 	
@@ -277,7 +312,17 @@ public class VCEPostSetCommand extends CommandWrapper {
 		while (decorItr.hasNext()) {
 			EAnnotation o = (EAnnotation) decorItr.next();
 			if (o instanceof BeanFeatureDecorator) 
-				return ((BeanFeatureDecorator) o).isChildFeature();
+				return ((BeanFeatureDecorator) o).getLinkType() == LinkType.CHILD_LITERAL;
+		}
+		return false;	
+	}
+	
+	public static boolean isDependencyRelationShip(EReference feature) {
+		Iterator decorItr = feature.getEAnnotations().iterator();
+		while (decorItr.hasNext()) {
+			EAnnotation o = (EAnnotation) decorItr.next();
+			if (o instanceof BeanFeatureDecorator) 
+				return ((BeanFeatureDecorator) o).getLinkType() == LinkType.DEPENDENCY_LITERAL;
 		}
 		return false;	
 	}

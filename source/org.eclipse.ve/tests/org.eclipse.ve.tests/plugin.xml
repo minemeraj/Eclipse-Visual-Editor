@@ -24,6 +24,7 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.jem.tests"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jem.proxy"/>
    </requires>
 
 

@@ -24,7 +24,7 @@
         upperBound="-1">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
   </event:AddMany>
 </xmi:XMI>

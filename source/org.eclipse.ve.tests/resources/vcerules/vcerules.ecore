@@ -8,14 +8,25 @@
   <!-- Set up for PostSet tests -->
   <eClassifiers xsi:type="ecore:EClass" name="ParentContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="components" eType="#//Component" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refs" eType="#//Child" upperBound="-1"/>    
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" eType="#//Child" upperBound="-1">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="DEPENDENCY"/>
+    </eStructuralFeatures>    
+    <eStructuralFeatures xsi:type="ecore:EReference" name="child" eType="#//Child">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="CHILD"/>
+    </eStructuralFeatures>        
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Component">
     <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="#//Child">
-      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </eStructuralFeatures>
   </eClassifiers>
+  
   <eClassifiers xsi:type="ecore:EClass" name="Child">
     <eStructuralFeatures xsi:type="ecore:EReference" name="crossRef" eType="#//Child"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" eType="#//ParentContainer">
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="DEPENDENCY"/>
+    </eStructuralFeatures>
   </eClassifiers>
   
   <!-- Now set up for preset tests. -->
