@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-23 19:21:34 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-30 00:21:08 $ 
  */
 
 import java.util.*;
@@ -37,7 +37,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors";
 	// ID of the registrations extension point.
 
-	public static final String PI_VARIABLE = "variable"; // <variable> in extension point. //$NON-NLS-1$
+	public static final String PI_DESCRIPTION = "description";	
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$
@@ -45,8 +45,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
 	public static final String PI_RUNTIME = "runtime"; //$NON-NLS-1$
 	public static final String PI_SOURCE = "source"; //$NON-NLS-1$	
-	public static final String PI_SOURCEPREFIX = "prefix"; //$NON-NLS-1$
-	public static final String PI_EXTEND = "extend"; //$NON-NLS-1$			
+	public static final String PI_SOURCEPREFIX = "prefix"; //$NON-NLS-1$			
 	// <contributor ...> or contributor="..." in extension point
 
 	private static JavaVEPlugin PLUGIN;
@@ -57,7 +56,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 
 	// Map of registered variable contributors, mapped key is path, value is IConfigurationElement[].
 	// It is allowed to have more than one. They will be concatenated together when used.
-	private HashMap variableContributors;
+//	private HashMap variableContributors;
 
 	private static ImageDescriptor WIZARD_TITLE_DESC;
 
@@ -71,69 +70,69 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		PLUGIN = this;
 	}
 
-	private Map getVariableContributors() {
-		if (variableContributors == null) {
-			variableContributors = new HashMap(30);
-			processRegistrationExtensionPoint();
-		}
-		return variableContributors;
-	}
+//	private Map getVariableContributors() {
+//		if (variableContributors == null) {
+//			variableContributors = new HashMap(30);
+//			processRegistrationExtensionPoint();
+//		}
+//		return variableContributors;
+//	}
 
 	public static JavaVEPlugin getPlugin() {
 		return PLUGIN;
 	}
 
-	protected void processRegistrationExtensionPoint() {
-		// Read in the registration information from the extensions.
-		// We'll first gather together in Lists, and then send as arrays at one time to register them.
-		HashMap registrations = new HashMap();
-		IConfigurationElement[] configs = getDescriptor().getExtensionPoint(PI_JBCF_REGISTRATIONS).getConfigurationElements();
-		for (int i = 0; i < configs.length; i++) {
-			IConfigurationElement iConfigurationElement = configs[i];
-			if (PI_VARIABLE.equals(iConfigurationElement.getName())) {
-				processLibraryEntry(iConfigurationElement,registrations);
-			}
-			// This is format for allowing containers or library to be used by a plugin
-			// <library 
-			//     container="FOO_CONTAINER"  OR  library="FOO_LIB"
-			//	   palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
- 			//	   contributor="com.foo.FOOConfigurationContributor">
-			// </library>
-			if (PI_LIBRARY.equals(iConfigurationElement.getName())) {
-				if(iConfigurationElement.getAttributeAsIs(PI_VARIABLE) != null){
-					processLibraryEntry(iConfigurationElement,registrations);
-				} else if(iConfigurationElement.getAttributeAsIs(PI_CONTAINER) != null){
-					processContainerEntry(iConfigurationElement,registrations);
-				}
-			}			
-		}
-
-		// Now we've processed all of the extensions.
-		Iterator regItr = registrations.entrySet().iterator();
-		while (regItr.hasNext()) {
-			Map.Entry entry = (Map.Entry) regItr.next();
-			List registrationsList = (List) entry.getValue();
-			registerRegistration(
-				(IPath) entry.getKey(),
-				(IConfigurationElement[]) registrationsList.toArray(new IConfigurationElement[registrationsList.size()]));
-		}
-	}
-	private void processLibraryEntry(IConfigurationElement aConfigurationElement,Map registrations){
-		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
-			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
-			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
-			String varpathstr = aConfigurationElement.getAttributeAsIs(PI_PATH);
-			if (varpathstr == null)
-				return; // Not proper format.
-			IPath varpath = new Path(varpathstr);
-			List varentry = (List) registrations.get(varpath);
-			if (varentry == null) {
-				varentry = new ArrayList(1);
-				registrations.put(varpath, varentry);
-			}
-			varentry.add(aConfigurationElement);
-		}		
-	}
+//	protected void processRegistrationExtensionPoint() {
+//		// Read in the registration information from the extensions.
+//		// We'll first gather together in Lists, and then send as arrays at one time to register them.
+//		HashMap registrations = new HashMap();
+//		IConfigurationElement[] configs = getDescriptor().getExtensionPoint(PI_JBCF_REGISTRATIONS).getConfigurationElements();
+//		for (int i = 0; i < configs.length; i++) {
+//			IConfigurationElement iConfigurationElement = configs[i];
+//			if (PI_VARIABLE.equals(iConfigurationElement.getName())) {
+//				processLibraryEntry(iConfigurationElement,registrations);
+//			}
+//			// This is format for allowing containers or library to be used by a plugin
+//			// <library 
+//			//     container="FOO_CONTAINER"  OR  library="FOO_LIB"
+//			//	   palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
+// 			//	   contributor="com.foo.FOOConfigurationContributor">
+//			// </library>
+//			if (PI_LIBRARY.equals(iConfigurationElement.getName())) {
+//				if(iConfigurationElement.getAttributeAsIs(PI_VARIABLE) != null){
+//					processLibraryEntry(iConfigurationElement,registrations);
+//				} else if(iConfigurationElement.getAttributeAsIs(PI_CONTAINER) != null){
+//					processContainerEntry(iConfigurationElement,registrations);
+//				}
+//			}			
+//		}
+//
+//		// Now we've processed all of the extensions.
+//		Iterator regItr = registrations.entrySet().iterator();
+//		while (regItr.hasNext()) {
+//			Map.Entry entry = (Map.Entry) regItr.next();
+//			List registrationsList = (List) entry.getValue();
+//			registerRegistration(
+//				(IPath) entry.getKey(),
+//				(IConfigurationElement[]) registrationsList.toArray(new IConfigurationElement[registrationsList.size()]));
+//		}
+//	}
+//	private void processLibraryEntry(IConfigurationElement aConfigurationElement,Map registrations){
+//		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
+//			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
+//			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
+//			String varpathstr = aConfigurationElement.getAttributeAsIs(PI_PATH);
+//			if (varpathstr == null)
+//				return; // Not proper format.
+//			IPath varpath = new Path(varpathstr);
+//			List varentry = (List) registrations.get(varpath);
+//			if (varentry == null) {
+//				varentry = new ArrayList(1);
+//				registrations.put(varpath, varentry);
+//			}
+//			varentry.add(aConfigurationElement);
+//		}		
+//	}
 /**	
  * Process the extension point for a container registration
  * Example syntax is 
@@ -147,71 +146,71 @@ public class JavaVEPlugin extends AbstractUIPlugin {
  *	</extension>
  * </pre>
  **/
-	private void processContainerEntry(IConfigurationElement aConfigurationElement,Map registrations){
-		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
-			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
-			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
-			String containerName = aConfigurationElement.getAttributeAsIs(PI_CONTAINER);
-			if (containerName == null)
-				return; // Not proper format.
-			IPath containerpath = new Path(containerName);
-			List containerentry = (List) registrations.get(containerpath);
-			if (containerentry == null) {
-				containerentry = new ArrayList(1);
-				registrations.put(containerpath, containerentry);
-			}
-			containerentry.add(aConfigurationElement);
-		}		
-	}	
-	/**
-	 * Register one registration for the path.
-	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
-	 * If it is only one segment long, then it is for the variable itself, and it will be used
-	 * for all paths that start with that variable. This allows several different jars within 
-	 * the variable's path to share the same registration information.
-	 */
-	public void registerRegistration(IPath path, IConfigurationElement registration) {
-		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
-		if (registered == null)
-			registered = new IConfigurationElement[] { registration };
-		else {
-			IConfigurationElement[] old = registered;
-			registered = new IConfigurationElement[old.length + 1];
-			System.arraycopy(old, 0, registered, 0, old.length);
-			registered[old.length] = registration;
-		}
-
-		getVariableContributors().put(path, registered);
-	}
-
-	/**
-	 * Register multiple registrations for the path.
-	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
-	 * If it is only one segment long, then it is for the variable itself, and it will be used
-	 * for all paths that start with that variable. This allows several different jars within 
-	 * the variable's path to share the same beaninfo registration information.
-	 */
-	public void registerRegistration(IPath path, IConfigurationElement[] registrations) {
-		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
-		if (registered == null) {
-			registered = new IConfigurationElement[registrations.length];
-			System.arraycopy(registrations, 0, registered, 0, registrations.length);
-		} else {
-			IConfigurationElement[] old = registered;
-			registered = new IConfigurationElement[old.length + registrations.length];
-			System.arraycopy(old, 0, registered, 0, old.length);
-			System.arraycopy(registrations, 0, registered, old.length, registrations.length);
-		}
-
-		getVariableContributors().put(path, registered);
-	}
-
-	/**
-	 * Return the registrations for a specified path. Return null if not registered.
-	 */
-	public IConfigurationElement[] getRegistrations(IPath path) {
-		return (IConfigurationElement[]) getVariableContributors().get(path);
-	}
+//	private void processContainerEntry(IConfigurationElement aConfigurationElement,Map registrations){
+//		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
+//			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
+//			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
+//			String containerName = aConfigurationElement.getAttributeAsIs(PI_CONTAINER);
+//			if (containerName == null)
+//				return; // Not proper format.
+//			IPath containerpath = new Path(containerName);
+//			List containerentry = (List) registrations.get(containerpath);
+//			if (containerentry == null) {
+//				containerentry = new ArrayList(1);
+//				registrations.put(containerpath, containerentry);
+//			}
+//			containerentry.add(aConfigurationElement);
+//		}		
+//	}	
+//	/**
+//	 * Register one registration for the path.
+//	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
+//	 * If it is only one segment long, then it is for the variable itself, and it will be used
+//	 * for all paths that start with that variable. This allows several different jars within 
+//	 * the variable's path to share the same registration information.
+//	 */
+//	public void registerRegistration(IPath path, IConfigurationElement registration) {
+//		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
+//		if (registered == null)
+//			registered = new IConfigurationElement[] { registration };
+//		else {
+//			IConfigurationElement[] old = registered;
+//			registered = new IConfigurationElement[old.length + 1];
+//			System.arraycopy(old, 0, registered, 0, old.length);
+//			registered[old.length] = registration;
+//		}
+//
+//		getVariableContributors().put(path, registered);
+//	}
+//
+//	/**
+//	 * Register multiple registrations for the path.
+//	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
+//	 * If it is only one segment long, then it is for the variable itself, and it will be used
+//	 * for all paths that start with that variable. This allows several different jars within 
+//	 * the variable's path to share the same beaninfo registration information.
+//	 */
+//	public void registerRegistration(IPath path, IConfigurationElement[] registrations) {
+//		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
+//		if (registered == null) {
+//			registered = new IConfigurationElement[registrations.length];
+//			System.arraycopy(registrations, 0, registered, 0, registrations.length);
+//		} else {
+//			IConfigurationElement[] old = registered;
+//			registered = new IConfigurationElement[old.length + registrations.length];
+//			System.arraycopy(old, 0, registered, 0, old.length);
+//			System.arraycopy(registrations, 0, registered, old.length, registrations.length);
+//		}
+//
+//		getVariableContributors().put(path, registered);
+//	}
+//
+//	/**
+//	 * Return the registrations for a specified path. Return null if not registered.
+//	 */
+//	public IConfigurationElement[] getRegistrations(IPath path) {
+//		return (IConfigurationElement[]) getVariableContributors().get(path);
+//	}
 
 	public Logger getLogger() {
 		if (logger == null)

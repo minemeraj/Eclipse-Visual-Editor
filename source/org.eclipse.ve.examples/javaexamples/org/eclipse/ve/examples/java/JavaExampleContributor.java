@@ -11,11 +11,15 @@ package org.eclipse.ve.examples.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaExampleContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:17 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-30 00:21:12 $ 
  */
+
+import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Platform;
 
 import org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter;
 import org.eclipse.jem.internal.proxy.core.IConfigurationContributionController;
+
 
 public class JavaExampleContributor extends ConfigurationContributorAdapter {
 
@@ -28,7 +32,9 @@ public class JavaExampleContributor extends ConfigurationContributorAdapter {
 	 * 1.4 includes this in the JDK.
 	 */
 	public void contributeClasspaths(IConfigurationContributionController controller) {
-		controller.contributeClasspath(JavaExamplePlugin.getPlugin().getDescriptor(), "archiver.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);
-		controller.contributeClasspath(JavaExamplePlugin.getPlugin().getDescriptor(), "crimson.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);		
+		
+		IPluginDescriptor pluginDescriptor = Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.ve.examples");
+		controller.contributeClasspath(pluginDescriptor, "archiver.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);
+		controller.contributeClasspath(pluginDescriptor, "crimson.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);		
 	}	
 }

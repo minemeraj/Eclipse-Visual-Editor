@@ -11,8 +11,8 @@
   <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="month" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
-          labelProviderClassname="org.eclipse.ve.examples.java/org.eclipse.ve.examples.java.MonthLabelProvider"
-          cellEditorClassname="org.eclipse.ve.examples.java/org.eclipse.ve.examples.java.MonthCellEditor"/>
+          labelProviderClassname="org.eclipse.ve.examples/org.eclipse.ve.examples.java.MonthLabelProvider"
+          cellEditorClassname="org.eclipse.ve.examples/org.eclipse.ve.examples.java.MonthCellEditor"/>
     </addedEObjects>
   </event:Add>
 </xmi:XMI>
