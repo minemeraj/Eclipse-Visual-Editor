@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.22 $ $Date: 2005-02-23 23:19:40 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.23 $ $Date: 2005-03-29 22:53:55 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -229,7 +229,10 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		// be called in the ctor's super(parent, checkStyle(style)). And this checkStyle method would take the
 		// incoming style and add in the style's selected from the property sheet and return the merged styles.
 		// Of course doing this means these styles CAN'T be turned off by users of the class.
-		if (((EObject) getTarget()).eContainmentFeature() != JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())
+		// We also can't deal with style bits on things that are implicitly created, cause these are given to us by 
+		// whomever created them and can't be altered as there is no constructor to re-generate
+		if (((EObject) getTarget()).eContainmentFeature() != JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()
+			&& !(((IJavaInstance)getTarget()).getAllocation() instanceof ImplicitAllocation))
 			mergeStyleBits(descriptorsList, ((EObject) getTarget()).eClass());
 		
 		return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
