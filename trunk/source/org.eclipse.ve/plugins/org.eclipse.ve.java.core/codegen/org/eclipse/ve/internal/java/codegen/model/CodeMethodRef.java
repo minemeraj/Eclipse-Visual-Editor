@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.14 $  $Date: 2004-04-28 14:57:18 $ 
  */
 
 import java.util.*;
@@ -411,7 +411,7 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	for(int i=list.size()-1;i>=0;i--){
 	 	CodeExpressionRef ce = (CodeExpressionRef) list.get(i);
 	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && ce.getOffset()>=0){
-	 		offset = ce.getOffset();
+	 		offset = ce.getOffset()+ce.getLen();
 	 		filler = ce.getFillerContent();
 	 		break;
 	 	}
@@ -572,9 +572,9 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 			offset = cExp.getOffset()+cExp.getLen();
 		}
 		filler=cExp.getFillerContent();
-	}	
-	exp.setOffset(offset);
+	}		
 	exp.setFillerContent(filler);
+	exp.setOffset(offset);
 	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 	l.add(index, exp);
 }
