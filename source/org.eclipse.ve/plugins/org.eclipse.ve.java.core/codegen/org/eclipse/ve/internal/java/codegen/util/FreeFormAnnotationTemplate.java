@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.compiler.*;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-29 19:55:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-02 00:32:45 $ 
  */
 /**
  * @version 	1.0
@@ -51,7 +51,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     
     public void setPosition (Point point) {
     	if(point==null)
-    		positionString = "";
+    		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\"";
     	else
     		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
                    "\""+Integer.toString(point.x)+","+Integer.toString(point.y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

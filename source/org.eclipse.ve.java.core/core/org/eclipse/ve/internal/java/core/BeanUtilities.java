@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-08 10:47:18 $ 
+ *  $Revision: 1.19 $  $Date: 2004-07-02 00:32:45 $ 
  */
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
@@ -26,13 +28,20 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMFactory;
+import org.eclipse.ve.internal.cdm.*;
+import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
+import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
+import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
+import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 public class BeanUtilities {
 	
@@ -135,6 +144,61 @@ public class BeanUtilities {
 			CDEUtilities.putEMapEntry(an.getKeyedValues(), sentry);
 			an.setAnnotates(newJavaBean);
 		}
+	}
+	
+	/** 
+	 * This method will clear the Visual Constraint annotation.  It can remove it all together,
+	 * in which case the object will NOT be on the FF, or create an empty one, in which case the 
+	 * object will flow to the next location on the FF.
+	 * 
+	 * @param newJavaBean   - A newly created JavaBean
+	 * @param hideFF    	- if set to true, remove visual-constraint which mean that 
+	 *                                        the bean will NOT be on the FF.
+	 *                        if set to false, create an empty contraints, which mean
+	 *                                        that the bean will flow on the FF.
+	 */
+	public static void setEmptyVisualContraints(IJavaInstance newJavaBean, EditDomain ed, boolean hideFF){
+		
+		CDMFactory fact = CDMFactory.eINSTANCE;
+		
+		// Get the current annotation.
+		AnnotationEMF.ParentAdapter a = (AnnotationEMF.ParentAdapter) EcoreUtil.getExistingAdapter(newJavaBean, AnnotationEMF.ParentAdapter.PARENT_ANNOTATION_ADAPTER_KEY);
+		AnnotationEMF an = a != null ? (AnnotationEMF) a.getParentAnnotation() : null;		
+		
+		if(an==null) {
+			an = fact.createAnnotationEMF();
+			an.setAnnotates(newJavaBean);
+		}
+			
+    	// find the primary diagram
+    	Diagram d = null ;
+    	for (int i=0; i<ed.getDiagramData().getDiagrams().size(); i++) {
+    		Diagram di = (Diagram) ed.getDiagramData().getDiagrams().get(i);
+    		if (Diagram.PRIMARY_DIAGRAM_ID.equals(di.getId())) {
+    			d = di ;
+    			break;
+    		}
+    	}
+    	// Set a null Visual Constraint in the Visual Info annotation.
+        KeyedBooleanImpl key = (KeyedBooleanImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedBoolean());
+        if (hideFF)
+            key.setValue(Boolean.TRUE);
+        else
+        	key.setValue(Boolean.FALSE);	
+        key.setKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
+        
+        VisualInfo vi = an.getVisualInfo(d) ;
+        if (vi == null)  {
+            // Create a new Visual Info
+	        vi = CDMFactory.eINSTANCE.createVisualInfo() ;	        
+            vi.setDiagram(d) ;
+            
+        }
+	    if(vi.getKeyedValues().containsKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY))
+	        	vi.getKeyedValues().removeKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
+	    vi.getKeyedValues().add(key) ;
+        an.getVisualInfos().add(vi) ;
+
 	}
 
 	/**
