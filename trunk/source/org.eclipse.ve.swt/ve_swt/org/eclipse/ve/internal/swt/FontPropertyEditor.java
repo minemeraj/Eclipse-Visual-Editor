@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.events.*;
@@ -51,13 +50,6 @@ public class FontPropertyEditor implements PropertyEditor {
 	protected final static int[] styleValues = { SWT.NORMAL, SWT.BOLD, SWT.ITALIC, SWT.BOLD | SWT.ITALIC };
 	protected final static int[] sizeValues = { 8, 10, 12, 14, 18, 24, 36, 48, 72 };
 
-	protected final static String JFACE_PREFIX = messages.getString("JFacePrefix"); //$NON-NLS-1$
-	protected final static String[] JFaceFontNames = { JFACE_PREFIX + messages.getString("BannerFont"), JFACE_PREFIX + messages.getString("DefaultFont"), JFACE_PREFIX + messages.getString("DialogFont"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		JFACE_PREFIX + messages.getString("HeaderFont"), JFACE_PREFIX + messages.getString("TextFont") }; //$NON-NLS-1$ //$NON-NLS-2$
-	protected final static String[] JFaceFontConstants = { JFaceResources.BANNER_FONT, JFaceResources.DEFAULT_FONT, JFaceResources.DIALOG_FONT, 
-		JFaceResources.HEADER_FONT, JFaceResources.TEXT_FONT };
-	protected final static String[] JFaceFontCalls = { "getBannerFont()", "getDefaultFont()", "getDialogFont()", "getHeaderFont()", "getTextFont()" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
 	protected static java.util.Set fontNames;
 	protected static java.util.Set lowerCaseFontNames;
 	
@@ -76,7 +68,6 @@ public class FontPropertyEditor implements PropertyEditor {
 	private boolean isUpdating = false;
 	
 	protected Font value;
-	protected int JFaceIndex = -1;
 
 	/* (non-Javadoc)
 	 * @see PropertyEditor#createControl(org.eclipse.swt.widgets.Composite, int)
@@ -264,9 +255,6 @@ public class FontPropertyEditor implements PropertyEditor {
 			for (int i = 0; i < fd.length; i++) {
 				fontNames.add(fd[i].getName());
 			}
-			for (int i = 0; i < JFaceFontNames.length; i++) {
-				fontNames.add(JFaceFontNames[i]);
-			}
 		}
 		return fontNames;
 	}
@@ -321,42 +309,19 @@ public class FontPropertyEditor implements PropertyEditor {
 				sizeField.setText(smallestSize);							
 			}
 		}
-		String newName = namesList.getSelection()[0];
-		int newJFaceIndex;
-		if (newName.startsWith(JFACE_PREFIX)) {
-			newJFaceIndex = 1;
-			for (int i = 0; i < JFaceFontNames.length; i++ ) {
-				if (newName.equals(JFaceFontNames[i])) {
-					newJFaceIndex = i;
-					break;
-				}
-			}
-			f = JFaceResources.getFont(JFaceFontConstants[newJFaceIndex]);
-		} else {
-			newJFaceIndex = -1;
-			try {
-				f = new Font(control.getDisplay(), namesList.getSelection()[0],
-												   newSize,
-												   styleValues[stylesList.getSelectionIndex()]);
-			} catch (SWTError e) {
-				// badly formed font
-				return;
-			}
+		try {
+			f = new Font(control.getDisplay(), namesList.getSelection()[0],
+											   newSize,
+											   styleValues[stylesList.getSelectionIndex()]);
+		} catch (SWTError e) {
+			// badly formed font
+			return;
 		}
 		previewText.setFont(f);
-		if (value != null && JFaceIndex == -1 && !value.isDisposed()) {
+		if (value != null && !value.isDisposed()) {
 			value.dispose();
 		}
 		setValue(f);
-		JFaceIndex = newJFaceIndex;
-		activateStyleAndSize();
-	}
-	
-	private void activateStyleAndSize() {
-		boolean state = JFaceIndex == -1;
-		stylesList.setEnabled(state);
-		sizeField.setEnabled(state);
-		sizesList.setEnabled(state);
 	}
 	
 	private void updateSelections() {
@@ -405,7 +370,7 @@ public class FontPropertyEditor implements PropertyEditor {
 		String SWT_PREFIX = "org.eclipse.swt.SWT"; //$NON-NLS-1$
 		if (value == null) {
 			return "null"; //$NON-NLS-1$
-		} else if (JFaceIndex == -1){
+		} else {
 			FontData fd = value.getFontData()[0];
 			String style;
 			switch (fd.getStyle()) {
@@ -417,8 +382,6 @@ public class FontPropertyEditor implements PropertyEditor {
 					style = SWT_PREFIX + ".NORMAL"; //$NON-NLS-1$
 			}
 			return "new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		} else {
-			return "org.eclipse.jface.resource.JFaceResources." + JFaceFontCalls[JFaceIndex]; //$NON-NLS-1$
 		}
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
