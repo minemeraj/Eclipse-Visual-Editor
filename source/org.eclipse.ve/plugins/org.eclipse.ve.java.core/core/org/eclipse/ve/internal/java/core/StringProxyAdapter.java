@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-06 20:19:51 $ 
  */
 import java.util.Iterator;
 
@@ -35,7 +35,10 @@ protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String in
 	// String
 	if ( initString.length() > 2 && initString.charAt(0) == '"' && initString.charAt(initString.length()-1) == '"'){
 		isExternalized = false;
-		return super.instantiateWithString(targetClass, initString);
+		
+		// TODO Need to fix this compile error... for now just return null
+		return null;
+		// return super.instantiateWithString(targetClass, initString);
 	}
 	// We have some kind of string that may be have come from a resource bundle
 	// VAJava generated a style of string like
@@ -91,6 +94,9 @@ protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String in
 		}
 	}
 	isExternalized = false;
-	return super.instantiateWithString(targetClass,initString);
+
+	// TODO Need to fix this compile error... for now just return null
+	return null;
+//	return super.instantiateWithString(targetClass,initString);
 }
 }
