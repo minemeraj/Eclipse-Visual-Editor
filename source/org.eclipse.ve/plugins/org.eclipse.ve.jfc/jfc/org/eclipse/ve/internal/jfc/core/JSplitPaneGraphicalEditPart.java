@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-05-24 17:56:08 $
+ * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-06-02 15:57:29 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -17,19 +17,14 @@ package org.eclipse.ve.internal.jfc.core;
 import java.util.*;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.*;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 

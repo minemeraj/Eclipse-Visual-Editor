@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-21 10:39:35 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.Iterator;
@@ -29,7 +29,6 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.TypeKind;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 

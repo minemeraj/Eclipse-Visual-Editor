@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-01 18:02:59 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.wizards.NewClassCreationWizard;
@@ -61,7 +60,8 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 	 */
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		fPage.createType(monitor); // use the full progress monitor
-		ICompilationUnit cu= JavaModelUtil.toOriginal(fPage.getCreatedType().getCompilationUnit());
+		// TODO What does this do (the toOriginal)? Does it need to be called here?
+		JavaModelUtil.toOriginal(fPage.getCreatedType().getCompilationUnit());
 	}
 	
 	protected void openResource(IResource resource) {
@@ -70,7 +70,7 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 	
 	public void setInitializationData(IConfigurationElement element,String string,Object object){
 		if ( object instanceof String ) {
-			fPluginName = element.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
+			fPluginName = element.getDeclaringExtension().getNamespace();
 			fExampleClassName = (String) object;
 		}			
 	}

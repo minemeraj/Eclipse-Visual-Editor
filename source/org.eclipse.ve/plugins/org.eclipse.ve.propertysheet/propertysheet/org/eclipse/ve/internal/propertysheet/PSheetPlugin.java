@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.propertysheet;
 /*******************************************************************************
  * Copyright (c)  2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,25 +10,24 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: PSheetPlugin.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:15 $ 
  */
+package org.eclipse.ve.internal.propertysheet;
 
-
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 
 /**
  * Plugin class for the property sheet.
  */
-public class PSheetPlugin extends AbstractUIPlugin {
+public class PSheetPlugin extends Plugin {
+
 	private static PSheetPlugin sPlugin;
-	
-	public PSheetPlugin(IPluginDescriptor pd) {
-		super(pd);
+
+	public PSheetPlugin() {
 		sPlugin = this;
 	}
-	
+
 	public static PSheetPlugin getPlugin() {
 		return sPlugin;
-	}	
+	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.io.IOException;
@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
@@ -31,9 +30,8 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
 /**
@@ -44,7 +42,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	private NewClassWizardPage fPage;
 	private String superClassName = null;
 	private IVisualClassCreationSourceContributor contributor = null;
-	private Plugin contributorPlugin = null;
+	private String contributorBundleName = null;
 	public static final String VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY = "VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY";
 	private static String DEFAULT_SUPER_CLASS = "javax.swing.JFrame";
 	public static String NEWLINE =  System.getProperty("line.separator") ; //$NON-NLS-1$
@@ -62,7 +60,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @param monitor
 	 */
 	protected void updateContributor(String className, IProgressMonitor monitor){
-		IExtensionPoint exp = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint("newsource"); //$NON-NLS-1$
+		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "newsource"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
 		IType superClass = null;
 		try {
@@ -81,7 +79,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 						if(superClass.getFullyQualifiedName().equals(typeName)){
 							contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
 							if(contributor!=null){
-								contributorPlugin = extensions[ec].getDeclaringPluginDescriptor().getPlugin();
+								contributorBundleName = extensions[ec].getNamespace();
 							}
 							contributorFound = true;
 						}
@@ -100,7 +98,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		} catch (TemplatesException  e) {
 			JavaVEPlugin.log(e, Level.FINE);
 		}
-		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorPlugin.getBundle().getSymbolicName()); 
+		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorBundleName); 
 		for(int i=0;i<contributorsPaths.size();i++)
 			if(!jdtClassPath.contains(contributorsPaths.get(i)))
 				jdtClassPath.add(contributorsPaths.get(i));

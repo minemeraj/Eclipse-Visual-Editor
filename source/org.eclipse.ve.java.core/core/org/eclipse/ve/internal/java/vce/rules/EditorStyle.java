@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditorStyle.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.vce.rules;
 
@@ -139,7 +139,7 @@ public class EditorStyle implements IEditorStyle {
 	 * @see org.eclipse.ve.internal.java.core.vce.IEditorStyle#getPluginID()
 	 */
 	public String getPluginID() {
-		return fConfig.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
+		return fConfig.getDeclaringExtension().getNamespace();
 	}
 
 	/**

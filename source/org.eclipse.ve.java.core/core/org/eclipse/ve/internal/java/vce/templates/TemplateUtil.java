@@ -10,18 +10,25 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-20 21:43:03 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
+import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.*;
-import org.eclipse.osgi.service.environment.Constants;
+import org.eclipse.osgi.util.ManifestElement;
+import org.osgi.framework.*;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -34,146 +41,136 @@ public class TemplateUtil {
     private final static HashMap fClassPathMap = new HashMap() ;  // cache class path
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
     private static List fPlatformJRE = null ;
+    private static boolean DEV_MODE = InternalPlatform.getDefault().getEnvironmentInfoService().inDevelopmentMode();	// TODO When in 5/17 Eclipse, change to use Platform.inDevelopmentMode().    
 	
-	/**
-	 * This will return the absolute class path associated with a Plugin
-	 */
-	static public String getPluginInstallPath (String plugin, String relativePath) {
-		return getPluginInstallPath(Platform.getPlugin(plugin).getDescriptor(), relativePath);
+    /**
+     * Get the path for file within the given bundle.
+     * @param bundleName
+     * @param relativePath
+     * @return
+     * 
+     * @since 1.0.0
+     */
+	static public String getPathForBundleFile (String bundleName, String relativePath) {
+		return getPathForBundleFile(Platform.getBundle(bundleName), relativePath);
 	}
 	
 	/**
 	 * This will return the absolute class path associated with a Plugin
 	 */
-	static public String getPluginInstallPath (IPluginDescriptor pluginDescriptor, String relativePath) {
-	    return getCorrectPath(ProxyPlugin.getPlugin().localizeFromPluginDescriptor(pluginDescriptor, relativePath));
+	static public String getPathForBundleFile (Bundle bundle, String relativePath) {
+	    return getCorrectPath(ProxyPlugin.getPlugin().localizeFromBundle(bundle, relativePath));
 	}	
-	
-	static public String getPluginSrcPath (String plugin, String relativePath) {
-		ILibrary[] lib = Platform.getPlugin(plugin).getDescriptor().getRuntimeLibraries();
-		if (lib == null || lib.length==0) return null ;
-		
-		Path src = new Path (lib[0].getPath().removeFileExtension().lastSegment()) ;
-		IPath p = src.append(relativePath)  ;
-		
-		return getPluginInstallPath(plugin,p.toString()) ;
-		
-	}
 	
 	/**
 	 * This will return the absolute class path associated with run time jars, and
 	 * dev. time directories associated with a give plugin.  It does not include
-	 * nested (required) plugin path.
+	 * nested (required) plugin path. It will include fragments.
 	 */
 	static public List getPluginJarPath (String plugin) {
 		List l = (List) fClassPathMap.get(plugin) ;
 		if (l != null) return l ;
 				
-		IPluginDescriptor desc = Platform.getPlugin(plugin).getDescriptor();
-		ArrayList list = new ArrayList();
-		// Pick up the Jars
-		ILibrary[] lib = desc.getRuntimeLibraries();			
-		for (int i = 0; i < lib.length; i++) {
-			String names[] = ProxyPlugin.getPlugin().localizeFromPluginDescriptorAndFragments(desc, lib[i].getPath().toString());
-			if (names.length > 0) {
-				// pickup the first one in line				
-				list.add(getCorrectPath(names[0]));
-			} else {
-				// Not found nor is there an override to tell where to look. Maybe in dev
-				// mode, so add bin to be safe. then break out of loop because if first runtime
-				// was not found, then the rest wouldn't be found either because this would be a plugin error.
-				list.add(getCorrectPath(ProxyPlugin.getPlugin().localizeFromPluginDescriptor(desc, "bin")));
-				break;
+		Bundle bundle = Platform.getBundle(plugin);
+		List list = null;
+		if (bundle != null) {
+			list = new ArrayList();
+			getBundleLibraries(bundle, list);
+			// Now handle the fragments.
+			Bundle[] frags = Platform.getFragments(bundle);
+			if (frags != null) {
+				for (int i = 0; i < frags.length; i++) {
+					getBundleLibraries(frags[i], list);
+				}
 			}
-		}
+		} else
+			list = Collections.EMPTY_LIST;
 	    fClassPathMap.put(plugin,list) ;
 		return list;
 	}
+	
+	private static void getBundleLibraries(Bundle bundle, List list) {
+		// Pick up the Jars
+		try {
+			String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
+			ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
+			if (elements != null) {
+				for (int i = 0; i < elements.length; i++) {
+					String name = ProxyPlugin.getPlugin().localizeFromBundle(bundle, elements[i].getValue());
+					if (!name.equals(".")) {
+						list.add(getCorrectPath(name));
+					}
+				}
+			}
+			// If in DEV mode, hard-code the bin directory in the plugin. It is assumed to be bin because
+			// getting the actual one is hidden down in OSGi and I don't know how to access it. It is also
+			// assumed that when in dev mode, that the plugins are local, so that when we resolve the URL
+			// from getEntry that it will be a file type url.
+			if (DEV_MODE) {
+				URL bin = bundle.getEntry("bin/");
+				if (bin != null) {
+					try {
+						bin = Platform.resolve(bin);
+						if (bin.getProtocol() == "file") {
+							String path = getCorrectPath(bin.getFile());
+							if (!list.contains(path))
+								list.add(bin.getFile());
+						}
+					} catch (IOException e) {
+						// Shouldn't occur. Nor do we care if it does.
+					}
+				}
+			}
+		} catch (BundleException e) {
+			JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+		}
+	}
+
 	/**
 	 * This will return the absolute class path associated with run time jars, and
 	 * dev. time directories associated with a give plugin as well as its preReq
 	 * plugins
-	 * 
-	 * Note: a call to this method will activate all preReq plugins.
 	 */	
 	static public List getPluginAndPreReqJarPath (String plugin) {
 		List lst = (List) fClassPathPreReqMap.get(plugin) ;
 		if (lst != null) return lst ;
-		
-		IPluginDescriptor desc = null ;		
-		try  {
-		   desc = Platform.getPlugin(plugin).getDescriptor();
-		}
-		catch (Exception e) {
-			return new ArrayList() ;
-		}
-		IPluginPrerequisite[] preReq = desc.getPluginPrerequisites() ;
-		List l = getPluginJarPath(plugin) ;
-		java.util.HashMap beenThere = new java.util.HashMap() ;
-		beenThere.put(plugin,plugin) ;
-		for (int i = 0; i < preReq.length; i++) {
-			String plgn = preReq[i].getUniqueIdentifier() ;
-			if (beenThere.get(plgn) != null) continue ;			
-			Iterator itr = getPluginAndPreReqJarPath(plgn,beenThere).iterator() ;
-			while (itr.hasNext()) {
-			   String path = (String) itr.next() ;
-			   if (l.contains(path)) continue ;
-			   l.add(path) ;
+		Bundle bundle = Platform.getBundle(plugin);
+		List l = null;
+		if (bundle != null) {
+			l = getPluginJarPath(bundle.getSymbolicName());
+			List allReqs = ProxyPlugin.getAllPrereqs(bundle);
+			for (int i = 0; i < allReqs.size(); i++) {
+				l.addAll(getPluginJarPath(((Bundle) allReqs.get(i)).getSymbolicName()));
 			}
 		}
 		fClassPathPreReqMap.put(plugin,l) ;
 		return l ;
 	}
-	
-	static private List getPluginAndPreReqJarPath (String plugin, HashMap beenThere) {
 		
-		List lst = (List) fClassPathPreReqMap.get(plugin) ;
-		if (lst != null) return lst ;
-		
-		IPluginDescriptor desc = null ;
-		try  {
-		   Plugin p = Platform.getPlugin(plugin) ;
-		   if (p != null)
-		     desc = p.getDescriptor();
-		}
-		catch (Exception e) {}
-		if (desc == null) 
-			return new ArrayList() ;
-		
-		IPluginPrerequisite[] preReq = desc.getPluginPrerequisites() ;
-		List l = getPluginJarPath(plugin) ;
-		beenThere.put(plugin,plugin) ;
-		for (int i = 0; i < preReq.length; i++) {
-			String plgn = preReq[i].getUniqueIdentifier() ;
-			if (beenThere.get(plgn) != null) continue ;			
-			Iterator itr = getPluginAndPreReqJarPath(plgn,beenThere).iterator() ;
-			while (itr.hasNext())
-			   l.add(itr.next()) ;
-		}
-		fClassPathPreReqMap.put(plugin,l) ;
-		return l ;
-	}
-	
 	private static String getCorrectPath(String path) {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < path.length(); i++) {
-			char c = path.charAt(i);
-			if (i == 0 && c == '/' && Platform.getOS().equals(Constants.OS_WIN32))
-				continue;
-
-			// Some VMs may return %20 instead of a space
-			if (c == '%' && i + 2 < path.length()) {
-				char c1 = path.charAt(i + 1);
-				char c2 = path.charAt(i + 2);
-				if (c1 == '2' && c2 == '0') {
-					i += 2;
-					buf.append(' ');
-					continue;
+		if (path.length() == 0)
+			return path;
+		boolean skipLeading = path.charAt(0) == '/' && Platform.getOS().equals(Platform.OS_WIN32);
+		if (skipLeading || path.indexOf('%') != -1) {
+			StringBuffer buf = new StringBuffer(path.length());
+			for (int i = skipLeading ? 1 : 0; i < path.length(); i++) {
+				char c = path.charAt(i);
+	
+				// Some VMs may return %20 instead of a space
+				if (c == '%' && i + 2 < path.length()) {
+					char c1 = path.charAt(i + 1);
+					char c2 = path.charAt(i + 2);
+					if (c1 == '2' && c2 == '0') {
+						i += 2;
+						buf.append(' ');
+						continue;
+					}
 				}
+				buf.append(c);
 			}
-			buf.append(c);
+			return buf.toString();
 		}
-		return buf.toString();
+		return path;
 	}
 	
 	static public List getPlatformJREPath() throws TemplatesException {
@@ -276,10 +273,28 @@ public class TemplateUtil {
 		return f.lastModified() ;		
 	}
 	
+	private static class SpecialClassLoader extends ClassLoader {
+		Bundle bundle;
+		
+		public SpecialClassLoader(Bundle bundle) {
+			this.bundle = bundle;
+		}
+		
+		
+		/* (non-Javadoc)
+		 * @see java.lang.ClassLoader#findClass(java.lang.String)
+		 */
+		protected Class findClass(String name) throws ClassNotFoundException {
+			return bundle.loadClass(name);
+		}
+	}
 	public static ClassLoader getClassLoader(String plugin) {
-		Plugin p = Platform.getPlugin(plugin) ;
-		if (p != null) {
-			return p.getDescriptor().getPluginClassLoader() ;
+		// The plugin class loader is now deprecated. Since this method is used
+		// extensively in the generator pattern here, we will instead fluff one 
+		// up that goes to the bundle to load the classes.
+		Bundle b = Platform.getBundle(plugin);
+		if (b != null) {
+			return new SpecialClassLoader(b);
 		}
 		return null ;		
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultMethodInvocationGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -76,7 +76,7 @@ public class DefaultMethodInvocationGenerator implements IMethodInvocationGenera
 			List list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
 			list.addAll(TemplateUtil.getPlatformJREPath());
 			String[] classPath = (String[]) list.toArray(new String[list.size()]);
-			String   templatePath = TemplateUtil.getPluginInstallPath(getBasePlugin(), getTemplatePath()) ;
+			String   templatePath = TemplateUtil.getPathForBundleFile(getBasePlugin(), getTemplatePath()) ;
 			
 			fTemplate = (IMethodInvocationTemplate)
 			TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 

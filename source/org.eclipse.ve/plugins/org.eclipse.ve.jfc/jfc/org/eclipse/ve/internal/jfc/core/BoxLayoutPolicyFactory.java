@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutPolicyFactory.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-20 11:11:43 $ 
+ *  $Revision: 1.9 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -22,7 +22,6 @@ import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.*;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.visual.*;
 

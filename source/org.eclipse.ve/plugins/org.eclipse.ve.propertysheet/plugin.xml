@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.ve.propertysheet"
    name="%pluginName"
@@ -17,6 +18,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.gef" optional="true"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.core.runtime"/>
    </requires>
 
 

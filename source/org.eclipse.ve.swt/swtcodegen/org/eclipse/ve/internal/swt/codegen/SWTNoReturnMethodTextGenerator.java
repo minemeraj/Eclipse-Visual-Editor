@@ -10,17 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-08 01:19:05 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 15:57:26 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.util.*;
 
  
 /**

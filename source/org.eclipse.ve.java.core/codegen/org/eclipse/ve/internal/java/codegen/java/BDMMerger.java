@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.16 $  $Date: 2004-06-01 19:04:56 $ 
+ *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 

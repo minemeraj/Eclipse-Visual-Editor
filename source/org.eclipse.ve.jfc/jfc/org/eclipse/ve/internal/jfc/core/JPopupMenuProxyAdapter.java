@@ -11,10 +11,8 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JPopupMenuProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-19 20:04:39 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 15:57:29 $ 
  */
-
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;

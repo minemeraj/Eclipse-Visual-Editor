@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCVisualContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-22 23:49:21 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ public class JFCVisualContributor extends ConfigurationContributorAdapter {
 	public void contributeClasspaths(IConfigurationContributionController controller) {
 		// Add the visualvm.jar and nls jars to the end of the classpath. This jar contains the vm stuff
 		// needed for doing JVE editing.
-		controller.contributeClasspath(JFCVisualPlugin.getPlugin().getDescriptor(), "vm/jfcvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
+		controller.contributeClasspath(JFCVisualPlugin.getPlugin().getBundle(), "vm/jfcvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
 	}
 
 	/*

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.39 $  $Date: 2004-06-01 16:29:20 $ 
+ *  $Revision: 1.40 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -42,11 +42,9 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.*;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
-import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
@@ -67,7 +65,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
-import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
@@ -104,6 +101,7 @@ import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
 import com.ibm.wtp.common.util.PerformanceMonitorUtil;
+import com.ibm.wtp.emf.workbench.plugin.EMFWorkbenchPlugin;
 
 
 /**
@@ -484,12 +482,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		jveTab.setControl(editorParent);
 		jveTab.setText(CodegenEditorPartMessages.getString("JavaVisualEditorPart.DesignPart")); //$NON-NLS-1$
 
-		// Create a 1:4 sash with the palette on the left and the JVE on the right
-		CustomSashForm jveParent = new CustomSashForm(editorParent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
-//		createPaletteViewer(jveParent);
+		boolean paletteInViewer = store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER);		
+
+		Composite jveParent = null;
+		CustomSashForm paletteEditorSashForm = null;
+		if(paletteInViewer){
+			jveParent = editorParent;
+		} else {
+			// Split them all on the same parent.
+			paletteEditorSashForm = new CustomSashForm(editorParent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
+			jveParent = paletteEditorSashForm;
+			createPaletteViewer(jveParent);				
+		}
 		createPrimaryViewer(jveParent);
-		jveParent.setSashBorders(new boolean[] { false, true });
-		jveParent.setWeights(getPaletteSashWeights());
+		
+		if (paletteEditorSashForm != null) {
+			paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
+			paletteEditorSashForm.setWeights(getPaletteSashWeights());
+		}
 
 		// Create the parent (new tab) for the java text editor.
 		Composite javaParent = new Composite(folder, SWT.NONE);
@@ -819,20 +829,20 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			String cat = paletteContribution.getAttributeAsIs(PI_CATEGORIES);
 			if (cat == null || cat.length() == 0)
 				return false;
-			IPluginDescriptor plugin = null;
+			String bundleName = null;
 			if (cat.charAt(0) != '/')
-				plugin = paletteContribution.getDeclaringExtension().getDeclaringPluginDescriptor();
+				bundleName = paletteContribution.getDeclaringExtension().getNamespace();
 			else {
 				if (cat.length() > 4) {
 					int pend = cat.indexOf('/', 1);
 					if (pend == -1 || pend >= cat.length()-1)
 						return false;	// invalid
-					plugin = Platform.getPluginRegistry().getPluginDescriptor(cat.substring(1, pend));
+					bundleName = cat.substring(1, pend);
 					cat = cat.substring(pend+1);
 				} else
 					return false;	// invalid
 			}
-			URI catsURI = URI.createURI(plugin.getInstallURL().toString()+cat);
+			URI catsURI = URI.createURI(EMFWorkbenchPlugin.PLATFORM_PROTOCOL+":/"+EMFWorkbenchPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat);
 			Resource res = rset.getResource(catsURI, true);
 			List cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
 			if (cats.isEmpty())
@@ -1174,7 +1184,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					 */
 					public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
 						// Add in the remote vm jar and any nls jars that is required for JBCF itself.
-						controller.contributeClasspath(JavaVEPlugin.getPlugin().getDescriptor(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
+						controller.contributeClasspath(JavaVEPlugin.getPlugin().getBundle(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
 					}
 					
 					/* (non-Javadoc)
@@ -1856,7 +1866,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	class VEPalettePage extends Page implements PalettePage{
 			Control control;
 		public void createControl(Composite parent) {
-			control = createPaletteViewer(parent);		
+			control = createPaletteViewer(parent);
+			control.addDisposeListener(new DisposeListener() {
+
+				public void widgetDisposed(DisposeEvent e) {
+					palettePage = null;
+					editDomain.setPaletteViewer(null);
+					rebuildPalette = true;	// Because next time palette is created we need to rebuild it.
+				}
+			});
 		}
 		public Control getControl() {
 			return control;

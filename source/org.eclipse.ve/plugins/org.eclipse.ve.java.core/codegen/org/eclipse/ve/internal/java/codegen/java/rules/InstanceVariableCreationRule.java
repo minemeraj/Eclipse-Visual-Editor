@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.11 $  $Date: 2004-05-17 20:28:14 $ 
+ *  $Revision: 1.12 $  $Date: 2004-06-02 15:57:22 $ 
  */
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -37,13 +36,9 @@ import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator;
-import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class InstanceVariableCreationRule implements IInstanceVariableCreationRule {
-
-	private static ResourceSet fRS = null;
-	private static String fDefaultPrefix = null;
 	
 	public static int internalIndex = 1;
 	public static Preferences fPrefStore = null;
@@ -220,8 +215,6 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	}
 
 	public static void clearCache() {
-		fRS = null;
-		fDefaultPrefix = null;
 	}
 
 	/**

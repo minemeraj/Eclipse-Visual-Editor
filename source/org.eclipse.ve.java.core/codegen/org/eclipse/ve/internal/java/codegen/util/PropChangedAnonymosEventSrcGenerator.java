@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropChangedAnonymosEventSrcGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -64,7 +64,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
 		 List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
 		 list.addAll(TemplateUtil.getPlatformJREPath());
 		 String[] classPath = (String[]) list.toArray(new String[list.size()]);
-		 String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
+		 String   templatePath = TemplateUtil.getPathForBundleFile(BASE_PLUGIN, TEMPLATE_PATH) ;
 		
 		 fEventTemplate = (IEventTemplate)
 					  TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 
@@ -84,7 +84,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
 		 List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
 		 list.addAll(TemplateUtil.getPlatformJREPath());
 		 String[] classPath = (String[]) list.toArray(new String[list.size()]);
-		 String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
+		 String   templatePath = TemplateUtil.getPathForBundleFile(BASE_PLUGIN, TEMPLATE_PATH) ;
 		
 		 fEventMethodTemplate = (IEventTemplate)
 					  TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 
@@ -104,7 +104,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
 		 List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
 		 list.addAll(TemplateUtil.getPlatformJREPath());
 		 String[] classPath = (String[]) list.toArray(new String[list.size()]);
-		 String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
+		 String   templatePath = TemplateUtil.getPathForBundleFile(BASE_PLUGIN, TEMPLATE_PATH) ;
 		
 		fEventPropertyTemplate = (IEventTemplate)
 					  TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.*;
@@ -79,8 +79,6 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	private Label className = null;
 	private String beanLabelText = null;
 	private Text beanLabel = null ;
-
-// TODO TimerStep comment	private int originalTestId;	// used for performance measurements
 	
 	private EditDomain feditDomain = null ;
 	
@@ -91,10 +89,6 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			IJavaSearchConstants.CLASS, 
 			SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}));
 		
-		// Use TimerStep APIs for performance measurements. Save the original test id to restore it later.
-// TODO Remove all timerstep comments		originalTestId = TimerStep.instance().getTestd();
-//		TimerStep.instance().setTestd(137);
-//		TimerStep.instance().writeCounters2(100);
 		this.selectedContributor = choice;
 		this.pkg = packageFragment;
 		this.project = packageFragment.getJavaProject();
@@ -116,7 +110,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	public static IChooseBeanContributor[] determineContributors(){
 		if(pluginContributors != null) return pluginContributors;
 		List contributorList = new ArrayList();
-		IExtensionPoint exp = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint("choosebean"); //$NON-NLS-1$
+		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "choosebean"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
 		
 		if(extensions!=null && extensions.length>0){
@@ -124,16 +118,12 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			// Ensure that the org.eclipse.ve.java plugins are the first in the list
 			IExtension[] orderedExtensions = new IExtension[extensions.length];
 			int index = 0;
-			Plugin veBasePlugin = JavaVEPlugin.getPlugin();
+			String veBaseBundleName = JavaVEPlugin.getPlugin().getBundle().getSymbolicName();
 			for (int i = 0; i < extensions.length; i++) {
-				try {
-					if(extensions[i].getDeclaringPluginDescriptor().getPlugin() == veBasePlugin){
-						orderedExtensions[index] = extensions[i];
-						index++;
-						extensions[i] = null; // Remove the one we took out
-					}
-				} catch (CoreException e) {
-					e.printStackTrace();
+				if(extensions[i].getNamespace().equals(veBaseBundleName)) {
+					orderedExtensions[index] = extensions[i];
+					index++;
+					extensions[i] = null; // Remove the one we took out
 				}
 			}
 			// Any remaining extensions go to the end

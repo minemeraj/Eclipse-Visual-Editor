@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-23 14:15:00 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.ArrayList;
@@ -19,26 +19,21 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EAnnotation;
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
 
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.IJavaCellEditor;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.ve.internal.propertysheet.ISourced;
-import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
+import org.eclipse.ve.internal.propertysheet.*;
 /**
  * The method createItems shows a list of available layout manager classes from which the 
  * user can pick one.

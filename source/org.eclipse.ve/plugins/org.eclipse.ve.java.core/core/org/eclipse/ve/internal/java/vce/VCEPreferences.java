@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-01 16:29:20 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 
@@ -72,7 +72,7 @@ public class VCEPreferences {
  */
 public static String[][] getPluginLookAndFeelClasses(){
 	
-	IExtensionPoint lookAndFeelExtensionPoint = getPlugin().getDescriptor().getExtensionPoint(LOOK_AND_FEEL);
+	IExtensionPoint lookAndFeelExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPlugin().getBundle().getSymbolicName(), LOOK_AND_FEEL);
 	if ( lookAndFeelExtensionPoint == null ) return new String[0][];
 	IConfigurationElement[] lookAndFeelElements = lookAndFeelExtensionPoint.getConfigurationElements();
 	String[][] result = new String[lookAndFeelElements.length][];

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.16 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.Iterator;
@@ -300,22 +300,6 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		}
 
 		return true;
-	}
-	
-	/**
-	 * This is a temporary workaround to the fact that we need to set
-	 * a constructor on a BoxLayout
-	 * @deprecated  we are using PT now, should not use this anymore
-	 */
-	private String boxLayoutOveride(String st) {
-		int index =  st.indexOf("(,") ; //$NON-NLS-1$
-        if (index>=0) {            
-            String toAdd = fbeanPart.getSimpleName();
-            StringBuffer s = new StringBuffer (st) ;            
-            s.replace(index, index+2, "("+toAdd+", ") ; //$NON-NLS-1$ //$NON-NLS-2$
-          return s.toString() ;
-        }
-        return st ;
 	}
 
 	/**

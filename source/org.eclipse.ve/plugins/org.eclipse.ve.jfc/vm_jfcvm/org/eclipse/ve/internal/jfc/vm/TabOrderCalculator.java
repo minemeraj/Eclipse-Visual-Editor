@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: TabOrderCalculator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:30 $ 
  */
 
 import java.util.List;
@@ -58,7 +58,7 @@ public TabOrderCalculator(JFrame aFrame) {
 protected void addFocusableChildrenTo(Container aContainer) {
 
 	// See whether the container can receive focus
-	if (aContainer.isFocusTraversable() && fFrame.getContentPane() != aContainer) {
+	if (aContainer.isFocusable() && fFrame.getContentPane() != aContainer) {
 		fAllFocusableComponents.add(aContainer);
 	}
 	// Iterate over the children

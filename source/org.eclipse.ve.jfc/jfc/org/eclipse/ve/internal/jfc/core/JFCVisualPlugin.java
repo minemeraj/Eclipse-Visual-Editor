@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,19 +10,19 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCVisualPlugin.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:29 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-public class JFCVisualPlugin extends AbstractUIPlugin {
+import org.eclipse.core.runtime.Plugin;
+
+public class JFCVisualPlugin extends Plugin {
 
 	private static JFCVisualPlugin PLUGIN;
 
 
-	public JFCVisualPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public JFCVisualPlugin() {
 		PLUGIN = this;
 	}
 

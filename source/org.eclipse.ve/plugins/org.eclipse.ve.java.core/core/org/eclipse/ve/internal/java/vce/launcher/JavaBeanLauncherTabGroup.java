@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLauncherTabGroup.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 /*
  * (c) Copyright IBM Corp. 2000, 2001.
@@ -19,6 +19,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  */
  
 import org.eclipse.debug.ui.*;
+import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.*;
 
 public class JavaBeanLauncherTabGroup extends AbstractLaunchConfigurationTabGroup {
@@ -33,7 +34,7 @@ public class JavaBeanLauncherTabGroup extends AbstractLaunchConfigurationTabGrou
 			new JavaArgumentsTab(),			
 			new JavaJRETab(),			
 			new JavaClasspathTab(),
-			new JavaSourceLookupTab(),
+			new SourceLookupTab(),
 			new CommonTab()
 		};
 		setTabs(tabs);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-02 22:20:45 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-02 15:57:26 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -23,7 +23,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
  
 /**
  * @author Gili Mendel

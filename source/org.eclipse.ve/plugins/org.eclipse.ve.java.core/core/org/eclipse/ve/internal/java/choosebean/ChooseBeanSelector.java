@@ -11,12 +11,11 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanSelector.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 18:14:26 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.logging.Level;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
@@ -32,9 +31,6 @@ protected SelectionCreationToolEntry creationToolEntry = null;
 
 public ChooseBeanSelector(){}
 
-protected String getPluginName(){
-	return ResourcesPlugin.getPlugin().getDescriptor().getLabel();
-}
 public Object[] getNewObjectAndType(SelectionCreationToolEntry.SelectionCreationTool creationTool){
 	creationToolEntry = creationTool.getSelectionToolEntry();
 	EditDomain ed = (EditDomain)creationTool.getDomain() ;	

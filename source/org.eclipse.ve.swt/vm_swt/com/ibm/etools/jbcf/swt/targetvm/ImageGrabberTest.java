@@ -1,13 +1,13 @@
 package com.ibm.etools.jbcf.swt.targetvm;
 
-import java.lang.reflect.*;
-
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.*;
 
 public class ImageGrabberTest {
 	
@@ -136,16 +136,16 @@ public class ImageGrabberTest {
 		d.dispose();
 		
 	}
-	private static Point getClientOrigin(Control aControl){
-		Point displayClientOrigin = aControl.toDisplay(0,0);
-		Point locationRelativeToDisplay = aControl.getLocation();
-		if(aControl.getParent() != null){
-			Point parentClientOrigin = aControl.getParent().toDisplay(0,0);
-			locationRelativeToDisplay = new Point(
-				locationRelativeToDisplay.x + parentClientOrigin.x,
-				locationRelativeToDisplay.y + parentClientOrigin.y
-			);
-		};	
-		return new Point(displayClientOrigin.x - locationRelativeToDisplay.x,displayClientOrigin.y - locationRelativeToDisplay.y);
-	}	
+//	private static Point getClientOrigin(Control aControl){
+//		Point displayClientOrigin = aControl.toDisplay(0,0);
+//		Point locationRelativeToDisplay = aControl.getLocation();
+//		if(aControl.getParent() != null){
+//			Point parentClientOrigin = aControl.getParent().toDisplay(0,0);
+//			locationRelativeToDisplay = new Point(
+//				locationRelativeToDisplay.x + parentClientOrigin.x,
+//				locationRelativeToDisplay.y + parentClientOrigin.y
+//			);
+//		};	
+//		return new Point(displayClientOrigin.x - locationRelativeToDisplay.x,displayClientOrigin.y - locationRelativeToDisplay.y);
+//	}	
 }

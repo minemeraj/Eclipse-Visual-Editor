@@ -1,12 +1,9 @@
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.awt.Point;
-import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.compiler.*;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
@@ -20,7 +17,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-17 20:28:14 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:22 $ 
  */
 /**
  * @version 	1.0
