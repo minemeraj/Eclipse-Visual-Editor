@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.20 $  $Date: 2004-06-18 16:31:34 $ 
+ *  $Revision: 1.21 $  $Date: 2004-07-02 20:02:31 $ 
  */
 
 import java.util.*;
@@ -82,6 +82,9 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	private Text beanLabel = null ;
 	
 	private EditDomain feditDomain = null ;
+	
+	private boolean classAreaVisability = true ;
+	private boolean beanLabelVisability = true ;
 	
 	/**
 	 * ChooseBeanDialog. 
@@ -287,6 +290,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	}
 	
 	private void createBeanLabelArea(Composite parent){
+
 		int numCols = 2;
 		Group group = new Group(parent, SWT.NONE);
 		group.setLayout(new GridLayout(numCols,false));
@@ -320,9 +324,11 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			label.setEnabled(false);
 			beanLabel.setEnabled(false);
 		}
+		group.setVisible(beanLabelVisability);
 	}
 
 	protected void createClassArea(Composite parent){
+	
 		if(isValidContributor()){
 			int numEntries = contributors.length;
 			Composite c = new Composite(parent, SWT.NONE);
@@ -374,6 +380,8 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			}
 	
 			typeChoices[selectedContributor].setSelection(true);
+			
+			c.setVisible(classAreaVisability);
 		}
 	}
 
@@ -779,4 +787,16 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			super.handleDefaultSelected();
 	}
 
+	/**
+	 * @param beanLabelVisability The beanLabelVisability to set.
+	 */
+	public void setBeanLabelVisability(boolean beanLabelVisability) {
+		this.beanLabelVisability = beanLabelVisability;
+	}
+	/**
+	 * @param classAreaVisability The classAreaVisability to set.
+	 */
+	public void setClassAreaVisability(boolean classAreaVisability) {
+		this.classAreaVisability = classAreaVisability;
+	}
 }
