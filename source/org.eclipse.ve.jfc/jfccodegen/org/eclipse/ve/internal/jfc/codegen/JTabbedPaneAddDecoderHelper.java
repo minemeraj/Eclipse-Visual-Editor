@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-16 20:56:05 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-20 13:01:30 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -317,7 +317,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		String AddedArg;
 		if (fAddedPart == null)
-			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel());
+			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
 		else if (fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
 		else
@@ -327,19 +327,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		// TODO  Need to deal with non String instances
 		if (fTitleInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance,fbeanPart.getModel()));
+			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		if (fIconInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fIconInstance,fbeanPart.getModel()));
+			finalArgs.add(CodeGenUtil.getInitString(fIconInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		finalArgs.add(AddedArg);
 
 		if (fToolTipInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance,fbeanPart.getModel()));
+			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 

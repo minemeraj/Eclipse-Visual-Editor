@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-27 23:17:06 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-20 13:01:30 $ 
  */
 
 import java.util.ArrayList;
@@ -635,7 +635,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		String AddedArg;
 		if (fAddedPart == null) {
 			// Simple property: add(new JLabel("Boo"),null)
-			AddedArg = CodeGenUtil.getInitString(fAddedInstance,fbeanPart.getModel());
+			AddedArg = CodeGenUtil.getInitString(fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
 		} else if (
 			fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
@@ -690,7 +690,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			// get the contstraints value
 			BeanPart cbp = fbeanPart.getModel().getABean(fAddedConstraintInstance);
 			if (cbp == null) // Vanilla constraint
-				fnonResolvedAddedConstraint = fAddedConstraint = CodeGenUtil.getInitString(fAddedConstraintInstance,fbeanPart.getModel());
+				fnonResolvedAddedConstraint = fAddedConstraint = CodeGenUtil.getInitString(fAddedConstraintInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
 			else
 				fnonResolvedAddedConstraint = fAddedConstraint = cbp.getSimpleName();
 		}
