@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.21 $  $Date: 2004-09-08 18:18:58 $ 
+ *  $Revision: 1.22 $  $Date: 2004-09-08 21:59:07 $ 
  */
 
 import java.util.Iterator;
@@ -70,13 +70,17 @@ public CodeExpressionRef createInitExpression() {
 			.getAllocationFeature(obj));
 	CodeExpressionRef exp;
 	try {
-		// Give the decoder the option to adapt
-		// The problem is that the decoder may not have all the information
+		// Give the decoder the option to decode/adapt
+		// The problem is that the decoder may not have all the information 
 		// it needs... e.g., allocation feature is there, but no parent child feature yet.
 		exp = f.createFromJVEModel(null);
 	} catch (CodeGenException e1) {
 		JavaVEPlugin.log(e1);
 		return null;
+	}
+	if (!exp.isStateSet(exp.STATE_NO_SRC)) {
+		// decoder was able to generate
+		return exp;
 	}
 	exp.clearState();
 	exp.setNoSrcExpression(false);
@@ -128,31 +132,6 @@ public CodeExpressionRef createInitExpression() {
 	
 }
 
-///**
-// * @deprecated temporary untill we deal with internal bean creation
-// * @param mt
-// * @return
-// * 
-// * @since 1.0.0
-// */
-//public CodeExpressionRef createInitExpression(BeanMethodTemplate mt) {
-//	CodeMethodRef mr = fBeanPart.getInitMethod() ;   	
-//	CodeExpressionRef exp = new CodeExpressionRef(mr,fBeanPart) ;
-//	//exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
-//	exp.clearState();
-//	exp.setState(CodeExpressionRef.STATE_EXIST, true);
-//	exp.setState(CodeExpressionRef.STATE_NO_MODEL, true);
-//	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
-//	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-//	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-//	ExpressionParser p = new ExpressionParser (mt.getPrefix(),mt.getInitExpressionOffset(),
-//			mt.getInitExpression().length()) ;
-//	
-//	exp.setContent(p) ;
-//	exp.setOffset(p.getExpressionOff()) ;   	
-//	fexpStmt = exp ;
-//	return fexpStmt ;
-//}
 
 /**
  *  Create a CodeExpressionRef from the VCE model
