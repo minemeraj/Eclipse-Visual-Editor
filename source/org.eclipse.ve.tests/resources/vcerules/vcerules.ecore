@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:jcm="http:///org/eclipse/ve/internal/jcm.ecore"   
+    name="vcerules"
+    nsURI="platform:/plugin/org.eclipse.ve.tests/resources/vcerules/vcerules.ecore" nsPrefix="org.eclipse.ve.tests.vcerules">
+  <eClassifiers xsi:type="ecore:EClass" name="ParentContainer">
+    <eReferences name="components" eType="#//Component" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Component">
+    <eReferences name="childComponent" eType="#//Child">
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>
+    </eReferences>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Child">
+    <eReferences name="crossRef" eType="#//Child"/>
+  </eClassifiers>
+</ecore:EPackage>

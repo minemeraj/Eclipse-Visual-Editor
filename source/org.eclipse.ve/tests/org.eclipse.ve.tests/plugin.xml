@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.tests"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName"
+   class="org.eclipse.ve.tests.VETestsPlugin">
+
+   <runtime>
+      <library name="vetests.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.ve.cde"/>
+      <import plugin="org.eclipse.ve.java.core"/>
+      <import plugin="org.eclipse.jdt.core"/>
+   </requires>
+
+
+<!-- extend a CodeGen rule -->
+   <extension
+         point="org.eclipse.ve.java.core.style">
+      <style
+            description="JUnit Added Style"
+            id="jUnitStyle">
+         <prefui
+               class="org.eclipse.ve.tests.codegen.java.rules.JunitPrefContributor">
+         </prefui>
+         <rule
+               class="org.eclipse.ve.tests.codegen.java.rules.TestRule"
+               id="ruleInstanceVariable">
+         </rule>
+      </style>
+   </extension>
+
+</plugin>
