@@ -28,7 +28,7 @@ Tutorial&nbsp; 1 - Enabling support for a custom widget<br>
 <p class="summary">The Visual Editor project provides reference
 implementations of a graphical user interface builder for the JFC and
 SWT widget toolkits built around an extensible framework.&nbsp; The
-motivation for this came from exerience with previous GUI builders that
+motivation for this came from experience with previous GUI builders that
 while they provided high function end points for particular toolkits
 were unable to be adapted to support custom behavior for areas of
 functionality such as custom widgets, custom layout managers, user
@@ -50,8 +50,7 @@ EMF .override files to introduce custom editor behavior.<br>
 Joe Winchester, IBM<br>
 Dave Orme, db4objects</b></p>
 <p><font size="1">
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March
-16, 2005<!--webbot bot="Timestamp" endspan i-checksum="17411" --></font></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March 18, 2005<!--webbot bot="Timestamp" endspan i-checksum="17667" --></font></p>
 <hr width="100%">
 <h2><a name="Introduction"></a>Introduction</h2>
 <p>In this tutorial a 3.1 based Eclipse plugin&nbsp; <i>
@@ -276,7 +275,7 @@ widget so the graphical edit part will remove the artificial border.<br>
 showing the image of the live visual control with a border<br>
       </td>
       <td style="vertical-align: top;">With plugin showing custom edit
-part with an icon and label and no boder<br>
+part with an icon and label and no border<br>
       </td>
     </tr>
     <tr>
@@ -425,7 +424,7 @@ installed.&nbsp; These can be obtained from the <a
 Editor's download page</a>.<br>
 </p>
 <p><img
- src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ src="images/note.gif"
  alt="Note: " height="13" width="62">&nbsp;&nbsp;&nbsp;
 Although the plugin is designed to target 3.1 it can be developed in an
 earlier environment such as 3.0.1.&nbsp; The target environment is the
@@ -444,7 +443,7 @@ section <a href="#A_complete_example">A complete example</a><br>
 <p>This section describes how to build the plugin <span
  style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
 </span>This will be used to package the CustomWidget itself as well as
-the include the extensions required to overide its default
+the include the extensions required to override its default
 behavior.&nbsp; The end result for users is that they will install this
 plugin onto their Eclipse environment and then configure their Java
 projects to use it <span style="color: rgb(255, 0, 0);">&lt;&lt; see
@@ -505,7 +504,7 @@ editor is:<br>
   </li>
 </ul>
 <p><img
- src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ src="images/note.gif"
  alt="Note: " height="13" width="62"> The pre-requisite plugin
 org.eclipse.ve.swt is not necessarily required by everyone extending
 the visual editor.&nbsp; It contains the code that enables the visual
@@ -541,9 +540,9 @@ has three child controls on it; a label, a text field, and a
 button.&nbsp; For this tutorial we used the Visual Editor to build the
 custom widget which, although a good exercise in using the Visual
 Editor is outside the scope of what this tutorial is designed to cover,
-so you download it directly from CVS.&nbsp; You should download the two
-classes <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java?cvsroot=Tools_Project">MyCustomPrompter.java</a>,
+so you can download it directly from CVS.&nbsp; You should download the two
+classes
+<a href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java">MyCustomPrompter.java</a>,
 and
 <a
  href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java?cvsroot=Tools_Project">ButtonSelectionListener.java</a>
