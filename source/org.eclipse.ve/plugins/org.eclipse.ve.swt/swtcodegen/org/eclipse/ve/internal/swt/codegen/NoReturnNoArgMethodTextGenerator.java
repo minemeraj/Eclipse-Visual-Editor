@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-13 20:30:34 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-20 21:58:39 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -94,7 +94,8 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	public String generateMain(String className) {
 		if (fMethodTemplate==null) 
 			return null ;  // regular method was not generated yet.
-		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell"))
+		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell") &&
+			!getInfo().finitBeanType.equals("Shell"))
 			return null ;
 		
 		fMethodTemplate=null;
