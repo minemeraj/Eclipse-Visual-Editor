@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.core.*;
@@ -94,16 +93,13 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 
 			if (jTarget.isSetAllocation()) {
 				JavaAllocation allocation = jTarget.getAllocation();
-				IAllocationAdapter allocAdapter = (IAllocationAdapter) EcoreUtil.getRegisteredAdapter(allocation, IAllocationAdapter.class);
-				if (allocAdapter != null) {
-					try {
-						ownsProxy = true;
-						beanProxy = allocAdapter.allocate(allocation, domain);
-					} catch (IAllocationAdapter.AllocationException e) {
-						processInstantiationError(e);
-					}
-					return beanProxy;
-				};
+				ownsProxy = true;
+				try {
+					beanProxy = getBeanProxyDomain().getAllocationProcesser().allocate(allocation);
+				} catch (IAllocationProcesser.AllocationException e) {
+					processInstantiationError(e);
+				}
+				return beanProxy;
 			}
 			
 			String qualifiedClassName = jTarget.getJavaType().getQualifiedNameForReflection();

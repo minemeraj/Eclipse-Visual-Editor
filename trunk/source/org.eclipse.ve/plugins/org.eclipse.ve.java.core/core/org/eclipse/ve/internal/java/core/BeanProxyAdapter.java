@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 import java.util.*;
@@ -38,8 +38,6 @@ import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
-
-import org.eclipse.ve.internal.java.core.IAllocationAdapter.AllocationException;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
@@ -812,24 +810,21 @@ protected void primInstantiateBeanProxy() {
 		if (!isThisPart()) {
 			if (getJavaObject().isSetAllocation()) {
 				JavaAllocation allocation = getJavaObject().getAllocation();
-				IAllocationAdapter allocAdapter = (IAllocationAdapter) getRegisteredAdapter(allocation, IAllocationAdapter.class);
-				if (allocAdapter != null) {
-					fOwnsProxy = true;
-					try {
-						setupBeanProxy(allocAdapter.allocate(allocation, domain));
-					} catch (AllocationException e) {
-						processInstantiationError(e.getWrapperedException());
-					}
-					return;
-				};
+				fOwnsProxy = true;
+				try {
+					setupBeanProxy(getBeanProxyDomain().getAllocationProcesser().allocate(allocation));
+				} catch (IAllocationProcesser.AllocationException e) {
+					processInstantiationError(e.getWrapperedException());
+				}
+				return;
 			}
 			
 			// otherwise just create it using the default ctor.
 			IBeanTypeProxy targetClass = getTargetTypeProxy();
 			try {
 				fOwnsProxy = true; // Since we created it, obviously we own it.
-				setupBeanProxy(InitStringAllocationAdapter.instantiateWithString(null,targetClass));
-			} catch (AllocationException exc) {
+				setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null,targetClass));
+			} catch (IAllocationProcesser.AllocationException exc) {
 				processInstantiationError(exc.getWrapperedException());
 			}			
 		} else {
@@ -851,8 +846,8 @@ protected void primInstantiateBeanProxy() {
 
 			try {
 				fOwnsProxy = true; // Since we created it, obviously we own it				
-				setupBeanProxy(InitStringAllocationAdapter.instantiateWithString(null, targetClass));
-			} catch (AllocationException exc) {
+				setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null, targetClass));
+			} catch (IAllocationProcesser.AllocationException exc) {
 				processInstantiationError(exc.getWrapperedException());
 			}
 		}

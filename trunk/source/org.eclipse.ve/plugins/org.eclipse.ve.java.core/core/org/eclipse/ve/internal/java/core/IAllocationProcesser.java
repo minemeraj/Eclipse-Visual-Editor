@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,28 +9,27 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: IAllocationAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $RCSfile: IAllocationProcesser.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-01-19 22:50:27 $ 
  */
- 
-import org.eclipse.emf.common.notify.Adapter;
+package org.eclipse.ve.internal.java.core;
+
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 /**
- * The adapter for allocating the appropriate proxy.
+ * The processer for allocating the appropriate proxy.
  * <p>
  * The allocate method is called when allocation is required.
  * <p>
- * Typically these adapters can be singletons. The JavaAllocation is passed in on the request. This should cut down
- * on the memory usage.
+ * The processer is associated with an IBeanProxyDomain. It can be retrieved from there. The processer cannot be
+ * shared with other IBeanProxyDomains.
  * 
  * @see org.eclipse.jem.internal.instantiation.JavaAllocation
- * @see org.eclipse.ve.internal.java.core.AllocationAdapterFactory
  * @since 1.0.0
  */
-public interface IAllocationAdapter extends Adapter {
+public interface IAllocationProcesser {
 	
 	/**
 	 * Exception occurred during allocation. The exception was caught and logged to the logging file. It would then
@@ -74,12 +72,18 @@ public interface IAllocationAdapter extends Adapter {
 	 * <p>If any exceptions are thrown, the exceptions should already be logged by the Allocation adapter implementation.
 	 * The problem is there is no way to know what all possible exceptions can be thrown. The list depends on the implementation.
 	 * 
-	 * @param allocation The allocation object that this adapter is on.  It is passed in rather than
-	 * use the adapter's target so that the adapter can be a singleton.
-	 * @param domain The domain to do the allocation within.
+	 * @param allocation The allocation object to allocate for. 
 	 * @return The allocated proxy.
 	 * @throws AllocationException
 	 */
-	public IBeanProxy allocate(JavaAllocation allocation, IBeanProxyDomain domain) throws AllocationException;
+	public IBeanProxy allocate(JavaAllocation allocation) throws AllocationException;
+	
+	/**
+	 * Set the domain to use with this processer. 
+	 * @param domain The domain to use. 
+	 * 
+	 * @since 1.0.0
+	 */
+	public void setBeanProxyDomain(IBeanProxyDomain domain);
 
 }

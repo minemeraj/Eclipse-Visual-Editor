@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-19 22:50:27 $ 
  */
 import java.lang.reflect.Constructor;
 
@@ -43,17 +43,29 @@ public class BeanProxyAdapterFactory
 
 	protected ProxyFactoryRegistry fProxyFactoryRegistry;
 	protected EditDomain domain;
+	protected IAllocationProcesser allocationProcesser;
 	protected static EAttribute BEAN_PROXY_CLASS_NAME;
 
 	/**
+	 * Create a BeanProxyAdapterFactory (which is also an IBeanProxyDomain.
+	 * 
+	 * @param aProxyFactoryRegistry
+	 * @param domain
+	 * @param allocationProcesser The allocation processer to be owned by this domain. It will have this factory set as its IBeanProxyDomain.
+	 * 
+	 * @since 1.0.0
+	 */
+	/**
 	 * BeanProxyAdaptorFactory constructor comment.
 	 */
-	public BeanProxyAdapterFactory(ProxyFactoryRegistry aProxyFactoryRegistry, EditDomain domain) {
+	public BeanProxyAdapterFactory(ProxyFactoryRegistry aProxyFactoryRegistry, EditDomain domain, IAllocationProcesser allocationProcesser) {
 		super();
 		fProxyFactoryRegistry = aProxyFactoryRegistry;
 		this.domain = domain;
+		this.allocationProcesser = allocationProcesser;
+		allocationProcesser.setBeanProxyDomain(this);
 		if (domain != null)
-			JavaEditDomainHelper.setBeanProxyDomain(this, domain);	// May not be a domain, used when just doing JBCF without editing.
+			JavaEditDomainHelper.setBeanProxyDomain(this, domain);	// May not be in an editdomain, used when just doing JBCF without editing.
 	}
 
 	public ProxyFactoryRegistry getProxyFactoryRegistry() {
@@ -125,4 +137,11 @@ public class BeanProxyAdapterFactory
 	public boolean isFactoryForType(Object key) {
 		return IBeanProxyHost.BEAN_PROXY_TYPE.equals(key);
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyDomain#getAllocationProcesser()
+	 */
+	public IAllocationProcesser getAllocationProcesser() {
+		return allocationProcesser; 
+	}
+
 }
