@@ -8,7 +8,8 @@
   <event:AddMany  featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
         treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JMenuBarTreeEditPart"
-        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JMenuBarGraphicalEditPart">
+        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JMenuBarGraphicalEditPart"
+        modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JMenuBarRootPaneOnlyModelAdapter">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menubar_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JMenuBarProxyAdapter"/>
