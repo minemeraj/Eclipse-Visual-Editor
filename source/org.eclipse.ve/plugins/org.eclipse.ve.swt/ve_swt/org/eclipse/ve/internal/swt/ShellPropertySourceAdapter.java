@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-15 21:24:56 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-16 20:47:59 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -104,7 +104,7 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 				default:
 					// If >2, then style is definitely the second arg. We will not add in trim if we have an arg
 					// because trim has already been taken care of (i.e. they added it or wasn't there, don't force it).
-					currentArg = (PTExpression) classInstanceCreation.getArguments().set(0, InstantiationFactory.eINSTANCE.createPTNullLiteral());
+					currentArg = (PTExpression) classInstanceCreation.getArguments().set(1, InstantiationFactory.eINSTANCE.createPTNullLiteral());
 					newArg = getChangedStyleExpression(currentArg, propertyID, styleBit);
 					if (newArg != null)
 						classInstanceCreation.getArguments().set(1, newArg);
