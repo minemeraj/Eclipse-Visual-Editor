@@ -84,8 +84,10 @@ if [[ -z $target && -z $buildType ]] ; then
 fi
 
 buildTypeArg=""
-if [ -n $buildType ] ; then
+if [[ -n $buildType ]] ; then
 	buildTypeArg="-DbuildType=$buildType"
 fi
+
+echo BD - $buildTypeArg
 
 $vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword
