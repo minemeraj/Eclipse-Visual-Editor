@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.wizards;
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.11 $  $Date: 2004-11-12 21:48:03 $ 
+ *  $Revision: 1.12 $  $Date: 2004-11-12 22:37:37 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -93,7 +93,7 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 		}
 	}
 	
-	protected void setInitializationData(String pluginName, String exampleClassName){
+	public void setInitializationData(String pluginName, String exampleClassName){
 		fPluginName = pluginName;
 		fExampleClassName = exampleClassName;
 	}
