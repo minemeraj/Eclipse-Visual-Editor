@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-05 03:38:43 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-05 14:36:44 $ 
  */
 
 import java.util.Iterator;
@@ -153,15 +153,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 
 			if (name.equals(getCurrentName()))
 				return null; // The current name is considered valid.
-			
-			if(!Character.isJavaIdentifierStart(name.charAt(0)))
-				return CDEMessages.getString("NameInCompositionPropertyDescriptor.NameInComposition.InvalidName_INFO_"); //$NON-NLS-1$
-			
-			for (int cc = 0; cc < name.length(); cc++) {
-				if(!Character.isJavaIdentifierPart(name.charAt(cc)))
-					return CDEMessages.getString("NameInCompositionPropertyDescriptor.NameInComposition.InvalidName_INFO_"); //$NON-NLS-1$
-			}
-			
+
 			String newName = getUniqueNameInComposition(domain, name);
 			if (newName.equals(name))
 				return null; // The name didn't change, so it is valid.
