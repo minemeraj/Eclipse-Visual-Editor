@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-24 01:08:29 $ 
  */
 
 
@@ -90,18 +90,26 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method, BeanPart bean) {
     setBean(bean)	;
 	
 }
-public CodeExpressionRef (Statement exp, CodeMethodRef method) {	
+/**
+ * exp/method may not have been generated from the same source
+ * if not, offset will have to be provided to normalize these two
+ * @param exp
+ * @param method
+ * 
+ * @since 1.0.0
+ */
+public CodeExpressionRef (Statement exp, CodeMethodRef method, int delta) {	
 	super(-1,-1,null) ;
 
     int start, end ;
     if (exp instanceof LocalDeclaration) {
         // Local Declaration is built out of 3 expressions
-        start = ((LocalDeclaration)exp).declarationSourceStart ;
-        end = ((LocalDeclaration)exp).declarationSourceEnd ;
+        start = ((LocalDeclaration)exp).declarationSourceStart+delta ;
+        end = ((LocalDeclaration)exp).declarationSourceEnd+delta ;
     }
     else {
-        start = exp.sourceStart ;
-        end = exp.sourceEnd ;
+        start = exp.sourceStart+delta ;
+        end = exp.sourceEnd+delta ;
     }
         
 	ExpressionParser fCP = createExpressionParser(method.getContent(),
@@ -110,13 +118,14 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method) {
 
     fMethod = method ;
     fExpr = exp ;
-	setState(STATE_SRC_LOC_FIXED, true); //fState |= STATE_SRC_LOC_FIXED ;      
+	setState(STATE_SRC_LOC_FIXED, true);   
 	setContent(fCP) ;
 	setOffset(getContentParser().getFillerOff()) ;
 	// Expression's content will include its Filler and comments	                           
-	
-	
-	
+}
+
+public CodeExpressionRef (Statement exp, CodeMethodRef method) {
+	this(exp,method,0) ;
 }
 
 public CodeExpressionRef (CodeMethodRef method,BeanPart bean) {	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectEmitter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-24 01:08:29 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -33,7 +33,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  * 
  * This class is not concerend with classes time stamps .. it is just a workerbee. If the template
  * time stamp has changed after the creation of this Emitter, it is the user responsibility
- * to create a new Emitter.
+ * to create a new Emitter.  Use the TemplateObjectFactory to get a current emitter
  */
 public class TemplateObjectEmitter {
 	

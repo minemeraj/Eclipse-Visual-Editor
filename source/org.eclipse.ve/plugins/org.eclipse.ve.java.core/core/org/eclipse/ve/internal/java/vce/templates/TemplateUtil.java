@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-24 01:08:29 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -144,11 +144,14 @@ public class TemplateUtil {
 		
 		IPluginDescriptor desc = null ;
 		try  {
-		   desc = Platform.getPlugin(plugin).getDescriptor();
+		   Plugin p = Platform.getPlugin(plugin) ;
+		   if (p != null)
+		     desc = p.getDescriptor();
 		}
-		catch (Exception e) {
+		catch (Exception e) {}
+		if (desc == null) 
 			return new ArrayList() ;
-		}
+		
 		IPluginPrerequisite[] preReq = desc.getPluginPrerequisites() ;
 		List l = getPluginJarPath(plugin) ;
 		beenThere.put(plugin,plugin) ;
