@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodAnalyzer.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
  */
 
 import java.util.*;
@@ -127,7 +127,7 @@ protected int reflectExistingSource(StringBuffer buf,Vector impactedBeans) throw
 String pc = exp.getContent() ;              
               exp.refreshFromComposition() ;
               exp.setOffset(buf.length()) ;
-              if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) { //(exp.getState() == exp.STATE_NOT_EXISTANT) {
+              if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_DELETE)) { //(exp.getState() == exp.STATE_NOT_EXISTANT) {
             	// Skip the expression
             	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("Need to deal with comments associated with statement") ; //$NON-NLS-1$
             	deleteCandidate.add(exp) ;

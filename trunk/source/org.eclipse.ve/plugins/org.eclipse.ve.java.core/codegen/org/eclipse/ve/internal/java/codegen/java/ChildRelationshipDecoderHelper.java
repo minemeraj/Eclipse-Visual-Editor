@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -363,7 +363,7 @@ private String getSourceCodeArg()  {
    	ExpressionTemplate.RPAREN) ;
    }
    else {
-     if (fAddedPart.isInstanceVar())
+     if (fAddedPart.getReturnedMethod() != null)
        st.append (ExpressionTemplate.LPAREN+ExpressionTemplate.RPAREN) ;   
    }
    return st.toString() ;

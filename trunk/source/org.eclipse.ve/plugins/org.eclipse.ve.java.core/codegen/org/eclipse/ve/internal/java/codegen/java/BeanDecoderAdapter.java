@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-04 15:47:50 $ 
  */
 
 import java.util.*;
@@ -298,118 +298,7 @@ protected void setElement (Notification msg) {
     }
     
     
-//         boolean childAdapter = false ;
-//         if (msg.getOldValue() != null && msg.getOldValue() instanceof EObject) {
-//           oldAdapter = getChildAdapter(fBean.getModel().getABean((EObject)msg.getOldValue())) ;
-//           childAdapter = true ;
-//         }
-//         else { 
-//           oldAdapter = getNullValuedAdapter((EStructuralFeature)msg.getFeature()) ;
-//           // Need to see if it is a child, or just an attribute
-//           if (oldAdapter != null && oldAdapter instanceof ExpressionDecoderAdapter) {
-//	        if (msg.getNewValue() != null && 
-//	            (isSpecialInstanceValue(msg.getNewValue()) ||
-//			     isChild((IJavaObjectInstance)msg.getNewValue()))
-//			    )
-//			    childAdapter = true ;
-//           }
-//         }
-//           // check to make sure it is 
-//           
-//	     // If it is a child, it is already removed - can  not call isChild()
-//		 if ((msg.getFeature() instanceof EAttribute || ((EReference) msg.getFeature()).isContainment()) &&
-//		     (isSpecialInstanceValue(msg.getNewValue()) ||
-//	          isSpecialInstanceValue(msg.getOldValue()) ||
-//	          (msg.getNewValue() instanceof IJavaObjectInstance && isChild((IJavaObjectInstance)msg.getNewValue())) || 
-//	          (msg.getOldValue() instanceof IJavaObjectInstance && isChild(((IJavaObjectInstance)msg.getOldValue())))||
-//	          (oldAdapter != null && childAdapter))
-//	         ) {	// Special Relationship e.g., contentPane
-//	        
-//	        IJavaObjectInstance old = null ; 	
-//	        if (msg.getOldValue() != null) 
-//	          if (isSpecialInstanceValue(msg.getOldValue()))  
-//	        	old = getComponentFromSpecialRoot((EObject)msg.getOldValue()) ;
-//	          else if (isChild((IJavaObjectInstance)msg.getOldValue()) ||
-//	                    oldAdapter!= null)
-//	            old = (IJavaObjectInstance) msg.getOldValue() ;
-//	         
-//	        if (old != null) {
-//	            BeanPart b = fBean.getModel().getABean(old) ;
-//	            oldAdapter = getChildAdapter(b) ;
-//	            fBean.removeChild(b) ;	
-//	            b.addBackRef(null) ;
-//	     	    removeChildAdapter(b) ;
-//	     	    removeBeanInstance(old) ;
-//	        }
-//	        
-//	        IJavaObjectInstance newv = null ;
-//	        if (msg.getNewValue() != null) 
-//	          if (isSpecialInstanceValue(msg.getNewValue()))  
-//	        	newv = getComponentFromSpecialRoot((EObject)msg.getNewValue()) ;
-//	          else if (isChild((IJavaObjectInstance)msg.getNewValue()))
-//	            newv = (IJavaObjectInstance) msg.getNewValue() ;
-//        		        		           
-//	        
-//	        if (newv != null) { 		
-//	          BeanPart b = fBean.getModel().getABean((EObject)newv) ;
-//	          if (b == null) {
-//		         createBeanInstance(newv) ;
-//		         b = fBean.getModel().getABean((EObject)newv) ;
-//	          }
-//		      fBean.addChild(b) ;
-//		      b.addBackRef(fBean) ;
-//		      // If the adapter was sitting on the null list, we will re-create the expression/decoder, to make sure
-//		      // We have a proper decoder (attribute null, vs. Instance null).
-//		      if (oldAdapter != null && getNullValuedAdapter((EStructuralFeature)msg.getFeature())==null)
-//		        addChildAdapter(b,oldAdapter) ;		        		      
-//		      else
-//		         oldAdapter = null ;
-//	        }
-//	        else	        	        
-//	         if (oldAdapter != null)	// Move the adapter to the new/null values list         	           
-//		      	addDecoderAdapeter(msg.getNewValue(),oldAdapter,msg.getFeature()) ;		     	   		     	   
-//		      
-//		        
-//	        args = new Object[] { msg.getNewValue() } ;
-//	     }
-//	     else {  // An attribute		     	 
-//	     	 oldAdapter = getDecoderAdapter(msg.getOldValue(),msg.getFeature()) ; 
-//	     	 if (oldAdapter != null) {
-//	     	   // Move the decoder to the new valued instance
-//	     	   removeDecoderAdapter(msg.getOldValue(),oldAdapter,msg.getFeature()) ;
-//	     	   addDecoderAdapeter(msg.getNewValue(),oldAdapter,msg.getFeature()) ;		     	   		     	   
-//	     	 }
-//	     	 NotifyParentIfNeeded((EStructuralFeature) msg.getFeature()) ;	     	 
-//	     }
-//	     
-//		if (oldAdapter == null) { // Brand new expression
-//			// If we have created a new child, we may have a lingering (demoted attribute left over)
-//			if (msg.getOldValue() != null)
-//				oldAdapter = getDecoderAdapter(msg.getOldValue(), msg.getFeature());
-//			else {
-//				oldAdapter = getNullValuedAdapter((EStructuralFeature) msg.getFeature());
-//				removeNullValue((EStructuralFeature) msg.getFeature());
-//			}
-//
-//			if (oldAdapter != null && oldAdapter instanceof ExpressionDecoderAdapter) {
-//				((ExpressionDecoderAdapter) oldAdapter).getDecoder().delete();
-//			}
-//			ExpressionRefFactory eGen = new ExpressionRefFactory(fBean, (EStructuralFeature) msg.getFeature());
-//			try {
-//				CodeExpressionRef exp = eGen.createFromVCEModel(args);
-//				if (exp != null)
-//					exp.insertContentToDocument(true);
-//			}
-//			catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
-//				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-//				return;
-//			}
-//		}
-//	     else {
-//	     	  // Let he decoder update the document.
-//	     	  if (!(oldAdapter instanceof JFCBeanDecoderAdapter))		     		     	  
-//	     	     oldAdapter.notifyChanged(msg) ;
-//	     }		
+
 }
 
 protected IJavaObjectInstance getComponentFromSpecialRoot(EObject root) {
@@ -465,59 +354,7 @@ protected void removeElement (Notification msg) {
             ICodeGenAdapter oldAdapter = getExistingAdapter(msg) ;
 			if (oldAdapter != null) {
 			    oldAdapter.notifyChanged(msg) ;
-		     }	
-			
-//            
-//            
-//            if (msg.getOldValue() != null)
-//              oldAdapter = getChildAdapter(fBean.getModel().getABean((EObject)msg.getOldValue())) ;
-//	         // If it is a child, it is already removed - can  not call isChild()
-//             if ((msg.getFeature() instanceof EAttribute || ((EReference) msg.getFeature()).isContainment())  &&
-//                 (isSpecialInstanceValue(msg.getOldValue()) || oldAdapter != null)) {
-//		          
-//	           IJavaObjectInstance obj = null ;
-//	           IJavaObjectInstance constraint = null ;
-//	           if (isSpecialInstanceValue(msg.getOldValue())) {
-//	               obj = getComponentFromSpecialRoot((EObject)msg.getOldValue()) ;
-//	               constraint = getConstraintFromSpecialRoot((EObject)msg.getOldValue()) ;
-//	               if (isVanillaConstraint(constraint))
-//	                  constraint=null ;
-//	           }
-//	           else
-//	               obj = (IJavaObjectInstance) msg.getOldValue() ;
-//	               	           
-////	           if (constraint != null) {
-////	               BeanPart cb = fBean.getModel().getABean(constraint) ;
-////	               
-////	               fBean.removeChild(cb) ;
-////	               removeBeanInstance(constraint) ;
-////	           }
-//	               
-//	     
-//	     	   BeanPart b = fBean.getModel().getABean(obj) ;
-//	     	   oldAdapter = getChildAdapter(b) ;
-//	     	   if (b != null) {
-//	     	     b.addBackRef(null) ;  
-////	     	     removeChildrenIfNeeded(b) ;
-//	     	     fBean.removeChild(b) ;	     	   
-//	     	     removeChildAdapter(b) ;
-////	     	     removeBeanInstance(obj) ;
-//	     	   }
-//	     	   else
-//	     	     oldAdapter = getChildAdapter(msg.getOldValue()) ;
-//		     }
-//		     else {  // An attribute		     	 		     	 
-//		     	 oldAdapter = getDecoderAdapter(msg.getOldValue(),msg.getFeature()) ;
-//		     	 if (oldAdapter != null) {
-//		     	   // Move the decoder to the new valued instance
-//		     	   removeDecoderAdapter(msg.getOldValue(),oldAdapter,msg.getFeature()) ;
-//		 //    	   addDecoderAdapeter(msg.getNewValue(),oldAdapter,(EStructuralFeature)msg.getFeature()) ;		     	   
-//		     	 }
-//		     }		     
-//		     if (oldAdapter != null) {
-		     	  // Let he decoder update the document.		     		     	  
-//		     	  oldAdapter.notifyChanged(msg) ;
-//		     }	
+		     }				
 }
 
 protected boolean isVanillaConstraint(IJavaObjectInstance c) {

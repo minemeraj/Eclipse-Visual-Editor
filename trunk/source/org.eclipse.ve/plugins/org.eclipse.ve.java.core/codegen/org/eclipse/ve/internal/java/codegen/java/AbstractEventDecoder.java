@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -200,7 +200,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	
 	protected void markExprAsDeleted() {
 		fEventRef.clearState();
-		fEventRef.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true); 
+		fEventRef.setState(CodeExpressionRef.STATE_DELETE, true); 
 	}
 	
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-04 15:47:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -129,7 +129,7 @@ protected IEventDecoder  getEventDecoder(){
 public synchronized boolean  decodeExpression() throws CodeGenException {
     
       // If it is already in MOF, no need to create it again.
-      if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
+      if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
       	return true ;
       
       if(isStateSet(STATE_NO_MODEL))
@@ -211,10 +211,10 @@ protected ExpressionParser createExpressionParser(String sourceSnippet, int expO
 public synchronized void refreshFromComposition() throws CodeGenException {
 	
 	if ((!isAnyStateSet()) || 
-		(isStateSet(STATE_NOT_EXISTANT))){
+		(isStateSet(STATE_DELETE))){
 		   // Clear the expression's content
 		   clearState();
-		   setState(STATE_NOT_EXISTANT, true) ;
+		   setState(STATE_DELETE, true) ;
 		   setContent((ExpressionParser) null) ;
 		   return ;
 		}
@@ -226,7 +226,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	
 	if (fDecoder.isDeleted()) {
 		clearState();
-		setState(STATE_NOT_EXISTANT, true) ;
+		setState(STATE_DELETE, true) ;
 		setContent((ExpressionParser) null) ;
 		return ;
 	}

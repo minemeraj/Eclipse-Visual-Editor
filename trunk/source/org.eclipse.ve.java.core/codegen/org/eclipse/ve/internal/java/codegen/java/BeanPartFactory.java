@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.12 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.13 $  $Date: 2004-02-04 15:47:50 $ 
  */
 
 import java.util.*;
@@ -621,12 +621,13 @@ public void removeBeanPart (BeanPart bean) {
 		CodeExpressionRef e = (CodeExpressionRef) itr.next();
 		//e.primSetState(e.STATE_NOT_EXISTANT) ;
 		e.clearState();
-		e.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true);
+		e.setState(CodeExpressionRef.STATE_DELETE, true);
 		deleteList.add(e);
 	}
 	// If the method is not removed, we need to remove the expressions
 	if (!shouldMethodBeRemoved) {
 	  // updateDocument will delete the expressions
+	  fBeanModel.refreshMethods();
 	  for (int i = deleteList.size() - 1; i >= 0; i--) {
 		// If it is an instance bean, we removed the method
 		((CodeExpressionRef) deleteList.get(i)).updateDocument(i == 0); // Update the source code once
