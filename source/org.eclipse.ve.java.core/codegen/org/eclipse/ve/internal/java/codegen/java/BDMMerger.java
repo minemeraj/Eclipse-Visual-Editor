@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-21 02:52:15 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-23 23:15:51 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -454,8 +454,7 @@ public class BDMMerger {
 					mainExp.setOffset(newExp.getOffset());
 					// No need to refresh when a shadow expression 
 					// We also do not care about event ordering
-					if(!newExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
-						((!(newExp instanceof CodeEventRef)) || needToRedecodeExpressions.contains(mainExp))) {
+					if(((!(newExp instanceof CodeEventRef)) || needToRedecodeExpressions.contains(mainExp))) {
 					   // Will take care of reordering of expressions
 					   logFiner("Updating because of changed offset "+newExp.getCodeContent());
 					   mainExp.refreshFromJOM(newExp); 

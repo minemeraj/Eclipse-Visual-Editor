@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTControlDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-02 22:20:45 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-23 23:15:53 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -42,4 +42,13 @@ public class SWTControlDecoder extends ObjectDecoder {
 			super.initialDecoderHelper() ;	
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractExpressionDecoder#isPriorityCacheable()
+	 */
+	protected boolean isPriorityCacheable() {
+		if (fhelper instanceof SWTConstructorDecoderHelper)
+			return false ;
+		else
+		    return super.isPriorityCacheable();
+	}
 }

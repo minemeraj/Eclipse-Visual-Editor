@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-02 19:40:26 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-23 23:15:51 $ 
  */
 
 import java.util.*;
@@ -336,6 +336,7 @@ protected List reorderInitExpsToTop(List unordered){
 	int maxPriorityCount = 0;
 	Iterator allExpressions = unordered.iterator();
 	ArrayList ordered = new ArrayList(unordered.size());
+	ArrayList orderedPri = new ArrayList(unordered.size());
 	while(allExpressions.hasNext()){
 		CodeExpressionRef exp = (CodeExpressionRef) allExpressions.next();
 		int[] expPriorities = (int[])exp.getPriority();
@@ -347,13 +348,23 @@ protected List reorderInitExpsToTop(List unordered){
 			expPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR){
 			if(exp.getBean()!=null &&
 			   exp.getBean().getReturnedMethod()!=null &&
-			   exp.getBean().getReturnedMethod().equals(this))
+			   exp.getBean().getReturnedMethod().equals(this)) {
 				ordered.add(0,exp);
-			else
-				ordered.add(maxPriorityCount,exp);
+				orderedPri.add(0,expPriorities);
+			}
+			else {
+				int i;
+				for (i=maxPriorityCount; i>0; i--) {
+					if (expPriorities[1]< ((int[])orderedPri.get(i-1))[1])
+						break;						
+				}				
+				ordered.add(i,exp);
+				orderedPri.add(i,expPriorities);
+			}
 			maxPriorityCount++;
 		}else{
 			ordered.add(exp);
+			orderedPri.add(expPriorities);
 		}
 	}
 	return ordered;
@@ -459,21 +470,32 @@ public  void updateExpressionOrder() throws CodeGenException{
 		}else{
 			if(bestUsableFiller!=null)
 				exp.setFillerContent(bestUsableFiller);
-			{// ALWAYS keep an expression which is floating after ALL
+			{// TODO: why are we doing this here???? sorting should resolve everyting!
+				// ALWAYS keep an expression which is floating after ALL
 			  // the 'new' expressions in the method ! 
-				Iterator itr = allExpressions.iterator();
-				while(itr.hasNext()){
-					CodeExpressionRef tmpexp = (CodeExpressionRef) itr.next();
-					int[] tmpexpPriorities = (int[])tmpexp.getPriority();
-					if(tmpexpPriorities==null){
-						JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
-						tmpexpPriorities = new int[]{-1, -1};
+				if (!exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+						Iterator itr = allExpressions.iterator();
+						while (itr.hasNext()) {
+							CodeExpressionRef tmpexp = (CodeExpressionRef) itr
+									.next();
+							int[] tmpexpPriorities = (int[]) tmpexp
+									.getPriority();
+							if (tmpexpPriorities == null) {
+								JavaVEPlugin.log(new Status(IStatus.ERROR,
+										JavaVEPlugin.getPlugin()
+												.getDescriptor()
+												.getUniqueIdentifier(),
+										IStatus.OK, "Priority is null", null));
+								tmpexpPriorities = new int[]{-1, -1};
+							}
+							if (tmpexp
+									.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)
+									&& (tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_CONSTRUCTOR)
+									&& tmpexp.getOffset() > bestUsablePosition)
+								bestUsablePosition = tmpexp.getOffset()
+										+ tmpexp.getLen();
+						}
 					}
-					if(tmpexp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
-					   (tmpexpPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR) &&
-					   tmpexp.getOffset()>bestUsablePosition)
-					   	bestUsablePosition = tmpexp.getOffset()+tmpexp.getLen();
-				}
 			}
 			exp.setOffset(bestUsablePosition);
 			bestUsablePosition += exp.getLen();
