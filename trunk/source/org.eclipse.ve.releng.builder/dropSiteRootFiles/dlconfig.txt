@@ -1,2 +1,2 @@
 dropPrefix[]=R&dropPrefix[]=S&dropPrefix[]=I&dropPrefix[]=N&dropPrefix[]=M&dropPrefix[]=L&dropPrefix[]=O&
-dropType[]=Latest Release&dropType[]=1.0.0 Stream Stable Build&dropType[]=1.0.0 Stream Integration Build&dropType[]=1.0.0 Stream Nightly Build&dropType[]=0.5.0 Stream Maintenance Build&
+dropType[]=Latest Release&dropType[]=0.5.0 Stream Stable Build&dropType[]=0.5.0 Stream Integration Build&dropType[]=0.5.0 Stream Nightly Build&dropType[]=0.5.0 Stream Maintenance Build&
