@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-02 15:57:26 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-16 20:29:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -198,5 +198,19 @@ public abstract class AbstractCompositeDecoder extends SWTControlDecoder {
 	protected void setReferenceWriteMethodNames(String[] writeMethodNames) {
 		this.writeMethodNames = writeMethodNames;
 	}
-
+	
+	protected void addStructuralFeatureAndWriteMethod(String sfName, String writeMethodName){
+		int existingSFLength = structuralFeatures==null ? 0 : structuralFeatures.length;
+		int existingWPLength = writeMethodNames==null ? 0 : writeMethodNames.length;
+		String[] newStructuralFeatures = new String[existingSFLength + 1];
+		String[] newWriteMethodNames = new String[existingWPLength + 1];
+		if(structuralFeatures!=null && structuralFeatures.length>0)
+			System.arraycopy(structuralFeatures, 0, newStructuralFeatures, 0, structuralFeatures.length);
+		if(writeMethodNames!=null && writeMethodNames.length>0)
+			System.arraycopy(writeMethodNames, 0, newWriteMethodNames, 0, writeMethodNames.length);
+		newStructuralFeatures[newStructuralFeatures.length-1] = sfName;
+		newWriteMethodNames[newWriteMethodNames.length-1] = writeMethodName;
+		structuralFeatures = newStructuralFeatures;
+		writeMethodNames = newWriteMethodNames;
+	}
 }

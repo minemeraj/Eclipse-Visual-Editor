@@ -14,7 +14,7 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
     	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableColumnProxyAdapter"/>
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-       modelled="true"/>
+    	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.TableColumnDecoder" modelled="true"/>
   </event:AddMany>
   <event:AddMany  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="data" unsettable="true" eType="org.eclipse.jem.java:JavaClass java:/java.lang#Object">

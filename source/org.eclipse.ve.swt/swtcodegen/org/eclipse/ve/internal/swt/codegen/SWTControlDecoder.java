@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTControlDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-23 23:15:53 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-16 20:29:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -37,7 +37,7 @@ public class SWTControlDecoder extends ObjectDecoder {
 	protected void initialDecoderHelper() {
 		
 		if (fFeatureMapper.getFeature(null).getName().equals(AllocationFeatureMapper.ALLOCATION_FEATURE))
-			fhelper =  new SWTConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);					
+			fhelper =  new SWTConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this, "controls");					
 		else
 			super.initialDecoderHelper() ;	
 	}

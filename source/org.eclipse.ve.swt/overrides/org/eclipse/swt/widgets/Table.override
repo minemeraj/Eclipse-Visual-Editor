@@ -15,6 +15,8 @@
         graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableGraphicalEditPart:true">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif"/>
     </addedEObjects>
+    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
+        expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.TableDecoder"/>    
   </event:AddMany>
   
   <event:AddMany  featureName="eStructuralFeatures">
