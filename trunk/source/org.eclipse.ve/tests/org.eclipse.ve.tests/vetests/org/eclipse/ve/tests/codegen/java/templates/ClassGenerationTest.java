@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ClassGenerationTest.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-13 18:14:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-16 21:28:14 $ 
  */
 package org.eclipse.ve.tests.codegen.java.templates;
 
@@ -121,7 +121,8 @@ public class ClassGenerationTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ICompilationUnit cu = getCU();
-		cu.delete(true,null);
+		if (cu != null)
+		   cu.delete(true,null);
 	}
 
 }
