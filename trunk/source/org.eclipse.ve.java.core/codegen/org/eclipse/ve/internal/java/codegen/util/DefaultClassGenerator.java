@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.3 $
+*  $Revision: 1.4 $
 */
 
 
@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.internal.formatter.DefaultCodeFormatter;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.text.edits.TextEdit;
@@ -112,7 +111,7 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 					} catch (CoreException e1) {
 					}
 				}
-				DefaultCodeFormatter formatter = new DefaultCodeFormatter();
+				CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
 				String content = wc.getSource();
 				TextEdit te = formatter.format(
 						CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, fNL);
