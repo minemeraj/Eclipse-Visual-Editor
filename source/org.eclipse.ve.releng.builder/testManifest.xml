@@ -2,22 +2,22 @@
 <topLevel>
 <zipTypes>
 	<zipType name="SDK">
-		<platform id="SDK" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux-GTK" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
+		<platform id="SDK" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux-GTK" fileName='&lt;a href="@base@VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Runtime">
-		<platform id="RUN" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux-GTK" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
+		<platform id="RUN" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux-GTK" fileName='&lt;a href="@base@VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Examples">
-		<platform id="EX" name="All" fileName='&lt;a href="VE-examples-@build@.zip">VE-examples-@build@.zip&lt;/a>'></platform>
+		<platform id="EX" name="All" fileName='&lt;a href="@base@VE-examples-@build@.zip">VE-examples-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Tests">
-		<platform id="T" name="All" fileName='&lt;a href="VE-Automated-Tests-@build@.zip">VE-Automated-Tests-@build@.zip&lt;/a>'></platform>
+		<platform id="T" name="All" fileName='&lt;a href="@base@VE-Automated-Tests-@build@.zip">VE-Automated-Tests-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="SDKJEM">
-		<platform id="SDKJEM" name="All" fileName='&lt;a href="JEM-SDK-@build@.zip">JEM-SDK-@build@.zip&lt;/a>'></platform>
+		<platform id="SDKJEM" name="All" fileName='&lt;a href="@base@JEM-SDK-@build@.zip">JEM-SDK-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="RuntimeJEM">
-		<platform id="RUNJEM" name="All" fileName='&lt;a href="JEM-runtime-@build@.zip">JEM-runtime-@build@.zip&lt;/a>'></platform>
+		<platform id="RUNJEM" name="All" fileName='&lt;a href="@base@JEM-runtime-@build@.zip">JEM-runtime-@build@.zip&lt;/a>'></platform>
 	</zipType>	
 </zipTypes>
 
