@@ -11,10 +11,9 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-03-09 00:08:12 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-18 18:19:46 $ 
  */
 
-import java.awt.GridLayout;
 import java.beans.*;
 
 public class GridLayoutBeanInfo extends IvjBeanInfo {
