@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContentsGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-10 21:04:27 $ 
  */
 
 import org.eclipse.draw2d.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.tools.DeselectAllTracker;
 /**
  * CDE Contents (Freeform surface) Graphical Edit Part.
@@ -25,7 +26,7 @@ import org.eclipse.gef.tools.DeselectAllTracker;
  * freeform surface, such as positioning, zooming, ...
  */
 
-public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart {
+public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart implements LayerManager {
 		
 /**
  * Set the figure's layout manager to be an XYFlowLayout.
@@ -37,24 +38,6 @@ protected IFigure createFigure() {
 	contentPane.setOpaque(true);
 	return contentPane;
 }
-
-/**
- * Apart from the EditPolicy updates and refreshes of super,
- * this also sets the layout of the CONNECTION_LAYER to
- * reflect the connection updates.
- */
-public void activate() {
-	// Get the connection layer from the drawing and set its connection 
-	// layout manager.  This allows one instance of a connection layout
-	// manager to be shared by all connections.
-	ConnectionLayer cLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
-	// The fan routre will resolve conflicts and provide auto-bending functionality
-	// This occurs after manual bending ( handled by the BendableConnectionRouter )
-	FanRouter chainRouter = new FanRouter();
-	chainRouter.setNextRouter(new BendpointConnectionRouter());
-	cLayer.setConnectionRouter(chainRouter);
-	super.activate();
-}
 	/* (non-Javadoc)
 	 * @see org.eclipse.gef.EditPart#getDragTracker(org.eclipse.gef.Request)
 	 */
@@ -62,6 +45,10 @@ public void activate() {
 		// Need to return a de-selection tracker for the contents edit part
 		// so the free form doesn't scroll to position 0,0
 		return new DeselectAllTracker(this);
+	}
+	
+	public IFigure getLayer(Object key) {
+		return super.getLayer(key);
 	}
 
 }
