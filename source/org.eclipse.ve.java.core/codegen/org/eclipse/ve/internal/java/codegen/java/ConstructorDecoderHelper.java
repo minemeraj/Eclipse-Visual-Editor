@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.20 $  $Date: 2004-05-26 22:02:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -146,11 +146,23 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				return null ;
 			}
 			public String resolveType(Type type) {
-				if (type instanceof SimpleType)
+				if (type.isSimpleType())
 				   return CodeGenUtil.resolve(((SimpleType)type).getName(), bdm);  //fbeanPart.getModel().resolve(type.toString());
-				else
+				else if (type.isPrimitiveType())
+					return ((PrimitiveType) type).getPrimitiveTypeCode().toString();
+				else if (type.isArrayType()) {
+					ArrayType at = (ArrayType) type;
+					// Resolve the final type. We know it won't be an array type, so we won't recurse.
+					// Then append "dims" number of "[]" to make a formal name.
+					StringBuffer st = new StringBuffer(resolveType(at.getElementType()));
+					int dims = at.getDimensions();
+					while(dims-- > 0) {
+						st.append("[]");
+					}
+					return st.toString();
+				} else
 					//TBD
-					return null;
+					return "?";	// So it ends up with class not found exception.
 			}
 		}		
 		Resolver r = new Resolver() ;
