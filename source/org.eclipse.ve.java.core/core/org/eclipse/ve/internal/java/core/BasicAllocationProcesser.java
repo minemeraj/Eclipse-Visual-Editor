@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:46:46 $ 
  */
  
 import java.text.MessageFormat;
@@ -24,7 +24,9 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-
+import org.eclipse.jem.internal.proxy.initParser.tree.IExpressionConstants.NoExpressionValueException;
+import org.eclipse.jem.workbench.utility.ParseTreeAllocationInstantiationVisitor;
+import org.eclipse.jem.workbench.utility.ParseTreeAllocationInstantiationVisitor.ProcessingException;
 
 /**
  * The basic allocation processer. It handles the basic allocations.
@@ -45,6 +47,30 @@ import org.eclipse.jem.internal.proxy.core.*;
  * @since 1.0.0
  */
 public class BasicAllocationProcesser implements IAllocationProcesser {
+	
+	/*
+	 * This is an instantation visitor which can handle emf references. 
+	 * 
+	 * @since 1.0.0
+	 */
+	private static class ParseAllocation extends ParseTreeAllocationInstantiationVisitor {
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTInstanceReference)
+		 */
+		public boolean visit(PTInstanceReference node) {
+			try {
+				IBeanProxy reference = BeanProxyUtilities.getBeanProxy(node.getObject());
+				getExpression().createProxyExpression(getNextExpression(), reference);
+			} catch (ThrowableProxy e) {
+				throw new ProcessingException(e);
+			} catch (NoExpressionValueException e) {
+				throw new ProcessingException(e);
+			}				
+			return false;
+		}
+
+}
 	
 	protected IBeanProxyDomain domain; 
 
@@ -100,10 +126,16 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 * @since 1.0.0
 	 */
 	protected IBeanProxy allocate(ParseTreeAllocation parseTree) throws AllocationException {
-		// TODO For now just create an init string.
-		String qualifiedClassName = ((IJavaInstance) parseTree.eContainer()).getJavaType().getQualifiedNameForReflection(); 
-		return BasicAllocationProcesser.instantiateWithString(parseTree.toString(), domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(qualifiedClassName));
-		
+		ParseAllocation allocator = new ParseAllocation();
+		try {
+			return allocator.getBeanProxy(parseTree.getExpression(), domain.getProxyFactoryRegistry());
+		} catch (ProcessingException e) {
+			throw new AllocationException(e.getCause());
+		} catch (ThrowableProxy e) {
+			throw new AllocationException(e);
+		} catch (NoExpressionValueException e) {
+			throw new AllocationException(e);
+		}
 	}
 
 	/**
