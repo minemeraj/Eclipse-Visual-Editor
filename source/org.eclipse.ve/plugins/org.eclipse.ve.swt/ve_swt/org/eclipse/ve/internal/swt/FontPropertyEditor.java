@@ -1,9 +1,3 @@
-/*
- * Created on Jul 29, 2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeEvent;
@@ -24,13 +18,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
 import java.util.ArrayList;
 
-/**
- * @author jmyers
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class FontPropertyEditor implements PropertyEditor {
+	
+	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.swt.fontpropertyeditor";//$NON-NLS-1$
+	private static java.util.ResourceBundle messages = java.util.ResourceBundle.getBundle(BUNDLE_NAME);
 	
 	private IJavaObjectInstance fExistingValue;
 	private java.util.List fPropertyChangeListeners;
@@ -54,16 +45,16 @@ public class FontPropertyEditor implements PropertyEditor {
 		}
 	}
 	
-	protected final static String[] styleNames = { "Normal", "Bold", "Italic", "Bold Italic" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	protected final static String[] styleNames = { messages.getString("normalStyle"), messages.getString("boldStyle"), messages.getString("italicStyle"), messages.getString("boldItalicStyle") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	protected final static int[] styleValues = { SWT.NORMAL, SWT.BOLD, SWT.ITALIC, SWT.BOLD | SWT.ITALIC };
 	protected final static int[] sizeValues = { 8, 10, 12, 14, 18, 24, 36, 48, 72 };
 
-	protected final static String JFACE_PREFIX = "JFace - ";
-	protected final static String[] JFaceFontNames = { JFACE_PREFIX + "Banner", JFACE_PREFIX + "Default", JFACE_PREFIX + "Dialog", 
-		JFACE_PREFIX + "Header", JFACE_PREFIX + "Text" };
+	protected final static String JFACE_PREFIX = messages.getString("JFacePrefix"); //$NON-NLS-1$
+	protected final static String[] JFaceFontNames = { JFACE_PREFIX + messages.getString("BannerFont"), JFACE_PREFIX + messages.getString("DefaultFont"), JFACE_PREFIX + messages.getString("DialogFont"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		JFACE_PREFIX + messages.getString("HeaderFont"), JFACE_PREFIX + messages.getString("TextFont") }; //$NON-NLS-1$ //$NON-NLS-2$
 	protected final static String[] JFaceFontConstants = { JFaceResources.BANNER_FONT, JFaceResources.DEFAULT_FONT, JFaceResources.DIALOG_FONT, 
 		JFaceResources.HEADER_FONT, JFaceResources.TEXT_FONT };
-	protected final static String[] JFaceFontCalls = { "getBannerFont()", "getDefaultFont()", "getDialogFont()", "getHeaderFont()", "getTextFont()" };
+	protected final static String[] JFaceFontCalls = { "getBannerFont()", "getDefaultFont()", "getDialogFont()", "getHeaderFont()", "getTextFont()" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	protected static java.util.Set fontNames;
 	protected static java.util.Set lowerCaseFontNames;
@@ -100,13 +91,13 @@ public class FontPropertyEditor implements PropertyEditor {
 			control.setLayout(grid);
 			
 			Label nameLabel = new Label(control, SWT.NONE);
-			nameLabel.setText("Name");
+			nameLabel.setText(messages.getString("nameLabel")); //$NON-NLS-1$
 			
 			Label styleLabel = new Label(control, SWT.NONE);
-			styleLabel.setText("Style");
+			styleLabel.setText(messages.getString("styleLabel")); //$NON-NLS-1$
 			
 			Label sizeLabel = new Label(control, SWT.NONE);
-			sizeLabel.setText("Size");
+			sizeLabel.setText(messages.getString("sizeLabel")); //$NON-NLS-1$
 			
 			nameField = new Text(control, SWT.SINGLE | SWT.BORDER);
 			GridData gd01 = new GridData();
@@ -151,7 +142,7 @@ public class FontPropertyEditor implements PropertyEditor {
 			sizesList.setLayoutData(gd22);
 			
 			previewText = new Text(control, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
-			previewText.setText("the quick brown fox jumped over the lazy dog");
+			previewText.setText(messages.getString("previewText")); //$NON-NLS-1$
 			GridData gd03 = new GridData();
 			gd03.horizontalSpan = 3;
 			gd03.horizontalAlignment = GridData.FILL;
@@ -399,7 +390,7 @@ public class FontPropertyEditor implements PropertyEditor {
 		if(fPropertyChangeListeners != null){
 			Iterator iter = fPropertyChangeListeners.iterator();
 			while(iter.hasNext()){
-				((PropertyChangeListener)iter.next()).propertyChange(new PropertyChangeEvent(this,"value",v,null));
+				((PropertyChangeListener)iter.next()).propertyChange(new PropertyChangeEvent(this,"value",v,null)); //$NON-NLS-1$
 			}
 		}		
 	}
@@ -408,23 +399,23 @@ public class FontPropertyEditor implements PropertyEditor {
 	}
 	
 	public String getJavaInitializationString() {
-		String SWT_PREFIX = "org.eclipse.swt.SWT";
+		String SWT_PREFIX = "org.eclipse.swt.SWT"; //$NON-NLS-1$
 		if (value == null) {
-			return "null";
+			return "null"; //$NON-NLS-1$
 		} else if (JFaceIndex == -1){
 			FontData fd = value.getFontData()[0];
 			String style;
 			switch (fd.getStyle()) {
-				case SWT.NORMAL : style = SWT_PREFIX + ".NORMAL"; break;
-				case SWT.BOLD   : style = SWT_PREFIX + ".BOLD"; break;
-				case SWT.ITALIC : style = SWT_PREFIX + ".ITALIC"; break;
-				case SWT.BOLD | SWT.ITALIC : style = SWT_PREFIX + ".BOLD | " + SWT_PREFIX + ".ITALIC"; break;
+				case SWT.NORMAL : style = SWT_PREFIX + ".NORMAL"; break; //$NON-NLS-1$
+				case SWT.BOLD   : style = SWT_PREFIX + ".BOLD"; break; //$NON-NLS-1$
+				case SWT.ITALIC : style = SWT_PREFIX + ".ITALIC"; break; //$NON-NLS-1$
+				case SWT.BOLD | SWT.ITALIC : style = SWT_PREFIX + ".BOLD | " + SWT_PREFIX + ".ITALIC"; break; //$NON-NLS-1$ //$NON-NLS-2$
 				default :
-					style = SWT_PREFIX + ".NORMAL";
+					style = SWT_PREFIX + ".NORMAL"; //$NON-NLS-1$
 			}
-			return "new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")";
+			return "new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			return "org.eclipse.jface.resource.JFaceResources." + JFaceFontCalls[JFaceIndex];
+			return "org.eclipse.jface.resource.JFaceResources." + JFaceFontCalls[JFaceIndex]; //$NON-NLS-1$
 		}
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -443,7 +434,7 @@ public class FontPropertyEditor implements PropertyEditor {
 		if(fExistingValue != null){
 			return FontJavaClassLabelProvider.getText(fExistingValue);			
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 	
