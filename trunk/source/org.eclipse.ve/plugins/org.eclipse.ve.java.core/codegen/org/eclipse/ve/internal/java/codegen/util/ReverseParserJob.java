@@ -12,10 +12,11 @@
  *  Created Jan 11, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReverseParserJob.java,v $
- *  $Revision: 1.1 $  $Date: 2005-01-13 21:02:40 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-19 17:59:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
+import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,8 +34,8 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
  */
 public abstract class ReverseParserJob extends Job {
 	
-	public static String    REVERSE_PARSE_JOB_NAME = "Visual Editor Reverse Parser";
-	public static int       DEFAULT_PRIORITY = Thread.MIN_PRIORITY+1;
+	public static String    REVERSE_PARSE_JOB_NAME = "Visual Editor reverse parser";
+	public static int       DEFAULT_PRIORITY = Thread.MIN_PRIORITY+1;	
 	
 	protected ICallbackRunnable callback ;
 	
@@ -43,8 +44,8 @@ public abstract class ReverseParserJob extends Job {
 	}
 	
 	public ReverseParserJob (String name) {
-		super(REVERSE_PARSE_JOB_NAME);
-		setPriority(Job.DECORATE);		
+		super(name);
+		setPriority(Job.DECORATE);				
 	}
 	protected IStatus run(IProgressMonitor monitor) {
 		Thread myThread = getThread();
@@ -52,12 +53,36 @@ public abstract class ReverseParserJob extends Job {
 		try {					
 			myThread.setPriority(DEFAULT_PRIORITY);
 			return doRun(monitor);
-		} catch (Exception e) {
-			return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, "",e);
 		}
 		finally {
 			myThread.setPriority(prevPriority);
 		}		
 	}	
-	protected abstract IStatus doRun(IProgressMonitor monitor); 	
+	protected abstract IStatus doRun(IProgressMonitor monitor);
+	
+	public boolean belongsTo(Object family) {		
+		return family==REVERSE_PARSE_JOB_NAME;
+	}
+	
+	/**
+	 * 
+	 * @return All currently running ReverseParserJobs
+	 * 
+	 * @since 1.1.0
+	 */
+	public static Job[] getReverseParserJobs() {
+		return InternalPlatform.getDefault().getJobManager().find(REVERSE_PARSE_JOB_NAME);
+	}
+	
+	public static void cancelJobs () {
+		Job[] jobs = getReverseParserJobs();
+		for (int i = 0; i < jobs.length; i++) {
+			jobs[i].cancel();
+		}
+	}
+	
+	public static void join(IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {		
+		InternalPlatform.getDefault().getJobManager().join(REVERSE_PARSE_JOB_NAME, monitor);
+	}
+
 }
