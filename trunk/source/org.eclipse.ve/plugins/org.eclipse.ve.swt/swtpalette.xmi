@@ -62,6 +62,11 @@
           creationClassURI="java:/org.eclipse.swt.widgets#Table"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Table"/>
       </cmpEntries> 
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/column_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
+          creationClassURI="java:/org.eclipse.swt.widgets#TableColumn"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TableColumn"/>
+      </cmpEntries>    
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry11" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry11obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Tree"/>
