@@ -500,13 +500,13 @@
    <extension
  		point="org.eclipse.ve.java.core.newStyleComponent">
 		<category
-			name="Other"
+			name="%NewStyleComponent.Other"
 			id="org.eclipse.ve.core.other"
 			priority="1000"
 			defaultExpand="true">
 		</category>
 			<visualElement
-				name="Object"
+				name="%NewStyleComponent.Object"
 				category="org.eclipse.ve.core.other"
 				type="java.lang.Object">
 			</visualElement>
