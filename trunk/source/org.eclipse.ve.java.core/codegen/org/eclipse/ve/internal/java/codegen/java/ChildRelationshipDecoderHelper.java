@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-16 16:15:02 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +62,45 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
       //  Make this relationship in the Composition Model	
       Object previousValue = target.getEObject().eGet(fFmapper.getFeature(null));
       int index = findIndex(toAdd,target);
+
+      // SMART DECODING - check start
+      boolean isAddingToModelNeeded = !toAdd.isInJVEModel();
+      boolean isChildBackRefNeeded = isChildRelationship();
+      if(isChildBackRefNeeded){
+      	  boolean backRefAdded = false;
+	      BeanPart[] bRefs = toAdd.getBackRefs();
+	      int bRefCount = 0;
+	      for (; bRefCount < bRefs.length; bRefCount++) 
+			if(target.equals(bRefs[bRefCount])){
+				backRefAdded = true;
+				break;
+			}
+			
+	      boolean childAdded = false;
+	      Iterator childItr = target.getChildren();
+	      while (childItr.hasNext()) {
+			BeanPart child = (BeanPart) childItr.next();
+			if(child.equals(toAdd)){
+				childAdded = true;
+				break;
+			}
+	      }
+		  
+	      isChildBackRefNeeded = !backRefAdded || !childAdded;
+      }
+      boolean isAddingToEMFNeeded = true;
+      if (previousValue instanceof EList) {
+		EList list = (EList) previousValue;
+		if(list.contains(toAdd.getEObject()) && list.indexOf(toAdd.getEObject())==index){
+			isAddingToEMFNeeded = false;
+		}
+      }else{
+      	if(target.getEObject().eIsSet(fFmapper.getFeature(null)))
+      		isAddingToEMFNeeded = !( target.getEObject().eGet(fFmapper.getFeature(null)).equals(toAdd.getEObject()) );
+      }
+      // SMART DECODING - check end
+	
+      if(isAddingToModelNeeded || isChildBackRefNeeded || isAddingToEMFNeeded){
       toAdd.addToJVEModel() ;      
       // Must do this first, as if we move a component out off FF, need
       // to remove it first. 
@@ -85,6 +124,7 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
         // TODO  Need to stop eSet like this when MOF ordering is in place
         // Set Scoping First        
       	CodeGenUtil.eSet(target.getEObject(), fFmapper.getFeature(null), toAdd.getEObject(), index) ;
+      }
       }
       JavaVEPlugin.log("DelegateRelationShipDecoderHelper.add("+toAdd+","+target+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 }
