@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutRowColumnValidator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-07-22 15:49:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-27 19:26:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -38,8 +38,7 @@ import org.eclipse.ve.internal.propertysheet.*;
  */
 public class GridLayoutRowColumnValidator implements ICellEditorValidator, ISourced, INeedData {
 
-	protected static final String sRowColumnEqualZeroError = PropertysheetMessages
-			.getString(PropertysheetMessages.GRIDLAYOUT_ROWCOLUMN_VALIDATOR_ERROR);
+	protected static final String sRowColumnEqualZeroError = JFCMessages.getString("GridLayout_rowcolumn_not_valid_WARN"); //$NON-NLS-1$
 
 	protected EditDomain domain;
 
