@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyFactory.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-08 14:49:54 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-20 09:04:47 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,8 +21,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
@@ -71,7 +70,7 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * @see ILayoutPolicyFactory#getLayoutManagerInstance(JavaHelpers, ResourceSet)
 	 */
-	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
+	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
 		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 	}
 

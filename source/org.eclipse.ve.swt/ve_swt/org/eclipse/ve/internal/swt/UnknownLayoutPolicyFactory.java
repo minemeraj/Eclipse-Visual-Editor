@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-15 22:31:11 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-20 09:07:30 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,9 +21,8 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.*;
 
@@ -79,7 +78,7 @@ public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * @see ILayoutPolicyFactory#getLayoutManagerInstance(EditDomain)
 	 */
-	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
+	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
 		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 	}
 }
