@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-10 21:35:19 $ 
+ *  $Revision: 1.3 $  $Date: 2003-11-10 21:38:12 $ 
  */
 
 import java.util.List;
@@ -19,17 +19,18 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.jem.internal.beaninfo.BeanDecorator;
-import org.eclipse.jem.internal.beaninfo.BeaninfoPackage;
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.ui.IWorkbenchPart;
 
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+import org.eclipse.jem.internal.beaninfo.BeanDecorator;
+import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.core.*;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.java.common.Common;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
+
+import org.eclipse.jem.internal.java.JavaClass;
 
 public class CustomizeAction extends SelectionAction {
 	public static final String ACTION_ID = "jcm.CUSTOMIZE"; //$NON-NLS-1$
@@ -64,7 +65,7 @@ public class CustomizeAction extends SelectionAction {
 			if (ba instanceof BeanProxyAdapter && ((BeanProxyAdapter) ba).isThisPart())
 				return null;
 			JavaClass beanClass = (JavaClass) ((EObject) model).eClass();
-			BeanDecorator beanDecor = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(beanClass, BeanDecorator.class, BeaninfoPackage.eINSTANCE.getBeanDecorator_CustomizerClass());
+			BeanDecorator beanDecor = Utilities.getBeanDecorator(beanClass);
 			return beanDecor != null ? beanDecor.getCustomizerClass() : null;	// If class invalid, bean decor will be null.
 		}
 		return null;
