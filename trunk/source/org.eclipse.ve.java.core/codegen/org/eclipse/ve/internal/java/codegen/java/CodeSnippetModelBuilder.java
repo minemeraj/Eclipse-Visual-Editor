@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
  */
 
 import java.util.List;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.model.JavaElementInfo;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 public class CodeSnippetModelBuilder  extends JavaBeanShadowModelBuilder {
@@ -94,7 +95,7 @@ protected void updateModelPositions(CompilationUnit decl){
 	}
 }
 
-protected void visitType(TypeDeclaration type, IBeanDeclModel model,  List tryAgain){
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain){
 	new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true).visit()  ;
 }
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-09 12:05:44 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
@@ -60,15 +60,10 @@ public class EventMethodVisitor extends MethodVisitor {
 		fastDom = dom ;
 		boolean useDefault = true ;
 		for (int i=0; i<fESigs.size(); i++) {
-			try {
-		     if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
+		    if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
 		    	useDefault = false ;
 		    	break ;
-		     }
-			}
-			catch (NullPointerException npe) {
-				// Introspection problems.. just keep on going
-			}
+		    }		   		    
 		}
 		if (useDefault) fPrefixConstraint = fDefaultPrefix ;
 	}
@@ -102,7 +97,7 @@ public class EventMethodVisitor extends MethodVisitor {
 				// No Arg method call (e.g initConnections()
 				String method = stmt.getName().getIdentifier();
 				MethodDeclaration methods[] = ((TypeDeclaration)fastDom.types().get(0)).getMethods();
-				IMethod cuMethods[] = TypeVisitor.getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
+				JavaElementInfo cuMethods[] = TypeVisitor.getCUMethods(methods, CodeGenUtil.getMethodsInfo(fModel.getCompilationUnit()), fModel);
 				int idx;
 				for (idx = 0; idx < methods.length; idx++) {
 					if (!(methods[idx] instanceof MethodDeclaration))
@@ -111,13 +106,11 @@ public class EventMethodVisitor extends MethodVisitor {
 					if (md.parameters().size()>0)
 						continue;
 					if (method.equals(md.getName().getIdentifier())) {
-						if (!cuMethods[idx].getElementName().equals(md.getName().getIdentifier()))
-							throw new CodeGenException("Not the same JCMMethod"); //$NON-NLS-1$
-						try {
-							CodeMethodRef mref = getMethodRef(md, fMethod.getTypeRef(), cuMethods[idx].getHandleIdentifier(), cuMethods[idx].getSourceRange(), cuMethods[idx].getSource());
-							newVisitor = new EventMethodVisitor(md, mref, fBean, fModel, fESigs, fastDom);
-						}
-						catch (JavaModelException e) {}
+						if (!cuMethods[idx].getName().equals(md.getName().getIdentifier()))
+							throw new CodeGenException("Not the same JCMMethod"); //$NON-NLS-1$						
+					    CodeMethodRef mref = getMethodRef(md, fMethod.getTypeRef(), cuMethods[idx].getHandle(), cuMethods[idx].getSourceRange(), cuMethods[idx].getContent());
+						newVisitor = new EventMethodVisitor(md, mref, fBean, fModel, fESigs, fastDom);
+					
 						break;
 					}
 				}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.18 $  $Date: 2004-04-08 22:36:49 $ 
+ *  $Revision: 1.19 $  $Date: 2004-04-15 19:35:17 $ 
  */
 
 
@@ -235,6 +235,19 @@ public static IMethod[] getMethods(ICompilationUnit cu) {
 	catch (JavaModelException e) {}
     return null ;
 }
+
+public static JavaElementInfo[] getMethodsInfo(ICompilationUnit cu) {
+	IMethod[] mtds = getMethods(cu);
+	if (mtds!=null) {
+		JavaElementInfo[] info = new JavaElementInfo[mtds.length];
+		for (int i = 0; i < mtds.length; i++) {
+		   info[i] = new JavaElementInfo(mtds[i]);					
+		}
+		return info;
+	}
+	return null;	
+}
+
 /**
  *  Get the methods associated with the main type of a compilation unit
  */ 
@@ -249,6 +262,21 @@ public static IMethod[] getMethods(ICompilationUnit cu, String typeName) {
 	catch (JavaModelException e) {}
     return null ;
 }
+
+public static JavaElementInfo[] getMethodsInfo(ICompilationUnit cu, String typeName) {
+	if(cu == null)
+		return null;
+	IMethod[] mtds = getMethods(cu,typeName);
+	if (mtds!=null) {
+		JavaElementInfo[] info = new JavaElementInfo[mtds.length];
+		for (int i = 0; i < mtds.length; i++) {
+		   info[i] = new JavaElementInfo(mtds[i]);					
+		}
+		return info;
+	}
+	return null;	
+}
+
 /**
  *   CU's content might have changed, and an old method is stale.
  */

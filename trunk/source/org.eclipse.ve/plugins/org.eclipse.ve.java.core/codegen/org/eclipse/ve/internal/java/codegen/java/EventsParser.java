@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-15 19:34:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
 
@@ -42,7 +41,7 @@ public class EventsParser {
 	CompilationUnit				fastDom ;
 	HashMap						faddListeners = new HashMap() ;
 	MethodDeclaration 			domMethods[] ;
-	IMethod 					cuMethods[] ;
+	JavaElementInfo				cuMethods[] ;
 	
 	
 	public EventsParser(IBeanDeclModel m, CompilationUnit dom) {
@@ -50,7 +49,7 @@ public class EventsParser {
 		fastDom = dom ;
 		domMethods = ((TypeDeclaration)fastDom.types().get(0)).getMethods();
 		// TODO WARNING - CU maybe stale
-		cuMethods = TypeVisitor.getCUMethods(domMethods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
+		cuMethods = TypeVisitor.getCUMethods(domMethods, CodeGenUtil.getMethodsInfo(fModel.getCompilationUnit()), fModel);
 	}
 	
 	private   List getAddSignitures(JavaClass h) {
@@ -77,8 +76,8 @@ public class EventsParser {
         return l ;
 	}
 	
-	private CodeMethodRef getMethodRef(MethodDeclaration md, IMethod im) throws JavaModelException {
-		String handle = im.getHandleIdentifier() ;
+	private CodeMethodRef getMethodRef(MethodDeclaration md, JavaElementInfo im) throws JavaModelException {
+		String handle = im.getHandle() ;
 		CodeTypeRef tr = fModel.getTypeRef() ;
 		Iterator itr = tr.getMethods() ;
 		while (itr.hasNext()) {
@@ -86,7 +85,7 @@ public class EventsParser {
 		   if (handle.equals(m.getMethodHandle()))
 		      return m ;
 		}
-		CodeMethodRef m = new CodeMethodRef(md, tr, handle, im.getSourceRange(), im.getSource());
+		CodeMethodRef m = new CodeMethodRef(md, tr, handle, im.getSourceRange(), im.getContent());
 		return m ;
 	}
 	
