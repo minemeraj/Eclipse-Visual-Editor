@@ -7,7 +7,7 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-05-26 08:44:24 $
  */
 import java.util.*;
 
@@ -346,6 +346,10 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	 */
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
+	}
+	
+	public boolean getTransparent(){
+		return transparent;
 	}
 
 	/**
