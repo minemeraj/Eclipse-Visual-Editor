@@ -14,18 +14,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-29 18:20:23 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-04 21:33:52 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 
 
 /**

@@ -7,12 +7,11 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2004-08-03 20:06:34 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2004-08-04 21:34:17 $
  */
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;

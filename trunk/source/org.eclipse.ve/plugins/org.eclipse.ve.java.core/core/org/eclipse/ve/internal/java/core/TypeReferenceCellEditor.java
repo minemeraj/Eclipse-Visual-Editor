@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-04 21:33:52 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -61,7 +61,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	protected List javaObjectLabels;
 	protected int selection = -1;
 	private String[] items;
-	private boolean allowCreation = true; // By default a ... button is there, although this can be overridden with initialiation data	
+//	private boolean allowCreation = true; // By default a ... button is there, although this can be overridden with initialiation data	
 	
 	public TypeReferenceCellEditor(Composite parent){
 		super(parent);
@@ -190,7 +190,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		// model on JTable would let you add new models as well as attach to existing ones
 		if ( object instanceof String ) {
 			// TODO - not yet coded.  Superclass makes this difficult, need to think about it - JRW
-			allowCreation = Boolean.getBoolean((String)object);
+//			allowCreation = Boolean.getBoolean((String)object);
 		}
 	}	
 	

@@ -14,30 +14,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-07-27 15:33:54 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-04 21:33:52 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.Iterator;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.internal.ui.palette.editparts.ColumnsLayout;
-import org.eclipse.gef.internal.ui.palette.editparts.SeparatorEditPart;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.*;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-
-import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
-
-import sun.java2d.loops.DrawLine;
 
 
 /**
