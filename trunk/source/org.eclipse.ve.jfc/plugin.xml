@@ -268,71 +268,78 @@
          </description>
       </wizard>
       <category
-            name="%Example.AWT.SWING"
-            parentCategory="org.eclipse.ui.Examples"
+            name="%AWT"
+            parentCategory="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples"
+            id="org.eclipse.ve.jfc.AWTExample">
+      </category>
+      <category
+            name="%Swing"
+            parentCategory="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples"
             id="org.eclipse.ve.jfc.SwingExample">
       </category>
       <wizard
+            name="AWTComponents"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.AWTExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:AwtComponents"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.AwtComponents">
+         <description>
+            %Example.AWTComponents.Desc
+         </description>
+      </wizard>
+      <wizard
             name="SimpleTextEditor"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.SwingExample"
             class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SimpleTextEditor"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleTextEditor">
          <description>
-            %example.label
+            %Example.SimpleTextEditor.Desc
          </description>
       </wizard>
       <wizard
             name="Slider Game"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.SwingExample"
             class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SliderGame"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SliderGame">
          <description>
-            %example.label
+            %Example.SliderGame.Desc
          </description>
       </wizard>
       <wizard
             name="ToDoList"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.SwingExample"
             class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:ToDoList"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.ToDoList">
          <description>
-            %example.label
+            %Example.ToDoList.Desc
          </description>
       </wizard>
       <wizard
             name="BasicSwingComponents"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.SwingExample"
             class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:BasicSwingComponents"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.BasicSwingComponents">
          <description>
-            %example.label
-         </description>
-      </wizard>
-      <wizard
-            name="AWTComponents"
-            icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
-            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:AwtComponents"
-            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.AwtComponents">
-         <description>
-            %example.label
+            %Example.BasicSwingComponents.Desc
          </description>
       </wizard>
       <wizard
             name="MoreSwingComponents"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
-            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.jfc.SwingExample"
             class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:MoreSwingComponents"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.MoreSwingComponents">
          <description>
-            %example.label
+            %Example.MoreSwingComponents.Desc
          </description>
       </wizard>
+      -->
    </extension>
+   
    <extension
          point="org.eclipse.jem.proxy.contributors">
       <contributor
