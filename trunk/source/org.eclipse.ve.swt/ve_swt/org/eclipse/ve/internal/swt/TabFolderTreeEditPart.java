@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-19 19:56:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-20 20:53:28 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -52,12 +52,15 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 	private Adapter containerAdapter = new EditPartAdapterRunnable() {
 
 		public void run() {
-			List children = getChildren();
-			int s = children.size();
-			for (int i = 0; i < s; i++) {
-				EditPart ep = (EditPart) children.get(i);
-				if (ep instanceof ControlTreeEditPart)
-					setPropertySource((ControlTreeEditPart) ep, (EObject) ep.getModel());
+			if (isActive()) {
+				refreshChildren();
+				List children = getChildren();
+				int s = children.size();
+				for (int i = 0; i < s; i++) {
+					EditPart ep = (EditPart) children.get(i);
+					if (ep instanceof ControlTreeEditPart)
+						setPropertySource((ControlTreeEditPart) ep, (EObject) ep.getModel());
+				}
 			}
 		}
 
@@ -78,6 +81,12 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 				EditDomain.getEditDomain(this))));
 	}
 
+	protected EditPart createChildEditPart(Object model) {
+		EditPart ep = super.createChildEditPart(model);
+		setPropertySource((ControlTreeEditPart) ep, (EObject) model);
+		return ep;
+	}
+
 	/*
 	 * @see EditPart#setModel(Object)
 	 */
@@ -86,6 +95,22 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_TABFOLDER_ITEMS);
 		sf_tabItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_TABITEM_CONTROL);
+	}
+
+	/*
+	 * Model children is the items feature. However, this returns the TabItems, but we want to return instead the controls themselves. They
+	 * are the "model" that gets sent to the createChild and control edit part.
+	 */
+	protected List getChildJavaBeans() {
+		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
+		ArrayList children = new ArrayList(tabitems.size());
+		Iterator itr = tabitems.iterator();
+		while (itr.hasNext()) {
+			EObject tabitem = (EObject) itr.next();
+			// Get the component out of the JTabComponent
+			children.add(tabitem.eGet(sf_tabItemControl));
+		}
+		return children;
 	}
 
 	protected void setPropertySource(ControlTreeEditPart childEP, EObject child) {
