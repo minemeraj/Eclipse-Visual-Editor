@@ -211,7 +211,7 @@
 		<antcall target="publishupdatesite"/>
 	</target>
 	
-	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
+	<target name="publishupdatesite" unless="nopush" if="rsyncPWFile" depends="init">
 		<!-- Publish to update site, but not push it. -->
 		<echo message="Publish the update site for the latest build."/>
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
