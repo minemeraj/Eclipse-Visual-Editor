@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.7 $  $Date: 2005-01-31 22:06:20 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-01 12:27:10 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,9 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
-import org.eclipse.core.resources.*;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
