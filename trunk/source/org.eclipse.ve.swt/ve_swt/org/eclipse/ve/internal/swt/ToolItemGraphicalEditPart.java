@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.1 $ $Date: 2004-08-22 22:42:51 $
+ * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-09-08 22:15:54 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -14,6 +14,8 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -24,23 +26,36 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.*;
 
 public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 
-	protected Rectangle bounds = null;
 
 	protected ImageFigureController imageFigureController;
-
-	protected IJavaInstance bean;
 
 	private ToolItemProxyAdapter toolItemProxyAdapter;
 
 	protected ErrorFigure fErrorIndicator;
 
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
+	
+	protected Adapter adapter = new EditPartAdapterRunnable() {
 
+		public void notifyChanged(Notification notification) {
+			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
+				return;
+			// Else assume a refresh is needed.
+			queueExec(ToolItemGraphicalEditPart.this);
+		}
+
+		public void run() {
+			if (isActive())
+				((ToolBarGraphicalEditPart) getParent()).refreshItems();
+		}
+	};
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -63,11 +78,17 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 
 		setSeverity(getControlProxy().getErrorStatus()); // Set the initial status
 		getControlProxy().addErrorListener(fBeanProxyErrorListener);
-		//		IRectangleBeanProxy rectBeanProxy = getToolItemProxyAdapter().getBounds();
-		//		if (rectBeanProxy != null) {
-		//			bounds = new Rectangle(rectBeanProxy.getX(), rectBeanProxy.getY(), rectBeanProxy.getWidth(), rectBeanProxy.getHeight());
-		//			refresh();
-		//		}
+		getBean().eAdapters().add(adapter);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#deactivate()
+	 */
+	public void deactivate() {
+		getControlProxy().removeErrorListener(fBeanProxyErrorListener);
+		getBean().eAdapters().remove(adapter);
+		super.deactivate();
 	}
 
 	/*
@@ -81,40 +102,30 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 		return toolItemProxyAdapter;
 	}
 
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
-	}
-
 	protected void setSeverity(int severity) {
 		fErrorIndicator.sevSeverity(severity);
 		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
 	}
 
-	protected IVisualComponent getVisualComponent() {
-		return (IVisualComponent) getControlProxy(); // For AWT, the component proxy is the visual component.
-	}
-
 	protected ToolItemProxyAdapter getControlProxy() {
-		IBeanProxyHost beanProxy = BeanProxyUtilities.getBeanProxyHost(getBean());
-		return (ToolItemProxyAdapter) beanProxy;
+		return getToolItemProxyAdapter();
 	}
 
 	public IJavaInstance getBean() {
-		if (bean == null) {
-			bean = (IJavaInstance) getModel();
-		}
-		return bean;
+		return (IJavaInstance) getModel();
 	}
 
-	public void refresh() {
-		super.refresh();
-		if (bounds != null) {
-			getFigure().setBounds(getBounds());
-		}
+	public void refreshVisuals() {
+		super.refreshVisuals();
+		getFigure().getParent().setConstraint(getFigure(), getBounds());
 	}
 
 	public Rectangle getBounds() {
-		return bounds;
+		IRectangleBeanProxy rectBeanProxy = getToolItemProxyAdapter().getBounds();
+		if (rectBeanProxy != null) {
+			return new Rectangle(rectBeanProxy.getX(), rectBeanProxy.getY(), rectBeanProxy.getWidth(), rectBeanProxy.getHeight());
+		}
+		return new Rectangle(0, 0, 10, 10);
 	}
 
 	public Object getAdapter(Class type) {
@@ -147,10 +158,6 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 		figure.setToolTip(ToolTipFig);
 		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
 		figure.add(fErrorIndicator);
-		IRectangleBeanProxy rectBeanProxy = getToolItemProxyAdapter().getBounds();
-		if (rectBeanProxy != null) {
-			bounds = new Rectangle(rectBeanProxy.getX(), rectBeanProxy.getY(), rectBeanProxy.getWidth(), rectBeanProxy.getHeight());
-		}
 		return figure;
 	}
 

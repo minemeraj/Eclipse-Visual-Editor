@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.2 $ $Date: 2004-08-25 15:46:05 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.3 $ $Date: 2004-09-08 22:15:54 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -25,7 +25,6 @@ import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class ToolItemProxyAdapter extends WidgetProxyAdapter {
-	private EStructuralFeature sf_text;
 	private EReference sf_items;
 	protected BeanProxyAdapter toolBarProxyAdapter;
 
@@ -81,19 +80,34 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 		if (!isBeanProxyInstantiated())
 			return; // Nothing to apply to yet or could not construct.
 		super.applied(sf, newValue, position); // We letting the settings go through
-		if (sf == sf_text && getToolBarProxyAdapter() != null)
+		if (getToolBarProxyAdapter() != null)
+			getToolBarProxyAdapter().revalidateBeanProxy();
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return; // Nothing to cancel to yet or could not construct.
+		super.canceled(sf, oldValue, position);
+		if (getToolBarProxyAdapter() != null)
 			getToolBarProxyAdapter().revalidateBeanProxy();
 	}
 
 	public IRectangleBeanProxy getBounds() {
-		return (IRectangleBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				// Call the layout() method
-				IBeanProxy rectProxy = getBoundsMethodProxy().invoke(getBeanProxy());
-				return rectProxy;
-			}
-		});
+		if (isBeanProxyInstantiated()) {
+	 		return (IRectangleBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+	
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					// Call the layout() method
+					IBeanProxy rectProxy = getBoundsMethodProxy().invoke(getBeanProxy());
+					return rectProxy;
+				}
+			});
+		} else
+			return null;
 	}
 
 	protected IMethodProxy getBoundsMethodProxy() {
@@ -113,7 +127,6 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
 		if (newTarget != null) {
-			sf_text = ((IJavaObjectInstance) newTarget).eClass().getEStructuralFeature("text"); //$NON-NLS-1$
 			sf_items = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TOOLBAR_ITEMS);
 		}
 	}
