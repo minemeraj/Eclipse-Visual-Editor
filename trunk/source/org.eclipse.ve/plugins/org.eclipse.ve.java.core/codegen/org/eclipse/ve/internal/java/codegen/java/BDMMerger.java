@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-07 14:40:17 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-08 18:15:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -57,14 +57,21 @@ public class BDMMerger {
 		this.display = display;
 	}
 	
+	// return success
 	public boolean merge() throws CodeGenException{
 		boolean merged = true;
 		if( mainModel != null && newModel != null ){
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && removeDeletedBeans() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && removeDeletedMethods() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && addNewBeans() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && addThisMethod() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && mergeAllBeans() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && updateFreeForm() ;
 		}
 		return merged ;
@@ -84,6 +91,7 @@ public class BDMMerger {
 			// Model
 			Iterator itr = mainModel.getBeans().iterator() ;
 			while (itr.hasNext()) {
+				if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 				BeanPart bean = (BeanPart) itr.next() ;
 				
 				// if a bean was added to a container, the decoder will reflect this in the BeamModel
@@ -156,6 +164,7 @@ public class BDMMerger {
 		boolean removed = true ;
 		Iterator methods = mainModel.getAllMethods();
 		while(methods.hasNext()){
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			CodeMethodRef m = (CodeMethodRef) methods.next();
 			if(newModel.getMethod(m.getMethodHandle())==null){
 				// Method is not to be found in the new model - hence remove it
@@ -234,7 +243,7 @@ public class BDMMerger {
 				}
 			   break;
 			case 1:
-				logFiner("Updating identical expression "+ newExp.getCodeContent());
+//				logFiner("Updating identical expression "+ newExp.getCodeContent());
 				if(mainExp.getOffset()==newExp.getOffset()){
 					// Absolutely no change, even in location
 					mainExp.setContent(newExp.getContentParser())  ;
@@ -245,9 +254,11 @@ public class BDMMerger {
 					// No need to refresh when a shadow expression 
 					// We also do not care about event ordering
 					if(!newExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
-						!(newExp instanceof CodeEventRef))
+						!(newExp instanceof CodeEventRef)) {
 					   // Will take care of reordering of expressions
+					   logFiner("Updating because of changed offset "+newExp.getCodeContent());
 					   mainExp.refreshFromJOM(newExp); 
+					}
 				}
 				break;
 		}
@@ -442,6 +453,7 @@ public class BDMMerger {
 		// Update changed bean parts
 		Iterator mainModelBeansItr = mainModelBeans.iterator();
 		while (mainModelBeansItr.hasNext()) {
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBP = (BeanPart) mainModelBeansItr.next();
 			BeanPart updateBP ;
 			if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
@@ -627,6 +639,7 @@ public class BDMMerger {
 		boolean add = true ;
 		Iterator newBeansItr = newModel.getBeans().iterator();
 		while (newBeansItr.hasNext()) {
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			final BeanPart beanPart = (BeanPart) newBeansItr.next();
 			if( mainModel.getABean(beanPart.getUniqueName()) == null &&
 				beanPart.getInitMethod()!=null){
@@ -660,6 +673,7 @@ public class BDMMerger {
 		
 		Iterator mainBeansItr = mainModel.getBeans().iterator();
 		while(mainBeansItr.hasNext()){
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
 			if(newModel.getABean(mainBean.getUniqueName())==null){
 				// Bean has been removed - hence remove
@@ -748,6 +762,7 @@ public class BDMMerger {
 		boolean add = true ;
 		Iterator newBeansItr = newModel.getBeans().iterator();
 		while (newBeansItr.hasNext()) {
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart beanPart = (BeanPart) newBeansItr.next();
 			if(	BeanPart.THIS_NAME.equals(beanPart.getSimpleName()) && 
 					mainModel.getABean(beanPart.getSimpleName())!=null){
