@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.55 $  $Date: 2004-08-10 17:54:35 $ 
+ *  $Revision: 1.56 $  $Date: 2004-08-10 21:04:31 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +27,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
@@ -704,9 +706,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		editDomain.setViewerData(primaryViewer, DistributeController.DISTRIBUTE_KEY, new DistributeController(primaryViewer));
 		primaryViewer.setEditPartFactory(new DefaultGraphicalEditPartFactory(ClassDescriptorDecoratorPolicy.getPolicy(editDomain)));
 
-		primaryViewer.setRootEditPart(new ScalableFreeformRootEditPart());
-		primaryViewer.setContents(new SubclassCompositionComponentsGraphicalEditPart(null));
-
+		// Set the connection router to manhattan by default
+		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart();		
+ 		primaryViewer.setRootEditPart(rootEditPart);
+		((ConnectionLayer)rootEditPart.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ManhattanConnectionRouter()); 		
+ 		
+		SubclassCompositionComponentsGraphicalEditPart viewerContents = new SubclassCompositionComponentsGraphicalEditPart(null);				
+		primaryViewer.setContents(viewerContents);
+		((ConnectionLayer)viewerContents.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ManhattanConnectionRouter());		
 		getSelectionSynchronizer().addViewer(primaryViewer);
 
 		openActionGroup = new OpenActionGroup(this);
