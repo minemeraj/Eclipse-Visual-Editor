@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ZoomHelperDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 
@@ -54,7 +54,7 @@ public class ZoomHelperDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(CDEMessages.getString("ZoomHelperDialog.label")); //$NON-NLS-1$
-		newShell.setImage(getImage(DLG_IMG_QUESTION));
+		newShell.setImage(newShell.getDisplay().getSystemImage(SWT.ICON_QUESTION));
 	}
 
 	protected Control createDialogArea(Composite parent) {

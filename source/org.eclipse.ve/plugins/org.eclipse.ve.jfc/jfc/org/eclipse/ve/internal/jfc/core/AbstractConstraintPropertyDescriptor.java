@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractConstraintPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-08 14:49:54 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-24 23:23:48 $ 
  */
 import java.util.logging.Level;
 
@@ -82,7 +82,7 @@ public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropert
 					provider = AbstractPropertyDescriptorAdapter.createLabelProviderInstance(labelProviderClass, classNameAndData, null, null);
 				} catch (ClassNotFoundException e) {
 					// One specified, but incorrect, log it, but continue and see if we can get another way.
-					JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+					JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 				}
 			}
 			

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEditorRegistry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import org.eclipse.emf.ecore.EcorePackage;
@@ -27,7 +27,7 @@ public class PropertyEditorRegistry {
 		DecoratorsFactory dFact = DecoratorsFactory.eINSTANCE;
 
 		String pid = CDEPlugin.getPlugin().getPluginID();
-		String pspid = PSheetPlugin.getPlugin().getDescriptor().getUniqueIdentifier();
+		String pspid = PSheetPlugin.getPlugin().getBundle().getSymbolicName();
 
 		BasePropertyDecorator bpd = dFact.createBasePropertyDecorator();
 		bpd.setCellEditorClassname(pspid + "/" + NumberCellEditor.class.getName() + ":byte"); //$NON-NLS-1$ //$NON-NLS-2$

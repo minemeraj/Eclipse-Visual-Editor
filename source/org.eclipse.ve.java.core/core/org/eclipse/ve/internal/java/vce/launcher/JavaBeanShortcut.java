@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-20 21:43:03 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-24 23:23:46 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -235,7 +235,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 	 * Returns the local java launch config type
 	 */
 	protected ILaunchConfigurationType getJavaLaunchConfigType() {
-		return getLaunchManager().getLaunchConfigurationType(VCEPreferences.getPlugin().getDescriptor().getUniqueIdentifier() + ".launcher.JavaBean");		 //$NON-NLS-1$
+		return getLaunchManager().getLaunchConfigurationType(VCEPreferences.getPlugin().getBundle().getSymbolicName() + ".launcher.JavaBean");		 //$NON-NLS-1$
 	}
 	
 	protected ILaunchManager getLaunchManager() {

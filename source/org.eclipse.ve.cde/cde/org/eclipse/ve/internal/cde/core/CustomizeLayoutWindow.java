@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-18 18:17:07 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import java.util.ArrayList;
@@ -226,9 +226,9 @@ public class CustomizeLayoutWindow extends Window {
 			page.update(selection);
 			return page;			
 		} catch (InstantiationException e) {
-			throw new CoreException(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 		} catch (IllegalAccessException e) {
-			throw new CoreException(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 		}
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-21 16:15:58 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-24 23:23:46 $ 
  */
 
 import java.io.IOException;
@@ -94,13 +94,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	}
 	
 	private IVisualClassCreationSourceGenerator getGeneratorInstance(URL templateLocation){
-		java.util.List jdtClassPath = TemplateUtil.getPluginAndPreReqJarPath(JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier());
+		java.util.List jdtClassPath = TemplateUtil.getPluginAndPreReqJarPath(JavaVEPlugin.getPlugin().getBundle().getSymbolicName());
 		try {
 			jdtClassPath.addAll(TemplateUtil.getPlatformJREPath());
 		} catch (TemplatesException  e) {
 			JavaVEPlugin.log(e, Level.FINE);
 		}
-		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorPlugin.getDescriptor().getUniqueIdentifier()); 
+		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorPlugin.getBundle().getSymbolicName()); 
 		for(int i=0;i<contributorsPaths.size();i++)
 			if(!jdtClassPath.contains(contributorsPaths.get(i)))
 				jdtClassPath.add(contributorsPaths.get(i));

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-24 23:23:46 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -70,15 +70,15 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
 			CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
 			return fact;
 		} catch (ClassNotFoundException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (ClassCastException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (InstantiationException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (IllegalAccessException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (CoreException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		}
 	}
 	return null;

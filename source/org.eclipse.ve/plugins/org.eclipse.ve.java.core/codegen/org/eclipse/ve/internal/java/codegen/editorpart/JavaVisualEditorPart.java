@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.37 $  $Date: 2004-05-18 18:15:15 $ 
+ *  $Revision: 1.38 $  $Date: 2004-05-24 23:23:46 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -731,7 +731,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					if (e instanceof CoreException)
 						ErrorDialog.openError(shell, title, msg, ((CoreException) e).getStatus());
 					else
-						ErrorDialog.openError(shell, title, msg, new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName(), e));
+						ErrorDialog.openError(shell, title, msg, new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName(), e));
 				}
 			});
 			JavaVEPlugin.log(e);
@@ -1272,7 +1272,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				} catch (CoreException e) {
 					// Wrapper the exception in a status so that when we join we can get the original exception back.
-					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 16, "", e);
+					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 16, "", e);
 				}
 				return Status.OK_STATUS;
 							
