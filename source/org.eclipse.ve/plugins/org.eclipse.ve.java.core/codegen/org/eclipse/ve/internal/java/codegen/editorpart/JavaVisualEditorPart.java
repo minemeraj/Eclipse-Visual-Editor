@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.35 $  $Date: 2004-05-12 20:01:41 $ 
+ *  $Revision: 1.36 $  $Date: 2004-05-18 17:55:53 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -830,144 +830,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}	/*
 	 * This will create the proxy factory registry.
 	 */
-	protected void createProxyFactoryRegistry(IFile aFile, IProgressMonitor monitor) throws CoreException {
-		if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
-			// Since we need to create a new one, we need to get rid of the old one.
-			proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
-			proxyFactoryRegistry.terminateRegistry();			
-		}
-
-		ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
-			IConfigurationContributionInfo info;
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
-			 */
-			public void initialize(IConfigurationContributionInfo info) {
-				this.info = info;
-			}
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
-			 */
-			public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
-				// Add in the remote vm jar and any nls jars that is required for JBCF itself.
-				controller.contributeClasspath(JavaVEPlugin.getPlugin().getDescriptor(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
-			}
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
-			 */
-			public void contributeToRegistry(ProxyFactoryRegistry registry) {
-				// Call the setup method in the target VM to initialize statics
-				// and other environment variables.
-				IBeanTypeProxy aSetupBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.java.remotevm.Setup"); //$NON-NLS-1$
-				IMethodProxy setupMethodProxy = aSetupBeanTypeProxy.getMethodProxy("setup"); //$NON-NLS-1$
-				setupMethodProxy.invokeCatchThrowableExceptions(aSetupBeanTypeProxy);
-				
-				// Everything is all set up. Now let's see if we need to rebuild the palette.
-				// First run though all visible containers that implement the IVEContributor interface.
-				final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
-				for (Iterator iter = info.getContainers().entrySet().iterator(); iter.hasNext();) {
-					final Map.Entry entry = (Map.Entry) iter.next();
-					if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
-						Platform.run(new ISafeRunnable() {
-							public void handleException(Throwable exception) {
-								// Default logs fro us.
-							}
-							public void run() throws Exception {
-								rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-							}
-						});
-					}
-				}
-				
-				// Now run though visible containers ids.
-				final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
-				if (!info.getContainerIds().isEmpty()) {
-					for (Iterator iter = info.getContainerIds().entrySet().iterator(); iter.hasNext();) {
-						Map.Entry entry = (Map.Entry) iter.next();
-						if (((Boolean) entry.getValue()).booleanValue()) {
-							final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
-							if (contributors != null) {
-								for (int i = 0; i < contributors.length; i++) {
-									final int ii = i;
-									Platform.run(new ISafeRunnable() {
-										public void handleException(Throwable exception) {
-											// Default logs exception for us.
-										}
-										public void run() throws Exception {
-											if (contributors[ii].getName().equals(PI_PALETTE)) {
-												if (defaultVE[0] == null)
-													defaultVE[0] = new DefaultVEContributor();
-												defaultVE[0].paletteContribution = contributors[ii];
-												rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-											} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
-												Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
-												if (contributor instanceof IVEContributor)
-													rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-											}
-										}
-									});
-								}
-							}
-						}
-					}
-				}
-				
-				// Now run though visible plugin ids.
-				if (!info.getPluginIds().isEmpty()) {
-					for (Iterator iter = info.getPluginIds().entrySet().iterator(); iter.hasNext();) {
-						Map.Entry entry = (Map.Entry) iter.next();
-						if (((Boolean) entry.getValue()).booleanValue()) {
-							final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
-							if (contributors != null) {
-								for (int i = 0; i < contributors.length; i++) {
-									final int ii = i;
-									Platform.run(new ISafeRunnable() {
-										public void handleException(Throwable exception) {
-											// Default logs exception for us.
-										}
-										public void run() throws Exception {
-											if (contributors[ii].getName().equals(PI_PALETTE)) {
-												if (defaultVE[0] == null)
-													defaultVE[0] = new DefaultVEContributor();
-												defaultVE[0].paletteContribution = contributors[ii];
-												rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-											} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
-												try {
-													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
-													if (contributor instanceof IVEContributor)
-														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-												} catch (CoreException e) {
-													JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
-												}
-											}
-										}
-									});
-								}
-							}
-						}
-					}
-				}
-				
-			}
-		};
-		
-		IConfigurationContributor[] contribs =
-			new IConfigurationContributor[] { BeaninfoNature.getRuntime(aFile.getProject()).getConfigurationContributor(), jcmCont };
-
-		ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
-				contribs, monitor);
-		registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
-		
-		synchronized (this) {
-			proxyFactoryRegistry = registry;
-			proxyFactoryRegistry.addRegistryListener(registryListener);
-			beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
-		}
-		return;
-	}
 	private ProxyFactoryRegistry.IRegistryListener registryListener = new ProxyFactoryRegistry.IRegistryListener() {
 		/**
 		 * @see org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry.IRegistryListener#registryTerminated(ProxyFactoryRegistry)
@@ -1039,12 +901,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				}).schedule();
 			}
-			
-			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
-			if (proxyFactoryRegistry != null) {
-				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
-			}
-					
+								
 			getSite().getPage().removeSelectionListener(selectionServiceListener);
 			
 			IWorkbenchWindow window = getSite().getWorkbenchWindow();
@@ -1071,7 +928,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// complete after the rest of the editor has already been closed. This is because
 		// we can't wait for the job in the UI thread during dispose. There would be lockups
 		// if we did that.
+		// Note: No need to sync(this) to access proxyFactoryRegistry because we are guarenteed that
+		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
+			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
+			proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
+			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
 			proxyFactoryRegistry = null;
@@ -1262,11 +1124,175 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private boolean doTimerStep = true;	// Whether this is the first time for the editor and so do timer stepping.	
 	private static final Integer NATURE_KEY = new Integer(0);	// Used within Setup to save the nature	 
 	private class Setup extends Job {
+		
+		public class CreateRegistry extends Job {
+			IFile file;
+			public CreateRegistry(String name, IFile file) {
+				super(name);
+				this.file = file;
+			}	
+			
+			protected IStatus run(IProgressMonitor monitor) {
+
+				if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
+					// Since we need to create a new one, we need to get rid of the old one.
+					proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
+					proxyFactoryRegistry.terminateRegistry();			
+				}
+
+				ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
+					IConfigurationContributionInfo info;
+					
+					/* (non-Javadoc)
+					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
+					 */
+					public void initialize(IConfigurationContributionInfo info) {
+						this.info = info;
+					}
+					
+					/* (non-Javadoc)
+					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
+					 */
+					public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
+						// Add in the remote vm jar and any nls jars that is required for JBCF itself.
+						controller.contributeClasspath(JavaVEPlugin.getPlugin().getDescriptor(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
+					}
+					
+					/* (non-Javadoc)
+					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
+					 */
+					public void contributeToRegistry(ProxyFactoryRegistry registry) {
+						// Call the setup method in the target VM to initialize statics
+						// and other environment variables.
+						IBeanTypeProxy aSetupBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.java.remotevm.Setup"); //$NON-NLS-1$
+						IMethodProxy setupMethodProxy = aSetupBeanTypeProxy.getMethodProxy("setup"); //$NON-NLS-1$
+						setupMethodProxy.invokeCatchThrowableExceptions(aSetupBeanTypeProxy);
+						
+						// Everything is all set up. Now let's see if we need to rebuild the palette.
+						// First run though all visible containers that implement the IVEContributor interface.
+						final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
+						for (Iterator iter = info.getContainers().entrySet().iterator(); iter.hasNext();) {
+							final Map.Entry entry = (Map.Entry) iter.next();
+							if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
+								Platform.run(new ISafeRunnable() {
+									public void handleException(Throwable exception) {
+										// Default logs fro us.
+									}
+									public void run() throws Exception {
+										rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+									}
+								});
+							}
+						}
+						
+						// Now run though visible containers ids.
+						final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
+						if (!info.getContainerIds().isEmpty()) {
+							for (Iterator iter = info.getContainerIds().entrySet().iterator(); iter.hasNext();) {
+								Map.Entry entry = (Map.Entry) iter.next();
+								if (((Boolean) entry.getValue()).booleanValue()) {
+									final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
+									if (contributors != null) {
+										for (int i = 0; i < contributors.length; i++) {
+											final int ii = i;
+											Platform.run(new ISafeRunnable() {
+												public void handleException(Throwable exception) {
+													// Default logs exception for us.
+												}
+												public void run() throws Exception {
+													if (contributors[ii].getName().equals(PI_PALETTE)) {
+														if (defaultVE[0] == null)
+															defaultVE[0] = new DefaultVEContributor();
+														defaultVE[0].paletteContribution = contributors[ii];
+														rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+														if (contributor instanceof IVEContributor)
+															rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													}
+												}
+											});
+										}
+									}
+								}
+							}
+						}
+						
+						// Now run though visible plugin ids.
+						if (!info.getPluginIds().isEmpty()) {
+							for (Iterator iter = info.getPluginIds().entrySet().iterator(); iter.hasNext();) {
+								Map.Entry entry = (Map.Entry) iter.next();
+								if (((Boolean) entry.getValue()).booleanValue()) {
+									final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
+									if (contributors != null) {
+										for (int i = 0; i < contributors.length; i++) {
+											final int ii = i;
+											Platform.run(new ISafeRunnable() {
+												public void handleException(Throwable exception) {
+													// Default logs exception for us.
+												}
+												public void run() throws Exception {
+													if (contributors[ii].getName().equals(PI_PALETTE)) {
+														if (defaultVE[0] == null)
+															defaultVE[0] = new DefaultVEContributor();
+														defaultVE[0].paletteContribution = contributors[ii];
+														rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+														try {
+															Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+															if (contributor instanceof IVEContributor)
+																rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+														} catch (CoreException e) {
+															JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+														}
+													}
+												}
+											});
+										}
+									}
+								}
+							}
+						}
+						
+					}
+				};
+				
+				try {
+					IConfigurationContributor[] contribs = new IConfigurationContributor[] {
+							BeaninfoNature.getRuntime(file.getProject()).getConfigurationContributor(), jcmCont};
+
+					ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(file.getProject(), "VM for " + file.getName(), //$NON-NLS-1$
+							contribs, monitor);
+					registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true); // Want to maintain list of not found types so we know when those types have been added.
+
+					synchronized (JavaVisualEditorPart.this) {
+						proxyFactoryRegistry = registry;
+						proxyFactoryRegistry.addRegistryListener(registryListener);
+						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
+					}
+				} catch (CoreException e) {
+					// Wrapper the exception in a status so that when we join we can get the original exception back.
+					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 16, "", e);
+				}
+				return Status.OK_STATUS;
+							
+			}
+		}
+		
+		CreateRegistry registryCreateJob;	// Not null if we have one.
 
 		public Setup(String name) {
 			super(name);
 		}
 			
+		
+		/*
+		 * Start the create registry job.
+		 */
+		private void startCreateProxyFactoryRegistry(IFile file) {
+			registryCreateJob = new CreateRegistry("Create Remote VM for Visual Editor for Java", file);
+			registryCreateJob.schedule(1L);	// Give us a moment to actually continue working before starting this.
+		}
 		
 		protected IStatus run(IProgressMonitor monitor) {			
 			try {
@@ -1279,21 +1305,20 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					BeaninfoNature nature = (BeaninfoNature) editDomain.getData(NATURE_KEY);
 					IFile file = ((IFileEditorInput) getEditorInput()).getFile();					
 					if (nature == null || !nature.isValidNature() || !file.getProject().equals(nature.getProject()))
-						initializeForProject(file, new SubProgressMonitor(monitor, 100));
+						initializeForProject(file);
 					else {
 						boolean createFactory = false;
 						synchronized (JavaVisualEditorPart.this) {
 							createFactory = proxyFactoryRegistry == null || !proxyFactoryRegistry.isValid();
 						}
 						if (createFactory)
-							createProxyFactoryRegistry(file, new SubProgressMonitor(monitor, 100));	// The registry is gone, need new one.
-						else
-							monitor.worked(100);
+							startCreateProxyFactoryRegistry(file);	// The registry is gone, need new one.
+						monitor.worked(100);
 					}
 				}
 			
 				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
+					return canceled();
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
@@ -1303,7 +1328,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				monitor.subTask("Initializing model");
 
 				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
+					return canceled();
 				
 				DiagramData dd = modelBuilder.getModelRoot();
 				if (dd != null) {
@@ -1318,8 +1343,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
-					if (dd != null
-						&& EcoreUtil.getExistingAdapter(
+					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.			
+					if (EcoreUtil.getExistingAdapter(
 							dd,
 							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)
 							== null) {
@@ -1343,37 +1368,99 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
 							setReloadEnablement(true);	// Because it was disabled.														
 						}
-					});	
-					return Status.CANCEL_STATUS;
+					});
+					return canceled();
 				}
 			
 			} catch (final Exception x) {
 				noLoadPrompt(x);
-				return Status.CANCEL_STATUS;
+				return canceled();
+			}
+			
+			if (rebuildPalette && !monitor.isCanceled()) {
+				// We want to rebuild palette and the monitor was not cancelled.
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (!isDisposed())
+							rebuildPalette();
+					}
+				});				
 			}
 			
 			monitor.done();
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
 
-		protected void initialize(IProgressMonitor monitor) throws CoreException {
+		/**
+		 * @throws Exception
+		 * 
+		 * @since 1.0.0
+		 */
+		private void joinCreateRegistry() throws Exception {
+			if (registryCreateJob != null) {
+				while (true) {
+					try {
+						registryCreateJob.join(); // Need to join up so that we don't have hanging out there.
+						break;
+					} catch (InterruptedException e) {
+					}
+				}
+				if (registryCreateJob.getResult().getSeverity() == IStatus.ERROR) {
+					// It had a severe error, get the exception out of the status (which we had put there) and rethrow it.
+					Exception e = (Exception) registryCreateJob.getResult().getException();
+					registryCreateJob = null;	// So we don't wait again.
+					throw e;
+				}
+				registryCreateJob = null;	// So we don't wait again.
+			}
+		}
+
+
+		/**
+		 * @return
+		 * 
+		 * @since 1.0.0
+		 */
+		private IStatus canceled() {
+			if (registryCreateJob != null) {
+				while (true) {
+					try {
+						registryCreateJob.join(); // Need to join up so that we don't have hanging out there.
+						break;
+					} catch (InterruptedException e) {
+					}
+				}
+				registryCreateJob = null;	// We waited and so no more. We don't care if there were any errors while creating the registry.
+			}
+			return Status.CANCEL_STATUS;
+		}
+
+
+		protected void initialize(final IProgressMonitor monitor) throws CoreException {
+			monitor.beginTask("", 100);
 			initialized = true;
 			initializeEditDomain();		
 			modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
 
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-			initializeForProject(file, monitor);
+			initializeForProject(file);
 
+			if (monitor.isCanceled())
+				return;
+			monitor.worked(25);
+			
 			// Add listener to part activation so that we can handle recycle the vm when reactivated.
 			final IWorkbenchWindow window = getSite().getWorkbenchWindow();
 			window.getPartService().addPartListener(activationListener);
 			window.getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					window.getShell().addShellListener(activationListener);
+					if (!window.getShell().isDisposed() && !isDisposed() && !monitor.isCanceled())
+						window.getShell().addShellListener(activationListener);
 				}
 			});
 			activationListener.partActivated(window.getPartService().getActivePart());	// Initialize to current active part
-
+			monitor.worked(25);
+			
 			synchronized (JavaVisualEditorPart.this) {
 				// Add the model synchronizer.
 				modelSynchronizer = new JavaModelSynchronizer(beanProxyAdapterFactory, JavaCore.create(file.getProject()), new Runnable() {
@@ -1386,6 +1473,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				});
 			}
+			monitor.worked(25);
 			
 			// When the user types into a java editor the model is changed incrementally
 			// We need to know when this happens so we can drive a refresh on the property sheet
@@ -1451,17 +1539,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 			});
 			
-			if (rebuildPalette) {
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (!isDisposed())
-							rebuildPalette();
-					}
-				});				
-			}
+			monitor.done();
 		}
 
-		protected void initializeForProject(IFile file, IProgressMonitor monitor) throws CoreException {
+		protected void initializeForProject(IFile file) throws CoreException {
 			IProject proj = file.getProject();
 			BeaninfoNature nature = BeaninfoNature.getRuntime(proj);
 			ResourceSet rs = nature.newResourceSet();
@@ -1481,7 +1562,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			rs.getAdapterFactories().add(beanProxyAdapterFactory);
 			
 			// Create the target VM that is used for instances within the document we open
-			createProxyFactoryRegistry(file, monitor);
+			startCreateProxyFactoryRegistry(file);
 						
 			if (modelSynchronizer != null)
 				modelSynchronizer.setProject(JavaCore.create(proj));
