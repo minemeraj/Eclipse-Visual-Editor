@@ -52,7 +52,7 @@ while [ "$#" -gt 0 ] ; do
                         shift 1
                     ;;
                 '-target')
-                        target=$2;
+                        target="${target} $2";
                         shift 1
                     ;;
                 '-buildID')
