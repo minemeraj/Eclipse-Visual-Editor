@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-07 22:48:31 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-15 22:18:29 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -123,6 +123,48 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		
 		public SimpleName getVariableName(){
 			return variableName;
+		}
+	}
+	
+	static class MethodNameFinderVisitor extends ASTVisitor{
+		SimpleName methodNameAST = null;
+		String methodName = null;
+		String[] methodParamTypes = null;
+
+		public MethodNameFinderVisitor(String methodName, String[] methodParamTypes){
+			this.methodName = methodName;
+			this.methodParamTypes = methodParamTypes;
+		}
+		
+		public boolean visit(MethodDeclaration node) {
+			if(methodName!=null && methodName.length()>0 && methodParamTypes!=null){
+				if(methodName.equals(node.getName().getIdentifier())){
+					List params = node.parameters();
+					if(params.size()==methodParamTypes.length){
+						boolean allParamsEqual = true;
+						for (int pc = 0; pc < params.size(); pc++) {
+							SingleVariableDeclaration svd = (SingleVariableDeclaration) params.get(pc);
+							String type = getTypeFromAST(svd.getType());
+							if(!type.equals(methodParamTypes[pc])){
+								allParamsEqual = false;
+								break;
+							}
+						}
+						if(allParamsEqual){
+							methodNameAST = node.getName();
+						}
+					}
+				}
+			}
+			return super.visit(node);
+		}
+		
+		
+		/**
+		 * @return Returns the methodNameAST.
+		 */
+		public SimpleName getMethodName() {
+			return methodNameAST;
 		}
 	}
   
@@ -259,7 +301,9 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 				cuNode.accept(visitor);
 				if(visitor.getVariableName()!=null){
 					LinkedNamesAssistProposal prop = new LinkedNamesAssistProposal(cu, visitor.getVariableName());
-					prop.apply(viewer, 'r', 0, visitor.getVariableName().getStartPosition());
+					char triggerChar = (newFieldName!=null && newFieldName.length()>0) ? newFieldName.charAt(newFieldName.length()-1) : 0;
+					int triggerPosition = visitor.getVariableName().getStartPosition()+newFieldName.length()-1;
+					prop.apply(viewer, triggerChar, 0, triggerPosition);
 					try {
 						cu.getBuffer().replace(visitor.getVariableName().getStartPosition(), visitor.getVariableName().getLength(), newFieldName.toCharArray());
 					} catch (JavaModelException e) {
@@ -273,32 +317,31 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 						if(	methodName.startsWith("get") &&
 								methodName.indexOf(varNameLower)==3 &&
 								methodName.length()==varNameLower.length()+3){
-									
-									try {
-										cu.reconcile(false,false, null, null); // force JDT to refresh, since with incorrect source ranges, refactoring will misplace code 
-									} catch (JavaModelException e1) {
-										JavaVEPlugin.log(e1, Level.FINE);
+									//	Excatly of the form get<VarName>()
+									String newMethodName = "get" + newFieldName.toUpperCase(Locale.getDefault()).charAt(0) + newFieldName.substring(1);
+									parser = ASTParser.newParser(AST.LEVEL_2_0);
+									parser.setSource(cu);
+									cuNode = (CompilationUnit) parser.createAST(null);
+									String getterMethodName = bpRetMethod.getElementName();
+									String[] getterParamSigs = bpRetMethod.getParameterTypes();
+									String[] getterParamTypes = new String[getterParamSigs.length];
+									for (int pc = 0; pc < getterParamSigs.length; pc++) {
+										getterParamTypes[pc] = Signature.toString(getterParamSigs[pc]);
 									}
-									
-									boolean previousRefactoringSaveEditors = RefactoringPreferences.getSaveAllEditors();
-									RefactoringPreferences.setSaveAllEditors(true);
-									try {
-										// Excatly of the form get<VarName>()
-										String newMethodName = "get" + newFieldName.toUpperCase(Locale.getDefault()).charAt(0) + newFieldName.substring(1);
-										RenameSupport renameMethod = RenameSupport.create(
-												bpRetMethod, 
-												newMethodName, 
-												RenameSupport.UPDATE_REFERENCES);
-										renameMethod.perform(es.getShell(), es.getWorkbenchWindow());
-									} catch (CoreException e2) {
-										JavaVEPlugin.log(e2, Level.WARNING);
-									} catch (InterruptedException e2) {
-									} catch (InvocationTargetException e2) {
-										JavaVEPlugin.log(e2, Level.WARNING);
-									} finally {
-										RefactoringPreferences.setSaveAllEditors(previousRefactoringSaveEditors);
+									MethodNameFinderVisitor mVisitor = new MethodNameFinderVisitor(getterMethodName, getterParamTypes);
+									cuNode.accept(mVisitor);
+									if(mVisitor.getMethodName()!=null){
+										prop = new LinkedNamesAssistProposal(cu, mVisitor.getMethodName());
+										triggerChar = newMethodName.charAt(newMethodName.length()-1) ;
+										triggerPosition = mVisitor.getMethodName().getStartPosition()+newMethodName.length()-1;
+										prop.apply(viewer, triggerChar, 0, triggerPosition);
+										try {
+											cu.getBuffer().replace(mVisitor.getMethodName().getStartPosition(), mVisitor.getMethodName().getLength(), newMethodName);
+										} catch (JavaModelException e) {
+											JavaVEPlugin.log(e);
+										}
 									}
-								}
+						}
 					}
 				}
 			  } catch (RuntimeException e) {
