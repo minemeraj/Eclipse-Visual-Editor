@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-11 17:44:27 $ 
  */
 
 import org.eclipse.draw2d.ColorConstants;
@@ -38,6 +38,7 @@ public class GridLayoutGridFigure extends Figure {
 public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, int[][] expandableDimensions, boolean columnsEqualWidth, Rectangle spacing, Rectangle clientArea) {
 	super();
 	setBounds(bounds);
+	setForegroundColor(ColorConstants.cyan);
 	this.clientArea = clientArea;
 	this.columnsEqualWidth = columnsEqualWidth;
 	if (spacing == null) {
@@ -68,15 +69,21 @@ public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, int[][
 
 protected void paintFigure(Graphics g){
 	Color orgColor = g.getForegroundColor();
+	
+	// TODO - workaround for SWT bug 85876 which causes 2pixel black line width for the columns and rows
+	// instead of dotted red lines. Setting the Graphics line width to 2 is a workaround and all the code
+	// for setting and restoring the linewidth should be removed once the bug is fixed.
+	int orgLineWidth = g.getLineWidth();
+	g.setLineWidth(2);
+	
 	g.setForegroundColor(ColorConstants.red);
 	g.setLineStyle(Graphics.LINE_DOT);
 	drawColumnDividers(g);
 	drawRowDividers(g);
-	g.setForegroundColor(orgColor);
 	
-	//	g.setLineStyle(Graphics.LINE_SOLID);
-	//	drawColumnHeaders(g);
-	//	drawRowHeaders(g);
+	g.setLineWidth(orgLineWidth);
+	
+	g.setForegroundColor(orgColor);
 }
 
 
