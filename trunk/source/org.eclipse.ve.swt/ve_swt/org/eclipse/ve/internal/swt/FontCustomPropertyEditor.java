@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-29 18:50:14 $ 
+ *  $Revision: 1.6 $  $Date: 2005-03-31 00:50:50 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
@@ -41,15 +42,36 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 public class FontCustomPropertyEditor extends Composite {
 
 	protected final static String[] styleNames = {
-			FontPropertyEditorMessages.getString("normalStyle"), FontPropertyEditorMessages.getString("boldStyle"), FontPropertyEditorMessages.getString("italicStyle"), FontPropertyEditorMessages.getString("boldItalicStyle")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			FontPropertyEditorMessages.getString("normalStyle"), //$NON-NLS-1$
+			FontPropertyEditorMessages.getString("boldStyle"), //$NON-NLS-1$
+			FontPropertyEditorMessages.getString("italicStyle"), //$NON-NLS-1$
+			FontPropertyEditorMessages.getString("boldItalicStyle")}; //$NON-NLS-1$
 	protected final static int[] styleValues = { SWT.NORMAL, SWT.BOLD, SWT.ITALIC, SWT.BOLD | SWT.ITALIC};
 	protected final static int[] sizeValues = { 8, 10, 12, 14, 18, 24, 36, 48, 72};
 
-	protected final static String[] jfaceFontNames = { "Banner", "Default", "Dialog", "Header", "Text"};
-	protected final static String[] jfaceNameConstants = { "org.eclipse.jface.bannerfont", "org.eclipse.jface.defaultfont", //$NON-NLS-1$ //$NON-NLS-2$
-			"org.eclipse.jface.dialogfont", "org.eclipse.jface.headerfont", "org.eclipse.jface.textfont"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	protected final static String[] jfaceFontNames = { 
+		FontPropertyEditorMessages.getString("jfaceBannerFontName"), //$NON-NLS-1$
+		FontPropertyEditorMessages.getString("jfaceDefaultFontName"), //$NON-NLS-1$
+		FontPropertyEditorMessages.getString("jfaceDialogFontName"), //$NON-NLS-1$
+		FontPropertyEditorMessages.getString("jfaceHeaderFontName"), //$NON-NLS-1$
+		FontPropertyEditorMessages.getString("jfaceTextFontName")}; //$NON-NLS-1$};
+	protected final static String[] jfaceNameConstants = { 
+		org.eclipse.jface.resource.JFaceResources.BANNER_FONT, 
+		org.eclipse.jface.resource.JFaceResources.DEFAULT_FONT, 
+		org.eclipse.jface.resource.JFaceResources.DIALOG_FONT, 
+		org.eclipse.jface.resource.JFaceResources.HEADER_FONT, 
+		org.eclipse.jface.resource.JFaceResources.TEXT_FONT};
+	protected final static String[] jfaceNameInitStrings = { 
+		"org.eclipse.jface.resource.JFaceResources.BANNER_FONT", //$NON-NLS-1$ 
+		"org.eclipse.jface.resource.JFaceResources.DEFAULT_FONT", //$NON-NLS-1$ 
+		"org.eclipse.jface.resource.JFaceResources.DIALOG_FONT", //$NON-NLS-1$ 
+		"org.eclipse.jface.resource.JFaceResources.HEADER_FONT", //$NON-NLS-1$ 
+		"org.eclipse.jface.resource.JFaceResources.TEXT_FONT"}; //$NON-NLS-1$
 	protected final static String[] jfaceStyleNames = {
-			FontPropertyEditorMessages.getString("normalStyle"), FontPropertyEditorMessages.getString("boldStyle"), FontPropertyEditorMessages.getString("italicStyle")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			FontPropertyEditorMessages.getString("normalStyle"), //$NON-NLS-1$ 
+			FontPropertyEditorMessages.getString("boldStyle"), //$NON-NLS-1$
+			FontPropertyEditorMessages.getString("italicStyle")}; //$NON-NLS-1$
+	protected final static String[] jfaceStyleMethodNames = {"get", "getBold", "getItalic"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 	protected final static int JFACE_NORMAL = 0;	// index into jfaceStyleNames
 	protected final static int JFACE_BOLD = 1;		// index into jfaceStyleNames
 	protected final static int JFACE_ITALIC = 2;	// index into jfaceStyleNames
@@ -76,7 +98,7 @@ public class FontCustomPropertyEditor extends Composite {
 	
 	protected Font value;
 	private TabFolder tabFolder = null;
-	private Composite composite = null;
+	private Composite namedFontsTab = null;
 	private Composite jfaceFontsTab = null;
 	private Label jfaceNameLabel = null;
 	private Label jfaceStyleLabel = null;
@@ -85,6 +107,7 @@ public class FontCustomPropertyEditor extends Composite {
 	private List jfaceNamesList = null;
 	private List jfaceStylesList = null;
 	private EditDomain fEditDomain = null;
+	private Label initStringLabel = null;
 
 	// Used to perform comparisons on strings ignoring case.
 	public class StringIgnoreCaseComparator implements Comparator {
@@ -118,12 +141,13 @@ public class FontCustomPropertyEditor extends Composite {
 	public FontCustomPropertyEditor(Composite parent, int style, Font value, IJavaObjectInstance existingValue, EditDomain editDomain) {
 		super(parent, style);
 		this.value = value;
-		fExistingValue = existingValue;
 		fEditDomain = editDomain;
+		fExistingValue = existingValue;
 		initialize();
 	}
 
 	private void initialize() {
+		GridData gridData1 = new org.eclipse.swt.layout.GridData();
 		setSize(new org.eclipse.swt.graphics.Point(322,245));
 		GridLayout grid = new GridLayout();
 		grid.horizontalSpacing = 1;
@@ -136,6 +160,7 @@ public class FontCustomPropertyEditor extends Composite {
 		previewText = new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
 		previewText.setText(FontPropertyEditorMessages.getString("previewText")); //$NON-NLS-1$
 		GridData gd03 = new GridData();
+		initStringLabel = new Label(this, SWT.NONE);
 		gd03.horizontalAlignment = GridData.FILL;
 		gd03.verticalAlignment = GridData.FILL;
 		gd03.grabExcessHorizontalSpace = true;
@@ -145,8 +170,16 @@ public class FontCustomPropertyEditor extends Composite {
 		previewText.setLayoutData(gd03);
 
 		grid.numColumns = 3;
+		initStringLabel.setText("");
+		initStringLabel.setLayoutData(gridData1);
+		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
+		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		gridData1.horizontalSpan = 3;
 		createFontFromProxy(this);
 		updateSelections();
+		if (isJFaceProject())
+			updateJFaceSelections();
 		nameField.selectAll();
 	}
 
@@ -249,17 +282,17 @@ public class FontCustomPropertyEditor extends Composite {
 			String results = "";
 			switch (jfaceFontInfo.style) {
 				case JFACE_NORMAL:
-					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().get(\"" + jfaceFontInfo.name + "\")"; //$NON-NLS-1$ //$NON-NLS-2$
+					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().get(" + jfaceFontInfo.name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case JFACE_BOLD:
-					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().getBold(\"" + jfaceFontInfo.name + "\")"; //$NON-NLS-1$ //$NON-NLS-2$
+					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().getBold(" + jfaceFontInfo.name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case JFACE_ITALIC:
-					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().getItalic(\"" + jfaceFontInfo.name + "\")"; //$NON-NLS-1$ //$NON-NLS-2$
+					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().getItalic(" + jfaceFontInfo.name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 
 				default:
-					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().get(\"" + jfaceFontInfo.name + "\")"; //$NON-NLS-1$ //$NON-NLS-2$
+					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().get(" + jfaceFontInfo.name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 			}
 			return results;
@@ -330,6 +363,8 @@ public class FontCustomPropertyEditor extends Composite {
 			value.dispose();
 		}
 		setValue(f);
+		if (!isUpdating)
+			updateLabelInitializationString();
 	}
 
 	private void updateJFaceFont() {
@@ -337,24 +372,25 @@ public class FontCustomPropertyEditor extends Composite {
 		isJFace = true;
 		jfaceFontInfo = new JFaceFontInfo();
 		Font f;
-		jfaceFontInfo.name = jfaceNameConstants[jfaceNamesList.getSelectionIndex()];
+		jfaceFontInfo.name = jfaceNameInitStrings[jfaceNamesList.getSelectionIndex()];
+		String jfaceFontName = jfaceNameConstants[jfaceNamesList.getSelectionIndex()];
 		switch (jfaceStylesList.getSelectionIndex()) {
 			case JFACE_NORMAL:
 				jfaceFontInfo.style = JFACE_NORMAL;
-				f = JFaceResources.getFontRegistry().get(jfaceFontInfo.name);
+				f = JFaceResources.getFontRegistry().get(jfaceFontName);
 				break;
 			case JFACE_BOLD:
 				jfaceFontInfo.style = JFACE_BOLD;
-				f = JFaceResources.getFontRegistry().getBold(jfaceFontInfo.name);
+				f = JFaceResources.getFontRegistry().getBold(jfaceFontName);
 				break;
 			case JFACE_ITALIC:
 				jfaceFontInfo.style = JFACE_ITALIC;
-				f = JFaceResources.getFontRegistry().getItalic(jfaceFontInfo.name);
+				f = JFaceResources.getFontRegistry().getItalic(jfaceFontName);
 				break;
 
 			default:
 				jfaceFontInfo.style = JFACE_NORMAL;
-				f = JFaceResources.getFontRegistry().get(jfaceFontInfo.name);
+				f = JFaceResources.getFontRegistry().get(jfaceFontName);
 				break;
 		}
 		f = new Font(this.getDisplay(), f.getFontData());
@@ -363,6 +399,7 @@ public class FontCustomPropertyEditor extends Composite {
 			value.dispose();
 		}
 		setValue(f);
+		updateLabelInitializationString();
 	}
 	private void updateSelections() {
 		if (value == null) { return; }
@@ -385,6 +422,65 @@ public class FontCustomPropertyEditor extends Composite {
 		}
 		sizeField.setText(String.valueOf(fd.getHeight()));
 		previewText.setFont(value);
+		if (fExistingValue != null && fExistingValue.getAllocation() instanceof ParseTreeAllocation) {
+			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) fExistingValue.getAllocation();
+			PTExpression exp = ptAlloc.getExpression();
+			if (exp instanceof PTClassInstanceCreation) 
+				updateLabelInitializationString();;
+		}
+		isUpdating = false;
+	}
+
+	/*
+	 * Update the JFace page to show what has been selected. 
+	 * This is determined first by looking at the allocation. If it's a parse tree allocation,
+	 * check if it's a factory method invocation 
+	 *    (e.g. JFaceResources.getFontRegistry().getItalic("org.eclipse.jface.headerfont")
+	 * If it is, get the method name for setting the styles and get the arguments for setting
+	 * the font name.
+	 *   
+	 * If it's not a parse tree allocation, get the FontData of the current font value
+	 * and see if it matches to the static FontData for each of the JFace fonts. 
+	 */
+	private void updateJFaceSelections() {
+		isUpdating = true;
+		jfaceStylesList.setSelection(0);
+		// Get the method name and symbolic name if it's a JFace ParseTreeAllocation
+		if (fExistingValue != null && fExistingValue.getAllocation() instanceof ParseTreeAllocation) {
+			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) fExistingValue.getAllocation();
+			PTExpression exp = ptAlloc.getExpression();
+			if (exp instanceof PTMethodInvocation	&& 
+					((PTMethodInvocation) exp).getReceiver() instanceof PTMethodInvocation &&
+					((PTMethodInvocation)((PTMethodInvocation) exp).getReceiver()).getName().equals("getFontRegistry")) {
+				jfaceFontInfo = new JFaceFontInfo();
+				PTExpression arg = (PTExpression) ((PTMethodInvocation) exp).getArguments().get(0);
+				if (arg instanceof PTFieldAccess) {
+					String symbolicName = ((PTFieldAccess) arg).getField();
+					for (int i = 0; i < jfaceNameInitStrings.length; i++) {
+						if (jfaceNameInitStrings[i].endsWith(symbolicName)) {
+							jfaceNamesList.setSelection(i);
+							jfaceNameField.setText(jfaceFontNames[i]);
+							jfaceFontInfo.name = jfaceNameInitStrings[i];
+							break;
+						}
+					}
+				}
+				String getStyleMethodName = ((PTMethodInvocation) exp).getName();
+				for (int i = 0; i < jfaceStyleMethodNames.length; i++) {
+					if (jfaceStyleMethodNames[i].equals(getStyleMethodName)) {
+						jfaceStylesList.setSelection(i);
+						jfaceStyleField.setText(jfaceStyleNames[i]);
+						jfaceFontInfo.style = i;
+						break;
+					}
+				}
+				tabFolder.setSelection(1);
+				isJFace = true;
+				//update the init string label to show the initialization string
+				updateLabelInitializationString();
+				
+			}
+		}
 		isUpdating = false;
 	}
 
@@ -403,6 +499,7 @@ public class FontCustomPropertyEditor extends Composite {
 
 	public void setExistingValue(IJavaObjectInstance existingValue) {
 		fExistingValue = existingValue;
+		
 		// force getting font when creating dialog
 		this.value = null;
 	}
@@ -416,14 +513,14 @@ public class FontCustomPropertyEditor extends Composite {
 		tabFolder = new TabFolder(this, SWT.NONE);		   
 		createComposite();
 		TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
-		tabItem1.setControl(composite);
-		tabItem1.setText("Named Fonts");
+		tabItem1.setControl(namedFontsTab);
+		tabItem1.setText(FontPropertyEditorMessages.getString("NamedFontsTab")); //$NON-NLS-1$
 		// If this project has JFace jars in it's class path, add the JFace page.
 		if (isJFaceProject()) {
 			createComposite1();
 			TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
-		tabItem2.setControl(jfaceFontsTab);
-		tabItem2.setText("JFace Fonts");
+			tabItem2.setControl(jfaceFontsTab);
+			tabItem2.setText(FontPropertyEditorMessages.getString("JFaceFontsTab")); //$NON-NLS-1$
 			initializeJfaceLists();
 		}
 		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -440,34 +537,34 @@ public class FontCustomPropertyEditor extends Composite {
 	 */    
 	private void createComposite() {
 		GridLayout gridLayout1 = new GridLayout();
-		composite = new Composite(tabFolder, SWT.NONE);
-		composite.setLayout(gridLayout1);
-		Label nameLabel = new Label(composite, SWT.NONE);
+		namedFontsTab = new Composite(tabFolder, SWT.NONE);
+		namedFontsTab.setLayout(gridLayout1);
+		Label nameLabel = new Label(namedFontsTab, SWT.NONE);
 		nameLabel.setText(FontPropertyEditorMessages.getString("nameLabel")); //$NON-NLS-1$
 
-		Label styleLabel = new Label(composite, SWT.NONE);
+		Label styleLabel = new Label(namedFontsTab, SWT.NONE);
 		styleLabel.setText(FontPropertyEditorMessages.getString("styleLabel")); //$NON-NLS-1$
 		
-		Label sizeLabel = new Label(composite, SWT.NONE);
+		Label sizeLabel = new Label(namedFontsTab, SWT.NONE);
 		sizeLabel.setText(FontPropertyEditorMessages.getString("sizeLabel")); //$NON-NLS-1$
 		
-		nameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		nameField = new Text(namedFontsTab, SWT.SINGLE | SWT.BORDER);
 		GridData gd01 = new GridData();
 		gd01.horizontalAlignment = GridData.FILL;
 		gd01.grabExcessHorizontalSpace = true;
 		nameField.setLayoutData(gd01);
 		
-		styleField = new Text(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+		styleField = new Text(namedFontsTab, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		GridData gd11 = new GridData();
 		gd11.horizontalAlignment = GridData.FILL;
 		styleField.setLayoutData(gd11);
 		
-		sizeField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		sizeField = new Text(namedFontsTab, SWT.SINGLE | SWT.BORDER);
 		GridData gd21 = new GridData();
 		gd21.horizontalAlignment = GridData.FILL;
 		sizeField.setLayoutData(gd21);
 		
-		namesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		namesList = new List(namedFontsTab, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gd02 = new GridData();
 		gd02.horizontalAlignment = GridData.FILL;
 		gd02.verticalAlignment = GridData.FILL;
@@ -477,14 +574,14 @@ public class FontCustomPropertyEditor extends Composite {
 		gd02.widthHint = 200;
 		namesList.setLayoutData(gd02);
 		
-		stylesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		stylesList = new List(namedFontsTab, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gd12 = new GridData();
 		gd12.horizontalAlignment = GridData.FILL;
 		gd12.verticalAlignment = GridData.FILL;
 		gd12.grabExcessVerticalSpace = true;
 		stylesList.setLayoutData(gd12);
 
-		sizesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		sizesList = new List(namedFontsTab, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gd22 = new GridData();
 		gd22.horizontalAlignment = GridData.FILL;
 		gd22.verticalAlignment = GridData.FILL;
@@ -647,6 +744,52 @@ public class FontCustomPropertyEditor extends Composite {
 	protected boolean isJFaceProject() {
 		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
 		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
+	}
+
+	/*
+	 * Update the init string label at the bottom of the property editor with the respective
+	 * initialzation string based on whether it's a SWT or JFace font.
+	 */
+	private void updateLabelInitializationString() {
+		if (value == null)
+			return;
+		String SWT_PREFIX = "SWT"; //$NON-NLS-1$
+		String result = ""; //$NON-NLS-1$
+		if (!isJFace) {
+			FontData fd = value.getFontData()[0];
+			String style;
+			switch (fd.getStyle()) {
+				case SWT.NORMAL:
+					style = SWT_PREFIX + ".NORMAL";break; //$NON-NLS-1$
+				case SWT.BOLD:
+					style = SWT_PREFIX + ".BOLD";break; //$NON-NLS-1$
+				case SWT.ITALIC:
+					style = SWT_PREFIX + ".ITALIC";break; //$NON-NLS-1$
+				case SWT.BOLD | SWT.ITALIC:
+					style = SWT_PREFIX + ".BOLD | " + SWT_PREFIX + ".ITALIC";break; //$NON-NLS-1$ //$NON-NLS-2$
+				default:
+					style = SWT_PREFIX + ".NORMAL"; //$NON-NLS-1$
+			}
+			result = "new Font(Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else {
+			String fontname = jfaceFontInfo.name.replaceAll("org.eclipse.jface.resource.JFaceResources", "JFaceResources"); //$NON-NLS-1$ //$NON-NLS-2$
+			switch (jfaceFontInfo.style) {
+				case JFACE_NORMAL:
+					result = "JFaceResources.getFontRegistry().get(" + fontname + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case JFACE_BOLD:
+					result = "JFaceResources.getFontRegistry().getBold(" + fontname + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				case JFACE_ITALIC:
+					result = "JFaceResources.getFontRegistry().getItalic(" + fontname + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+
+				default:
+					result = "JFaceResources.getFontRegistry().get(" + fontname + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+			}
+		}
+		initStringLabel.setText(result);
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
