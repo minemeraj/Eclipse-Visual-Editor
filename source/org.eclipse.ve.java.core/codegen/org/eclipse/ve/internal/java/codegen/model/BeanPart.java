@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-30 23:25:52 $ 
  */
 import java.util.*;
 
@@ -516,7 +516,7 @@ public void addBackRef (BeanPart bean, EReference sf) {
 public void removeBackRef (BeanPart bean, boolean updateFF) {
 		
 	fbackReferences.remove(bean) ;
-	if (bean != null && getModel().getCompositionModel() != null)
+	if (bean != null && getModel() != null && getModel().getCompositionModel() != null)
 	   if (fContainer != null && fContainer.equals(bean.getEObject())) {
 	      fContainer = null ;
 	      // Do not update in the case that this is induced from a compound command
