@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeansLauncher.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:39:55 $ 
+ *  $Revision: 1.4 $  $Date: 2004-07-08 14:22:18 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -61,34 +61,34 @@ public static void main(String[] args){
 	// Try a number of different ways to launch the JavaBean
 	try {	
 		Class aClass = Class.forName(nameOfClassToLaunch);		
-		Method mainMethod = null;
-		try {
-			mainMethod = aClass.getDeclaredMethod("main", new Class[] {String[].class}); //$NON-NLS-1$
-		} catch (NoSuchMethodException e) {}
-		if (mainMethod != null && Modifier.isStatic(mainMethod.getModifiers())) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithMain_INFO_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
-			// Static method call to the main method
-			mainMethod.invoke(null, new Object[]{ args });
-		} else {			
-			// new up an instance of the java bean
-			Constructor ctor = aClass.getDeclaredConstructor(null);
-			// Make sure we can intantiate it in case the class it not public
-			ctor.setAccessible(true);
-			Object javaBean = ctor.newInstance(null);
-			
-			List launchers = getLaunchers();
-			ILauncher selected = null;
-			ILauncher current = null;
-			Iterator itr = launchers.iterator();
-			while(itr.hasNext()) {
-				current = (ILauncher)itr.next();
-				if (current.supportsLaunching(aClass, javaBean)) {
-					selected = current;
-					break;
-				}
+		// new up an instance of the java bean
+		Constructor ctor = aClass.getDeclaredConstructor(null);
+		// Make sure we can intantiate it in case the class it not public
+		ctor.setAccessible(true);
+		Object javaBean = ctor.newInstance(null);
+		
+		List launchers = getLaunchers();
+		ILauncher selected = null;
+		ILauncher current = null;
+		Iterator itr = launchers.iterator();
+		while(itr.hasNext()) {
+			current = (ILauncher)itr.next();
+			if (current.supportsLaunching(aClass, javaBean)) {
+				selected = current;
+				break;
 			}
-			if (selected != null) {
-				selected.launch(aClass, javaBean, args);
+		}
+		if (selected != null) {
+			selected.launch(aClass, javaBean, args);
+		} else {
+			Method mainMethod = null;
+			try {
+				mainMethod = aClass.getDeclaredMethod("main", new Class[] {String[].class}); //$NON-NLS-1$
+			} catch (NoSuchMethodException e) {}
+			if (mainMethod != null && Modifier.isStatic(mainMethod.getModifiers())) {
+				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithMain_INFO_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+				// Static method call to the main method
+				mainMethod.invoke(null, new Object[]{ args });
 			} else {
 				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
 			}
