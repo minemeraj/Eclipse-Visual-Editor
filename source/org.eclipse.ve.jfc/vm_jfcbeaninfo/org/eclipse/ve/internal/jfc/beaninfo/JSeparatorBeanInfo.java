@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JSeparatorBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-19 12:20:35 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-19 16:34:13 $ 
  */
 
 import java.beans.*;
@@ -101,15 +101,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      				"javax.swing.SwingConstants.HORIZONTAL", //$NON-NLS-1$
 	      				JSeparatorMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.SwingConstants.VERTICAL), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.VERTICAL" //$NON-NLS-1$
-	    			},
-	      			// layout - hide it
-	    			super.createPropertyDescriptor(getBeanClass(),"layout", new Object[] { //$NON-NLS-1$
-	    	      	HIDDEN, Boolean.TRUE
-	    	    		}
-	    	    	),	      			
+	    			}}),
+  			// layout - hide it
+			super.createPropertyDescriptor(getBeanClass(),"layout", new Object[] { //$NON-NLS-1$
+	      	HIDDEN, Boolean.TRUE
 	    		}
-	    	)
-		
+	    	),	      			
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
