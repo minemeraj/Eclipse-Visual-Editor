@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-07-09 22:24:20 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -19,8 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaElement;
@@ -69,9 +68,15 @@ protected void processMethods(Notification msg) {
                  }             
              break ;
 		case Notification.ADD :
-		      MemberDecoderAdapter a = new MemberDecoderAdapter(fbeanModel) ;
-		      a.setTarget((Notifier)msg.getNewValue()) ;
-		      ((Notifier)msg.getNewValue()).eAdapters().add(a) ;
+			  MemberDecoderAdapter a = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(((EObject)msg.getNewValue()).eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
+		      // looking for a MemberDecoeder Adapter Only
+		      if (!a.getClass().isAssignableFrom(MemberDecoderAdapter.class))
+		      	a = null;
+		      if (a==null) {
+			      a = new MemberDecoderAdapter(fbeanModel) ;
+			      a.setTarget((Notifier)msg.getNewValue()) ;
+			      ((Notifier)msg.getNewValue()).eAdapters().add(a) ;
+		      }
 		case Notification.REMOVE :
 		     if (msg.getOldValue() != null) {
 		         Adapter oa = EcoreUtil.getExistingAdapter((Notifier)msg.getOldValue(), ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
