@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-16 15:03:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -133,8 +133,8 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 						}
 					}
 				} else if (event.arguments().size() == 2) {
-					if (event.arguments().get(0) instanceof SimpleName) {
-						String pname = ((SimpleName) event.arguments().get(0)).getIdentifier();
+					if (event.arguments().get(0) instanceof StringLiteral) {
+						String pname = ((StringLiteral) event.arguments().get(0)).toString();
 						pname = pname.substring(1, pname.length() - 1);
 						PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
 						pe.setPropertyName(pname);
