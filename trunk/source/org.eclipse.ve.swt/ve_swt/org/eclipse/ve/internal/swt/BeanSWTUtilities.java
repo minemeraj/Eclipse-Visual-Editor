@@ -1,18 +1,17 @@
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.swt.graphics.Point;
+
 import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
-import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.swt.graphics.Point;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
@@ -25,7 +24,8 @@ public class BeanSWTUtilities {
 		getBoundsMethodProxy,
 		getLocationMethodProxy,
 		getChildrenMethodProxy,		
-		computeSizeMethodProxy;
+		computeSizeMethodProxy,
+		setTabfolderSelectionMethodProxy;
 
     public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
 
@@ -201,4 +201,26 @@ public class BeanSWTUtilities {
     		return new Point(10000, 10000);
     	}
     }
+    /**
+     * Set the selection on the TabFolder which brings the respective tab to the front.
+     */
+    public static void invoke_tabfolder_setSelection(final IBeanProxy aTabFolderBeanProxy, final IIntegerBeanProxy intBeanProxy) {
+    	BeanSWTUtilities constants = getConstants(aTabFolderBeanProxy);
+    	
+    	if (constants.setTabfolderSelectionMethodProxy == null) {
+    		constants.setTabfolderSelectionMethodProxy = aTabFolderBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.TabFolder").getMethodProxy( //$NON-NLS-1$
+    			"setSelection", "int"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.setTabfolderSelectionMethodProxy != null) {
+        	final IMethodProxy setTabfolderSelectionMethodProxy = constants.setTabfolderSelectionMethodProxy;
+            JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aTabFolderBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return setTabfolderSelectionMethodProxy.invoke(aTabFolderBeanProxy, intBeanProxy);
+                        }
+                    });
+        }
+    }
+
 }
