@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -83,6 +83,17 @@ public class JFCConstants {
 		
 		CLASS_CONTAINER_CONSTRAINTCOMPONENT,	// containerVisuals/ConstraintComponent
 		CLASS_JTABBEDPANE_JTABCOMPONENT;	// jtabbedPaneVisuals/JTabComponent	
+		
+	public static final String
+		POINT_CLASS_NAME,
+		DIMENSION_CLASS_NAME,
+		RECTANGLE_CLASS_NAME;
+		
+	static {
+		POINT_CLASS_NAME = "java.awt.Point";
+		DIMENSION_CLASS_NAME = "java.awt.Dimension";
+		RECTANGLE_CLASS_NAME = "java.awt.Rectangle";
+	}
 		
 	static {
 		SF_COMPONENT_VISIBLE = URI.createURI("java:/java.awt#Component/visible");		 //$NON-NLS-1$

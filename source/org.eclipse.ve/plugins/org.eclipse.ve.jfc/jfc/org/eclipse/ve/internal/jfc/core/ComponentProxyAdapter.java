@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -216,7 +216,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// If the either x or y is -1, then we need to adjust 
 			Point location = new Point(pnt.getX(), pnt.getY());
 			if (NullLayoutEditPolicy.adjustForPreferredLocation(getBeanProxy(), location,5,5)) {
-				String initString = PointJavaClassCellEditor.getJavaInitializationString(location.x, location.y);
+				String initString = PointJavaClassCellEditor.getJavaInitializationString(location.x, location.y,JFCConstants.POINT_CLASS_NAME);
 				final IJavaInstance pointBean = BeanUtilities.createJavaObject("java.awt.Point", ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
@@ -264,7 +264,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 
 			Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 			if (NullLayoutEditPolicy.adjustForPreferredSizeAndPosition(getBeanProxy(), bounds, 5, 5)) {
-				String initString = RectangleJavaClassCellEditor.getJavaInitializationString(bounds);
+				String initString = RectangleJavaClassCellEditor.getJavaInitializationString(bounds,JFCConstants.RECTANGLE_CLASS_NAME);
 				final IJavaInstance rectBean = BeanUtilities.createJavaObject("java.awt.Rectangle", ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
@@ -300,12 +300,12 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fDefaultLocation);
 			if (d != null)
 				d.releaseBeanProxy();
-			String initString = PointJavaClassCellEditor.getJavaInitializationString(rect.getX(), rect.getY());
+			String initString = PointJavaClassCellEditor.getJavaInitializationString(rect.getX(), rect.getY(),JFCConstants.POINT_CLASS_NAME);
 			fDefaultLocation = BeanUtilities.createJavaObject("java.awt.Point", ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
 
 			IPointBeanProxy pointProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(fLocationToUse);
 			initString =
-				RectangleJavaClassCellEditor.getJavaInitializationString(pointProxy.getX(), pointProxy.getY(), rect.getWidth(), rect.getHeight());
+				RectangleJavaClassCellEditor.getJavaInitializationString(pointProxy.getX(), pointProxy.getY(), rect.getWidth(), rect.getHeight(),JFCConstants.RECTANGLE_CLASS_NAME);
 			super.applied(
 				sfComponentBounds,
 				BeanUtilities.createJavaObject("java.awt.Rectangle", ((EObject) target).eResource().getResourceSet(), initString),//$NON-NLS-1$
@@ -362,7 +362,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// Create a new point for the location we wish to set the component to
 			// and apply this as an attribute settings
 				fLocationToUse = BeanUtilities.createJavaObject("java.awt.Point", //$NON-NLS-1$
-	 ((EObject) target).eResource().getResourceSet(), PointJavaClassCellEditor.getJavaInitializationString(setToLocation.x, setToLocation.y));
+	 ((EObject) target).eResource().getResourceSet(), PointJavaClassCellEditor.getJavaInitializationString(setToLocation.x, setToLocation.y,JFCConstants.POINT_CLASS_NAME));
 
 			// If we have a proxy then set the location to the specified setting.
 			super.applied(sfComponentLocation, fLocationToUse, 0); // Now apply the setTo value, use super to avoid checks on flag

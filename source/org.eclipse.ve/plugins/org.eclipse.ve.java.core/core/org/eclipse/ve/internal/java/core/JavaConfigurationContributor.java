@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaConfigurationContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
  */
 
 import java.util.*;
@@ -168,6 +168,14 @@ public class JavaConfigurationContributor implements IConfigurationContributor {
 					IConfigurationElement[] registrations = JavaVEPlugin.getPlugin().getRegistrations(JRE_LIB_VARIABLE_PATH);
 					if (registrations != null)
 						processConfigurationRegistrations(registrations);
+				}
+			} else {
+				// See whether the container is registered
+				if(!visitedVariablePaths.contains(path)){
+					visitedVariablePaths.add(path);
+					IConfigurationElement[] registrations = JavaVEPlugin.getPlugin().getRegistrations(path);
+					if (registrations != null)
+						processConfigurationRegistrations(registrations);					
 				}
 			}
 		}

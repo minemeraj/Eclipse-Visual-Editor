@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: SizePropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
  */
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -51,7 +51,7 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 				IRectangleBeanProxy bounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(boundsObject);
 				Object newLoc = BeanUtilities.createJavaObject("java.awt.Point", //$NON-NLS-1$
 					comp.eResource().getResourceSet(),
-					PointJavaClassCellEditor.getJavaInitializationString(bounds.getX(), bounds.getY()));
+					PointJavaClassCellEditor.getJavaInitializationString(bounds.getX(), bounds.getY(),JFCConstants.POINT_CLASS_NAME));
 				cb.applyAttributeSetting(comp, sfComponentLocation, newLoc);
 			}
 		}
