@@ -11,14 +11,13 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-23 23:19:41 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.*;
@@ -94,16 +93,15 @@ public class JSplitPaneProxyAdapter extends ContainerProxyAdapter {
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applyBeanFeature(EStructuralFeature, PropertyDecorator, BeanFeatureDecorator, IBeanProxy)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applyBeanFeature(EStructuralFeature, PropertyDecorator, IBeanProxy)
 	 */
 	protected void primApplyBeanFeature(
 		EStructuralFeature sf,
 		PropertyDecorator propDecor,
-		BeanFeatureDecorator featureDecor,
 		IBeanProxy settingBeanProxy) throws ThrowableProxy {
 		// If it is divider, then set through the manager. 
 		if (sf != sfDividerLocation || splitPaneManager == null) 
-			super.primApplyBeanFeature(sf, propDecor, featureDecor, settingBeanProxy);
+			super.primApplyBeanFeature(sf, propDecor, settingBeanProxy);
 		else {
 			splitPaneManager.setDividerLocation(settingBeanProxy);
 			dividerSet = ((IIntegerBeanProxy) settingBeanProxy).intValue() != -1;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-22 13:40:49 $ 
+ *  $Revision: 1.18 $  $Date: 2005-02-23 23:19:41 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -189,9 +189,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					 */
 					public void run() {
 						// We may not be within the context of a change control, so we need to get a controller to handle the change.
-						IModelChangeController controller =
-							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-						controller.doModelChanges(new Runnable() {
+						getModelChangeController().doModelChanges(new Runnable() {
 							public void run() {
 								// Set the constraints on the component bean.  This will change the size of the component
 								// Because we will be called back with notify and apply the constraints rectangle to the live bean
@@ -229,9 +227,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					 */
 					public void run() {
 						// We may not be within the context of a change control, so we need to get a controller to handle the change.
-						IModelChangeController controller =
-							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-						controller.doModelChanges(new Runnable() {
+						getModelChangeController().doModelChanges(new Runnable() {
 							public void run() {
 								// Set the constraints on the component bean.  This will change the size of the component
 								// Because we will be called back with notify and apply the constraints rectangle to the live bean
@@ -277,9 +273,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					 */
 					public void run() {
 						// We may not be within the context of a change control, so we need to get a controller to handle the change.
-						IModelChangeController controller =
-							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-						controller.doModelChanges(new Runnable() {
+						getModelChangeController().doModelChanges(new Runnable() {
 							public void run() {
 								// Set the constraints on the component bean.  This will change the size of the component
 								// Because we will be called back with notify and apply the constraints rectangle to the live bean
@@ -864,23 +858,25 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		if (getVisualComponentBeanProxy() != null) {
 		    getModelChangeController().execAtEndOfTransaction(new Runnable(){
 		        public void run(){				    
-					// Invalidate the component bean
-					IBeanProxy componentBean = getVisualComponentBeanProxy();
-					BeanAwtUtilities.invoke_invalidate(componentBean);
-					// Go up the chain and invalidate all of the parents that have image listeners.
-					IComponentProxyHost parentBean = ComponentProxyAdapter.this;
-					while (parentBean != null) {
-						if (parentBean.hasImageListeners())
-							parentBean.invalidateImage();
-						parentBean = parentBean.getParentComponentProxyHost();
-					}
-					
-					// Now let the parent know
-					childInvalidated(ComponentProxyAdapter.this);		            
+					if (isBeanProxyInstantiated()) {
+						// Invalidate the component bean
+						IBeanProxy componentBean = getVisualComponentBeanProxy();
+						BeanAwtUtilities.invoke_invalidate(componentBean);
+						// Go up the chain and invalidate all of the parents that have image listeners.
+						IComponentProxyHost parentBean = ComponentProxyAdapter.this;
+						while (parentBean != null) {
+							if (parentBean.hasImageListeners())
+								parentBean.invalidateImage();
+							parentBean = parentBean.getParentComponentProxyHost();
+						}
+
+						// Now let the parent know
+						childInvalidated(ComponentProxyAdapter.this); 
+					}		            
 		        }
 		    },
-		    IModelChangeController.createHashKey(this,"INVALIDATE"),
-		    new Object[] {IModelChangeController.SETUP_PHASE,IModelChangeController.INIT_VIEWERS_PHASE});
+		    ModelChangeController.createHashKey(this,"INVALIDATE"),
+		    new Object[] {ModelChangeController.SETUP_PHASE,ModelChangeController.INIT_VIEWERS_PHASE});
 		}
 	}
 	
@@ -893,9 +889,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// that all of the refresh requests are queued up and only the first one
 			// will actually run. The rest will see a valid refresh is in progress and
 			// not do anything.
-		    IModelChangeController modelChangeController = (IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-		    
-			modelChangeController.execAtEndOfTransaction(new Runnable() {
+		    getModelChangeController().execAtEndOfTransaction(new Runnable() {
 				public void run() {
 					if (isBeanProxyInstantiated()) {
 						// Still live at when invoked later.

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.21 $ $Date: 2005-02-17 12:39:12 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.22 $ $Date: 2005-02-23 23:19:40 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -33,7 +33,7 @@ import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -172,7 +172,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
 		String[] fInitStrings;
 
-		Integer[] fValues;
+		Number[] fValues;
 
 		private ILabelProvider labelProvider; // Performance cache because property sheets asks for this twice always
 
@@ -192,7 +192,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			} else {
 				fNames = new String[] { styleBits.fNames[0], SWTMessages.getString("WidgetPropertySourceAdapter.NotSet")}; //$NON-NLS-1$
 				fInitStrings = new String[] { styleBits.fInitStrings[0], STYLE_NOT_SET_INITSTRING};
-				fValues = new Integer[] { styleBits.fValues[0], STYLE_NOT_SET_INTEGER};
+				fValues = new Number[] { styleBits.fValues[0], STYLE_NOT_SET_INTEGER};
 			}
 		}
 
@@ -276,9 +276,9 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
 		public String[] fInitStrings;
 
-		public Integer[] fValues;
+		public Number[] fValues;
 
-		public SweetStyleBits(String propertyName, String displayName, boolean isExpert, String[] names, String[] initStrings, Integer[] values) {
+		public SweetStyleBits(String propertyName, String displayName, boolean isExpert, String[] names, String[] initStrings, Number[] values) {
 			fPropertyName = propertyName;
 			fDisplayName = displayName;
 			fIsExpert = isExpert;
@@ -316,11 +316,11 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 					int numberOfValues = triplicateArray.length / 3;
 					String[] names = new String[numberOfValues];
 					String[] initStrings = new String[numberOfValues];
-					Integer[] values = new Integer[numberOfValues];
+					Number[] values = new Number[numberOfValues];
 					for (int j = 0, index = 0; j < triplicateArray.length; j+=3, ++index) {
 						names[index] = (String) triplicateArray[j];
 						initStrings[index] = (String) triplicateArray[j+1];
-						values[index] =  new Integer( ((Number)triplicateArray[j+2]).intValue());
+						values[index] =  (Number) triplicateArray[j+2];
 					}
 					styleDetails[i] = new SweetStyleBits(propertyName, displayName, expert, names, initStrings, values);
 				}
@@ -350,7 +350,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			int currentStyleValue = getWidgetProxyAdapter().getStyle();
 			// The style value represents all the bits together. We must return a single int value the represents the style that is set
 			// for the family that this property represents
-			Integer[] availableValues = ((StyleBitPropertyID) descriptorID).propertyDescriptor.fValues;
+			Number[] availableValues = ((StyleBitPropertyID) descriptorID).propertyDescriptor.fValues;
 			for (int i = 0; i < availableValues.length; i++) {
 				if ((availableValues[i].intValue() & currentStyleValue) == availableValues[i].intValue()) { return availableValues[i]; }
 			}
@@ -364,7 +364,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		if (descriptorID instanceof EStructuralFeature) {
 			return super.isPropertySet(descriptorID);
 		} else if (descriptorID instanceof StyleBitPropertyID) {
-			int currentValue = ((Integer) getPropertyValue(descriptorID)).intValue();
+			int currentValue = ((Number) getPropertyValue(descriptorID)).intValue();
 			// If the current property value is -1 then this means it is the "UNSET" value from a single value'd property and by definition must be
 			// not set
 			if (currentValue == STYLE_NOT_SET)
@@ -394,7 +394,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 				if (styleExpression != null) {
 					try {
 						styleBeanProxy = BasicAllocationProcesser.instantiateWithExpression(styleExpression, getWidgetProxyAdapter().getBeanProxyDomain());
-						if (styleBeanProxy != null && !(styleBeanProxy instanceof IIntegerBeanProxy)) {
+						if (styleBeanProxy != null && !(styleBeanProxy instanceof INumberBeanProxy)) {
 							styleBeanProxy.getProxyFactoryRegistry().releaseProxy(styleBeanProxy);
 							styleBeanProxy = null;	// Not an integer, so an invalid return. Really wasn't the style expression.
 						}
@@ -403,7 +403,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 					}
 				}
 			}
-			explicitStyle = styleBeanProxy != null ? ((IIntegerBeanProxy) styleBeanProxy).intValue() : SWT.NONE;
+			explicitStyle = styleBeanProxy != null ? ((INumberBeanProxy) styleBeanProxy).intValue() : SWT.NONE;
 		}
 		return explicitStyle;
 	}
@@ -645,10 +645,10 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			//       <leftOperator xmi:type=PTName name="org.eclipse.swt.BORDER">
 			//       <rightOperator xmi:type=PTName name="org.eclipse.swt.CHECK">
 			// A value of -1 (or null) means that we are unsetting the property value
-			int intValue = val != null ? ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
+			int intValue = val != null ? ((INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
 			
 			// See if we are changing it. If not, then don't do anything. Don't want to signal an unneeded change.	
-			if (((Integer) getPropertyValue(feature)).intValue() == intValue)
+			if (((Number) getPropertyValue(feature)).intValue() == intValue)
 				return;	// The property has not changed. Don't do anything.
 				
 			JavaAllocation alloc = getBean().getAllocation();

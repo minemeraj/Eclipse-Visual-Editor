@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.15 $ $Date: 2005-02-23 13:38:37 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.16 $ $Date: 2005-02-23 23:19:40 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,6 @@ import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -111,10 +110,6 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 					 * @see java.lang.Runnable#run()
 					 */
 					public void run() {
-						IModelChangeController controller = (IModelChangeController) getBeanProxyDomain()
-								.getEditDomain()
-								.getData(
-										IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 						ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
 						AnnotationLinkagePolicy policy = getBeanProxyDomain().getEditDomain().getAnnotationLinkagePolicy();
 						Annotation ann = policy.getAnnotation(getJavaObject());
@@ -123,7 +118,7 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 							name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 						}	
 						final IJavaInstance titleInstance = BeanUtilities.createString(rset, name);
-						controller.doModelChanges(new Runnable() {
+						getModelChangeController().doModelChanges(new Runnable() {
 							public void run() {
 								RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
 								cbld.applyAttributeSetting((EObject) target,sf, titleInstance);

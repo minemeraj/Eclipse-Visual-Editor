@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.16 $ $Date: 2005-02-15 23:51:48 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.17 $ $Date: 2005-02-23 23:19:40 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -25,7 +25,6 @@ import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
 import org.eclipse.jem.java.JavaHelpers;
 
-import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
 import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
@@ -94,12 +93,11 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 		return JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(), runnable);
 	}
 
-	protected void primApplyBeanFeature(final EStructuralFeature sf, final PropertyDecorator propDecor, final BeanFeatureDecorator featureDecor,
-			final IBeanProxy settingBeanProxy) throws ThrowableProxy {
+	protected void primApplyBeanFeature(final EStructuralFeature sf, final PropertyDecorator propDecor, final IBeanProxy settingBeanProxy) throws ThrowableProxy {
 		invokeSyncExecCatchRunnable(new DisplayManager.DisplayRunnable() {
 
 			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				WidgetProxyAdapter.super.primApplyBeanFeature(sf, propDecor, featureDecor, settingBeanProxy);
+				WidgetProxyAdapter.super.primApplyBeanFeature(sf, propDecor, settingBeanProxy);
 				return null;
 			}
 		});

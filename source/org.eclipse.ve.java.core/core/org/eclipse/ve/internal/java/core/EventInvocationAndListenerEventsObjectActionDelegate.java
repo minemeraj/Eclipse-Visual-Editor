@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventInvocationAndListenerEventsObjectActionDelegate.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-22 13:41:21 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-23 23:19:39 $ 
  */
 
 import java.util.Iterator;
@@ -31,7 +31,7 @@ import org.eclipse.jem.internal.beaninfo.*;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.Listener;
 
@@ -75,7 +75,7 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 				public void widgetSelected(final SelectionEvent e) {
 					// TODO This should be a command.
 					EditDomain domain = EditDomain.getEditDomain(editPart);
-					((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
+					((ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 						public void run() {									
 							// The data is the method proxy of the event to be added to the existing listener
 							PropertyDecorator propDecor = (PropertyDecorator)e.widget.getData(); 
@@ -135,7 +135,7 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 					public void widgetSelected(final SelectionEvent e) {
 						// TODO This should be a command.
 						EditDomain domain = EditDomain.getEditDomain(editPart);
-						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
+						((ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 							public void run() {									
 								// The data is the method proxy of the event to be added to the existing listener
 								MethodProxy methodProxy = (MethodProxy) e.widget.getData();
