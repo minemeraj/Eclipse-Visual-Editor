@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-20 09:04:47 $ 
+ *  $Revision: 1.9 $  $Date: 2004-04-23 14:15:00 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -177,6 +178,12 @@ public void setData(Object data){
 	}
 	
 	public void setSources(Object[] sources, IPropertySource[] propertySources, IPropertyDescriptor[] descriptors) {
-		container = (IJavaObjectInstance) sources[0];
+		if (sources[0] instanceof IJavaObjectInstance) {
+			// if the source is the container, set the container
+			container = (IJavaObjectInstance) sources[0];
+		} else {
+			// if the source is the ConstraintComponent, get the constraint's container
+			container = (IJavaObjectInstance) ((EObject)sources[0]).eContainer();
+		}
 	}
 }
