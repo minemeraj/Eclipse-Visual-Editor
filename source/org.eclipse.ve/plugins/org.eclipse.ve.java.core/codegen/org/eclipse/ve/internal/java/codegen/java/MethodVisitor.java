@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-09 14:35:29 $ 
  */
 
 import java.util.List;
@@ -204,7 +204,9 @@ public void visit() {
 	}	
 	
 	try {
-	  processStatementArray(fMethod.getDeclMethod().getBody().statements()) ;		
+	  Block body = fMethod.getDeclMethod().getBody();
+	  if (body!=null && body.statements()!=null && body.statements().size()>0)
+	       processStatementArray(fMethod.getDeclMethod().getBody().statements()) ;		
 	}
 	catch (CodeGenException  e) {
 		// Will have to pass it on later on

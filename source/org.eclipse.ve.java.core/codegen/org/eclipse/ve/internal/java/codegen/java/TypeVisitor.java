@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-09-09 14:35:29 $ 
  */
 
 import java.util.*;
@@ -167,9 +167,10 @@ public void visit()  {
 		// No compilation unit... depend on jdom solely
 		if(methods==null || methods.length==0)
 			return;
-		try{
-			int methodHandleUseCount = 0;
-			for(int i=0; i<methods.length; i++){
+		
+		int methodHandleUseCount = 0;
+		for(int i=0; i<methods.length; i++){
+			try {
 				if(	(methods[i]!=null) &&
 					(methods[i] instanceof MethodDeclaration) &&
 					(!((MethodDeclaration)methods[i]).isConstructor())){
@@ -187,9 +188,9 @@ public void visit()  {
 								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()), 
 								 String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()));
 				}
+			}catch(Exception e){
+				JavaVEPlugin.log(e, Level.WARNING) ;
 			}
-		}catch(Exception e){
-			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
 		JavaElementInfo cuMethods[] = getCUMethods(methods, JDTMethods, fModel);
@@ -198,9 +199,9 @@ public void visit()  {
 		// Compilation unit methods and jdom methods should match.
 		if (cuMethods.length != methods.length) 
 			throw new RuntimeException("methods length error") ; //$NON-NLS-1$
-		int i=0 ;
-		try {
-			for (; i < methods.length ; i++){
+		int i=0 ;		
+		for (; i < methods.length ; i++){
+			try {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					methods[i] instanceof MethodDeclaration ) {
@@ -209,9 +210,10 @@ public void visit()  {
 								cuMethods[i].getContent()) ;
 				}
 			}
-		}catch (Exception e) {
-			JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		    catch (Exception e) {
+			   JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+		    }
+		}		
 	}
 }
 
