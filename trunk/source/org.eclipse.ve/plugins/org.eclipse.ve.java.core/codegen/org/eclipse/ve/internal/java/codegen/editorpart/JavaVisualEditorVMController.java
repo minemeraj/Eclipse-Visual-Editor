@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -324,7 +324,7 @@ public class JavaVisualEditorVMController {
 		private synchronized void startJob(long delay) {
 			// Start the job. It is assumed the job is already ended. Should not be called otherwise.
 			if (createJob == null) {
-				createJob = new CreateSpareRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"));
+				createJob = new CreateSpareRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE")); //$NON-NLS-1$
 				createJob.setSystem(true);	// Don't want to interrupt user with these being generated. They happen all of the time.
 			}
 			// If the delay is for the spare remote vm, set the job thread priority low (see CreateRegistry.run(IProgressMonitor))
@@ -777,7 +777,7 @@ public class JavaVisualEditorVMController {
 	 */
 	protected static void addInactiveJob() {
 		// It is assumed that we are sync(perProject) at this point.
-		INACTIVE_JOB = new Job("Visual Editor for Java Inactive VM check") {
+		INACTIVE_JOB = new Job(CodegenEditorPartMessages.getString("JavaVisualEditorVMController.InactiveVMCheckJob.Text")) { //$NON-NLS-1$
 
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -786,13 +786,13 @@ public class JavaVisualEditorVMController {
 					// Phase 1 will gather projects active
 					// Phase 2 will get rid of inactive ones.
 					// Phase 3 will deactivate the controller if no projects are left.
-					monitor.beginTask("", 300);
+					monitor.beginTask("", 300); //$NON-NLS-1$
 					// Accumulate list of projects that we have in perProjects that have an active ve.
 					// Those not listed are the ones that may need to be cleaned up.
 					Set activeProjects = new HashSet();
 					IWorkbenchWindow[] ww = PlatformUI.getWorkbench().getWorkbenchWindows();
 					IProgressMonitor subm = new SubProgressMonitor(monitor, 100);
-					subm.beginTask("", ww.length * 100);
+					subm.beginTask("", ww.length * 100); //$NON-NLS-1$
 					for (int i = 0; i < ww.length; i++) {
 						if (subm.isCanceled())
 							return Status.CANCEL_STATUS;
@@ -824,7 +824,7 @@ public class JavaVisualEditorVMController {
 							return Status.CANCEL_STATUS;	// We can skip phase 3 because we haven't processed any projects yet.
 						int clearCount = INACTIVE_COUNT - 2;
 						subm = new SubProgressMonitor(monitor, 100);
-						subm.beginTask("", PER_PROJECT.size() * 100);
+						subm.beginTask("", PER_PROJECT.size() * 100); //$NON-NLS-1$
 						for (Iterator iter = PER_PROJECT.values().iterator(); iter.hasNext();) {
 							if (subm.isCanceled())
 								break;	// Don't go any further here, but we still need to check if empty so that we can deactive, even though canceling.
@@ -877,7 +877,7 @@ public class JavaVisualEditorVMController {
 	
 	protected static RegistryResult createRegistryForDebug(IFile file) throws CoreException {
 		
-		CreateDebugRegistry job = new CreateDebugRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file);
+		CreateDebugRegistry job = new CreateDebugRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file); //$NON-NLS-1$
 		job.schedule(); // Start it up
 		while (true) {
 			try {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.25 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.26 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 import java.util.*;
@@ -48,7 +48,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class JavaBeanModelBuilder {
 
-	public static final String ASTNODE_SOURCE_PROPERTY = "org.eclipse.ve.codegen.source";
+	public static final String ASTNODE_SOURCE_PROPERTY = "org.eclipse.ve.codegen.source"; //$NON-NLS-1$
   
   String     fFileName = null ;     //  Java Source 
   char[]    fFileContent = null ;
@@ -120,7 +120,7 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 	//       we may consider to turn off some errors ... as we are not interested in
 	//       to compile all of this, but rather bits of pieaces of this
 
-	TimerTests.basicTest.startStep("AST creation");	
+	TimerTests.basicTest.startStep("AST creation");	 //$NON-NLS-1$
 	try {
 		String sourceBeingParsed = null;
 		CompilationUnit result;
@@ -165,12 +165,12 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 				}
 			}
 		}
-		TimerTests.basicTest.stopStep("AST creation");
+		TimerTests.basicTest.stopStep("AST creation"); //$NON-NLS-1$
 		return result ;
 	} catch (CodeGenSyntaxError e) {
 		throw e;	// Pass it on, don't log it twice.
 	} catch (Exception e) {
-		throw new CodeGenSyntaxError ("JVE Parsing Error: "+e.getMessage());
+		throw new CodeGenSyntaxError ("JVE Parsing Error: "+e.getMessage()); //$NON-NLS-1$
 	}
 } 
  
@@ -232,7 +232,7 @@ void  setLineSeperator() {
  * This method will remove these instances from the model
  */
 protected void cleanModel () {
-	fMonitor.subTask("Cleaning model");
+	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.CleanModel")); //$NON-NLS-1$
 	Iterator itr = fModel.getBeans().iterator() ;
 	ArrayList err = new ArrayList() ;
 	
@@ -320,8 +320,8 @@ protected List getInnerTypes() {
 }
 
 protected  void analyzeEvents(IVisitorFactoryRule visitorFactoryRule) {
-	TimerTests.basicTest.startStep("Parse Events");
-	fMonitor.subTask("Analyzing events");
+	TimerTests.basicTest.startStep("Parse Events"); //$NON-NLS-1$
+	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.AnalyzeEvents")); //$NON-NLS-1$
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
 	// Scan methods for event expressions.
@@ -352,7 +352,7 @@ protected  void analyzeEvents(IVisitorFactoryRule visitorFactoryRule) {
 			break ;
 		}
 	  }
-	  TimerTests.basicTest.stopStep("Parse Events");
+	  TimerTests.basicTest.stopStep("Parse Events"); //$NON-NLS-1$
 }
 
 /**
@@ -365,8 +365,8 @@ public IBeanDeclModel build () throws CodeGenException {
 
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.
-	fMonitor.beginTask("Building model: ", determineWorkAmount());
-	fMonitor.subTask("Parsing source");
+	fMonitor.beginTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.BuildingModel"), determineWorkAmount()); //$NON-NLS-1$
+	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.ParsingSource")); //$NON-NLS-1$
     JavaElementInfo[] jdtMethods=null;
     if (fSync!=null) {         	
         fastCU = ParseJavaCode (new SubProgressMonitor(fMonitor, 100)) ;        
@@ -453,7 +453,7 @@ public IBeanDeclModel build () throws CodeGenException {
  private IVisitorFactoryRule determineVisitorFactoryRule(TypeDeclaration declaration) {
 	 IVisitorFactoryRule visitorFactory = (IVisitorFactoryRule) CodeGenUtil.getEditorStyle(fModel).getRule(IVisitorFactoryRule.RULE_ID) ;
 	 Name superClassName = declaration.getSuperclass();
-	 String superClassFQN = "java.lang.Object"; // default to java.lang.Object class if it extends nothing or cannot be resolved.
+	 String superClassFQN = "java.lang.Object"; // default to java.lang.Object class if it extends nothing or cannot be resolved. //$NON-NLS-1$
 	 if(superClassName!=null){
 		 TypeResolver.Resolved resolved = fModel.getResolver().resolveType(superClassName);
 		 if(resolved!=null)
@@ -484,7 +484,7 @@ private int determineWorkAmount() {
 }
 
 protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor, IVisitorFactoryRule visitorFactoryRule){
-	TimerTests.basicTest.startStep("Creating Instance Var. BeanParts");
+	TimerTests.basicTest.startStep("Creating Instance Var. BeanParts"); //$NON-NLS-1$
 	if (visitorFactoryRule != null) {
 	 	TypeVisitor v = visitorFactoryRule.getTypeVisitor();
 		v.initialize(type,model, tryAgain,false, visitorFactoryRule) ;
@@ -492,7 +492,7 @@ protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElemen
 		v.setProgressMonitor(monitor);
 		v.visit()  ;
 	}
-	TimerTests.basicTest.stopStep("Creating Instance Var. BeanParts");
+	TimerTests.basicTest.stopStep("Creating Instance Var. BeanParts"); //$NON-NLS-1$
 }
 
 }

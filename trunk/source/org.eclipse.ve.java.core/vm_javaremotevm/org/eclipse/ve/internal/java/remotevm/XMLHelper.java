@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: XMLHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.io.*;
@@ -35,8 +35,8 @@ public static Object getDecodedObject(String xmlString){
 	if (!LOOKEDUP_DECODER){
 		LOOKEDUP_DECODER = true;
 		try {
-			XML_DECODER_CLASS = Class.forName("java.beans.XMLDecoder");
-			DECODER_READOBJECT_METHOD = XML_DECODER_CLASS.getMethod("readObject",null);
+			XML_DECODER_CLASS = Class.forName("java.beans.XMLDecoder"); //$NON-NLS-1$
+			DECODER_READOBJECT_METHOD = XML_DECODER_CLASS.getMethod("readObject",null); //$NON-NLS-1$
 			DECODER_CONSTRUCTOR = XML_DECODER_CLASS.getConstructor(new Class[]{ByteArrayInputStream.class});
 		} catch (ClassNotFoundException e) {
 		} catch (NoSuchMethodException e) {		
@@ -63,9 +63,9 @@ public static String getEncodedString(Object bean){
 	if (!LOOKEDUP_ENCODER){
 		LOOKEDUP_ENCODER = true;
 		try {
-			XML_ENCODER_CLASS = Class.forName("java.beans.XMLEncoder");
-			ENCODER_WRITEOBJECT_METHOD = XML_ENCODER_CLASS.getMethod("writeObject",new Class[] {Object.class});
-			ENCODER_CLOSE_METHOD = XML_ENCODER_CLASS.getMethod("close",null);			
+			XML_ENCODER_CLASS = Class.forName("java.beans.XMLEncoder"); //$NON-NLS-1$
+			ENCODER_WRITEOBJECT_METHOD = XML_ENCODER_CLASS.getMethod("writeObject",new Class[] {Object.class}); //$NON-NLS-1$
+			ENCODER_CLOSE_METHOD = XML_ENCODER_CLASS.getMethod("close",null);			 //$NON-NLS-1$
 			ENCODER_CONSTRUCTOR = XML_ENCODER_CLASS.getConstructor(new Class[]{BufferedOutputStream.class});
 		} catch (ClassNotFoundException e) {
 		} catch (NoSuchMethodException e) {		

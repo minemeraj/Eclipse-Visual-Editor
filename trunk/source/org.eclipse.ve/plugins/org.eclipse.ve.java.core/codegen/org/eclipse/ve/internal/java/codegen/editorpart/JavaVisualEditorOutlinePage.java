@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -64,10 +64,10 @@ import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPar
  */
 class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
-	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif");
-	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif");
-	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title");
-	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip");
+	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif"); //$NON-NLS-1$
+	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif"); //$NON-NLS-1$
+	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title"); //$NON-NLS-1$
+	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
 	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IVisitorFactoryRule.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -34,7 +34,7 @@ import org.eclipse.ve.internal.java.codegen.java.TypeVisitor;
  */
 public interface IVisitorFactoryRule extends IRule {
 	
-	public static final String RULE_ID = "ruleVisitorFactory";
+	public static final String RULE_ID = "ruleVisitorFactory"; //$NON-NLS-1$
 	
 	public TypeVisitor getTypeVisitor();
 	public MethodVisitor getMethodVisitor();

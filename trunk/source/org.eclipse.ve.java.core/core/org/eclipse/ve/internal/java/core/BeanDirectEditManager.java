@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDirectEditManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-21 22:48:06 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -41,7 +41,7 @@ public class BeanDirectEditManager extends CDEDirectEditManager {
 	 * Gets the property value for the specified structural feature sfProperty
 	 */
 	protected String getPropertyValue(EStructuralFeature sfProperty) {
-		String initialText = "";
+		String initialText = ""; //$NON-NLS-1$
 		// retrieve the property's value from the model
 		IJavaObjectInstance bean = (IJavaObjectInstance) getEditPart().getModel();
 		if (bean.eIsSet(sfProperty)) {

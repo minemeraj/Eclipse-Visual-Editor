@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 
@@ -101,7 +101,7 @@ protected boolean isSimpleObject(IJavaObjectInstance obj) {
     if (obj == null) return true ;
     else {    
        String type = obj.getJavaType().getQualifiedName() ;
-       if (type.equals("java.lang.String")) return true ;
+       if (type.equals("java.lang.String")) return true ; //$NON-NLS-1$
     }
     return false ;
 }

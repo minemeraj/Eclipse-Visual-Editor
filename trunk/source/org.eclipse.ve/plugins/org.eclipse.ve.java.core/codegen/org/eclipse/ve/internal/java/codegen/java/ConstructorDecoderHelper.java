@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-01 20:57:55 $ 
+ *  $Revision: 1.34 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -384,15 +384,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			if(type.isPrimitiveType())
 				return true;
 			String typeName = resolveType(type);
-			if(		"java.lang.String".equals(typeName) ||
-					"java.lang.Character".equals(typeName) ||
-					"java.lang.Byte".equals(typeName) ||
-					"java.lang.Short".equals(typeName) ||
-					"java.lang.Integer".equals(typeName) ||
-					"java.lang.Long".equals(typeName) ||
-					"java.lang.Boolean".equals(typeName) ||
-					"java.lang.Float".equals(typeName) ||
-					"java.lang.Double".equals(typeName))
+			if(		"java.lang.String".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Character".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Byte".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Short".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Integer".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Long".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Boolean".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Float".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Double".equals(typeName)) //$NON-NLS-1$
 				return true;
 			return false;
 		}
@@ -478,12 +478,12 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			if (idx>=0)
 				type = type.substring(idx+1);
 			type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
-			sb.append(type+" ");
+			sb.append(type+" "); //$NON-NLS-1$
 		}
 		sb.append(fbeanPart.getSimpleName());
-		sb.append(" = ");
+		sb.append(" = "); //$NON-NLS-1$
 		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
-		sb.append(";");
+		sb.append(";"); //$NON-NLS-1$
 		sb.append(fbeanPart.getModel().getLineSeperator());
 		return sb.toString();
 		

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -63,7 +63,7 @@ public class VEexpressionPriority {
 		if (priority<0) 
 			return "[NO Priority]"; //$NON-NLS-1$
 		else
-			return "["+priority+", "+index+"]"; //$NON-NLS-1$
+			return "["+priority+", "+index+"]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }
 

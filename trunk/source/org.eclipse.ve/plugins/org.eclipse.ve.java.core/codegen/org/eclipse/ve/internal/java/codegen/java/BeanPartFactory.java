@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.37 $  $Date: 2005-03-13 02:45:14 $ 
+ *  $Revision: 1.38 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 import java.util.*;
@@ -182,8 +182,8 @@ protected void parseInitExpression (BeanPart b) {
 	}
 
    protected IMethod getMainMethod(IType t) {
-		IMethod main = t.getMethod("main", new String[]{Signature
-				.createTypeSignature("String[]", false)});
+		IMethod main = t.getMethod("main", new String[]{Signature //$NON-NLS-1$
+				.createTypeSignature("String[]", false)}); //$NON-NLS-1$
 		if (main != null && main.exists())
 			return main;
 		return null;
@@ -194,7 +194,7 @@ protected void parseInitExpression (BeanPart b) {
 			try {
 				// main already exists
 				// See if there are any statement in it.
-				String clazz = "class Foo {\n" + main.getSource() + "\n}";
+				String clazz = "class Foo {\n" + main.getSource() + "\n}"; //$NON-NLS-1$ //$NON-NLS-2$
 				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(clazz.toCharArray());
 				parser.setSourceRange(0, clazz.length());
@@ -777,7 +777,7 @@ public static void updateInstanceInitString(BeanPart bp) {
     if (exp != null && exp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
     	// we should not be here anymore !!!!!!!!
     	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-    		JavaVEPlugin.log("BeanPartFactory.updateInstanceInitString(): Should not be here",Level.WARNING);    	
+    		JavaVEPlugin.log("BeanPartFactory.updateInstanceInitString(): Should not be here",Level.WARNING);    	 //$NON-NLS-1$
     }
 }
 

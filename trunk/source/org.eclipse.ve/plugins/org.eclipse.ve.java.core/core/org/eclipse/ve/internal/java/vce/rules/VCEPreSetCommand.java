@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.util.*;
@@ -57,7 +57,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Key in Annotation's KeyHolder for the BeanLocation override for a particular instance.
 	 * The KeyValue entry will be a Keyed.
 	 */
-	public static final String BEAN_LOCATION_KEY = "org.eclipse.ve.java.BeanLocation"; 
+	public static final String BEAN_LOCATION_KEY = "org.eclipse.ve.java.BeanLocation";  //$NON-NLS-1$
 	
 	protected EditDomain domain;
 	protected EObject target;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.21 $  $Date: 2005-03-28 19:08:21 $ 
+ *  $Revision: 1.22 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -100,7 +100,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 	        	fContent = fft.toString();
 	        }
         }else{
-        	fContent = "";
+        	fContent = ""; //$NON-NLS-1$
         }
         return fContent ;
     }

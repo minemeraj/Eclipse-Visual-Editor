@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: AbstractClassGenerator.java,v $
-*  $Revision: 1.5 $
+*  $Revision: 1.6 $
 */
 
 package org.eclipse.ve.internal.java.codegen.util;
@@ -40,7 +40,7 @@ public abstract class AbstractClassGenerator {
 	};
 	
 
-	protected	String			fNL=System.getProperties().getProperty("line.separator");
+	protected	String			fNL=System.getProperties().getProperty("line.separator"); //$NON-NLS-1$
 	protected   String[]		fComments = null;
 	protected   String		   	fPackageName=null;
 	protected  	String		   	fClassName=null;
@@ -74,7 +74,7 @@ public abstract class AbstractClassGenerator {
 	protected abstract String getTemplateDirPath() ;
 
 	public String toString() {
-		return "ClassGenerator for: " + fClassName ;
+		return "ClassGenerator for: " + fClassName ; //$NON-NLS-1$
 	}
 
 

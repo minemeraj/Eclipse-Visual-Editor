@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -336,7 +336,7 @@ protected IMethod getReturnMethod(ICompilationUnit cu, BeanPart bp){
 			for (int mc = 0; mc < methods.length; mc++) {
 				String returnType = Signature.toString(methods[mc].getReturnType());
 				if(	returnType!=null &&
-						!returnType.equals("void") &&
+						!returnType.equals("void") && //$NON-NLS-1$
 						bp.getReturnedMethod().getMethodName().equals(methods[mc].getElementName())) {
 					Resolved r = resolver.resolveType(returnType);
 					if (r != null && bp.getType().equals(r.getName())){
@@ -368,7 +368,7 @@ public static String getTypeFromAST(Type type){
 	String t = new String();
 	if(type.isArrayType()){
 		ArrayType at = (ArrayType) type;
-		t = getTypeFromAST(at.getComponentType()) + "[]";
+		t = getTypeFromAST(at.getComponentType()) + "[]"; //$NON-NLS-1$
 	}else if(type.isPrimitiveType()){
 		t = ((PrimitiveType)type).getPrimitiveTypeCode().toString();
 	}else if(type.isQualifiedType()){
@@ -452,11 +452,11 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 						String methodName = bpRetMethod.getElementName().toLowerCase(Locale.getDefault());
 						String varName = visitor.getVariableName().getIdentifier();
 						String varNameLower = varName.toLowerCase(Locale.getDefault());
-						if(	methodName.startsWith("get") &&
+						if(	methodName.startsWith("get") && //$NON-NLS-1$
 								methodName.indexOf(varNameLower)==3 &&
 								methodName.length()==varNameLower.length()+3){
 									//	Excatly of the form get<VarName>()
-									String newMethodName = "get" + newFieldName.toUpperCase(Locale.getDefault()).charAt(0) + newFieldName.substring(1);
+									String newMethodName = "get" + newFieldName.toUpperCase(Locale.getDefault()).charAt(0) + newFieldName.substring(1); //$NON-NLS-1$
 									parser = ASTParser.newParser(AST.JLS2);
 									parser.setSource(cu);
 									cuNode = (CompilationUnit) parser.createAST(null);

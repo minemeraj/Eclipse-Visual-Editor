@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.32 $  $Date: 2005-04-01 21:00:25 $ 
+ *  $Revision: 1.33 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 
@@ -559,9 +559,9 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 		    }
 			else // use full qualifier
 			  qn = jc.getQualifiedName();
-			return "new " + qn + "()";
+			return "new " + qn + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else
-			return "";	// Shouldn't get here for prims. They should have an allocation.
+			return "";	// Shouldn't get here for prims. They should have an allocation. //$NON-NLS-1$
 	}
 }
 /*public static String getResolvedInitString(Statement stmt, ITypeResolver resolver){
@@ -814,7 +814,7 @@ public static void logParsingError(String exp, String method, String msg, boolea
 		   context = "as an event registration" ; //$NON-NLS-1$
 		else
 		   context = "as a property setting" ; //$NON-NLS-1$
-		JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 }
 

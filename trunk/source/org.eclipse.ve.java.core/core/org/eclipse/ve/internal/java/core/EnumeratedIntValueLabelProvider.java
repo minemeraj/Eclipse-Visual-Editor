@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-23 23:19:39 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -48,6 +48,6 @@ public String getText(Object element){
 			return FILL_NAMES[i];
 		}
 	}
-	return "";
+	return ""; //$NON-NLS-1$
 }
 }

@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventCallBackExpressionVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
+
+import java.text.MessageFormat;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Statement;
@@ -41,7 +43,7 @@ public void initialize(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclM
 	 */
 	public void visit() {
 		// We can parse the callback here to see that it makes actual callbacks here before adding it in.
-		getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()"+" : "+fExpression.getCodeContent());
+		getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("EventCallBackExpressionVisitor.TypeMethodExpression"), new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fExpression.getCodeContent()})); //$NON-NLS-1$
 		fExpression.setBean(fBean) ;
 		fMethod.setModel(fBean.getModel()) ;
 	    

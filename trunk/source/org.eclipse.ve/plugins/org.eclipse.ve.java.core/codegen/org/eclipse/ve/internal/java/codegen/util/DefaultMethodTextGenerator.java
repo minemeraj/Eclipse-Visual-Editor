@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultMethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -56,8 +56,8 @@ public class DefaultMethodTextGenerator extends AbstractMethodTextGenerator {
 	protected AbstractMethodTextGenerator.MethodInfo getInfo() {
 	   if (fInfo != null) return fInfo ;
 	   fComments = new String[] { IMethodTextGenerator.DEFAULT_METHOD_COMMENT+finitbeanName,
-	   		"", 
-	   		"@return "+((IJavaObjectInstance)fComponent).getJavaType().getQualifiedName()
+	   		"",  //$NON-NLS-1$
+	   		"@return "+((IJavaObjectInstance)fComponent).getJavaType().getQualifiedName() //$NON-NLS-1$
 	   };
        fInfo = new AbstractMethodTextGenerator.MethodInfo(true) ;
        return fInfo ;

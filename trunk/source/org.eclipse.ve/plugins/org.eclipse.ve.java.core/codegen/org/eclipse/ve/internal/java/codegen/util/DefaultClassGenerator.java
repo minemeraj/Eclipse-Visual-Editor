@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.6 $
+*  $Revision: 1.7 $
 */
 
 
@@ -88,10 +88,10 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 	}
 	
 	public void generateClass(IProgressMonitor monitor) throws CodeGenException {
-	    if (fProject == null) throw new CodeGenException ("Project is not set") ;
+	    if (fProject == null) throw new CodeGenException ("Project is not set") ; //$NON-NLS-1$
 		IPackageFragment pkg = generatePackageIfNeeded(monitor);
 		try {
-			ICompilationUnit cu = pkg.createCompilationUnit(fClassName+".java",getTemplteContent(),true,monitor);
+			ICompilationUnit cu = pkg.createCompilationUnit(fClassName+".java",getTemplteContent(),true,monitor); //$NON-NLS-1$
 			if (fFormatTemplate) {
 				ICompilationUnit wc = cu.getWorkingCopy(monitor);
 				if (PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEGEN_ADD_COMMENTS)) {
@@ -103,7 +103,7 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 						if (wc.getPackageDeclarations().length>0) {
 						 // The type template will generate the package header
 						 ISourceRange sr = (ISourceRange) wc.getPackageDeclarations()[0].getSourceRange() ;
-						 wc.getBuffer().replace(sr.getOffset(),sr.getLength(),"");
+						 wc.getBuffer().replace(sr.getOffset(),sr.getLength(),""); //$NON-NLS-1$
 						}						
 						String content = CodeGeneration.getCompilationUnitContent(wc,comment,wc.getSource(), fNL );						
 						wc.getBuffer().setContents(content);

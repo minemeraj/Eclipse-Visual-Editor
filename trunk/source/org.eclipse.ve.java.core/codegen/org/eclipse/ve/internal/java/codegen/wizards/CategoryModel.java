@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: CategoryModel.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -65,13 +65,13 @@ public class CategoryModel {
 
 	public String getName() {
 		if (configElement != null)
-			return configElement.getAttribute("name");
+			return configElement.getAttribute("name"); //$NON-NLS-1$
 		return null;
 	}
 
 	public String getId() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("id");
+			return configElement.getAttributeAsIs("id"); //$NON-NLS-1$
 		return null;
 	}
 
@@ -81,7 +81,7 @@ public class CategoryModel {
 
 	public int getPriority() {
 		if (configElement != null) {
-			String priority = configElement.getAttributeAsIs("priority");
+			String priority = configElement.getAttributeAsIs("priority"); //$NON-NLS-1$
 			if (priority != null) {
 				try {
 					return Integer.parseInt(priority);
@@ -95,9 +95,9 @@ public class CategoryModel {
 	}
 
 	public boolean getDefaultExpand() {
-		String defaultExpand = configElement.getAttributeAsIs("defaultExpand");
+		String defaultExpand = configElement.getAttributeAsIs("defaultExpand"); //$NON-NLS-1$
 		if (defaultExpand != null)
-			return (defaultExpand.equalsIgnoreCase("true")) ? true : false;
+			return (defaultExpand.equalsIgnoreCase("true")) ? true : false; //$NON-NLS-1$
 		return true;
 	}
 

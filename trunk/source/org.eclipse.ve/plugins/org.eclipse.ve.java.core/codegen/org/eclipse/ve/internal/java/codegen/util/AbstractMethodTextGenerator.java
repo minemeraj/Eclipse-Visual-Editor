@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -100,7 +100,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
     protected abstract AbstractMethodTextGenerator.MethodInfo getInfo();
 
     public String toString() {
-    	return super.toString() + ": " + fmethodName ;
+    	return super.toString() + ": " + fmethodName ; //$NON-NLS-1$
     }
 
 

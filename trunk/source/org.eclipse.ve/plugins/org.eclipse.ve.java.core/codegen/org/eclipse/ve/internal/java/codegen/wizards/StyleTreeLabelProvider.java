@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: StyleTreeLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
@@ -49,7 +49,7 @@ public class StyleTreeLabelProvider extends LabelProvider {
 				return uiImages.getImage(org.eclipse.jdt.ui.ISharedImages.IMG_OBJS_CLASS);
 			} else {
 				bundlename = visualElementModel.getContributorBundleName();
-				imageId = bundlename + "/" + imagename;
+				imageId = bundlename + "/" + imagename; //$NON-NLS-1$
 			}
 			Image image = (Image) imageCache.get(imageId);
 			if (image == null) {
@@ -66,13 +66,13 @@ public class StyleTreeLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof CategoryModel) {
 			if (((CategoryModel) element).getName() == null) {
-				return "Style Name Error";
+				return CodegenWizardsMessages.getString("StyleTreeLabelProvider.StyleNameError_ERROR_"); //$NON-NLS-1$
 			} else {
 				return ((CategoryModel) element).getName();
 			}
 		} else if (element instanceof VisualElementModel) {
 			if (((VisualElementModel) element).getName() == null) {
-				return "Element Name Error";
+				return CodegenWizardsMessages.getString("StyleTreeLabelProvider.ElementNameError_ERROR_"); //$NON-NLS-1$
 			} else
 				return ((VisualElementModel) element).getName();
 		}

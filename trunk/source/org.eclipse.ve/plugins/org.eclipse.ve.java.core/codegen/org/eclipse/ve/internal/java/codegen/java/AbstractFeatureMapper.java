@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import java.util.logging.Level;
 
@@ -132,7 +132,7 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 			Type tr = ((VariableDeclarationStatement) expr).getType();
 			if (tr instanceof SimpleType) {
 				//TODO: need tor resolve a Simple name
-				return "new" + ((SimpleType) tr).getName().toString();
+				return "new" + ((SimpleType) tr).getName().toString(); //$NON-NLS-1$
 				//return "new" + CodeGenUtil.resolve(((SimpleType)tr).getName(), ???)
 			}
 		}

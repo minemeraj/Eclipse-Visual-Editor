@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.29 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.30 $  $Date: 2005-04-05 22:48:23 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -42,7 +42,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class BeanPart {
     
     public final static String         THIS_NAME = "this" ; //$NON-NLS-1$
-    public final static String		 THIS_HANDLE = "_this_Annotation_handle";
+    public final static String		 THIS_HANDLE = "_this_Annotation_handle"; //$NON-NLS-1$
 	
 	String 	fName = null ;
 	String 	fType ;
@@ -824,7 +824,7 @@ public boolean isEquivalent(BeanPart b) {
 						e.getBean().addBadExpresion(e);
 						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 							JavaVEPlugin.log(
-								"BeanPart.resolveParentExpressions() : Did not Decoded: "
+								"BeanPart.resolveParentExpressions() : Did not Decoded: " //$NON-NLS-1$
 										+ e, Level.FINE); //$NON-NLS-1$
 					}
 				} 

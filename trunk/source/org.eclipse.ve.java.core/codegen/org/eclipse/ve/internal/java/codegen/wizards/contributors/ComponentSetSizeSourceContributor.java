@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.java.codegen.wizards.contributors;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentSetSizeSourceContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 import java.net.URL;
@@ -48,7 +48,7 @@ public boolean needsFormatting() {
  * @see org.eclipse.ve.internal.java.core.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
  */
 public URL getTemplateLocation() {
-	return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/ComponentSetSizeSourceTemplate.javajet"));
+	return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/ComponentSetSizeSourceTemplate.javajet")); //$NON-NLS-1$
 }
 
 

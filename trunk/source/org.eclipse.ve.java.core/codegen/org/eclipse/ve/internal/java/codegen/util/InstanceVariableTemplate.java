@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableTemplate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:22 $ 
  */
 public class InstanceVariableTemplate {
 	
@@ -25,7 +25,7 @@ final public static String MODIFIER    =   "private" ; //$NON-NLS-1$
 	String fComments [] ;
 	String fType ;
 	String fName ;
-	String    fIndent="\t" ;
+	String    fIndent="\t" ; //$NON-NLS-1$
 	String fSeperator = System.getProperty("line.separator") ; //$NON-NLS-1$
 
 

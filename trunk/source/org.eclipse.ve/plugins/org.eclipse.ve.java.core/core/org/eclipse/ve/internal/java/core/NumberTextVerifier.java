@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NumberTextVerifier.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import org.eclipse.swt.events.VerifyEvent;
@@ -94,7 +94,7 @@ public class NumberTextVerifier implements VerifyListener {
 		if (e.widget instanceof Text) {
 			StringBuffer textbuf = new StringBuffer(((Text)e.widget).getText());
 			textbuf.replace(e.start, e.end, e.text);
-			if (textbuf.length() == 0 || (min < 0 && textbuf.toString().equals("-"))) {
+			if (textbuf.length() == 0 || (min < 0 && textbuf.toString().equals("-"))) { //$NON-NLS-1$
 				newValue = defaultValue;
 				return;
 			}
