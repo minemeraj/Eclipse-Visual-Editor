@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Set Map Version Ids" default="setids" basedir=".">
 
-<target name="setids" depends="version" description="Set maps ids. (Define property id for id, and version to cause CVS project versioning to occur)" >
+<target name="setids" description="Set maps ids. (Define property id for id)" >
 	<fail message="No id passed in." unless="id"/>
 	<copy file="ve.map.template" tofile="ve.map" overwrite="true">
 		<filterset >
@@ -12,7 +12,7 @@
 	<eclipse.refreshLocal resource="${mypath}" depth="infinite"/>
 </target>
 
-<target name="version" if="version" >
+<target name="version" description="Use this target to version the projects (Define property id for version id)" >
 	<fail message="No id passed in." unless="id"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}"/>
