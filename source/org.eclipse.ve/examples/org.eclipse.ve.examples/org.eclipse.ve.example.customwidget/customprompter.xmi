@@ -1,0 +1,17 @@
+<xmi:XMI xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI" 
+  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
+  <palette:CategoryCmp xmi:id="swtCat0">
+    <categoryLabel xsi:type="utility:ConstantString" string="Custom"/>
+    <cmpGroups xsi:type="palette:GroupCmp">
+    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
+          creationClassURI="java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/>
+        <entryLabel xsi:type="utility:ConstantString" string="Prompter"/>
+      </cmpEntries> 
+      
+    </cmpGroups>
+  </palette:CategoryCmp>
+</xmi:XMI>
