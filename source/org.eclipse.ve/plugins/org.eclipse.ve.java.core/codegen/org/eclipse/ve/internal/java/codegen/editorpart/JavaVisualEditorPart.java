@@ -11,10 +11,10 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.75 $  $Date: 2005-01-10 19:26:52 $ 
+ *  $Revision: 1.76 $  $Date: 2005-01-20 19:11:43 $ 
  */
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -110,6 +110,8 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
+import sun.misc.SoftCache;
+
 
 
 /**
@@ -145,6 +147,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
 	protected IDiagramModelBuilder modelBuilder;
+
 	
 	// Is the model ready. This is needed because sometimes the viewers come up before the model has been
 	// instantiated but it is in the modelBuilder. This causes NPE's. So only when we are about
@@ -903,7 +906,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private static final URI basePaletteRoot = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi#java_palette"); //$NON-NLS-1$
-	
+	public static class  PaletteStream extends BufferedInputStream {
+
+		public PaletteStream(InputStream in) {
+			super(in);
+		}
+		public PaletteStream(InputStream in, int size) {
+			super(in, size);
+		}
+		boolean closed = false;
+		public void close() throws IOException {
+			if (!closed)
+			   in.close();			
+		}
+		
+		public boolean markSupported() {
+			return false;
+		}
+	}	
 	/*
 	 * A default contributor that works with the palette extension point format. This here so that 
 	 * the default registration contributor can do the same thing with its palette contribution.
@@ -916,6 +936,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * can be reused.
 		 */
 		public IConfigurationElement paletteContribution;
+		static SoftCache paletteCategories = new SoftCache(10);
+
 		
 		/* (non-Javadoc)
 		 * @see org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor#contributePalleteCats(java.util.List, org.eclipse.emf.ecore.resource.ResourceSet)
@@ -938,8 +960,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					return false;	// invalid
 			}
 			URI catsURI = URI.createURI(JEMUtilPlugin.PLATFORM_PROTOCOL+":/"+JEMUtilPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat); //$NON-NLS-1$
-			Resource res = rset.getResource(catsURI, true);
-			List cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
+
+			List cats = (List) paletteCategories.get(catsURI.toString());
+			if (cats == null) {			
+				Resource res = rset.getResource(catsURI, true);
+				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
+				paletteCategories.put(catsURI.toString(),cats);				
+			}
+			
+			
 			if (cats.isEmpty())
 				return false;
 			// Check to see if the first cat is already in the list of categories. This means we already processed this once.

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.51 $  $Date: 2005-01-20 19:11:42 $ 
+ *  $Revision: 1.52 $  $Date: 2005-01-20 19:14:26 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -639,6 +639,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 		// not block calls to isBusy(), pause() and such while the loadModel is going on
 		pm.beginTask("", 100);
 		pm.subTask(CodegenEditorPartMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
+		ReverseParserJob.cancelJobs();
 		Object l = fWorkingCopy==null? new Object() : fWorkingCopy.getDocLock();
 		synchronized (l) {
 			floadInProgress = true;
