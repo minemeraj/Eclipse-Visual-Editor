@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.13 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.14 $  $Date: 2004-10-04 20:29:04 $ 
  */
 
 import java.util.ArrayList;
@@ -179,6 +179,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		createCodeGenerationTab();
 		createStylesTab();
 		initializeGUIControlsFromStore();
+		
+		applyDialogFont(tabFolder);
 
 		return tabFolder;
 	}
