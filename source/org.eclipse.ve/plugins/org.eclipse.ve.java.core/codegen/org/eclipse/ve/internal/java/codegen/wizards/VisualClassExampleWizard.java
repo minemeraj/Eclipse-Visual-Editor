@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-16 21:56:49 $ 
  */
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.wizards.NewClassCreationWizard;
@@ -77,4 +78,12 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 		}			
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getSchedulingRule()
+	 */
+	protected ISchedulingRule getSchedulingRule() {
+		if(fPage!=null)
+			return fPage.getModifiedResource();
+		return super.getSchedulingRule();
+	}
 }
