@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-23 23:19:39 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -28,19 +28,19 @@ public class EnumeratedIntValueLabelProvider extends LabelProvider  {
 
 	protected EditDomain editDomain;
 	protected String[] FILL_NAMES;
-	protected Integer[] FILL_VALUES;
+	protected Number[] FILL_VALUES;
 	
-public EnumeratedIntValueLabelProvider(String[] NAMES, Integer[] VALUES){
-	FILL_NAMES = NAMES;
-	FILL_VALUES = VALUES;
+public EnumeratedIntValueLabelProvider(String[] names, Number[] values){
+	FILL_NAMES = names;
+	FILL_VALUES = values;
 }
 
 public String getText(Object element){
 	int intValue = 0;
 	if(element instanceof IJavaDataTypeInstance){
-		intValue = ((IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance)element)).intValue();
+		intValue = ((INumberBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance)element)).intValue();
 	} else {
-		intValue = ((Integer)element).intValue();		
+		intValue = ((Number)element).intValue();		
 	}
 	// Match against the int value
 	for (int i=0; i<FILL_VALUES.length; i++){

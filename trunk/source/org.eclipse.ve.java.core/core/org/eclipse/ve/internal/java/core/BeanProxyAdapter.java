@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.33 $  $Date: 2005-02-21 14:42:25 $ 
+ *  $Revision: 1.34 $  $Date: 2005-02-23 23:19:39 $ 
  */
 
 import java.util.*;
@@ -33,9 +33,8 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.*;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
@@ -239,17 +238,8 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) sf);
 		// Only apply if this if it is not the this part, or if it is the
 		// this part, then only if it is a non-local attribute.
-		if (!isThisPart() || !isAttributeLocal(sf)) {
-			BeanFeatureDecorator featureDecor = null; 
-			if (propertyDecorator == null || propertyDecorator.getWriteMethod() == null) {
-				// Note: fields are handled in kludge way, need a better way of doing this. This is being put off until next release.
-				// This could be a field instead, see if it has a feature decor. 
-				// When we rewrite this, need to take into consideration that the field may be final, in which case it
-				// would be read only.
-				featureDecor = (BeanFeatureDecorator)Utilities.getDecorator((EModelElement)sf,BeanFeatureDecorator.class);
-			}
-			
-			if ((propertyDecorator != null && propertyDecorator.isWriteable()) || featureDecor != null) {
+		if (!isThisPart() || !isAttributeLocal(sf)) {			
+			if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
 				IJavaInstance javaValue = (IJavaInstance)newValue;
 				IBeanProxyHost settingBean = null;
 				if (javaValue != null) {
@@ -263,7 +253,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 					// get race conditions of which apply get's done first.
 					if (fOrigSettingProxies == null || !getOriginalSettingsTable().containsKey(sf)) {
 						// This is the first time for this setting, so we save the current value for canceling.
-						IBeanProxy origValue = getBeanProxyValue(sf, propertyDecorator, featureDecor);
+						IBeanProxy origValue = getBeanProxyValue(sf, propertyDecorator);
 						getOriginalSettingsTable().put(sf, origValue);
 					}
 					if (settingBean != null) {
@@ -273,7 +263,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 					if (settingBean != null && settingBean.getErrorStatus() == ERROR_SEVERE)
 						processError(sf, ((ExceptionError) settingBean.getErrors().get(0)).error);
 					else
-						applyBeanFeature(sf, propertyDecorator, featureDecor, settingBean != null ? settingBean.getBeanProxy() : null);
+						applyBeanFeature(sf, propertyDecorator, settingBean != null ? settingBean.getBeanProxy() : null);
 				}
 			}
 		} 
@@ -288,24 +278,15 @@ public void applyBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature,
 	// Only apply if this if it is not the this part, or if it is the
 	// this part, then only if it is a non-local attribute.
 	if (!isThisPart() || !isAttributeLocal(aBeanPropertyFeature)) {
-		BeanFeatureDecorator featureDecor = null; 
-		if (propertyDecorator == null || propertyDecorator.getWriteMethod() == null) {
-			// Note: fields are handled in kludge way, need a better way of doing this. This is being put off until next release.
-			// This could be a field instead, see if it has a feature decor. 
-			// When we rewrite this, need to take into consideration that the field may be final, in which case it
-			// would be read only.
-			featureDecor = (BeanFeatureDecorator)Utilities.getDecorator((EModelElement)aBeanPropertyFeature, BeanFeatureDecorator.class);
-		}
-		
-		applyBeanFeature(aBeanPropertyFeature, propertyDecorator, featureDecor, aproxy);
+		applyBeanFeature(aBeanPropertyFeature, propertyDecorator, aproxy);
 	}
 }
 
-protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) {
+protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , IBeanProxy settingBeanProxy) {
 	try {
 
 		if (getBeanProxy().isValid()) {
-			primApplyBeanFeature(sf, propDecor, featureDecor, settingBeanProxy);
+			primApplyBeanFeature(sf, propDecor, settingBeanProxy);
 			clearError(sf);		
 			revalidateBeanProxy();			
 		}
@@ -327,7 +308,7 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
  * This can be overridden. Overrides shouldn't catch exceptions except if they can clean them up to mean a good apply was done.
  * Otherwise, applyBeanFeature will catch exceptions and mark the errors correctly.
  */
-protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) throws ThrowableProxy {
+protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , IBeanProxy settingBeanProxy) throws ThrowableProxy {
 
 	if (propDecor != null && propDecor.isWriteable()) {
 			BeanProxyUtilities.writeBeanFeature(propDecor , getBeanProxy() , settingBeanProxy);	
@@ -586,7 +567,7 @@ protected void canceled(EStructuralFeature sf , Object oldValue, int position) {
 					// get race conditions of which cancel get's done first.
 					// Only apply the value if we actually do have one to apply
 					if ( fOrigSettingProxies != null && fOrigSettingProxies.containsKey(sf)){
-						applyBeanFeature(sf, propertyDecorator, featureDecor, (IBeanProxy)fOrigSettingProxies.get(sf));
+						applyBeanFeature(sf, propertyDecorator, (IBeanProxy)fOrigSettingProxies.get(sf));
 					}
 					
 					clearError(sf);	// Clear the error for this feature, if one was created. This could of happened
@@ -673,7 +654,7 @@ protected IBeanProxy getInternalBeanPropertyProxyValue(EStructuralFeature aBeanP
 	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)aBeanPropertyAttribute);
 	// If we have a properyt decorator then it has a get method so just call it
 	if ( propertyDecorator != null && propertyDecorator.isReadable()) {
-		return getBeanProxyValue(aBeanPropertyAttribute, propertyDecorator, null);
+		return getBeanProxyValue(aBeanPropertyAttribute, propertyDecorator);
 	} else {
 	    return null;
 	}
@@ -686,7 +667,7 @@ protected IBeanProxy primReadBeanFeature(PropertyDecorator propDecor, IBeanProxy
 		
 }
 
-protected IBeanProxy getBeanProxyValue(EStructuralFeature aBeanPropertyAttribute, PropertyDecorator propertyDecorator, BeanFeatureDecorator featureDecor) {
+protected IBeanProxy getBeanProxyValue(EStructuralFeature aBeanPropertyAttribute, PropertyDecorator propertyDecorator) {
 	if ( propertyDecorator != null && propertyDecorator.isReadable()) {
 		try {
 			return primReadBeanFeature(propertyDecorator,getBeanProxy()) ;
@@ -1062,8 +1043,8 @@ public void invalidateBeanProxy() {
 public void validateBeanProxy() {
 }
 
-protected IModelChangeController getModelChangeController(){
-    return (IModelChangeController)getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+protected ModelChangeController getModelChangeController(){
+    return (ModelChangeController)getBeanProxyDomain().getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 }
 
 }

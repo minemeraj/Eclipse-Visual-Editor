@@ -388,9 +388,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					 */
 					public void run() {
 						// We may not be within the context of a change control, so we need to get a controller to handle the change.
-						IModelChangeController controller =
-							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-						controller.doModelChanges(new Runnable() {
+						getModelChangeController().doModelChanges(new Runnable() {
 							public void run() {
 								// Set the constraints on the component bean.  This will change the size of the component
 								// Because we will be called back with notify and apply the constraints rectangle to the live bean

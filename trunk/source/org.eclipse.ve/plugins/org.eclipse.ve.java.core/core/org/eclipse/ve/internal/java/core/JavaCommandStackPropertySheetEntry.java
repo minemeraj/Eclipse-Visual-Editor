@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaCommandStackPropertySheetEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-23 23:19:39 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -23,7 +23,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.ve.internal.cde.properties.ModelChangeControllerPropertySheetEntry;
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -54,7 +54,7 @@ public class JavaCommandStackPropertySheetEntry extends ModelChangeControllerPro
 		CommandStack stack,
 		JavaCommandStackPropertySheetEntry parent,
 		IPropertySourceProvider provider) {
-		super((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY), stack, parent, provider);
+		super((ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY), stack, parent, provider);
 		this.domain = domain;
 	}
 

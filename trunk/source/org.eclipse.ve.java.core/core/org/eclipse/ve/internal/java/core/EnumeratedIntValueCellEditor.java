@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-23 23:19:39 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringEvaluationException;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
 import org.eclipse.ve.internal.propertysheet.*;
@@ -30,11 +30,11 @@ import org.eclipse.ve.internal.propertysheet.*;
 public class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	protected EditDomain fEditDomain;
 	protected Object[] fSources; 
-	protected Integer[] fill_values;
+	protected Number[] fill_values;
 	protected String[] fill_names;
 	protected String[] file_initStrings;
 	
-public EnumeratedIntValueCellEditor(Composite aComposite, String[] names, Integer[] values, String[] initStrings){
+public EnumeratedIntValueCellEditor(Composite aComposite, String[] names, Number[] values, String[] initStrings){
 	// Create the combo editor with the list of possible fill values
 	super(aComposite, names);
 	fill_names = names;
@@ -43,10 +43,10 @@ public EnumeratedIntValueCellEditor(Composite aComposite, String[] names, Intege
 		fill_values = values;
 	} else {
 		// Evaluate the initStrings to find the Init values
-		fill_values = new Integer[initStrings.length];
+		fill_values = new Number[initStrings.length];
 		for (int i = 0; i < initStrings.length; i++) {
 			try {
-				fill_values[i] = (Integer) InitializationStringParser.evaluate(initStrings[i]);
+				fill_values[i] = (Number) InitializationStringParser.evaluate(initStrings[i]);
 			} catch (InitializationStringEvaluationException e) {
 				JavaVEPlugin.log(e,Level.WARNING);
 			}
@@ -75,12 +75,12 @@ protected int doGetIndex(Object anObject){
 	// The argument is an IJavaInstance.  Get its bean proxy and compare its int to what we have.
 	if (anObject instanceof IJavaInstance) {
 		// get the init string from the real value and set the editor value
-		IIntegerBeanProxy fillValueProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)anObject, JavaEditDomainHelper.getResourceSet(fEditDomain));
+		INumberBeanProxy fillValueProxy = (INumberBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)anObject, JavaEditDomainHelper.getResourceSet(fEditDomain));
 		// The proxy is an int.  which represents one of the values.
 		// Loop the array of fill values and return the index for the one found.
 		fillValue = fillValueProxy.intValue();
 	} else {
-		fillValue = ((Integer)anObject).intValue();
+		fillValue = ((Number)anObject).intValue();
 	}
 	for (int i = 0; i < fill_values.length; i++) {
 		if (fillValue == fill_values[i].intValue()) {
