@@ -222,9 +222,10 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<echo message="HOME: ${eclipse.home}/"/>
+		<available file="${eclipse.home}/plugins/org.eclipse.osgi_3.0.0" property="versionFound"/>
+		<fail unless="versionFound" message="Failed due to 3.0.0 Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
-	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/core.jar"/>
+	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_3.0.0/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.0/core.jar"/>
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
