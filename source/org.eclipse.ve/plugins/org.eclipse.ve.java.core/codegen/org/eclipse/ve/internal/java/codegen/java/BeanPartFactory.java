@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.33 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.34 $  $Date: 2004-09-08 14:27:11 $ 
  */
 
 import java.util.*;
@@ -313,35 +313,29 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
     IMethod firstM = null ;
     try {
 		IMethod[] mtds = t.getMethods() ;
-	    IMethod  nullConstructor = null ;
+	    List constructorList = new ArrayList();
 	    for (int i = 0; i < mtds.length; i++) {	        
 	        IMethod method = mtds[i];
 	        if (firstM == null) firstM = method ;
 	        if (method.isConstructor()) {
-//	            String src = method.getSource() ;
-//	            CDEHack.fixMe("asap") ; //$NON-NLS-1$
-//	            if (src.indexOf(iniMethod.getMethodName()) >= 0)
-//	               return ; // already there
-	            if (method.getNumberOfParameters() == 0) {
-	                // Found a null constructor
-	                nullConstructor = method ;
-	                break ;
-	            }
-	        }
-	        
+	        	constructorList.add(method);
+	        }	        
 	    }
-	    if (nullConstructor != null) {
-	        // Update existing method
-	        
-	        // Is the bean an instance of Applet ??? In this case we do not want to call 
-            // the init method.
-            
-			if (isNeedToCallInit(b)) {
-				MethodParser mp = new MethodParser(nullConstructor, fBeanModel.getLineSeperator());
-				mp.addMethodCallIfNeeded(iniMethod.getMethodName());
-			}
+	    if (constructorList.size()>0) {
+	    	if (isNeedToCallInit(b)) {
+	        // Update existing constructors
+		    	for (int i = 0; i < constructorList.size(); i++) {
+					IMethod constructor = (IMethod)constructorList.get(i);
+			        // Is the bean an instance of Applet ??? In this case we do not want to call 
+		            // the init method.	            					
+					MethodParser mp = new MethodParser(constructor, fBeanModel.getLineSeperator());
+					mp.addMethodCallIfNeeded(iniMethod.getMethodName());
+					// force a reconcile
+					fBeanModel.getCompilationUnit();
+		    	}
+	    	}
         }
-        else { // create one
+        else { // create a null one
             String name = fBeanModel.getCompilationUnit().getOriginalElement().getCorrespondingResource().getName() ;
             name = name.substring(0,name.indexOf(fBeanModel.getCompilationUnit().getOriginalElement().getCorrespondingResource().getFileExtension())-1) ;
             NullConstructorTemplate template = new NullConstructorTemplate(null,
