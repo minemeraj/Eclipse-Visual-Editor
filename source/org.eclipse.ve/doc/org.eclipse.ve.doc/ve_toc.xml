@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
 <toc label="Visual Editor for Java User Guide" topic="topics/calign.html">
    <topic label="Using the Visual Editor for Java">
       <topic label="Visually editing Java applications">
