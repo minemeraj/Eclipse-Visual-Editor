@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:35 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
  */
 
 import java.awt.*;
@@ -143,7 +143,7 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 			try {
 				fServer.doCallback(new ICallbackRunnable() {
 					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackWithParms(fCallbackID, Common.CL_SHOWN, null);						
+						return handler.callbackAsConstants(fCallbackID, Common.CL_SHOWN, null);						
 					}
 				});
 			} catch (CommandException exp) {
@@ -159,7 +159,7 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 			try {
 				fServer.doCallback(new ICallbackRunnable() {
 					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackWithParms(fCallbackID, Common.CL_HIDDEN, null);						
+						return handler.callbackAsConstants(fCallbackID, Common.CL_HIDDEN, null);						
 					}
 				});
 			} catch (CommandException exp) {
@@ -179,7 +179,7 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 					try {
 						fServer.doCallback(new ICallbackRunnable() {
 							public Object run(ICallbackHandler handler) throws CommandException {
-								return handler.callbackWithParms(fCallbackID, Common.CL_REFRESHED, null);						
+								return handler.callbackAsConstants(fCallbackID, Common.CL_REFRESHED, null);						
 							}
 						});
 					} catch (CommandException exp) {

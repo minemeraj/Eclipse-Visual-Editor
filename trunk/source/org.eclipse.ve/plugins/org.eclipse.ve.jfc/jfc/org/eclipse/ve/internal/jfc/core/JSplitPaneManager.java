@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneManager.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
  */
 
 import java.io.InputStream;
@@ -74,7 +74,7 @@ public class JSplitPaneManager implements ICallback {
 		BeanAwtUtilities.invoke_reset_JSplitPane_PreferredSizes_Manager(splitpaneManager);			
 	}
 	
-	/**
+	/*
 	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, IBeanProxy)
 	 */
 	public Object calledBack(int msgID, IBeanProxy parm) {
@@ -84,18 +84,25 @@ public class JSplitPaneManager implements ICallback {
 		return null;
 	}
 
-	/**
+	/*
 	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, Object[])
 	 */
 	public Object calledBack(int msgID, Object[] parms) {
 		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$	
 	}
 
-	/**
+	/*
 	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBackStream(int, InputStream)
 	 */
 	public void calledBackStream(int msgID, InputStream is) {
 		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, java.lang.Object)
+	 */
+	public Object calledBack(int msgID, Object parm) {
+		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$
 	}
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
  */
 
 import java.io.*;
@@ -235,6 +235,13 @@ public class ImageDataCollector implements ICallback {
 	 * This isn't called for ImageDataCollector.
 	 */ 
 	public Object calledBack(int p1, Object[] p2){
+		return null;
+	}
+
+	/*
+	 * This isn't called for ImageDataCollector.
+	 */ 
+	public Object calledBack(int p1, Object p2){
 		return null;
 	}
 	
