@@ -1,32 +1,26 @@
-/*
- * Created on Jul 24, 2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
+
 package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
-
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-/**
- * @author jmyers
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class ColorPropertyEditor implements PropertyEditor {
+	
+	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.swt.colorpropertyeditor";//$NON-NLS-1$
+	private static java.util.ResourceBundle messages = java.util.ResourceBundle.getBundle(BUNDLE_NAME);
 	
 	private class PreviewPanel {
 		private Group control;
@@ -44,12 +38,12 @@ public class ColorPropertyEditor implements PropertyEditor {
 		private static final int swatchWidth  = 50;
 		private static final int swatchHeight = 25;
 		
-		private static final String previewText = "Sample Text  Sample Text";
+		private final String previewText = messages.getString("previewText"); //$NON-NLS-1$
 
 		public Control createControl(Composite parent, int style, Color initialColor) {
 			if (control == null) {
 				control = new Group(parent, style);
-				control.setText("Preview");
+				control.setText(messages.getString("previewGroupTitle")); //$NON-NLS-1$
 				RowLayout rowLayout = new RowLayout();
 				rowLayout.wrap = false;
 				rowLayout.pack = true;
@@ -206,13 +200,13 @@ public class ColorPropertyEditor implements PropertyEditor {
 	
 	private IJavaObjectInstance fExistingValue;
 
-	private static final String COLOR_PREFIX = "org.eclipse.swt.SWT.COLOR_";
+	private static final String COLOR_PREFIX = "org.eclipse.swt.SWT.COLOR_"; //$NON-NLS-1$
 	
-	private static final String[] basicColorNames = { "Black", "Blue", "Cyan", "Gray", "Green", "Magenta", "Red", "White", "Yellow",
-		"Dark Blue", "Dark Cyan", "Dark Gray", "Dark Green", "Dark Magenta", "Dark Red", "Dark Yellow" };
+	private static final String[] basicColorNames = { messages.getString("black"), messages.getString("blue"), messages.getString("cyan"), messages.getString("gray"), messages.getString("green"), messages.getString("magenta"), messages.getString("red"), messages.getString("white"), messages.getString("yellow"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+		messages.getString("darkBlue"), messages.getString("darkCyan"), messages.getString("darkGray"), messages.getString("darkGreen"), messages.getString("darkMagenta"), messages.getString("darkRed"), messages.getString("darkYellow") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	private static final String[] basicColorConstants = { "BLACK", "BLUE", "CYAN", "GRAY", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW",
-		"DARK_BLUE", "DARK_CYAN", "DARK_GRAY", "DARK_GREEN", "DARK_MAGENTA", "DARK_RED", "DARK_YELLOW" };
+	private static final String[] basicColorConstants = { "BLACK", "BLUE", "CYAN", "GRAY", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+		"DARK_BLUE", "DARK_CYAN", "DARK_GRAY", "DARK_GREEN", "DARK_MAGENTA", "DARK_RED", "DARK_YELLOW" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
 	private static final int[] basicColorConstantValues = { SWT.COLOR_BLACK, SWT.COLOR_BLUE, SWT.COLOR_CYAN, SWT.COLOR_GRAY, SWT.COLOR_GREEN,
 		SWT.COLOR_MAGENTA, SWT.COLOR_RED, SWT.COLOR_WHITE, SWT.COLOR_YELLOW,
@@ -222,19 +216,19 @@ public class ColorPropertyEditor implements PropertyEditor {
 	private static Color[] basicColorValues = new Color[basicColorConstantValues.length];
 	private Image basicColorImages[] = new Image[basicColorValues.length];
 		
-	private static final String[] systemColorNames = { "Info Background", "Info Foreground", 
-		"List Background", "List Foreground", "List Selection", "List Selection Text", 
-		"Title Background", "Title Background Gradient", "Title Foreground", "Title Inactive Background", "Title Inactive Background Gradient", 
-		"Title Inactive Foreground",
-		"Widget Background", "Widget Border", "Widget Dark Shadow", "Widget Foreground", "Widget Highlight Shadow", "Widget Light Shadow",
-		"Widget Normal Shadow" };
+	private static final String[] systemColorNames = { messages.getString("infoBackground"), messages.getString("infoForeground"),  //$NON-NLS-1$ //$NON-NLS-2$
+		messages.getString("listBackground"), messages.getString("listForeground"), messages.getString("listSeletion"), messages.getString("listSelectionText"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		messages.getString("titleBackground"), messages.getString("titleBackgroundGradient"), messages.getString("titleForeground"), messages.getString("titleInactiveBackground"), messages.getString("titleInactiveBackgroundGradient"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		messages.getString("titleInactiveForeground"), //$NON-NLS-1$
+		messages.getString("widgetBackground"), messages.getString("widgetBorder"), messages.getString("widgetDarkShadow"), messages.getString("widgetForeground"), messages.getString("widgetHighlightShadow"), messages.getString("widgetLightShadow"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		messages.getString("widgetNormalShadow") }; //$NON-NLS-1$
 
-	private static final String[] systemColorConstants = { "INFO_BACKGROUND", "INFO_FOREGROUND", 
-		"LIST_BACKGROUND", "LIST_FOREGROUND", "LIST_SELECTION", "LIST_SELECTION_TEXT", 
-		"TITLE_BACKGROUND", "TITLE_BACKGROUND_GRADIENT", "TITLE_FOREGROUND", "TITLE_INACTIVE_BACKGROUND", 
-		"TITLE_INACTIVE_BACKGROUND_GRADIENT", "TITLE_INACTIVE_FOREGROUND", 
-		"WIDGET_BACKGROUND", "WIDGET_BORDER", "WIDGET_DARK_SHADOW", "WIDGET_FOREGROUND", "WIDGET_HIGHLIGHT_SHADOW", "WIDGET_LIGHT_SHADOW", 
-		"WIDGET_NORMAL_SHADOW" };
+	private static final String[] systemColorConstants = { "INFO_BACKGROUND", "INFO_FOREGROUND",  //$NON-NLS-1$ //$NON-NLS-2$
+		"LIST_BACKGROUND", "LIST_FOREGROUND", "LIST_SELECTION", "LIST_SELECTION_TEXT",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		"TITLE_BACKGROUND", "TITLE_BACKGROUND_GRADIENT", "TITLE_FOREGROUND", "TITLE_INACTIVE_BACKGROUND",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		"TITLE_INACTIVE_BACKGROUND_GRADIENT", "TITLE_INACTIVE_FOREGROUND",  //$NON-NLS-1$ //$NON-NLS-2$
+		"WIDGET_BACKGROUND", "WIDGET_BORDER", "WIDGET_DARK_SHADOW", "WIDGET_FOREGROUND", "WIDGET_HIGHLIGHT_SHADOW", "WIDGET_LIGHT_SHADOW",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		"WIDGET_NORMAL_SHADOW" }; //$NON-NLS-1$
 		
 	private static final int[] systemColorConstantValues = { SWT.COLOR_INFO_BACKGROUND, SWT.COLOR_INFO_FOREGROUND, 
 		SWT.COLOR_LIST_BACKGROUND, SWT.COLOR_LIST_FOREGROUND, SWT.COLOR_LIST_SELECTION, SWT.COLOR_LIST_SELECTION_TEXT, 
@@ -312,12 +306,12 @@ public class ColorPropertyEditor implements PropertyEditor {
 			tabPane.setLayoutData(tabGD);
 			
 			TabItem namedPage = new TabItem(tabPane, SWT.NONE);
-			namedPage.setText("Named Colors");
+			namedPage.setText(messages.getString("namedTabTitle")); //$NON-NLS-1$
 			Control namedPageContents = makeNamedPage(tabPane, SWT.NONE);
 			namedPage.setControl(namedPageContents);
 			
 			TabItem rgbPage = new TabItem(tabPane, SWT.NONE);
-			rgbPage.setText("RGB");
+			rgbPage.setText(messages.getString("rgbTabTitle")); //$NON-NLS-1$
 			Control rgbPageContents = makeRGBPage(tabPane, SWT.NONE);
 			rgbPage.setControl(rgbPageContents);
 			
@@ -354,7 +348,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		page.setLayout(rowLayout);
 		
 		Group basicGroup = new Group(page, SWT.NONE);
-		basicGroup.setText("Basic Colors");
+		basicGroup.setText(messages.getString("basicColorsGroupTitle")); //$NON-NLS-1$
 		basicGroup.setLayout(new RowLayout());
 		
 		basicTable = new Table(basicGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -404,7 +398,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		});
 		
 		Group systemGroup = new Group(page, SWT.NONE);
-		systemGroup.setText("System Colors");
+		systemGroup.setText(messages.getString("SystemColorsGroupTitle")); //$NON-NLS-1$
 		systemGroup.setLayout(new RowLayout());
 		
 		systemTable = new Table(systemGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -533,7 +527,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		rgbPanel.setLayout(grid2);
 		
 		Label redL = new Label(rgbPanel, SWT.NONE);
-		redL.setText("Red");
+		redL.setText(messages.getString("redSliderLabel")); //$NON-NLS-1$
 		
 		redScale = new Scale(rgbPanel, SWT.NONE);
 		redScale.setMinimum(0);
@@ -546,7 +540,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		redSpinner.setMaximum(255);
 		
 		Label greenL = new Label(rgbPanel, SWT.NONE);
-		greenL.setText("Green");
+		greenL.setText(messages.getString("greenSliderLabel")); //$NON-NLS-1$
 		
 		greenScale = new Scale(rgbPanel, SWT.NONE);
 		greenScale.setMinimum(0);
@@ -559,7 +553,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		greenSpinner.setMaximum(255);
 		
 		Label blueL = new Label(rgbPanel, SWT.NONE);
-		blueL.setText("Blue");
+		blueL.setText(messages.getString("blueSliderLabel")); //$NON-NLS-1$
 		
 		blueScale = new Scale(rgbPanel, SWT.NONE);
 		blueScale.setMinimum(0);
@@ -613,7 +607,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		greenScale.addSelectionListener(scaleListener);
 		
 		Button externalChooser = new Button(page, SWT.PUSH);
-		externalChooser.setText("Advanced...");
+		externalChooser.setText(messages.getString("advancedButton")); //$NON-NLS-1$
 		externalChooser.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Shell shell = e.widget.getDisplay().getActiveShell();
@@ -676,7 +670,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 		if(fPropertyChangeListeners != null){
 			Iterator iter = fPropertyChangeListeners.iterator();
 			while(iter.hasNext()){
-				((PropertyChangeListener)iter.next()).propertyChange(new PropertyChangeEvent(this,"value",c,null));
+				((PropertyChangeListener)iter.next()).propertyChange(new PropertyChangeEvent(this,"value",c,null)); //$NON-NLS-1$
 			}
 		}
 		
@@ -693,24 +687,24 @@ public class ColorPropertyEditor implements PropertyEditor {
 	}
 	
 	public String getJavaInitializationString() {
-		String result = "null";
+		String result = "null"; //$NON-NLS-1$
 		synchronized(color) {
 			if (color != null) {
 				if (!isNamed) {
-					result = "new Color(org.eclipse.swt.widgets.Display.getDefault(), " + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")";
+					result = "new Color(org.eclipse.swt.widgets.Display.getDefault(), " + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
 					initializeColorConstants(control.getDisplay());
 					if ( isBasic ) {
 						for (int i = 0; i < basicColorValues.length; i++) {
 							if(color.getRGB().equals(basicColorValues[i].getRGB())) {
-								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[i] + ")";
+								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								break;
 							}
 						}
 					} else if ( isSystem ) {
 						for (int i = 0; i < systemColorValues.length; i++) {
 							if(color.getRGB().equals(systemColorValues[i].getRGB())) {
-								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[i] + ")";
+								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 								break;
 							}
 						}
@@ -744,7 +738,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 			// Get the toString() of the target VM color
 			return BeanProxyUtilities.getBeanProxy(fExistingValue).toBeanString();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
