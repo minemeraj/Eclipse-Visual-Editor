@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-09-02 14:42:20 $ 
+ *  $Revision: 1.13 $  $Date: 2004-10-27 20:42:04 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -111,7 +112,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		}
 		
 		CodeExpressionRef exp = fOwner.getExprRef();
-		List controlList = (List)parent.eGet(sf);
+		EList controlList = (EList)parent.eGet(sf);
 		
 		// determine z order
 		int index = 0;
@@ -124,8 +125,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		// Add a control feature
 		if(controlList.contains(fbeanPart.getEObject())){
 			if(controlList.indexOf(fbeanPart.getEObject())!=index){
-				controlList.remove(fbeanPart.getEObject());
-				controlList.add(index, fbeanPart.getEObject());
+				controlList.move(index, fbeanPart.getEObject());
 			}
 		}else{
 			controlList.add(index, fbeanPart.getEObject());

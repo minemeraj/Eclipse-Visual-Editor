@@ -26,7 +26,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
 	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
-	private IMethodProxy moveAboveMethodProxy;	// method proxy for move above.
+	private IMethodProxy moveAboveMethodProxy, moveBelowMethodProxy;	// method proxy for move above and below
 	// TODO these method proxies should be off in the factory constants so we don't need to get it for each and every composite.
 
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
@@ -87,6 +87,27 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		}
 
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#moved(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, int)
+	 */
+	protected void moved(EStructuralFeature feature, Object value, int oldPosition, int newPosition) {
+		if (feature == sf_containerControls) {
+			final IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) value);
+			if (controlProxyHost == null || !controlProxyHost.isBeanProxyInstantiated())
+				return;	// Not instantiated, don't try to move on the jvm.
+			
+			// A move of "components" can be done simply here by using moveAbove instead of remove and add.
+			IBeanProxy above = getBeanProxyAt(newPosition+1);
+			if (above != null)
+				moveComponentBefore(controlProxyHost, above);
+			else
+				moveComponentToEnd(controlProxyHost);
+			childValidated(this);
+		} else
+			super.moved(feature, value, oldPosition, newPosition);
+	}
 
 	protected IMethodProxy layoutMethodProxy(){
 		if(layoutMethodProxy == null){
@@ -101,6 +122,13 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		}
 		return moveAboveMethodProxy;
 	}	
+	
+	protected IMethodProxy moveBelowMethodProxy(){
+		if(moveBelowMethodProxy == null){
+			moveBelowMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveBelow", "org.eclipse.swt.widgets.Control");
+		}
+		return moveBelowMethodProxy;
+	}
 	
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
 		// Find the index of the child - remove it and re-insert it at this position
@@ -141,23 +169,50 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	
 	protected void primAddControl(IJavaObjectInstance aControl, int position) {
 		final IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
-		((ControlProxyAdapter) controlProxyHost).setParentProxyHost(this);
+		((ControlProxyAdapter) controlProxyHost).setParentProxyHost(null);	// So that it doesn't notify us of changes until after we have it added.
 		controlProxyHost.releaseBeanProxy();
 		controlProxyHost.instantiateBeanProxy();
 
 		// Now we need to move it above the correct guy.
-		final IBeanProxy before = getBeanProxyAt(position + 1);
+		IBeanProxy before = getBeanProxyAt(position + 1);
 		if (before != null) {
-			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-					moveAboveMethodProxy().invokeCatchThrowableExceptions(controlProxyHost.getBeanProxy(), before);
-					return null;
-				}
-			});
+			moveComponentBefore(controlProxyHost, before);
 		}
+		
+		((ControlProxyAdapter) controlProxyHost).setParentProxyHost(this);	// Now we can be notified of changes.		
 	}
 	
+	/**
+	 * @param controlProxyHost
+	 * @param before
+	 * 
+	 * @since 1.0.2
+	 */
+	protected void moveComponentBefore(final IBeanProxyHost controlProxyHost, final IBeanProxy before) {
+		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				moveAboveMethodProxy().invokeCatchThrowableExceptions(controlProxyHost.getBeanProxy(), before);
+				return null;
+			}
+		});
+	}
+	
+	/**
+	 * @param controlProxyHost
+	 * 
+	 * @since 1.0.2
+	 */
+	protected void moveComponentToEnd(final IBeanProxyHost controlProxyHost) {
+		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				moveBelowMethodProxy().invokeCatchThrowableExceptions(controlProxyHost.getBeanProxy(), (IBeanProxy) null);
+				return null;
+			}
+		});
+	}
+
 	protected void removeControl(IJavaObjectInstance aControl) throws ReinstantiationNeeded {
 		// Dispose the control
 		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
