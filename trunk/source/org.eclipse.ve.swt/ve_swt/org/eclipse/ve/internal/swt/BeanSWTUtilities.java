@@ -10,8 +10,13 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Point;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -260,6 +265,27 @@ public class BeanSWTUtilities {
 		if (childRef instanceof JCMMethod && parentRef instanceof JCMMethod)
 			if (childRef != parentRef)
 				return true;
+		return false;
+	}
+	
+	/**
+	 * Helper class to determine if the JFace plugin id is visible to this java project.
+	 * 
+	 * @param editDomain
+	 * @return 
+	 * 		true if it's visible 
+	 * 		false if it's not visible, not found, or JavaModelException is thrown
+	 * 
+	 * @since 1.1.0
+	 */
+	public static boolean isJFaceProject(EditDomain editDomain) {
+		IJavaProject proj = JavaEditDomainHelper.getJavaProject(editDomain);
+		Map containers = new HashMap(), plugins = new HashMap();
+		try {
+			ProxyPlugin.getPlugin().getIDsFound(proj, containers, new HashMap(), plugins, new HashMap());
+			return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false;
+		} catch (JavaModelException e) {
+		}
 		return false;
 	}
 }

@@ -10,15 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-02 02:05:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-04 22:25:51 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
@@ -30,8 +31,6 @@ import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -82,13 +81,13 @@ public class ColorCustomPropertyEditor extends Composite {
 	private Image systemColorImages[] = new Image[systemColorValues.length]; 
 
 	// JFace colors from JFacePreferences
-	private static final String[] jfaceColorNames = { ColorPropertyEditorMessages.getString("error"), ColorPropertyEditorMessages.getString("hyperlink"), ColorPropertyEditorMessages.getString("active_hyperlink")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	private static final String[] jfaceColorNames = { ColorPropertyEditorMessages.getString("hyperlink"), ColorPropertyEditorMessages.getString("active_hyperlink"), ColorPropertyEditorMessages.getString("error")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 	
-	private static final String[] jfaceColorConstantValues = {JFacePreferences.ERROR_COLOR, JFacePreferences.HYPERLINK_COLOR, JFacePreferences.ACTIVE_HYPERLINK_COLOR};
+	private static final String[] jfaceColorConstantValues = {JFacePreferences.HYPERLINK_COLOR, JFacePreferences.ACTIVE_HYPERLINK_COLOR, JFacePreferences.ERROR_COLOR};
 	protected final static String[] jfaceColorInitStrings = { 
-		"org.eclipse.jface.preference.JFacePreferences.ERROR_COLOR", //$NON-NLS-1$ 
 		"org.eclipse.jface.preference.JFacePreferences.HYPERLINK_COLOR", //$NON-NLS-1$ 
-		"org.eclipse.jface.preference.JFacePreferences.ACTIVE_HYPERLINK_COLOR"}; //$NON-NLS-1$ 
+		"org.eclipse.jface.preference.JFacePreferences.ACTIVE_HYPERLINK_COLOR", //$NON-NLS-1$ 
+		"org.eclipse.jface.preference.JFacePreferences.ERROR_COLOR"}; //$NON-NLS-1$ 
 		
 	private static Color[] jfaceColorValues = new Color[jfaceColorConstantValues.length];
 	private Image jfaceColorImages[] = new Image[jfaceColorValues.length];
@@ -156,6 +155,9 @@ public class ColorCustomPropertyEditor extends Composite {
 	private static final int swatchWidth  = 50;
 	private static final int swatchHeight = 25;
 	private final String previewText = ColorPropertyEditorMessages.getString("previewText"); //$NON-NLS-1$
+
+	private boolean lookupIsJFaceProject = true; // lookup JFace plugin only once
+	private boolean isJFaceProject = false;
 
 	public ColorCustomPropertyEditor(Composite parent, int style, Color value, IJavaObjectInstance existingValue, EditDomain editDomain) {
 		super(parent, style);
@@ -931,11 +933,14 @@ public class ColorCustomPropertyEditor extends Composite {
 	}
 
 	/*
-	 * Return true if JFace classes are part of the resource set. 
+	 * Return true if the JFace plugin is part of this Java Project.
 	 * This is used to determine whether or not to add the JFace page to the property editor. 
 	 */
 	protected boolean isJFaceProject() {
-		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
-		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
+		// Look this up only once and store the result in the field isJFaceProject
+		if (lookupIsJFaceProject) {
+			isJFaceProject = BeanSWTUtilities.isJFaceProject(fEditDomain);
+		}
+		return isJFaceProject;
 	}
 }  // @jve:decl-index=0:visual-constraint="10,-2"

@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorProxyRegistration.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-01 19:48:03 $ 
+ *  $Revision: 1.1 $  $Date: 2005-04-04 22:25:51 $ 
  */
-package org.eclipse.ve.internal.swt;
+package org.eclipse.ve.internal.jface;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
@@ -38,7 +38,7 @@ public class JFaceColorProxyRegistration {
 		RGB activeHyperLinkColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR);
 
 		// JFaceColorRegistryInitializer - remote vm helper used to prime the JFace ColorRegistry.
-		IBeanTypeProxy jfaceColorInitBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.JFaceColorRegistryInitializer"); //$NON-NLS-1$
+		IBeanTypeProxy jfaceColorInitBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.JFaceColorRegistryInitializer"); //$NON-NLS-1$
 		
 		IBeanTypeProxy hashMapBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.HashMap"); //$NON-NLS-1$
 		IBeanTypeProxy objectBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.lang.Object"); //$NON-NLS-1$
