@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanSearchEngine.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-08 18:48:02 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,6 +44,13 @@ public class JavaBeanSearchEngine {
 
 	public static boolean typeIsABean(IType type) {
 
+		// KLUDGE Need to also allow SWT controls, but we don't have a contribution mechanism for this.
+		// Really bad is there is no simple way to determine if subclass of something without doing resolves.
+		// But we will get many classes to do resolves on. We will narrow it down to it requires a ctor
+		// of ctor(composite, int) or ctor(composite) to work and inherits from control. Only these can be
+		// handled anyway.
+		// TODO Need to create a contribution mechanism for determining isBean.
+
 		boolean anyCtors = false;
 		try {
 			if (!type.isClass())
@@ -56,16 +63,57 @@ public class JavaBeanSearchEngine {
 					anyCtors = true;
 					if (method.getNumberOfParameters() == 0)
 						return true;
-				}
+					else if (method.getNumberOfParameters() == 1) {
+						// Possible SWT control.
+						String parmType = Signature.toString(method.getParameterTypes()[0]);
+						if ("Composite".equals(parmType) || "org.eclipse.swt.widgets.Composite".equals(parmType)) {
+							if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control"))
+								return true;
+						}
+					} else if (method.getNumberOfParameters() == 2) {
+						// Possible SWT control.
+						String[] parmTypes = method.getParameterTypes();
+						if ("int".equals(Signature.toString(parmTypes[1]))) {
+							String p1Type = Signature.toString(parmTypes[0]);
+							if ("Composite".equals(p1Type) || "org.eclipse.swt.widgets.Composite".equals(p1Type)) {
+								if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control"))
+									return true;
+							}
+						}
+					}
+				} else if (method.isMainMethod())
+					return true;
 			}
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e.getStatus(), Level.FINE); // Not really a bad error
 			return false;
 		}
-
 		return !anyCtors; // If we got this far and no ctors at all, then still a bean.
 	}
 
+	private static boolean inheritsFrom(IType type, String superClassPkg, String superClassName) throws JavaModelException {
+		String superName = null;
+		String fullSuper = superClassPkg+'.'+superClassName;
+		while (type != null && (superName = type.getSuperclassName()) != null) {
+			if (fullSuper.equals(superName))
+				return true;	// It was fully-qualified.
+			IType stype = type.getJavaProject().findType(superName);
+			if (stype == null) {
+				// It wasn't fully-qualified and couldn't be resolved.
+				String[][] superTypes = type.resolveType(superName);
+				if (superTypes == null || superTypes.length > 1 )
+					return false;
+				if (superClassPkg.equals(superTypes[0][0]) && superClassName.equals(superTypes[0][1]))
+					return true;
+				type = type.getJavaProject().findType(superTypes[0][0], superTypes[0][1]);
+			} else if (stype.getFullyQualifiedName().equals(fullSuper))
+				return true;
+			else
+				type = stype;
+		}
+		return false;
+	}
+	
 	private static class JavaBeanCollector implements IJavaSearchResultCollector {
 		private List fResult;
 		private IProgressMonitor fProgressMonitor;

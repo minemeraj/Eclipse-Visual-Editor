@@ -20,14 +20,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -92,10 +90,12 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		try {
 			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-					// TODO Need a better way to get a parent in if parent is null. (i.e. on
-					// freeform. Then we can use
-					// the standard allocation mechanism.
-					// Create the control with the constructor of its parent composite
+					// TODO Need a better way to get a parent in it if parent is null. (i.e. on
+					// freeform). Then we can use the standard allocation mechanism.
+					// If parent cannot be found, Create the control with the constructor of its parent composite
+					// but it doesn't use the allocation at all, so it will have SWT.NONE.
+					// Right now we've kludged it in for composite to call here with no allocation
+					// or parent when subclassing. 
 					IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
 					IJavaObjectInstance composite = getParentComposite(control);
 					IBeanProxy compositeBeanProxy = null;
@@ -370,7 +370,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				
 				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-				JavaHelpers primInt = Utilities.getJavaClass("int", rset);
 				IJavaInstance inst = (IJavaInstance)  BeanUtilities.createJavaObject("int",rset,String.valueOf(-1));
 				IIntegerBeanProxy defval =  (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(inst);
 				
