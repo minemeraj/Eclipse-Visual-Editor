@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyDomain.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-18 18:15:15 $ 
  */
 
+import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 /**
@@ -48,4 +49,20 @@ public interface IBeanProxyDomain {
 	 * @since 1.0.0
 	 */
 	public IAllocationProcesser getAllocationProcesser();
+	
+	/**
+	 * Set the name of the "this" type.
+	 * @param name
+	 * 
+	 * @since 1.0.0
+	 */
+	public void setThisTypeName(String name);
+	
+	/**
+	 * Return the "this" type for this domain.
+	 * @return the "this" type for this domain, or <code>null</code> if not retrievable for some reason.
+	 * 
+	 * @since 1.0.0
+	 */
+	public IBeanTypeProxy getThisType();
 }

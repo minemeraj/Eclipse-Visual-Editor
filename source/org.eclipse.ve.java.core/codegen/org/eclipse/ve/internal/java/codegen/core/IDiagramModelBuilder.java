@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-09 19:46:56 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-18 18:15:15 $ 
  */
 
 
@@ -59,6 +59,14 @@ public interface IDiagramModelBuilder  {
 	 * @since 1.0.0
 	 */
 	public Diagram getDiagram();
+	
+	/**
+	 * Answer the type name of the "this". For example if editing "xyz.Qxr" return "xyz.Qxr" as the this type name.
+	 * @return typename of the "this".
+	 * 
+	 * @since 1.0.0
+	 */
+	public String getThisTypeName();
 	
 
 	/**

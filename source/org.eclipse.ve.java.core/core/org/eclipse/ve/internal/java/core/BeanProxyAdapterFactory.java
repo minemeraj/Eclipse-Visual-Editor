@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-18 18:15:15 $ 
  */
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
@@ -45,6 +46,7 @@ public class BeanProxyAdapterFactory
 	protected ProxyFactoryRegistry fProxyFactoryRegistry;
 	protected EditDomain domain;
 	protected IAllocationProcesser allocationProcesser;
+	protected String thisTypeName;
 	protected static EAttribute BEAN_PROXY_CLASS_NAME;
 
 	/**
@@ -145,4 +147,16 @@ public class BeanProxyAdapterFactory
 		return allocationProcesser; 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyDomain#getThisType()
+	 */
+	public IBeanTypeProxy getThisType() {
+		return thisTypeName != null && getProxyFactoryRegistry() != null ? getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(thisTypeName) : null;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyDomain#setThisTypeName(java.lang.String)
+	 */
+	public void setThisTypeName(String name) {
+		this.thisTypeName = name;
+	}
 }
