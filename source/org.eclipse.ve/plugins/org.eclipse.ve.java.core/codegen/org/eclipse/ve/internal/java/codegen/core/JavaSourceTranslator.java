@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.42 $  $Date: 2004-11-05 20:08:16 $ 
+ *  $Revision: 1.43 $  $Date: 2004-11-16 18:52:58 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -682,15 +683,18 @@ boolean  decodeExpression(CodeExpressionRef code) throws CodeGenException {
 
 /**
  *  Create MOF instances 
+ * @param pm  Expects a new progress monitor as a beginTask() will be called
  */
-void  createJavaInstances () throws CodeGenException {
+void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
+	pm.beginTask("", fBeanModel.getBeans().size()+5); // +5 for disposing the error beans
 	Iterator itr = fBeanModel.getBeans().iterator() ;
 	ArrayList err = new ArrayList() ;
     BeanSubclassComposition comp = fVEModel.getModelRoot() ;
 	while (itr.hasNext()) {
 	   BeanPart bean = (BeanPart) itr.next() ;
-	   
+	   pm.subTask("Creating instance "+bean.getSimpleName());
 	   EObject obj = bean.createEObject() ;
+	   pm.worked(1);
        String annotatedName= bean.getSimpleName() ;
        
        // The Model Builder will clean up irrelevent beans
@@ -742,8 +746,10 @@ void  createJavaInstances () throws CodeGenException {
 	   }
 	}	
 	for (int i = 0; i < err.size(); i++) {
+		pm.subTask("Disposing incorrect bean "+((BeanPart)err.get(i)).getSimpleName());
         ((BeanPart)err.get(i)).dispose() ;
     }
+	pm.done();
 }
 
 
@@ -764,15 +770,19 @@ void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenExcepti
 /**
  *  Given the BeanDOM, build the Composition Model
  */
-void	buildCompositionModel() throws CodeGenException {
+void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	if (fBeanModel == null || fVEModel == null) throw new CodeGenException ("null Builder") ; //$NON-NLS-1$
 	
 	fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL,true) ;
 	
 	try{
 		// Before handle expressions, make sure all BeanPart s have instances
-		createJavaInstances() ;
+		createJavaInstances(new SubProgressMonitor(pm, 10)) ;
 	
+		// Create a new progress monitor for the decoding of expressions
+		SubProgressMonitor expProgressMonitor = new SubProgressMonitor(pm, 45);
+		expProgressMonitor.beginTask("",  getTotalExpressionCount());
+		
 	    // Decode the relevant expressions	
 		Iterator itr = fBeanModel.getBeans().iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
@@ -791,10 +801,12 @@ void	buildCompositionModel() throws CodeGenException {
 		      
 		      //if (getCorrespondingFeature(codeRef,obj) != null)
 		      try {
+		      	expProgressMonitor.subTask("Decoding expression: "+codeRef.getCodeContent());
 			  if (!decodeExpression (codeRef)) {
 				 JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, Level.FINE) ;						 //$NON-NLS-1$
 				 badExprssions.add(codeRef) ;			 
 			  }
+			  expProgressMonitor.worked(1);
 		      }
 		      catch (Exception e) {
 		        JavaVEPlugin.log("Skipping expression: "+codeRef,Level.WARNING) ; //$NON-NLS-1$
@@ -802,15 +814,20 @@ void	buildCompositionModel() throws CodeGenException {
 		        badExprssions.add(codeRef) ;	
 		      }
 		    }
-		}	
+		}
+		expProgressMonitor.done();
+		expProgressMonitor = null;
+		
 		// Clean up
 		itr = badExprssions.iterator() ;
 		while (itr.hasNext()) {
 			CodeExpressionRef codeRef = (CodeExpressionRef) itr.next() ;
+			pm.subTask("Removing bad expression: "+codeRef.getCodeContent());
 			codeRef.getMethod().removeExpressionRef(codeRef) ;
 			codeRef.getBean().removeRefExpression(codeRef) ;
 			codeRef.getBean().addBadExpresion(codeRef);
 		}
+		pm.worked(2);
 	
 	
 	      // Decoders have analyzed and acted on the Expressions - 
@@ -829,6 +846,7 @@ void	buildCompositionModel() throws CodeGenException {
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 		   
+		   pm.subTask("Adding bean "+bean.getSimpleName()+" to model");
 		   addBeanPart(bean,fVEModel.getModelRoot()) ;
 		   
 //		   if (bean.getContainer() == null) {
@@ -845,19 +863,38 @@ void	buildCompositionModel() throws CodeGenException {
 //	       		
 			try {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
-				if(bean.getFFDecoder()!=null)
+				if(bean.getFFDecoder()!=null){
+					pm.subTask("Decoding freeform annotation for: "+bean.getSimpleName());
 					bean.getFFDecoder().decode();
+				}
 			} finally {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
 			}
 //	   	   }
 		}
+		  pm.worked(3);
 	}finally{
 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 	}
 } 
  
+/**
+ * @return
+ * 
+ * @since 1.0.2
+ */
+private int getTotalExpressionCount() {
+	int count=0;
+	Iterator bitr = fBeanModel.getBeans().iterator();
+	while (bitr.hasNext()) {
+		BeanPart bp = (BeanPart) bitr.next();
+		count += bp.getRefEventExpressions().size();
+		count += bp.getRefExpressions().size();
+	}
+	return count;
+}
+
 /**
  *  Go for parsing a Java Source
  */ 
@@ -872,19 +909,19 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 		
 			
 	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
-                                              fWorkingCopy.getFile().getLocation().toFile().toString(),null) ;              
+                                              fWorkingCopy.getFile().getLocation().toFile().toString(),null,new SubProgressMonitor(pm, 40, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK)) ;              
     
 	builder.setDiagram(fVEModel) ;
 	fBeanModel = builder.build() ; 	
 	fBeanModel.setSourceSynchronizer(fSrcSync) ;	
 		
 	try {		
-	  buildCompositionModel() ;	 
+	  buildCompositionModel(pm) ;	 
 	}
 	catch (Exception e) {
 		JavaVEPlugin.log (e, Level.SEVERE) ; //$NON-NLS-1$
 	}
-			
+	pm.subTask("Finished decoding document");
 	return;
 }
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventCallBackExpressionVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-11-16 18:52:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -41,6 +41,7 @@ public EventCallBackExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement 
 	 */
 	public void visit() {
 		// We can parse the callback here to see that it makes actual callbacks here before adding it in.
+		getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()"+" : "+fExpression.getCodeContent());
 		fExpression.setBean(fBean) ;
 		fMethod.setModel(fBean.getModel()) ;
 	    

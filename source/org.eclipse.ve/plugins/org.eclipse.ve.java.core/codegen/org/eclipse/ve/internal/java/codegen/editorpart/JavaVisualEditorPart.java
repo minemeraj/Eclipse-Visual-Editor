@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.63 $  $Date: 2004-11-02 19:13:53 $ 
+ *  $Revision: 1.64 $  $Date: 2004-11-16 18:52:58 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1502,9 +1502,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				TimerTests.basicTest.startStep(SETUP_STEP, TimerTests.CURRENT_PARENT_ID);
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
-				monitor.beginTask("", 300);
+				monitor.beginTask("", 200);
 				if (!initialized) {
-					initialize(new SubProgressMonitor(monitor, 100));
+					initialize(new SubProgressMonitor(monitor, 50));
 				} else {
 					beanProxyAdapterFactory.setThisTypeName(null);	// Unset the this type since it could actually change after the load is done.
 					modelSynchronizer.setIgnoreTypeName(null);	// Nothing to ignore at this time.

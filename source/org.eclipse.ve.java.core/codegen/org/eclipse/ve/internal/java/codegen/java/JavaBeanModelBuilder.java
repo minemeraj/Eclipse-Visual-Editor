@@ -11,15 +11,15 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.15 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.16 $  $Date: 2004-11-16 18:52:56 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.ISynchronizable;
@@ -58,12 +58,16 @@ public class JavaBeanModelBuilder {
   IVEModelInstance         		fDiagram  = null ;
   EditDomain					fDomain = null ;
   JavaSourceSynchronizer		fSync = null;
+  IProgressMonitor 			fMonitor = null;
 	
-public JavaBeanModelBuilder(EditDomain d, String fileName, char[][] packageName) {
+/**
+  * @param monitor Expects the progress monitor to be a new one as a beginTask() will be called
+  */
+public JavaBeanModelBuilder(EditDomain d, String fileName, char[][] packageName, IProgressMonitor monitor) {
   	this.fFileName = fileName ;
   	this.fPackageName = packageName ;
   	this.fDomain = d ;
-
+  	this.fMonitor = monitor;
 }
 
 public void setDiagram(IVEModelInstance diag) {
@@ -72,10 +76,10 @@ public void setDiagram(IVEModelInstance diag) {
 
 
 /**
- *  
+ *  Expects the progress monitor to be a new one as a beginTask() will be called
  */
-public JavaBeanModelBuilder(EditDomain d, JavaSourceSynchronizer sync, IWorkingCopyProvider wcp, String filePath, char[][] packageName) {
-	this (d,filePath,packageName) ;
+public JavaBeanModelBuilder(EditDomain d, JavaSourceSynchronizer sync, IWorkingCopyProvider wcp, String filePath, char[][] packageName, IProgressMonitor monitor) {
+	this (d,filePath,packageName,monitor) ;
   	fCU = wcp.getWorkingCopy(false) ;
   	fWCP = wcp ;
   	fSync=sync;
@@ -104,7 +108,7 @@ protected char[] getFileContents() throws CodeGenException {
 /**
  *  Get the JDOM for the input source file
  */
-protected CompilationUnit ParseJavaCode() throws CodeGenException
+protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenException
 {
 		
 	// TODO: we need to investigate the bindings option vs. resolve
@@ -119,11 +123,11 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 			if (fCU.isConsistent()) {
 				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(fCU);
-				result = (CompilationUnit) parser.createAST(null);
+				result = (CompilationUnit) parser.createAST(pm);
 			}
 			else {
 				// AST will only be returned if need to reconcile
-			   result = fCU.reconcile(AST.JLS2, false, null, null);	
+			   result = fCU.reconcile(AST.JLS2, false, null, pm);	
 			}
 			try{
 				sourceBeingParsed = fCU.getSource();
@@ -137,7 +141,7 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 			fFileContent = getFileContents();
 			sourceBeingParsed = new String(fFileContent);
 			parser.setSource(fFileContent);		
-		    result = (CompilationUnit) parser.createAST(null);
+		    result = (CompilationUnit) parser.createAST(pm);
 		}
 		
 		// The cu AST node now has the property called 'org.eclipse.ve.codegen.source' 
@@ -222,7 +226,7 @@ void  setLineSeperator() {
  * This method will remove these instances from the model
  */
 protected void cleanModel () {
-
+	fMonitor.subTask("Cleaning model");
 	Iterator itr = fModel.getBeans().iterator() ;
 	ArrayList err = new ArrayList() ;
 	
@@ -309,11 +313,12 @@ protected List getInnerTypes() {
 }
 
 protected  void analyzeEvents() {
-	
+	fMonitor.subTask("Analyzing events");
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
 	// Scan methods for event expressions.
 	EventsParser p = new EventsParser(fModel, fastCU) ;
+	p.setProgressMonitor(fMonitor);
 	while (itr.hasNext()) {
 		BeanPart b = (BeanPart) itr.next();
 		p.addEvents(b) ;
@@ -326,7 +331,9 @@ protected  void analyzeEvents() {
 	  for (int i=0; i<innerTypes.size(); i++) {
 		String name = ((TypeDeclaration)innerTypes.get(0)).getName().getIdentifier();
 		if (sharedListeners.contains(name)) {
-			new EventHandlerVisitor((TypeDeclaration)innerTypes.get(0),fModel,false).visit() ;
+			EventHandlerVisitor visitor = new EventHandlerVisitor((TypeDeclaration)innerTypes.get(0),fModel,false);
+			visitor.setProgressMonitor(fMonitor);
+			visitor.visit() ;
 			break ;
 		}
 	  }
@@ -341,9 +348,9 @@ public IBeanDeclModel build () throws CodeGenException {
 
 JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; //$NON-NLS-1$
 
-
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.
+	fMonitor.subTask("Parsing source");
     JavaElementInfo[] jdtMethods=null;
     if (fSync!=null) {
       Object lock = (fWCP.getDocument() instanceof ISynchronizable) ?
@@ -351,7 +358,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
       		        fWCP.getDocument();
       synchronized(lock) {      	
         fSync.clearOutstandingWork();
-        fastCU = ParseJavaCode () ;        
+        fastCU = ParseJavaCode (new SubProgressMonitor(fMonitor, 100)) ;        
         if (fCU!=null) 
         	jdtMethods=CodeGenUtil.getMethodsInfo(fCU);
         else
@@ -359,7 +366,9 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
       }
     }
     else 
-    	fastCU = ParseJavaCode () ;
+    	fastCU = ParseJavaCode (new SubProgressMonitor(fMonitor, 100)) ;
+	
+    fMonitor.beginTask("Building model: ", determineWorkAmount());
 	CreateBeanDeclModel() ;
 	setLineSeperator() ;
 	  
@@ -369,7 +378,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 		List  tryAgain = new ArrayList () ;
 	    
 	    // Start visiting our main type
-	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain) ;
+	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -379,6 +388,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    }
 	    
 	    analyzeEvents() ;
+	    fMonitor.worked(100);
 	    
 	    // Update the parent
 	    Iterator itr = fModel.getBeans().iterator() ;
@@ -389,22 +399,44 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 		
 		
 		cleanModel() ;
+		fMonitor.worked(100);
 		
 	} catch(Exception e) {
 	    org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;
 	}
 	finally {        
        JavaVEPlugin.log ("JavaBeanModelBuilder.build(), Done.", Level.FINE) ; //$NON-NLS-1$
+       fMonitor.done();
 	}
    return fModel ;
    
 }
     
- protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain){
-	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
+ /**
+  * Determines the work amount to be the number of methods in the 
+  * type that is being parsed along with some fixed amount of other 
+  * work like cleaning model etc.
+  * 
+ * @return
+ * 
+ * @since 1.0.2
+ */
+private int determineWorkAmount() {
+	int amount = 0;
+	if(fastCU!=null){
+		TypeDeclaration type = (TypeDeclaration) fastCU.types().get(0);
+		MethodDeclaration[] methods = type.getMethods();
+		amount = (methods==null?0:methods.length)*100 + 100 + 100; // methods*100 + analyze events + clean model
+	}
+	return amount;
+}
+
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor){
+ 	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
 	v.setJDTMethods(mthds);
+	v.setProgressMonitor(monitor);
 	v.visit()  ;
 }
-	
+
 }
 

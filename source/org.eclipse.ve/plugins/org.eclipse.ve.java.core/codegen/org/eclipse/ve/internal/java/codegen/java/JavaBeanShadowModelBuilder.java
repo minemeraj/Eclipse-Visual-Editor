@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -128,7 +129,7 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 	}
 
 	public JavaBeanShadowModelBuilder(EditDomain d, String fileName, char[][] packageName) {
-		super(d, fileName, packageName);
+		super(d, fileName, packageName, new NullProgressMonitor());
 	}
 
 	protected IBeanDeclModel createDefaultModel(EditDomain d) {

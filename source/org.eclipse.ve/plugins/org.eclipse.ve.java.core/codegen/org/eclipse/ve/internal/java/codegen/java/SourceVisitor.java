@@ -11,11 +11,13 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SourceVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-11-16 18:52:58 $ 
  */
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -29,7 +31,7 @@ public abstract class SourceVisitor implements ISourceVisitor {
 	protected ASTNode 		fVisitedNode = null ;
 	protected IBeanDeclModel 	fModel ; 
 	protected List			fReTryLater = null ;
-	
+	protected IProgressMonitor progressMonitor = null; 
 		
 public SourceVisitor (ASTNode node, IBeanDeclModel model, List reTryList) {
 	fVisitedNode = node ;
@@ -50,4 +52,22 @@ public void setNoRetry () {
 } 
 
 
+	/**
+	 * @return Returns the progressMonitor.
+	 * 
+	 * @since 1.0.2
+	 */
+	public IProgressMonitor getProgressMonitor() {
+		if(progressMonitor==null)
+			progressMonitor = new NullProgressMonitor();
+		return progressMonitor;
+	}
+	/**
+	 * @param progressMonitor The progressMonitor to set.
+	 * 
+	 * @since 1.0.2
+	 */
+	public void setProgressMonitor(IProgressMonitor progressMonitor) {
+		this.progressMonitor = progressMonitor;
+	}
 }
