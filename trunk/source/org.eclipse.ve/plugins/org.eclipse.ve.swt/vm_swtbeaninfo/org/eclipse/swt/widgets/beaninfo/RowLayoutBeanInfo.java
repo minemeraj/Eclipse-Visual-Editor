@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-03-09 18:49:08 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,51 +33,51 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("type", RowLayout.class.getField("type"), new Object[]{
+				createFieldPropertyDescriptor("type", RowLayout.class.getField("type"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.type"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.type.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginWidth", RowLayout.class.getField("marginWidth"), new Object[]{
+				createFieldPropertyDescriptor("marginWidth", RowLayout.class.getField("marginWidth"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.marginwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginWidth.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginHeight", RowLayout.class.getField("marginHeight"), new Object[]{
+				createFieldPropertyDescriptor("marginHeight", RowLayout.class.getField("marginHeight"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.marginheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginHeight.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginLeft", RowLayout.class.getField("marginLeft"), new Object[]{
+				createFieldPropertyDescriptor("marginLeft", RowLayout.class.getField("marginLeft"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.marginleft"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginLeft.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginRight", RowLayout.class.getField("marginRight"), new Object[]{
+				createFieldPropertyDescriptor("marginRight", RowLayout.class.getField("marginRight"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.marginright"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginRight.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginTop", RowLayout.class.getField("marginTop"), new Object[]{
+				createFieldPropertyDescriptor("marginTop", RowLayout.class.getField("marginTop"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.margintop"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginTop.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginBottom", RowLayout.class.getField("marginBottom"), new Object[]{
+				createFieldPropertyDescriptor("marginBottom", RowLayout.class.getField("marginBottom"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.marginbottom"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginBottom.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("spacing", RowLayout.class.getField("spacing"), new Object[]{
+				createFieldPropertyDescriptor("spacing", RowLayout.class.getField("spacing"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.spacing"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.spacing.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("wrap", RowLayout.class.getField("wrap"), new Object[]{
+				createFieldPropertyDescriptor("wrap", RowLayout.class.getField("wrap"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.wrap"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.wrap.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("fill", RowLayout.class.getField("fill"), new Object[]{
+				createFieldPropertyDescriptor("fill", RowLayout.class.getField("fill"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.fill"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.fill.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("justify", RowLayout.class.getField("justify"), new Object[]{
+				createFieldPropertyDescriptor("justify", RowLayout.class.getField("justify"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.justify"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.justify.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("pack", RowLayout.class.getField("pack"), new Object[]{
+				createFieldPropertyDescriptor("pack", RowLayout.class.getField("pack"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowlayout.pack"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.pack.Desc"), //$NON-NLS-1$							
 				}),					

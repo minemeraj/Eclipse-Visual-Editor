@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SweetHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class SweetHelper {
 	
-	public static final String STYLE_BITS_ID = "org.eclipse.ve.sweet.stylebits";
+	public static final String STYLE_BITS_ID = "org.eclipse.ve.sweet.stylebits"; //$NON-NLS-1$
 /**
  * Combine all of the style bits from the descriptor's classes superclass into the descriptor
  */	
@@ -120,7 +120,7 @@ public static void mergeNamedStyleBits(BeanDescriptor descriptor, Class namedCla
 public static void main(String[] args) {
 	
 	// Test
-	Introspector.setBeanInfoSearchPath(new String[] {"org.eclipse.swt.widgets.beaninfo"});
+	Introspector.setBeanInfoSearchPath(new String[] {"org.eclipse.swt.widgets.beaninfo"}); //$NON-NLS-1$
 	mergeSuperclassStyleBits(new TableBeanInfo().getBeanDescriptor());
 	
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SashFormBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -68,13 +68,13 @@ public class SashFormBeanInfo extends IvjBeanInfo {
 			PropertyDescriptor[] pds) {
 		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
 
-		replacePropertyDescriptor(newPDs, "layout", null, new Object[] {
+		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { //$NON-NLS-1$
 				DESIGNTIMEPROPERTY, Boolean.FALSE, });
-		replacePropertyDescriptor(newPDs, "border", null, new Object[] {
+		replacePropertyDescriptor(newPDs, "border", null, new Object[] { //$NON-NLS-1$
 				DESIGNTIMEPROPERTY, Boolean.FALSE, });
-		replacePropertyDescriptor(newPDs, "verticalScroll", null, new Object[] {
+		replacePropertyDescriptor(newPDs, "verticalScroll", null, new Object[] { //$NON-NLS-1$
 				DESIGNTIMEPROPERTY, Boolean.FALSE, });
-		replacePropertyDescriptor(newPDs, "horizontalScroll", null,
+		replacePropertyDescriptor(newPDs, "horizontalScroll", null, //$NON-NLS-1$
 				new Object[] { DESIGNTIMEPROPERTY, Boolean.FALSE, });
 
 		return newPDs;

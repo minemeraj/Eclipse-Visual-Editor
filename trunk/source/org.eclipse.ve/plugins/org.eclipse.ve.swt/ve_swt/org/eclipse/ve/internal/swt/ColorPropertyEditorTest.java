@@ -31,7 +31,7 @@ public class ColorPropertyEditorTest {
 	public static void main(String[] args) {
 			Display display = new Display ();
 			Shell shell = new Shell(display);
-			shell.setText("Color Chooser Demo");
+			shell.setText(ColorPropertyEditorMessages.getString("ColorPropertyEditorTest.Shell.title")); //$NON-NLS-1$
 			
 			GridLayout grid = new GridLayout();
 			grid.numColumns = 1;
@@ -57,7 +57,7 @@ public class ColorPropertyEditorTest {
 			okCancel.setLayoutData(gd2);
 			
 			Button ok = new Button(okCancel, SWT.PUSH);
-			ok.setText("OK");
+			ok.setText(ColorPropertyEditorMessages.getString("ColorPropertyEditorTest.OK")); //$NON-NLS-1$
 			ok.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					System.out.println(cc.getJavaInitializationString());
@@ -67,7 +67,7 @@ public class ColorPropertyEditorTest {
 			});
 			
 			Button cancel = new Button(okCancel, SWT.PUSH);
-			cancel.setText("Cancel");
+			cancel.setText(ColorPropertyEditorMessages.getString("ColorPropertyEditorTest.Cancel")); //$NON-NLS-1$
 			cancel.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					e.widget.getDisplay().dispose();

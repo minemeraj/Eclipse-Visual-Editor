@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
  * user can pick one.
  */
 public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData {
-	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.swt.LayoutCellEditor";
+	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.swt.LayoutCellEditor"; //$NON-NLS-1$
 	public static final int CLASSNAMES_INDEX = 0;
 	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
@@ -131,16 +131,16 @@ public static String [][] getLayoutItems(EditDomain editDomain) {
 	String[][] layoutLists = (String[][]) editDomain.getData(EDITDOMAINKEY_ITEMS_LIST);
 	if (layoutLists == null) {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(editDomain);
-		JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Layout", rset);
+		JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Layout", rset); //$NON-NLS-1$
 		if (javaClass != null) {
 			List classNames = new ArrayList();
 			List displayNames = new ArrayList();
 			List annotations = ((JavaClass) javaClass).getEAnnotations();
 			for (int i = 0; i < annotations.size(); i++) {
-				if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) {
+				if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) { //$NON-NLS-1$
 					EMap details = ((EAnnotation) annotations.get(i)).getDetails();
-					String layoutClassName = (String) details.get("org.eclipse.ve.internal.swt.layoutClass");
-					String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.swt.layoutDisplayName");
+					String layoutClassName = (String) details.get("org.eclipse.ve.internal.swt.layoutClass"); //$NON-NLS-1$
+					String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.swt.layoutDisplayName"); //$NON-NLS-1$
 					if (layoutClassName != null && layoutDisplayName != null) {
 						classNames.add(layoutClassName);
 						displayNames.add(layoutDisplayName);
@@ -150,9 +150,9 @@ public static String [][] getLayoutItems(EditDomain editDomain) {
 			if (classNames.size() > 0) {
 				layoutLists = new String [2][];
 				layoutLists[CLASSNAMES_INDEX] = new String[classNames.size() + 1];
-				layoutLists[CLASSNAMES_INDEX][0] = "";
+				layoutLists[CLASSNAMES_INDEX][0] = ""; //$NON-NLS-1$
 				layoutLists[DISPLAYNAMES_INDEX]  = new String[displayNames.size() + 1];
-				layoutLists[DISPLAYNAMES_INDEX][0] = "null";
+				layoutLists[DISPLAYNAMES_INDEX][0] = "null"; //$NON-NLS-1$
 				System.arraycopy(classNames.toArray(new String [classNames.size()]), 0, layoutLists[CLASSNAMES_INDEX], 1, classNames.size());
 				System.arraycopy(displayNames.toArray(new String [displayNames.size()]), 0, layoutLists[DISPLAYNAMES_INDEX], 1, displayNames.size());
 				editDomain.setData(EDITDOMAINKEY_ITEMS_LIST, layoutLists);

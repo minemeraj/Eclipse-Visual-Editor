@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.23 $ $Date: 2005-03-29 22:53:55 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.24 $ $Date: 2005-04-05 21:40:17 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -147,7 +147,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 						packagedInitStrings[i][0] = propertyDescriptor.fInitStrings[i].substring(0, lastDot);
 						packagedInitStrings[i][1] = propertyDescriptor.fInitStrings[i].substring(lastDot+1);
 					} else {
-						packagedInitStrings[i][0] = "";
+						packagedInitStrings[i][0] = ""; //$NON-NLS-1$
 						packagedInitStrings[i][1] = propertyDescriptor.fInitStrings[i];
 					}
 				}
@@ -155,16 +155,16 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		}
 	}
 
-	private static final Object SWEET_STYLE_ID = "org.eclipse.ve.sweet.stylebits";
+	private static final Object SWEET_STYLE_ID = "org.eclipse.ve.sweet.stylebits"; //$NON-NLS-1$
 
-	protected static final String SWT_TYPE_ID = "org.eclipse.swt.SWT";
+	protected static final String SWT_TYPE_ID = "org.eclipse.swt.SWT"; //$NON-NLS-1$
 	
-	protected static final String STYLE_NONE = "NONE";
+	protected static final String STYLE_NONE = "NONE"; //$NON-NLS-1$
 	
 	protected static final int STYLE_NOT_SET = -1;
 	protected static final Integer STYLE_NOT_SET_INTEGER = new Integer(STYLE_NOT_SET);
 	
-	static final String[] UNKNOWN = new String[] { "???", "???"};
+	static final String[] UNKNOWN = new String[] { "???", "???"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static class StyleBitPropertyDescriptor extends EToolsPropertyDescriptor {
 
@@ -359,7 +359,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			}
 			return STYLE_NOT_SET_INTEGER;
 		} else {
-			return "???";
+			return "???"; //$NON-NLS-1$
 		}
 	}
 

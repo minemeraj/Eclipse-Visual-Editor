@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: GridDataBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-03-01 19:33:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,39 +33,39 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("grabExcessHorizontalSpace", GridData.class.getField("grabExcessHorizontalSpace"), new Object[]{
+				createFieldPropertyDescriptor("grabExcessHorizontalSpace", GridData.class.getField("grabExcessHorizontalSpace"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.grabExcessHorizontalSpace"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.grabExcessHorizontalSpace.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("grabExcessVerticalSpace", GridData.class.getField("grabExcessVerticalSpace"), new Object[] {
+				createFieldPropertyDescriptor("grabExcessVerticalSpace", GridData.class.getField("grabExcessVerticalSpace"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.grabExcessVerticalSpace"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.grabExcessVerticalSpace.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("heightHint", GridData.class.getField("heightHint"), new Object[]{
+				createFieldPropertyDescriptor("heightHint", GridData.class.getField("heightHint"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.heightHint"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.heightHint.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("widthHint", GridData.class.getField("widthHint"), new Object[]{
+				createFieldPropertyDescriptor("widthHint", GridData.class.getField("widthHint"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.widthHint"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.widthHint.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("horizontalAlignment", GridData.class.getField("horizontalAlignment"), new Object[]{
+				createFieldPropertyDescriptor("horizontalAlignment", GridData.class.getField("horizontalAlignment"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.horizontalAlignment"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalAlignment.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("verticalAlignment", GridData.class.getField("verticalAlignment"), new Object[]{
+				createFieldPropertyDescriptor("verticalAlignment", GridData.class.getField("verticalAlignment"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.verticalAlignment"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.verticalAlignment.Desc"), //$NON-NLS-1$
 				}),				
-				createFieldPropertyDescriptor("horizontalIndent", GridData.class.getField("horizontalIndent"), new Object[]{
+				createFieldPropertyDescriptor("horizontalIndent", GridData.class.getField("horizontalIndent"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.horizontalIndent"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalIndent.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("horizontalSpan", GridData.class.getField("horizontalSpan"), new Object[]{
+				createFieldPropertyDescriptor("horizontalSpan", GridData.class.getField("horizontalSpan"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.horizontalSpan"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalSpan.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("verticalSpan", GridData.class.getField("verticalSpan"), new Object[]{
+				createFieldPropertyDescriptor("verticalSpan", GridData.class.getField("verticalSpan"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("griddata.verticalSpan"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.verticalSpan.Desc"), //$NON-NLS-1$
 				}),	

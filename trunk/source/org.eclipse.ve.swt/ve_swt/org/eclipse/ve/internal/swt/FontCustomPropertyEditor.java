@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-04 22:25:51 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -169,7 +169,7 @@ public class FontCustomPropertyEditor extends Composite {
 		previewText.setLayoutData(gd03);
 
 		grid.numColumns = 3;
-		initStringLabel.setText("");
+		initStringLabel.setText(""); //$NON-NLS-1$
 		initStringLabel.setLayoutData(gridData1);
 		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -206,7 +206,7 @@ public class FontCustomPropertyEditor extends Composite {
 			// type: Font
 			IBeanProxy fontProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
 			IBeanTypeProxy fontType = fontProxy.getTypeProxy();
-			IMethodProxy getFontData = fontType.getMethodProxy("getFontData");
+			IMethodProxy getFontData = fontType.getMethodProxy("getFontData"); //$NON-NLS-1$
 			// type: FontData[]
 			IArrayBeanProxy fontDataArrayProxy = (IArrayBeanProxy) getFontData.invoke(fontProxy);
 			int len = fontDataArrayProxy.getLength();
@@ -216,9 +216,9 @@ public class FontCustomPropertyEditor extends Composite {
 				IBeanProxy fontDataProxy = fontDataArrayProxy.get(i);
 				IBeanTypeProxy fontDataType = fontDataProxy.getTypeProxy();
 
-				IMethodProxy getHeight = fontDataType.getMethodProxy("getHeight");
-				IMethodProxy getStyle = fontDataType.getMethodProxy("getStyle");
-				IMethodProxy getName = fontDataType.getMethodProxy("getName");
+				IMethodProxy getHeight = fontDataType.getMethodProxy("getHeight"); //$NON-NLS-1$
+				IMethodProxy getStyle = fontDataType.getMethodProxy("getStyle"); //$NON-NLS-1$
+				IMethodProxy getName = fontDataType.getMethodProxy("getName"); //$NON-NLS-1$
 
 				int height = ((IIntegerBeanProxy) getHeight.invoke(fontDataProxy)).intValue();
 				int style = ((IIntegerBeanProxy) getStyle.invoke(fontDataProxy)).intValue();
@@ -278,7 +278,7 @@ public class FontCustomPropertyEditor extends Composite {
 			}
 			return "new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			String results = "";
+			String results = ""; //$NON-NLS-1$
 			switch (jfaceFontInfo.style) {
 				case JFACE_NORMAL:
 					results = "org.eclipse.jface.resource.JFaceResources.getFontRegistry().get(" + jfaceFontInfo.name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -450,7 +450,7 @@ public class FontCustomPropertyEditor extends Composite {
 			PTExpression exp = ptAlloc.getExpression();
 			if (exp instanceof PTMethodInvocation	&& 
 					((PTMethodInvocation) exp).getReceiver() instanceof PTMethodInvocation &&
-					((PTMethodInvocation)((PTMethodInvocation) exp).getReceiver()).getName().equals("getFontRegistry")) {
+					((PTMethodInvocation)((PTMethodInvocation) exp).getReceiver()).getName().equals("getFontRegistry")) { //$NON-NLS-1$
 				jfaceFontInfo = new JFaceFontInfo();
 				PTExpression arg = (PTExpression) ((PTMethodInvocation) exp).getArguments().get(0);
 				if (arg instanceof PTFieldAccess) {
@@ -714,8 +714,8 @@ public class FontCustomPropertyEditor extends Composite {
 		jfaceStylesList.setLayoutData(gridData7);
 		jfaceFontsTab.setLayout(gridLayout11);
 		gridLayout11.numColumns = 2;
-		jfaceNameLabel.setText("Name");
-		jfaceStyleLabel.setText("style");
+		jfaceNameLabel.setText(FontPropertyEditorMessages.getString("FontCustomPropertyEditor.NameLabel.Text")); //$NON-NLS-1$
+		jfaceStyleLabel.setText(FontPropertyEditorMessages.getString("FontCustomPropertyEditor.StyleLabel.text")); //$NON-NLS-1$
 		jfaceNamesList.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    
 				if (!isUpdating) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -43,7 +43,7 @@ public class CompositeFeatureMapper extends AbstractFeatureMapper {
 	public String getMethodName(Statement expr) {
 		String name = super.getMethodName(expr) ;
 		if (name == null) 
-			name = "????????" ;
+			name = "????????" ; //$NON-NLS-1$
 		return name ;
 	}
 

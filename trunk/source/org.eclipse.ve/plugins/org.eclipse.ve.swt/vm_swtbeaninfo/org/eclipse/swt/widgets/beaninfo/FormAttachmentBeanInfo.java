@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FormAttachmentBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,19 +33,19 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("alignment", FormAttachment.class.getField("alignment"), new Object[]{
+				createFieldPropertyDescriptor("alignment", FormAttachment.class.getField("alignment"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formattachment.alignment"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formattachment.alignment.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("denominator", FormAttachment.class.getField("denominator"), new Object[]{
+				createFieldPropertyDescriptor("denominator", FormAttachment.class.getField("denominator"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formattachment.denominator"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formattachment.denominator.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("numerator", FormAttachment.class.getField("numerator"), new Object[]{
+				createFieldPropertyDescriptor("numerator", FormAttachment.class.getField("numerator"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formattachment.numerator"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formattachment.numerator.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("offset", FormAttachment.class.getField("offset"), new Object[]{
+				createFieldPropertyDescriptor("offset", FormAttachment.class.getField("offset"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formattachment.offset"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formattachment.offset.Desc"), //$NON-NLS-1$							
 				}),		

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-22 23:47:56 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -113,19 +113,19 @@ public class TabItemPropertySourceAdapter extends PropertySourceAdapter {
 			if (pd.getId() instanceof EStructuralFeature) {
 				// We need to wrapper them to change the names so that don't collide with the properties of the control
 				String fn = ((EStructuralFeature) pd.getId()).getName();
-				if ("text".equals(fn)) {
-					String tabtext = "tabText";
+				if ("text".equals(fn)) { //$NON-NLS-1$
+					String tabtext = SWTMessages.getString("TabItemPropertySourceAdapter.tabText"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabtext, this, pd);
 					continue;
-				} else if ("image".equals(fn)) {
-					String tabImage = "tabImage";
+				} else if ("image".equals(fn)) { //$NON-NLS-1$
+					String tabImage = SWTMessages.getString("TabItemPropertySourceAdapter.tabImage"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabImage, this, pd);
 					continue;
-				} else if ("toolTipText".equals(fn)) {
-					String tabToolTipText = "tabToolTipText";
+				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
+					String tabToolTipText = SWTMessages.getString("TabItemPropertySourceAdapter.tabToolTipText"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabToolTipText, this, pd);
 					continue;
-				} else if ("control".equals(fn))
+				} else if ("control".equals(fn)) //$NON-NLS-1$
 					continue;
 			}
 			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(tabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, pd);

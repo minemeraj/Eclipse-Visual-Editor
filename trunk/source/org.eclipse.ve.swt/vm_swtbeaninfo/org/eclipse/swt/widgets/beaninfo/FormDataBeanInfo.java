@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FormDataBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,27 +33,27 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("height", FormData.class.getField("height"), new Object[]{
+				createFieldPropertyDescriptor("height", FormData.class.getField("height"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.height"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.height.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("width", FormData.class.getField("width"), new Object[] {
+				createFieldPropertyDescriptor("width", FormData.class.getField("width"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.width"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.width.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("bottom", FormData.class.getField("bottom"), new Object[]{
+				createFieldPropertyDescriptor("bottom", FormData.class.getField("bottom"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.bottom"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.bottom.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("top", FormData.class.getField("top"), new Object[]{
+				createFieldPropertyDescriptor("top", FormData.class.getField("top"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.top"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.top.Desc"), //$NON-NLS-1$								
 				}),
-				createFieldPropertyDescriptor("left", FormData.class.getField("left"), new Object[]{
+				createFieldPropertyDescriptor("left", FormData.class.getField("left"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.left"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.left.Desc"), //$NON-NLS-1$
 				}),
-				createFieldPropertyDescriptor("right", FormData.class.getField("right"), new Object[]{
+				createFieldPropertyDescriptor("right", FormData.class.getField("right"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formdata.right"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formdata.right.Desc"), //$NON-NLS-1$								
 				}),				
