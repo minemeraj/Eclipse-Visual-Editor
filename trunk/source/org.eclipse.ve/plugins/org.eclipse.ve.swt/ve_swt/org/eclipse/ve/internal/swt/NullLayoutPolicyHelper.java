@@ -52,47 +52,6 @@ public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
 	super(ep);
 }
 
-/**
- * This is a temporary hack to add an initialization string (allocation) to a dropped component
- * which contain a parsed tree referencing the parent.
- * 
- * Rich has not implemented a ref. parsed tree yet, so use this as a deprecated method
- * 
- * @param parent
- * @return
- * 
- * @since 1.0.0
- */
-
-private Command  createInitStringCommand(IJavaObjectInstance child, IJavaObjectInstance parent) {
-  
-
-	// Class Creation tree - new Foo(args[])
-	PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
-	ic.setType(child.getJavaType().getJavaName()) ;
-	
-	// set the arguments
-	PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
-	ir.setObject(parent) ;	
-	PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
-	PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT") ;
-	fa.setField("NONE");
-	fa.setReceiver(name) ;
-	
-	
-	ic.getArguments().add(ir);
-	ic.getArguments().add(fa) ;
-	
-	
-	JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
-	ApplyAttributeSettingCommand applyCmd = new ApplyAttributeSettingCommand();
-	applyCmd.setTarget(child);
-	applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation"));
-	applyCmd.setAttributeSettingValue(alloc);	
-	
-	return applyCmd;
-}
-
 public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
 	return getCreateChildCommand(childComponent,null,constraint,position) ;
 
@@ -107,8 +66,6 @@ public Command getCreateChildCommand(Object childComponent, Object parent, Objec
 		return UnexecutableCommand.INSTANCE;	// It can't be created
 			
 	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	if (parent != null)
-	  command.append(createInitStringCommand((IJavaObjectInstance) childComponent, (IJavaObjectInstance) parent));
 	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint) constraint));
 	command.append(createContributionCmd);
 
