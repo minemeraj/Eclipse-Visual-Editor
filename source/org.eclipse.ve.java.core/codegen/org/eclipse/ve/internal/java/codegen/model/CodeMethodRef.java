@@ -11,18 +11,18 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-11 14:05:54 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-
-
 
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -336,7 +336,13 @@ protected List reorderInitExpsToTop(List unordered){
 	ArrayList ordered = new ArrayList(unordered.size());
 	while(allExpressions.hasNext()){
 		CodeExpressionRef exp = (CodeExpressionRef) allExpressions.next();
-		if(((int[])exp.getPriority())[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR){
+		int[] expPriorities = (int[])exp.getPriority();
+		if(expPriorities==null){
+			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+			expPriorities = new int[]{-1, -1};
+		}
+		if(expPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR ||
+			expPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR){
 			if(exp.getBean()!=null &&
 			   exp.getBean().getReturnedMethod()!=null &&
 			   exp.getBean().getReturnedMethod().equals(this))
@@ -456,8 +462,13 @@ public  void updateExpressionOrder() throws CodeGenException{
 				Iterator itr = allExpressions.iterator();
 				while(itr.hasNext()){
 					CodeExpressionRef tmpexp = (CodeExpressionRef) itr.next();
+					int[] tmpexpPriorities = (int[])tmpexp.getPriority();
+					if(tmpexpPriorities==null){
+						JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+						tmpexpPriorities = new int[]{-1, -1};
+					}
 					if(tmpexp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && 
-					   ((int[])tmpexp.getPriority())[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR&&
+					   (tmpexpPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR) &&
 					   tmpexp.getOffset()>bestUsablePosition)
 					   	bestUsablePosition = tmpexp.getOffset()+tmpexp.getLen();
 				}
@@ -501,12 +512,12 @@ protected static Comparator getDefaultBeanOrderComparator(){
 			int np1 = getImportanceCount(bp1, bp2);
 			int np2 = getImportanceCount(bp2, bp1);
 			if(np1 < np2){
-				return -1;
+				return 1; // Return greater, becuase Sorted set returns in ascending
 			}else{
 				if(np1 == np2){
-					return 1;
+					return -1; // Return less, becuase Sorted set returns in ascending
 				}else{
-					return 1;
+					return -1; // Return less, becuase Sorted set returns in ascending
 				}
 			}
 		}
@@ -515,8 +526,8 @@ protected static Comparator getDefaultBeanOrderComparator(){
 			if(isAChildOf(main, subMain))
 				return Integer.MAX_VALUE;
 			int parentCount = getParentCount(main);
-			int constraintCount = getConstraintCount(main);
-			return parentCount + constraintCount;
+			int hasChildren = getConstraintCount(main);
+			return - hasChildren - parentCount;
 		}
 		
 		protected boolean isAChildOf(BeanPart parent, BeanPart reference){
@@ -543,10 +554,11 @@ protected static Comparator getDefaultBeanOrderComparator(){
 		protected int getParentCount(BeanPart b){
 			int pc = 0;
 			int safetyCount = 1000;
-			while(b.getBackRefs().length>0 && safetyCount>0){
+			BeanPart parent = b;
+			while(parent!=null && safetyCount>0){
+				parent = CodeGenUtil.determineParentBeanpart(parent);
 				pc++;
 				safetyCount--;
-				b = b.getBackRefs()[0];
 			}
 			return pc;
 		}
@@ -566,10 +578,20 @@ protected static Comparator getDefaultMethodComparator(){
 		public int compare(Object e1, Object e2){
 			CodeExpressionRef r1 = (CodeExpressionRef)e1;
 			CodeExpressionRef r2 = (CodeExpressionRef)e2;
-			int sfPriority1 = ((int[])r1.getPriority())[0];
-			int sfPriority2 = ((int[])r2.getPriority())[0];
-			int indexPriority1 = ((int[])r1.getPriority())[1];
-			int indexPriority2 = ((int[])r2.getPriority())[1];
+			int[] r1Priorities = (int[])r1.getPriority();
+			int[] r2Priorities = (int[])r2.getPriority();
+			if(r1Priorities==null){
+				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+				r1Priorities = new int[]{-1, -1};
+			}
+			if(r2Priorities==null){
+				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+				r2Priorities = new int[]{-1, -1};
+			}
+			int sfPriority1 = r1Priorities[0];
+			int sfPriority2 = r2Priorities[0];
+			int indexPriority1 = r1Priorities[1];
+			int indexPriority2 = r2Priorities[1];
 			int o1 = r1.getOffset();
 			int o2 = r2.getOffset();
 			if(o1<0)					// If the offsets are less than 0
