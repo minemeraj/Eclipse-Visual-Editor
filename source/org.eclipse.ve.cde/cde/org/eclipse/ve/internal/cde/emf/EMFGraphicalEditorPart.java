@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-22 13:51:27 $ 
  */
 
 
@@ -72,6 +72,7 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.AbstractPropertySheetEntry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
+import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
 /**
  * Base class to use for MOG Graphical Editors.
@@ -282,10 +283,13 @@ protected DefaultEditDomain createEditDomain(){
 	dom.setAnnotationLinkagePolicy(createLinkagePolicy());
 	// Give it a default do nothing special model controller.
 	dom.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, new IModelChangeController() {
-		
-		private int compoundChangeCount = 0;
-		private int holdState = READY_STATE;
-		private String holdMsg = null;
+				
+		/* (non-Javadoc)
+         * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getRootPropertySheetEntry()
+         */
+        protected IDescriptorPropertySheetEntry getRootPropertySheetEntry() {
+            return rootPropertySheetEntry;
+        }
 		
 		/* (non-Javadoc)
 		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#inTransaction()
@@ -328,11 +332,11 @@ protected DefaultEditDomain createEditDomain(){
 			return true;
 		}
 
-		private synchronized void startChange() {
+		protected synchronized void startChange() {
 			compoundChangeCount++;
 		}
 
-		private synchronized void stopChange() {
+		protected synchronized void stopChange() {
 			if (--compoundChangeCount <= 0) {
 				compoundChangeCount = 0; // In case we get out of sync.
 			}
@@ -345,19 +349,6 @@ protected DefaultEditDomain createEditDomain(){
 			return holdMsg;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#setHoldState(int)
-		 */
-		public void setHoldState(int stateFlag, String msg) {
-			holdState = stateFlag;
-			if (holdState != READY_STATE)
-				if (msg != null)
-					holdMsg = msg;
-				else
-					holdMsg = "Editor cannot be changed at this time.";
-			else
-				holdMsg = null;
-		}
 	});
 	return dom;
 }

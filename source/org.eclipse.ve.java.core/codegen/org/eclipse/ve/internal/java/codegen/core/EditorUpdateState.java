@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditorUpdateState.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-22 13:51:13 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -31,7 +31,7 @@ public class EditorUpdateState implements IEditorUpdateState {
 		if(flag){
 			bottomUpProcessing ++;
 		}else{
-			if(bottomUpProcessing--<0)
+			if(--bottomUpProcessing<0)
 				bottomUpProcessing = 0;
 		}
 	}
