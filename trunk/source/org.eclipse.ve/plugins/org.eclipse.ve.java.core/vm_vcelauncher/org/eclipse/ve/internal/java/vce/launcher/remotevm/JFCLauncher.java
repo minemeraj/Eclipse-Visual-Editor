@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCLauncher.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-27 19:00:00 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-17 18:24:35 $ 
  */
 
 import java.applet.Applet;
@@ -38,7 +38,7 @@ public class JFCLauncher implements ILauncher {
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
 	 */
 	public boolean supportsLaunching(Class clazz, Object javaBean) {
-		return (javaBean instanceof Window || javaBean instanceof JComponent || javaBean instanceof Component);
+		return (javaBean instanceof Applet || javaBean instanceof Window || javaBean instanceof JComponent || javaBean instanceof Component);
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +60,10 @@ public class JFCLauncher implements ILauncher {
 		}
 		
 		// If the JavaBean is an instance of a Frame then we should make it visible
-		if ( javaBean instanceof Window ) {
+		if ( javaBean instanceof Applet ) {
+			String projectURL = System.getProperty("vce.launcher.projecturl"); //$NON-NLS-1$
+			launchApplet(clazz, projectURL);
+		} else if ( javaBean instanceof Window ) {
 			launchWindow((Window)javaBean,(Component)javaBean,((Component)javaBean).getSize());
 		} else if ( javaBean instanceof JComponent ) {
 			launchJComponent((JComponent)javaBean);
@@ -164,6 +167,13 @@ protected static void launchApplet(Class anAppletClass, String projectLocation){
 	Dimension aComponentSize = applet.getSize();	
 	frame.setLocation(OFF_SCREEN);
 	frame.setVisible(true);
+	Dimension additionalSize = ((IAppletFrame)frame).getAdditionalSize();
+	if (additionalSize != null) {
+		aComponentSize.height += additionalSize.height;
+		if (aComponentSize.width < additionalSize.width) {
+			aComponentSize.width = additionalSize.width;
+		}
+	}
 	if ( aComponentSize.width == 0 && aComponentSize.height == 0 ) {
 		aComponentSize = new Dimension(250,250);
 	}
