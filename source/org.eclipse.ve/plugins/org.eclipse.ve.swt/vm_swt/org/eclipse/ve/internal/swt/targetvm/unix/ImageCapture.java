@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-04 21:35:04 $ 
+ *  $Revision: 1.4 $  $Date: 2004-10-14 18:51:47 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -164,14 +164,27 @@ public class ImageCapture implements IImageCapture{
 		
 		// title bar
 		if((decoration.getStyle()&(SWT.TITLE|SWT.CLOSE|SWT.MAX|SWT.MIN))!=0 && topLeft.y>2){
+			int barHeight = topLeft.y - 2;
 			// There will be a title bar - draw the text
 			gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
 			gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-			gc.fillGradientRectangle(0,0,bounds.width, topLeft.y-2,false);
+			gc.fillGradientRectangle(0,0,bounds.width, barHeight,false);
 			gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 			gc.drawText(decoration.getText(), topLeft.y, 2, true);
-			if(decoration.getImage()!=null && !decoration.getImage().isDisposed())
-				gc.drawImage(decoration.getImage(), 0,0);
+			if(decoration.getImage()!=null && !decoration.getImage().isDisposed()) {
+				Rectangle imageBounds = decoration.getImage().getBounds();
+				if (imageBounds.height <= barHeight) {
+					gc.drawImage(decoration.getImage(), 0,0);
+				} else {
+					ImageData imageData = decoration.getImage().getImageData();
+					double factor = (double)barHeight / (double)imageBounds.height;
+					int newWidth = (int)((double)imageBounds.width * factor);
+					imageData = imageData.scaledTo(newWidth, barHeight);
+					Image newImage = new Image(decoration.getDisplay(), imageData);
+					gc.drawImage(newImage, 0, 0);
+					newImage.dispose();
+				}
+			}			
 			
 			int rightx = bounds.width-topLeft.y;
 
