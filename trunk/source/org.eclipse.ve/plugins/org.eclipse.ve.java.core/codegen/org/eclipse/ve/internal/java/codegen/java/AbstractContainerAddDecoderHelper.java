@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.ArrayList;
@@ -273,7 +273,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	/**
 	 * 
 	 */
-	public void delete() {
+	public void removeFromModel() {
 		unadaptToCompositionModel();
 		clearPreviousIfNeeded();
 

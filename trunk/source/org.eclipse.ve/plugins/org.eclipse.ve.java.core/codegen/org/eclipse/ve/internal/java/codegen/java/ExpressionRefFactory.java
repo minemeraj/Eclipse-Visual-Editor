@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-28 21:54:07 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.Iterator;
@@ -72,7 +72,7 @@ public CodeExpressionRef createFromJVEModel(Object[] args) throws CodeGenExcepti
 		CodeExpressionRef exp = new CodeExpressionRef(mr, fBeanPart);
 		exp.setArguments(args);
 		//exp.setState(exp.STATE_EXIST) ;
-		exp.clearAllFlags();
+		exp.clearState();
 		exp.setState(CodeExpressionRef.STATE_EXIST, true);
 		exp.generateSource(fSF);
 		if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) //exp.getState()
@@ -184,7 +184,7 @@ public CodeExpressionRef createInitExpression() {
 	org.eclipse.jdt.internal.compiler.ast.Statement s = getInitExpression(src) ;
 	CodeExpressionRef exp = new CodeExpressionRef(s,mr,mr.getOffset()-CLASS_PREFIX.length()) ;
 	//exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
-	exp.clearAllFlags();
+	exp.clearState();
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
 	exp.setState(CodeExpressionRef.STATE_NO_OP, true);
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
@@ -217,7 +217,7 @@ public CodeExpressionRef createFromSource(CodeExpressionRef exp, CodeMethodRef m
 public static CodeExpressionRef createShadowExpression(String content, int SrcOffset, int ExpOffset, int len, CodeMethodRef method, BeanPart b) {
 	CodeExpressionRef exp = new CodeExpressionRef (method,b) ;	
 	//exp.setState(exp.STATE_EXIST) ;
-	exp.clearAllFlags();
+	exp.clearState();
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
 	exp.setContent(new ExpressionParser(content,SrcOffset,len)) ;
 	exp.setOffset(ExpOffset) ;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -95,7 +95,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	if ((!isAnyStateSet()) || 
 		(isStateSet(STATE_NOT_EXISTANT))){
 		   // Clear the expression's content
-		   clearAllFlags();
+		   clearState();
 		   setState(STATE_NOT_EXISTANT, true) ;
 		   setContent((ExpressionParser) null) ;
 		   return ;
@@ -107,7 +107,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	if (fDecoder == null) throw new CodeGenException ("No Decoder") ; //$NON-NLS-1$
 	
 	if (fDecoder.isDeleted()) {
-		clearAllFlags();
+		clearState();
 		setState(STATE_NOT_EXISTANT, true) ;
 		setContent((ExpressionParser) null) ;
 		return ;

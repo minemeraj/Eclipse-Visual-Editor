@@ -11,11 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
  */
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -121,8 +121,8 @@ protected void initialDecoderHelper() {
 /**
  *  Get the first level descendents
  */
-public Vector getChildren(IJavaObjectInstance component) {
-  Vector kids = super.getChildren(component) ; 
+public List getChildren(IJavaObjectInstance component) {
+  List kids = super.getChildren(component) ; 
   java.util.List compList = CodeGenUtil.getChildrenComponents(component) ;
   if (compList != null && compList.size()>0) {    	
 	  Iterator itr = compList.iterator() ;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IJVEDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -50,8 +50,8 @@ public interface IJVEDecoder {
 	public String getCurrentExpression();
 	// Refresh existing expression content from the JVE model
 	public String reflectExpression(String expSig) throws CodeGenException;
-	// Delete from the JVE model
-	public void delete();
+	// Delete from the source
+	public void deleteFromSrc();
 	public void dispose();
 	// Update the Source code with the latest JVE model values
 	public void reflectMOFchange();

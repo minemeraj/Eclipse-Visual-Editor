@@ -11,15 +11,16 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IExpressionDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 
@@ -41,7 +42,7 @@ public interface IExpressionDecoder extends IJVEDecoder {
 
    // Return a vector that contain a set of pair elements:
    // child component, the SF associated with the relationship of the child
-   public Vector getChildren(IJavaObjectInstance component) ;
+   public List getChildren(IJavaObjectInstance component) ;
    public boolean isImplicit (Object[] args) ;
 
    public EStructuralFeature getSF() ;

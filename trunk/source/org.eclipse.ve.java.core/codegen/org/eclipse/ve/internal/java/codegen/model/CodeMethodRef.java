@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -113,7 +113,7 @@ public int isEquivalent(AbstractCodeRef code){
  *  from the *original* source. Else they will be appended in the 
  *  end, and then the method will be 'refreshed' by the expression.
  */
-public synchronized void addExpressionRef(CodeExpressionRef ref) {
+public  void addExpressionRef(CodeExpressionRef ref) {
 	int offset = ref.getOffset() ;
 	if (fExpressions == null) 
 		fExpressions = new ArrayList() ;
@@ -138,7 +138,7 @@ public synchronized void addExpressionRef(CodeExpressionRef ref) {
  *  from the *original* source. Else they will be appended in the 
  *  end, and then the method will be 'refreshed' by the expression.
  */
-public synchronized void addEventExpressionRef(CodeEventRef ref) {
+public  void addEventExpressionRef(CodeEventRef ref) {
 	int offset = ref.getOffset() ;
 	if (fEventExpressions == null) 
 		fEventExpressions = new ArrayList() ;
@@ -156,12 +156,12 @@ public synchronized void addEventExpressionRef(CodeEventRef ref) {
 	}
 }
 
-public synchronized void removeExpressionRef(CodeExpressionRef ref) {
+public  void removeExpressionRef(CodeExpressionRef ref) {
 	if (fExpressions!= null)
 	   fExpressions.remove(ref) ;
 }
 
-public synchronized void removeEventRef(CodeEventRef ref) {
+public  void removeEventRef(CodeEventRef ref) {
 	if (fEventExpressions!=null)
 	  fEventExpressions.remove(ref) ;
 }
@@ -170,19 +170,19 @@ public synchronized void removeEventRef(CodeEventRef ref) {
 /**
  * Get all expressions in this method that impact bean/s in the model
  */
-public synchronized Iterator getExpressions() {
+public  Iterator getExpressions() {
 	if (fExpressions == null) fExpressions = new ArrayList () ;
 	return fExpressions.iterator() ;
 }
 /**
  * Get all Event expressions in this method that impact bean/s in the model
  */
-public synchronized Iterator getEventExpressions() {
+public  Iterator getEventExpressions() {
 	if (fEventExpressions == null) fEventExpressions = new ArrayList () ;
 	return fEventExpressions.iterator() ;
 }
 
-public synchronized Iterator getAllExpressions() {
+public  Iterator getAllExpressions() {
 	
 	final Iterator exp = getExpressions() ;
 	final Iterator events = getEventExpressions() ;	
@@ -416,7 +416,7 @@ protected Object[] getUsableOffsetAndFiller(List allExpressionsSorted) throws Co
  *     expression is set a priority of -1.
  * (*) 
  */
-public synchronized void updateExpressionOrder() throws CodeGenException{
+public  void updateExpressionOrder() throws CodeGenException{
 
 	resetExpressionPriorities();
 	
@@ -602,8 +602,11 @@ protected static Comparator getDefaultMethodComparator(){
 }
 
 
-
-public synchronized void dispose() {
+/**
+ * This method will remove itself and of of its expressions from the model.
+ * It will not remove BeanParts that it initializes
+ */
+public  void dispose() {
 	
 	if (fModel != null) {
 		Iterator itr = fModel.getBeansInitilizedByMethod(this).iterator();
@@ -644,22 +647,6 @@ public synchronized void dispose() {
 	  
 	fTypeRef = null ;
 	fcompMethod = null ;
-}
-
-public synchronized void deleteFromComposition () {
-	if (fExpressions != null) {
-		Iterator itr = fExpressions.iterator() ;
-		while (itr.hasNext()) {
-			((CodeExpressionRef)itr.next()).deleteFromComposition() ;
-		}
-	}
-	
-	if (fEventExpressions != null) {
-		Iterator itr = fEventExpressions.iterator() ;
-		while (itr.hasNext()) {
-			((CodeEventRef)itr.next()).deleteFromComposition() ;
-		}
-	}
 }
 
 public ICodeGenSourceRange getTargetSourceRange() {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IAnnotationDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -41,7 +41,9 @@ public interface IAnnotationDecoder {
    public void setBeanPart(BeanPart part) ;
    public BeanPart getBeanPart() ;
    public boolean isDeleted() throws CodeGenException  ;
+   // Delete from from the source code
    public void delete () ;
+   // Clean up and remove from the model
    public void dispose()  ;
    // Return a vector that contain a set of pair elements:
    // child component, the SF associated with the relationship of the child   

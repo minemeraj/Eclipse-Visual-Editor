@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 
@@ -20,14 +20,14 @@ import java.util.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -114,7 +114,7 @@ protected boolean isChildValue(EStructuralFeature sf, IJavaInstance val, boolean
  * Treat it as a regular bean instance (e.g., setLayout(xxx) ; where xxx was initialized with
  * some attributes.
  */
-protected void addNonSimpleAttribute (IJavaObjectInstance obj, Vector list) {
+protected void addNonSimpleAttribute (IJavaObjectInstance obj, List list) {
     
     if (obj == null) return  ;
     
@@ -134,7 +134,7 @@ protected void addNonSimpleAttribute (IJavaObjectInstance obj, Vector list) {
 	}
 }
 
-private void addNonSimpleAttribute(Vector list, EStructuralFeature sf, Object val) {
+private void addNonSimpleAttribute(List list, EStructuralFeature sf, Object val) {
 	if (val instanceof IJavaInstance && isChildValue(sf, (IJavaInstance) val, true)) {
 		list.add(val);
 		list.add(sf);
@@ -145,9 +145,9 @@ private void addNonSimpleAttribute(Vector list, EStructuralFeature sf, Object va
 /**
  *  Get the first level descendents
  */
-public Vector getChildren(IJavaObjectInstance component) {
+public List getChildren(IJavaObjectInstance component) {
 	// Simple Object has not childrens
-	Vector v = new Vector() ;
+	List v = new ArrayList() ;
 //  In the future we should support adding non-simple attribute (an instance of an attribute)
 	addNonSimpleAttribute(component,v) ;
 	return v ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.Iterator;
@@ -421,7 +421,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 
 	}
 
-	public void delete() {
+	public void removeFromModel() {
 		unadaptToCompositionModel();
 
 		org.eclipse.emf.ecore.EStructuralFeature sf = fFmapper.getFeature(fExpr);

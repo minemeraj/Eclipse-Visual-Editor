@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.7 $  $Date: 2004-01-28 17:38:06 $ 
+ *  $Revision: 1.8 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 
@@ -356,7 +356,7 @@ public boolean isEquivalentChanged(ITypeResolver oldResolver, CodeExpressionRef 
 /**
  *  Decode this. expression 
  */
-public synchronized boolean  decodeExpression() throws CodeGenException {
+public  boolean  decodeExpression() throws CodeGenException {
     
       // If it is already in MOF, no need to create it again.
       if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
@@ -399,7 +399,7 @@ protected String removeWhiteSpace(String s) {
 /**
  *  Generate this. expression 
  */
-public synchronized String  generateSource(EStructuralFeature sf) throws CodeGenException {
+public  String  generateSource(EStructuralFeature sf) throws CodeGenException {
     
       if (!isStateSet(STATE_EXIST)) //((fState|STATE_EXIST)==0) 
       	return null ;
@@ -466,12 +466,12 @@ if (this instanceof CodeEventRef)
     return getExpressionDecoder() ;   
 }
 
-public synchronized void refreshFromComposition() throws CodeGenException {
+public  void refreshFromComposition() throws CodeGenException {
 	
 	if ((!isAnyStateSet()) ||  //((fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT) {
 	    (isStateSet(STATE_NOT_EXISTANT))){
 		   // Clear the expression's content
-		   clearAllFlags();
+		   clearState();
 		   setState(STATE_NOT_EXISTANT, true) ;
 		   setContent((ExpressionParser) null) ;
 		   return ;
@@ -485,7 +485,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	if (fDecoder.isImplicit(fArguments))
 	    return ;	
 	if (fDecoder.isDeleted()) {
-		clearAllFlags();
+		clearState();
 		setState(STATE_NOT_EXISTANT, true) ;
 		setContent((ExpressionParser) null) ;
 		return ;
@@ -499,18 +499,9 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	setState(STATE_EXIST, true);
 }
 
-public synchronized void deleteFromComposition() {
-	clearAllFlags();
-	setState(STATE_NOT_EXISTANT, true) ;
-	setContent((ExpressionParser) null);
-	setOffset(-1) ;
-	if (primGetDecoder() != null)
-		primGetDecoder().deleteFromComposition() ;	  
-}
 
 // Show the expression, and the location in the document they point to
-public String _debugExpressions() {
-    
+public String _debugExpressions() {    
     return getMethod()._debugExpressions() ;
 }
 
@@ -522,7 +513,7 @@ public String _debugExpressions() {
  *                         WHY a limbo state of ExpressionRef depends on its
  *                         JDOM Expression????
  */
-public synchronized void updateLimboState (CodeExpressionRef exp) {
+public  void updateLimboState (CodeExpressionRef exp) {
 //    if (exp == null) return ;
 //    boolean parsedOK  ;
 //    if (exp.isStateSet(STATE_EXP_IN_LIMBO)) //((exp.getState()&exp.STATE_EXP_IN_LIMBO)>0)
@@ -545,7 +536,7 @@ public synchronized void updateLimboState (CodeExpressionRef exp) {
  *  o Update the MOF model if a decoder is present.
  *  o Update the local working copy to reflect the text change.
  */
-public synchronized void refreshFromJOM(CodeExpressionRef exp){
+public  void refreshFromJOM(CodeExpressionRef exp){
 	try{
 		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
 		
@@ -586,7 +577,7 @@ public synchronized void refreshFromJOM(CodeExpressionRef exp){
 }
 
 
-public synchronized void updateDocument(ExpressionParser newParser) {
+public  void updateDocument(ExpressionParser newParser) {
 	synchronized (fBean.getModel().getDocumentLock()) {
 		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
 		int off = getOffset();
@@ -604,7 +595,7 @@ public synchronized void updateDocument(ExpressionParser newParser) {
 	}
 }
 
-public synchronized void updateDocument(boolean updateSharedDoc) {
+public  void updateDocument(boolean updateSharedDoc) {
 	if(isStateSet(STATE_IN_SYNC))  
 		return ;
      
@@ -869,24 +860,29 @@ public String getMethodNameContent(){
 	  return null ;
 }
 
+
+/**
+ * A call to despose will delete this expression from the VE model if needed,
+ * and will clean up.  It is assume that the document have been updated already
+ * at this point by the decoder.
+ */
 public void dispose() {
 	// A dispose will be called after a delete.
-//	if (isStateSet(STATE_NOT_EXISTANT)) return ;
-	
-	clearAllFlags();
+  
+	if (!isStateSet(STATE_NOT_EXISTANT) && primGetDecoder() != null) {
+		primGetDecoder().dispose();		
+	}
+	fDecoder = null ;
+	clearState();	
 	setState(STATE_NOT_EXISTANT, true) ;
 	setContent((ExpressionParser) null) ;
-	if (fDecoder != null)
-	  fDecoder.dispose() ;
-	fDecoder = null ;
 	setProprity(null) ;
 	if (fMethod != null)
 	   fMethod.removeExpressionRef(this) ;		
 	fMethod = null ;
 	if (fBean != null)
 	   fBean.removeRefExpression(this) ;
-	fBean = null ;
-	
+	fBean = null ;	
 }
 public void setProprity(Object priority){
 	fPriority = priority;
@@ -894,16 +890,8 @@ public void setProprity(Object priority){
 private void primSetState(int flag) {
     fInternalState = flag ;
 }
-public void clearAllFlags(){
-	setState(STATE_EXIST, false);
-	setState(STATE_EXP_IN_LIMBO, false);
-	setState(STATE_IMPLICIT, false);
-	setState(STATE_IN_SYNC, false);
-	setState(STATE_NO_OP, false);
-	setState(STATE_INIT_EXPR,false) ;
-	setState(STATE_NOT_EXISTANT, false);
-	setState(STATE_SRC_LOC_FIXED, false);
-	setState(STATE_UPDATING_SOURCE, false);
+public void clearState(){
+	primSetState(0);
 }
 public void setState(int flag, boolean state) {
 	if(state)

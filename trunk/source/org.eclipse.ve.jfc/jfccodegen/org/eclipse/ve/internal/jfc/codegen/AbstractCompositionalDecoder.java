@@ -12,9 +12,9 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositionalDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
  */
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -60,8 +60,8 @@ public abstract class AbstractCompositionalDecoder extends ContainerDecoder {
 	 * structural feature in the array to be the holder of
 	 * of the true children.
 	 */
-	public Vector getChildren(IJavaObjectInstance component) {
-		Vector kids = super.getChildren(component);
+	public List getChildren(IJavaObjectInstance component) {
+		List kids = super.getChildren(component);
 		// Look for delegated children
 		for (int sfc = 0; sfc < structuralFeatures.length; sfc++) { // Is SF containing children present?
 			if (structuralFeatures[sfc].length() < 1)

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
  */
 import java.util.List;
 
@@ -42,7 +42,8 @@ public JFCChildRelationshipDecoderHelper(BeanPart bean, Statement exp, IJavaFeat
 protected List getIndexedEntries() {
 	if(fFmapper!=null && fFmapper.getMethodName()!=null && fFmapper.getMethodName().equals(JTableDecoder.JTABLE_ADDCOLUMN_METHOD))
 		if(fFmapper.getFeature(fExpr).isMany() && fAddedPart!=null)
-			return getComponentsFromConstraintComponents((List)fAddedPart.getBackRefs()[0].getEObject().eGet(fFmapper.getFeature(fExpr)));
+			if (fAddedPart.getBackRefs().length>0)
+			    return getComponentsFromConstraintComponents((List)fAddedPart.getBackRefs()[0].getEObject().eGet(fFmapper.getFeature(fExpr)));
 	return null;
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-19 22:50:31 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:30 $ 
  */
 
 
@@ -261,7 +261,7 @@ public boolean decode() throws CodeGenException {
       return addConstraintFeature() ;
 }
 
-public void delete() {
+public void removeFromModel() {
 	unadaptToCompositionModel() ;
 	
 	org.eclipse.emf.ecore.EStructuralFeature sf = fFmapper.getFeature(fExpr) ;

@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedInnerStyleHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -139,7 +139,7 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
         if (d != null) {
              d.removeChangeListener(this) ;
              removePropertyDecoderFromMap(pName, d) ;
-             d.delete() ;
+             d.deleteFromSrc() ;
         }
         else {
 	       org.eclipse.ve.internal.java.core.JavaVEPlugin.log("PropertyChangedInnerStyleHelper.removePropertyEvent: No Property decoder for"+pName) ; //$NON-NLS-1$

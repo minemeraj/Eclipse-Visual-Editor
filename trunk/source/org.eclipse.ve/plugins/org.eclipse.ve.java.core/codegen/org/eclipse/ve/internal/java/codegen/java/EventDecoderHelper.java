@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -385,9 +385,9 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#delete()
+	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#removeFromModel()
 	 */
-	public void delete() {
+	public void removeFromModel() {
 		cleanUpPreviousIfNedded();
 	}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -263,7 +263,7 @@ public boolean decode() throws CodeGenException {
       return addComponent() ;
 }
 
-public void delete() {
+public void removeFromModel() {
 	unadaptToCompositionModel() ;
 	
 	org.eclipse.emf.ecore.EStructuralFeature sf = fFmapper.getFeature(fExpr) ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:30 $ 
  */
 
 
@@ -190,7 +190,7 @@ public boolean decode() throws CodeGenException {
       return addPointArg() ;
 }
 
-public void delete() {
+public void removeFromModel() {
 	unadaptToCompositionModel() ;
 	
 	org.eclipse.emf.ecore.EStructuralFeature sf = fFmapper.getFeature(fExpr) ;

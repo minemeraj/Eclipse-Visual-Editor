@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -201,7 +201,7 @@ public void deleteDesignatedBeans() {
  * Return all beans initialized by this method
  */	
 public BeanPart[] getBeansInializedByMethod(String methodHandle) {
-	Vector beans = new Vector () ;
+	List beans = new ArrayList () ;
 	Iterator itr = getBeans().iterator() ;
 	while (itr.hasNext()) {
 		BeanPart b = (BeanPart)itr.next() ;
@@ -213,7 +213,7 @@ public BeanPart[] getBeansInializedByMethod(String methodHandle) {
 	if (beans.size() > 0) {
 		result = new BeanPart[beans.size()] ;
 		for (int i=0; i<beans.size(); i++) {
-			result[i] = (BeanPart)beans.elementAt(i) ;
+			result[i] = (BeanPart)beans.get(i) ;
 		}
 	}
 	else
@@ -257,8 +257,7 @@ public void removeBean (BeanPart bean) {
    fBeansKey.remove(bean.getUniqueName()) ; 
    if (bean.getEObject()!= null)  
       fRefObjKey.remove(bean.getEObject()) ;
-   fBeanReturns.values().remove(bean) ;
-   bean.setModel(null) ;
+   fBeanReturns.values().remove(bean) ;  
 }
 
 
@@ -458,8 +457,7 @@ public void removeMethodRef(CodeMethodRef mr) {
 		if (!isStateSet(BDM_STATE_DOWN)) {
 			for (count = 0; count < exps.length; count++) {
 				CodeExpressionRef exp = exps[count];
-				if (exp != null && exp.getCodeContent() != null && CodeGenUtil.isExactlyPresent(exp.getCodeContent(),mr.getMethodName())){
-					exp.deleteFromComposition();
+				if (exp != null && exp.getCodeContent() != null && CodeGenUtil.isExactlyPresent(exp.getCodeContent(),mr.getMethodName())){					
 					exp.dispose();
 				}
 			}

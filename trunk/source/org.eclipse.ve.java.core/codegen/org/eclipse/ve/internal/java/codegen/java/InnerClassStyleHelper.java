@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -194,7 +194,7 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 		if (d != null) {
 		   d.removeChangeListener(this) ;
 		   removeCallBackDecoderFromMap(mName, d) ;
-		   d.delete() ;
+		   d.deleteFromSrc() ;
 		}
 		else {
 			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InnerClassStyleHelper.removeCallBack: No Callback decoder for"+mName) ; //$NON-NLS-1$
