@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-16 21:21:15 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-21 02:52:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -573,7 +573,6 @@ public class BDMMerger {
 	 *  Generate an expression that is hooked into the main BDM
 	 */
 	private CodeEventRef createNewEventExpression(CodeEventRef e, CodeMethodRef m, boolean decode) throws CodeGenException{
-		if (getMainBDMExpression(e) != null) throw new CodeGenException("duplicate Expression") ; //$NON-NLS-1$
 		BeanPart b = getMainBDMBean(e.getBean()) ;
 		if (b == null) throw new CodeGenException("No Bean Part") ; //$NON-NLS-1$
 		CodeEventRef newe = new CodeEventRef(m, b);
@@ -597,7 +596,10 @@ public class BDMMerger {
 	 *  Generate an expression that is hooked into the main BDM
 	 */
 	private CodeExpressionRef createNewExpression(CodeExpressionRef e, CodeMethodRef m, boolean decode) throws CodeGenException{
-		if (getMainBDMExpression(e) != null) throw new CodeGenException("duplicate Expression") ; //$NON-NLS-1$
+		if (getMainBDMExpression(e) != null) {
+			logFiner("Ignoring creation of duplicate Expression" + e.getCodeContent()) ; //$NON-NLS-1$
+			return null;
+		}
 		BeanPart b = getMainBDMBean(e.getBean()) ;
 		if (b == null) throw new CodeGenException("No Bean Part") ; //$NON-NLS-1$
 		ExpressionRefFactory gen = new ExpressionRefFactory(b,null) ;
