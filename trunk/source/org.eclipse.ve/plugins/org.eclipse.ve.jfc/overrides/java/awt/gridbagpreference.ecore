@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore"     
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"  
+  
+  nsURI="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore"
+  nsPrefix="gridbagpreference"
+  name="gridbagpreference">
+  
+  <!-- The enumeration for the FillKind. -->
+  <eClassifiers xsi:type="ecore:EEnum" xmi:id="FillKind" name="FillKind" >
+    <eLiterals name="none" value="0"/>  
+    <eLiterals name="both" value="1"/>
+    <eLiterals name="horizontal" value="2"/>
+    <eLiterals name="vertical" value="3"/>
+  </eClassifiers>
+  
+  <!-- Preference is used to set the GridBag preference for layout. E.G. Horizontal or Vertical -->
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="Preference" name="Preference"
+      eSuperTypes="ecore:EClass http:///org/eclipse/ve/internal/cdm.ecore#//KeyedDynamic">
+    <eAttributes name="keyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="org.eclipse.ve.internal.jfc.core.gridbagfilepreferencekey"/>
+    <eAttributes name="typedValue" eType="FillKind" defaultValueLiteral="none"/>
+  </eClassifiers>
+</ecore:EPackage>

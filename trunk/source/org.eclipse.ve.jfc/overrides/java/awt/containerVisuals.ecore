@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI"
+     
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+  xmlns:java="java.xmi"
+  xmlns:jcm="http:///org/eclipse/ve/internal/jcm.ecore"   
+  xmlns:decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+  
+  nsURI="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/containerVisuals.ecore"
+  nsPrefix="containerVisuals"
+  name="containerVisuals">
+  
+  <!-- ConstraintComponent is the "component" of a java awt Container.
+       "component" always needs to be set.
+       "constraint" should be set only if the constraint is set (set to null is still considered to be set).
+                    LayoutManager's shouldn't set constraint, except if it is a string. LayoutManager2's should, if necessary. -->
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="ConstraintComponent" name="ConstraintComponent">
+    <eReferences name="component" xmi:id="ConstraintComponent/component" eType="java:JavaClass java:/java.awt#Component">
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>        
+    </eReferences>
+    <eReferences name="constraint" xmi:id="ConstraintComponent/constraint" eType="java:JavaClass java:/java.lang#Object" unsettable="true"/>
+    
+    <eAnnotations xsi:type="decorators:PropertySourceAdapterInformation"
+      propertySourceAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ConstraintComponentPropertySourceAdapter"/>
+  </eClassifiers>
+  
+</ecore:EPackage>

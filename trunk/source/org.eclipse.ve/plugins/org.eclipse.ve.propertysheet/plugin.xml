@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.propertysheet"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName"
+   class="org.eclipse.ve.internal.propertysheet.PSheetPlugin">
+
+   <runtime>
+      <library name="propertysheet.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.propertysheet"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.ui" export="true"/>
+      <import plugin="org.eclipse.gef" optional="true"/>
+   </requires>
+
+
+</plugin>
