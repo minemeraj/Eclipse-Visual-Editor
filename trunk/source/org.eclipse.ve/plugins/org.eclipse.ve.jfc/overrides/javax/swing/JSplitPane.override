@@ -24,16 +24,16 @@
           propertyDescriptorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JSplitPaneOrientationPropertyDescriptor"/>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="leftComponent" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="rightComponent" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="topComponent" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="bottomComponent" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
   </event:AddMany>
 </xmi:XMI>

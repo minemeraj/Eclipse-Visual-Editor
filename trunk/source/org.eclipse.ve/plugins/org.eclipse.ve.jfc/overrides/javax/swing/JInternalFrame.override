@@ -18,10 +18,10 @@
   </event:AddMany>
   <event:AddMany  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="contentPane" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="JMenuBar" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
   </event:AddMany>
 </xmi:XMI>

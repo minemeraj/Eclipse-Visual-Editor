@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanFeatureDecorator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanProxyMediatorName <em>Bean Proxy Mediator Name</em>}</li>
- *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#isChildFeature <em>Child Feature</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getLinkType <em>Link Type</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}</li>
  * </ul>
  * </p>
@@ -70,38 +70,37 @@ public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
 	void setBeanProxyMediatorName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Child Feature</b></em>' attribute.
+	 * Returns the value of the '<em><b>Link Type</b></em>' attribute.
+	 * The default value is <code>"NORMAL"</code>.
+	 * The literals are from the enumeration {@link org.eclipse.ve.internal.jcm.LinkType}.
 	 * <!-- begin-user-doc -->
-   * <p>
-	* If true, then this is a child feature. This means that if the parent is deleted, 
-	* then the child should be deleted except if the child is referenced by another feature that is a child feature.
-	* It is a basic parent/child relationship, which is usually shown in the tree and graph view. It is used by
-	* proxy adapters to know when to recycle the remote proxy.
-   * </p>
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * If true, then this is a child feature. This means that if the parent is deleted, then the child should be deleted except if the child is referenced by another feature that is a child feature.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Child Feature</em>' attribute.
-	 * @see #setChildFeature(boolean)
-	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator_ChildFeature()
-	 * @model 
+	 * @return the value of the '<em>Link Type</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.LinkType
+	 * @see #setLinkType(LinkType)
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator_LinkType()
+	 * @model default="NORMAL"
 	 * @generated
 	 */
-  boolean isChildFeature();
+	LinkType getLinkType();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#isChildFeature <em>Child Feature</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getLinkType <em>Link Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Child Feature</em>' attribute.
-	 * @see #isChildFeature()
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Link Type</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.LinkType
+	 * @see #getLinkType()
 	 * @generated
 	 */
-  void setChildFeature(boolean value);
+	void setLinkType(LinkType value);
 
 	/**
 	 * Returns the value of the '<em><b>Bean Location</b></em>' attribute.
+	 * The default value is <code>"GLOBAL_GLOBAL"</code>.
 	 * The literals are from the enumeration {@link org.eclipse.ve.internal.jcm.InstanceLocation}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -114,7 +113,7 @@ public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
 	 * @see #unsetBeanLocation()
 	 * @see #setBeanLocation(InstanceLocation)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator_BeanLocation()
-	 * @model unsettable="true"
+	 * @model default="GLOBAL_GLOBAL" unsettable="true"
 	 * @generated
 	 */
 	InstanceLocation getBeanLocation();

@@ -17,7 +17,7 @@
       <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/component" name="component"
         eType="java:JavaClass java:/javax.swing#JComponent">
         <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" hidden="true"/>
-        <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>         
+        <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="CHILD"/>         
       </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabTitle" name="tabTitle"
         eType="java:JavaClass java:/java.lang#String">

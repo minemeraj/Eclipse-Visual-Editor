@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import java.util.Map;
@@ -44,6 +44,7 @@ import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 import org.eclipse.ve.internal.jcm.JCMPackage;
+import org.eclipse.ve.internal.jcm.LinkType;
 import org.eclipse.ve.internal.jcm.Listener;
 import org.eclipse.ve.internal.jcm.ListenerType;
 import org.eclipse.ve.internal.jcm.MemberContainer;
@@ -143,6 +144,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum linkTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass listenerTypeEClass = null;
 
 	/**
@@ -215,27 +223,28 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * @generated
 	 */
 	public static JCMPackage init() {
-		if (isInited) return (JCMPackage)EPackage.Registry.INSTANCE.get(JCMPackage.eNS_URI);
+		if (isInited) return (JCMPackage)EPackage.Registry.INSTANCE.getEPackage(JCMPackage.eNS_URI);
 
-		// Obtain or create and register package.
-		JCMPackageImpl theJCMPackage = (JCMPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(eNS_URI) : new JCMPackageImpl());
+		// Obtain or create and register package
+		JCMPackageImpl theJCMPackage = (JCMPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof JCMPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new JCMPackageImpl());
 
 		isInited = true;
 
 		// Initialize simple dependencies
-		BeaninfoPackageImpl.init();
-		JavaRefPackageImpl.init();
-		EcorePackageImpl.init();
 		CDMPackageImpl.init();
+		EcorePackageImpl.init();
+		JavaRefPackageImpl.init();
 		InstantiationPackageImpl.init();
+		BeaninfoPackageImpl.init();
 
-		// Obtain or create and register interdependencies
-
-		// Step 1: create meta-model objects
+		// Create package meta-data objects
 		theJCMPackage.createPackageContents();
 
-		// Step 2: complete initialization
+		// Initialize created meta-data
 		theJCMPackage.initializePackageContents();
+
+		// Mark meta-data to indicate it can't be changed
+		theJCMPackage.freeze();
 
 		return theJCMPackage;
 	}
@@ -296,10 +305,10 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 
 	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public EAttribute getBeanFeatureDecorator_ChildFeature() {
+	public EAttribute getBeanFeatureDecorator_LinkType() {
 		return (EAttribute)beanFeatureDecoratorEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -542,6 +551,15 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getLinkType() {
+		return linkTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public JCMFactory getJCMFactory() {
 		return (JCMFactory)getEFactoryInstance();
 	}
@@ -725,7 +743,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 
 		beanFeatureDecoratorEClass = createEClass(BEAN_FEATURE_DECORATOR);
 		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME);
-		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__CHILD_FEATURE);
+		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__LINK_TYPE);
 		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__BEAN_LOCATION);
 
 		beanCompositionEClass = createEClass(BEAN_COMPOSITION);
@@ -783,6 +801,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 
 		// Create enums
 		instanceLocationEEnum = createEEnum(INSTANCE_LOCATION);
+		linkTypeEEnum = createEEnum(LINK_TYPE);
 	}
 
 	/**
@@ -842,68 +861,68 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		jcmMethodEClass.getESuperTypes().add(this.getMemberContainer());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(beanDecoratorEClass, BeanDecorator.class, "BeanDecorator", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getBeanDecorator_BeanProxyClassName(), ecorePackage.getEString(), "beanProxyClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getBeanDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getBeanDecorator_BeanReturn(), ecorePackage.getEBoolean(), "beanReturn", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(beanDecoratorEClass, BeanDecorator.class, "BeanDecorator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBeanDecorator_BeanProxyClassName(), ecorePackage.getEString(), "beanProxyClassName", null, 0, 1, BeanDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBeanDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", null, 0, 1, BeanDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBeanDecorator_BeanReturn(), ecorePackage.getEBoolean(), "beanReturn", null, 0, 1, BeanDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(beanFeatureDecoratorEClass, BeanFeatureDecorator.class, "BeanFeatureDecorator", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getBeanFeatureDecorator_BeanProxyMediatorName(), ecorePackage.getEString(), "beanProxyMediatorName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getBeanFeatureDecorator_ChildFeature(), ecorePackage.getEBoolean(), "childFeature", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getBeanFeatureDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(beanFeatureDecoratorEClass, BeanFeatureDecorator.class, "BeanFeatureDecorator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBeanFeatureDecorator_BeanProxyMediatorName(), ecorePackage.getEString(), "beanProxyMediatorName", null, 0, 1, BeanFeatureDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBeanFeatureDecorator_LinkType(), this.getLinkType(), "linkType", "NORMAL", 0, 1, BeanFeatureDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBeanFeatureDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", "GLOBAL_GLOBAL", 0, 1, BeanFeatureDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(beanCompositionEClass, BeanComposition.class, "BeanComposition", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getBeanComposition_Components(), theEcorePackage.getEObject(), null, "components", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getBeanComposition_ListenerTypes(), this.getListenerType(), null, "listenerTypes", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(beanCompositionEClass, BeanComposition.class, "BeanComposition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBeanComposition_Components(), theEcorePackage.getEObject(), null, "components", null, 0, -1, BeanComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBeanComposition_ListenerTypes(), this.getListenerType(), null, "listenerTypes", null, 0, -1, BeanComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(abstractEventInvocationEClass, AbstractEventInvocation.class, "AbstractEventInvocation", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAbstractEventInvocation_Callbacks(), this.getCallback(), null, "callbacks", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getAbstractEventInvocation_Listener(), this.getListener(), this.getListener_ListenedBy(), "listener", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(abstractEventInvocationEClass, AbstractEventInvocation.class, "AbstractEventInvocation", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAbstractEventInvocation_Callbacks(), this.getCallback(), null, "callbacks", null, 0, -1, AbstractEventInvocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractEventInvocation_Listener(), this.getListener(), this.getListener_ListenedBy(), "listener", null, 0, 1, AbstractEventInvocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(listenerTypeEClass, ListenerType.class, "ListenerType", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getListenerType_Name(), ecorePackage.getEString(), "name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getListenerType_ThisPart(), ecorePackage.getEBoolean(), "thisPart", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getListenerType_Extends(), theJavaRefPackage.getJavaClass(), null, "extends", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getListenerType_Implements(), theJavaRefPackage.getJavaClass(), null, "implements", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getListenerType_Is(), theJavaRefPackage.getJavaClass(), null, "is", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getListenerType_Listeners(), this.getListener(), this.getListener_ListenerType(), "listeners", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(listenerTypeEClass, ListenerType.class, "ListenerType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getListenerType_Name(), ecorePackage.getEString(), "name", null, 0, 1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getListenerType_ThisPart(), ecorePackage.getEBoolean(), "thisPart", null, 0, 1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListenerType_Extends(), theJavaRefPackage.getJavaClass(), null, "extends", null, 0, 1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListenerType_Implements(), theJavaRefPackage.getJavaClass(), null, "implements", null, 0, -1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListenerType_Is(), theJavaRefPackage.getJavaClass(), null, "is", null, 0, 1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListenerType_Listeners(), this.getListener(), this.getListener_ListenerType(), "listeners", null, 0, -1, ListenerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(memberContainerEClass, MemberContainer.class, "MemberContainer", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getMemberContainer_Properties(), theEcorePackage.getEObject(), null, "properties", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getMemberContainer_Members(), theEcorePackage.getEObject(), null, "members", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(memberContainerEClass, MemberContainer.class, "MemberContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMemberContainer_Properties(), theEcorePackage.getEObject(), null, "properties", null, 0, -1, MemberContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberContainer_Members(), theEcorePackage.getEObject(), null, "members", null, 0, -1, MemberContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(listenerEClass, Listener.class, "Listener", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getListener_ListenedBy(), this.getAbstractEventInvocation(), this.getAbstractEventInvocation_Listener(), "listenedBy", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getListener_ListenerType(), this.getListenerType(), this.getListenerType_Listeners(), "listenerType", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(listenerEClass, Listener.class, "Listener", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getListener_ListenedBy(), this.getAbstractEventInvocation(), this.getAbstractEventInvocation_Listener(), "listenedBy", null, 0, -1, Listener.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListener_ListenerType(), this.getListenerType(), this.getListenerType_Listeners(), "listenerType", null, 0, 1, Listener.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(callbackEClass, Callback.class, "Callback", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getCallback_SharedScope(), ecorePackage.getEBoolean(), "sharedScope", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getCallback_Method(), theJavaRefPackage.getMethod(), null, "method", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getCallback_Statements(), theInstantiationPackage.getPTExpression(), null, "statements", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(callbackEClass, Callback.class, "Callback", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCallback_SharedScope(), ecorePackage.getEBoolean(), "sharedScope", null, 0, 1, Callback.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCallback_Method(), theJavaRefPackage.getMethod(), null, "method", null, 1, 1, Callback.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCallback_Statements(), theInstantiationPackage.getPTExpression(), null, "statements", null, 0, -1, Callback.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(eventInvocationEClass, EventInvocation.class, "EventInvocation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getEventInvocation_Event(), theBeaninfoPackage.getBeanEvent(), null, "event", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(eventInvocationEClass, EventInvocation.class, "EventInvocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getEventInvocation_Event(), theBeaninfoPackage.getBeanEvent(), null, "event", null, 0, 1, EventInvocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(propertyChangeEventInvocationEClass, PropertyChangeEventInvocation.class, "PropertyChangeEventInvocation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getPropertyChangeEventInvocation_AddMethod(), theJavaRefPackage.getMethod(), null, "addMethod", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getPropertyChangeEventInvocation_Properties(), this.getPropertyEvent(), null, "properties", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(propertyChangeEventInvocationEClass, PropertyChangeEventInvocation.class, "PropertyChangeEventInvocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPropertyChangeEventInvocation_AddMethod(), theJavaRefPackage.getMethod(), null, "addMethod", null, 1, 1, PropertyChangeEventInvocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPropertyChangeEventInvocation_Properties(), this.getPropertyEvent(), null, "properties", null, 0, -1, PropertyChangeEventInvocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(propertyEventEClass, PropertyEvent.class, "PropertyEvent", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getPropertyEvent_PropertyName(), ecorePackage.getEString(), "propertyName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getPropertyEvent_UseIfExpression(), ecorePackage.getEBoolean(), "useIfExpression", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(propertyEventEClass, PropertyEvent.class, "PropertyEvent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPropertyEvent_PropertyName(), ecorePackage.getEString(), "propertyName", null, 0, 1, PropertyEvent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPropertyEvent_UseIfExpression(), ecorePackage.getEBoolean(), "useIfExpression", null, 0, 1, PropertyEvent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(beanSubclassCompositionEClass, BeanSubclassComposition.class, "BeanSubclassComposition", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getBeanSubclassComposition_ThisPart(), theInstantiationPackage.getIJavaObjectInstance(), null, "thisPart", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getBeanSubclassComposition_Methods(), this.getJCMMethod(), null, "methods", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(beanSubclassCompositionEClass, BeanSubclassComposition.class, "BeanSubclassComposition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBeanSubclassComposition_ThisPart(), theInstantiationPackage.getIJavaObjectInstance(), null, "thisPart", null, 1, 1, BeanSubclassComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBeanSubclassComposition_Methods(), this.getJCMMethod(), null, "methods", null, 0, -1, BeanSubclassComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(jcmMethodEClass, JCMMethod.class, "JCMMethod", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getJCMMethod_Name(), ecorePackage.getEString(), "name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getJCMMethod_Initializes(), theEcorePackage.getEObject(), null, "initializes", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getJCMMethod_Return(), theEcorePackage.getEObject(), null, "return", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(jcmMethodEClass, JCMMethod.class, "JCMMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJCMMethod_Name(), ecorePackage.getEString(), "name", null, 0, 1, JCMMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJCMMethod_Initializes(), theEcorePackage.getEObject(), null, "initializes", null, 0, -1, JCMMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJCMMethod_Return(), theEcorePackage.getEObject(), null, "return", null, 0, 1, JCMMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedInstanceLocationEClass, Map.Entry.class, "KeyedInstanceLocation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedInstanceLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedInstanceLocation_Value(), this.getInstanceLocation(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedInstanceLocationEClass, Map.Entry.class, "KeyedInstanceLocation", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedInstanceLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedInstanceLocation_Value(), this.getInstanceLocation(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(instanceLocationEEnum, InstanceLocation.class, "InstanceLocation");
@@ -912,7 +931,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.LOCAL_LITERAL);
 		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.PROPERTY_LITERAL);
 
+		initEEnum(linkTypeEEnum, LinkType.class, "LinkType");
+		addEEnumLiteral(linkTypeEEnum, LinkType.NORMAL_LITERAL);
+		addEEnumLiteral(linkTypeEEnum, LinkType.CHILD_LITERAL);
+		addEEnumLiteral(linkTypeEEnum, LinkType.DEPENDENCY_LITERAL);
+
 		// Create resource
 		createResource(eNS_URI);
 	}
+
 } //JCMPackageImpl

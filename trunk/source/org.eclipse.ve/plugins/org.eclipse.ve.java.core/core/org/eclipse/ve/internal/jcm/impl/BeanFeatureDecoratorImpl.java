@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import java.util.Collection;
@@ -39,6 +39,8 @@ import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
+import org.eclipse.ve.internal.jcm.LinkType;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Bean Feature Decorator</b></em>'.
@@ -48,7 +50,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getKeyedValues <em>Keyed Values</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getBeanProxyMediatorName <em>Bean Proxy Mediator Name</em>}</li>
- *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#isChildFeature <em>Child Feature</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getLinkType <em>Link Type</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getBeanLocation <em>Bean Location</em>}</li>
  * </ul>
  * </p>
@@ -101,24 +103,24 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	protected String beanProxyMediatorName = BEAN_PROXY_MEDIATOR_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isChildFeature() <em>Child Feature</em>}' attribute.
+	 * The default value of the '{@link #getLinkType() <em>Link Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @see #isChildFeature()
+	 * <!-- end-user-doc -->
+	 * @see #getLinkType()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final boolean CHILD_FEATURE_EDEFAULT = false;
+	protected static final LinkType LINK_TYPE_EDEFAULT = LinkType.NORMAL_LITERAL;
 
 	/**
-	 * The cached value of the '{@link #isChildFeature() <em>Child Feature</em>}' attribute.
+	 * The cached value of the '{@link #getLinkType() <em>Link Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @see #isChildFeature()
+	 * <!-- end-user-doc -->
+	 * @see #getLinkType()
 	 * @generated
 	 * @ordered
 	 */
-  protected boolean childFeature = CHILD_FEATURE_EDEFAULT;
+	protected LinkType linkType = LINK_TYPE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getBeanLocation() <em>Bean Location</em>}' attribute.
@@ -202,23 +204,23 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 
 	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public boolean isChildFeature() {
-		return childFeature;
+	public LinkType getLinkType() {
+		return linkType;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void setChildFeature(boolean newChildFeature) {
-		boolean oldChildFeature = childFeature;
-		childFeature = newChildFeature;
+	public void setLinkType(LinkType newLinkType) {
+		LinkType oldLinkType = linkType;
+		linkType = newLinkType == null ? LINK_TYPE_EDEFAULT : newLinkType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE, oldChildFeature, childFeature));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_FEATURE_DECORATOR__LINK_TYPE, oldLinkType, linkType));
 	}
 
 	/**
@@ -355,8 +357,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 				return getKeyedValues();
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME:
 				return getBeanProxyMediatorName();
-			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
-				return isChildFeature() ? Boolean.TRUE : Boolean.FALSE;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__LINK_TYPE:
+				return getLinkType();
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
 				return getBeanLocation();
 		}
@@ -399,8 +401,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME:
 				setBeanProxyMediatorName((String)newValue);
 				return;
-			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
-				setChildFeature(((Boolean)newValue).booleanValue());
+			case JCMPackage.BEAN_FEATURE_DECORATOR__LINK_TYPE:
+				setLinkType((LinkType)newValue);
 				return;
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
 				setBeanLocation((InstanceLocation)newValue);
@@ -440,8 +442,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME:
 				setBeanProxyMediatorName(BEAN_PROXY_MEDIATOR_NAME_EDEFAULT);
 				return;
-			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
-				setChildFeature(CHILD_FEATURE_EDEFAULT);
+			case JCMPackage.BEAN_FEATURE_DECORATOR__LINK_TYPE:
+				setLinkType(LINK_TYPE_EDEFAULT);
 				return;
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
 				unsetBeanLocation();
@@ -473,8 +475,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 				return keyedValues != null && !keyedValues.isEmpty();
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME:
 				return BEAN_PROXY_MEDIATOR_NAME_EDEFAULT == null ? beanProxyMediatorName != null : !BEAN_PROXY_MEDIATOR_NAME_EDEFAULT.equals(beanProxyMediatorName);
-			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
-				return childFeature != CHILD_FEATURE_EDEFAULT;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__LINK_TYPE:
+				return linkType != LINK_TYPE_EDEFAULT;
 			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
 				return isSetBeanLocation();
 		}
@@ -522,8 +524,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (beanProxyMediatorName: ");
 		result.append(beanProxyMediatorName);
-		result.append(", childFeature: ");
-		result.append(childFeature);
+		result.append(", linkType: ");
+		result.append(linkType);
 		result.append(", beanLocation: ");
 		if (beanLocationESet) result.append(beanLocation); else result.append("<unset>");
 		result.append(')');

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import java.util.Map;
@@ -72,8 +72,16 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case JCMPackage.INSTANCE_LOCATION:
-				return InstanceLocation.get(initialValue);
+			case JCMPackage.INSTANCE_LOCATION: {
+				InstanceLocation result = InstanceLocation.get(initialValue);
+				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+				return result;
+			}
+			case JCMPackage.LINK_TYPE: {
+				LinkType result = LinkType.get(initialValue);
+				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+				return result;
+			}
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -87,6 +95,8 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case JCMPackage.INSTANCE_LOCATION:
+				return instanceValue == null ? null : instanceValue.toString();
+			case JCMPackage.LINK_TYPE:
 				return instanceValue == null ? null : instanceValue.toString();
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
@@ -241,4 +251,5 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public static JCMPackage getPackage() {
 		return JCMPackage.eINSTANCE;
 	}
+
 } //JCMFactoryImpl

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-31 20:56:09 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -262,13 +262,13 @@ public interface JCMPackage extends EPackage{
 	int BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME = EcorePackage.EANNOTATION_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Child Feature</b></em>' attribute.
+	 * The feature id for the '<em><b>Link Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-  int BEAN_FEATURE_DECORATOR__CHILD_FEATURE = EcorePackage.EANNOTATION_FEATURE_COUNT + 2;
+	int BEAN_FEATURE_DECORATOR__LINK_TYPE = EcorePackage.EANNOTATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Bean Location</b></em>' attribute.
@@ -939,6 +939,17 @@ public interface JCMPackage extends EPackage{
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.LinkType <em>Link Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.jcm.LinkType
+	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getLinkType()
+	 * @generated
+	 */
+	int LINK_TYPE = 15;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.BeanDecorator <em>Bean Decorator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1003,15 +1014,15 @@ public interface JCMPackage extends EPackage{
 	EAttribute getBeanFeatureDecorator_BeanProxyMediatorName();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#isChildFeature <em>Child Feature</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getLinkType <em>Link Type</em>}'.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Child Feature</em>'.
-	 * @see org.eclipse.ve.internal.jcm.BeanFeatureDecorator#isChildFeature()
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Link Type</em>'.
+	 * @see org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getLinkType()
 	 * @see #getBeanFeatureDecorator()
 	 * @generated
 	 */
-  EAttribute getBeanFeatureDecorator_ChildFeature();
+	EAttribute getBeanFeatureDecorator_LinkType();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}'.
@@ -1290,6 +1301,16 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	EEnum getInstanceLocation();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.ve.internal.jcm.LinkType <em>Link Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Link Type</em>'.
+	 * @see org.eclipse.ve.internal.jcm.LinkType
+	 * @generated
+	 */
+	EEnum getLinkType();
 
 	/**
 	 * Returns the factory that creates the instances of the model.

@@ -20,7 +20,7 @@
   </event:AddMany>
   <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="viewportView" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
   </event:Add>
 </xmi:XMI>

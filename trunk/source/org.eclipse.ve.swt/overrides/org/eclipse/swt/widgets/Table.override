@@ -23,7 +23,7 @@
     <addedEObjects xsi:type="ecore:EReference" name="tableColumns" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#TableColumn"
         upperBound="-1">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
   </event:AddMany>
 
