@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.22 $  $Date: 2004-08-27 15:34:11 $ 
+ *  $Revision: 1.23 $  $Date: 2004-09-10 21:03:24 $ 
  */
 
 import java.util.*;
@@ -49,6 +49,7 @@ import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
 /**
  * @author sri
@@ -455,7 +456,9 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	
 	protected void setBeanName(EObject obj, String name){
 		if(obj!=null) {
-			BeanUtilities.setBeanName((IJavaInstance)obj,name);
+			RuledCommandBuilder commandBuilder = new RuledCommandBuilder(feditDomain);
+			commandBuilder.append(BeanUtilities.getSetBeanNameCommand((IJavaInstance)obj,name, feditDomain));
+			commandBuilder.getCommand().execute();
 		}
 	}
 	
