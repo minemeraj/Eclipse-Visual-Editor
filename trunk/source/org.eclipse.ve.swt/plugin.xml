@@ -97,10 +97,6 @@
                package="org.eclipse.swt.custom"
                path="overrides/org/eclipse/swt/custom">
          </override>
-         <override
-               package="org.eclipse.ui.part"
-               path="overrides/org/eclipse/ui/part">
-         </override>             
       </registration>
    </extension>
    <extension
