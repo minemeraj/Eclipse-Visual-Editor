@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-17 20:28:01 $ 
+ *  $Revision: 1.17 $  $Date: 2004-05-20 13:06:57 $ 
  */
 
 import java.util.Iterator;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -75,7 +76,9 @@ public CodeExpressionRef createInitExpression() {
 	IJavaObjectInstance obj = (IJavaObjectInstance)fBeanPart.getEObject();
 	InitExpressionGenerator gen = new InitExpressionGenerator(fBeanPart.getEObject(),fBeanPart.getModel());
 	gen.setInitbeanName(fBeanPart.getSimpleName());
-	gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel()));
+	gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports()));
+	if (obj.getAllocation() instanceof ParseTreeAllocation)
+	    gen.setInitbeanType(obj.getJavaType().getName());
 		   			
 	String content = gen.generate();
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.17 $  $Date: 2004-05-20 13:06:57 $ 
  */
 
 import java.util.*;
@@ -224,11 +224,11 @@ protected void GenerateAChild(StringBuffer buf,BeanPart bean, BeanPart child,ESt
 	
 }
 
-protected void setConstructorString (BeanMethodTemplate tp, Object component) {
+protected void setConstructorString (BeanMethodTemplate tp, Object component, List imports) {
     if (component instanceof IJavaObjectInstance) {
      // use the init string rather than default template string
         IJavaObjectInstance obj = (IJavaObjectInstance) component ;
-        String st = CodeGenUtil.getInitString(obj,fModel) ;  
+        String st = CodeGenUtil.getInitString(obj,fModel, imports) ;  
         tp.setBeanConstructorString(st) ;
     }
 }
@@ -273,7 +273,7 @@ public void generateInLine(CodeMethodRef method,String beanName, List kids) thro
     
 }
 
-public String generateMethod(CodeMethodRef method,String methodName,String beanName) throws CodeGenException {
+public String generateMethod(CodeMethodRef method,String methodName,String beanName, List imports) throws CodeGenException {
 	  
     fMethodRef = method ;    
     freturnType = ((IJavaObjectInstance)fComponent).getJavaType().getQualifiedName() ;
@@ -283,8 +283,8 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
     // Set up a new BeanPart in the decleration Model
     BeanPart bp = fModel.getABean(fName) ;
  	
-    BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,fMethodName,fComments) ;
-    setConstructorString (template, fComponent) ;
+    BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,fMethodName,fComments) ;    
+    setConstructorString (template, fComponent, imports) ;
     template.setSeperator(fModel.getLineSeperator()) ;
 //    if (((IJavaObjectInstance)fComponent).isImplicit()) {
 //    	template.setImplicit(true) ;

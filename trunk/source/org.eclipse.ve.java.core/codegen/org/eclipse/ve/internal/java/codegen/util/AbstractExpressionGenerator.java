@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-20 13:06:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -37,9 +37,11 @@ public abstract class AbstractExpressionGenerator {
 	protected	EObject			fComponent ;	
 	protected   String			fComment = null ;			// Trailing comment	
 	protected   String			finitbeanConstructionString=null ; // If this exists, finitBeanArgs is ignored
+	protected   String			finitbeanType = null;
 	protected	String			finitbeanName = null ;		// Initialized Bean
 	protected   String[]		finitbeanArgs = null ;		// Init constructor args.
 	protected	String			fIndent = "\t";
+	
 	
 	
 	protected	IExpressionTemplate fTemplate = null ;
@@ -58,7 +60,10 @@ public abstract class AbstractExpressionGenerator {
 		
 		public ExprInfo() {
 			this.fSeperator = fModel.getLineSeperator() ;
-			finitBeanType = ((JavaClassImpl)fComponent.eClass()).getQualifiedName();
+			if (AbstractExpressionGenerator.this.finitbeanType == null) 
+			   finitBeanType = ((JavaClassImpl)fComponent.eClass()).getQualifiedName();
+			else
+			   finitBeanType = AbstractExpressionGenerator.this.finitbeanType;
 			finitBeanName = AbstractExpressionGenerator.this.finitbeanName ;	
 			finitBeanArgs = AbstractExpressionGenerator.this.finitbeanArgs;
 			fIndent = AbstractExpressionGenerator.this.fIndent;
@@ -169,4 +174,10 @@ public abstract class AbstractExpressionGenerator {
 		this.finitbeanName = finitbeanName;
 	}
 
+	/**
+	 * @param type The finitbeanType to set.
+	 */
+	public void setInitbeanType(String type) {
+		this.finitbeanType = type;
+	}
 }

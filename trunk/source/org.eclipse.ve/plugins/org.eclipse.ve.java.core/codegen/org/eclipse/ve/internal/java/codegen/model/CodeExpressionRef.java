@@ -11,15 +11,16 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.25 $  $Date: 2004-05-14 21:45:42 $ 
+ *  $Revision: 1.26 $  $Date: 2004-05-20 13:06:57 $ 
  */
 
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
 
@@ -42,6 +43,7 @@ private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
 protected 	VEexpressionPriority	fPriority		= null;      
 protected   CodeExpressionRef		fMasterExpression = null;  // STATE_NO_SRC expressions may have a master expression
+protected   List					freqImports = new ArrayList();  // Imports required
 
 
 /*********
@@ -569,11 +571,59 @@ protected void updateDocument(int docOff, int len, String newContent) {
 	
 		try {
 			model.getDocumentBuffer().replace(docOff,len,newContent) ;				
-			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;		
+			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
+			handleImportStatements(fBean.getModel().getCompilationUnit(), fBean.getModel(), freqImports);
 			setState(STATE_EXP_NOT_PERSISTED,false);
         } catch (Exception e) {
 			JavaVEPlugin.log(e) ;
 		}	
+}
+
+/**
+ * Expression decoders may generated code that will require
+ * a set of import statements.  If they do not exist, add them
+ */
+public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel model, List imports) {
+	if (imports != null && imports.size()>0) {		
+		try {
+			int preLen = cu.getSource().length();
+//			cu.reconcile(false,false,null,null);
+			IImportDeclaration[] cuImports = cu.getImports();
+			for (int i = 0; i < imports.size(); i++) {
+			   boolean found=false;
+			   String reqName = (String)imports.get(i);
+			   for (int j = 0; j < cuImports.length; j++) {
+						String iname = cuImports[j].getElementName();
+						// check to see if this is a a.b.c.* type of an import
+						boolean star = false ;
+						StringTokenizer tk = new StringTokenizer(iname,".");
+						String lastSeg = iname ;
+						while (tk.hasMoreElements())
+							lastSeg=tk.nextToken();
+						if (lastSeg == "*") {
+							star = true;
+							iname = iname.substring(0,iname.length()-lastSeg.length());
+						}
+						if ((star && reqName.startsWith(iname)) ||
+						    (!star && reqName.equals(iname))) {
+						      found=true;
+						      break;
+						}
+			   }
+			   if (!found && false) {
+			   	  int offset = cu.createImport(reqName, null, null).getSourceRange().getOffset();
+			   	  int delta = cu.getSource().length()-preLen;
+			   	  if (model != null)
+				      model.driveExpressionChangedEvent(null, offset, delta) ;
+			   }
+			}
+
+		} catch (JavaModelException e) {
+			JavaVEPlugin.log(e);
+		}
+		imports.clear();
+	}
+	
 }
 
 public  void insertContentToDocument() {
@@ -583,7 +633,7 @@ public  void insertContentToDocument() {
 		// mark a controlled update (Top-Down)		
 		setState(STATE_UPDATING_SOURCE, true); 
 		int docOff = getOffset()+getMethod().getOffset() ;
-		updateDocument(docOff, 0, getContent()) ;
+		updateDocument(docOff, 0, getContent()) ;		
 		setState(STATE_UPDATING_SOURCE, false); 
 	}
 }
@@ -938,5 +988,11 @@ public void setMasterExpression(CodeExpressionRef masterExpression) {
 		else 
 			return super.getOffset();
 	}
+/**
+ * @return Returns the freqImports.
+ */
+public List getReqImports() {
+	return freqImports;
+}
 }
 
