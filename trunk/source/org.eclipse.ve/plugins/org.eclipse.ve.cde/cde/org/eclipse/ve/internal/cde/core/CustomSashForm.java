@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-22 22:47:32 $ 
  */
 
 import org.eclipse.swt.SWT;
@@ -106,6 +106,13 @@ public class CustomSashForm extends SashForm {
 	 */
 	public CustomSashForm(Composite parent, int style, int customStyle) {	
 		super(parent, style);
+		
+		// Need listener to force a layout
+		this.addListener(SWT.Resize, new Listener() {
+			public void handleEvent(Event e) {
+				layout(true);
+			}
+		});
 		
 		noMaxUp = ((customStyle & NO_MAX_UP) != 0);
 		noMaxDown = ((customStyle & NO_MAX_DOWN) != 0);
@@ -786,7 +793,7 @@ public class CustomSashForm extends SashForm {
 		gc.drawLine(x+4, y+3, x+4, y+5);
 		gc.drawLine(x+3, y+1, x+3, y+6);
 		gc.drawLine(x+2, y+1, x+2, y+7);
-	}	
-	
+	}
+
 
 }
