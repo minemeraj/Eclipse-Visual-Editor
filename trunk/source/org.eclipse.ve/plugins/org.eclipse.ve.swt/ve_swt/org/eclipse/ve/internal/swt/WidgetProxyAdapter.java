@@ -6,12 +6,11 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
-import org.eclipse.jem.internal.java.Method;
+import org.eclipse.jem.java.Method;
 
 public class WidgetProxyAdapter extends BeanProxyAdapter {
 	
 	private IBeanTypeProxy environmentBeanTypeProxy;
-	private IMethodProxy flushEventDispatchLoopMethodProxy;
 	private IMethodProxy environmentInvoke0ArgMethodProxy;
 	private IMethodProxy environmentInvoke1ArgMethodProxy;	
 	private IMethodProxy environmentInvoke2ArgMethodProxy;	

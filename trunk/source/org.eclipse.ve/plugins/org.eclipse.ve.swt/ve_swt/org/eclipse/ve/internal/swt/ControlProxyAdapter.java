@@ -14,7 +14,7 @@ import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.jem.internal.proxy.core.*;

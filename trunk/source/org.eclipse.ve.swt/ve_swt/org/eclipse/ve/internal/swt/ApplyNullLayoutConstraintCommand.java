@@ -2,10 +2,8 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.PointJavaClassCellEditor;
-import org.eclipse.ve.internal.java.visual.NullLayoutConstraintCommand;
+import org.eclipse.ve.internal.java.visual.*;
 
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.

@@ -9,13 +9,13 @@ import org.eclipse.swt.internal.win32.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
-public class ImageGrabber_3_0 {
+public class ImageCapture {
 	
 	Control controlToCapture;
 	
 	public static void main (String [] args) {
 			
-		ImageGrabber_3_0 steveImageGrabber = new ImageGrabber_3_0();
+		ImageCapture steveImageGrabber = new ImageCapture();
 		steveImageGrabber.run();
 			
 	}

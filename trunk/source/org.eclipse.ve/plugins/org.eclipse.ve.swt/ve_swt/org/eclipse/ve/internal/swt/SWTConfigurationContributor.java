@@ -45,28 +45,15 @@ public class SWTConfigurationContributor implements IConfigurationContributor {
 	 */
 	public void contributeToConfiguration(VMRunnerConfiguration aConfig) {	
 
-		// TODO This needs thinking about how to cope with Linux
-		// TODO or other versions of where the plugin DLL is.  Right now it's hard coded to be the one
-		// TODO in the workbench itself
-		// This is done rather than using the getBootClassPath and setBootClassPath
-		// of VMRunnerConfiguration because that doesn't put a /p in which means that the 
-		// the path is not prepended to but is totally replaced and this causes problems
-		
-		// Get the location of the swt dll in the workbench path
+		// Get the location of the swt dll in the workbench path and add it
+		// TODO This needs changing so if a build path project is being used then the
+		// TODO SWT DLL comes from there + we need to think about Linux where the folder name is different
 		Path path = new Path("os/win32/x86");
 		URL localURL = Platform.getPlugin("org.eclipse.swt").find(path);		
 		String dllLocation = localURL.getFile();
 		dllLocation = dllLocation.replace('/',java.io.File.separatorChar);		
 
-		// We also need to add in the location of the swtprint.dll to the library path of the target VM
-		// so the SWT graphic image can be obtained
-		URL swtprintURL = ProxyPlugin.getPlugin().urlLocalizeFromPluginDescriptor(SwtPlugin.getDefault().getDescriptor(), "swtprint.dll"); //$NON-NLS-1$
-		String swtprintlocation = swtprintURL.getFile();
-		int indexOfLastSeparator = swtprintlocation.lastIndexOf('/');
-		swtprintlocation = swtprintlocation.substring(0,indexOfLastSeparator);
-		swtprintlocation = swtprintlocation.replace('/',java.io.File.separatorChar);		
-
-		String programArg = "-Djava.library.path=" + dllLocation + ";" + swtprintlocation;		
+		String programArg = "-Djava.library.path=" + dllLocation;		
 		String[] existingVMArguments = aConfig.getVMArguments();
 		// Create a new array of VM arguments so we can add in the two new entries
 		String[] newVMArguments = new String[existingVMArguments.length + 1];
