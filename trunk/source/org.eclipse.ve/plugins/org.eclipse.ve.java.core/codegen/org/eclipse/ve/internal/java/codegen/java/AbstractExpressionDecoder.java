@@ -11,18 +11,18 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
+import java.util.logging.Level;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
@@ -142,7 +142,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		try {
 			result = fhelper.decode();
 		} catch (Exception e) {
-			JavaVEPlugin.log(e.getMessage(), org.eclipse.jem.internal.core.MsgLogger.LOG_FINEST);
+			JavaVEPlugin.log(e.getMessage(), Level.FINEST);
 		}
 
 		// Always try to revert to a simple helper
@@ -187,7 +187,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		if (result == null && !(fhelper instanceof SimpleAttributeDecoderHelper)) {
 			// Specialized decoder may not be applicable, try a vanilla one
 			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-			JavaVEPlugin.log("generate():  *Defaulting* to a SimpleAttr. Helper", MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("generate():  *Defaulting* to a SimpleAttr. Helper", Level.FINE); //$NON-NLS-1$
 			result = fhelper.generate(args);
 		}
 

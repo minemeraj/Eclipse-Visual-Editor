@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
-
-import org.eclipse.jem.internal.core.MsgLogger;
+import java.util.logging.Level;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodeSnippetMergelet {
 
@@ -176,13 +176,13 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
         if (oExp != null && dExp != null)
            oExp.updateLimboState(dExp) ;
         if (oExp == null && status != ICodeDelta.ELEMENT_ADDED && status != ICodeDelta.ELEMENT_UNDETERMINED) {
-            org.eclipse.ve.internal.java.core.JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta(): could not find"+dExp, //$NON-NLS-1$
-                                                MsgLogger.LOG_FINE) ;
+            JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta(): could not find"+dExp, //$NON-NLS-1$
+                                                Level.FINE) ;
         }
         switch (status) { 
         	case ICodeDelta.ELEMENT_UNDETERMINED:                 
-                 org.eclipse.ve.internal.java.core.JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta() In Limbo: "+oExp, //$NON-NLS-1$
-                                                     MsgLogger.LOG_FINE) ;
+                 JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta() In Limbo: "+oExp, //$NON-NLS-1$
+                                                     Level.FINE) ;
                  if (oExp != null)  
                     oExp.setState(CodeExpressionRef.STATE_EXP_IN_LIMBO, true) ;
                     
@@ -351,7 +351,7 @@ public boolean updateBDM(IBeanDeclModel model) throws CodeGenException {
 	}
 	else { // Instance Variable update
 	 	// TBD
-	 	org.eclipse.ve.internal.java.core.JavaVEPlugin.log("CodeSnippetMerglent.updateBDM() : no CodeMethodRef",org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+	 	JavaVEPlugin.log("CodeSnippetMerglent.updateBDM() : no CodeMethodRef", Level.WARNING) ; //$NON-NLS-1$
 	}
 	return modelUpdated ;
 }

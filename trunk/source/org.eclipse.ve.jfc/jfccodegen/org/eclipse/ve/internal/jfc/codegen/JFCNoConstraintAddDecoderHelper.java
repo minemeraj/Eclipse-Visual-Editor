@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:40 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:43:58 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -241,7 +241,7 @@ public String primRefreshFromComposition(String expSig) throws CodeGenException 
 	int end = start<0 ? -1 : 	          
 	          expSig.lastIndexOf(")"); //$NON-NLS-1$
 	if (start<0 || end<0) {
-		JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+		JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", Level.WARNING) ; //$NON-NLS-1$
 		return expSig ;
 	}
 	

@@ -11,23 +11,26 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisBeanDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import org.eclipse.ve.internal.jcm.JCMMethod;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.JCMMethod;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @version 	1.0
@@ -87,7 +90,7 @@ public void notifyChanged(Notification msg){
        createInitMethodIfNedded(msg) ;
     }
     catch (CodeGenException e) {
-        JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+        JavaVEPlugin.log(e, Level.WARNING) ;
         return ;
     }
     super.notifyChanged(msg) ;

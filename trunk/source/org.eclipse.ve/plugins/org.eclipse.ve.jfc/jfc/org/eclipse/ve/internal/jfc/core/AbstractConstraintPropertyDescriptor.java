@@ -11,13 +11,18 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractConstraintPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
  */
+import java.util.logging.Level;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -26,12 +31,10 @@ import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
 
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.ve.internal.propertysheet.EToolsPropertyDescriptor;
 import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 /**
  * This is a default base for the Constraint Property Descriptor.
  * LayoutPolicyFactories can choose to use a subclass of this,
@@ -79,7 +82,7 @@ public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropert
 					provider = AbstractPropertyDescriptorAdapter.createLabelProviderInstance(labelProviderClass, classNameAndData, null, null);
 				} catch (ClassNotFoundException e) {
 					// One specified, but incorrect, log it, but continue and see if we can get another way.
-					JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+					JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 				}
 			}
 			

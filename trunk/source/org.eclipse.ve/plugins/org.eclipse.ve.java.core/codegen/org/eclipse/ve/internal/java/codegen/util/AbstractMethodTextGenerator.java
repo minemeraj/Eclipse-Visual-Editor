@@ -10,17 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
@@ -233,7 +233,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 				String src = newExpr.getContent();
 				if (src == null)
 					throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-				JavaVEPlugin.log("\tAdding: " + src, MsgLogger.LOG_FINE); //$NON-NLS-1$
+				JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
 			}
 		}
 	}
@@ -279,7 +279,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 			method.updateExpressionOrder() ;
 		}
 		catch (Throwable e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_SEVERE) ;
+			JavaVEPlugin.log(e, Level.SEVERE) ;
 			return   ;
 		}
 		// We may be processing a nested child, 

@@ -10,23 +10,23 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
-import org.eclipse.jem.internal.core.MsgLogger;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -176,7 +176,7 @@ public class EventMethodVisitor extends MethodVisitor {
 		else if (stmt instanceof Expression)
 			new EventExpressionVisitor(fBean, fMethod, (Expression) stmt, fModel, fESigs, fDom).visit();
 		else
-			JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
 	}
 	
 	public String toString() {

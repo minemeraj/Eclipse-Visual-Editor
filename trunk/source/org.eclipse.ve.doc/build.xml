@@ -11,7 +11,7 @@
 
 	<target name="init" depends="properties">
 		<property name="plugin" value="org.eclipse.ve.doc"/>
-		<property name="version.suffix" value="_0.5.0"/>
+		<property name="version.suffix" value="_1.0.0"/>
 		<property name="full.name" value="${plugin}${version.suffix}"/>
 		<property name="temp.folder" value="${basedir}/temp.folder"/>
 		<property name="plugin.destination" value="${basedir}"/>

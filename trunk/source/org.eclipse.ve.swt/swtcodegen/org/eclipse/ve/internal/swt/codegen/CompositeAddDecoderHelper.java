@@ -10,18 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:46 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:43:39 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
@@ -30,7 +30,6 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -236,7 +235,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		int end = start<0 ? -1 : 	          
 						  expSig.lastIndexOf(")"); //$NON-NLS-1$
 		if (start<0 || end<0) {
-			JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+			JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", Level.WARNING) ; //$NON-NLS-1$
 			return expSig ;
 		}
 		

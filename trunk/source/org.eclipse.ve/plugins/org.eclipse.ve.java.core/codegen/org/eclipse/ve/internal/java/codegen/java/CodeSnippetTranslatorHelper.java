@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslatorHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.ISourceRange;
@@ -26,20 +27,16 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
+import org.eclipse.jdt.internal.compiler.parser.*;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.builder.NameEnvironment;
 import org.eclipse.jdt.internal.core.builder.ProblemFactory;
-import org.eclipse.jem.internal.core.MsgLogger;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.TransientErrorEvent;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodeSnippetTranslatorHelper {
 
@@ -65,7 +62,7 @@ protected static List compile(String classCode, final String classType, IJavaPro
 					for(int i=0;i<result.getProblems().length;i++){
 						IProblem pr = (IProblem) result.getProblems()[i];
 						if(pr.isError() || (pr.isWarning() && wantWarnings)){
-							JavaVEPlugin.log("Compile problem** Message:"+pr.getMessage(), MsgLogger.LOG_FINEST); //$NON-NLS-1$
+							JavaVEPlugin.log("Compile problem** Message:"+pr.getMessage(), Level.FINEST); //$NON-NLS-1$
 							problems.add(result.getProblems()[i]);
 						}
 					}
@@ -93,7 +90,7 @@ protected static List compile(String classCode, final String classType, IJavaPro
 		compiler.compile(cus);
 	}catch(Exception e){
 		problems.add(e);
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	return problems;
 }
@@ -135,7 +132,7 @@ public static IBeanDeclModel createShadowBDM(IBeanDeclModel original, String ini
 //			String bpName = originalExp.getBean().getUniqueName();
 //		};
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	return newModel;
 }
@@ -317,14 +314,14 @@ protected static List determineCompilerProblemsInMethod(
 
 private static void dumpErrors (List errors) {
 	if (errors.isEmpty()) return ;
-	JavaVEPlugin.log("CodeSnippetDecoderHelper: Parsing Error/s:", MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+	JavaVEPlugin.log("CodeSnippetDecoderHelper: Parsing Error/s:", Level.FINE) ; //$NON-NLS-1$
 	Iterator itr = errors.iterator() ;
 	while (itr.hasNext()) {
 		Object n = itr.next() ;
 		if (n instanceof IProblem) {
 			IProblem p = (IProblem) n ;
 			if (p.isWarning()) continue ;
-			JavaVEPlugin.log(p.getMessage(), MsgLogger.LOG_FINE) ;
+			JavaVEPlugin.log(p.getMessage(), Level.FINE) ;
 		}
 	}
 }
@@ -394,7 +391,7 @@ public static List determineOffendingParts(
 		}
 		dumpErrors(wholeMethodSyntax) ;
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	return wholeMethodSyntax; // Some error, but couldnt figure out which, because it was not even parseable.
 }
@@ -584,7 +581,7 @@ protected static void parseStatements(
 					if(stmt instanceof ReturnStatement)
 						return;
 					String msg = getCompleteSource(content, stmt);
-					JavaVEPlugin.log("Analyzing:"+msg, MsgLogger.LOG_FINEST); //$NON-NLS-1$
+					JavaVEPlugin.log("Analyzing:"+msg, Level.FINEST); //$NON-NLS-1$
 					List problems = compile(getStatementWrappedInClass(packageName, goodImports, superClass, superInterfaces, goodInnerTypes, goodFields, msg, prependLocalDeclarations, otherMethods, content), WRAPPER_CLASS_NAME, project, packageName, false);
 					if((problems==null || problems.size()<1) && (stmt instanceof LocalDeclaration)){
 						// Add the local declarations before the statements.
@@ -697,7 +694,7 @@ public static List removeAllComments(String originalCopy){
 			catch (InvalidInputException e) {}
 		}
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	commentRanges.add(0,corrected.toString());
 	return commentRanges;

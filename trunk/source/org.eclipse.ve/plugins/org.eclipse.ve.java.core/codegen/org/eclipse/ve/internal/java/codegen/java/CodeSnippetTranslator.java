@@ -11,23 +11,23 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.core.TransientErrorEvent;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodeSnippetTranslator {
 
@@ -183,7 +183,7 @@ protected String getCodeSnippetClass(int whichMethod, boolean putOtherMethods){
 		src.append(infix);
 		src.append(postfix);
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	return src.toString();
 }
@@ -553,9 +553,9 @@ private IBeanDeclModel build(EditDomain d){
 			// Field changes.. just build a totally new model and return
 		}
 	}catch(Exception e){
-		JavaVEPlugin.log("*** Code Snippet in Error", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-		JavaVEPlugin.log("\n", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+		JavaVEPlugin.log("*** Code Snippet in Error", Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(e, Level.WARNING);
+		JavaVEPlugin.log("\n", Level.WARNING) ; //$NON-NLS-1$
 	}
 	return null;
 }

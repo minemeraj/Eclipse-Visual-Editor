@@ -10,13 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventRefFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
 import java.util.Iterator;
-
-import org.eclipse.jem.internal.core.MsgLogger;
+import java.util.logging.Level;
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.Listener;
@@ -122,7 +121,7 @@ public CodeEventRef getExistingExpression(Object[] args) {
 				mr.updateExpressionOrder();
 			}
 			catch (Throwable e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 //				Iterator itr = mr.getExpressions();
 //				CodeExpressionRef prev = null;
 //

@@ -1,4 +1,5 @@
 org.eclipse.ve.java.core/debug/livewindow=false
 org.eclipse.ve.java.core/debug/xmltext=false
-org.eclipse.ve.java.core/debug/echoconsole=default
+org.eclipse.ve.java.core/debug/logtrace=default
+org.eclipse.ve.java.core/debug/logtracefile=default
 org.eclipse.ve.java.core/debug/loglevel=default

@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: StrategyWorker.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
-import org.eclipse.jem.internal.core.MsgLogger;
+import java.util.logging.Level;
+
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
 
@@ -104,7 +105,7 @@ public void run () {
 	  /* save a reference to this thread */
 	
 
-  	  JavaVEPlugin.log ("StrategyWorker running: "+fStrategy.getClass().getName(), MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+  	  JavaVEPlugin.log ("StrategyWorker running: "+fStrategy.getClass().getName(), Level.FINE) ; //$NON-NLS-1$
   	  if (fMonitor == null || !fMonitor.isCanceled()) {
   	     fStrategy.run(fdisplay,fdocListener, fworkItems,fMonitor) ;  	     	  	   
   	  }
@@ -113,7 +114,7 @@ public void run () {
     catch (InterruptedException e) {}
     catch (Throwable t) {
     	try {
-    	 JavaVEPlugin.log(t, MsgLogger.LOG_WARNING) ;
+    	 JavaVEPlugin.log(t, Level.WARNING) ;
     	}
     	catch (Throwable tt) {}
     }

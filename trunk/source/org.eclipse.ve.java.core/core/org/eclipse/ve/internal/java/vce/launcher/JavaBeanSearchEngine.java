@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanSearchEngine.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -24,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.util.Assert;
@@ -59,7 +59,7 @@ public class JavaBeanSearchEngine {
 				}
 			}
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e.getStatus(), MsgLogger.LOG_FINE); // Not really a bad error
+			JavaVEPlugin.log(e.getStatus(), Level.FINE); // Not really a bad error
 			return false;
 		}
 
@@ -91,7 +91,7 @@ public class JavaBeanSearchEngine {
 							fResult.add(type);
 					}
 				} catch (JavaModelException e) {
-					JavaVEPlugin.log(e.getStatus(), MsgLogger.LOG_FINE); // Not really a bad error						
+					JavaVEPlugin.log(e.getStatus(), Level.FINE); // Not really a bad error						
 				}
 			}
 		}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:30 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.JavaCore;
@@ -26,7 +27,6 @@ import org.eclipse.jdt.internal.compiler.*;
 import org.eclipse.jdt.internal.compiler.batch.FileSystem;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblem;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -248,7 +248,7 @@ public class JavaObjectEmiter {
 				fsecondBestClass = clazz ;
 				long ts = TemplateUtil.getTimeStamp(clazz) ;
 				if (ts >= fSrcTimeStamp) {
-					JavaVEPlugin.log("JavaObjectEmitter: found existing class: "+clazz.getName(),MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+					JavaVEPlugin.log("JavaObjectEmitter: found existing class: "+clazz.getName(),Level.FINEST) ; //$NON-NLS-1$
 					ftheClass = clazz ;
 					return clazz ;				
 				}
@@ -332,7 +332,7 @@ public class JavaObjectEmiter {
 	    if (index>0) refreshSourceClassname() ;	   	    
 		   
         // Compile it
-        JavaVEPlugin.log("JavaObjectEmitter: Compiling a new class: "+getClassName(),MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+        JavaVEPlugin.log("JavaObjectEmitter: Compiling a new class: "+getClassName(),Level.FINEST) ; //$NON-NLS-1$
 		EmitterCompilationUnit[] cu = new EmitterCompilationUnit[] { new EmitterCompilationUnit()};
 		INameEnvironment env = new FileSystem(classPath, new String[0], fEncodeing);
 		tick(pm);

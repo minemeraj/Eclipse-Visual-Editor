@@ -11,20 +11,20 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import org.eclipse.ve.internal.java.common.Common;
-
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.java.common.Common;
 
 /**
  * A Utility to launch an remote VM WindowLauncher
@@ -89,7 +89,7 @@ public void waitUntilWindowCloses(){
 							fToFrontMethodProxy.invoke(fWindowLauncherProxy);
 						}
 					} catch ( ThrowableProxy exc ) {
-						JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+						JavaVEPlugin.log(exc, Level.WARNING);
 					}
 				}
 			});
@@ -109,7 +109,7 @@ public void waitUntilWindowCloses(){
 							}
 						} 
 					} catch ( ThrowableProxy exc ) {
-						JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+						JavaVEPlugin.log(exc, Level.WARNING);
 					}
 				}
 			});
@@ -129,7 +129,7 @@ public void waitUntilWindowCloses(){
 							fToFrontMethodProxy.invoke(fWindowLauncherProxy);
 						}
 					} catch ( ThrowableProxy exc ) {
-						JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+						JavaVEPlugin.log(exc, Level.WARNING);
 					}
 				}
 			});
@@ -146,7 +146,7 @@ public void waitUntilWindowCloses(){
 				try {
 				fToFrontMethodProxy.invoke(fWindowLauncherProxy);
 				} catch ( ThrowableProxy exc ) {
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(exc, Level.WARNING);
 				}
 			}
 		});
@@ -162,7 +162,7 @@ public void waitUntilWindowCloses(){
 				display.sleep();
 		}
 	} catch ( ThrowableProxy exc ) {
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(exc, Level.WARNING);
 	} finally {
 		// Make sure it gets removed. We don't want it hanging around for any reason.
 		fShell.removeShellListener(shellListener);

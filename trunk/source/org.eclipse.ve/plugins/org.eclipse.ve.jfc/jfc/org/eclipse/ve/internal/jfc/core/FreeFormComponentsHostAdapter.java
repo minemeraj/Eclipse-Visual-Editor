@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormComponentsHostAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -26,7 +27,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.*;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.draw2d.geometry.Point;
@@ -66,9 +66,9 @@ public class FreeFormComponentsHostAdapter extends AdapterImpl {
 					}
 				});				
 			} catch (ThrowableProxy e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 			} catch (InstantiationException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 			}				
 		}
 

@@ -11,16 +11,18 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanSelector.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
+import java.util.logging.Level;
+
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.palette.SelectionCreationToolEntry;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ChooseBeanSelector
@@ -45,7 +47,7 @@ public Object[] getNewObjectAndType(SelectionCreationToolEntry.SelectionCreation
 	if(dialog.open()==Window.OK){
 		try{
 			Object[] results = dialog.getResult();
-			JavaVEPlugin.log(ChooseBeanMessages.getString("ToolSelector.SelectionLogMessage")+results[0], MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log(ChooseBeanMessages.getString("ToolSelector.SelectionLogMessage")+results[0], Level.FINE); //$NON-NLS-1$
 			return results;
 		}catch(Exception e){
 			return null;

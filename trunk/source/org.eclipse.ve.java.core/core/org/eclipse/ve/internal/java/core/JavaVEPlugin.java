@@ -11,18 +11,22 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import org.eclipse.wtp.common.logger.proxy.Logger;
+import org.eclipse.wtp.logger.proxyrender.EclipseLogger;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
@@ -44,7 +48,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	// <contributor ...> or contributor="..." in extension point
 
 	private static JavaVEPlugin PLUGIN;
-	private static MsgLogger msgLogger = null;
+	private static Logger logger = null;
 	public static Image fJavaBeanImage;
 	public static Image fAppletImage;
 	public static Image CHECK_IMAGE;
@@ -207,34 +211,34 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		return (IConfigurationElement[]) getVariableContributors().get(path);
 	}
 
-	public MsgLogger getMsgLogger() {
-		if (msgLogger == null)
-			msgLogger = EclipseLogMsgLogger.createLogger(this);
-		return msgLogger;
+	public Logger getLogger() {
+		if (logger == null)
+			logger = EclipseLogger.getEclipseLogger(this);
+		return logger;
 	}
 
 	public static void log(Object obj) {
-		getPlugin().getMsgLogger().log(obj);
+		getPlugin().getLogger().log(obj);
 	}
 
-	public static void log(Object obj, int level) {
-		getPlugin().getMsgLogger().log(obj, level);
+	public static void log(Object obj, Level level) {
+		getPlugin().getLogger().log(obj, level);
 	}
 
 	public static void log(Throwable e) {
-		getPlugin().getMsgLogger().log(e);
+		getPlugin().getLogger().log(e);
 	}
 
-	public static void log(Throwable e, int level) {
-		getPlugin().getMsgLogger().log(e, level);
+	public static void log(Throwable e, Level level) {
+		getPlugin().getLogger().log(e, level);
 	}
 
 	public static void log(IStatus status) {
-		getPlugin().getMsgLogger().log(status);
+		getPlugin().getLogger().log(status);
 	}
 
-	public static void log(IStatus status, int logLevel) {
-		getPlugin().getMsgLogger().log(status, logLevel);
+	public static void log(IStatus status, Level logLevel) {
+		getPlugin().getLogger().log(status, logLevel);
 	}
 
 	public static Image getJavaBeanImage() {

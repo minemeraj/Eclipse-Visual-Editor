@@ -10,17 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectEmitter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:30 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
 import java.io.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.jet.JETCompiler;
 import org.eclipse.emf.codegen.jet.JETException;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -156,7 +156,7 @@ public class TemplateObjectEmitter {
 	}
 	protected void parseTemplate(IProgressMonitor pm) throws JETException {
 		if (!parsed) {
-			JavaVEPlugin.log("TemplateObjectEmitter: parsing: "+fTemplate,MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+			JavaVEPlugin.log("TemplateObjectEmitter: parsing: "+fTemplate,Level.FINEST) ; //$NON-NLS-1$
 			// Make sure ClassPath Var. are initialized
 			org.eclipse.jdt.launching.JavaRuntime.getDefaultVMInstall() ;
 			tick(pm) ;
@@ -174,7 +174,7 @@ public class TemplateObjectEmitter {
 			ByteArrayOutputStream generatedTemplate = new ByteArrayOutputStream() ; ;
 			tick(pm) ;
 			getJetCompiler().generate(generatedTemplate) ;
-			JavaVEPlugin.log("TemplateObjectEmitter: generating"+fTemplate,MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+			JavaVEPlugin.log("TemplateObjectEmitter: generating"+fTemplate,Level.FINEST) ; //$NON-NLS-1$
 			
 			// convert the output String into a StringBuffer
 			InputStream contents = new ByteArrayInputStream(generatedTemplate.toByteArray());						

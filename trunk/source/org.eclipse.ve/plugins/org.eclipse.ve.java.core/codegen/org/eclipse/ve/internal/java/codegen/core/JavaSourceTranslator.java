@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-06 22:03:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:30 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,20 +30,22 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.cdm.*;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IModelChangeController;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-import org.eclipse.ve.internal.cdm.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -214,7 +217,7 @@ String fUri;
 										return DELTA_BDM_CHANGE;
 								}
 							} catch (CodeGenException e) {
-								JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+								JavaVEPlugin.log(e, Level.WARNING);
 							}
 						}
 					}
@@ -246,11 +249,11 @@ String fUri;
   					  if (fMsgRrenderer.setReloadPending(false) == false) // No more pending, go for it
 			             reloadFromScratch(disp,monitor) ;	                               		           
 			          else
-			             JavaVEPlugin.log("Reload: reload is pending, skipping",MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+			             JavaVEPlugin.log("Reload: reload is pending, skipping",Level.FINE) ; //$NON-NLS-1$
   			}
   		}
   		catch (Throwable t) {
-  				  JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);                    
+  				  JavaVEPlugin.log(t, Level.WARNING);                    
   		}      
  	}
   	
@@ -368,9 +371,9 @@ String fUri;
 						// TODO Adapters will not react for GUI deltas !!!
 						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
 						if (delta == null || delta.getDeltaMethod() == null)
-							JavaVEPlugin.log("NOT Driving a delta merge: DeltaMethod==NULL", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+							JavaVEPlugin.log("NOT Driving a delta merge: DeltaMethod==NULL", Level.FINEST); //$NON-NLS-1$
 						else
-							JavaVEPlugin.log("Driving a delta merge: " + delta.getDeltaMethod(), MsgLogger.LOG_FINEST); //$NON-NLS-1$
+							JavaVEPlugin.log("Driving a delta merge: " + delta.getDeltaMethod(), Level.FINEST); //$NON-NLS-1$
 						if (fBeanModel != null && delta != null && delta.getDeltaMethod() != null) {
 							// Display thread
 							disp.syncExec(new Runnable() {
@@ -387,7 +390,7 @@ String fUri;
 										}
 									}
 									catch (Throwable t) {
-										JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+										JavaVEPlugin.log(t, Level.WARNING);
 									}
 								}
 							});
@@ -416,7 +419,7 @@ String fUri;
 					}
 				}
 				catch (Throwable e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+					JavaVEPlugin.log(e, Level.FINE);
 					// Reload from scratch will re-set the state of the BDM 		      	
 					Reload(disp, monitor);
 					break ;
@@ -436,7 +439,7 @@ String fUri;
   		else {  // It is not a method delta
   		  try {  		  	
   			switch (getDeltaStatus(items)) {
-  				case DELTA_SKIP: JavaVEPlugin.log(":) Skipping Unresolved Work Element Handle",MsgLogger.LOG_FINEST) ;  //$NON-NLS-1$
+  				case DELTA_SKIP: JavaVEPlugin.log(":) Skipping Unresolved Work Element Handle",Level.FINEST) ;  //$NON-NLS-1$
   				                  break ;
   				case DELTA_COMPLEX_DELTA:
   				case DELTA_BDM_CHANGE:
@@ -445,7 +448,7 @@ String fUri;
   			}
   		  }
   		  catch (Throwable t) {
-  		  	JavaVEPlugin.log(t,MsgLogger.LOG_WARNING) ;
+  		  	JavaVEPlugin.log(t,Level.WARNING) ;
   		  }
           finally {
                  fireSnippetProcessing(false) ;        
@@ -503,7 +506,7 @@ protected synchronized void refreshFreeFrom(Display disp) {
 							ffBeans.remove(obj) ;							
 						}
                   }catch (Throwable t) {
-                    JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+                    JavaVEPlugin.log(t, Level.WARNING);
                   }
             }
         }) ;
@@ -521,7 +524,7 @@ protected synchronized void refreshFreeFrom(Display disp) {
 			ffBeans.remove(obj) ;							
 		 }
       }catch (Throwable t) {
-         JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+         JavaVEPlugin.log(t, Level.WARNING);
       }
    }
    
@@ -680,7 +683,7 @@ void  createJavaInstances () throws CodeGenException {
        if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
     	   if (!(obj instanceof IJavaObjectInstance)) {    	   	  
     	      obj = null ;
-    	      JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),MsgLogger.LOG_WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+    	      JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
     	   }
        }
        else {  // a this part
@@ -693,7 +696,7 @@ void  createJavaInstances () throws CodeGenException {
        
        
 	   if (obj == null) {
-	    JavaVEPlugin.log("Could not create a JavaObjectInstance for: "+bean.getType()+": "+bean.getUniqueName(),MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	    JavaVEPlugin.log("Could not create a JavaObjectInstance for: "+bean.getType()+": "+bean.getUniqueName(),Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	    err.add(bean) ;
 	    // Children will not be connected to the VCE model
 	    Iterator bItr = bean.getChildren() ;
@@ -712,7 +715,7 @@ void  createJavaInstances () throws CodeGenException {
 	       BeanPartFactory.updateInstanceInitString(bean) ;
 	     }
 	     catch (IllegalArgumentException e) {
-	     	JavaVEPlugin.log(e,MsgLogger.LOG_FINE) ;
+	     	JavaVEPlugin.log(e,Level.FINE) ;
 	     	if (!err.contains(bean)) {
 	     	   err.add(bean) ;
 	     	   // Children will not be connected to the VCE model
@@ -774,13 +777,13 @@ void	buildCompositionModel() throws CodeGenException {
 		      //if (getCorrespondingFeature(codeRef,obj) != null)
 		      try {
 			  if (!decodeExpression (codeRef)) {
-				 JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, MsgLogger.LOG_FINE) ;						 //$NON-NLS-1$
+				 JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, Level.FINE) ;						 //$NON-NLS-1$
 				 badExprssions.add(codeRef) ;			 
 			  }
 		      }
 		      catch (Exception e) {
-		        JavaVEPlugin.log("Skipping expression: "+codeRef,MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
-		        JavaVEPlugin.log(e,MsgLogger.LOG_WARNING) ;
+		        JavaVEPlugin.log("Skipping expression: "+codeRef,Level.WARNING) ; //$NON-NLS-1$
+		        JavaVEPlugin.log(e,Level.WARNING) ;
 		        badExprssions.add(codeRef) ;	
 		      }
 		    }
@@ -886,7 +889,7 @@ public void decodeDocument (IDiagramModelInstance cm, String uri, IFile sourceFi
 	  fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,false) ;
 	}
 	catch (Exception e) {
-		JavaVEPlugin.log (e, MsgLogger.LOG_SEVERE) ; //$NON-NLS-1$
+		JavaVEPlugin.log (e, Level.SEVERE) ; //$NON-NLS-1$
 	}
 	
 	fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_SYNCHING,false) ;
@@ -1032,7 +1035,7 @@ pm.beginTask(CodegenMessages.getString("JavaSourceTranslator.ProgressMonitor.Sav
     	reloadFromScratch(Display.getCurrent(),null) ;
     	      
     } catch (Exception e) {
-    	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+    	JavaVEPlugin.log(e, Level.WARNING);
     }
     finally {
 //    	if (workingCU!=null)  workingCU.destroy() ;    	    	
@@ -1068,7 +1071,7 @@ public void reloadFromScratch(Display disp, ICancelMonitor monitor) throws CodeG
 				public void run() {
 					try {
 						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, true);
-						JavaVEPlugin.log("*** Reloading", MsgLogger.LOG_FINE); //$NON-NLS-1$
+						JavaVEPlugin.log("*** Reloading", Level.FINE); //$NON-NLS-1$
 						disconnect(false); // clear the BDM, but do not dispose of local Doc, and Synch.
 
 						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_SYNCHING, true);
@@ -1089,9 +1092,9 @@ public void reloadFromScratch(Display disp, ICancelMonitor monitor) throws CodeG
 						if (fMsgRrenderer != null)
 							fMsgRrenderer.showMsg(t.getMessage(), IJVEStatus.ERROR_MSG);
 
-						int severity = MsgLogger.LOG_WARNING;
+						Level severity = Level.WARNING;
 						if (t instanceof CodeGenException)
-							severity = MsgLogger.LOG_FINE;
+							severity = Level.FINE;
 						if (t instanceof CodeGenSyntaxError)
 							JavaVEPlugin.log(t.toString(), severity);
 						else
@@ -1201,7 +1204,7 @@ private   void clearModel(boolean vceModel) {
    }
 	}
 	catch (Exception e) {
-		JavaVEPlugin.log(e,MsgLogger.LOG_FINE) ;
+		JavaVEPlugin.log(e,Level.FINE) ;
 	}
 }
 
@@ -1313,7 +1316,7 @@ public void commit() {
 		fBeanModel.docChanged();
 	}
       	 		      	 			                    
-    JavaVEPlugin.log("JavaSourceTranslator: commit",MsgLogger.LOG_FINEST) ;         //$NON-NLS-1$
+    JavaVEPlugin.log("JavaSourceTranslator: commit",Level.FINEST) ;         //$NON-NLS-1$
 }
 /**
  * This one provide an Async. registration for a notification on flush process
@@ -1342,12 +1345,12 @@ public void commitAndFlush(ISynchronizerListener listener, String marker) {
 //       return ;
 //    }
 //    
-//    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(async) - start",MsgLogger.LOG_FINEST) ;          //$NON-NLS-1$
+//    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(async) - start",Level.FINEST) ;          //$NON-NLS-1$
 //    if (fSrcSync == null) 
 //      listener.markerProcessed(marker) ;
 //    else     
 //      fSrcSync.notifyOnMarker(listener,marker,false) ;    
-    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush - done",MsgLogger.LOG_FINEST) ;         //$NON-NLS-1$
+    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush - done",Level.FINEST) ;         //$NON-NLS-1$
 }
 
 public void setSynchronizerSyncDelay(int delay) {
@@ -1359,14 +1362,14 @@ public void setSynchronizerSyncDelay(int delay) {
 
 protected void fireUpdateNotification() {
     
-    JavaVEPlugin.log("JavaSourceTranslator.fireUpdateNotification",MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+    JavaVEPlugin.log("JavaSourceTranslator.fireUpdateNotification",Level.FINEST) ; //$NON-NLS-1$
     for (Iterator itr = fTranslatorListeners.iterator(); itr.hasNext();) {
         ISourceTranslatorListener element = (ISourceTranslatorListener) itr.next();
         try {
             element.modelUpdated() ;
         }
         catch (Throwable t) {
-            JavaVEPlugin.log(t,MsgLogger.LOG_WARNING) ;
+            JavaVEPlugin.log(t,Level.WARNING) ;
         }        
     }
 }
@@ -1391,10 +1394,10 @@ public  void  fireSnippetProcessing(boolean start) {
             }
         }
         catch (Throwable t) {
-            JavaVEPlugin.log(t,MsgLogger.LOG_WARNING) ;
+            JavaVEPlugin.log(t,Level.WARNING) ;
         }        
      }  
-     JavaVEPlugin.log("JavaSourceTranslator.fireSnippetProcessin, Start="+start,MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+     JavaVEPlugin.log("JavaSourceTranslator.fireSnippetProcessin, Start="+start,Level.FINEST) ; //$NON-NLS-1$
 }    
 
 

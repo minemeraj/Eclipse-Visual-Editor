@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -24,7 +25,6 @@ import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
 //  The following will suport a working copy for the working copy
 //import org.eclipse.jdt.internal.core.BufferManager;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -748,7 +748,7 @@ public void updateBeanNameChange(BeanPart bp) {
 				m.refreshIMethod((IMethod)map.get(m.getMethodHandle())) ;			
 			}
 		} catch (JavaModelException e1) {
-			JavaVEPlugin.log(e1, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e1, Level.WARNING);
 		}
 	}
 }

@@ -1,17 +1,20 @@
 package org.eclipse.ve.internal.swt;
 
+import java.util.logging.Level;
+
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.jem.internal.core.MsgLogger;
+
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.jcm.BeanDecorator;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+
+import org.eclipse.ve.internal.jcm.BeanDecorator;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 
 public class BeanSWTUtilities {
 
@@ -35,15 +38,15 @@ public class BeanSWTUtilities {
 				CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
 				return fact;
 			} catch (ClassNotFoundException e) {
-				JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 			} catch (ClassCastException e) {
-				JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 			} catch (InstantiationException e) {
-				JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 			} catch (IllegalAccessException e) {
-				JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 			} catch (CoreException e) {
-				JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 			}
 		}
 	

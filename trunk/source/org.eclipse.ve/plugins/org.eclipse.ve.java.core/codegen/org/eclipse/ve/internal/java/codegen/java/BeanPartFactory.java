@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.16 $  $Date: 2004-02-17 21:28:48 $ 
+ *  $Revision: 1.17 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,7 +23,6 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
@@ -116,7 +116,7 @@ public static void fixOffsetIfNeeded(String methodSrc, CodeMethodRef mref) throw
     if (index < 0) {
     	// It is possible that a filler was changed, with syntax error,, in this case plan B works, but where
     	// does it starts  e.g.   .....xxx...<expression>,  where xxx was added to the filler.
-    	JavaVEPlugin.log("BeanPartGenerator.fixOffsetIfNeeded(): Can not find expression in method:\n\t"+exp, org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ;    //$NON-NLS-1$
+    	JavaVEPlugin.log("BeanPartGenerator.fixOffsetIfNeeded(): Can not find expression in method:\n\t"+exp, Level.FINE) ;    //$NON-NLS-1$
     	continue ;
     }
     if (exp.getOffset() != index) {
@@ -156,7 +156,7 @@ protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor,
 			}
 		}
 	} catch (JavaModelException e) {
-		JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+		JavaVEPlugin.log(e, Level.FINE);
 	}
 	return sibling;
 }
@@ -210,12 +210,12 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 				mref.setContent(newMethod.getSource());
 				fBeanModel.addMethodInitializingABean(mref);
 			} catch (JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 				throw new CodeGenException(e);
 			}
 			// template also created the init expression; e.g., new Foo()
 			parseInitExpression(bp);
-			JavaVEPlugin.log("Adding JCMMethod: \n" + newMSrc + "\n", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$    
+			JavaVEPlugin.log("Adding JCMMethod: \n" + newMSrc + "\n", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$    
 			CodeGenUtil.refreshMethodOffsets(cuType, fBeanModel);
 			// Workaround, as the create method may create a method which include other
 			// comments,etc.
@@ -250,7 +250,7 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 	catch (JavaModelException e) {
 		throw new CodeGenException(e);
 	}
-	JavaVEPlugin.log("Adding Instance Var: \n" + ft + "\n", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
+	JavaVEPlugin.log("Adding Instance Var: \n" + ft + "\n", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 }
 /**
  * The null constructor typically will call the initialization method.  The exception
@@ -405,10 +405,10 @@ protected CodeMethodRef generateThisInitMethod() throws CodeGenException {
         fBeanModel.addMethodInitializingABean(mref) ;          
    }
    catch (JavaModelException e) {
-     	 JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+     	 JavaVEPlugin.log(e, Level.WARNING) ;
     	 throw new CodeGenException(e) ;
    }    
-   JavaVEPlugin.log("Adding \"this\" method: \n"+newSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$
+   JavaVEPlugin.log("Adding \"this\" method: \n"+newSrc+"\n", Level.FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$
    //mref.setMethod(CodeGenUtil.refreshMethod(newMethod)) ;
    mref.refreshIMethod();
    
@@ -541,7 +541,7 @@ public void removeBeanPart (BeanPart bean) {
 	  IField f = tp.getField(bean.getSimpleName()) ;
 	  if (f != null) {		// delete the field
 		try {
-		  JavaVEPlugin.log("\tRemoving Field: "+f, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+		  JavaVEPlugin.log("\tRemoving Field: "+f, Level.FINE) ; //$NON-NLS-1$
 //		  String handle = (f.getHandleIdentifier()) ;
 		  f.delete(true,null) ;
 		  jdtChangesMade = true;
@@ -549,7 +549,7 @@ public void removeBeanPart (BeanPart bean) {
 		catch (JavaModelException e) {} 
 	  }
 	  else 
-	     JavaVEPlugin.log ("BeanPartGenerator.removeBeanPart: field is not in source: "+bean.getUniqueName()+"  <--- check me", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	     JavaVEPlugin.log ("BeanPartGenerator.removeBeanPart: field is not in source: "+bean.getUniqueName()+"  <--- check me", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	 
 	// TODO  Need to maintain Bean Ref Count in method, and remove it when the last ref. is gone
@@ -606,12 +606,12 @@ public void removeBeanPart (BeanPart bean) {
 				itr = mr.getExpressions() ;
 				IMethod m = CodeGenUtil.getMethod(tp, mr.getMethodHandle());
 				String handle = mr.getMethodHandle();
-				JavaVEPlugin.log("\tRemoving JCMMethod: " + handle, MsgLogger.LOG_FINE); //$NON-NLS-1$
+				JavaVEPlugin.log("\tRemoving JCMMethod: " + handle, Level.FINE); //$NON-NLS-1$
 				m.delete(true, null);
 				jdtChangesMade = true;
 			}
 			else
-				JavaVEPlugin.log("deleteBeanPart: method is not in source: " + bean.getUniqueName(), MsgLogger.LOG_FINE); //$NON-NLS-1$
+				JavaVEPlugin.log("deleteBeanPart: method is not in source: " + bean.getUniqueName(), Level.FINE); //$NON-NLS-1$
 		}
 		catch (JavaModelException e) {}
 	}

@@ -11,16 +11,19 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.core.*;
+import java.util.logging.Level;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.propertysheet.INeedData;
 
 public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProvider implements INeedData {
 	
@@ -50,8 +53,8 @@ public EnumeratedLabelProvider(IArrayBeanProxy aBeanInfoValuesArray, JavaHelpers
 			j++;
 		}
 	} catch ( ThrowableProxy exc ){
-		JavaVEPlugin.log("Unable to determine enumeration values", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(exc, Level.WARNING);
 	}	
 }
 public String getText(Object aJavaInstance){
@@ -74,11 +77,11 @@ public String getText(Object aJavaInstance){
 				fBeanProxies[i] = aBeanTypeProxy.newInstance(fInitStrings[i]);
 			}
 		} catch ( ThrowableProxy exc ) {
-			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], MsgLogger.LOG_WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc,MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc,Level.WARNING);
 		} catch ( InstantiationException exc ) {
-			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], MsgLogger.LOG_WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc,MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc,Level.WARNING);
 		}
 	}
 	// This can occur following an introspection error

@@ -10,21 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jem.internal.core.MsgLogger;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventHandlerRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -69,7 +69,7 @@ public void visit()  {
 				}
 			}
 		}catch(Exception e){
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
 		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit(), fType.getName()), fModel);
@@ -91,7 +91,7 @@ public void visit()  {
 				}
 			}
 		}catch (JavaModelException e) {
-			JavaVEPlugin.log ("EventHandlerVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), MsgLogger.LOG_WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+			JavaVEPlugin.log ("EventHandlerVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

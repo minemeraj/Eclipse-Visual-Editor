@@ -11,18 +11,21 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
+import java.util.logging.Level;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jem.internal.core.MsgLogger;
+
+import org.eclipse.ve.internal.cdm.VisualInfo;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cdm.VisualInfo;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -83,8 +86,8 @@ public void notifyChanged(Notification msg){
 		     action = "REMOVING_ADAPTER" ;		      //$NON-NLS-1$
 		     break;
 	}
-	JavaVEPlugin.log(this+" action= "+action, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
-JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$
+	JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
+JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), Level.FINE) ;	 //$NON-NLS-1$
 	
 	  // Note: this doesn't handle add_many/remove_many, but currently we don't do that.
       switch (msg.getEventType()) {
@@ -112,7 +115,7 @@ JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), MsgLogger.LOG_FINE) ;	 //
       }
   }
   catch (Throwable t) {
-      JavaVEPlugin.log(t, MsgLogger.LOG_WARNING) ;
+      JavaVEPlugin.log(t, Level.WARNING) ;
   }
 }
 

@@ -11,19 +11,22 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.*;
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.*;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
-import org.eclipse.jem.internal.proxy.core.*;
 
 public class EnumeratedCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	
@@ -57,8 +60,8 @@ public EnumeratedCellEditor(Composite aComposite, IArrayBeanProxy arrayOfValues,
 		// Set the display names as the items the user sees in the combo box
 		setItems(fDisplayNames);	
 	} catch ( ThrowableProxy exc ){
-		JavaVEPlugin.log("Unable to determine enumeration values", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(exc, Level.WARNING);
 	}
 }
 protected String isCorrectObject(Object value) {
@@ -107,12 +110,12 @@ public void setData(Object data){
 			fBeanProxies[i] = fBeanTypeProxy.newInstance(fInitStrings[i]);
 		}
 	} catch ( ThrowableProxy exc ) {
-		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(exc, Level.WARNING);
 		// TODO Rather than null, probably should do this in a validation step so the property sheet entry knows to not apply the bad value"); //$NON-NLS-1$
 	} catch (InstantiationException exc) {			
-		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(exc, Level.WARNING);
 		// TODO Rather than null, probably should do this in a validation step so the property sheet entry knows to not apply the bad value"); //$NON-NLS-1$
 	}		
 }

@@ -11,21 +11,23 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenRuntimeException;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ExpressionDecoderAdapter implements ICodeGenAdapter {
 
@@ -111,10 +113,10 @@ public class ExpressionDecoderAdapter implements ICodeGenAdapter {
 					break;
 			}
 		} catch( CodeGenRuntimeException e){
-			JavaVEPlugin.log(e.getMessage(), MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e.getMessage(), Level.FINE);
 			throw e;
 		} catch (Throwable t) {
-			JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(t, Level.WARNING);
 		}
 	}
 
@@ -168,7 +170,7 @@ public class ExpressionDecoderAdapter implements ICodeGenAdapter {
 			}
 
 			public void notifyChanged(Notification msg) {
-				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("SourceRangeExpressionDecoderAdapter Shadow: msgType=: " + msg.getEventType(), MsgLogger.LOG_FINE); //$NON-NLS-1$
+				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("SourceRangeExpressionDecoderAdapter Shadow: msgType=: " + msg.getEventType(), Level.FINE); //$NON-NLS-1$
 			}
 
 			public org.eclipse.emf.common.notify.Notifier getTarget() {

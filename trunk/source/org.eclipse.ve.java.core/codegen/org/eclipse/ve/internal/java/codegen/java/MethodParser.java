@@ -11,12 +11,16 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodParser.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -120,7 +124,7 @@ public class MethodParser {
 		    	return true ;
 		    }
 		    else 
-		      org.eclipse.ve.internal.java.core.JavaVEPlugin.log("MethodParser.addMethodCallIfNedded(): Could not insert",org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ;		       //$NON-NLS-1$
+		      JavaVEPlugin.log("MethodParser.addMethodCallIfNedded(): Could not insert", Level.FINE) ;		       //$NON-NLS-1$
 		}
 		return false ;
 		

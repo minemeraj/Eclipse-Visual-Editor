@@ -30,6 +30,7 @@
 		<project>org.eclipse.ui.workbench.texteditor</project>
 		<project>org.eclipse.ve.cde</project>
 		<project>org.eclipse.ve.propertysheet</project>
+		<project>org.eclipse.wtp.common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

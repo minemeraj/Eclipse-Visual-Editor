@@ -11,20 +11,21 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractIndexedChildrenDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
-import org.eclipse.jem.internal.core.*;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author sri
@@ -121,7 +122,7 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 							if(off < thisOffset)
 								index ++;
 						} catch (CodeGenException e) {
-							JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+							JavaVEPlugin.log(e, Level.WARNING);
 						}
 					}
 				}

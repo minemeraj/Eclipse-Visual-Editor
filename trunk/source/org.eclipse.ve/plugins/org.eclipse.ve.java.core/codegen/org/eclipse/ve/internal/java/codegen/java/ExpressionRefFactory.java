@@ -11,17 +11,17 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.10 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -141,7 +141,7 @@ public CodeExpressionRef createFromJVEModel(Object[] args) throws CodeGenExcepti
 		try {
 			mr.updateExpressionOrder();
 		} catch (Throwable e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			Iterator itr = mr.getExpressions();
 			CodeExpressionRef prev = null;
 

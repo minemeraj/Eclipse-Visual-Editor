@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -27,18 +28,19 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.commands.CancelAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
+
 import org.eclipse.ve.internal.java.common.Common;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
@@ -138,7 +140,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 			launcher = null;
 
 		} catch (Exception exc) {
-			JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(exc, Level.WARNING);
 		};
 	}
 	protected void customizerCancel(Map oldValues, IBeanProxyHost aBeanProxyHost, IJavaObjectInstance aBean) {

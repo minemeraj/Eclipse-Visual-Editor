@@ -11,16 +11,16 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
@@ -76,7 +76,7 @@ protected void initialDecoderHelper() {
 		fhelper = new ConstructorDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
 	else if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance)fbeanPart.getEObject(), false))  {
         JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for "+fFeatureMapper.getFeature(null), //$NON-NLS-1$
-        MsgLogger.LOG_FINE) ;
+        Level.FINE) ;
         fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
     }
     else

@@ -11,20 +11,21 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
+import java.util.logging.Level;
+
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
@@ -61,8 +62,8 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 				fSFname = ((EStructuralFeature) fSF).getName();
 				fPD = Utilities.getPropertyDecorator((EModelElement) sf);
 			} catch (Throwable e) {
-				JavaVEPlugin.log("Utilities.getPropertyDecorator on:" + sf, MsgLogger.LOG_WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log("Utilities.getPropertyDecorator on:" + sf, Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(e, Level.WARNING);
 			}
 			if (fPD == null && isFieldAccess(sf)) {
 				fisMethod = false;

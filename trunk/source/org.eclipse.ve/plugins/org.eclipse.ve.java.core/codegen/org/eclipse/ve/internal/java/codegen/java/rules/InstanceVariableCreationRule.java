@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.7 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:30 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EClassifier;
@@ -40,6 +41,7 @@ import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class InstanceVariableCreationRule implements IInstanceVariableCreationRule {
@@ -63,7 +65,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 			return internalHelpers;
 
 		ArrayList a = new ArrayList();
-		org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InstanceVariableCreationRule: loading cache", org.eclipse.jem.internal.core.MsgLogger.LOG_FINE); //$NON-NLS-1$
+		JavaVEPlugin.log("InstanceVariableCreationRule: loading cache", Level.FINE); //$NON-NLS-1$
 		for (int i = 0; i < internalTypes.length; i++) {
 			JavaHelpers sType = JavaRefFactory.eINSTANCE.reflectType(internalTypes[i], rs);
 			if (sType == null)

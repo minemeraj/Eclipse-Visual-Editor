@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-06 22:52:35 $ 
+ *  $Revision: 1.10 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -26,7 +27,6 @@ import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -267,7 +267,7 @@ protected IBeanProxyFeatureMediator getFeatureMediator(BeanFeatureDecorator feat
 			Class mediatorClass = CDEPlugin.getClassFromString(beanProxyFeatureMediatorName);
 			return (IBeanProxyFeatureMediator)mediatorClass.newInstance();
 		} catch ( Exception exc ) {
-			JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(exc, Level.WARNING);
 		}
 	}
 	return null;		
@@ -420,7 +420,7 @@ protected void processError(EStructuralFeature sf, Throwable exc, Object object)
 	fireAddedError(error);
 
 	// Log it so that we can figure out later why.
-	JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);		
+	JavaVEPlugin.log(exc, Level.WARNING);		
 	
 	// Now need to throw reinstation needed so that multi-values do not continue trying to apply follow on values. There
 	// could be a problem of duplicate adds in that case.
@@ -700,7 +700,7 @@ protected IBeanProxy getBeanProxyValue(EStructuralFeature aBeanPropertyAttribute
 		try {
 			return primReadBeanFeature(propertyDecorator,getBeanProxy()) ;
 		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);	// An exception on query is just FINE, not a warning.
+			JavaVEPlugin.log(e, Level.FINE);	// An exception on query is just FINE, not a warning.
 		}
 	} 
 	// It may be that this is a public field - this has a decorator to get the value
@@ -711,7 +711,7 @@ protected IBeanProxy getBeanProxyValue(EStructuralFeature aBeanPropertyAttribute
 			try {
 				return mediator.getValue(aBeanPropertyAttribute, this.getBeanProxy());					
 			} catch ( Exception exc ) {
-				JavaVEPlugin.log(exc, MsgLogger.LOG_FINE);	// An exception on query is just FINE, not a warning.
+				JavaVEPlugin.log(exc, Level.FINE);	// An exception on query is just FINE, not a warning.
 			}
 		}
 	}

@@ -11,16 +11,15 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultTransientErrorHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:30 $ 
  */
 
 import java.text.MessageFormat;
 import java.util.Hashtable;
+import java.util.logging.Level;
 
-import org.eclipse.jem.internal.core.MsgLogger;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @version 	1.0
@@ -36,10 +35,10 @@ public class DefaultTransientErrorHandler implements ITransientErrorListener {
    }
 
 	public void display(ITransientErrorEvent event) {
-		JavaVEPlugin.log("DefaultTransientError:", MsgLogger.LOG_FINE); //$NON-NLS-1$
-		JavaVEPlugin.log("\t\tMessage:"+event.getMessage(), MsgLogger.LOG_FINE); //$NON-NLS-1$
-		JavaVEPlugin.log("\t\tErrorType:"+event.getErrorType(), MsgLogger.LOG_FINE); //$NON-NLS-1$
-		JavaVEPlugin.log("\t\tRefObject:"+event.getRefObject(), MsgLogger.LOG_FINE); //$NON-NLS-1$
+		JavaVEPlugin.log("DefaultTransientError:", Level.FINE); //$NON-NLS-1$
+		JavaVEPlugin.log("\t\tMessage:"+event.getMessage(), Level.FINE); //$NON-NLS-1$
+		JavaVEPlugin.log("\t\tErrorType:"+event.getErrorType(), Level.FINE); //$NON-NLS-1$
+		JavaVEPlugin.log("\t\tRefObject:"+event.getRefObject(), Level.FINE); //$NON-NLS-1$
 	}
 
 	/*

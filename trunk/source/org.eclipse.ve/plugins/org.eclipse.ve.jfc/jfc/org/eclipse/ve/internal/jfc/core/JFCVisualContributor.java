@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCVisualContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-import org.eclipse.jem.internal.core.MsgLogger;
+
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -53,14 +54,14 @@ public class JFCVisualContributor implements IConfigurationContributor {
 					aUIManagerBeanTypeProxy.getMethodProxy("setLookAndFeel", "javax.swing.LookAndFeel"); //$NON-NLS-1$ //$NON-NLS-2$
 				IBeanTypeProxy lookAndFeelType = registry.getBeanTypeProxyFactory().getBeanTypeProxy(lookAndFeelClass);
 				if (lookAndFeelType == null)
-					JavaVEPlugin.log("L&F not found: " + lookAndFeelClass, MsgLogger.LOG_WARNING); //$NON-NLS-1$
+					JavaVEPlugin.log("L&F not found: " + lookAndFeelClass, Level.WARNING); //$NON-NLS-1$
 				else {				
 					IBeanProxy windowsLookAndFeelProxy = lookAndFeelType.newInstance();
 					setLookAndFeelMethodProxy.invoke(aUIManagerBeanTypeProxy, windowsLookAndFeelProxy);
 				}
 			} catch (Exception exc) {
-				JavaVEPlugin.log("Unable to set target VM to L&F" + lookAndFeelClass, MsgLogger.LOG_WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log("Unable to set target VM to L&F" + lookAndFeelClass, Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, Level.WARNING);
 			}
 		}
 	}

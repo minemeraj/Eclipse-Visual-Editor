@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-18 21:45:42 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -29,10 +30,9 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
-import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
 /**
@@ -67,7 +67,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		try {
 			superClass = fPage.getPackageFragmentRoot().getJavaProject().findType(className);
 		} catch (JavaModelException e2) {
-			JavaVEPlugin.log(e2, MsgLogger.LOG_FINEST);
+			JavaVEPlugin.log(e2, Level.FINEST);
 		}
 		if(extensions!=null && extensions.length>0 && superClass!=null){
 			boolean contributorFound = false;
@@ -85,7 +85,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 							contributorFound = true;
 						}
 					} catch (CoreException e) {
-						JavaVEPlugin.log(e, MsgLogger.LOG_FINEST);
+						JavaVEPlugin.log(e, Level.FINEST);
 					}
 				}
 			}
@@ -97,7 +97,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		try {
 			jdtClassPath.addAll(TemplateUtil.getPlatformJREPath());
 		} catch (TemplatesException  e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e, Level.FINE);
 		}
 		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorPlugin.getDescriptor().getUniqueIdentifier()); 
 		for(int i=0;i<contributorsPaths.size();i++)
@@ -111,13 +111,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			templatePath = Platform.asLocalURL(templateLocation).getPath();
 			templatePath = templatePath.substring(0,templatePath.lastIndexOf('/'));
 		} catch (IOException e1) {
-			JavaVEPlugin.log(e1, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e1, Level.WARNING);
 		}
 		String[] templatePaths = {  templatePath };
 		try {
 			return (IVisualClassCreationSourceGenerator) TemplateObjectFactory.getClassInstance(jdtClassPaths, templatePaths, templateLocation.getPath().substring(templateLocation.getPath().lastIndexOf('/')+1), contributor.getClass().getClassLoader(), null, null);
 		} catch (TemplatesException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 		}
 		return null;
 	}
@@ -213,7 +213,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 //				source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 			declaringType.createMethod(NEWLINE+source+NEWLINE, sibling, true, monitor);
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e, Level.FINE);
 		}
 	}
 	
@@ -230,7 +230,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			 	to = toNL+1;
 			 return cuSource.substring(from, to);
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e, Level.FINE);
 		}
 		return null;
 	}
@@ -284,7 +284,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 				}
 			}
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e, Level.FINE);
 		}
 	}
 	
@@ -300,7 +300,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			merge(originalCU, workingCopy, formatter, monitor);
 			workingCopy.discardWorkingCopy();
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e, Level.FINE);
 		}
 	}
 	

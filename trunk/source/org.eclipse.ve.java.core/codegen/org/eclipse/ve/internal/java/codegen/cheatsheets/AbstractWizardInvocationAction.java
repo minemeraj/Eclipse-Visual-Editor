@@ -17,15 +17,15 @@ package org.eclipse.ve.internal.java.codegen.cheatsheets;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractWizardInvocationAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -60,11 +60,11 @@ public abstract class AbstractWizardInvocationAction extends Action {
 				m.invoke(targetObject, parameters);
 				return;
 			} catch (IllegalArgumentException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+				JavaVEPlugin.log(e, Level.FINE);
 			} catch (IllegalAccessException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+				JavaVEPlugin.log(e, Level.FINE);
 			} catch (InvocationTargetException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+				JavaVEPlugin.log(e, Level.FINE);
 			}
 		}
 	}
@@ -74,11 +74,11 @@ public abstract class AbstractWizardInvocationAction extends Action {
 			IPluginDescriptor desc = Platform.getPlugin(pluginID).getDescriptor();
 			return desc.getPluginClassLoader().loadClass(className).newInstance();
 		} catch (InstantiationException e1) {
-			JavaVEPlugin.log(e1, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e1, Level.FINE);
 		} catch (IllegalAccessException e1) {
-			JavaVEPlugin.log(e1, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e1, Level.FINE);
 		}catch (ClassNotFoundException e1) {
-			JavaVEPlugin.log(e1, MsgLogger.LOG_FINE);
+			JavaVEPlugin.log(e1, Level.FINE);
 		}
 		return null;
 	}
@@ -138,7 +138,7 @@ public abstract class AbstractWizardInvocationAction extends Action {
 							
 					
 				} catch (Exception e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+					JavaVEPlugin.log(e, Level.FINE);
 				}
 				/*
 			 };

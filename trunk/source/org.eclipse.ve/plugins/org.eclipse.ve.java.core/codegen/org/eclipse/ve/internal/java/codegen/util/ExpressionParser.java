@@ -11,14 +11,15 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -78,7 +79,7 @@ public ExpressionParser(IField field){
 		fSourceOff = field.getSourceRange().getOffset();
 		fSourceLen = indexOfSemiColon(field.getSource());
 	}catch(JavaModelException e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(e, Level.WARNING);
 	}
 }
 
@@ -227,7 +228,7 @@ protected int skipSemiColonifNeeded(int right) {
 			}
 		}
 		catch(InvalidInputException e){
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,MsgLogger.LOG_FINE) ;
+			org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
 		}		
     }
     int index = fSource.substring(right).indexOf(';') ;
@@ -253,7 +254,7 @@ public static int indexOfSemiColon(String targetSrc) {
 		}
 	}
 	catch(InvalidInputException e){
-		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,MsgLogger.LOG_FINE) ;
+		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
 	}		
     return targetSrc.length();
 }
@@ -324,7 +325,7 @@ protected void primParseExpression() {
 
     } 
     catch (InvalidInputException e) {
-    	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+    	JavaVEPlugin.log(e, Level.WARNING) ;
     }
 }
 
@@ -425,7 +426,7 @@ protected void primParseComment() {
 	 }	      
     } 
     catch (InvalidInputException e) {
-    	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+    	JavaVEPlugin.log(e, Level.WARNING) ;
     }	 
 }
 	

@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.10 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -23,7 +24,6 @@ import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration;
 import org.eclipse.jdt.internal.core.util.Util;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -258,7 +258,7 @@ public  void addReturnMethod(CodeMethodRef methodRef) {
 	   methodRef.setModel(fModel) ;
 	  }
 	  catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
-	  	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+	  	JavaVEPlugin.log(e, Level.WARNING) ;
 	  }
 }
 

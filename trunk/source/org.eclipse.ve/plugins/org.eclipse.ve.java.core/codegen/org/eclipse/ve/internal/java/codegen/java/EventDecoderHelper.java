@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -33,6 +34,7 @@ import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -430,7 +432,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		if (feventAdapter != null)
 		   c.eAdapters().add(feventAdapter.getCallBackSourceRangeAdapter(c)) ;
 		else
-		   org.eclipse.ve.internal.java.core.JavaVEPlugin.log("EventDecoderHelper.adaptCallBack: NoAdapter",org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;  //$NON-NLS-1$
+		   JavaVEPlugin.log("EventDecoderHelper.adaptCallBack: NoAdapter", Level.WARNING) ;  //$NON-NLS-1$
 	}
 	
 	protected void unadaptCallBack(Callback c) {

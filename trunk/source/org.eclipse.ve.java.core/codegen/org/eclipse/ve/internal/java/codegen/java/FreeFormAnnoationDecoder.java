@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-16 20:31:25 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
+import java.util.logging.Level;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IField;
-
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -77,7 +77,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
              return true ;
           }
                     
-          JavaVEPlugin.log(fBeanpart.getUniqueName()+" Decoding FF annotation", MsgLogger.LOG_FINE) ;    //$NON-NLS-1$
+          JavaVEPlugin.log(fBeanpart.getUniqueName()+" Decoding FF annotation", Level.FINE) ;    //$NON-NLS-1$
           
           int[] args = FreeFormAnnotationTemplate.getAnnotationArgs(src,0) ;
           if (args == null) return false ;
@@ -112,7 +112,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
           return decode(src) ;                    
         }
         catch (Exception e) {
-            JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+            JavaVEPlugin.log(e, Level.WARNING) ;
             return false ;
         }
      }     
@@ -141,7 +141,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
             // Brand New Anotation 
               newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
               if (newSrc == null || newSrc.length() == 0) {
-                JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+                JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", Level.WARNING) ; //$NON-NLS-1$
                 return ;
               }
               
@@ -152,10 +152,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
               else
                  len = commentStart + FreeFormAnnotationTemplate.ANNOTATION_START.length() ;                 
               
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", MsgLogger.LOG_FINE) ;                          //$NON-NLS-1$
+              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", Level.FINE) ;                          //$NON-NLS-1$
           }
           else {
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", MsgLogger.LOG_FINE) ;    //$NON-NLS-1$
+              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
               if(getAnnotationValue()==null){
@@ -190,10 +190,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 		  // update offsets
 		  fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length()-len) ;
 		  fBeanpart.getModel().docChanged();
-		  JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
+		  JavaVEPlugin.log(newSrc, Level.FINE) ;
         }
         catch (Exception e) {
-            JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+            JavaVEPlugin.log(e, Level.WARNING) ;
         }
      }
         

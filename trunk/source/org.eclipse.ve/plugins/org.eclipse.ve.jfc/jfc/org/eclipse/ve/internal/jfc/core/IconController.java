@@ -11,20 +11,20 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IconController.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.io.File;
 import java.io.FileFilter;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.*;
@@ -37,6 +37,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -945,9 +946,9 @@ public class IconController {
 				addImages(f, path, monitor, 1000);
 				allImagesLoaded = !monitor.isCanceled();
 			} catch (Exception e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 			} catch (SWTError err) {
-				JavaVEPlugin.log(err, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(err, Level.WARNING);
 			} finally {
 				if (terminateThread)
 					return;

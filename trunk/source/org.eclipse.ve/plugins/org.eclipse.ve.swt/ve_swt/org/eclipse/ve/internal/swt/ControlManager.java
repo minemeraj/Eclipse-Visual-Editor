@@ -1,13 +1,13 @@
 package org.eclipse.ve.internal.swt;
 
 import java.io.DataInputStream;
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -101,7 +101,7 @@ public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
 			}
 			invoke_setControlManager(fControlManagerProxy, fControlBeanProxy);	
 		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 		}
 	}
 }
@@ -137,11 +137,11 @@ public void calledBackStream(int msgID, java.io.InputStream is){
 					nextInt = dataInput.read();		
 				}
 			} catch (Exception exc) {
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(exc, Level.WARNING);
 			}
 			break;
 		default:
-			JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, MsgLogger.LOG_WARNING);	//$NON-NLS-1$
+			JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
 	}	
 }
 public ImageData getImageData(){

@@ -14,12 +14,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.internal.compiler.ast.*;
@@ -32,6 +33,7 @@ import org.eclipse.ve.internal.jcm.PropertyEvent;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -140,7 +142,7 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 		if (feventAdapter != null)
 			pe.eAdapters().add(feventAdapter.getPropertyEventSourceRangeAdapter(pe));
 		else
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("PropertyChangedAllocationStyleHellper.adaptPropertyEvent: NoAdapter", org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log("PropertyChangedAllocationStyleHellper.adaptPropertyEvent: NoAdapter", Level.WARNING); //$NON-NLS-1$
 	}
 
 	

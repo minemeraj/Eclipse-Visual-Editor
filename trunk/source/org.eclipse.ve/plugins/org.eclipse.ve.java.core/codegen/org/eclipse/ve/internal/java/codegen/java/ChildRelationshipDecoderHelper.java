@@ -11,26 +11,25 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 
 
 
@@ -85,7 +84,7 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
         // Set Scoping First        
       	CodeGenUtil.eSet(target.getEObject(), fFmapper.getFeature(null), toAdd.getEObject(), index) ;
       }
-      JavaVEPlugin.log("DelegateRelationShipDecoderHelper.add("+toAdd+","+target+")", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      JavaVEPlugin.log("DelegateRelationShipDecoderHelper.add("+toAdd+","+target+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 }
 
 /**

@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-23 16:10:31 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -41,14 +42,16 @@ import org.eclipse.ui.dialogs.TwoPaneElementSelector;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.*;
+
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
+import org.eclipse.ve.internal.cdm.CDMFactory;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMFactory;
-import org.eclipse.ve.internal.java.core.*;
+
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 
 /**
@@ -562,7 +565,7 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 				if(!isClass && types[i].isInterface())
 					list.add(types[i]);
 			} catch (JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_INFO);
+				JavaVEPlugin.log(e, Level.INFO);
 			}
 		}
 		return list;

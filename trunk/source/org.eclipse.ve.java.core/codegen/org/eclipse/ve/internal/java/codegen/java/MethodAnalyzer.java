@@ -11,22 +11,24 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodAnalyzer.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.JavaModelException;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * This is used in the pull down save approach, and should be used for testing purpuses
@@ -48,8 +50,8 @@ public MethodAnalyzer (IMethod method, IBeanDeclModel model) {
 	   try {
 	     fSource = method.getSource() ;
 	   } catch (Exception e) {
-	   	 JavaVEPlugin.log("MethodAnalyzer("+method.getElementName()+"): "+e, MsgLogger.LOG_WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
-	   	 JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+	   	 JavaVEPlugin.log("MethodAnalyzer("+method.getElementName()+"): "+e, Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+	   	 JavaVEPlugin.log(e, Level.WARNING);
 	   } 
 	   
 }
@@ -131,7 +133,7 @@ String pc = exp.getContent() ;
             	// Skip the expression
             	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("Need to deal with comments associated with statement") ; //$NON-NLS-1$
             	deleteCandidate.add(exp) ;
-            	JavaVEPlugin.log("\tDeleting: "+exp, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+            	JavaVEPlugin.log("\tDeleting: "+exp, Level.FINE) ; //$NON-NLS-1$
             	// Advance the left marker to the start of next expression
               }
               else 
@@ -140,7 +142,7 @@ String pc = exp.getContent() ;
             	// Get the latest expression
             	buf.append(exp.getContent());            	
 if (pc != null && !pc.equals(exp.getContent())) {
-JavaVEPlugin.log("\tUpdating: "+pc+" -> "+exp.getContent(), MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+JavaVEPlugin.log("\tUpdating: "+pc+" -> "+exp.getContent(), Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 }
             	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("clean this up") ; //$NON-NLS-1$
             	flastFiller = exp.getFillerContent() ;
@@ -212,7 +214,7 @@ private void appendNewAttribute(StringBuffer buf, BeanPart bean, String filler, 
 	   if (!isSourceExists(elm,obj,sf)) {
 	    String src = GenerateAttribute(buf,sf,bean,buf.length(),filler) ;
 	    if (src == null) throw new CodeGenException ("Could not Generate Source") ;	 //$NON-NLS-1$
-	    JavaVEPlugin.log ("\tAdding: "+src, MsgLogger.LOG_FINE) ;	       //$NON-NLS-1$
+	    JavaVEPlugin.log ("\tAdding: "+src, Level.FINE) ;	       //$NON-NLS-1$
 	    buf.append(src) ;		      	
 	   }
 	
@@ -253,7 +255,7 @@ protected void appendNewContainerSource(StringBuffer buf,BeanPart bean,String fi
     		// A child that is not reflected in source code    	
 		    String src = GenerateAddComponent(buf,bean,bp,buf.length(),filler) ;
 		    if (src == null) throw new CodeGenException ("Could not Generate Source") ;	 //$NON-NLS-1$
-		    JavaVEPlugin.log ("\tAdding: "+src, MsgLogger.LOG_FINE) ;	       //$NON-NLS-1$
+		    JavaVEPlugin.log ("\tAdding: "+src, Level.FINE) ;	       //$NON-NLS-1$
 		    buf.append(src) ;	
     	}
     }
@@ -282,7 +284,7 @@ public String getCompositionReflectedSource() throws CodeGenException {
 	fMethodRef = fModel.getMethodInitializingABean(fMethod.getHandleIdentifier()) ;
 	
 	if (fMethodRef == null) return null ;
-	JavaVEPlugin.log("MethodAnalyzer: "+fMethod.getElementName()+"() - thinking ....", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	JavaVEPlugin.log("MethodAnalyzer: "+fMethod.getElementName()+"() - thinking ....", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	// At this point we expect that the source has not changed yet.
 //	if (hasContentChanged()) return null ;
 	// re-construct in here 
@@ -301,11 +303,11 @@ public String getCompositionReflectedSource() throws CodeGenException {
 	buf.append(fSource.substring(srcOffset));	
       String proposedContent = buf.toString() ;
       if (!proposedContent.equals(fSource)) {
-        JavaVEPlugin.log ("                "+fMethod.getElementName()+"() - Updating Source", MsgLogger.LOG_FINE) ;         //$NON-NLS-1$ //$NON-NLS-2$
+        JavaVEPlugin.log ("                "+fMethod.getElementName()+"() - Updating Source", Level.FINE) ;         //$NON-NLS-1$ //$NON-NLS-2$
         updateMethodContent(proposedContent) ;        
       }
       else 
-        JavaVEPlugin.log ("                "+fMethod.getElementName()+"() - No Change", MsgLogger.LOG_FINE) ;           //$NON-NLS-1$ //$NON-NLS-2$
+        JavaVEPlugin.log ("                "+fMethod.getElementName()+"() - No Change", Level.FINE) ;           //$NON-NLS-1$ //$NON-NLS-2$
     return fMethodRef.getContent() ;	
 }
 
