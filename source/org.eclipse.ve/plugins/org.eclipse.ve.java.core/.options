@@ -3,3 +3,4 @@ org.eclipse.ve.java.core/debug/xmltext=false
 org.eclipse.ve.java.core/debug/logtrace=default
 org.eclipse.ve.java.core/debug/logtracefile=default
 org.eclipse.ve.java.core/debug/loglevel=default
+org.eclipse.ve.java.core/debug/vetimetrace=false

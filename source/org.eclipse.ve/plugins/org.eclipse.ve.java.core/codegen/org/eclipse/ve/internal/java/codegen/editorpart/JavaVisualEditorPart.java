@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.57 $  $Date: 2004-08-16 17:55:23 $ 
+ *  $Revision: 1.58 $  $Date: 2004-08-17 19:33:15 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -179,7 +179,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	private static final String JVE_STEP = "JVE"; 
 	public static final String SETUP_STEP = "Setup JVE";
-	public final static boolean DO_TIMER_TESTS = false;
+	public final static boolean DO_TIMER_TESTS = Boolean.valueOf(Platform.getDebugOption(JavaVEPlugin.getPlugin().getBundle().getSymbolicName() + "/debug/vetimetrace")).booleanValue(); //$NON-NLS-1$;
 	
 	public JavaVisualEditorPart() {
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
@@ -793,7 +793,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (doTimerStep)
 					TimerTests.basicTest.stopStep(JVE_STEP);
 				TimerTests.basicTest.stopStep(SETUP_STEP);
-				TimerTests.basicTest.printIt();
+				TimerTests.basicTest.printIt(30);
 				TimerTests.basicTest.clearTests();
 				TimerTests.basicTest.testState(false);
 				if (doTimerStep) {
@@ -977,7 +977,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	public void dispose() {
+		if (DO_TIMER_TESTS)
+			TimerTests.basicTest.testState(true);
+		TimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
+			TimerTests.basicTest.startStep("Dispose", null);
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			
 			boolean queuedJobDispose = setupJob != null && setupJob.getState() != Job.NONE;
@@ -1016,12 +1020,21 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			Shell shell = window.getShell();
 			if (shell != null && !shell.isDisposed())
 				window.getShell().removeShellListener(activationListener);
-			
+		
+			TimerTests.basicTest.startStep("Dispose Graphical Action Registry", TimerTests.CURRENT_PARENT_ID);
 			graphicalActionRegistry.dispose();
+			TimerTests.basicTest.stopStep("Dispose Graphical Action Registry");
+			TimerTests.basicTest.startStep("Dispose Common Action Registry", TimerTests.CURRENT_PARENT_ID);
 			commonActionRegistry.dispose();
+			TimerTests.basicTest.stopStep("Dispose Common Action Registry");
 			if (!queuedJobDispose)
 				finalDispose();
 		} catch (Exception e) {
+		} finally {
+			TimerTests.basicTest.stopStep("Dispose");
+			TimerTests.basicTest.printIt(30);
+			if (DO_TIMER_TESTS) 
+				TimerTests.basicTest.testState(false);
 		}
 		super.dispose();
 	}
@@ -1037,25 +1050,33 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Note: No need to sync(this) to access proxyFactoryRegistry because we are guarenteed that
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
+			TimerTests.basicTest.startStep("Dispose Proxy Registry", TimerTests.CURRENT_PARENT_ID);
 			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
 			proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
 			proxyFactoryRegistry = null;
+			TimerTests.basicTest.stopStep("Dispose Proxy Registry");
 		}
 
+		TimerTests.basicTest.startStep("Dispose Model Builder", TimerTests.CURRENT_PARENT_ID);
 		modelBuilder.dispose();
+		TimerTests.basicTest.stopStep("Dispose Model Builder");
 		
 		if (modelSynchronizer != null) {
+			TimerTests.basicTest.startStep("Dispose Model Synchronizer", TimerTests.CURRENT_PARENT_ID);
 			modelSynchronizer.stopSynchronizer();
+			TimerTests.basicTest.stopStep("Dispose Model Synchronizer");
 		}
 		
 		EditDomain ed = editDomain;
 		synchronized (this) {
 			editDomain = null;
 		}
+		TimerTests.basicTest.startStep("Dispose Editdomain", TimerTests.CURRENT_PARENT_ID);
 		ed.dispose();
+		TimerTests.basicTest.stopStep("Dispose Editdomain");
 	}
 	
 	protected synchronized boolean isDisposed() {
