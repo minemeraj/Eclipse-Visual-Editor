@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2004-09-14 21:16:01 $ 
+ *  $Revision: 1.24 $  $Date: 2004-10-27 20:42:03 $ 
  */
 
 import java.util.*;
@@ -151,7 +151,25 @@ public void notifyChanged(Notification msg){
 			removingAdapter();	// Let subclasses hook into the remove.
 			releaseBeanProxy();	// This adapter is being removed, so get rid of the proxy.
 			break;
+		case Notification.MOVE:
+			moved((EStructuralFeature)msg.getFeature(), msg.getNewValue(), ((Integer) msg.getOldValue()).intValue(), msg.getPosition());
+			break;
 	}
+}
+
+/**
+ * Default implementation of move of feature has occurred. Subclasses should override if necessary.
+ * @param feature
+ * @param value
+ * @param oldPosition
+ * @param newPosition
+ * 
+ * @since 1.0.2
+ */
+protected void moved(EStructuralFeature feature, Object value, int oldPosition, int newPosition) {
+	// The default is to do a remove followed by add.
+	canceled(feature, value, oldPosition);
+	applied(feature, value, newPosition);
 }
 
 /*
