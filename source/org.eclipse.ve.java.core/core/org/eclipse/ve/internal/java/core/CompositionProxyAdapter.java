@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-06 20:47:40 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-07 00:09:56 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -23,10 +23,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 /**
  * This is a special adaptor for BeanCompositions.
  * There really isn't a bean proxy, but we need to handle
@@ -104,10 +106,15 @@ public void notifyChanged(Notification msg) {
 }
 
 public void initBeanProxy() {
-
-	Iterator settings = ((EObject)target).eContents().iterator();	// Get only the composite features.
-	while (settings.hasNext()) {;
-		initSetting(settings.next());
+	// TODO Should Only instantiate this and components, but we may not be a BeanSubclassComposition. Need a better
+	// way of handling this.
+	if (getTarget() instanceof BeanSubclassComposition) {
+		initSetting(((BeanSubclassComposition) getTarget()).getThisPart());
+	}
+	// Next run the components.
+	List components = ((BeanComposition) getTarget()).getComponents();
+	for (int i = 0; i < components.size(); i++) {
+		initSetting(components.get(i));
 	}
 }
 
@@ -118,7 +125,8 @@ public void initBeanProxy() {
 public void releaseBeanProxy() {
 
 	// It will go through the attribute settings and dispose
-	// of them too since they were instantiated by this object.
+	// of them too since they were instantiated by this object. This does all of the containment because
+	// some properties may of been initialized and so aren't known as components.
 	Iterator settings = ((EObject)target).eContents().iterator();	// Get only the attrs and composite refs.
 	while (settings.hasNext()) {
 		releaseSetting(settings.next());
