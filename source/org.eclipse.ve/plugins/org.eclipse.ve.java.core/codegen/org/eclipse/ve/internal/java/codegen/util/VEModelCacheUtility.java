@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.1 $  $Date: 2005-01-05 18:41:43 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-05 22:13:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -68,7 +68,7 @@ public class VEModelCacheUtility {
 	}
 	
 	public static boolean isValidCache (IFile f) {
-//		File dest = getCachePath(f).toFile();		
+//		File dest = getCachedPath(f).toFile();		
 //		if (dest.exists() && dest.canRead()) {
 //			if (dest.lastModified()>f.getFullPath().toFile().lastModified())
 //				return true;
@@ -77,7 +77,7 @@ public class VEModelCacheUtility {
 	}
 	
 	protected static IPath getCachedPath(IFile f) {
-		IPath savedPath = getCacheDirectory().append(f.getProjectRelativePath());
+		IPath savedPath = getCacheDirectory().append(f.getFullPath());
 		return savedPath.removeLastSegments(1).append(savedPath.lastSegment().substring(0,savedPath.lastSegment().indexOf('.'))+".xmi");
 	}
 	
