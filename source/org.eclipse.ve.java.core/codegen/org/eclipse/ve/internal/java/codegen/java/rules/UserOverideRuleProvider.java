@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UserOverideRuleProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
 import java.io.*;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.ve.internal.cde.rules.IRule;
@@ -87,7 +88,7 @@ public class UserOverideRuleProvider implements IRuleProvider {
 				// Need to compile
 				if (!fsrcFile.canRead()) {
 					JavaVEPlugin.log("UserOverideRuleProvider: Can not read source file: "+fsrcFile.getAbsolutePath(), //$NON-NLS-1$
-					                org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
+					                Level.WARNING) ;
 					return null ;
 				}
 				in = new FileReader(fsrcFile);
@@ -106,7 +107,7 @@ public class UserOverideRuleProvider implements IRuleProvider {
 		}
 		catch (Exception ex) {
 			JavaVEPlugin.log("UserOverideRuleProvider.getRule(): "+ex.getMessage(), //$NON-NLS-1$
-			               org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
+			               Level.WARNING) ;
 		}		
 		finally {
 			if (in != null)

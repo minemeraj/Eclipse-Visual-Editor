@@ -11,20 +11,21 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
+
 import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
 
 /**
@@ -88,7 +89,7 @@ public class ImageDataCollector implements ICallback {
 		try {
 			fDataCollectorProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ImageDataCollector").newInstance(); //$NON-NLS-1$
 		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			return;	// This is an invalid collector.
 		}
 		registry.getCallbackRegistry().registerCallback(fDataCollectorProxy, this);
@@ -255,7 +256,7 @@ public class ImageDataCollector implements ICallback {
 				createImageData(new DataInputStream(is));
 				break;
 			default:
-				JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, MsgLogger.LOG_WARNING);	//$NON-NLS-1$
+				JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
 		}
 	}
 	
@@ -397,12 +398,12 @@ public class ImageDataCollector implements ICallback {
 					fDataCollectedRunnable.imageNotCollected(abortStatus);
 				} else {
 					// We ended for some other reason, report the error.
-					JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+					JavaVEPlugin.log(e, Level.FINE);
 					// We will close hard.
 					fDataCollectedRunnable.imageNotCollected(ImageDataConstants.IMAGE_ERROR);
 				}
 		} catch (IOException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			// We will close hard.
 			fDataCollectedRunnable.imageNotCollected(ImageDataConstants.IMAGE_ERROR);
 		}

@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.*;
@@ -24,8 +26,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -64,7 +64,7 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
  	 }
  	}
  	catch (JavaModelException e) {
- 		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+ 		JavaVEPlugin.log(e, Level.WARNING) ;
  	}
  	return false ;
  }
@@ -106,7 +106,7 @@ public Object getDocLock() {
  	  getDocumentProvider().getAnnotationModel(fEditorIn).connect(getDocument());
  	}
  	catch (Exception e) {
- 		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+ 		JavaVEPlugin.log(e, Level.WARNING) ;
  	}
 	 	
  	return fEditorIn ;

@@ -11,17 +11,17 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -232,7 +232,7 @@ protected void resetExpressionPriorities(){
 					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
 				}
 			}
-		}catch(Exception e ){JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;}
+		}catch(Exception e ){JavaVEPlugin.log(e, Level.WARNING) ;}
 	}
 	
 	// Reset priority of event expressions
@@ -251,7 +251,7 @@ protected void resetExpressionPriorities(){
 					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
 				}
 			}
-		}catch(Exception e ){JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;}
+		}catch(Exception e ){JavaVEPlugin.log(e, Level.WARNING) ;}
 	}
 }
 
@@ -436,7 +436,7 @@ public  void updateExpressionOrder() throws CodeGenException{
 		bestUsablePosition = ((Integer)ret[0]).intValue();
 		bestUsableFiller = (String)ret[1];
 	} catch (CodeGenException e) {
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(e, Level.WARNING);
 	}
 	
 	// Place the expressions
@@ -477,7 +477,7 @@ protected static Enumeration determineBeanOrder(Enumeration beans){
 	while(beans.hasMoreElements()){
 		boolean added = beanSorter.add((BeanPart) beans.nextElement());
 		if(!added)
-			JavaVEPlugin.log("No addition to the treeset", MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("No addition to the treeset", Level.FINE); //$NON-NLS-1$
 	};
 	Vector order = new Vector();
 	Iterator sorted = beanSorter.iterator();
@@ -691,7 +691,7 @@ public void refreshIMethod(){
 		IMethod m = CodeGenUtil.getMethod(mainType, getMethodHandle());
 		refreshIMethod(m);
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(e, Level.WARNING);
 	}
 }
 
@@ -702,7 +702,7 @@ public void refreshIMethod(IMethod m) {
 			setContent(m.getSource());
 		}
 	} catch (JavaModelException e) {
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(e, Level.WARNING);
 	}			
 }
 

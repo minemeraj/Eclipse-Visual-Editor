@@ -12,9 +12,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.lang.reflect.Constructor;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -22,15 +23,15 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+
 import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.jcm.JCMPackage;
-
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 
 /**
  * Factory for creating the BeanProxyAdaptor.
@@ -119,7 +120,7 @@ public class BeanProxyAdapterFactory
 					adapterClass = CDEPlugin.getClassFromString(adapterClassName);
 			} catch (ClassNotFoundException e) {
 				adapterClass = null;
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e, Level.WARNING);
 			}
 			if (adapterClass != null)
 				try {
@@ -127,7 +128,7 @@ public class BeanProxyAdapterFactory
 					Constructor constructor = adapterClass.getConstructor(new Class[] { IBeanProxyDomain.class });
 					adapter = (Adapter) constructor.newInstance(new Object[] { this });
 				} catch (Exception e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(e, Level.WARNING);
 				}
 		}
 

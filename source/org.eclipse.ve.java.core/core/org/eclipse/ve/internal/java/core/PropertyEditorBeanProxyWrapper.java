@@ -11,16 +11,17 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEditorBeanProxyWrapper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Shell;
 
-import org.eclipse.ve.internal.java.common.Common;
-
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.java.common.Common;
 
 public class PropertyEditorBeanProxyWrapper {
 
@@ -158,7 +159,7 @@ public String getJavaInitializationString(){
 		IStringBeanProxy initStringProxy = (IStringBeanProxy)fGetJavaInitializationStringMethodProxy.invoke(propertyEditorProxy);
 		return initStringProxy.stringValue();
 	} catch ( ThrowableProxy exc ) {
-		JavaVEPlugin.log(exc, MsgLogger.LOG_SEVERE);
+		JavaVEPlugin.log(exc, Level.SEVERE);
 		return "???"; //$NON-NLS-1$
 	}
 }
@@ -197,7 +198,7 @@ public int launchCustomEditor(Shell parentShell) {
 		windowLauncher.waitUntilWindowCloses();	
 		state = windowLauncher.getWindowState();
 	} catch ( ThrowableProxy exc ){
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(exc, Level.WARNING);
 	} finally {
 		if (windowLauncher != null)
 			windowLauncher.dispose();

@@ -11,27 +11,25 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.ve.internal.java.vce.*;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaSourceSynchronizer {
 
@@ -268,10 +266,10 @@ public class JavaSourceSynchronizer {
 						prev = SynchronizerWorkItem.getWorkItemList(event,fWorkingCopyProvider.getWorkingCopy(true),true,true) ;
 						if (prev.size()>100)
 						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+prev.size(), //$NON-NLS-1$
-						                 org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
+						                 Level.WARNING) ;
 					}catch(Throwable e){
-						JavaVEPlugin.log("Not processing documentAboutToBeChanged(DocumentEvent) due to exception.",MsgLogger.LOG_WARNING); //$NON-NLS-1$
-						JavaVEPlugin.log(e,MsgLogger.LOG_WARNING);
+						JavaVEPlugin.log("Not processing documentAboutToBeChanged(DocumentEvent) due to exception.",Level.WARNING); //$NON-NLS-1$
+						JavaVEPlugin.log(e,Level.WARNING);
 					}
 				}
 				public void documentChanged(DocumentEvent event){
@@ -285,7 +283,7 @@ public class JavaSourceSynchronizer {
 						List elements = SynchronizerWorkItem.refreshWorkItemList(prev,event,fWorkingCopyProvider.getWorkingCopy(true),true,false) ;
 						if (elements.size()>100)
 						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+elements.size(), //$NON-NLS-1$
-						                 org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
+						                 Level.WARNING) ;
 						prev = null ;
 						// There is a delta change,  if we are already in the process of reloading from scratch,
 						// put on the list that we need a "newer" reload from sctrach action, which will force the current
@@ -297,8 +295,8 @@ public class JavaSourceSynchronizer {
 							updateLocalFromShared(elements);
 						}
 					}catch(Throwable e){
-						JavaVEPlugin.log("Not processing documentChanged(DocumentEvent) due to exception.",MsgLogger.LOG_WARNING); //$NON-NLS-1$
-						JavaVEPlugin.log(e,MsgLogger.LOG_WARNING);
+						JavaVEPlugin.log("Not processing documentChanged(DocumentEvent) due to exception.",Level.WARNING); //$NON-NLS-1$
+						JavaVEPlugin.log(e,Level.WARNING);
 					}
 				}
 
@@ -413,7 +411,7 @@ public class JavaSourceSynchronizer {
 		}
 		
 		if (strategy == null) {
-			JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+			JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$
 			return ;
 		}
 		

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-05 23:11:15 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-20 00:44:30 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -23,6 +23,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,9 +85,11 @@ import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 import org.eclipse.ui.views.properties.*;
 
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -94,16 +97,17 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.properties.*;
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
+
+import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
 import org.eclipse.ve.internal.java.codegen.core.*;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
-import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
@@ -512,9 +516,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						paletteRoot.add(drawer);
 					}
 				} catch (IOException e) {		
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);								
+					JavaVEPlugin.log(e, Level.WARNING);								
 				} catch (RuntimeException e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(e, Level.WARNING);
 				}	
 			}
 		}
@@ -638,7 +642,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					modelBuilder.getModelResource().save(os, XML_TEXT_OPTIONS);
 					xmlTextPage.setText(os.toString());
 				} catch (Exception e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(e, Level.WARNING);
 					xmlTextPage.setText(""); //$NON-NLS-1$
 				}
 			} else {
@@ -936,8 +940,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				   codeGenAdapter = list[0] ;
 			}
 			if (codeGenAdapter == null) {
-				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + fNotifier, //$NON-NLS-1$
-				org.eclipse.jem.internal.core.MsgLogger.LOG_FINE);
+				JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + fNotifier, //$NON-NLS-1$
+				Level.FINE);
 			} else {
 				try {
 					final ICodeGenSourceRange sourceRange = codeGenAdapter.getHighlightSourceRange();
@@ -1059,7 +1063,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// starts changes and returns whether changes allowed.
 			boolean doit = false;
 			final IRewriteTarget rewriteTarget = (IRewriteTarget) getAdapter(IRewriteTarget.class);
-			JavaVEPlugin.log("(+1) Starting change", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+			JavaVEPlugin.log("(+1) Starting change", Level.FINEST); //$NON-NLS-1$
 			synchronized (this) {
 				if (compoundChangeCount++ == 0) {
 					if (rewriteTarget != null) {
@@ -1070,7 +1074,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							allowingChanges = validateEditorInputState();
 							;
 						} catch (Throwable t) {
-							JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+							JavaVEPlugin.log(t, Level.WARNING);
 						}
 						if (allowingChanges)
 							doit = true;
@@ -1079,40 +1083,40 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					} else
 						allowingChanges = true; // Editor not fully up yet, so not a transaction that can be undone. Just go do it.		
 				} else
-					JavaVEPlugin.log("(+2) Starting nested transaction", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+					JavaVEPlugin.log("(+2) Starting nested transaction", Level.FINEST); //$NON-NLS-1$
 			}
 
 			if (doit) {
-				JavaVEPlugin.log("(+1a) Starting wait for completion", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(+1a) Starting wait for completion", Level.FINEST); //$NON-NLS-1$
 				// Needed to have commitAndFlush outside of sync block because the commitAndFlushAsync below may also try to access "this", but from a different thread.
 				// Can't have any pending changes before beginning next group of changes.				
 				waitForCompleteTransaction();
-				JavaVEPlugin.log("(-1a) Ending wait for completion", MsgLogger.LOG_FINEST); //$NON-NLS-1$
-				JavaVEPlugin.log("(+1b) Starting begin compound change", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(-1a) Ending wait for completion", Level.FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(+1b) Starting begin compound change", Level.FINEST); //$NON-NLS-1$
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
 						// Stopping the reDraw causes the SWT (Editor) Text Widget to be
 						// Out of sync with the JDT model and the AnnotatorPainter that tries
 						// to maintain the errors on this widget
 //						rewriteTarget.setRedraw(false); // So we don't get so much flicker.							
-						JavaVEPlugin.getPlugin().getMsgLogger().log("Redraw off", MsgLogger.LOG_FINER); //$NON-NLS-1$
+						JavaVEPlugin.getPlugin().getLogger().log("Redraw off", Level.FINER); //$NON-NLS-1$
 						rewriteTarget.beginCompoundChange();
 					}
 				}); // setRedraw needs to be in a UI thread.
-				JavaVEPlugin.log("(-1b) Ending begin compound change", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(-1b) Ending begin compound change", Level.FINEST); //$NON-NLS-1$
 				synchronized (this) {
 					inTransaction = true;
 				}
-				JavaVEPlugin.getPlugin().getMsgLogger().log("(+3) Transaction started", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.getPlugin().getLogger().log("(+3) Transaction started", Level.FINEST); //$NON-NLS-1$
 			}
-			JavaVEPlugin.log("(-1) Ending starting change", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+			JavaVEPlugin.log("(-1) Ending starting change", Level.FINEST); //$NON-NLS-1$
 			return allowingChanges;
 		}
 
 		private synchronized void stopChange() {
 			// stops changes
 			if (--compoundChangeCount <= 0) {
-				JavaVEPlugin.log("(3a) Starting end transaction", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(3a) Starting end transaction", Level.FINEST); //$NON-NLS-1$
 				compoundChangeCount = 0; // In case we get out of sync.
 				if (inTransaction) {
 					// We have done a beginCompoundChange, must now do endCompoundChange
@@ -1125,7 +1129,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							public void markerProcessed(String marker) {
 								final IRewriteTarget rewriteTarget = (IRewriteTarget) getAdapter(IRewriteTarget.class);
 								boolean doEnd = true;
-								JavaVEPlugin.log("(+3b) Starting async commit processing", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+								JavaVEPlugin.log("(+3b) Starting async commit processing", Level.FINEST); //$NON-NLS-1$
 								synchronized (JavaModelChangeController.this) {
 									if (compoundChangeCount <= 0) {
 										inTransaction = false; // We haven't started a new one while processing the termination.
@@ -1133,7 +1137,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 									} else {
 										doEnd = false;
 										// We've started a new transaction since this end request went through, so treat it as nested.
-										JavaVEPlugin.log("(3b) Another transaction has started, treat it as nested for now.", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+										JavaVEPlugin.log("(3b) Another transaction has started, treat it as nested for now.", Level.FINEST); //$NON-NLS-1$
 									}
 								}
 								processCodeGenFlushIfNeeded();
@@ -1142,19 +1146,19 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 									public void run() {
 										if (finalDoEnd) {
 											rewriteTarget.endCompoundChange();
-											JavaVEPlugin.log("(-3) End transaction", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+											JavaVEPlugin.log("(-3) End transaction", Level.FINEST); //$NON-NLS-1$
 										}
 //										rewriteTarget.setRedraw(true);
-										JavaVEPlugin.getPlugin().getMsgLogger().log("Redraw on", MsgLogger.LOG_FINER); //$NON-NLS-1$
+										JavaVEPlugin.getPlugin().getLogger().log("Redraw on", Level.FINER); //$NON-NLS-1$
 									}
 								}); // setRedraw needs to be in a UI thread.
-								JavaVEPlugin.log("(-3b) End async commit processing", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+								JavaVEPlugin.log("(-3b) End async commit processing", Level.FINEST); //$NON-NLS-1$
 							}
 						}, "modelChangeMarker"); //$NON-NLS-1$
 					}
 				}
 			} else
-				JavaVEPlugin.log("(-2) Ending nested transaction", MsgLogger.LOG_FINEST); //$NON-NLS-1$
+				JavaVEPlugin.log("(-2) Ending nested transaction", Level.FINEST); //$NON-NLS-1$
 		}
 
 		/**
@@ -1385,7 +1389,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				image = null;
 
 			if (msg != null)
-				JavaVEPlugin.log(msg, MsgLogger.LOG_FINE);
+				JavaVEPlugin.log(msg, Level.FINE);
 
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {

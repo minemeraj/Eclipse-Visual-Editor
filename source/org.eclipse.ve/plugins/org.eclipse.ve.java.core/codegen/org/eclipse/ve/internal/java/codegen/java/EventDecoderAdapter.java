@@ -14,23 +14,24 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -153,7 +154,7 @@ public class EventDecoderAdapter implements ICodeGenAdapter {
 
 		}
 		catch (Throwable t) {
-			JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(t, Level.WARNING);
 		}
 	}
 

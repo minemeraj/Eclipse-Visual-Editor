@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
@@ -23,7 +24,6 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -40,7 +40,7 @@ static public ResourceSet fdecoratorRSCache = null ;
 
 private List primGetDecorators(EObject metaObject) {
     
-     JavaVEPlugin.log("AttributeFeatureMapper.primGetDecorators: "+((EClass) metaObject).getName(),org.eclipse.jem.internal.core.MsgLogger.LOG_FINEST) ; //$NON-NLS-1$
+     JavaVEPlugin.log("AttributeFeatureMapper.primGetDecorators: "+((EClass) metaObject).getName(), Level.FINEST) ; //$NON-NLS-1$
      EList properties = ((JavaClass)metaObject).getAllProperties() ;
 	 fdecoratorCache.put(metaObject,properties) ;
      Iterator itr = Utilities.getPropertiesIterator(properties);
@@ -76,7 +76,7 @@ protected Iterator getPropertiesIterator(EObject obj) {
      
     if (fdecoratorRSCache==null || rs != fdecoratorRSCache) {
         // Poor Man's cache at this point
-        JavaVEPlugin.log("AttributeFeatureMapper.getPropertiesIterator():  *ClearingCache*",org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+        JavaVEPlugin.log("AttributeFeatureMapper.getPropertiesIterator():  *ClearingCache*", Level.FINE) ; //$NON-NLS-1$
         fdecoratorCache.clear();
         fdecoratorRSCache = rs ;
     }
@@ -151,7 +151,7 @@ public EStructuralFeature getFeature (Statement expr) {
 				fPD = pd;
 				break;
 			} catch (Exception e) {
-				JavaVEPlugin.log("AttributeFeatureMapper.getFeature() : " + e, MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log("AttributeFeatureMapper.getFeature() : " + e, Level.WARNING); //$NON-NLS-1$
 				continue;
 			}
 

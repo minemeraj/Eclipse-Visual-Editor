@@ -11,17 +11,17 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.13 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.14 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.jdom.IDOMMethod;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
@@ -136,7 +136,7 @@ public void generateExpressionsContent() throws CodeGenException {
 			String src = newExpr.getContent();
 			if (src == null)
 				throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-			JavaVEPlugin.log("\tAdding: " + src, MsgLogger.LOG_FINE); //$NON-NLS-1$	
+			JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$	
 		}
 	}
 	
@@ -166,7 +166,7 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 			String src = newExpr.getContent();
 			if (src == null)
 				throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-			JavaVEPlugin.log("\tAdding: " + src, MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
 			if (!updateDoc)
 				newExpr.setOffset(buf.length());
 			buf.append(src);
@@ -209,7 +209,7 @@ protected void GenerateAChild(StringBuffer buf,BeanPart bean, BeanPart child,ESt
     CodeExpressionRef newExpr = GenerateAttribute(sf,bean,new Object[] { actualChild },false) ; ;
 	String src =  newExpr.getContent() ;
 	if (src == null) {
-		JavaVEPlugin.log ("No Source Generated for "+bean.getUniqueName()+"("+sf+")", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		JavaVEPlugin.log ("No Source Generated for "+bean.getUniqueName()+"("+sf+")", Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return ;
 	}	
     
@@ -220,7 +220,7 @@ protected void GenerateAChild(StringBuffer buf,BeanPart bean, BeanPart child,ESt
     newExpr.setOffset(buf.length()) ;
     mref.addExpressionRef(newExpr) ;
 	buf.append(src) ;		      	
-	JavaVEPlugin.log ("\tAttribute source added: "+src, MsgLogger.LOG_FINE) ;	       //$NON-NLS-1$
+	JavaVEPlugin.log ("\tAttribute source added: "+src, Level.FINE) ;	       //$NON-NLS-1$
 	
 }
 
@@ -257,7 +257,7 @@ public void generateInLine(CodeMethodRef method,String beanName, List kids) thro
        method.updateExpressionOrder() ;
    }
    catch (Throwable e) {
-        JavaVEPlugin.log(e, MsgLogger.LOG_SEVERE) ;
+        JavaVEPlugin.log(e, Level.SEVERE) ;
         return  ;
    }
    // We may be processing a nested child, 

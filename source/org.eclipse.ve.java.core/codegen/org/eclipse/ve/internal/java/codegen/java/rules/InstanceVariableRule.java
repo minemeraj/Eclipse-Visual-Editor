@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:30 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -28,6 +29,7 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class InstanceVariableRule implements IInstanceVariableRule, IMethodVariableRule {
 
@@ -150,7 +152,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 				}
 			}
 		} catch (Exception e) {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, org.eclipse.jem.internal.core.MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
 		}
 
 		internalsCache.put(getType(field), Boolean.FALSE);

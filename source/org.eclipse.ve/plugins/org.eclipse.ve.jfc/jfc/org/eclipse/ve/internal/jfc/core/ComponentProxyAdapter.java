@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-05 23:11:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:43:58 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Notifier;
@@ -23,16 +24,17 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.awt.*;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.cde.core.*;
 
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;
+
 import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.awt.*;
 /**
  * Live Bean Adapter for java.awt.Component.
  * Implements IComponentNotifier so that edit parts can
@@ -602,7 +604,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				}
 			} catch (ThrowableProxy e) {
 				// This shouldn't of happened. Should always be able to instantiate canvas.
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
+				JavaVEPlugin.log(e, Level.FINE);
 			}
 			beanProxy.getProxyFactoryRegistry().releaseProxy(beanProxy);
 			beanProxy = newProxy;
@@ -768,7 +770,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 						});
 					}
 				} catch (ThrowableProxy e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(e, Level.WARNING);
 					String eMsg = e.getProxyLocalizedMessage();
 					if (eMsg == null) {
 						// No localized msg. Get the exception type. If it is OutOfMemory, handle special.

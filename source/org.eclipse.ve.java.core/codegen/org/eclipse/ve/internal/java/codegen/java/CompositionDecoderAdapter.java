@@ -11,27 +11,27 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jem.internal.core.MsgLogger;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -80,7 +80,7 @@ protected void processMethods(Notification msg) {
 		      }		     
 		     break ;		     		    
 	      default:
-	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	           return ;
 	}
 	
@@ -118,7 +118,7 @@ protected void processSettings(Notification msg) {
 		     // No need to remove anything from the source at this point	    
 		     break ;		     		    
 	      default:
-	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	           return ;
 	}	
 }
@@ -146,11 +146,11 @@ public void notifyChanged(Notification msg){
         case JCMPackage.BEAN_SUBCLASS_COMPOSITION__LISTENER_TYPES:
           	  break ;
         default:
-              JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: "+msg.getFeature(), MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+              JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: "+msg.getFeature(), Level.FINE) ; //$NON-NLS-1$
       } 
  }
  catch (Throwable t) {
-     JavaVEPlugin.log(t, MsgLogger.LOG_WARNING) ;
+     JavaVEPlugin.log(t, Level.WARNING) ;
  }
 }
 

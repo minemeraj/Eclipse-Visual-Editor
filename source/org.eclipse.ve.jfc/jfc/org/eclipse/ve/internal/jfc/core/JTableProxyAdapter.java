@@ -11,19 +11,20 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.java.core.*;
 public class JTableProxyAdapter extends ComponentProxyAdapter {
 
 	protected IMethodProxy fAddColumnMethodProxy;
@@ -55,7 +56,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 				try {
 					setModelProxy.invoke(getBeanProxy(), previewTypeProxy.newInstance());
 				} catch (ThrowableProxy exc) {
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(exc, Level.WARNING);
 				}
 			}
 		}

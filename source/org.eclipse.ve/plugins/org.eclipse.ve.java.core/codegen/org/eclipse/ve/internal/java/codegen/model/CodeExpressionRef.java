@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.13 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.14 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.ISourceRange;
@@ -30,7 +31,6 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.BasicCompilationUnit;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -207,7 +207,7 @@ public ExpressionParser getParser () {
 
 public void setContent (String content)  {
 	CodeGenException e = new CodeGenException("Use an ExpressionParser to set the content") ; //$NON-NLS-1$
-	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+	JavaVEPlugin.log(e, Level.WARNING) ;
 }
 
 
@@ -347,7 +347,7 @@ public boolean isEquivalentChanged(ITypeResolver oldResolver, CodeExpressionRef 
 				}
 			}
 		}else{
-			JavaVEPlugin.log("Comparision in CodeExpressionRef.isEquivalentChanged() should happen between equivalent expressions.", MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log("Comparision in CodeExpressionRef.isEquivalentChanged() should happen between equivalent expressions.", Level.WARNING); //$NON-NLS-1$
 			return true;
 		}
 	} catch (CodeGenException e) {
@@ -369,12 +369,12 @@ public  boolean  decodeExpression() throws CodeGenException {
       
       // Do not decode
       if (fBean.getInitMethod() == null || !fBean.getInitMethod().equals(fMethod)) {
-      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Invalid init JCMMethod for"+fBean,org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ; //$NON-NLS-1$      	
+      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Invalid init JCMMethod for"+fBean,Level.FINE) ; //$NON-NLS-1$      	
       	return false ;
       }
       
       if (isDuplicate()) {
-      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fExpr,org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fExpr, Level.FINE) ; //$NON-NLS-1$
       	return false ;
       }
     
@@ -561,7 +561,7 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 	    
 	    
 	}catch(Exception e){
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	finally {
 	   setState(STATE_UPDATING_SOURCE, false); // fState &= ~STATE_UPDATING_SOURCE ;				   	 
@@ -605,7 +605,7 @@ public  void updateDocument(boolean updateSharedDoc) {
 		try {	  
 			refreshFromComposition() ;
 		}catch (CodeGenException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+			JavaVEPlugin.log(e, Level.WARNING) ;
 			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
 			return ;
 		}
@@ -629,7 +629,7 @@ public  void updateDocument(boolean updateSharedDoc) {
 			 !isStateSet(STATE_NO_SRC)){
     		// Do we need to update the document ?
     		if (getContent() != null && prevContent.equals(getContent()))  {
-    			JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+    			JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, Level.FINE) ; //$NON-NLS-1$
     			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
     			return ;
     		}
@@ -643,7 +643,7 @@ public  void updateDocument(boolean updateSharedDoc) {
 		setOffset(off) ;
 		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
 	}
-	JavaVEPlugin.log(trace.toString(), MsgLogger.LOG_FINE) ;
+	JavaVEPlugin.log(trace.toString(), Level.FINE) ;
 
 	if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
@@ -666,7 +666,7 @@ protected void updateDocument(int docOff, int len, String newContent) {
 
 public  void insertContentToDocument() {
 	if (isStateSet(STATE_NO_SRC)) return ;
-	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	synchronized (fBean.getModel().getDocumentLock()) {
 		// mark a controlled update (Top-Down)		
 		setState(STATE_UPDATING_SOURCE, true); 

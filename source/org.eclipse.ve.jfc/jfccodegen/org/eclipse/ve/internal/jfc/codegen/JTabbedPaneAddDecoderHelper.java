@@ -11,16 +11,16 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:16 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:43:58 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -124,7 +124,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// target's add feature
 		EStructuralFeature cf = fFmapper.getFeature(null);
 		java.util.List compList = (java.util.List) target.getEObject().eGet(cf);
-		JavaVEPlugin.log("JTabbedPaneAddDecoderHelper.add(" + toAdd + "," + target + "@" + i + ")", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		JavaVEPlugin.log("JTabbedPaneAddDecoderHelper.add(" + toAdd + "," + target + "@" + i + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (i < 0)
 			compList.add(root);
 		else
@@ -270,7 +270,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// TODO  Need to deal with identical 
 		int end = start < 0 ? -1 : expSig.lastIndexOf(args[args.length - 1]) + args[args.length - 1].length();
 		if (start < 0 || end < 0) {
-			JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.WARNING); //$NON-NLS-1$
 			return expSig;
 		}
 

@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
 
@@ -113,7 +113,7 @@ public class SWTConfigurationContributor implements IConfigurationContributor {
 			initializeMethodProxy.invoke(environmentBeanTypeProxy);				
 		} catch (Exception exc) {
 			JavaVEPlugin.log("Unable to set initialize the SWT target VM");
-			JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(exc, Level.WARNING);
 		}	
 		
 		// Register the SWT proxy factory that allows easy manipulation of things like rectangles, points, etc...

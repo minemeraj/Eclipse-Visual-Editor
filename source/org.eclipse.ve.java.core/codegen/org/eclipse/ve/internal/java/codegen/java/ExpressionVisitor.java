@@ -11,21 +11,22 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.java.impl.JavaClassImpl;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 public class ExpressionVisitor extends SourceVisitor {
@@ -70,7 +71,7 @@ BeanPart  processRefToMessageSend  (MessageSend stmt) {
      // postpone the parsing to later
      if (fReTryLater != null) {
      		fReTryLater.add(this) ;
-            JavaVEPlugin.log ("\t[Expression] - postponing: "+stmt, MsgLogger.LOG_FINE) ;        		 //$NON-NLS-1$
+            JavaVEPlugin.log ("\t[Expression] - postponing: "+stmt, Level.FINE) ;        		 //$NON-NLS-1$
        		return null ;
      }
      selector = new String (((MessageSend)stmt.receiver).selector) ;  	  	
@@ -142,7 +143,7 @@ protected void processAMessageSend() {
    	 		// bean.getModel().addMethodInitializingABean(fMethod) ;
   	  }
       else {  	     
-        JavaVEPlugin.log("\t[Expression] Visitor.processAMessageSend() did not process: "+stmt, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+        JavaVEPlugin.log("\t[Expression] Visitor.processAMessageSend() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
       }
 }
 
@@ -213,7 +214,7 @@ protected void processAssignmment() {
 			   fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 			}
 			else {
-			  JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+			  JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
 			}
 		}		
 	}
@@ -232,7 +233,7 @@ protected void processAssignmment() {
 	    }
 	}	
    else {   	 
-   	 JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+   	 JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
    }	
 }
 
@@ -274,7 +275,7 @@ public void visit(){
     else if (fExpression.getExpression() instanceof LocalDeclaration)
        processDeclarations() ;
     else
-       JavaVEPlugin.log ("\t[Expression] Visitor: *** did not process Expression:"+fVisitedNode, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+       JavaVEPlugin.log ("\t[Expression] Visitor: *** did not process Expression:"+fVisitedNode, Level.FINE) ; //$NON-NLS-1$
 	   
 	   
 	// Need to fartehr analyze  - see Expression()

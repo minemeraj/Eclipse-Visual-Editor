@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:16 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -134,7 +134,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		EStructuralFeature cf = CodeGenUtil.getComponentFeature(targetContainer);
 		java.util.List compList = (java.util.List) targetContainer.eGet(cf);
-		JavaVEPlugin.log("ContainerAddDecoderHelper(" + componentToAdd.eClass() + "," + targetContainer.eClass() + "@" + index + ")", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		JavaVEPlugin.log("ContainerAddDecoderHelper(" + componentToAdd.eClass() + "," + targetContainer.eClass() + "@" + index + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (index < 0)
 			compList.add(CC);
 		else
@@ -447,7 +447,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		// TODO  Need to deal with identical 
 		int end = start < 0 ? -1 : expSig.lastIndexOf(args[args.length - 1]) + args[args.length - 1].length();
 		if (start < 0 || end < 0) {
-			JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.FINE); //$NON-NLS-1$
 			return expSig;
 		}
 		// Get the latest constraint	
@@ -568,7 +568,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 	//				if("ConstraintComponent".equals(cc.eClass().getName())) //$NON-NLS-1$
 	//					cc = CodeGenUtil.getCCcomponent(cc);
 	//				if (cc == null) {
-	//					JavaVEPlugin.log("ContainerAddDecoderHelper.getPriorityOfExpression(): null Component in a CC :"+this+org.eclipse.ve.internal.java.core.MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+	//					JavaVEPlugin.log("ContainerAddDecoderHelper.getPriorityOfExpression(): null Component in a CC :"+this+org.eclipse.ve.internal.java.core.Level.FINE) ; //$NON-NLS-1$
 	//					continue ;
 	//				}
 	//				if(cc.equals(childInstance)){

@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.Label;
@@ -30,15 +31,16 @@ import org.eclipse.jdt.internal.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.jcm.*;
-
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.*;
+
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+
+import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
+
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  *  This Adapter represents the VCE model listener for a component.
@@ -244,7 +246,7 @@ protected void removeDecoderAdapter (Object obj, ICodeGenAdapter a, Object sf) {
 protected boolean sanityCheck(boolean flag, String msg) {
 	if (!flag) {
 		org.eclipse.ve.internal.java.codegen.util.CodeGenException e = new org.eclipse.ve.internal.java.codegen.util.CodeGenException(msg) ;
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log(e, Level.WARNING) ;
 	}
 	return flag ;
 }
@@ -292,7 +294,7 @@ protected void setElement (Notification msg) {
 				exp.insertContentToDocument();
 		}
 		catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			return;
 		}
     }
@@ -433,7 +435,7 @@ protected void addElement (Notification msg) {
 			exp.insertContentToDocument();
 		}
 		catch (Exception e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			return;
 		}
 	}
@@ -497,7 +499,7 @@ public void notifyChanged(Notification msg) {
 					if (!msg.isTouch())
 						action = "SET"; //$NON-NLS-1$
 					if (msg.getFeature().equals(getEventsSF())) {
-						JavaVEPlugin.log("Event feature setting ?????? on : "+msg.getNewValue(),MsgLogger.LOG_FINE); //$NON-NLS-1$
+						JavaVEPlugin.log("Event feature setting ?????? on : "+msg.getNewValue(),Level.FINE); //$NON-NLS-1$
 					}
 					else
 						setElement(msg);
@@ -526,15 +528,15 @@ public void notifyChanged(Notification msg) {
 		         //noOp
 		         break;
 			default :
-				JavaVEPlugin.log(this +" No action= ????? (" + msg.getEventType() + ")", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				JavaVEPlugin.log(this +" No action= ????? (" + msg.getEventType() + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 
 		}
-		JavaVEPlugin.log(this +" action= " + action + " completed.", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		JavaVEPlugin.log("SourceRange: " + getJavaSourceRange(), MsgLogger.LOG_FINE); //$NON-NLS-1$
+		JavaVEPlugin.log(this +" action= " + action + " completed.", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		JavaVEPlugin.log("SourceRange: " + getJavaSourceRange(), Level.FINE); //$NON-NLS-1$
 	}
 	catch (Throwable t) {
-		JavaVEPlugin.log(t, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log(t, Level.WARNING);
 	}
 }
 

@@ -11,16 +11,16 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.util.ListenerList;
 
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -109,8 +109,8 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 				ownsProxy = true;
 			} catch (ThrowableProxy exc) {
 				processInstantiationError(exc);
-				JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, MsgLogger.LOG_WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, Level.WARNING);
 			}
 		}
 

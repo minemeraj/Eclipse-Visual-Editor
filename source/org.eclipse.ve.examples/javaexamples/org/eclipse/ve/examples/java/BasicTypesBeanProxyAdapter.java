@@ -11,21 +11,21 @@ package org.eclipse.ve.examples.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicTypesBeanProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:36 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.ve.internal.java.core.*;
-
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+
+import org.eclipse.ve.internal.java.core.*;
 /**
  * This bean proxy adapter sends a dispose method to the live bean
  * when it is disposed.  This is because the live bean has a Frame
@@ -45,7 +45,7 @@ public void releaseBeanProxy(){
 				disposeFrameMethodProxy.invoke(getBeanProxy());
 				disposeFrameMethodProxy.getProxyFactoryRegistry().releaseProxy(disposeFrameMethodProxy);
 			} catch ( ThrowableProxy exc ) {
-				JavaVEPlugin.log("Unable to dispose the BasicTypes by calling disposeFrame", MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log("Unable to dispose the BasicTypes by calling disposeFrame", Level.WARNING); //$NON-NLS-1$
 				exc.printProxyStackTrace();
 			}
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-06 20:19:51 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.List;
@@ -179,7 +179,7 @@ public class CustomizeAction extends SelectionAction {
 //				execute(finalCommand);
 //			}
 //		} catch (Exception e) {
-//			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+//			JavaVEPlugin.log(e, Level.WARNING);
 //		}
 //
 	}

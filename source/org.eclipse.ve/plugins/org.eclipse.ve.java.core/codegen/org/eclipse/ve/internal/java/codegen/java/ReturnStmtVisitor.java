@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.eval.CodeSnippetReturnStatement;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IReturnStmtRule;
@@ -90,7 +90,7 @@ public void visit(){
 		fReturnStmt instanceof ReturnStatement) 
 	              processAReturnStatement () ;	
       else
-        JavaVEPlugin.log ("... did not process Expression:"+fReturnStmt, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+        JavaVEPlugin.log ("... did not process Expression:"+fReturnStmt, Level.FINE) ; //$NON-NLS-1$
 	
 	
 }

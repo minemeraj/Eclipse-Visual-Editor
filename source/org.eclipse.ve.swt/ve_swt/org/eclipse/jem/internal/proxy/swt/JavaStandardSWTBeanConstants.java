@@ -126,7 +126,7 @@ public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry
 	try {
 		return invokeSyncExec(registry, runnable);
 	} catch (ThrowableProxy e) {
-		JavaVEPlugin.getPlugin().getMsgLogger().log(e);
+		JavaVEPlugin.getPlugin().getLogger().log(e);
 		return null;
 	}
 }

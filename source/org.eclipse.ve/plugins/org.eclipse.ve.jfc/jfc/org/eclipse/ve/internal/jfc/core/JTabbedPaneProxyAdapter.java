@@ -11,30 +11,27 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
 /**
  * Create the bean proxy. 
@@ -150,7 +147,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 				poofed = true;
 			} catch (ThrowableProxy e) {
 				// This really shouldn't of occurred.
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);				
+				JavaVEPlugin.log(e, Level.WARNING);				
 			}
 		}
 		// If the position is not -1, use insertTab to add the component, otherwise use addTab

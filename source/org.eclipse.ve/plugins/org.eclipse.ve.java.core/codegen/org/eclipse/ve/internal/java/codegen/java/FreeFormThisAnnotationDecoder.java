@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-18 21:42:15 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
-import org.eclipse.jdt.core.*;
+import java.util.logging.Level;
 
-import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jdt.core.*;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -159,7 +159,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
           String src = getDesignatedAnnotationString(fBeanpart.getModel().getCompilationUnit()) ;
           ICodeGenSourceRange curSR = getDesignatedAnnotationRange(fBeanpart.getModel().getCompilationUnit()) ;
           if (src == null || curSR == null) {
-          	JavaVEPlugin.log("FFThisAnnotationDecoder.reflectMOFchange(): Could not insert THIS FF annotation",MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+          	JavaVEPlugin.log("FFThisAnnotationDecoder.reflectMOFchange(): Could not insert THIS FF annotation",Level.FINE) ; //$NON-NLS-1$
           	return ;          	
           }
           String newSrc = null ;
@@ -171,7 +171,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
             // Brand New Anotation 
               newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
               if (newSrc == null || newSrc.length() == 0) {
-                JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+                JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", Level.WARNING) ; //$NON-NLS-1$
                 return ;
               }
               
@@ -182,10 +182,10 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
               else
                  len = commentStart + FreeFormAnnotationTemplate.ANNOTATION_START.length() ;                 
               
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", MsgLogger.LOG_FINE) ;                          //$NON-NLS-1$
+              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", Level.FINE) ;                          //$NON-NLS-1$
           }
           else {
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", MsgLogger.LOG_FINE) ;    //$NON-NLS-1$
+              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
               newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
@@ -199,10 +199,10 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
 		  fBeanpart.getModel().driveExpressionChangedEvent(null, curSR.getOffset(), newSrc.length()-len) ;
 		  fBeanpart.getModel().docChanged();
 		  
-		  JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
+		  JavaVEPlugin.log(newSrc, Level.FINE) ;
         }
         catch (Exception e) {
-            JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+            JavaVEPlugin.log(e, Level.WARNING) ;
         }
      }
         

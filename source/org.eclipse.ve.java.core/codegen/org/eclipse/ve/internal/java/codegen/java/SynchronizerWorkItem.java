@@ -11,14 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SynchronizerWorkItem.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.core.SourceType;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.text.DocumentEvent;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -486,14 +486,14 @@ public class SynchronizerWorkItem {
 			    }
 				while (wi != null) {
 				    if (list.size()>totals) {
-				        org.eclipse.ve.internal.java.core.JavaVEPlugin.log("SynchronizerWorkItem.getWorkItemList(): looping.",org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
+				        JavaVEPlugin.log("SynchronizerWorkItem.getWorkItemList(): looping.", Level.WARNING) ; //$NON-NLS-1$
 				        break ;
 				    }
 					list.add(wi) ;
 					wi = SynchronizerWorkItem.getNextMethodWorkItem(wi,cu) ;
 				}
 			}catch(Exception e){
-				JavaVEPlugin.log(e,MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e,Level.WARNING);
 			}
 			return list ;			
 		}
@@ -529,7 +529,7 @@ public class SynchronizerWorkItem {
 	            if (nList.isEmpty()) 
 	              nList.add(new SynchronizerWorkItem(docDelta,cu,isDirectionToLocal,isBeforeActualChange)) ;					
 			}catch(Exception e){
-				JavaVEPlugin.log(e,MsgLogger.LOG_WARNING);
+				JavaVEPlugin.log(e,Level.WARNING);
 			}
 			return nList ;
 		}
@@ -711,7 +711,7 @@ public class SynchronizerWorkItem {
 				}
 				buff.append(";\n}\n"); //$NON-NLS-1$
 			}catch(JavaModelException e){
-				JavaVEPlugin.log("SyncWI: Error when constructing skeleton",MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log("SyncWI: Error when constructing skeleton",Level.WARNING); //$NON-NLS-1$
 				buff=new StringBuffer();
 			}
 			return buff.toString();
@@ -901,7 +901,7 @@ public class SynchronizerWorkItem {
 
 			}			
 			catch (JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+				JavaVEPlugin.log(e, Level.WARNING) ;
 			}
 		}
 		
@@ -973,7 +973,7 @@ public class SynchronizerWorkItem {
 		
 		public void setSourceCode(String code){
 		    if (code == null)
-		      org.eclipse.ve.internal.java.core.JavaVEPlugin.log("SynchronizerWorkItem: null code",org.eclipse.jem.internal.core.MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+		      JavaVEPlugin.log("SynchronizerWorkItem: null code", Level.FINE) ; //$NON-NLS-1$
 			entireClassCode = code;
 		}
 		

@@ -11,14 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
@@ -157,7 +157,7 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
       else if (stmt instanceof Expression) 
           new ExpressionVisitor(fMethod,(Expression)stmt,fModel,fReTryLater).visit();
       else
-         JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+         JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, Level.FINE) ; //$NON-NLS-1$
 }	
 	
 /**
@@ -203,7 +203,7 @@ public void visit() {
 	}
 	catch (CodeGenException  e) {
 		// Will have to pass it on later on
-		JavaVEPlugin.log (e, MsgLogger.LOG_WARNING) ;
+		JavaVEPlugin.log (e, Level.WARNING) ;
 	}
 }
 

@@ -10,27 +10,28 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-02 21:14:23 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
 import java.lang.reflect.Constructor;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
+
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 import org.eclipse.jem.internal.proxy.initParser.MethodHelper;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+
 import org.eclipse.ve.internal.jcm.BeanDecorator;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
@@ -72,15 +73,15 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
 			CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
 			return fact;
 		} catch (ClassNotFoundException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (ClassCastException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (InstantiationException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (IllegalAccessException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (CoreException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		}
 	}
 	return null;
@@ -104,8 +105,8 @@ public static EditPolicy getLayoutPolicy(Class layoutInputPolicyClass, org.eclip
 		else
 			layoutPolicy = (EditPolicy) layoutInputPolicyClass.newInstance();
 	} catch (Throwable e) {
-		JavaVEPlugin.log("Unable to create the layout policy", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		JavaVEPlugin.log("Unable to create the layout policy", Level.WARNING); //$NON-NLS-1$
+		JavaVEPlugin.log(e, Level.WARNING);
 	}
 	return layoutPolicy;
 }

@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-05 23:19:15 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-20 00:43:58 $ 
  */
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -24,7 +25,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
@@ -129,7 +129,7 @@ public static IBeanProxy getJSplitPaneOrientationHorizontal(ProxyFactoryRegistry
 		try {
 			constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane").getFieldProxy("HORIZONTAL_SPLIT").get(null);
 		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 		}
 	}
 	
@@ -458,13 +458,13 @@ public static boolean getBoxLayoutAxis(IBeanProxy boxlayoutProxy) {
 			constants.getBoxLayoutAxisFieldProxy.setAccessible(true);
 			constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null);
 		} catch (Exception e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(e);
+			JavaVEPlugin.getPlugin().getLogger().log(e);
 		}
 	}
 	try {
 		return constants.getBoxLayoutAxisFieldProxy.get(boxlayoutProxy).equals(constants.boxLayoutAxis_XAXIS);
 	} catch (ThrowableProxy e) {
-		JavaVEPlugin.getPlugin().getMsgLogger().log(e);		
+		JavaVEPlugin.getPlugin().getLogger().log(e);		
 		return true;
 	}
 }

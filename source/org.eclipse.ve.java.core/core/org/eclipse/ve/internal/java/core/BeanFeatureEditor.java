@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.text.MessageFormat;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -24,15 +25,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaDataType;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaDataType;
+import org.eclipse.jem.java.JavaHelpers;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ISourced;
-import org.eclipse.jem.internal.proxy.core.*;
 /**
  * This class is a Cell editor that wraps a Java beans' property editor
  * The java bean property editor is proxied via the interface IBeanPropertyEditorProxy.
@@ -366,7 +368,7 @@ public class BeanFeatureEditor
 				try {
 					res = fPropertyEditorWrapperProxy.getAsText();
 				} catch (Throwable exc) {
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(exc, Level.WARNING);
 				}
 			} else {
 				// We don't have a property editor, so just get the bean string.

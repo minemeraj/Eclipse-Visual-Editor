@@ -34,6 +34,7 @@
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.wtp.common"/>
    </requires>
 
 
@@ -75,7 +76,7 @@
       <override
             package="org.eclipse.swt.layout"
             path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/layout">
-      </override>      
+      </override>
    </extension>
 
 </plugin>

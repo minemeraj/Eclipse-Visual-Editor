@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
@@ -32,7 +33,6 @@ import org.eclipse.jdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -43,10 +43,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
-import org.eclipse.ve.internal.java.vce.VCEPreferences;
-import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
-
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 /**
  * This tab appears in the LaunchConfigurationDialog for launch configurations that
@@ -349,7 +348,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		try {
 			projectName = config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, EMPTY_STRING);	
 		} catch (CoreException ce) {
-			JavaVEPlugin.log(ce.getStatus(), MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(ce.getStatus(), Level.WARNING);
 		}
 		fProjText.setText(projectName);
 	}
@@ -359,7 +358,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		try {
 			mainTypeName = config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, EMPTY_STRING);
 		} catch (CoreException ce) {
-			JavaVEPlugin.log(ce.getStatus(), MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(ce.getStatus(), Level.WARNING);
 		}	
 		fMainText.setText(mainTypeName);	
 	}
@@ -467,7 +466,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		try {
 			projects= JavaCore.create(getWorkspaceRoot()).getJavaProjects();
 		} catch (JavaModelException e) {
-			JavaVEPlugin.log(e.getStatus(), MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e.getStatus(), Level.WARNING);
 			projects= new IJavaProject[0];
 		}
 		

@@ -11,19 +11,22 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:43:58 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
 
+import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
 import org.eclipse.ve.internal.cde.core.VisualComponentSupport;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.jfc.common.Common;
 
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import org.eclipse.ve.internal.jfc.common.Common;
 /**
  * This is the IDE class that is the callback listener for org.eclipse.ve.internal.jfc.vm.ComponentListener
  * that is running in the target VM
@@ -60,7 +63,7 @@ public void setComponentBeanProxy(IBeanProxy aComponentBeanProxy){
 			}
 			BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, fComponentBeanProxy);	
 		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 		}
 	}
 }

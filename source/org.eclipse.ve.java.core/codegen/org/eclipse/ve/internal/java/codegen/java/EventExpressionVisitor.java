@@ -10,21 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -111,7 +112,7 @@ public void visit(){
 	if (fExpression.getExpression() instanceof MessageSend)
 	   processAMessageSend () ;
     else
-       JavaVEPlugin.log ("\t[Event] ExpressionVisitor: *** did not process Expression:"+fExpression, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+       JavaVEPlugin.log ("\t[Event] ExpressionVisitor: *** did not process Expression:"+fExpression, Level.FINE) ; //$NON-NLS-1$
 
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
@@ -148,7 +148,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 				}
 			}
 		} catch (Exception e) {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, org.eclipse.ve.internal.java.core.JavaMsgLogger.LOG_FINE); //$NON-NLS-1$
+			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, org.eclipse.ve.internal.java.core.JavaLevel.FINE); //$NON-NLS-1$
 		}
 
 		internalsCache.put(getType(field), Boolean.FALSE);

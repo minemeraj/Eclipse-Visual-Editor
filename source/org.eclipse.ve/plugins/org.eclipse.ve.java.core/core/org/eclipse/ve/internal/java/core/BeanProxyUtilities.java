@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -23,7 +24,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -187,7 +187,7 @@ public class BeanProxyUtilities {
 			return proxyDomain.getProxyFactoryRegistry();
 		} else {
 			// TODO Is this really a good thing to do"); //$NON-NLS-1$
-			JavaVEPlugin.log("Unable to find a proxy factory registry for " + anEditPart, MsgLogger.LOG_WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log("Unable to find a proxy factory registry for " + anEditPart, Level.WARNING); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -214,7 +214,7 @@ public class BeanProxyUtilities {
 			aField.set(aSource, aValue);
 		} catch (ThrowableProxy e) {
 			// TODO "Field could not be set " + fieldName); //$NON-NLS-1$
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 		}
 
 	}
@@ -229,7 +229,7 @@ public class BeanProxyUtilities {
 			return aField.get(aSource);
 		} catch (ThrowableProxy e) {
 			// TODO "Field could not be retrieved " + fieldName); //$NON-NLS-1$
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e, Level.WARNING);
 			return null;
 		}
 
@@ -368,8 +368,8 @@ public class BeanProxyUtilities {
 		try {
 			return aMethodProxy.invoke(aReceiver);
 		} catch (ThrowableProxy exc) {
-			JavaVEPlugin.log("Error invoking " + aMessageName, MsgLogger.LOG_WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log("Error invoking " + aMessageName, Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc, Level.WARNING);
 			return null;
 		}
 	}

@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.10 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.11 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.*;
@@ -29,7 +30,6 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -138,7 +138,7 @@ public  static IJavaInstance  createInstance (String instanceType,ResourceSet rs
 public static IJavaInstance createInstance(String instanceType, IDiagramModelInstance cm) throws CodeGenException {
 	if (cm.getModelResourceSet() == null)
 		throw new CodeGenException("MOF is not set up"); //$NON-NLS-1$
-	JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
+	JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 
 	return createInstance(instanceType, cm.getModelResourceSet());
 }
@@ -855,7 +855,7 @@ public static void logParsingError(String exp, String method, String msg, boolea
 	   context = "as an event registration" ; //$NON-NLS-1$
 	else
 	   context = "as a property setting" ; //$NON-NLS-1$
-	JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 }
 
 public static String expressionToString (Expression exp) {

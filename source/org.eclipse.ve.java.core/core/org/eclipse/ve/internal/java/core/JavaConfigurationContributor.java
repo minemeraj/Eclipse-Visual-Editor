@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaConfigurationContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -22,7 +23,6 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 
-import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
 /**
@@ -73,7 +73,7 @@ public class JavaConfigurationContributor implements IConfigurationContributor {
 				try {
 					contrib = (IConfigurationContributor) v.createExecutableExtension(JavaVEPlugin.PI_CONTRIBUTOR);
 				} catch (ClassCastException e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+					JavaVEPlugin.log(e, Level.WARNING);
 				} catch (CoreException e) {
 					// Couldn't find or instantiate it. The exception was probably logged, so we just ignore it.
 				}

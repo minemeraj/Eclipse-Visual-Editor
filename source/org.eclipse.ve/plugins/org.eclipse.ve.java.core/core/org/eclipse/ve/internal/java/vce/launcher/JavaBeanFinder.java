@@ -11,19 +11,19 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanFinder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -51,7 +51,7 @@ public class JavaBeanFinder {
 							try {
 								collectTypes(elements[i], new SubProgressMonitor(pm, 1), result);
 							} catch (JavaModelException e) {
-								JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+								JavaVEPlugin.log(e, Level.WARNING);
 							}
 							if (pm.isCanceled()) {
 								throw new InterruptedException();

@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.*;
@@ -25,7 +26,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.debug.ui.JavaUISourceLocator;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,9 +34,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
-import org.eclipse.ve.internal.java.vce.VCEPreferences;
-
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 /**
  * Performs single click launching for local java applications.
@@ -139,7 +138,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 				}
 			}
 		} catch (CoreException e) {
-			JavaVEPlugin.log(e.getStatus(), MsgLogger.LOG_WARNING);
+			JavaVEPlugin.log(e.getStatus(), Level.WARNING);
 		}
 		
 		// If there are no existing configs associated with the IType, create one.
@@ -203,7 +202,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			wc.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
 			config = wc.doSave();		
 		} catch (CoreException ce) {
-			JavaVEPlugin.log(ce.getStatus(), MsgLogger.LOG_WARNING);			
+			JavaVEPlugin.log(ce.getStatus(), Level.WARNING);			
 		}
 		return config;
 	}

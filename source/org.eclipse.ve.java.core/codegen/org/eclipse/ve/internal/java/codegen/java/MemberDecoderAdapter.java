@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -21,19 +22,17 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.MemberContainer;
 
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 /**
@@ -100,7 +99,7 @@ protected void  createBeanInstance(IJavaObjectInstance obj) throws CodeGenExcept
       bgen.createFromJVEModel(obj,fbeanModel.getCompilationUnit()) ;
     }
     catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
-      JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+      JavaVEPlugin.log(e, Level.WARNING) ;
       return ;
     }
 }
@@ -260,7 +259,7 @@ protected void processMembers(Notification msg) {
 		      }		     
 		     break ;		     		    
 	      default:
-	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	           return ;
 	}
 	
@@ -285,7 +284,7 @@ public void notifyChanged(Notification msg){
 			// Do nothing
 			break;
 		default :
-			JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: " + msg.getFeature(), MsgLogger.LOG_FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: " + msg.getFeature(), Level.FINE); //$NON-NLS-1$
 			return ;
 	}
       
@@ -344,10 +343,10 @@ public void notifyChanged(Notification msg){
              }
              break ;		     
 	}
-	JavaVEPlugin.log(this+" action= "+action, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+	JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
  }
  catch (Throwable t) {
-     JavaVEPlugin.log(t, MsgLogger.LOG_WARNING) ;
+     JavaVEPlugin.log(t, Level.WARNING) ;
  }
 }
 

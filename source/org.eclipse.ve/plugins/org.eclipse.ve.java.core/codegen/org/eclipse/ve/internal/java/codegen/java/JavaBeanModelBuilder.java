@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -28,7 +29,6 @@ import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.BasicCompilationUnit;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -208,7 +208,7 @@ protected void cleanModel () {
 		if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
 			if (BeanPartFactory.getInstanceInitializationExpr(bean) == null && !bean.isInstanceInstantiation()){
 //			    &&  (bean.getReturnedMethod() == null || bean.getRefExpressions().isEmpty())) {
-				JavaVEPlugin.log("*Discarting a beanPart " + bean, MsgLogger.LOG_FINE); //$NON-NLS-1$
+				JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
 				removeFlag = true;
 			}
 		}
@@ -300,7 +300,7 @@ protected  void analyzeEvents() {
  */  
 public IBeanDeclModel build () throws CodeGenException {
 
-JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; //$NON-NLS-1$
 
 
     if (fFileName == null || fFileName.length() == 0) throw new CodeGenException("null Input Source") ;     //$NON-NLS-1$
@@ -342,7 +342,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", MsgLogger.LOG_F
 	    org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;
 	}
 	finally {        
-       JavaVEPlugin.log ("JavaBeanModelBuilder.build(), Done.", MsgLogger.LOG_FINE) ; //$NON-NLS-1$
+       JavaVEPlugin.log ("JavaBeanModelBuilder.build(), Done.", Level.FINE) ; //$NON-NLS-1$
 	}
    return fModel ;
    

@@ -11,17 +11,17 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
  */
 
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule;
@@ -192,7 +192,7 @@ public void visit()  {
 				}
 			}
 		}catch(Exception e){
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
+			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
 		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
@@ -214,7 +214,7 @@ public void visit()  {
 				}
 			}
 		}catch (JavaModelException e) {
-			JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), MsgLogger.LOG_WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+			JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }
