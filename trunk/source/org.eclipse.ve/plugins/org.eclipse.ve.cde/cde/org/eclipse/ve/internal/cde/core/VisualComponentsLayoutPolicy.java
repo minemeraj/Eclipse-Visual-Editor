@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-20 09:03:08 $ 
  */
 
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
@@ -23,6 +23,7 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.Request;
 /**
@@ -108,7 +109,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		child.removeEditPolicy(CONSTRAINT_REFRESH_POLICY);
 	}
 	
-	protected class ConstraintRefreshPolicy extends AbstractEditPolicy implements IVisualComponentListener {
+	public class ConstraintRefreshPolicy extends AbstractEditPolicy implements IVisualComponentListener {
 		IVisualComponent visualComponent;
 		
 		protected Display getDisplay() {
@@ -183,13 +184,14 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 					Rectangle bounds = (Rectangle) parent.getLayoutManager().getConstraint(child);
 					if (bounds != null) {
 						bounds = bounds.getCopy();
-						bounds.setSize(width, height);
+						Dimension size = new Dimension(width,height);
+						constrain(size,parent);
+						bounds.setSize(size);
 						parent.setConstraint(child, bounds);
 					}
 				}
 			});
 		}
-
 		public void componentRefreshed() {
 			signalRefresh();
 		}
@@ -199,6 +201,14 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 
 		public void componentHidden() {
 		}
+		
+	}
+
+	/**
+	 * Constraint the size - specialized in subclasses that want to override the figure dimensions 
+	 * @since 1.0.0
+	 */
+	protected void constrain(Dimension size, IFigure parentFigure){
 		
 	}
 
