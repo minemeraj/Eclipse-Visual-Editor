@@ -18,7 +18,7 @@ plugin@org.eclipse.jem=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.ui=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.tests=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.tests=I20040614a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.workbench=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
 plugin@org.eclipse.ve=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,
@@ -33,7 +33,7 @@ plugin@org.eclipse.ve.doc=I20040614,:pserver:anonymous@dev.eclipse.org:/home/too
 plugin@org.eclipse.ve.sdk=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
 feature@org.eclipse.jem=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
-feature@org.eclipse.jem.tests=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
+feature@org.eclipse.jem.tests=I20040614a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
 feature@org.eclipse.ve=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=I20040614,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
