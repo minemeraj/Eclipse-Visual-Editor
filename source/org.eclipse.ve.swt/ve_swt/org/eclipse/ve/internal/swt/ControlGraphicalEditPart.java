@@ -9,17 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-02-15 23:51:49 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-03-21 22:48:08 $
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -39,10 +36,9 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-
 import org.eclipse.ve.internal.java.core.*;
 
-public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
+public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor, IDirectEditableEditPart {
 	
 	protected ImageFigureController imageFigureController;
 	protected IJavaInstance bean;
@@ -160,7 +156,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 
 		sfDirectEditProperty = getDirectEditTargetProperty();
 		if (sfDirectEditProperty != null) {
-		    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ControlDirectEditPolicy());
+		    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
 	}
 	protected IVisualComponent getVisualComponent() {
@@ -277,7 +273,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	
 	private void performDirectEdit(){
 		if(manager == null)
-			manager = new ControlDirectEditManager(this, 
+			manager = new BeanDirectEditManager(this, 
 				TextCellEditor.class, new ControlCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}

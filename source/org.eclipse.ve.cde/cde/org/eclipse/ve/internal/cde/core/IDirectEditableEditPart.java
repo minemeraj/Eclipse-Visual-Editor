@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IDirectEditableEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.1 $  $Date: 2005-03-21 22:48:08 $ 
  */
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
  

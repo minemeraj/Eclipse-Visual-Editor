@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-02-18 22:02:40 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-03-21 22:48:09 $
  */
 import java.util.*;
 
@@ -35,7 +35,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-
 import org.eclipse.ve.internal.java.core.*;
 
 /**
@@ -284,7 +283,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
 		sfDirectEditProperty = getDirectEditTargetProperty();
 		if (sfDirectEditProperty != null) {
-			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ComponentDirectEditPolicy());
+			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
 		if (getParent() instanceof ContentsGraphicalEditPart) {
 			// TODO At the moment a bit of kludge to get the FreeForm Dialogs
@@ -314,7 +313,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new ComponentDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 

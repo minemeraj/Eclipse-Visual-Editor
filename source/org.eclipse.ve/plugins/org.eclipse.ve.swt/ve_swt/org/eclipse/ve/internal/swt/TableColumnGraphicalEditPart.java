@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-03-21 22:48:08 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,20 +21,21 @@ import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
-import org.eclipse.ve.internal.cde.core.OutlineBorder;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * org.eclipse.swt.widgets.TableColumn does not inherit from org.eclipse.swt.widgets.Control The edit part should create a figure that has the height
@@ -42,9 +43,11 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * 
  * @since 1.0.0
  */
-public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
+public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart implements IDirectEditableEditPart {
 
 	private TableColumnProxyAdapter tableColumnProxyAdapter;
+	protected EStructuralFeature sfDirectEditProperty = null;
+	protected DirectEditManager manager = null;
 
 	protected Adapter adapter = new EditPartAdapterRunnable() {
 
@@ -84,6 +87,27 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
+		sfDirectEditProperty = getDirectEditTargetProperty();
+		// Install policy that will allow direct edit capability on the table column
+		if (sfDirectEditProperty != null) {
+			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
+		}
+	}
+
+	private EStructuralFeature getDirectEditTargetProperty() {
+		EStructuralFeature target = null;
+		IJavaObjectInstance column = (IJavaObjectInstance) getModel();
+		JavaClass modelType = (JavaClass) column.eClass();
+		// Hard coded string properties to direct edit.
+		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
+		return target;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.jfc.core.IDirectEditableEditPart#getSfDirectEditProperty()
+	 */
+	public EStructuralFeature getSfDirectEditProperty() {
+		return sfDirectEditProperty;
 	}
 
 	protected IFigure createFigure() {
@@ -121,6 +145,17 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 		this.bounds = bounds;
 	}
 
+	public void performRequest(Request request) {
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
+			performDirectEdit();
+	}
+	
+	private void performDirectEdit(){
+		if(manager == null)
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ControlCellEditorLocator(getFigure()), sfDirectEditProperty);
+		manager.show();
+	}
+
 	public void refresh(){
 		super.refresh();
 		if (bounds != null) {
@@ -128,6 +163,5 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 		}
 		
 	}
-	
 
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-03-21 22:48:09 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -31,8 +31,9 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
-import org.eclipse.ve.internal.cde.core.OutlineBorder;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
+import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
  
 
 /**
@@ -100,7 +101,7 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
 		sfDirectEditProperty = getDirectEditTargetProperty();
 		if (sfDirectEditProperty != null) {
-			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ComponentDirectEditPolicy());
+			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
 	}
 	
@@ -122,7 +123,7 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 	
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new ComponentDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 
