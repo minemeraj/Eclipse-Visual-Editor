@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.14 $  $Date: 2004-04-01 15:37:13 $ 
+ *  $Revision: 1.15 $  $Date: 2004-04-19 22:12:51 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -394,6 +394,10 @@ public Collection getRefCallBackExpressions() {
 	return new ArrayList(fCallBackExpressions) ;
 }
 
+public Collection getNoSrcExpressions() {
+	return new ArrayList(fNoSrcExpressions);
+}
+
 
 
 /**
@@ -672,8 +676,10 @@ public  void dispose() {
 	//       on the inverse adapter instead
 	for (int i = 0; i < fbackReferences.size(); i++) {
 		// This should be empty if decoders had the chance to do their thing
-		BeanPart bp = (BeanPart) fbackReferences.get(i);		
-		for (Iterator iter = bp.getRefExpressions().iterator(); iter.hasNext();) {
+		BeanPart bp = (BeanPart) fbackReferences.get(i);	
+		Collection beanParts = bp.getRefExpressions();
+		beanParts.addAll(bp.getNoSrcExpressions());
+		for (Iterator iter = beanParts.iterator(); iter.hasNext();) {
 			CodeExpressionRef exp = (CodeExpressionRef) iter.next();
 			Object[] added = exp.getAddedInstances();
 			if (added!=null)
