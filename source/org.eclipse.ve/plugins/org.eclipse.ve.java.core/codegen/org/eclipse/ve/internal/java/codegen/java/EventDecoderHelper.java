@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-09-08 20:38:19 $ 
+ *  $Revision: 1.13 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -219,6 +219,11 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     	}
     }
     
+    protected void restoreInvocationFromModel (int index) {
+   	 EStructuralFeature sf = getEventSF();
+   	 AbstractEventInvocation aee = (AbstractEventInvocation)((List)fbeanPart.getEObject().eGet(sf)).get(index);
+   	 ((CodeEventRef)fOwner.getExprRef()).setEventInvocation(aee);    	
+    }
 	/**
 	 * 
 	 * @return the index of the removed Invocation
@@ -357,7 +362,13 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      * Process the Anonymous  type
      * @return true if sucessful
      */
-    protected abstract boolean processEvent(MethodInvocation event)  ;
+    protected abstract boolean processEvent(MethodInvocation event, boolean addToEMFmodel)  ;
+    
+    public boolean isValid (MethodInvocation exp) {
+    	return isValidReceiver(exp) &&
+	           isValidSelector(exp.getName().getIdentifier()) &&
+	           isValidArguments(exp.arguments());
+    }
     
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#decode()
@@ -365,10 +376,18 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	public boolean decode() throws CodeGenException {
 		if (fExpr != null && getExpression() instanceof MethodInvocation) {
 			MethodInvocation exp = (MethodInvocation)getExpression() ;
-			if (isValidReceiver(exp) &&
-			    isValidSelector(exp.getName().getIdentifier()) &&
-			    isValidArguments(exp.arguments())) {
-				return processEvent(exp) ;
+			if (isValid(exp)) {
+				return processEvent(exp, true) ;
+			}
+		}		
+		return false;
+	}
+	
+	public boolean restore() throws CodeGenException {
+		if (fExpr != null && getExpression() instanceof MethodInvocation) {
+			MethodInvocation exp = (MethodInvocation)getExpression() ;
+			if (isValid(exp)) {
+				return processEvent(exp, false) ;
 			}
 		}		
 		return false;
@@ -706,6 +725,5 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	protected Expression getExpression() {
 		return getExpression(fExpr);
 	}
-
 
 }

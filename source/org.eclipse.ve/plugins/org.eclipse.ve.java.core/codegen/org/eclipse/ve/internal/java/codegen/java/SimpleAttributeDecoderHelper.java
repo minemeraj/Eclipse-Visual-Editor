@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.28 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.29 $  $Date: 2005-01-13 21:02:40 $ 
  */
 
 import java.util.Iterator;
@@ -93,7 +93,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 *  Add a new Simple Structured Feature to a target object instance
 	 *  e.g., setFoo("boo") ;
 	 */
-	protected boolean addFeature() throws CodeGenException {
+	protected boolean addFeature(boolean updateEMFModel) throws CodeGenException {
 
 		if (fbeanPart.getEObject() == null)
 			throw new CodeGenException("null EObject:" + fExpr); //$NON-NLS-1$
@@ -105,8 +105,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
         if (fFmapper.isFieldFeature()) {
             EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
             if (sf == null) throw new CodeGenException("Invalid SF"); //$NON-NLS-1$
-            argType = sf.getEType() ;   
-            newPropInstance = createPropertyInstance(((Assignment)getExpression()).getRightHandSide(), argType);
+            argType = sf.getEType() ;
+            if (updateEMFModel)
+               newPropInstance = createPropertyInstance(((Assignment)getExpression()).getRightHandSide(), argType);
+            else
+               newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(sf);
         }
         else {
             // Regular setter JCMMethod
@@ -116,13 +119,23 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			argType =  pd.getPropertyType();            
 		    List argExpr = ((MethodInvocation)getExpression()).arguments();
 		    if (argExpr.size() != 1) throw new CodeGenException("Expression has more than one argument"); //$NON-NLS-1$
-		    newPropInstance = createPropertyInstance((Expression)argExpr.get(0), argType);
+		    if (updateEMFModel)
+		    	newPropInstance = createPropertyInstance((Expression)argExpr.get(0), argType);
+	        else
+	            newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));		    
         }
         
 	    if (newPropInstance!=null)
 	        newInitString = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
 	    else
 	    	newInitString = NULL_STRING;
+	    
+	    
+	    if (!updateEMFModel) {
+	    	fPropInstance = newPropInstance;
+			fInitString = newInitString;
+			return true;
+	    }
 	    
 		EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
 		EObject target = fbeanPart.getEObject() ;
@@ -245,23 +258,39 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		fExprSig = sb.toString();
 		return fExprSig;
 	}
-
-	public boolean decode() throws CodeGenException {
-
+	
+	protected boolean isValid() throws CodeGenException {
 		if (fFmapper.getFeature(fExpr) == null || fExpr == null) {
 		    CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Feature "+fFmapper.getMethodName()+" is not recognized.",false) ; //$NON-NLS-1$ //$NON-NLS-2$
 			throw new CodeGenException("null Feature:" + fExpr); //$NON-NLS-1$
 		}
-
 		Expression exp = getExpression();
 		if ((exp instanceof Assignment) ||
 		    ((exp instanceof MethodInvocation) && ((MethodInvocation)exp).arguments().size() == 1))
-			return (addFeature());
+			return true;
+		else 			
+			return false;		
+	}
+
+	public boolean decode() throws CodeGenException {
+		
+		if (isValid())
+			return (addFeature(true));
 		else {
 			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format",false) ; //$NON-NLS-1$
 			return (false);
 		}
 
+	}
+	
+	public boolean restore() throws CodeGenException {
+		if (isValid()) {
+			return (addFeature(false));
+		}
+		else {
+			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format",false) ; //$NON-NLS-1$
+		  return false;
+		}
 	}
 
 	public void removeFromModel() {
@@ -348,5 +377,4 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	          fPropInstance.eAdapters().remove(a) ;
 		}
 	}
-
 }

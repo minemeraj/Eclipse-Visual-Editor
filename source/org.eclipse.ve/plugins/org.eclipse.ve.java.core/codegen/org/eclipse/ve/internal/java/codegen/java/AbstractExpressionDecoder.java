@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.12 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.13 $  $Date: 2005-01-13 21:02:40 $ 
  */
 import java.util.logging.Level;
 
@@ -140,8 +140,12 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 		// Go for it
 		boolean result = false;
+		boolean fromCache = fbeanPart.getModel().getCompositionModel().isFromCache();
 		try {
-			result = fhelper.decode();
+			if (fromCache)
+				result = fhelper.restore();
+			else
+			    result = fhelper.decode();
 		} catch (Exception e) {
 			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
 				JavaVEPlugin.log(e.getMessage(), Level.FINEST);
@@ -151,7 +155,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		if (!result && !(fhelper instanceof SimpleAttributeDecoderHelper)) {
 			// A specialized decoded had faild.  Try to process with a simple Attribute Decoder
 			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-			result = fhelper.decode();
+			if (fromCache)
+			   result = fhelper.restore();
+			else
+			   result = fhelper.decode();
 			determinePriority();
 		}
 		if (result) {

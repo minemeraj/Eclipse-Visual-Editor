@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2004-10-27 20:42:04 $ 
+ *  $Revision: 1.14 $  $Date: 2005-01-13 21:02:55 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -95,40 +95,43 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 * and create the proper Expression for the BDM
 	 * @since 1.0.0
 	 */
-	protected void createControlFeature() {				
+	protected void createControlFeature(boolean updateEMFModel) {
 		
-		EObject parent = getParent().getEObject();
-		BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-						
 		EStructuralFeature sf = getControlSF();
-		// find all the other "control" expressions
-		ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(sf);
-		HashMap map = new HashMap() ;
-		// Map "control" feature added part, to its expression
-		for (int i = 0; i < controls.length; i++) {
-			if (controls[i] instanceof ExpressionDecoderAdapter) 
-			  map.put(((ExpressionDecoderAdapter)controls[i]).getDecoder().getAddedInstance()[0],
-					  ((ExpressionDecoderAdapter)controls[i]).getDecoder().getExprRef());
-		}
-		
 		CodeExpressionRef exp = fOwner.getExprRef();
-		EList controlList = (EList)parent.eGet(sf);
 		
-		// determine z order
-		int index = 0;
-		for (int i=0; i<controlList.size(); i++) {			
-			CodeExpressionRef cExpr = (CodeExpressionRef) map.get(controlList.get(i));
-			if (cExpr != null && cExpr.getOffset()<exp.getOffset()){
-				index=i+1;
-			}			
-		}
-		// Add a control feature
-		if(controlList.contains(fbeanPart.getEObject())){
-			if(controlList.indexOf(fbeanPart.getEObject())!=index){
-				controlList.move(index, fbeanPart.getEObject());
+		if (updateEMFModel) {
+			EObject parent = getParent().getEObject();
+			BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+
+			// find all the other "control" expressions
+			ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(sf);
+			HashMap map = new HashMap() ;
+			// Map "control" feature added part, to its expression
+			for (int i = 0; i < controls.length; i++) {
+				if (controls[i] instanceof ExpressionDecoderAdapter) 
+				  map.put(((ExpressionDecoderAdapter)controls[i]).getDecoder().getAddedInstance()[0],
+						  ((ExpressionDecoderAdapter)controls[i]).getDecoder().getExprRef());
 			}
-		}else{
-			controlList.add(index, fbeanPart.getEObject());
+						
+			EList controlList = (EList)parent.eGet(sf);
+			
+			// determine z order
+			int index = 0;
+			for (int i=0; i<controlList.size(); i++) {			
+				CodeExpressionRef cExpr = (CodeExpressionRef) map.get(controlList.get(i));
+				if (cExpr != null && cExpr.getOffset()<exp.getOffset()){
+					index=i+1;
+				}			
+			}
+			// Add a control feature
+			if(controlList.contains(fbeanPart.getEObject())){
+				if(controlList.indexOf(fbeanPart.getEObject())!=index){
+					controlList.move(index, fbeanPart.getEObject());
+				}
+			}else{
+				controlList.add(index, fbeanPart.getEObject());
+			}
 		}
 		
 		if(masterExpression==null){
@@ -154,7 +157,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		boolean result = super.decode();
 		if (result) {
 			if (isControlFeatureNeeded()) {
-				createControlFeature();								
+				createControlFeature(true);								
 			}
 		}
 		if (getParent()!=null) {
@@ -163,6 +166,21 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			fbeanPart.resolveParentExpressions(getParent());
 		}
 		return (result);
+	}
+	
+	public boolean restore() throws CodeGenException {
+		boolean result = super.restore();
+		if (result) {
+			if (isControlFeatureNeeded()) {
+				createControlFeature(false);								
+			}
+		}
+		if (getParent()!=null) {
+			// our parent may have called us with createFoo() ... 
+			// during parsing time we could not resolve who is the parent... now is the time
+			fbeanPart.resolveParentExpressions(getParent());
+		}
+		return result;
 	}
 	
 	/**

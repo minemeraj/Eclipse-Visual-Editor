@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-13 21:02:56 $ 
  */
 
 
@@ -51,7 +51,7 @@ public PointDecoderHelper(BeanPart bean, Statement exp,  IJavaFeatureMapper fm, 
 /**
  *  Add a new constraint
  */
-protected boolean	addPointArg() throws CodeGenException {
+protected boolean	addPointArg(boolean updateEMFmodel) throws CodeGenException {
 	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null) throw new CodeGenException ("null EObject:"+fExpr) ;       //$NON-NLS-1$
 		
 	try {
@@ -62,6 +62,9 @@ protected boolean	addPointArg() throws CodeGenException {
 			for (int i = 0; i < 2; i++)
 				fpointArgs[i] = Integer.parseInt(((MethodInvocation) getExpression()).arguments().get(i).toString());
 
+			if (!updateEMFmodel)
+				return true; 
+			
             IJavaInstance value = CodeGenUtil.createInstance(POINT_CLASS,fOwner.getCompositionModel()) ;	 //$NON-NLS-1$
             value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+POINT_CLASS+"("+Integer.toString(fpointArgs[0])+    //$NON-NLS-1$ //$NON-NLS-2$
                                                             ","+Integer.toString(fpointArgs[1])+")")) ;                                 //$NON-NLS-1$ //$NON-NLS-2$
@@ -225,8 +228,11 @@ public boolean primIsDeleted() {
  *   Go for it
  */
 public boolean decode() throws CodeGenException {
+    return addPointArg(true) ;
+}
 
-      return addPointArg() ;
+public boolean restore() throws CodeGenException {
+	return addPointArg(false);
 }
 
 public void removeFromModel() {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2004-12-16 18:36:42 $ 
+ *  $Revision: 1.16 $  $Date: 2005-01-13 21:02:56 $ 
  */
 
 import java.util.*;
@@ -660,21 +660,43 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		return fFmapper.getFeature(fExpr).equals(CodeGenUtil.getComponentFeature(fbeanPart.getEObject()));
 	}
 
-	/**
-	 *   Go for it
-	 */
-	public boolean decode() throws CodeGenException {
-
+	protected boolean isValid() throws CodeGenException {
 		if (fFmapper.getFeature(fExpr) == null || fExpr == null) {
 			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Feature " + fFmapper.getMethodName() + " is not recognized.", false); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new CodeGenException("null Feature:" + fExpr); //$NON-NLS-1$
 		}
-
-		if (isMySigniture())
+		return isMySigniture();
+	}
+	/**
+	 *   Go for it
+	 */
+	public boolean decode() throws CodeGenException {
+		if (isValid())
 			return addComponent();
 		else
 			return false;
 	}
+	public boolean restore() throws CodeGenException {	
+		if (isValid()) {
+			fAddedPart = parseAddedPart((MethodInvocation) ((ExpressionStatement)fExpr).getExpression());
+			if (fAddedPart==null || fAddedInstance==null) {
+				CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Could not resolve added component", false); //$NON-NLS-1$
+				return false;
+			}
+			// update fCC
+			getConstraintComponent(false);
+			EStructuralFeature sf = fCC.eClass().getEStructuralFeature("constraint"); //$NON-NLS-1$
+			fAddedConstraintInstance = (IJavaObjectInstance) fCC.eGet(sf);
+			fisAddedConstraintSet = fCC.eIsSet(sf);
+			fAddedPart.addBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));			
+			fAddedPart.addChild(fAddedPart);
+			// TODO fAddedIndex is not processed at this time... need to also check the
+			//      Smart decoding for the fAddedIndex
+			return true;
+		}
+		else
+			return false;
+	}	
 
 	public void removeFromModel() {
 		unadaptToCompositionModel();
@@ -902,5 +924,4 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		return new Object[0];
 	}
-
 }

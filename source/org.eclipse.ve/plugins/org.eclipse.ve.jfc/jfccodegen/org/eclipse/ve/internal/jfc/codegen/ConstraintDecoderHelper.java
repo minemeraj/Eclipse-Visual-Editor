@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.12 $  $Date: 2005-01-13 21:02:56 $ 
  */
 
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.internal.compiler.lookup.UpdatedMethodBinding;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -90,70 +91,68 @@ public static void addDimensionFeatureValue (MemberContainer pOwner, EObject tar
 /**
  *  Add a new constraint
  */
-protected boolean	addConstraintFeature() throws CodeGenException {
-	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null) throw new CodeGenException ("null EObject:"+fExpr) ;       //$NON-NLS-1$
-		
-	MethodInvocation exp = (MethodInvocation)getExpression();
-	try {
-		if(!shouldCommit(exp))
-			return true;
-        if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_BOUND)) {
-     	    // TODO  Need to deal with Rectangle arg
-    	    if (exp.arguments().size() == 4)   {
-   		   // Create a dimension from the width and height of the rectangle
-   		   fConstraints = new int[4] ;
-   		   for (int i=0; i<4; i++) 
-   		     fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString()) ;
-               addRectangleFeatureValue(fbeanPart.getInitMethod().getCompMethod(),
-   		                       fbeanPart.getEObject(),
-   		                       fConstraints,
-   		                       fFmapper.getFeature(null),   		                       
-   		                       fOwner.getCompositionModel()) ;
-    	    }
-          else {
-			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format: bound, number of arguments is not 4",false) ; //$NON-NLS-1$
-           	  return false ;
-          }   		                 
-        }
-        else
-        	if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_SIZE)) {
-		       	// TODO  Need to deal with Dimension arg
-		       	if (exp.arguments().size() == 2)  {
-		       	   fConstraints = new int[2] ;
-		   		   for (int i=0; i<2; i++) 
-		   		     fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString()) ;
-		       	   
-		       	   // Create a dimension from the width and height of the rectangle    
-		       	  addDimensionFeatureValue(fbeanPart.getInitMethod().getCompMethod(),  	
-		       	                       fbeanPart.getEObject(),
-		       	                       fConstraints,
-                                       fFmapper.getFeature(null),
-		   		                       fOwner.getCompositionModel()) ;
-		       	}
-		   		else {
-					CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format: size, number of arguments is not 2",false) ; //$NON-NLS-1$
-		           	return false ;
-		   		}
-          }
-          else 
-          		// Check if only string is inside. We assume that this decoder helper 
-          		// _really_ trusts the expression it has been given to handle.
-			if((exp.arguments().size() == 1) && 
-			   (exp.arguments().get(0) instanceof StringLiteral)){
-				// String is the constraint parameter 
-		            String constraint = exp.arguments().get(0).toString() ;
-		            // Add the constraint to the added part
-		           	CodeGenUtil.addConstraintString(fbeanPart.getInitMethod().getCompMethod(),
-		           	                                fbeanPart.getEObject(), constraint,
-                                                    fFmapper.getFeature(null),                                                        
-		           	                                fOwner.getCompositionModel()) ;
-          		}
-          		else return false ;
-	}
-	catch (Exception e) {
-		throw new CodeGenException(e) ;
-	}
-	return true ;   
+protected boolean	addConstraintFeature(boolean addToEMFmodel) throws CodeGenException {
+	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null)
+			throw new CodeGenException("null EObject:" + fExpr); //$NON-NLS-1$
+
+		MethodInvocation exp = (MethodInvocation) getExpression();
+		try {
+			// If we restore... go ahead, and update fConstraints
+			if (addToEMFmodel && !shouldCommit(exp))
+				return true;
+			if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_BOUND)) {
+				// TODO Need to deal with Rectangle arg
+				if (exp.arguments().size() == 4) {
+					// Create a dimension from the width and height of the rectangle
+					fConstraints = new int[4];
+					for (int i = 0; i < 4; i++)
+						fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString());
+					if (addToEMFmodel)
+						addRectangleFeatureValue(fbeanPart.getInitMethod().getCompMethod(), fbeanPart.getEObject(), fConstraints, fFmapper
+								.getFeature(null), fOwner.getCompositionModel());
+				}
+				else {
+					CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(),
+							"Invalid Format: bound, number of arguments is not 4", false); //$NON-NLS-1$
+					return false;
+				}
+			}
+			else if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_SIZE)) {
+				// TODO Need to deal with Dimension arg
+				if (exp.arguments().size() == 2) {
+					fConstraints = new int[2];
+					for (int i = 0; i < 2; i++)
+						fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString());
+
+					// Create a dimension from the width and height of the rectangle
+					if (addToEMFmodel)
+						addDimensionFeatureValue(fbeanPart.getInitMethod().getCompMethod(), fbeanPart.getEObject(), fConstraints, fFmapper
+								.getFeature(null), fOwner.getCompositionModel());
+				}
+				else {
+					CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(),
+							"Invalid Format: size, number of arguments is not 2", false); //$NON-NLS-1$
+					return false;
+				}
+			}
+			else
+				// Check if only string is inside. We assume that this decoder helper
+				// _really_ trusts the expression it has been given to handle.
+				if ((exp.arguments().size() == 1) && (exp.arguments().get(0) instanceof StringLiteral)) {
+					if (addToEMFmodel) {
+						// String is the constraint parameter
+						String constraint = exp.arguments().get(0).toString();
+						// Add the constraint to the added part
+						CodeGenUtil.addConstraintString(fbeanPart.getInitMethod().getCompMethod(), fbeanPart.getEObject(), constraint, fFmapper
+								.getFeature(null), fOwner.getCompositionModel());
+					}
+				}
+				else
+					return false;
+		} catch (Exception e) {
+			throw new CodeGenException(e);
+		}
+		return true;   
 }
 
 
@@ -340,9 +339,11 @@ public boolean primIsDeleted() {
  *   Go for it
  */
 public boolean decode() throws CodeGenException {
+      return addConstraintFeature(true) ;
+}
 
-	// TODO  Need to validate that the constraint is valid for a given layout
-      return addConstraintFeature() ;
+public boolean restore() throws CodeGenException {	
+	return addConstraintFeature(false);
 }
 
 public void removeFromModel() {
@@ -454,7 +455,6 @@ public Object[] getArgsHandles(Statement expr) {
 	          o.eAdapters().remove(a) ;
 		}
 	}
-
 }
 
 
