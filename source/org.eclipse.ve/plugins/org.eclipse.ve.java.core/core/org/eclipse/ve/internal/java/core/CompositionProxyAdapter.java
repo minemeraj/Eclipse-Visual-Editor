@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-10 17:52:23 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-16 17:56:13 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -25,10 +25,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.remote.REMConnection;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import com.ibm.wtp.common.util.TimerTests;
 
 /**
  * This is a special adaptor for BeanCompositions.
@@ -110,13 +113,26 @@ public void initBeanProxy() {
 	// TODO Should Only instantiate this and components, but we may not be a BeanSubclassComposition. Need a better
 	// way of handling this.
 	if (getTarget() instanceof BeanSubclassComposition) {
+		TimerTests.basicTest.startStep("this init", TimerTests.CURRENT_PARENT_ID);
+		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, "this init");
+		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, "this init");
 		initSetting(((BeanSubclassComposition) getTarget()).getThisPart());
+		TimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
+		TimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
+		TimerTests.basicTest.stopStep("this init");
 	}
 
 	// Next run the components.
 	List components = ((BeanComposition) getTarget()).getComponents();
 	for (int i = 0; i < components.size(); i++) {
-		initSetting(components.get(i));		
+		String step = "init#"+i;
+		TimerTests.basicTest.startStep(step, TimerTests.CURRENT_PARENT_ID);
+		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, step);
+		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, step);
+		initSetting(components.get(i));
+		TimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
+		TimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
+		TimerTests.basicTest.stopStep(step);
 	}
 }
 
