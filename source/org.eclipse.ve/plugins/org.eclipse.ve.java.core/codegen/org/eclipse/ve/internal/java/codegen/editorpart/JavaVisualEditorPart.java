@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.89 $  $Date: 2005-03-09 21:45:32 $ 
+ *  $Revision: 1.90 $  $Date: 2005-03-10 16:52:08 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -792,7 +792,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		loadingFigureController.startListener(primaryViewer);
 
-		initializeViewers();
+		if (setupJob != null && setupJob.getState() == Job.NONE)
+			initializeViewers();
 		final DeleteAction deleteAction = new DeleteAction((IWorkbenchPart) this);
 		deleteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(deleteAction);
