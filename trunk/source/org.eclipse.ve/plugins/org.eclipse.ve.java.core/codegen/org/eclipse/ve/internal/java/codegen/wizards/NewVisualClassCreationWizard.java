@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-26 15:30:49 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-16 21:56:49 $ 
  */
 
 import java.io.IOException;
@@ -401,15 +401,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getSchedulingRule()
 	 */
 	protected ISchedulingRule getSchedulingRule() {
-		// TODO WARNING ! - should return fPage.getModifiedResource();
-		IType enclosing= fPage.getEnclosingType();
-		if (enclosing != null) {
-			return enclosing.getResource();
-		}
-		IPackageFragment pack= fPage.getPackageFragment();
-		if (pack != null) {
-			return pack.getCompilationUnit(fPage.getTypeName() + ".java").getResource(); //$NON-NLS-1$
-		}
+		if(fPage!=null)
+			return fPage.getModifiedResource();
 		return null;
 	}
 	
