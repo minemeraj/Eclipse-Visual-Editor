@@ -15,7 +15,7 @@ plugin@org.eclipse.jem=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools
 plugin@org.eclipse.jem.beaninfo=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo.ui=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.tests=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.tests=I20031104b,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.workbench=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
 plugin@org.eclipse.ve=I20031104a,:pserver:anonymous@dev.eclipse.org:/home/tools,
