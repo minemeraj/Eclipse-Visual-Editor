@@ -3,7 +3,8 @@
    id="org.eclipse.ve.examples"
    name="%pluginName"
    version="1.0.0"
-   provider-name="%providerName">
+   provider-name="%providerName"
+   class="">
 
    <runtime>
       <library name="dept.jar">
@@ -30,27 +31,28 @@
       <import plugin="org.eclipse.ve.propertysheet"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jem.beaninfo"/>
+      <import plugin="org.eclipse.jdt.core"/>
    </requires>
 
 
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="%dinnerPlanner"
             default="true"
-            icon="images\graph.gif"
+            name="%dinnerPlanner"
             extensions="dinner"
-            contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
+            icon="images\graph.gif"
             class="org.eclipse.ve.examples.cdm.dept.dinner.ui.DinnerGraphicalEditorPart"
+            contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
             id="Dinner Planner">
       </editor>
       <editor
-            name="%companyEditor"
             default="true"
-            icon="images\graph.gif"
+            name="%companyEditor"
             extensions="cdmcmp"
-            contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
+            icon="images\graph.gif"
             class="org.eclipse.ve.examples.cdm.dept.ui.CompanyGraphicalEditorPart"
+            contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
             id="Company Editor">
       </editor>
    </extension>
@@ -78,79 +80,113 @@
       </editor>
    </extension>
 -->
+
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
             name="%visualExamples"
-            class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:JAVA_EXAMPLE"
-            id="org.eclipse.ve.examples.java.visualexamples.classpathcontainerpage">
+            class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"
+            id="org.eclipse.ve.examples.JavaExample">
       </classpathContainerPage>
+   </extension>
+
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"
+            id="org.eclipse.ve.examples.JavaExample">
+      </classpathContainerInitializer>
    </extension>
    <extension
          point="org.eclipse.ve.java.core.registrations">
-      <variable
-            contributor="org.eclipse.ve.examples.java.JavaExampleContributor"
-            path="JAVA_EXAMPLE"
-            palettecats="platform:/plugin/org.eclipse.ve.examples/examplecats.xmi">
-         <extend
+      <registration
+            container="org.eclipse.ve.examples.JavaExample"
+            description="%visualExamples">
+         <library
                runtime="vm/javaexamplebeans.jar"
                source="vm/javaexamplebeanssrc.zip">
-         </extend>
-      </variable>
+         </library>
+      </registration>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            container="org.eclipse.ve.examples.JavaExample"
+            categories="examplecats.xmi">
+      </palette>
+   </extension>
+   <extension
+         point="org.eclipse.jem.proxy.contributors">
+      <contributor
+            container="org.eclipse.ve.examples.JavaExample"
+            class="org.eclipse.ve.examples.java.JavaExampleContributor">
+      </contributor>
    </extension>
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <registration
-            container="JAVA_EXAMPLE">
-        <beaninfo
-              path="/org.eclipse.ve.examples/vm/javaexamplebeaninfo.jar">
-           <searchpath
-                 package="org.eclipse.ve.examples.java.beaninfo">
-           </searchpath>
-        </beaninfo>
+            container="org.eclipse.ve.examples.JavaExample">
+         <beaninfo
+               path="/org.eclipse.ve.examples/vm/javaexamplebeaninfo.jar">
+            <searchpath
+                  package="org.eclipse.ve.examples.java.beaninfo">
+            </searchpath>
+         </beaninfo>
+         <override
+               package="org.eclipse.ve.examples.java.vm"
+               path="overrides/org/eclipse/ve/examples/java/vm">
+         </override>
       </registration>
-   </extension>
-   <extension
-         point="org.eclipse.jem.beaninfo.overrides">
-      <override
-            package="org.eclipse.ve.examples.java.vm"
-            path="platform:/plugin/org.eclipse.ve.examples/overrides/org/eclipse/ve/examples/java/vm">
-      </override>
-   </extension>
-   <extension
-         point="org.eclipse.jem.beaninfo.registrations">
-      <variable
-            path="WIZZO_WIDGETS">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.examples/vm/wizzowidgets_dt.jar">
-               <searchpath
-                     package="com.abc.wizzowidgets.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </variable>
-   </extension>
+   </extension>   
+      
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
             name="%wizzoWidgets"
-            class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:WIZZO_WIDGETS"
-            id="com.abc.wizzowidgets.classpathcontainerpage">
+            class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"
+            id="org.eclipse.ve.examples.WizzoWidgets">
       </classpathContainerPage>
    </extension>
+
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"
+            id="org.eclipse.ve.examples.WizzoWidgets">
+      </classpathContainerInitializer>
+   </extension>
+      
    <extension
          point="org.eclipse.ve.java.core.registrations">
-      <variable
-            path="WIZZO_WIDGETS"
-            palettecats="platform:/plugin/org.eclipse.ve.examples/wizzopalette.xmi">
-         <extend
-               runtime="vm/wizzowidgets.jar"
-               source="src/wizzowidegets_src.zip"
-               prefix="src">
-         </extend>
-      </variable>
+      <registration
+            container="org.eclipse.ve.examples.WizzoWidgets"
+            description="%wizzoWidgets">
+         <library
+            runtime="vm/wizzowidgets.jar"
+            prefix="src"
+            source="src/wizzowidgets_src.zip">
+         </library>
+      </registration>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            container="org.eclipse.ve.examples.WizzoWidgets"
+            categories="wizzopalette.xmi">
+      </palette>
+   </extension>
+
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">      
+      <registration
+            container="org.eclipse.ve.examples.WizzoWidgets">
+         <beaninfo
+               path="vm/wizzowidgets_dt.jar">
+            <searchpath
+                  package="com.abc.wizzowidgets.beaninfo">
+            </searchpath>
+         </beaninfo>
+      </registration>
    </extension>
 
 </plugin>

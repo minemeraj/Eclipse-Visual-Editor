@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.ve.java.core">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.ve.java.core" id="registrations" name="Java Visual Editor Registrations"/>
+      </appInfo>
+      <documentation>
+         This extension point is registration for Java Core Visual Editor. It is for providing the libraries that should be used for a classpath container of type &lt;samp&gt;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&lt;/samp&gt;. The classpath container initializer should be declared in the same plugin as this extension declaration.
+&lt;p&gt;
+Note: This is an interim API. It will be more fully formed later, but currently only used to supply the libraries.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="registration" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a fully qualified identifier of the target extension point
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional identifier of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  an optional name of the extension instance
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="registration">
+      <annotation>
+         <documentation>
+            The registration for a particular container id.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="library" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="container" type="string">
+            <annotation>
+               <documentation>
+                  id of the container this registration is for. The id must be of container defined by a classpath container initializer of type &lt;samp&gt;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&lt;/samp&gt; declared in this plugin.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the description of this container to show in the UI. It can be translatable by using form of &quot;%key&quot; where &quot;key&quot; is a key found in the plugin.properties for the declaring plugin.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="library">
+      <annotation>
+         <documentation>
+            Define a library (jar file) that is to be on the classpath for this container.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="runtime" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the path to the jar relative to the plugin. This jar will be added to the classpath. If relative to another plugin, then use the format &quot;/otherpluginid/myjar.jar&quot;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="source" type="string">
+            <annotation>
+               <documentation>
+                  the source jar, if any. This allows source to be attached to the jar for debugging. It should be a jar relative to the plugin. If relative to another plugin, then use the format &quot;/otherpluginid/myjar.jar&quot;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="prefix" type="string">
+            <annotation>
+               <documentation>
+                  the prefix to use in the source jar. For example if the source files actually reside under the directory &quot;src&quot; (where &quot;src&quot; is not part of a package name) in the source jar, then there use &quot;src&quot; as the value for prefix. Omit if there is no prefix directories to the source in the source jar.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;pre&gt;
+   &lt;extension
+         point=&quot;org.eclipse.jdt.core.classpathContainerInitializer&quot;&gt;
+      &lt;classpathContainerInitializer
+            class=&quot;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&quot;
+            id=&quot;SWT_CONTAINER&quot;&gt;
+      &lt;/classpathContainerInitializer&gt;
+   &lt;/extension&gt;
+   &lt;extension
+         point=&quot;org.eclipse.ve.java.core.registrations&quot;&gt;
+      &lt;registration container=&quot;SWT_CONTAINER&quot; description=&quot;%swtContainerDescription&quot;&gt;
+        &lt;library runtime=&quot;swt/myjar.jar&quot; src=&quot;src/myjarsrc.jar&quot; prefix=&quot;src&quot;/&gt;
+      &lt;/registration&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;p&gt;
+This is a registration for the &quot;SWT_CONTAINER&quot; defined by the default classpath container initializer that we supply. It is important that there be a classpath container initializer extension in the same plugin of the type &lt;samp&gt;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&lt;/samp&gt; for the given id. It won&apos;t work otherwise. If the org.eclipse.ve.java.core plugin is not a required plugin, it is important to put &quot;&lt;samp&gt;org.eclipse.ve.java.core&lt;/samp&gt;&quot; before the classname so that the class can be found.
+&lt;p&gt;
+This supplies the runtime library to add to the classpath. The description is found in the plugin.properties file under the key &quot;swtContainerDescription&quot;.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         None.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         &lt;samp&gt;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&lt;/samp&gt; is supplied for the classpath container initializer that uses this extension point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Common Public License v1.0 which accompanies 
+this distribution, and is available at 
+&lt;a href=&quot;http://www.eclipse.org/legal/cpl-v10.html&quot;&gt;http://www.eclipse.org/legal/cpl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>

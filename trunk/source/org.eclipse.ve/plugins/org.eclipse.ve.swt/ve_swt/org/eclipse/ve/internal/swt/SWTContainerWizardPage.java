@@ -1,16 +1,14 @@
 package org.eclipse.ve.internal.swt;
 
-import java.lang.reflect.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.ui.wizards.*;
-import org.eclipse.jface.wizard.*;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.actions.*;
-
-import org.eclipse.ve.internal.java.wizard.InternalMessages;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 
 public class SWTContainerWizardPage extends WizardPage implements IClasspathContainerPage {
 	
@@ -39,38 +37,11 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 	}	
 	
 	public boolean finish(){
-
-		// Now append the name of the variable the user has supplied in the initialization data to the container
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
-				try {
-					monitor.beginTask(InternalMessages.getString("ClasspathWizardPage.Finish.task.SettingProject"), 2000); //$NON-NLS-1$
-					Path path = new Path("SWT_CONTAINER");
-					path.append("EXTERNAL");
-					setSelection(JavaCore.newContainerEntry(path));			
-				} finally {
-					monitor.done();
-				}
-			}
-		};			
-
-			
-		try {
-			getContainer().run(true, true, op);
-		} catch (InterruptedException e) {
-			return false;
-		} catch (InvocationTargetException e) {
-			if (e.getTargetException() instanceof CoreException) {
-				setErrorMessage(((CoreException) e.getTargetException()).getStatus().getMessage());
-			} else {
-				// CoreExceptions are handled above, but unexpected runtime exceptions and errors may still occur.
-				setErrorMessage(e.getTargetException().getLocalizedMessage());
-			}
-		return false;
-		}			
-
+		Path path = new Path("SWT_CONTAINER");
+		setSelection(JavaCore.newContainerEntry(path));			
 		return true;
 	}
+	
 	public void setSelection(IClasspathEntry containerEntry) {
 		fClassPathEntry = containerEntry;
 	}

@@ -7,6 +7,7 @@
 		<project>org.eclipse.core.runtime.compatibility</project>
 		<project>org.eclipse.emf.ecore</project>
 		<project>org.eclipse.gef</project>
+		<project>org.eclipse.jdt.core</project>
 		<project>org.eclipse.jdt.launching</project>
 		<project>org.eclipse.jem</project>
 		<project>org.eclipse.jem.beaninfo</project>
