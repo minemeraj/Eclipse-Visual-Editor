@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-01 13:39:39 $ 
  */
 
 import org.eclipse.core.resources.IResource;
@@ -39,7 +39,7 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 		super();
 		setDefaultPageImageDescriptor(JavaVEPlugin.getWizardTitleImageDescriptor());
 		setDialogSettings(JavaVEPlugin.getPlugin().getDialogSettings());
-		setWindowTitle(CodegenMessages.getPluginPropertyString("example.label")); //$NON-NLS-1$
+		setWindowTitle(CodegenMessages.getString("VisualClassExampleWizard.title")); //$NON-NLS-1$
 	}
 
 	/*
