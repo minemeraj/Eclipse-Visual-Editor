@@ -10,60 +10,32 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-01 19:49:30 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-02 02:05:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
-
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.ColorDialog;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Scale;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class ColorCustomPropertyEditor extends Composite {
 	
@@ -108,6 +80,19 @@ public class ColorCustomPropertyEditor extends Composite {
 		
 	private static Color[] systemColorValues = new Color[systemColorConstantValues.length];
 	private Image systemColorImages[] = new Image[systemColorValues.length]; 
+
+	// JFace colors from JFacePreferences
+	private static final String[] jfaceColorNames = { ColorPropertyEditorMessages.getString("error"), ColorPropertyEditorMessages.getString("hyperlink"), ColorPropertyEditorMessages.getString("active_hyperlink")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	
+	private static final String[] jfaceColorConstantValues = {JFacePreferences.ERROR_COLOR, JFacePreferences.HYPERLINK_COLOR, JFacePreferences.ACTIVE_HYPERLINK_COLOR};
+	protected final static String[] jfaceColorInitStrings = { 
+		"org.eclipse.jface.preference.JFacePreferences.ERROR_COLOR", //$NON-NLS-1$ 
+		"org.eclipse.jface.preference.JFacePreferences.HYPERLINK_COLOR", //$NON-NLS-1$ 
+		"org.eclipse.jface.preference.JFacePreferences.ACTIVE_HYPERLINK_COLOR"}; //$NON-NLS-1$ 
+		
+	private static Color[] jfaceColorValues = new Color[jfaceColorConstantValues.length];
+	private Image jfaceColorImages[] = new Image[jfaceColorValues.length];
+
 	
 	private IJavaObjectInstance fExistingValue;
 	
@@ -115,7 +100,7 @@ public class ColorCustomPropertyEditor extends Composite {
 	private Composite namedValueComposite = null;
 	private Composite rgbComposite = null;
 	private Composite rgbPanel = null;
-	private PreviewPanel preview = null;	
+	private Composite preview = null;	
 	
 	private Table basicTable;
 	private Table systemTable;
@@ -144,20 +129,45 @@ public class ColorCustomPropertyEditor extends Composite {
 	private boolean isBasic = false;
 	private boolean isSystem = false;
 	private boolean changeInProcess = false;
+	private boolean isJFace = false;
+	private int jfaceColorSelection;
+
 	
 	private static final int NAMED_SWATCH_SIZE = 10;
 	private static final int NAMED_LIST_HEIGHT = 175;
-	private static final int NAMED_LIST_WIDTH = 150;
+	private static final int NAMED_LIST_WIDTH = 175;
+	
 
-	public ColorCustomPropertyEditor(Composite parent, int style, Color value, IJavaObjectInstance existingValue) {
+	private Composite jfaceColorComposite = null;
+
+	private Table jfaceColorTable = null;
+	private Label initStringLabel = null;
+	private EditDomain fEditDomain;
+
+	// preview pane fields and constants
+	private Group previewGroup;
+	private Canvas previewCanvas;
+	private Color initialColor;
+	private Color white;
+	private static final int spacing = 5;
+	private static final int bigRect = 25;
+	private static final int medRect = 15;
+	private static final int smRect = 5;
+	private static final int swatchWidth  = 50;
+	private static final int swatchHeight = 25;
+	private final String previewText = ColorPropertyEditorMessages.getString("previewText"); //$NON-NLS-1$
+
+	public ColorCustomPropertyEditor(Composite parent, int style, Color value, IJavaObjectInstance existingValue, EditDomain editDomain) {
 		super(parent, style);
 		this.value = value;
+		fEditDomain = editDomain;
 		fExistingValue = existingValue;
 		initialize();
 	}
 
 	private void initialize() {
-		setSize(new org.eclipse.swt.graphics.Point(429,297));
+		GridData gridData3 = new org.eclipse.swt.layout.GridData();
+		setSize(new org.eclipse.swt.graphics.Point(433,340));
 		GridLayout grid = new GridLayout();
 		grid.numColumns = 1;
 		grid.verticalSpacing = 5;
@@ -179,15 +189,20 @@ public class ColorCustomPropertyEditor extends Composite {
 			tabFolder.setSelection(1);
 		}
 	
-		preview = new PreviewPanel();
-		Control pControl = preview.createControl(this, SWT.NONE, getColor());
+		createPreviewPanel();
 		GridData previewGD = new GridData();
+		initStringLabel = new Label(this, SWT.NONE);
 		previewGD.verticalAlignment = GridData.CENTER;
 		previewGD.horizontalAlignment = GridData.FILL;
 		previewGD.grabExcessHorizontalSpace = true;
 		previewGD.grabExcessVerticalSpace = false;
-		pControl.setLayoutData(previewGD);
-		this.pack();
+		initStringLabel.setText("");
+		initStringLabel.setLayoutData(gridData3);
+		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
+		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		preview.setLayoutData(previewGD);
+//		this.pack();
 	}
 	
 	private void createTabFolder() {
@@ -206,6 +221,12 @@ public class ColorCustomPropertyEditor extends Composite {
 		namedPage.setControl(namedValueComposite);
 		rgbPage.setText(ColorPropertyEditorMessages.getString("rgbTabTitle")); //$NON-NLS-1$
 		rgbPage.setControl(rgbComposite);
+		if (isJFaceProject()) {
+			createJfaceColorComposite();
+			TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
+			tabItem1.setControl(jfaceColorComposite);
+			tabItem1.setText(ColorPropertyEditorMessages.getString("jfaceTabTitle")); //$NON-NLS-1$
+		}
 	}
 	
 	private void createNamedValueComposite(){
@@ -232,7 +253,7 @@ public class ColorCustomPropertyEditor extends Composite {
 			TableItem ti = new TableItem(basicTable, SWT.NONE);
 			ti.setText(basicColorNames[i]);
 			ti.setData(new Integer(i));
-			ti.setImage(makeSwatchIcon(ti.getDisplay(), basicColorValues[i]));
+			ti.setImage(basicColorImages[i]);
 			if (value.equals(basicColorValues[i])) {
 				selection = i;
 			}
@@ -262,9 +283,11 @@ public class ColorCustomPropertyEditor extends Composite {
 						changeInProcess = true;
 						setColor(basicColorValues[value], true);
 						systemTable.deselectAll();
+						deSelectJFaceColorTable();
 						updateSpinnersFromColor();
 						isBasic = true;
 						changeInProcess = false;
+						updateLabelInitializationString();
 					}
 				}
 			}
@@ -282,7 +305,7 @@ public class ColorCustomPropertyEditor extends Composite {
 			TableItem ti = new TableItem(systemTable, SWT.NONE);
 			ti.setText(systemColorNames[i]);
 			ti.setData(new Integer(i));
-			ti.setImage(makeSwatchIcon(ti.getDisplay(), systemColorValues[i]));
+			ti.setImage(systemColorImages[i]);
 		}
 		RowData sRD = new RowData();
 		sRD.width = NAMED_LIST_WIDTH;
@@ -306,9 +329,11 @@ public class ColorCustomPropertyEditor extends Composite {
 						changeInProcess = true;
 						setColor(systemColorValues[value], true);
 						basicTable.deselectAll();
+						deSelectJFaceColorTable();
 						updateSpinnersFromColor();
 						isSystem = true;
 						changeInProcess = false;
+						updateLabelInitializationString();
 					}
 				}
 			}
@@ -366,7 +391,7 @@ public class ColorCustomPropertyEditor extends Composite {
 				}
 			}
 		});	
-		rgbComposite.pack();
+//		rgbComposite.pack();
 	}
 	
 	private void createRGBPanel() {		
@@ -473,11 +498,6 @@ public class ColorCustomPropertyEditor extends Composite {
 		redSpinner.setSelection(c.getRed());
 		greenSpinner.setSelection(c.getGreen());		
 		blueSpinner.setSelection(c.getBlue());
-		Object [] jfaceColors = JFaceResources.getColorRegistry().getKeySet().toArray();
-		for (int i = 0; i < jfaceColors.length; i++) {
-			System.out.println("\nColor=" + jfaceColors[i]);
-			System.out.println(", RGB=" + JFaceResources.getColorRegistry().get((String) jfaceColors[i]));
-		}
 	}
 	
 	private void initializeColorConstants(Device d) {
@@ -503,6 +523,25 @@ public class ColorCustomPropertyEditor extends Composite {
 		}
 	}
 	
+	private void initializeJfaceColorValues(Device d) {
+		// check to see that it's not already initialized
+		if (jfaceColorValues[0] == null || jfaceColorValues[0].isDisposed()) {
+			ColorRegistry registry = JFaceResources.getColorRegistry();
+			for (int i = 0; i < jfaceColorConstantValues.length; i++) {
+				jfaceColorValues[i] = new Color(d, registry.getRGB(jfaceColorConstantValues[i]));
+			}
+		}
+	}
+	
+	private void initializeJfaceColorImages(Device d) {
+		initializeJfaceColorValues(d);
+		
+		for (int i = 0; i < jfaceColorImages.length; i++) {
+			jfaceColorImages[i] = makeSwatchIcon(d, jfaceColorValues[i]);
+		}
+	}
+	
+	
 	private Image makeSwatchIcon(Device d, Color c) {
 		Rectangle swatchBounds = new Rectangle(0, 0, NAMED_SWATCH_SIZE, NAMED_SWATCH_SIZE);
 		Image img = new Image(d, swatchBounds);
@@ -521,14 +560,11 @@ public class ColorCustomPropertyEditor extends Composite {
 		Color c = new Color(this.getDisplay(), redSpinner.getSelection(), 
 				greenSpinner.getSelection(), blueSpinner.getSelection());
 		setColor(c, false);
+		updateLabelInitializationString();
 	}
 
 	public Color getColor() {
 		return value;
-	}
-	
-	public void setColor(Color c) {
-		setColor(c, false);	
 	}
 	
 	private void setColor(Color c, boolean named) {
@@ -541,8 +577,9 @@ public class ColorCustomPropertyEditor extends Composite {
 		isNamed = named;
 		isBasic = false;
 		isSystem = false;
+		isJFace = false;
 		if (preview != null) {
-			preview.paint();
+			paintPreviewPanel();
 		}
 		// Fire the color change
 		if(fPropertyChangeListeners != null){
@@ -553,65 +590,50 @@ public class ColorCustomPropertyEditor extends Composite {
 		}	
 	}
 	
-	private class PreviewPanel {
-		private Group control;
-		private Canvas canvas;
-		
-		private Color initial;
-		private Color black;
-		private Color white;
-		
-		private static final int spacing = 5;
-		private static final int bigRect = 25;
-		private static final int medRect = 15;
-		private static final int smRect = 5;
-		
-		private static final int swatchWidth  = 50;
-		private static final int swatchHeight = 25;
-		
-		private final String previewText = ColorPropertyEditorMessages.getString("previewText"); //$NON-NLS-1$
+	private void createPreviewPanel() {
+		preview = new Composite(this, SWT.NONE);
+		GridData previewGD = new GridData();
+		previewGD.verticalAlignment = GridData.CENTER;
+		previewGD.horizontalAlignment = GridData.FILL;
+		previewGD.grabExcessHorizontalSpace = true;
+		previewGD.grabExcessVerticalSpace = false;
+		preview.setLayoutData(previewGD);
+		preview.setLayout(new FillLayout()); 
+		previewGroup = new Group(preview, SWT.NONE);
+		previewGroup.setText(ColorPropertyEditorMessages.getString("previewGroupTitle")); //$NON-NLS-1$
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.wrap = false;
+		rowLayout.pack = true;
+		rowLayout.justify = true;
+		previewGroup.setLayout(rowLayout);
 
-		public Control createControl(Composite parent, int style, Color initialColor) {
-			if (control == null) {
-				control = new Group(parent, style);
-				control.setText(ColorPropertyEditorMessages.getString("previewGroupTitle")); //$NON-NLS-1$
-				RowLayout rowLayout = new RowLayout();
-				rowLayout.wrap = false;
-				rowLayout.pack = true;
-				rowLayout.justify = true;
-				control.setLayout(rowLayout);
-				
-				canvas = new Canvas(control, SWT.NONE);
-				
-				black = canvas.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-				white = canvas.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-				
-				canvas.setLayoutData(new RowData(computeDrawingSize()));
+		previewCanvas = new Canvas(previewGroup, SWT.NONE);
+		black = previewCanvas.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		white = previewCanvas.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		previewCanvas.setLayoutData(new RowData(computePreviewDrawingSize()));
+		previewCanvas.addPaintListener(new PaintListener() {
 
-				control.pack();
-				canvas.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						paint();
-					}
-				});
-				
-				initial = new Color(control.getDisplay(), initialColor.getRGB());
-				control.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						if (initial != null && !initial.isDisposed()) {
-							initial.dispose();
-							initial = null;
-						}
-					}
-				});
-				
-				paint();
+			public void paintControl(PaintEvent e) {
+				paintPreviewPanel();
 			}
-			return control;
-		}
+		});
+
+		initialColor = new Color(previewGroup.getDisplay(), getColor().getRGB());
+		previewGroup.addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				if (initialColor != null && !initialColor.isDisposed()) {
+					initialColor.dispose();
+					initialColor = null;
+				}
+			}
+		});
+
+		paintPreviewPanel();
+	}
 		
-		private Point computeDrawingSize() {
-			GC surface = new GC(canvas);
+		private Point computePreviewDrawingSize() {
+			GC surface = new GC(previewCanvas);
 			Point previewSize = surface.stringExtent(previewText);
 			surface.dispose();
 			int width = 3 * bigRect + 5 * spacing + swatchWidth + previewSize.x + 5;
@@ -622,107 +644,104 @@ public class ColorCustomPropertyEditor extends Composite {
 			return new Point(width, height);
 		}
 		
-		public void paint() {
-			int x = 0;
-			int y = 0;
-			
-			Color current = getColor();
-			
-			synchronized (current) {
-				if (current == null || current.isDisposed()) {
-					return;
-				}
+		private void paintPreviewPanel() {
+		int x = 0;
+		int y = 0;
 
-				GC surface = new GC(canvas);
+		Color current = getColor();
 
-				// Draw the preview rectangles
+		synchronized (current) {
+			if (current == null || current.isDisposed()) { return; }
 
-				// 0,0
-				surface.setBackground(white);
-				surface.fillRectangle(x, y, bigRect, bigRect);
-				surface.setBackground(current);
-				surface.fillRectangle(x + 5, y + 5, medRect, medRect);
-				surface.setBackground(white);
-				surface.fillRectangle(x + 10, y + 10, smRect, smRect);
+			GC surface = new GC(previewCanvas);
 
-				// 0,1
-				x = x + bigRect + spacing;
-				surface.setBackground(black);
-				surface.fillRectangle(x, y, bigRect, bigRect);
-				surface.setBackground(current);
-				surface.fillRectangle(x + 5, y + 5, medRect, medRect);
-				surface.setBackground(white);
-				surface.fillRectangle(x + 10, y + 10, smRect, smRect);
+			// Draw the preview rectangles
 
-				// 0,2
-				x = x + bigRect + spacing;
-				surface.setBackground(white);
-				surface.fillRectangle(x, y, bigRect, bigRect);
-				surface.setBackground(current);
-				surface.fillRectangle(x + 5, y + 5, medRect, medRect);
-				surface.setBackground(black);
-				surface.fillRectangle(x + 10, y + 10, smRect, smRect);
+			// 0,0
+			surface.setBackground(white);
+			surface.fillRectangle(x, y, bigRect, bigRect);
+			surface.setBackground(current);
+			surface.fillRectangle(x + 5, y + 5, medRect, medRect);
+			surface.setBackground(white);
+			surface.fillRectangle(x + 10, y + 10, smRect, smRect);
 
-				// 1,0
-				x = 0;
-				y = y + bigRect + spacing;
-				surface.setBackground(current);
-				surface.fillRectangle(x, y, bigRect, bigRect);
+			// 0,1
+			x = x + bigRect + spacing;
+			surface.setBackground(black);
+			surface.fillRectangle(x, y, bigRect, bigRect);
+			surface.setBackground(current);
+			surface.fillRectangle(x + 5, y + 5, medRect, medRect);
+			surface.setBackground(white);
+			surface.fillRectangle(x + 10, y + 10, smRect, smRect);
 
-				// 1,1
-				x = x + bigRect + spacing;
-				surface.setBackground(white);
-				surface.fillRectangle(x, y, bigRect, bigRect);
-				surface.setBackground(current);
-				surface.fillRectangle(x + 5, y + 5, medRect, medRect);
+			// 0,2
+			x = x + bigRect + spacing;
+			surface.setBackground(white);
+			surface.fillRectangle(x, y, bigRect, bigRect);
+			surface.setBackground(current);
+			surface.fillRectangle(x + 5, y + 5, medRect, medRect);
+			surface.setBackground(black);
+			surface.fillRectangle(x + 10, y + 10, smRect, smRect);
 
-				// 1,2
-				x = x + bigRect + spacing;
-				surface.setBackground(black);
-				surface.fillRectangle(x, y, bigRect, bigRect);
-				surface.setBackground(current);
-				surface.fillRectangle(x + 5, y + 5, medRect, medRect);
+			// 1,0
+			x = 0;
+			y = y + bigRect + spacing;
+			surface.setBackground(current);
+			surface.fillRectangle(x, y, bigRect, bigRect);
 
-				// Text previews
+			// 1,1
+			x = x + bigRect + spacing;
+			surface.setBackground(white);
+			surface.fillRectangle(x, y, bigRect, bigRect);
+			surface.setBackground(current);
+			surface.fillRectangle(x + 5, y + 5, medRect, medRect);
 
-				x = x + bigRect + spacing;
-				y = 0;
+			// 1,2
+			x = x + bigRect + spacing;
+			surface.setBackground(black);
+			surface.fillRectangle(x, y, bigRect, bigRect);
+			surface.setBackground(current);
+			surface.fillRectangle(x + 5, y + 5, medRect, medRect);
 
-				Point textSize = surface.stringExtent(previewText);
+			// Text previews
 
-				// 1
-				surface.setForeground(current);
-				surface.drawText(previewText, x + 3, y + 3, true);
+			x = x + bigRect + spacing;
+			y = 0;
 
-				// 2
-				y = y + textSize.y + spacing * 2;
-				surface.setBackground(current);
-				surface.fillRectangle(x, y, textSize.x + 5, textSize.y + 5);
-				surface.setForeground(black);
-				surface.drawText(previewText, x + 3, y + 3, true);
+			Point textSize = surface.stringExtent(previewText);
 
-				// 3
-				y = y + textSize.y + spacing * 2;
-				surface.setBackground(white);
-				surface.fillRectangle(x, y, textSize.x + 5, textSize.y + 5);
-				surface.setForeground(current);
-				surface.drawText(previewText, x + 3, y + 3, true);
+			// 1
+			surface.setForeground(current);
+			surface.drawText(previewText, x + 3, y + 3, true);
 
-				// Swatches
+			// 2
+			y = y + textSize.y + spacing * 2;
+			surface.setBackground(current);
+			surface.fillRectangle(x, y, textSize.x + 5, textSize.y + 5);
+			surface.setForeground(black);
+			surface.drawText(previewText, x + 3, y + 3, true);
 
-				// initial
-				x = x + textSize.x + 5 + spacing;
-				y = 0;
-				surface.setBackground(initial);
-				surface.fillRectangle(x, y, swatchWidth, swatchHeight);
+			// 3
+			y = y + textSize.y + spacing * 2;
+			surface.setBackground(white);
+			surface.fillRectangle(x, y, textSize.x + 5, textSize.y + 5);
+			surface.setForeground(current);
+			surface.drawText(previewText, x + 3, y + 3, true);
 
-				// current
-				y = y + swatchHeight;
-				surface.setBackground(current);
-				surface.fillRectangle(x, y, swatchWidth, swatchHeight);
+			// Swatches
 
-				surface.dispose();
-			}
+			// initial
+			x = x + textSize.x + 5 + spacing;
+			y = 0;
+			surface.setBackground(initialColor);
+			surface.fillRectangle(x, y, swatchWidth, swatchHeight);
+
+			// current
+			y = y + swatchHeight;
+			surface.setBackground(current);
+			surface.fillRectangle(x, y, swatchWidth, swatchHeight);
+
+			surface.dispose();
 		}
 	}
 	
@@ -783,30 +802,140 @@ public class ColorCustomPropertyEditor extends Composite {
 
 	public String getJavaInitializationString() {
 		String result = "null"; //$NON-NLS-1$
-		synchronized(value) {
-			if (value != null) {
-				if (!isNamed) {
-					result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				} else {
-					initializeColorConstants(this.getDisplay());
-					if ( isBasic ) {
-						for (int i = 0; i < basicColorValues.length; i++) {
-							if(value.getRGB().equals(basicColorValues[i].getRGB())) {
-								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-								break;
-							}
-						}
-					} else if ( isSystem ) {
-						for (int i = 0; i < systemColorValues.length; i++) {
-							if(value.getRGB().equals(systemColorValues[i].getRGB())) {
-								result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-								break;
-							}
-						}
+		if (value == null)
+			return result;
+		if (value != null) {
+			if (!isNamed) {
+				result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			} else if (isBasic) {
+				for (int i = 0; i < basicColorValues.length; i++) {
+					if (value.getRGB().equals(basicColorValues[i].getRGB())) {
+						result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+						break;
 					}
 				}
+			} else if (isSystem) {
+				for (int i = 0; i < systemColorValues.length; i++) {
+					if (value.getRGB().equals(systemColorValues[i].getRGB())) {
+						result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+						break;
+					}
+				}
+			} else if (isJFace) {
+				return "org.eclipse.jface.resource.JFaceResources.getColorRegistry().get(" + jfaceColorInitStrings[jfaceColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
 			}
 		}
 		return result;
 	}
-}  //  @jve:decl-index=0:visual-constraint="10,-2"
+
+	/**
+	 * This method initializes composite
+	 * 
+	 */    
+	private void createJfaceColorComposite() {
+		jfaceColorComposite = new Composite(tabFolder, SWT.NONE);	
+		initializeJfaceColorImages(jfaceColorComposite.getDisplay());
+		createJFaceColorTable();
+		jfaceColorComposite.setLayout(new RowLayout());
+	}
+
+	/**
+	 * This method initializes table	
+	 *
+	 */    
+	private void createJFaceColorTable() {
+		RowData rowData2 = new org.eclipse.swt.layout.RowData();
+		jfaceColorTable = new Table(jfaceColorComposite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);		   
+		rowData2.height = NAMED_LIST_HEIGHT;
+		rowData2.width = NAMED_LIST_WIDTH;
+		jfaceColorTable.setLayoutData(rowData2);
+		for (int i = 0; i < jfaceColorNames.length; i++) {
+			TableItem ti = new TableItem(jfaceColorTable, SWT.NONE);
+			ti.setText(jfaceColorNames[i]);
+			ti.setData(new Integer(i));
+			ti.setImage(jfaceColorImages[i]);
+			if (value.equals(jfaceColorValues[i])) {
+//				selection = i;
+			}
+		}
+//		if ( selection != -1 ) {
+//			jfaceColorTable.setSelection(selection);
+//		}
+		jfaceColorTable.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				changeSelection((Table)e.widget);
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				changeSelection((Table)e.widget);
+			}
+			
+			private void changeSelection(Table t) {
+				TableItem items[] = t.getSelection();
+				if (items.length > 0) {
+					int index = ((Integer)items[0].getData()).intValue();
+					if (index < jfaceColorValues.length) {
+						changeInProcess = true;
+						setColor(jfaceColorValues[index], true);
+						basicTable.deselectAll();
+						systemTable.deselectAll();
+						updateSpinnersFromColor();
+						isJFace = true;
+						jfaceColorSelection = index;
+						changeInProcess = false;
+						updateLabelInitializationString();
+					}
+				}
+			}
+		});
+	}
+	private void deSelectJFaceColorTable() {
+		if (isJFaceProject())
+			jfaceColorTable.deselectAll();
+	}
+
+	/*
+	 * Update the init string label at the bottom of the property editor with the respective
+	 * initialzation string based on whether it's a SWT or JFace color.
+	 */
+	private void updateLabelInitializationString() {
+		if (value == null)
+			return;
+		String result = "null"; //$NON-NLS-1$
+		String SWT_PREFIX = "SWT."; //$NON-NLS-1$
+		if (!isNamed) {
+			result = "new Color(Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else if (isBasic) {
+			for (int i = 0; i < basicColorValues.length; i++) {
+				if (value.getRGB().equals(basicColorValues[i].getRGB())) {
+					result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				}
+			}
+		} else if (isSystem) {
+			for (int i = 0; i < systemColorValues.length; i++) {
+				if (value.getRGB().equals(systemColorValues[i].getRGB())) {
+					result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					break;
+				}
+			}
+		} else if (isJFace) {
+			String jfaceConstantName = jfaceColorInitStrings[jfaceColorSelection].replaceAll("org.eclipse.jface.preference.JFacePreferences",
+					"JFacePreferences");
+			result = "JFaceResources.getColorRegistry().get(" + jfaceConstantName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
+		}
+		initStringLabel.setText(result);
+		initStringLabel.setToolTipText(result);
+	}
+
+	/*
+	 * Return true if JFace classes are part of the resource set. 
+	 * This is used to determine whether or not to add the JFace page to the property editor. 
+	 */
+	protected boolean isJFaceProject() {
+		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
+		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
+	}
+}  // @jve:decl-index=0:visual-constraint="10,-2"

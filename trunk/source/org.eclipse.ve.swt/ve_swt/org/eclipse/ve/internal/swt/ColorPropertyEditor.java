@@ -13,17 +13,22 @@ package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
-public class ColorPropertyEditor implements PropertyEditor {
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.propertysheet.INeedData;
+
+public class ColorPropertyEditor implements PropertyEditor, INeedData {
 
 	private ColorCustomPropertyEditor customColorEditor;
 	private IJavaObjectInstance fExistingValue;
 	private Color color;
+	private EditDomain fEditDomain;
 	
 	public ColorPropertyEditor() {
 		
@@ -35,11 +40,15 @@ public class ColorPropertyEditor implements PropertyEditor {
 	
 	public Control createControl(Composite parent, int style) {
 		if (customColorEditor == null || customColorEditor.isDisposed()) {
-			customColorEditor = new ColorCustomPropertyEditor(parent, style, color, fExistingValue);
+			customColorEditor = new ColorCustomPropertyEditor(parent, style, color, fExistingValue, fEditDomain);
 		}
 		return customColorEditor;
 	}
 	
+
+	public void setData(Object data) {
+		fEditDomain = (EditDomain) data;
+	}
 
 	public void setValue(Object value) {
 		if(customColorEditor != null){
