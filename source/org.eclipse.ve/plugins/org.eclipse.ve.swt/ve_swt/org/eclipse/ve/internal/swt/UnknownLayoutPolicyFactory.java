@@ -1,0 +1,83 @@
+package org.eclipse.ve.internal.swt;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-01 19:16:49 $ 
+ */
+
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.*;
+
+import org.eclipse.ve.internal.propertysheet.EToolsPropertyDescriptor;
+/**
+ * Unknown Layout Policy Factory for LayoutManager (not LayoutManager2
+ * types).
+ * Creation date: (10/24/00 2:51:35 PM)
+ * @author: Peter Walker
+ */
+public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
+	/**
+	 * UnknownayoutPolicyFactory constructor comment.
+	 */
+	public UnknownLayoutPolicyFactory() {
+		super();
+	}
+	/**
+	 * getConstraintConverter method comment.
+	 */
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy cp) {
+		return new UnknownLayoutSwitcher(cp);
+	}
+	/**
+	 * getLayoutInputPolicyClass method comment.
+	 */
+	public Class getLayoutInputPolicyClass() {
+		return UnknownLayoutInputPolicy.class;
+	}
+
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy cp) {
+		return new UnknownLayoutPolicyHelper(cp);
+	}
+
+	/**
+	 * Return a default constraint property descriptor.
+	 */
+	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
+		// Return one where the constraint is a string.
+		return new EToolsPropertyDescriptor(sfConstraint,"layoutData") {
+
+			public CellEditor createPropertyEditor(Composite parent) {
+				return new StringJavaClassCellEditor(parent);
+			}
+
+			public ILabelProvider getLabelProvider() {
+				return new StringJavaClassLabelProvider();
+			}
+		};
+	}
+
+	/**
+	 * @see ILayoutPolicyFactory#getLayoutManagerInstance(EditDomain)
+	 */
+	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
+		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
+	}
+}

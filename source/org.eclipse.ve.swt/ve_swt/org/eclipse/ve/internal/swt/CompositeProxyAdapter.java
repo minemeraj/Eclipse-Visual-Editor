@@ -6,6 +6,9 @@ package org.eclipse.ve.internal.swt;
  * restricted by GSA ADP Schedule Contract with IBM Corp. 
  */
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.*;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -18,6 +21,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
 	private IMethodProxy getLayoutMethodProxy;  // Field to cache the IMethodProxy for the getLayout() method on the composite
+	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
 
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
@@ -56,17 +60,33 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		}); 
 	}
 	
+	protected IMethodProxy layoutMethodProxy(){
+		if(layoutMethodProxy == null){
+			layoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("layout");
+		}
+		return layoutMethodProxy;
+	}
+	
 	protected void addControl(IJavaObjectInstance aControl, int position) throws ReinstantiationNeeded {
-		//TODO We need to add a listener to the control to know when its layoutData changes to handle layouts in SWT
-		// For now just deal with x and y
-		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
 		
-		((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);
-		
-		// It is possible the component didn't instantiate.  We then can't apply it
-		controlProxyHost.instantiateBeanProxy();
-		// This is required because SWT will not invalidate and relayout the container	
-		revalidateBeanProxy();
+		// Whenever a control is added unless it is at the end there is no way to insert it at a particular
+		// position, so the existing controls before it must all be disposed 
+		// Then add in the new control and instantiate everyone behind him to maintain target VM order
+		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
+		Iterator iter = controls.iterator();
+		int controlCount = 0;
+		while(iter.hasNext()){
+			// If the number of times we have iterated over controls > position we are adding continue
+			if(controlCount++ < position) continue;			
+			IJavaObjectInstance control = (IJavaObjectInstance)iter.next();
+			IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(control);
+			((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);
+			// Release the bean proxy and then instantiate it.  This is because we are inserting at a position
+			// and any already existing controls must be added in the corrected order
+			controlProxyHost.releaseBeanProxy();
+			controlProxyHost.instantiateBeanProxy();
+		}		
+		childValidated(this);
 	}
 
 	protected void removeControl(IJavaObjectInstance aControl) throws ReinstantiationNeeded {
@@ -78,4 +98,22 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		revalidateBeanProxy();
 	}
 	
+	public void childValidated(ControlProxyAdapter childProxy) {
+		if(parentProxyAdapter != null){
+			super.childValidated(childProxy);
+		} else {
+			try {
+				// We are the top with no parents, do a layout() on us
+				invokeSyncExec(new DisplayManager.DisplayRunnable() {
+					public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+						// Call the layout() method
+						return layoutMethodProxy().invoke(getBeanProxy());
+					}
+				});
+			} catch (ThrowableProxy e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
+	}	
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 10:31:58 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-01 19:16:49 $ 
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -39,7 +39,7 @@ public class RowLayoutPolicyFactory implements ILayoutPolicyFactory {
 	}
 
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
-		return null;
+		return new UnknownLayoutPolicyHelper(ep);
 	}	
 
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
