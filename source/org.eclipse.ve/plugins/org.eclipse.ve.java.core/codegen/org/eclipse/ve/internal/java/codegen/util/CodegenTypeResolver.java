@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenTypeResolver.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 21:43:09 $ 
  */
 
 import java.util.HashMap;
@@ -85,6 +85,9 @@ public class CodegenTypeResolver implements IElementChangedListener{
 		return map;
 	}
 
+	public String resolveTypeComplex(String toResolve) {
+		return resolveTypeComplex(toResolve,false) ;
+	}
 	/*
 	 * P = package
 	 * C = class
@@ -96,12 +99,13 @@ public class CodegenTypeResolver implements IElementChangedListener{
 	 * (*) P1.P2.C1.C2    >> P1.P2.C1$C2     
 	 * (*) P1.P2.C1.C2.V1 >> P1.P2.C1$C2.V1  
 	 * (*) C1.C2.V1       >> P1.P2.C1$C2.V1  
-	 * 
+	 * noField implies that we need to resolve the accessor of an internal
+	 * field, e.g., org.eclipse.swt.SWT.None ... return org.eclipse.swt.SWT
 	 */
-	public String resolveTypeComplex(String toResolve){
+	public String resolveTypeComplex(String toResolve, boolean noField){
 		if(tempHash==null)
 			tempHash = getNewHashMap();
-		if(tempHash.containsKey(toResolve))
+		if(!noField && tempHash.containsKey(toResolve))
 			return (String) tempHash.get(toResolve);
 		StringTokenizer dotTokenizer = new StringTokenizer(toResolve,"$.",false); //$NON-NLS-1$
 		String finalResolved = toResolve;
@@ -118,6 +122,7 @@ public class CodegenTypeResolver implements IElementChangedListener{
 		String seenSoFar = new String();
 		boolean lastTokenWasAClass = false;
 		boolean couldResolveAtleastOneToken = false ;
+		String lastResolved = null ;
 		for(int i=0;i<tokens.length;i++){
 			String token = tokens[i];
 			seenSoFar = correctedFinalResolved.replace('$','.');
@@ -125,8 +130,10 @@ public class CodegenTypeResolver implements IElementChangedListener{
 				seenSoFar = seenSoFar.concat("."); //$NON-NLS-1$
 			seenSoFar = seenSoFar.concat(token);
 			String[] ret = resolveSimpleType(seenSoFar);
-			if (ret != null)
+			if (ret != null) {
 			   couldResolveAtleastOneToken = true ;  // could be a temporary compile/parsing issues with the current IType
+			   lastResolved = seenSoFar ;
+			}
 			boolean tokenPresentInHierarchy = false;
 			if(ret==null && lastTokenWasAClass)
 				ret = checkInHierarchy(seenSoFar);
@@ -145,6 +152,8 @@ public class CodegenTypeResolver implements IElementChangedListener{
 				lastTokenWasAClass = true;
 			}
 		}
+		if (noField) return lastResolved;
+		
 		if(correctedFinalResolved!=null)
 			finalResolved = correctedFinalResolved;
 		if(finalResolved.startsWith(".")){ //$NON-NLS-1$

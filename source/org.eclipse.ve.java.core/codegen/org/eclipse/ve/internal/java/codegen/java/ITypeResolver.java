@@ -11,13 +11,29 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ITypeResolver.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 21:43:09 $ 
  */
 /**
  * @version 	1.0
  * @author
  */
 public interface ITypeResolver {
+	/**
+	 * Get unqualified and resolve it
+	 * @param unresolved  
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
 	public String resolve(String unresolved);
+	/**
+	 * Get unqualified and resolve it, not including Field accessors.
+	 * e.g., org.eclipse.swt.SWT.None will return org.eclipse.swt.SWT
+	 * @param unresolved
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public String resolveType(String unresolved);
 	public String resolveThis();
 }

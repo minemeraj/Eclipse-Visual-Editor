@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-06 21:43:09 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -305,5 +305,12 @@ public Object getDocLock() {
     public String toString() {    
     	return "WCP ["+fFile+"]" ; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.ITypeResolver#resolveType(java.lang.String)
+	 */
+	public String resolveType(String unresolved) {
+		return unresolved != null ? getInternalResolver().resolveTypeComplex(unresolved,true) : null;
+	}
 
 }

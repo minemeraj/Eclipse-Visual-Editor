@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-06 21:43:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -81,6 +81,10 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 				catch (Exception e) {
 					return unresolved;
 				}
+			}
+			public String resolveType(String unresolved) {
+				if (resolver == null) return null ;
+				return unresolved != null ? resolver.resolveTypeComplex(unresolved,true) : null;
 			}
 			public String resolveThis() {
 				return CodeGenUtil.getMainType(referenceCU).getTypeQualifiedName();

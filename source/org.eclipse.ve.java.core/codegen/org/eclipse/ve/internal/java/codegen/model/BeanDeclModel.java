@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-06 21:43:09 $ 
  */
 
 import java.util.*;
@@ -491,7 +491,9 @@ public String toString() {
 public String resolve(String unresolved){
 	return getWorkingCopyProvider().resolve(unresolved);
 }
-
+public String resolveType(String unresolved){
+	return getWorkingCopyProvider().resolveType(unresolved);
+}
 /*
  * @see IBeanDeclModel#resolveThis()
  */
