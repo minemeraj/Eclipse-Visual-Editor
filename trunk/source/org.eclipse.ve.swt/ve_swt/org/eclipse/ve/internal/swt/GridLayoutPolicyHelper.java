@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-24 15:57:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-04 20:44:12 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -114,8 +115,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDefaultConstraint(java.util.List)
 	 */
 	public List getDefaultConstraint(List children) {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.nCopies(children.size(), null);
 	}
 	
 	/**
