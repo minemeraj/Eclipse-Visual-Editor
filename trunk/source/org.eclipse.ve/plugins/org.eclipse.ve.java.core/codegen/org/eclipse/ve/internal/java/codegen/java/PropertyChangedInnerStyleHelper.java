@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedInnerStyleHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.8 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -51,12 +51,20 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.EventDecoderHelper#processEvent(org.eclipse.jdt.internal.compiler.ast.MessageSend)
 	 */
-	protected boolean processEvent(MethodInvocation event) {
+	protected boolean processEvent(MethodInvocation event, boolean addToEMFmodel) {
 							
 		Expression exp = (Expression) event.arguments().get(event.arguments().size()-1) ;
+				
+		int index = getInvocationIndex();
+		if (addToEMFmodel)
+			 cleanUpPreviousIfNedded() ;
+		else {
+			restoreInvocationFromModel(index);
+			return true;
+		}
 		
-		cleanUpPreviousIfNedded() ;
-		int index = getInvocationIndex();			
+		
+		
 		PropertyChangeEventInvocation ee = (PropertyChangeEventInvocation) fEventInvocation ;   
 		
 		Method listenRegMethod = getAddMethod(event) ;

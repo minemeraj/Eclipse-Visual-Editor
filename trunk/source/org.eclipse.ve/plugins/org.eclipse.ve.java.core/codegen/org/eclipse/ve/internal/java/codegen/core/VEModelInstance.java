@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.2 $  $Date: 2005-01-05 18:41:43 $ 
+ *  $Revision: 1.3 $  $Date: 2005-01-13 21:02:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -35,6 +35,8 @@ import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.VEModelCacheUtility;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.yourkit.api.Controller;
  
 /**
  * @author Gili Mendel
@@ -86,7 +88,7 @@ public class VEModelInstance implements IVEModelInstance {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.core.IVEModelInstance#createEmptyComposition()
 	 */
-	public EObject createComposition() throws CodeGenException {
+	public EObject createComposition(boolean ignoreCache) throws CodeGenException {
 
 			if (fUri == null)
 				throw new CodeGenException("Model URI is not set"); //$NON-NLS-1$
@@ -96,12 +98,12 @@ public class VEModelInstance implements IVEModelInstance {
 			if (cr != null)
 				rs.getResources().remove(cr);
 
-			if (VEModelCacheUtility.isValidCache(getFile())) {
+			if (!ignoreCache && VEModelCacheUtility.isValidCache(getFile())) {
 				fResource = VEModelCacheUtility.doLoadFromCache(this, null);
 				fRoot = (BeanSubclassComposition) fResource.getEObject("/");
 				fUri = fResource.getURI().toString();
 				JavaVEPlugin.log("Loading EMF model from cache",Level.FINE);
-				isFromCache=true;
+				isFromCache=true;	
 			}
 			else {
 				fResource = rs.createResource(URI.createURI(fUri));
@@ -138,5 +140,9 @@ public class VEModelInstance implements IVEModelInstance {
 	
 	public boolean isFromCache() {
 		return isFromCache;
+	}
+	public void loadFromCacheComplete() {
+		VEModelCacheUtility.removeCacheAnnotationFromEMFModel(this);
+		isFromCache=false;
 	}
 }

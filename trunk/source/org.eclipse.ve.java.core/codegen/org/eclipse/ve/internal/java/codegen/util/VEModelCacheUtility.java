@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.2 $  $Date: 2005-01-05 22:13:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -68,11 +68,11 @@ public class VEModelCacheUtility {
 	}
 	
 	public static boolean isValidCache (IFile f) {
-//		File dest = getCachedPath(f).toFile();		
-//		if (dest.exists() && dest.canRead()) {
-//			if (dest.lastModified()>f.getFullPath().toFile().lastModified())
-//				return true;
-//		}		
+		File dest = getCachedPath(f).toFile();		
+		if (dest.exists() && dest.canRead()) {
+			if (dest.lastModified()>f.getFullPath().toFile().lastModified())
+				return true;
+		}		
 	    return false;
 	}
 	
@@ -121,14 +121,20 @@ public class VEModelCacheUtility {
 		r.getContents().add(cache);
 	}
 	
-	public static void removeCacheAnnotationFromEMFModel (IVEModelInstance model) {
+	public static JavaCacheData getJavaCacheData (IVEModelInstance model) {
 		Resource r = model.getModelResource();		
 		for (int i=r.getContents().size()-1; i>=0; i--) {
 			Object next = r.getContents().get(i);
 			if (next instanceof JavaCacheData) {
-				r.getContents().remove(i);				
+				return (JavaCacheData) next;				
 			}
 		}
+		return null;
+	}
+	
+	public static void removeCacheAnnotationFromEMFModel (IVEModelInstance model) {
+		Resource r = model.getModelResource();
+		r.getContents().remove(getJavaCacheData(model));
 	}
 	
 	public static void doSaveCache (IBeanDeclModel bdm, IProgressMonitor monitor) {

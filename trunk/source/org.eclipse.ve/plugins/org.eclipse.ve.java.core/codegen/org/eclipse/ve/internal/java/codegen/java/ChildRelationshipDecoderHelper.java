@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.13 $  $Date: 2005-01-13 21:02:40 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -197,11 +197,9 @@ protected boolean  addComponent () throws CodeGenException {
 	
 	// TODO  Need to deal with multiple arguments, and nesting
 	
-	 BeanPart oldAddedPart = fAddedPart ;
-	 Expression exp = getExpression();
-    if (!(exp instanceof MethodInvocation)) return false ;
-    
-    fAddedPart = parseAddedPart((MethodInvocation)exp)  ;
+	BeanPart oldAddedPart = fAddedPart ;
+  
+    fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
     
     if (oldAddedPart != null)
        if (fAddedPart != oldAddedPart) {
@@ -213,10 +211,8 @@ protected boolean  addComponent () throws CodeGenException {
            add(fAddedPart,fbeanPart) ;                  
            return true ;
     }	
-    boolean parseOK = fAddedPart != null ;
-//    if (!parseOK)
-//	   CodeGenUtil.logParsingError(fexpStmt.toString(), fbeanPart.getInitMethod().getMethodName(), "Could not resolve setting instance",false) ; //$NON-NLS-1$ 
-	return parseOK ;
+    else
+	  return false;
 }
 
 /**
@@ -295,15 +291,38 @@ public boolean primIsDeleted() {
    return result ;
 }
 
+protected boolean isValid() throws CodeGenException {
+	if (fFmapper.getFeature(fExpr) == null ||
+	 	   fExpr == null) throw new CodeGenException ("null Feature:"+fExpr) ; //$NON-NLS-1$
+	
+	 Expression exp = getExpression();
+	 if (!(exp instanceof MethodInvocation)) return false ;
+	 else return true;
+}
+
 /**
  *   Go for it
  */
 public boolean decode() throws CodeGenException {
 
-   if (fFmapper.getFeature(fExpr) == null ||
-	   fExpr == null) throw new CodeGenException ("null Feature:"+fExpr) ; //$NON-NLS-1$
 
-      return addComponent() ;
+      if (isValid())
+         return addComponent() ;
+      return false;
+}
+
+public boolean restore() throws CodeGenException {
+	if (isValid()) {
+		fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
+		if (fAddedPart!=null) {
+		  if (isChildRelationship()) {      
+		    fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
+		    fbeanPart.addChild(fAddedPart) ;
+		  }	         
+		  return true;
+		}
+	}		
+	return false;
 }
 
 public void removeFromModel() {
@@ -518,5 +537,4 @@ public Object[] getArgsHandles(Statement expr) {
 		if (fAddedPart != null) return true;
 		else return false ;	
 	}
-
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-13 21:02:40 $ 
  */
 
 import java.util.*;
@@ -294,6 +294,24 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		else
 			return false;
 	}
+	
+
+	public boolean restore() throws CodeGenException {		
+		if (fFmapper.getFeature(fExpr) == null || fExpr == null) {
+			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Feature " + fFmapper.getMethodName() + " is not recognized.", false); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CodeGenException("null Feature:" + fExpr); //$NON-NLS-1$
+		}
+		if (isMySigniture()) {			
+			fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
+			if (fAddedPart!=null) {
+			   fAddedInstance = fAddedPart.getEObject();
+				fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
+				fbeanPart.addChild(fAddedPart) ;
+			   return true; 			   
+			}			
+		}		
+		return false;
+	}
 
 	/**
 	 * 
@@ -468,6 +486,4 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		}
 		return true;
 	}
-
-
 }

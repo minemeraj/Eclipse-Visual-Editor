@@ -11,15 +11,15 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.48 $  $Date: 2005-01-10 19:26:52 $ 
+ *  $Revision: 1.49 $  $Date: 2005-01-13 21:02:40 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.swt.widgets.Display;
@@ -38,12 +39,10 @@ import org.eclipse.jem.util.TimerTests;
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.Diagram;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-import org.eclipse.ve.internal.jcm.JCMPackage;
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.CodegenEditorPartMessages;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -427,6 +426,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		modelBldr.setDiagram(fVEModel);
 		IBeanDeclModel bdm = null;
 		try {
+
 			bdm = modelBldr.build();
 		} catch (CodeGenException e) {
 			JavaVEPlugin.log(e) ;
@@ -652,25 +652,10 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 		}
 		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
 
-		fFile = input.getFile();
-		try {
-			synchronized (l) {   // only one thread is to update the model				
-			    decodeDocument(fFile, pm);					    
-				floadInProgress = false;
-				fmodelLoaded = true;
-			}
-			fireProcessingPause(fdisconnected);
-			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
-			fireParseError(false);
-		} catch (CodeGenSyntaxError e) {
-			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.			
-		} finally {
-			synchronized (l) {
-				floadInProgress = false ;
-			}			
+		fFile = input.getFile();		
+		synchronized (l) {   // only one thread is to update the model				
+		   decodeDocument(fFile, pm);					    					
 		}
-		
-		
 		pm.done();
 }
  
@@ -682,6 +667,21 @@ boolean  decodeExpression(CodeExpressionRef code) throws CodeGenException {
     return code.decodeExpression() ;
 }
 
+protected EObject  createAJavaInstance(BeanPart bean, JavaCacheData cache, IProgressMonitor pm) throws CodeGenException {
+	
+	   pm.subTask("Creating instance "+bean.getSimpleName());
+	   EObject obj = null;
+	   if (cache == null)
+	      obj = bean.createEObject() ;
+	   else {
+	   	  obj = (EObject) cache.getNamesToBeans().get(bean.getUniqueName());
+	   	  bean.setEObject(obj);
+	   	  bean.setIsInJVEModel(true);
+	   }
+	   pm.worked(1);
+       return obj;
+}
+
 /**
  *  Create MOF instances 
  * @param pm  Expects a new progress monitor as a beginTask() will be called
@@ -691,14 +691,13 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
 	Iterator itr = fBeanModel.getBeans().iterator() ;
 	ArrayList err = new ArrayList() ;
     BeanSubclassComposition comp = fVEModel.getModelRoot() ;
+    JavaCacheData cache = VEModelCacheUtility.getJavaCacheData(fVEModel);
 	while (itr.hasNext()) {
 	   BeanPart bean = (BeanPart) itr.next() ;
-	   pm.subTask("Creating instance "+bean.getSimpleName());
-	   EObject obj = bean.createEObject() ;
-	   pm.worked(1);
-       String annotatedName= bean.getSimpleName() ;
-       
-       // The Model Builder will clean up irrelevent beans
+	   EObject obj = createAJavaInstance(bean,cache,pm);
+	   String annotatedName= bean.getSimpleName() ;
+	   
+	      // The Model Builder will clean up irrelevent beans
        if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
     	   if (!(obj instanceof IJavaObjectInstance)) {    	   	  
     	      obj = null ;
@@ -708,14 +707,14 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        }
        else {  // a this part
           if (obj != null) {
-             ((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.getString("CodegenMessages.ThisPart.uriID"), new Object[] {fVEModel.getFile().getName()})) ; //$NON-NLS-1$
+          	if (cache==null)
+                ((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.getString("CodegenMessages.ThisPart.uriID"), new Object[] {fVEModel.getFile().getName()})) ; //$NON-NLS-1$
              // If no annotation, the PS will not allow you to edit the name in composition
-             annotatedName = null ;
+            annotatedName = null ;
           }
        }
-       
-       
-	   if (obj == null) {
+
+       if (obj == null) {
 	   	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 	   		JavaVEPlugin.log("Could not create a JavaObjectInstance for: "+bean.getType()+": "+bean.getUniqueName(),Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	    err.add(bean) ;
@@ -727,7 +726,8 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
 	    // Remove from the JVE model if needed
 	    bean.setEObject(null) ;
 	   }
-	   else {	        	    	   
+	   else {	      
+	   	if (cache == null) {
 	     Annotation an = CodeGenUtil.addAnnotation(obj) ;	
          if (annotatedName != null)
            CodeGenUtil.addAnnotatedName(an, annotatedName); 
@@ -746,12 +746,13 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
 	                  err.add(bItr.next()) ;
 	     	}
 	     }
+	   	}
 	   }
 	}	
 	for (int i = 0; i < err.size(); i++) {
 		pm.subTask("Disposing incorrect bean "+((BeanPart)err.get(i)).getSimpleName());
         ((BeanPart)err.get(i)).dispose() ;
-    }
+    }	
 	pm.done();
 }
 
@@ -855,35 +856,28 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 		   
 		   pm.subTask("Adding bean "+bean.getSimpleName()+" to model");
-		   addBeanPart(bean,fVEModel.getModelRoot()) ;
+		   if (!fVEModel.isFromCache())
+		     addBeanPart(bean,fVEModel.getModelRoot()) ;
 		   
-//		   if (bean.getContainer() == null) {
-//	       		// We are on the free from, 
-//	       		BeanSubclassComposition comp = fCompositionModel.getModelRoot() ;
-//	       		if (bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
-//	       		    if (comp.eIsSet(VcePackage.eINSTANCE.getBeanSubclassComposition_ThisPart())) throw new CodeGenException ("this Already initialized") ; //$NON-NLS-1$
-//	           		comp.setThisPart((IJavaObjectInstance)bean.getEObject()) ;	           	           		
-//	           		CDEHack.fixMe("Need to deal with FF annotation") ; //$NON-NLS-1$
-//	       		}
-//	       		else {	       		
-//	          		comp.getComponents().add(bean.getEObject()) ;	          		
-//	       		}
-//	       		
+
 			try {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
 				if(bean.getFFDecoder()!=null){
 					pm.subTask("Decoding freeform annotation for: "+bean.getSimpleName());
-					bean.getFFDecoder().decode();
+					if (fBeanModel.getCompositionModel().isFromCache())
+						bean.getFFDecoder().restore();
+					else
+					    bean.getFFDecoder().decode();
 				}
 			} finally {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
 			}
-//	   	   }
 		}
 		  pm.worked(3);
 	}finally{
 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
+		fVEModel.loadFromCacheComplete();
 	}
 } 
  
@@ -903,40 +897,84 @@ private int getTotalExpressionCount() {
 	return count;
 }
 
+protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
+	
+	
+    try {
+    	fSrcSync.getLockMgr().setGUIReadonly(true);
+		pm.beginTask("Parsing Java Source",100);
+		TimerTests.basicTest.startStep("Reverse Parsing");
+		TimerTests.basicTest.startStep("Parsing");			
+		JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
+	                                              fWorkingCopy.getFile().getLocation().toFile().toString(),null,new SubProgressMonitor(pm, 40, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK)) ;
+		
+	    
+		builder.setDiagram(fVEModel) ;
+		fBeanModel = builder.build() ; 	
+		fBeanModel.setSourceSynchronizer(fSrcSync) ;	
+		TimerTests.basicTest.stopStep("Parsing");
+		
+		TimerTests.basicTest.startStep("Decoding");
+		buildCompositionModel(new SubProgressMonitor(pm,60)) ;	 
+		pm.done();
+		TimerTests.basicTest.stopStep("Decoding");
+    }
+    catch (CodeGenSyntaxError e) {
+		fireParseError(true);
+		floadInProgress = false ;
+		throw e;
+    }
+    finally {
+		floadInProgress = false ;
+		fSrcSync.getLockMgr().setGUIReadonly(false);		
+	}
+	fmodelLoaded = true;
+	fireProcessingPause(fdisconnected);
+	fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
+	TimerTests.basicTest.stopStep("Reverse Parsing");
+}
+
 /**
  *  Go for parsing a Java Source
  */ 
-public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGenException {
+public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGenException {
 	
 	if (sourceFile == null || !sourceFile.exists()) 
 	    throw new CodeGenException("Invalid Source File") ;	 //$NON-NLS-1$
 	
 
 	
-    reConnect(sourceFile) ; 
-    if (fVEModel.isFromCache())
-    	return;
-		
-			
-    TimerTests.basicTest.startStep("Parsing");			
-	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
-                                              fWorkingCopy.getFile().getLocation().toFile().toString(),null,new SubProgressMonitor(pm, 40, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK)) ;              
-    
-	builder.setDiagram(fVEModel) ;
-	fBeanModel = builder.build() ; 	
-	fBeanModel.setSourceSynchronizer(fSrcSync) ;	
-	TimerTests.basicTest.stopStep("Parsing");
-	
-	TimerTests.basicTest.startStep("Decoding");
-	try {		
-	  buildCompositionModel(pm) ;	 
-	}
-	catch (Exception e) {
-		JavaVEPlugin.log (e, Level.SEVERE) ; //$NON-NLS-1$
-	}
-	pm.subTask("Finished decoding document");
-	TimerTests.basicTest.stopStep("Decoding");
-	return;
+    reConnect(sourceFile) ;     
+    if (fVEModel.isFromCache()) {
+    	// Model is already constructed from cache, we can let
+    	// the GUI bulding go, and build the BDM and such in the background.
+    	Job reverseParseJobe = new ReverseParserJob() {
+			protected IStatus doRun(IProgressMonitor monitor) {
+				try {	
+					synchronized (fWorkingCopy.getDocLock()) {
+					  //fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC")); //$NON-NLS-1$
+					  fireSnippetProcessing(true);					
+					  reverseParse(monitor);
+					}
+				} catch (Exception e) {
+					fireParseError(true);
+					return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, "",e);
+				}
+				return Status.OK_STATUS;
+			}
+		};    		  
+		reverseParseJobe.schedule();
+		fmodelLoaded=true;
+    	return false ;    
+    }
+    else {
+		try {					
+			reverseParse(pm);
+		} catch (Exception e) {
+			fireParseError(true);
+		}
+    	return true;
+    }		
 }
 
 
@@ -1092,7 +1130,8 @@ public synchronized void reConnect(IFile file) {
        fSrcSync.connect() ;
     
     try {
-		fVEModel.createComposition();
+    	boolean ignoreCache = JavaUI.getDocumentProvider().canSaveDocument(fWorkingCopy.getEditor());
+		fVEModel.createComposition(ignoreCache);
 	} catch (CodeGenException e) {		
 		JavaVEPlugin.log(e);
 	}
@@ -1221,7 +1260,7 @@ public void setSynchronizerSyncDelay(int delay) {
       fSrcSync.setDelay(fSrcSyncDelay) ;
 }
 
-public synchronized BeanSubclassComposition getModelRoot() {
+public  BeanSubclassComposition getModelRoot() {
 	if (fVEModel!=null && fmodelLoaded)
 		 return fVEModel.getModelRoot();
 	else
@@ -1329,10 +1368,22 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 	 * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#getThisTypeName()
 	 */
 	public String getThisTypeName() {
-	// Gili	IType type = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit());
-	// Gili	return type.getFullyQualifiedName();
-		String className=fVEModel.getFile().getProjectRelativePath().toString();
-		return className.substring(0,className.indexOf('.')).replace('/','.');
+		ICompilationUnit cu = null ;
+		if (fBeanModel!=null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+			cu = fBeanModel.getCompilationUnit();
+		}
+		else {
+		  IJavaProject p = JavaCore.create (fVEModel.getFile().getProject());	
+		  try {
+		  	cu = (ICompilationUnit) p.findElement(fVEModel.getFile().getProjectRelativePath());		  
+		  } catch (JavaModelException e) {
+			JavaVEPlugin.log(e);
+			return "???";
+		  }		  
+		}
+		IType type = CodeGenUtil.getMainType(cu);
+		return type.getFullyQualifiedName();
+		  
 	}
 	public void doSave(IProgressMonitor monitor) {
 		VEModelCacheUtility.doSaveCache(fBeanModel, monitor);

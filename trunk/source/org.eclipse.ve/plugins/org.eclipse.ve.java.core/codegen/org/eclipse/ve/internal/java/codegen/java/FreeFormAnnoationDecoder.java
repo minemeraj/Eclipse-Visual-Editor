@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.14 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.15 $  $Date: 2005-01-13 21:02:40 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -169,6 +169,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
      }     
     }
     
+	public boolean restore() throws CodeGenException {
+		return true;
+	}
+    
     
     public void reflectMOFchange() {
 
@@ -227,5 +231,4 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 		}
 
 	}
-
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.10 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -87,8 +87,12 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 
 		// Go for it
 		boolean result = false;
+		boolean fromCache = fbeanPart.getModel().getCompositionModel().isFromCache();
 		try {
-			result = fhelper.decode();
+			if (fromCache)
+				result = fhelper.restore();
+			else
+				result = fhelper.decode();
 		}
 		catch (Exception e) {
 			org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;

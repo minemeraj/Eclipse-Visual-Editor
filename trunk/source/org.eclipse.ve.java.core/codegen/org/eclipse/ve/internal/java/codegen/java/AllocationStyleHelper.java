@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -38,36 +38,38 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 		super(bean, exp, owner);
 	}
 
-	protected boolean processEvent(MethodInvocation event) {
+	protected boolean processEvent(MethodInvocation event, boolean addToEMFmodel) {
 		
 		Expression exp = (Expression) event.arguments().get(0) ;
-		cleanUpPreviousIfNedded() ;
-		int index = getInvocationIndex();
-//		EventInvocation ee = getNewEventInvocation(fbeanPart.getModel().getCompositionModel());
-//		ee.setEvent((BeanEvent) fEventDecorator.eContainer());
+		int index = getInvocationIndex();		
+		if (addToEMFmodel)
+		   cleanUpPreviousIfNedded() ;
+		else {
+			restoreInvocationFromModel(index);
+			return true;
+		}
 		EventInvocation ee = (EventInvocation) fEventInvocation ;
 		if (exp instanceof ClassInstanceCreation) {
 			ClassInstanceCreation qe = (ClassInstanceCreation) exp;
 			if (qe.getAnonymousClassDeclaration() != null) {
 				// Anonymous allocation
-
 				JavaClass clazz = getAllocatedType(qe.getName());
 				if (clazz == null || !clazz.isExistingType())
-					return false;
-
+					return false;				
 				Listener l;
 				if (clazz.isInterface())
 					l = getAnonymousListener(null, new Object[] { clazz });
 				else
 					l = getAnonymousListener(clazz, null);
 				ee.setListener(l);
+
 				List impl = getAnonymousTypeEventMethods(qe.getAnonymousClassDeclaration());
 				for (Iterator itr = impl.iterator(); itr.hasNext();) {
 					Method m = (Method) itr.next();
 					// Anonymouse callback is not shared
 					addMethod(ee, m, false);
-				}
-				addInvocationToModel(ee, index);
+				}				
+				addInvocationToModel(ee, index);				   
 				return true;
 			} else {
 				// Allocation of a new class

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -89,12 +89,16 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 	}
 	
 	
-	protected boolean processEvent(MethodInvocation event) {
+	protected boolean processEvent(MethodInvocation event, boolean addToEMFmodel) {
 		Expression exp = (Expression) event.arguments().get(event.arguments().size()-1) ;
-				                                		
-		
-		cleanUpPreviousIfNedded() ;
+				                                						
 		int index = getInvocationIndex();
+		if (addToEMFmodel)
+			 cleanUpPreviousIfNedded() ;
+		else {
+			restoreInvocationFromModel(index);
+			return true;
+		}
 
 		PropertyChangeEventInvocation ee = (PropertyChangeEventInvocation) fEventInvocation ;
 		

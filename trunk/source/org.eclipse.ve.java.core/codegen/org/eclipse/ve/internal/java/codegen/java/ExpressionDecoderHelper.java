@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-13 21:02:40 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -41,7 +41,28 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		fExpr = exp;
 	}
 
+	/**
+	 * The decoder will attempt update the EMF model
+	 * from the source.
+	 */
 	public abstract boolean decode() throws CodeGenException;
+	/**
+	 * The decoder should initialized itself.  This is typically called
+	 * when the EMF model was constructed from cache, and the BDM is building
+	 * in the background.   
+	 * A restore should never update the EMF model.  It is implemented
+	 * to initialize the decoder propertly, as if a decode was called.
+	 * It is possible that the expression can not be decoded and most likely
+	 * there are no art effects representing this expression in the model (a case 
+	 * where a decode() will return false, or throw an exception)
+	 * 
+	 * @return sucess 
+	 * @throws CodeGenException
+	 */
+	public abstract boolean restore() throws CodeGenException;
+	/**
+	 * The decoder will generate source code relevant to the EMF model state.
+	 */
 	public abstract String generate(Object[] args) throws CodeGenException;
 	public abstract void removeFromModel();
 

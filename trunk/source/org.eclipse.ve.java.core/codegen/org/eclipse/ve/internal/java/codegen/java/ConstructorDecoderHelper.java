@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.29 $  $Date: 2004-11-22 21:48:45 $ 
+ *  $Revision: 1.30 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -439,6 +439,13 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		
 		return true;
 	}
+	
+	public boolean restore() throws CodeGenException {
+		// Update the references (fReferences) from the allocation PT. 
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
+		return true;
+	}	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])
@@ -551,19 +558,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	protected int getIndexPriority() {
 		if(fbeanPart!=null){
-//			// TODO Warning: Hierarchy of beans is assumed to be known at this point, 
-//			// to figure out constructor expression index priority.
-//			BeanPart obj = fbeanPart;
-//			int parentCount = 0;
-//			if (fbeanPart.getReturnedMethod() != fbeanPart.getInitMethod()) {
-//				// Let the constructor of the returned bean have a higher priority
-//				parentCount++;
-//			}
-//			while(obj!=null){
-//				parentCount++;
-//				obj = CodeGenUtil.determineParentBeanpart(obj);
-//			}
-//			return Integer.MAX_VALUE - parentCount;
 			return getDefaultBeanPriority(fbeanPart);
 		}
 		return super.getIndexPriority();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramSourceDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:11 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-13 21:02:42 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -30,8 +30,16 @@ public interface IDiagramSourceDecoder {
 	public final static String JAVAExt =   "java" ;     // JAVA file ; //$NON-NLS-1$
 	
 
-    // Decode the imput source
-	public void	decodeDocument (IFile sourceFile, IProgressMonitor pm) throws CodeGenException ;
+	/**
+     *  Decode the input source file
+     * 
+	 * @param sourceFile
+	 * @param pm
+	 * @return  true, if decode is completed, false, if the decode was spawned into a different
+	 *          thread.
+	 * @throws CodeGenException
+	 */
+	public boolean	decodeDocument (IFile sourceFile, IProgressMonitor pm) throws CodeGenException ;
 	
 	// What file extention does this decoder works with
 	public String  getFileExt() ;

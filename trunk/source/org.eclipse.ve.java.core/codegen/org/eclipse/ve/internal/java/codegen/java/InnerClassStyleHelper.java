@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.8 $  $Date: 2005-01-13 21:02:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -51,13 +51,19 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 	}
 
 				
-		protected boolean processEvent(MethodInvocation event) {
+		protected boolean processEvent(MethodInvocation event, boolean addToEMFmodel) {
 			
 			Expression exp = (Expression) event.arguments().get(0) ;
-			cleanUpPreviousIfNedded() ;
+			
 			int index = getInvocationIndex();			
-//			EventInvocation ee = getNewEventInvocation(fbeanPart.getModel().getCompositionModel());
-//			ee.setEvent((BeanEvent) fEventDecorator.eContainer());
+			if (addToEMFmodel)
+				 cleanUpPreviousIfNedded() ;
+			else {
+				restoreInvocationFromModel(index);
+				return true;
+			}
+
+
 			EventInvocation ee = (EventInvocation) fEventInvocation ;             
 			if (exp instanceof SimpleName) {
 				// Instance of Event
