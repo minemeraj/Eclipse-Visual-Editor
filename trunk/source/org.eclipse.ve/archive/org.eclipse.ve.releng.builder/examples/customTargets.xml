@@ -180,7 +180,7 @@
 <target name="getEMF" unless="emfExists" depends="getBaseInit">
 	<get src="${emfZipURL}" dest="${buildDirectory}/../emf.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
-		<arg line="-o -qq emf.zip -d ${buildDirectory}"/>
+		<arg line="-o -qq emf.zip"/>
    	</exec>
   	<stripVersions directory="${buildDirectory}/plugins" />
 </target>
@@ -188,7 +188,7 @@
 <target name="getGEF" unless="gefExists" depends="getBaseInit">
 	<get src="${gefZipURL}" dest="${buildDirectory}/../gef.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
-		<arg line="-o -qq gef.zip -d ${buildDirectory}"/>
+		<arg line="-o -qq gef.zip"/>
    	</exec>
   	<stripVersions directory="${buildDirectory}/plugins" />
 </target>
