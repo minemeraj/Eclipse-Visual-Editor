@@ -11,21 +11,17 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-24 17:55:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
+import java.util.Iterator;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.*;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.swt.widgets.Display;
-
-import java.util.*;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartListener;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.Request;
 /**
  * This is an editpolicy that is placed onto a VisualComponent, and that has
  * children that are visual components. What it does is control the figure constraints

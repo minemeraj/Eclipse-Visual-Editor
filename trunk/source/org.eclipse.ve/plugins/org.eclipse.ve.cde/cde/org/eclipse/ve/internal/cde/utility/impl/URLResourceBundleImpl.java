@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-04 16:13:43 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-24 23:23:39 $ 
  */
 import java.net.*;
 import java.util.*;
@@ -109,34 +109,26 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 						urls.add(new URL(urlString));
 						if (urlString.startsWith("platform:/plugin/")) { //$NON-NLS-1$
 							// Special, need to get the fragments too.
-							// TODO Need to change this to use OSGi API when it is stable.
 							int begPluginName = "platform:/plugin/".length(); //$NON-NLS-1$
 							int endPluginName = urlString.indexOf('/', begPluginName);
 							String pluginName = urlString.substring(begPluginName, endPluginName);
-							String pid = getId(pluginName);
-							String vid = getVersion(pluginName);
 							String rest = urlString.substring(endPluginName);
-							IPluginRegistry registry = Platform.getPluginRegistry();
-							IPluginDescriptor desc = (vid == null || vid.equals("")) ? registry.getPluginDescriptor(pid) : registry.getPluginDescriptor(pid, new PluginVersionIdentifier(vid)); //$NON-NLS-1$
-							if (desc != null) {
+							Bundle bundle = Platform.getBundle(pluginName);
+							if (bundle != null) {
 								// The plugin descriptor can't get the fragments directly. We will go to the 
 								// plugin, from there get the bundle, and ask it. (This will only work with legacy plugins. OSGi plugins do not show in list).
-								try {
-									Bundle[] fragments = Platform.getFragments(desc.getPlugin().getBundle());
-									// See if there are any fragments
-									if (fragments != null)
-										for (int j = 0; j < fragments.length; j++) {
-											try {
-												URL u = fragments[j].getEntry(rest);
-												if (u != null)
-													urls.add(u); //$NON-NLS-1$
-											} catch (Exception e) {
-												// Had problems with the file. Just skip it.
-											}
+								Bundle[] fragments = Platform.getFragments(bundle);
+								// See if there are any fragments
+								if (fragments != null)
+									for (int j = 0; j < fragments.length; j++) {
+										try {
+											URL u = fragments[j].getEntry(rest);
+											if (u != null)
+												urls.add(u); //$NON-NLS-1$
+										} catch (Exception e) {
+											// Had problems with the file. Just skip it.
 										}
-								} catch (CoreException e) {
-									// Do nothing. Probably won't occur.
-								}
+									}
 							}
 						}
 					} catch (MalformedURLException e) {
@@ -152,16 +144,6 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 			}
 		}
 		return fBundle;
-	}
-
-	protected String getId(String spec) {
-		int i = spec.lastIndexOf('_'); //$NON-NLS-1$
-		return i >= 0 ? spec.substring(0, i) : spec;
-	}
-
-	protected String getVersion(String spec) {
-		int i = spec.lastIndexOf('_');
-		return i >= 0 ? spec.substring(i + 1, spec.length()) : ""; //$NON-NLS-1$
 	}
 
 	public void setBundleName(String value) {

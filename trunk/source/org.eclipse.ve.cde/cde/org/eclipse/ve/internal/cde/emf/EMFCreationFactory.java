@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFCreationFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import org.eclipse.core.runtime.IStatus;
@@ -46,7 +46,7 @@ public class EMFCreationFactory implements CreationFactory {
 		try {
 			return fClass.getEPackage().getEFactoryInstance().create(fClass);
 		} catch (Exception e) {
-			Status st = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e); //$NON-NLS-1$
+			Status st = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(st);
 		}
 		return null;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import java.net.MalformedURLException;
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 
 /**
  * This is the top-level class of the Common Diagram Editor plugin
@@ -43,8 +44,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 
 	private static CDEPlugin CDE_PLUGIN = null;
 
-	public CDEPlugin(IPluginDescriptor pluginDescriptor) {
-		super(pluginDescriptor);
+	public CDEPlugin() {
 		CDE_PLUGIN = this;
 	}
 
@@ -56,15 +56,19 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	}
 
 	public String getPluginID() {
-		return getDescriptor().getUniqueIdentifier();
+		return getBundle().getSymbolicName();
 	}
 
 	/**
 	 * Handle getting a class from the string. The format of the string is either:
 	 *   a) pluginName/className - Find class within the plugin
 	 *   b) className - Find class within EMFPlugin classpath.
-	 * Note:
-	 * Will throw ClassNotFoundException.
+	 * 
+	 * @param pluginFormatedClassName
+	 * @return
+	 * @throws ClassNotFoundException
+	 * 
+	 * @since 1.0.0
 	 */
 	static public Class getClassFromString(String pluginFormatedClassName) throws ClassNotFoundException {
 		return getClassFromString(null, pluginFormatedClassName);
@@ -73,13 +77,18 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	/**
 	 * Handle getting a class from the string. The format of the string is either:
 	 *   a) pluginName/className - Find class within the plugin
-	 *   b) className - Find class within the plugin classpath of the plugin descriptor passed in.
+	 *   b) className - Find class within the plugin classpath of the bundle passed in.
 	 *
 	 *   If of the form "className:data" or "pluginName/className:data" the ":data" portion will be stripped off.
-	 * Note:
-	 * Will throw ClassNotFoundException.
+	 * 
+	 * @param bundle
+	 * @param pluginFormatedClassName
+	 * @return
+	 * @throws ClassNotFoundException
+	 * 
+	 * @since 1.0.0
 	 */
-	static public Class getClassFromString(IPluginDescriptor descriptor, String pluginFormatedClassName) throws ClassNotFoundException {
+	static public Class getClassFromString(Bundle bundle, String pluginFormatedClassName) throws ClassNotFoundException {
 
 		int slashNdx = pluginFormatedClassName.indexOf('/');
 		int colonNdx = pluginFormatedClassName.indexOf(':', slashNdx + 1);
@@ -88,15 +97,14 @@ public final class CDEPlugin extends AbstractUIPlugin {
 		if (slashNdx != -1) {
 			String pluginName = className.substring(0, slashNdx);
 			className = className.substring(slashNdx + 1);
-			IPluginRegistry registry = Platform.getPluginRegistry();
-			if (registry.getPluginDescriptor(pluginName) != null) {
-				ClassLoader classLoader = registry.getPluginDescriptor(pluginName).getPluginClassLoader();
-				return classLoader.loadClass(className);
+			Bundle abundle = Platform.getBundle(pluginName);
+			if (abundle != null) {
+				return abundle.loadClass(className);
 			}
 		}
 
-		// No plugin name, use plugin classpath of passed in descriptor.
-		return (descriptor == null ? CDE_PLUGIN.getDescriptor() : descriptor).getPluginClassLoader().loadClass(className);
+		// No plugin name, use plugin classpath of passed in bundle.
+		return (bundle == null ? CDE_PLUGIN.getBundle() : bundle).loadClass(className);
 	}
 
 	/**
@@ -104,13 +112,23 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 * then the init data, if any, will be passed as a string to it. The config element and attribute name
 	 * will be sent in as nulls because this isn't be created from a configuraton element. The default ctor
 	 * will be used to instantiate it.
-	 *
+	 * <p>
 	 * This is used for things like CellValidatorClassname to allow passing in additional information. For example
 	 * the minmax validator can have "min,max" passed in as initialization data to configure the validator for this.
+	 * 
+	 * @param bundle
+	 * @param pluginFormatedClassName
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws CoreException
+	 * 
+	 * @since 1.0.0
 	 */
-	static public Object createInstance(IPluginDescriptor descriptor, String pluginFormatedClassName)
+	static public Object createInstance(Bundle bundle, String pluginFormatedClassName)
 		throws ClassNotFoundException, InstantiationException, IllegalAccessException, CoreException {
-		Class c = getClassFromString(descriptor, pluginFormatedClassName);
+		Class c = getClassFromString(bundle, pluginFormatedClassName);
 		Object o = c.newInstance();
 		setInitializationData(o, pluginFormatedClassName, null);
 		return o;
@@ -155,20 +173,36 @@ public final class CDEPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	/**
+	 * Create an Image from a plugin. 
+	 * @param plugin
+	 * @param file
+	 * @return the image. It is caller's responsibility to dispose of this image when not needed.
+	 * 
+	 * @since 1.0.0
+	 */
 	static public Image getImageFromPlugin(Plugin plugin, String file) {
-		try {
-			return ImageDescriptor.createFromURL(new URL(plugin.getDescriptor().getInstallURL(), file)).createImage();
-		} catch (MalformedURLException e) {
+		URL url = Platform.find(plugin.getBundle(), new Path(file));
+		if (url != null)
+			return ImageDescriptor.createFromURL(url).createImage();
+		else
 			return ImageDescriptor.getMissingImageDescriptor().createImage();
-		}
 	}
 
+	/**
+	 * Return image descriptor from a file in the plugin.
+	 * @param plugin
+	 * @param file
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
 	static public ImageDescriptor getImageDescriptorFromPlugin(Plugin plugin, String file) {
-		try {
-			return ImageDescriptor.createFromURL(new URL(plugin.getDescriptor().getInstallURL(), file));
-		} catch (MalformedURLException e) {
+		URL url = Platform.find(plugin.getBundle(), new Path(file));
+		if (url != null)
+			return ImageDescriptor.createFromURL(url);
+		else
 			return ImageDescriptor.getMissingImageDescriptor();
-		}
 	}
 	
 	/* (non-Javadoc)

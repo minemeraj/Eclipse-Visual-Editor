@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyAttributeSettingCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class ApplyAttributeSettingCommand extends AbstractApplyAttributeCommand 
 					throw e;
 				}catch (RuntimeException e2) {
 					// Another happened, so just log this one and throw the original.				}
-					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e2));
+					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e2));
 				}					
 			}
 		} else {

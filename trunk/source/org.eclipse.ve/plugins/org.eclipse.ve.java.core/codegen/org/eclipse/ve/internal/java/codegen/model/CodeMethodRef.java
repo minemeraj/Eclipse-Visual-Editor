@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.17 $  $Date: 2004-05-24 23:23:46 $ 
  */
 
 import java.util.*;
@@ -352,7 +352,7 @@ protected List reorderInitExpsToTop(List unordered){
 		CodeExpressionRef exp = (CodeExpressionRef) allExpressions.next();
 //		int[] expPriorities = (int[])exp.getPriority();
 //		if(expPriorities==null){
-//			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
 //			expPriorities = new int[]{-1, -1};
 //		}
 //		if(expPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR ||
@@ -804,11 +804,11 @@ protected static Comparator getDefaultMethodComparator(){
 //			int[] r1Priorities = (int[])r1.getPriority();
 //			int[] r2Priorities = (int[])r2.getPriority();
 //			if(r1Priorities==null){
-//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
 //				r1Priorities = new int[]{-1, -1};
 //			}
 //			if(r2Priorities==null){
-//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
 //				r2Priorities = new int[]{-1, -1};
 //			}
 //			int sfPriority1 = r1Priorities[0];

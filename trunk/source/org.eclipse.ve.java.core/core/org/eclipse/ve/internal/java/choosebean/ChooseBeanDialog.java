@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.15 $  $Date: 2004-05-20 21:43:03 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-24 23:23:46 $ 
  */
 
 import java.util.*;
@@ -190,7 +190,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	}
 	
 	private QualifiedName getQualifiedName(){
-		return new QualifiedName(JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), JBCF_CHOOSEBEAN_SELHIST_KEY);
+		return new QualifiedName(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), JBCF_CHOOSEBEAN_SELHIST_KEY);
 	}
 	
 	public ChooseBeanDialog(Shell shell, IFile file, ResourceSet resourceSet, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
@@ -585,7 +585,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		}
 		Status status = new Status(
 							isInstantiable?IStatus.OK:IStatus.ERROR, 
-							JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 
+							JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 
 							IStatus.OK, 
 							message, 
 							t);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyDescriptorAdapterFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 import java.text.MessageFormat;
@@ -23,6 +23,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EModelElement;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.ve.internal.cde.core.CDEMessages;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
@@ -47,9 +48,9 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 	private static class AdapterType {
 		protected Class fDecoratorType;
 		protected String fDecoratorTypeName;
-		protected IPluginDescriptor fDecoratorTypeDescriptor;
+		protected Bundle decoratingTypeBundle;
 		protected String fFullDecoratorTypeName;
-		protected IPluginDescriptor fDeclaringDescriptor;
+		protected Bundle declaringBundle;
 		public IConfigurationElement fConfigElement;
 
 		public AdapterType(String typeName, IConfigurationElement config) {
@@ -59,14 +60,14 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 			fDecoratorTypeName = typeName.substring(slashNdx + 1, colonNdx == -1 ? typeName.length() : colonNdx);
 			fFullDecoratorTypeName = typeName;
 			fConfigElement = config;
-			fDeclaringDescriptor = config.getDeclaringExtension().getDeclaringPluginDescriptor();
+			declaringBundle = Platform.getBundle(config.getDeclaringExtension().getNamespace());
 
 			String decTypePlugin = typeName.substring(0, slashNdx == -1 ? 0 : slashNdx);
 			if (decTypePlugin.length() == 0)
-				fDecoratorTypeDescriptor = fDeclaringDescriptor;
+				decoratingTypeBundle = declaringBundle;
 			else {
-				fDecoratorTypeDescriptor = Platform.getPluginRegistry().getPluginDescriptor(decTypePlugin);
-				if (fDecoratorTypeDescriptor == null)
+				decoratingTypeBundle = Platform.getBundle(decTypePlugin);
+				if (decoratingTypeBundle == null)
 					fDecoratorTypeName = null; // The plugin doesn't exist, so don't allow matches ever.
 			}
 		}
@@ -87,10 +88,10 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 				return fDecoratorType.isInstance(instance);
 
 			// Type not yet loaded, see if the plugin is now active, if it is load the class
-			if (fDecoratorTypeDescriptor.isPluginActivated()) {
+			if (decoratingTypeBundle.getState() == Bundle.ACTIVE) {
 				// Load the class now to compare against.
 				try {
-					fDecoratorType = CDEPlugin.getClassFromString(fDeclaringDescriptor, fFullDecoratorTypeName);
+					fDecoratorType = CDEPlugin.getClassFromString(declaringBundle, fFullDecoratorTypeName);
 					return fDecoratorType.isInstance(instance);
 				} catch (ClassNotFoundException e) {
 					fDecoratorTypeName = null; // Set it to null, we can never match against it, so don't try.
@@ -105,7 +106,7 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 	public PropertyDescriptorAdapterFactory() {
 		// Build the adapter type cross-ref list.
 		IExtensionPoint point =
-			Platform.getPluginRegistry().getExtensionPoint(CDEPlugin.getPlugin().getPluginID(), CDEPlugin.ADAPTER_BY_TYPE_ID);
+			Platform.getExtensionRegistry().getExtensionPoint(CDEPlugin.getPlugin().getPluginID(), CDEPlugin.ADAPTER_BY_TYPE_ID);
 		if (point == null) {
 			fTypes = new AdapterType[0];
 			return;

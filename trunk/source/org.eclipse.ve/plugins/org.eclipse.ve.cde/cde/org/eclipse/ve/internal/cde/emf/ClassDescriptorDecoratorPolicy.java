@@ -11,24 +11,23 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:15 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.*;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;
-import org.eclipse.gef.EditPart;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
@@ -94,10 +93,8 @@ public class ClassDescriptorDecoratorPolicy {
 		ClassDescriptorDecorator classDecor = DecoratorsFactory.eINSTANCE.createClassDescriptorDecorator();
 		classDecor.setGraphViewClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart"); //$NON-NLS-1$
 		classDecor.setTreeViewClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultTreeEditPart"); //$NON-NLS-1$
-		try {
-			classDecor.setGraphic(UtilityFactory.eINSTANCE.createGIFFileGraphic((new URL(CDEPlugin.getPlugin().getDescriptor().getInstallURL(), "images/somepart.gif")).toString()));	//$NON-NLS-1$
-		} catch (MalformedURLException e) {
-		} 
+		URL url = Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif"));	//$NON-NLS-1$
+		classDecor.setGraphic(UtilityFactory.eINSTANCE.createGIFFileGraphic((url.toString())));	
 		classDecor.setLabelProviderClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.emf.DefaultLabelProvider"); //$NON-NLS-1$
 		registerDefaultDecorator(ClassDescriptorDecorator.class, classDecor);
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-20 21:42:35 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 
@@ -247,24 +247,14 @@ protected WorkbenchPartAction getCanvasDeleteAction(){
 public static String GEF_DELETE_LABEL;
 public static String getGEFDeleteLabel(){
 	if ( GEF_DELETE_LABEL == null ) {
-		org.eclipse.core.runtime.IPluginDescriptor desc = org.eclipse.core.runtime.Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.gef");//$NON-NLS-1$
-		try{
-			GEF_DELETE_LABEL = desc.getResourceString("%DeleteAction.Label"); //$NON-NLS-1$
-		}catch(MissingResourceException e){
-			GEF_DELETE_LABEL = "%DeleteAction.Label"; //$NON-NLS-1$
-		}
+		GEF_DELETE_LABEL = Platform.getResourceString(Platform.getBundle("org.eclipse.gef"), "%DeleteAction.Label"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return GEF_DELETE_LABEL;
 }
 public static String GEF_DELETE_TOOLTIP;
 public static String getGEFDeleteTooltip(){
 	if ( GEF_DELETE_TOOLTIP == null ) {
-		org.eclipse.core.runtime.IPluginDescriptor desc = org.eclipse.core.runtime.Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.gef");//$NON-NLS-1$
-		try{
-			GEF_DELETE_TOOLTIP = desc.getResourceString("%DeleteAction.Tooltip");	//$NON-NLS-1$
-		}catch(MissingResourceException e){
-			GEF_DELETE_TOOLTIP = "%DeleteAction.Label"; //$NON-NLS-1$
-		}
+		GEF_DELETE_TOOLTIP = Platform.getResourceString(Platform.getBundle("org.eclipse.gef"), "%DeleteAction.Tooltip"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return GEF_DELETE_TOOLTIP;
 }
@@ -842,7 +832,7 @@ protected final void setPaletteRoot() {
 		try {
 			palette = (PaletteRoot) getResourceSet().getEObject(URI.createURI("platform:/plugin/org.eclipse.ve.cde/cde_palette.xmi#cde_palette"), true); //$NON-NLS-1$
 		} catch (RuntimeException e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
 		}
 	}
 	
@@ -866,7 +856,7 @@ protected PaletteRoot getPaletteRoot() {
 			Palette ref = (Palette) getResourceSet().getEObject(URI.createURI(paletteHRef), true);
 			return (PaletteRoot) ref.getEntry();
 		} catch (RuntimeException e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
 		}
 	}	
 	
@@ -1255,13 +1245,13 @@ protected void save(IProgressMonitor monitor) {
 					}
 					fResource.save(os, XML_TEXT_OPTIONS);
 				} catch (Exception e) {
-					throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
+					throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
 				}
 				monitor.worked(1000);
 				InputStream stream= new ByteArrayInputStream(os.toByteArray());
 				file.setContents(stream, false, true, new SubProgressMonitor(monitor, 1000));				
 			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), e));
+				throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), e));
 			}
 			setDirty(false);
 			monitor.done();
@@ -1277,7 +1267,7 @@ protected void save(IProgressMonitor monitor) {
 		if (eReal instanceof CoreException) {
 			status = ((CoreException) eReal).getStatus();
 		} else {
-			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), eReal);
+			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), eReal);
 		}
 		CDEPlugin.getPlugin().getLog().log(status);
 		showErrorMessage(status.getMessage());
@@ -1333,7 +1323,7 @@ protected boolean performSaveAs(){
 		if (eReal instanceof CoreException) {
 			status = ((CoreException) eReal).getStatus();
 		} else {
-			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {path.toString()}), eReal);
+			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {path.toString()}), eReal);
 		}
 		CDEPlugin.getPlugin().getLog().log(status);
 		showErrorMessage(status.getMessage());
@@ -1347,7 +1337,7 @@ protected void saveAs(IProgressMonitor monitor, IFile file, Resource resource) t
 	try {
 		resource.save(os, XML_TEXT_OPTIONS);
 	} catch (Exception e) {
-		throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
+		throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
 	}
 	
 	InputStream stream= new ByteArrayInputStream(os.toByteArray());
@@ -1402,7 +1392,7 @@ protected void setInput(IEditorInput input) {
 			try { 
 				initializeWithNewRoot(rootModel);
 			} catch (Exception exc){
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", exc));				
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc));				
 			}
 			if (rootModel != null) {
 				EditPart baseEditPart = getEditPart(rootModel);
@@ -1417,7 +1407,7 @@ protected void setInput(IEditorInput input) {
 			}
 			
 		} catch (Exception exc) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", exc));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc));
 		}
 	}
 	// This has been moved out of the if statement so as to handle the case
@@ -1459,7 +1449,7 @@ protected void superSetInput( IEditorInput input ){
 				resourceListener =  new ResourceTracker();
 			file.getWorkspace().addResourceChangeListener( resourceListener );
 		}
-		setTitle( file.getName() );
+		setPartName( file.getName() );
 	}
 }
 /**

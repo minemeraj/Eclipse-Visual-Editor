@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-17 20:28:32 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-24 23:23:46 $ 
  */
 
 
@@ -165,7 +165,7 @@ public static void initializeDefaultPluginPreferences(Preferences aStore) {
  * @return true/false if a given option is given to the VM
  */
 public static boolean isOptionSet(String option) {
-    String  fullOption = getPlugin().getDescriptor().getUniqueIdentifier()+option ;
+    String  fullOption = getPlugin().getBundle().getSymbolicName()+option ;
     return   "true".equalsIgnoreCase(Platform.getDebugOption(fullOption)) ; //$NON-NLS-1$
 }
 

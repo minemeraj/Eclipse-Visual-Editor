@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridPropertiesDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
  */
 
 
@@ -73,7 +73,7 @@ public GridPropertiesDialog(Shell parentShell, GridController gridController) {
 protected void configureShell(Shell shell) {
 	super.configureShell(shell);
 	shell.setText(CDEMessages.getString("GridPropertiesDialog.label")); //$NON-NLS-1$
-	shell.setImage(getImage(DLG_IMG_QUESTION));	
+	shell.setImage(shell.getDisplay().getSystemImage(SWT.ICON_QUESTION));	
 
 }
 
