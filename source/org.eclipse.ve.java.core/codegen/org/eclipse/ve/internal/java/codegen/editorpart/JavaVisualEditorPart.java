@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.33 $  $Date: 2004-04-29 22:24:48 $ 
+ *  $Revision: 1.34 $  $Date: 2004-05-10 17:54:17 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -98,6 +98,8 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
+import com.ibm.wtp.common.util.PerformanceMonitorUtil;
+
 
 /**
  * @author richkulp
@@ -161,6 +163,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected SelectionServiceListener selectionServiceListener = new SelectionServiceListener();
 
 	public JavaVisualEditorPart() {
+		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 	}
 	
 	/* (non-Javadoc)
@@ -679,6 +682,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				loadingFigureController.showLoadingFigure(false);
 				setReloadEnablement(true);
 				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
+				if (doTimerStep) {
+					doTimerStep = false;	// Done with first load, don't do it again.
+					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.
+				}
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
 				throw e;
@@ -1241,13 +1248,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/*
 	 * Job to do the setup for a new input file (and initial initialization if needed).
 	 */
+	private boolean doTimerStep = true;	// Whether this is the first time for the editor and so do timer stepping.	
 	private static final Integer NATURE_KEY = new Integer(0);	// Used within Setup to save the nature	 
 	private class Setup extends Job {
 
 		public Setup(String name) {
 			super(name);
 		}
-				
+			
+		
 		protected IStatus run(IProgressMonitor monitor) {			
 			try {
 				monitor.beginTask("", 300);
@@ -1275,7 +1284,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 				
+				if (doTimerStep)
+					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
+				if (doTimerStep)
+					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
 				monitor.subTask("Initializing model");
 
 				if (monitor.isCanceled())
