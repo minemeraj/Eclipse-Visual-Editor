@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IOverideMethodVisitRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -37,7 +38,7 @@ static String RULE_ID = "ruleOverideMethod" ;	 //$NON-NLS-1$
  *
  * May be used with connection type methods
  */
-public ISourceVisitor overideMethodVisit(AbstractMethodDeclaration method, IBeanDeclModel model) ;
+public ISourceVisitor overideMethodVisit(MethodDeclaration method, IBeanDeclModel model) ;
 	
 
 

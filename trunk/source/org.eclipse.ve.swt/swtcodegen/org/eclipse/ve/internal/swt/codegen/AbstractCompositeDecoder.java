@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:42 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:50 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -188,7 +188,7 @@ public abstract class AbstractCompositeDecoder extends ObjectDecoder {
 				// Specelized Feature mappers may be able to get it anyhow.
 				method = fFeatureMapper.getMethodName();
 		if (method == null)
-			method = CodeGenUtil.getWriteMethod(fExpr);
+			method = AbstractFeatureMapper.getWriteMethod(fExpr);
 		return method != null && method.equals(methodName);
 	}
 

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventProcessingRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -30,7 +31,7 @@ public interface IEventProcessingRule extends IRule {
      * Beyond the init JCMMethod, should the given method be parsed for events
      * for a given bean part, bp.   e.g., initConnections()
      */
-	boolean  parseForEvents (AbstractMethodDeclaration method, BeanPart bp) ;	
+	boolean  parseForEvents (MethodDeclaration method, BeanPart bp) ;	
 	boolean  isEventInitMethodSigniture (String methodName) ;
 
 }

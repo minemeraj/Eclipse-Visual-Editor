@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -20,7 +20,8 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 
 
 import org.eclipse.ve.internal.jcm.JCMFactory;
@@ -35,21 +36,21 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class CodeMethodRef extends AbstractCodeRef {
 
 
-protected   AbstractMethodDeclaration   fdeclMethod = null ;
-protected   CodeTypeRef	             fTypeRef = null ;
-protected   ArrayList                   fExpressions = new ArrayList() ;
-protected   ArrayList					 fEventExpressions = new ArrayList() ;
-protected	 String                      fMethodHandle = null ;  // Unique handle in a class
-protected   String                      fMethodName ;
-protected   Object                      fSync ;
-protected   IBeanDeclModel              fModel = null ;
-protected   JCMMethod					 fcompMethod = null ;
-protected	 boolean					 fgenerationRequired = false ;
-protected	 boolean					 fStaleOffset = false ;
+protected   MethodDeclaration		fdeclMethod = null ;
+protected   CodeTypeRef				fTypeRef = null ;
+protected   ArrayList				fExpressions = new ArrayList() ;
+protected   ArrayList				fEventExpressions = new ArrayList() ;
+protected	String					fMethodHandle = null ;  // Unique handle in a class
+protected   String					fMethodName ;
+protected   Object					fSync ;
+protected   IBeanDeclModel			fModel = null ;
+protected   JCMMethod				fcompMethod = null ;
+protected	boolean					fgenerationRequired = false ;
+protected	boolean					fStaleOffset = false ;
 	
 
 
-    public CodeMethodRef (AbstractMethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
+    public CodeMethodRef (MethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
 	super(range.getOffset(),range.getLength(),content) ;
 	fSync = this ;
 	fTypeRef = tRef ;	      	
@@ -72,10 +73,10 @@ public CodeMethodRef (CodeTypeRef tr,String mName, JCMMethod cMethod) {
 	fcompMethod = cMethod ;
 }
 
-protected void setDeclMethod(AbstractMethodDeclaration method){
+protected void setDeclMethod(MethodDeclaration method){
 	fdeclMethod = method ;
 	if(fdeclMethod!=null){// && fMethod==null){
-		fMethodName = new String(fdeclMethod.selector);
+		fMethodName = method.getName().getIdentifier();
 	}
 }
 
@@ -83,7 +84,7 @@ public String getMethodName() {
 	return fMethodName ;
 }
 
-public AbstractMethodDeclaration getDeclMethod() {
+public MethodDeclaration getDeclMethod() {
 	return fdeclMethod ;
 }
 
@@ -684,7 +685,7 @@ public void setModel(IBeanDeclModel model) {
 public void refreshIMethod(){
 	try{
 	    try {
-	      if (!fModel.getCompilationUnit().isConsistent()) fModel.getCompilationUnit().reconcile() ;
+	      if (!fModel.getCompilationUnit().isConsistent()) fModel.getCompilationUnit().reconcile(false,null) ;
 	    }
 	    catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());
@@ -699,7 +700,7 @@ public void refreshIMethod(IMethod m) {
 	try {
 		if(m!=null){
 			setOffset(m.getSourceRange().getOffset()) ;
-			setContent(m.getSource());
+//			setContent(m.getSource());
 		}
 	} catch (JavaModelException e) {
 		JavaVEPlugin.log(e, Level.WARNING);
@@ -792,7 +793,7 @@ public void setOffset(int off) {
 }
 
 public void setContent(String content) {
-	super.setContent(content) ;
+	super.setContent(content) ;	
 	fStaleOffset = false ;
 }
 /**

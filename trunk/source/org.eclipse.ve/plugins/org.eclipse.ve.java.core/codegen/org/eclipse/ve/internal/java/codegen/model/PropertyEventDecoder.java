@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.PropertyEvent;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -233,6 +234,12 @@ public class PropertyEventDecoder implements IPropertyEventDecoder {
 	public ICodeGenAdapter createThisCodeGenInstanceAdapter(BeanPart bp) {
 		EObject bean = bp.getEObject();
 		return new ThisBeanDecoderAdapter(bean, bp);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#setStatement(org.eclipse.jdt.core.dom.Statement)
+	 */
+	public void setStatement(Statement s) {		
 	}
 
 }

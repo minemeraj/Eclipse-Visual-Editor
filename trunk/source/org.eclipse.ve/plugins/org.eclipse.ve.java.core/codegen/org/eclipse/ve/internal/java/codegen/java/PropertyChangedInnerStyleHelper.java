@@ -14,13 +14,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedInnerStyleHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+
 
 import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.jem.java.JavaClass;
@@ -52,9 +53,9 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.EventDecoderHelper#processEvent(org.eclipse.jdt.internal.compiler.ast.MessageSend)
 	 */
-	protected boolean processEvent(MessageSend event) {
+	protected boolean processEvent(MethodInvocation event) {
 							
-		Expression exp = event.arguments[event.arguments.length-1] ;
+		Expression exp = (Expression) event.arguments().get(event.arguments().size()-1) ;
 		
 		cleanUpPreviousIfNedded() ;
 		int index = getInvocationIndex();			
@@ -64,10 +65,10 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 		if (listenRegMethod != null)
 		   ee.setAddMethod(listenRegMethod) ;	 
 		          
-		if (exp instanceof SingleNameReference) {
+		if (exp instanceof SimpleName) {
 			// Instance of Event
-			SingleNameReference nr = (SingleNameReference) exp;
-			JavaClass clazz = resolveInstance(nr.token);
+			SimpleName nr = (SimpleName) exp;
+			JavaClass clazz = resolveInstance(nr.getIdentifier().toCharArray());
 			if (clazz == null)
 				return false;
 				
@@ -166,27 +167,31 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 	 */
 	protected static String processCondition (Expression condition) {
 		String result = null;
-		if (condition instanceof MessageSend) {
-			if ((((MessageSend) condition).receiver) instanceof MessageSend) {
-				MessageSend rec = (MessageSend) (((MessageSend) condition).receiver);
-				if (new String(rec.selector).equals(PropertyChangeInvocationHelper.PROPERTY_NAME_GETTER)) {
-					MessageSend ms = (MessageSend) condition;
-					if (ms.arguments != null && ms.arguments.length == 1 && ms.arguments[0] instanceof StringLiteral)
-						result = new String(((StringLiteral) ms.arguments[0]).source());
+		if (condition instanceof MethodInvocation) {
+			if ((((MethodInvocation) condition).getExpression()) instanceof MethodInvocation) {
+				MethodInvocation rec = (MethodInvocation) (((MethodInvocation) condition).getExpression());
+				if (rec.getName().getIdentifier().equals(PropertyChangeInvocationHelper.PROPERTY_NAME_GETTER)) {
+					MethodInvocation ms = (MethodInvocation) condition;
+					if (ms.arguments().size() == 1 && ms.arguments().get(0) instanceof StringLiteral)
+						result = ((StringLiteral) ms.arguments().get(0)).getLiteralValue();
 				}
 			}
 		}
-		else if (condition instanceof BinaryExpression) {
-			BinaryExpression be = (BinaryExpression) condition;
-			result = processCondition(be.left);
+		else if (condition instanceof InfixExpression) {
+			InfixExpression be = (InfixExpression) condition;
+			result = processCondition(be.getLeftOperand());
 			if (result == null)
-				result = processCondition(be.right);
+				result = processCondition(be.getRightOperand());
 		}
+		else if (condition instanceof ParenthesizedExpression) {
+			return processCondition(((ParenthesizedExpression)condition).getExpression());
+		}
+		
 		return result;
 	}
 	
 	public static String parsePropertyFromIfStatement(IfStatement stmt) {
-		return processCondition(stmt.condition) ;		
+		return processCondition(stmt.getExpression()) ;		
 	}
 	/**
 	 * During parsing, we should have matched call back expressions to a given bean
@@ -200,10 +205,10 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 		List pList = new ArrayList() ;				
 		for (Iterator iter = fbeanPart.getRefCallBackExpressions().iterator(); iter.hasNext();) {
 			CodeCallBackRef exp = (CodeCallBackRef) iter.next();
-			if (getInnerName(c).equals(exp.getMethod().getTypeRef().getName())) {
+			if (getInnerName(c).equals(exp.getMethod().getTypeRef().getSimpleName())) {
 				String mname = exp.getMethod().getMethodName() ;
-				if (mname.equals(PROPERTY_CALLBACK_NAME) && exp.getExpression() instanceof IfStatement) {
-					String property = parsePropertyFromIfStatement((IfStatement)exp.getExpression()) ;					
+				if (mname.equals(PROPERTY_CALLBACK_NAME) && exp.getExprStmt() instanceof IfStatement) {
+					String property = parsePropertyFromIfStatement((IfStatement)exp.getExprStmt()) ;					
 					
 					PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
 					pList.add(pe) ;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.java.codegen.model.CodeEventHandlerRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -39,9 +39,9 @@ public EventHandlerVisitor (TypeDeclaration node, IBeanDeclModel model, boolean 
 
 public void visit()  {
 
-	AbstractMethodDeclaration[] methods = fType.getTypeDecl().methods;
+	MethodDeclaration[] methods = fType.getTypeDecl().getMethods();
 	if (forceJDOMUsage) {
-//.. have not done anything for snippet here... need to verify
+//TODO.. have not done anything for snippet here... need to verify
 //		
 		// No compilation unit... depend on jdom solely
 		if(methods==null || methods.length==0)
@@ -50,8 +50,7 @@ public void visit()  {
 			int methodHandleUseCount = 0;
 			for(int i=0; i<methods.length; i++){
 				if(	(methods[i]!=null) &&
-					(methods[i] instanceof MethodDeclaration || 
-					 methods[i] instanceof ConstructorDeclaration)){
+					 methods[i] instanceof MethodDeclaration ){
 					String thisMethodHandle = ""; //$NON-NLS-1$
 					if (methods[i] instanceof MethodDeclaration) {
 						thisMethodHandle = methodHandles[methodHandleUseCount];
@@ -62,17 +61,18 @@ public void visit()  {
 					// Please see CodeSnippetModelBuilder.updateMethodOffsets() to see how
 					// the declaration Source starts, and the declaration source ends are 
 					// being modified. This is due to inconsistency between JDOM and JDT.
+//					
 					new EventMethodCallBackVisitor( methods[i], fModel, fType, thisMethodHandle, // null,
-								 getSourceRange(methods[i].declarationSourceStart,methods[i].declarationSourceEnd), 
-								 new String(content).substring(methods[i].declarationSourceStart, methods[i].declarationSourceEnd)).
-								 visit();
+								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()),
+						         String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength())).  
+								 visit();								 
 				}
 			}
 		}catch(Exception e){
 			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
-		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit(), fType.getName()), fModel);
+		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit(), fType.getSimpleName()), fModel);
 		if(cuMethods==null || cuMethods.length<1)
 			return;
 		// Compilation unit methods and jdom methods should match.
@@ -83,15 +83,14 @@ public void visit()  {
 			for (; i < methods.length ; i++){
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
-					(methods[i] instanceof MethodDeclaration ||
-					 methods[i] instanceof ConstructorDeclaration)) {
+					 methods[i] instanceof MethodDeclaration) {
 					new EventMethodCallBackVisitor(methods[i],fModel,fType,((IMethod)cuMethods[i]).getHandleIdentifier(),
 								cuMethods[i].getSourceRange(),
 								cuMethods[i].getSource()).visit();
 				}
 			}
 		}catch (JavaModelException e) {
-			JavaVEPlugin.log ("EventHandlerVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+			JavaVEPlugin.log ("EventHandlerVisitor.visit() could not visit"+String.valueOf(methods[i].getName())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

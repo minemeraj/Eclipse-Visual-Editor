@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-05 19:20:32 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:46 $ 
  */
 
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class JTableDecoder extends AbstractCompositionalDecoder {
 	}
 
 	protected IExpressionDecoderHelper getAppropriateDecoderHelper(String structuralFeature) {
-		// return new ChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
+		// return new ChildRelationshipDecoderHelper(fbeanPart, fexpStmt,  fFeatureMapper, this);
 		return new JFCNoConstraintAddDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
 	}
 

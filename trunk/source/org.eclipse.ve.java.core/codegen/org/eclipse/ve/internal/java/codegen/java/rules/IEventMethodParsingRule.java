@@ -14,11 +14,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventMethodParsingRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 /**
@@ -28,6 +29,6 @@ public interface IEventMethodParsingRule extends IRule {
 
 	static final String 	RULE_ID = "ruleEventMethodParsing" ;	 //$NON-NLS-1$
 
-	public boolean ignoreAnonymousEventMethod (AbstractMethodDeclaration m) ;
+	public boolean ignoreAnonymousEventMethod (MethodDeclaration m) ;
 
 }

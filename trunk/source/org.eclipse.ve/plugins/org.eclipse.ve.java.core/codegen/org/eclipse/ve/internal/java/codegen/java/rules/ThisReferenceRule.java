@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.Iterator;
@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
@@ -48,7 +48,7 @@ public class ThisReferenceRule implements IThisReferenceRule {
 	public final static String[] ignoredAttributes = new String[] { "allocation", "implicit", "instantiateUsing", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		"serializeData", "class", "listeners", "events" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	public ISourceVisitor overideThisReferenceVisit(AbstractMethodDeclaration mDecl, MessageSend exp, IBeanDeclModel model) {
+	public ISourceVisitor overideThisReferenceVisit(MethodDeclaration mDecl, MethodInvocation exp, IBeanDeclModel model) {
 		return null;
 	}
 
@@ -62,10 +62,10 @@ public class ThisReferenceRule implements IThisReferenceRule {
 		return false;
 	}
 
-	public boolean shouldProcess(AbstractMethodDeclaration method, MessageSend stmt) {
+	public boolean shouldProcess(MethodDeclaration method, MethodInvocation stmt) {
 
 		// VAJ's initialization method
-		String sel = new String(method.selector);
+		String sel = method.getName().getIdentifier();
 		for (int i = 0; i < INIT_METHOD_NAME.length; i++)
 			if (sel.equals(INIT_METHOD_NAME[i]))
 				return true;

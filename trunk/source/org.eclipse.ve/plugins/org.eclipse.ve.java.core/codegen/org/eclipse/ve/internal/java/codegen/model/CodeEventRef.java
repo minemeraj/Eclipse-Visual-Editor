@@ -10,14 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
 import java.util.Iterator;
 
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Statement;
+
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -34,7 +35,7 @@ public class CodeEventRef extends CodeExpressionRef {
 	private 	AbstractEventInvocation		fEventInvocation = null ;
 	protected	IEventDecoder				fDecoder     = null ; 
 
-	public CodeEventRef(Statement exp, CodeMethodRef method, CompilationUnitDeclaration dom) {
+	public CodeEventRef(Statement exp, CodeMethodRef method, CompilationUnit dom) {
 		super(exp, method);		
 	}
 	
@@ -173,7 +174,7 @@ public synchronized boolean  decodeExpression() throws CodeGenException {
 	/**
  *  Generate this. expression 
  */
-public synchronized String generateSource(AbstractEventInvocation ei) throws CodeGenException {
+public String generateSource(AbstractEventInvocation ei) throws CodeGenException {
 
 	if (!isStateSet(STATE_EXIST))
 		return null;
@@ -189,6 +190,13 @@ public synchronized String generateSource(AbstractEventInvocation ei) throws Cod
 	setOffset(-1);
 	fEventInvocation = ei;
 	getEventDecoder().setEventInvocation(fEventInvocation) ;
+	try {
+	   refreshAST();
+	   getEventDecoder().setStatement(fexpStmt);
+	}
+	catch (Exception e1) {
+//		  JavaVEPlugin.log(e1) ;
+	}
 	return result;
 }
 
@@ -291,15 +299,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 		}
 		return -1;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef#isEquivalentChanged(org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef, org.eclipse.ve.internal.java.codegen.java.ITypeResolver)
-	 */
-	public boolean isEquivalentChanged(ITypeResolver oldResolver, CodeExpressionRef newExp, ITypeResolver newResolver) {
-		// TODO Auto-generated method stub
-		return super.isEquivalentChanged(oldResolver, newExp, newResolver);
-	}
-	
+ 	
 	protected IJVEDecoder primGetDecoder() {
 	   return getEventDecoder() ;
 	}
@@ -309,8 +309,8 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	 */
 	public synchronized void refreshFromJOM(CodeExpressionRef exp) {
 		// Reset the event invocation - it may instigate a decoder to reset its helper
-		if (exp.getExpression() != null)
-			setExpression(exp.getExpression());
+		if (exp.getExprStmt() != null)
+			setExprStmt(exp.getExprStmt());
 		setEventInvocation(((CodeEventRef)exp).getEventInvocation()) ;
 		super.refreshFromJOM(exp);
 	}

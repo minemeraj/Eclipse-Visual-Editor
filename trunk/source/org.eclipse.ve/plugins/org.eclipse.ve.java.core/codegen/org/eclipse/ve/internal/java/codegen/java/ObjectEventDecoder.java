@@ -10,14 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectEventDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.MessageSend;
-import org.eclipse.jdt.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.jcm.EventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
@@ -35,15 +33,17 @@ public class ObjectEventDecoder extends AbstractEventDecoder {
 
 		IEventDecoderHelper helper = null;
 		if (exp != null) {
-			if (exp instanceof MessageSend) {
-				if (((MessageSend) exp).arguments != null && ((MessageSend) exp).arguments.length == 1) {
+			if (exp instanceof ExpressionStatement &&
+				((ExpressionStatement)exp).getExpression() instanceof MethodInvocation ) {
+				MethodInvocation mi = (MethodInvocation)((ExpressionStatement)exp).getExpression();
+				if (mi.arguments().size()== 1) {
 
 					// regular VCE pattern
-					boolean innerType = ((MessageSend) exp).arguments[0] instanceof SingleNameReference;
+					boolean innerType = mi.arguments().get(0) instanceof SimpleName;
 					// jBuilder pattern
-					if (((MessageSend) exp).arguments[0] instanceof AllocationExpression) {
-						AllocationExpression ae = (AllocationExpression) ((MessageSend) exp).arguments[0];
-						if (ae.arguments != null && ae.arguments.length == 1 && (ae.arguments[0] instanceof ThisReference))
+					if (mi.arguments().get(0) instanceof ClassInstanceCreation) {
+						ClassInstanceCreation ae = (ClassInstanceCreation) mi.arguments().get(0);
+						if (ae.arguments().size() == 1 && (ae.arguments().get(0) instanceof ThisExpression))
 							innerType = true;
 					}
 
@@ -65,7 +65,7 @@ public class ObjectEventDecoder extends AbstractEventDecoder {
 						}
 					}
 				}
-				else if (((MessageSend) exp).arguments.length == 2 && getEventInvocation() instanceof PropertyChangeEventInvocation) {
+				else if (((MethodInvocation) mi).arguments().size() == 2 && getEventInvocation() instanceof PropertyChangeEventInvocation) {
 					// "property",Listener signiture
 					helper = new PropertyChangedAllocationStyleHellper(fbeanPart, exp, this);
 				}

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventProcessingRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -30,10 +31,10 @@ public class EventProcessingRule implements IEventProcessingRule {
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IEvenProcessingRule#parseForEvents(AbstractMethodDeclaration, BeanPart)
 	 */
-	public boolean parseForEvents(AbstractMethodDeclaration method, BeanPart bp) {
+	public boolean parseForEvents(MethodDeclaration method, BeanPart bp) {
         // Parse this method for events, if it is the init method, or if it is a initConnection JCMMethod.		                                   
-		if (EVENT_INIT_METHOD.equals(new String(method.selector))) { 
-			if (method.arguments == null)
+		if (EVENT_INIT_METHOD.equals(method.getName().getIdentifier())) { 
+			if (method.parameters().size() == 0)
 			  return true ;
 		}	
 		else if (bp.isInitMethod(method))

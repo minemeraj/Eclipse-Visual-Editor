@@ -11,17 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 
 import java.util.List;
-import java.util.logging.Level;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.eval.CodeSnippetReturnStatement;
+import org.eclipse.jdt.core.dom.*;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IReturnStmtRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -31,12 +28,12 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
 public class ReturnStmtVisitor extends SourceVisitor {
 	
-CodeMethodRef             fMethod = null ;
-ReturnStatement		  fReturnStmt = null ;
+CodeMethodRef		fMethod = null ;
+ReturnStatement		fReturnStmt = null ;
 	
 
 ReturnStmtVisitor(CodeMethodRef method,ReturnStatement stmt,IBeanDeclModel model,List reTryList) {
-	super((ASTNode)stmt,model,reTryList) ;	
+	super(stmt,model,reTryList) ;	
 	fMethod = method ;
 	fReturnStmt = stmt ;
 }
@@ -46,29 +43,25 @@ ReturnStmtVisitor(CodeMethodRef method,ReturnStatement stmt,IBeanDeclModel model
  */
 void processAReturnStatement() {
 	
-	Expression exp = fReturnStmt.expression ;
-	
-	if (exp instanceof SingleNameReference) {
-		String value = new String (((SingleNameReference)exp).token) ;
-		String localValue = BeanDeclModel.constructUniqueName(fMethod,value) ;		
-		BeanPart bean  ;
-		// It is possible that we have a local decleration with the same name of an 
-		// instance variable.  If a local is defined, the return method is for it.
-		bean = fModel.getABean(localValue) ;
-		if (bean == null)
-		   bean = fModel.getABean(value) ;
-		if (bean != null) {
-			bean.addReturnMethod(fMethod) ;
-			try {
-			  fModel.addMethodReturningABean(new String(fMethod.getDeclMethod().selector),bean.getUniqueName()) ;
+	Expression exp = fReturnStmt.getExpression();
+
+		if (exp instanceof SimpleName) {
+			String value = ((SimpleName) exp).getIdentifier();
+			String localValue = BeanDeclModel.constructUniqueName(fMethod, value);
+			BeanPart bean;
+			// It is possible that we have a local decleration with the same name of an
+			// instance variable. If a local is defined, the return method is for it.
+			bean = fModel.getABean(localValue);
+			if (bean == null)
+				bean = fModel.getABean(value);
+			if (bean != null) {
+				bean.addReturnMethod(fMethod);
+				try {
+					fModel.addMethodReturningABean(fMethod.getDeclMethod().getName().getIdentifier(), bean.getUniqueName());
+				} catch (CodeGenException e) { // Should not be here
+				}
 			}
-			catch (CodeGenException e) { // Should not be here
-		      }
 		}
-	}
-	
-	
-	
 } 
  
 	
@@ -86,12 +79,8 @@ public void visit(){
 		}
 	}
 		
-	if (!(fReturnStmt instanceof CodeSnippetReturnStatement) && 
-		fReturnStmt instanceof ReturnStatement) 
-	              processAReturnStatement () ;	
-      else
-        JavaVEPlugin.log ("... did not process Expression:"+fReturnStmt, Level.FINE) ; //$NON-NLS-1$
-	
+	processAReturnStatement () ;	
+    
 	
 }
 

@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IIfStatementRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.IfStatement;
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -44,8 +46,8 @@ static int        PROCESS_OVERIDE = -1 ;    // us overideMethodVisit()
  * Unique method visits (like VAJ's "initialize()" method) can be used
  * @return ISourceVisitor - the object which will overide the method's visit
  */
-public ISourceVisitor   overideIFVisit(AbstractMethodDeclaration method, IfStatement stmt, IBeanDeclModel model) ;
-public int		      whichPartToProcess(AbstractMethodDeclaration method, IfStatement stmt) ;
+public ISourceVisitor   overideIFVisit(MethodDeclaration method, IfStatement stmt, IBeanDeclModel model) ;
+public int		      	whichPartToProcess(MethodDeclaration method, IfStatement stmt) ;
 	
 
 }

@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
@@ -38,7 +38,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	protected Object fPriority = null;
 
 	public AbstractExpressionDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance bldr, BeanPart part) {
-		fExpr = (Statement) expr.getExpression();
+		fExpr =  expr.getExprStmt();
 		fExprRef = expr;
 		fExprRef.setDecoder(this);
 		fBeanModel = model;
@@ -123,8 +123,8 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	public boolean decode() throws CodeGenException {
 
 		// Refresh decoder 
-		if ((getExprRef().getExpression() != null) && (getExprRef().getExpression() != fExpr))
-			fExpr = getExprRef().getExpression();
+		if ((getExprRef().getExprStmt() != null) && (getExprRef().getExprStmt() != fExpr))
+			fExpr = getExprRef().getExprStmt();
 
 		if (fFeatureMapper != null && fFeatureMapper.getMethodName() == null)
 			fFeatureMapper = null;
@@ -204,7 +204,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 	public void setExpression(CodeExpressionRef expr) {
 		fExprRef = expr;
-		fExpr = (Statement) expr.getExpression();
+		fExpr = (Statement) expr.getExprStmt();
 		fExprRef.setDecoder(this);
 		if (fhelper != null)
 			fhelper.setDecodingContent(fExpr);
@@ -392,6 +392,14 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		if (getHelper() != null)
 			return getHelper().canRefreshFromComposition();
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#setStatement(org.eclipse.jdt.core.dom.Statement)
+	 */
+	public void setStatement(Statement s) {
+		fExpr=s;
+		getHelper().setDecodingContent(s);
 	}
 
 }

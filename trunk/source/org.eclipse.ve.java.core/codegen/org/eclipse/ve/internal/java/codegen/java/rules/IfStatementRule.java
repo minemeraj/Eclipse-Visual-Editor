@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IfStatementRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.IfStatement;
+
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -26,7 +28,7 @@ public class IfStatementRule implements IIfStatementRule {
 	/**
 	 *  No Overide
 	 */
-	public ISourceVisitor overideIFVisit(AbstractMethodDeclaration method, IfStatement stmt, IBeanDeclModel model) {
+	public ISourceVisitor overideIFVisit(MethodDeclaration method, IfStatement stmt, IBeanDeclModel model) {
 		return null;
 	}
 
@@ -34,7 +36,7 @@ public class IfStatementRule implements IIfStatementRule {
 	 *  We can try to use some pattern analysys.  e.g., VAJ's initialization as 
 	 *  if (ivjFoo == null) {  initialize block }
 	 */
-	public int whichPartToProcess(AbstractMethodDeclaration method, IfStatement stmt) {
+	public int whichPartToProcess(MethodDeclaration method, IfStatement stmt) {
 		// This will do for now,
 		return PROCESS_IF;
 	}

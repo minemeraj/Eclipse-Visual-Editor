@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -152,8 +152,8 @@ private CodeEventRef createNewEventExpression(CodeEventRef e, CodeMethodRef m, b
 	CodeEventRef newe = new CodeEventRef(m, b);
 	newe.setState(CodeExpressionRef.STATE_NO_MODEL, e.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
 	newe.setState(CodeExpressionRef.STATE_INIT_EXPR, e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR));
-	newe.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //fExpr.getState() | fExpr.STATE_SRC_LOC_FIXED) ;
-	newe.setExpression(e.getExpression()) ;
+	newe.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //fexpStmt.getState() | fexpStmt.STATE_SRC_LOC_FIXED) ;
+	newe.setExprStmt(e.getExprStmt()) ;
 	newe.setContent(e.getContentParser()) ;
 	newe.setOffset(e.getOffset()) ;
  	newe.setEventInvocation(e.getEventInvocation());
@@ -171,7 +171,7 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
 	    boolean updated = false ;
 		if (oExp != null && dExp != null && !dExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 			if (oExp.isEquivalent(dExp) < 0) throw new CodeGenException("No the same Expressions"); //$NON-NLS-1$
-			oExp.setExpression(dExp.getExpression());
+			oExp.setExprStmt(dExp.getExprStmt());
 		}
         if (oExp != null && dExp != null)
            oExp.updateLimboState(dExp) ;

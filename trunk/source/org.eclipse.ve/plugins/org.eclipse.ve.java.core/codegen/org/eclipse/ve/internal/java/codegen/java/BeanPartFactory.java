@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.17 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.18 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -20,10 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
 
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
 
@@ -42,6 +39,7 @@ import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 
 
 
@@ -207,6 +205,7 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 				// Offsets will be updated with a call to refreshMethods on mref
 				newMethod = cuType.createMethod(newMSrc, getSiblingForNewMEthod(cuType, false, false), false, null);
 				mref.setMethodHandle(newMethod.getHandleIdentifier());
+				// Need to set the source overhere, so that we can parse the init expression
 				mref.setContent(newMethod.getSource());
 				fBeanModel.addMethodInitializingABean(mref);
 			} catch (JavaModelException e) {
@@ -686,21 +685,24 @@ public static CodeExpressionRef getInstanceInitializationExpr(BeanPart bp) {
     for (Iterator itr = bp.getRefExpressions().iterator(); itr.hasNext();) {
         CodeExpressionRef exp = (CodeExpressionRef) itr.next();
         if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-            if (exp.getExpression()!=null) {
-                Expression e=null ;
-                if (exp.getExpression() instanceof Assignment) {
-                     e = ((Assignment)exp.getExpression()).expression ;
-                }
-                else if (exp.getExpression() instanceof LocalDeclaration) {
-                     e = ((LocalDeclaration)exp.getExpression()).initialization ;
-                }
-                // If it is of type STAT_INI_EXPR .. this should be it.
-                if (e != null && (e instanceof AllocationExpression ||
-								   e instanceof ArrayAllocationExpression ||
-                                   e instanceof CastExpression ||
-                                   e instanceof MessageSend))
-                            return exp ;
-            }
+//            if (exp.getExprStmt()!=null) {
+//                Expression e=null ;
+//                if (exp.getExprStmt() instanceof Assignment) {
+//                     e = ((Assignment)exp.getExprStmt()).expression ;
+//                }
+//                else if (exp.getExprStmt() instanceof LocalDeclaration) {
+//                     e = ((LocalDeclaration)exp.getExprStmt()).initialization ;
+//                }
+//                // If it is of type STAT_INI_EXPR .. this should be it.
+//                if (e != null && (e instanceof AllocationExpression ||
+//								   e instanceof ArrayAllocationExpression ||
+//                                   e instanceof CastExpression ||
+//                                   e instanceof MessageSend))
+//                            return exp ;
+//            }
+        	// Time to open this up.... any init expression will go - we should build
+        	// the proper Parsed tree for this
+        	return exp;
         }       
     }
     return null ;
@@ -708,6 +710,7 @@ public static CodeExpressionRef getInstanceInitializationExpr(BeanPart bp) {
 
 /**
  * Update the IJavaObjectInstance initialization string
+ * @deprecated Constructor decoder should update allocation from now on
  */
 public static void updateInstanceInitString(BeanPart bp) {
     IJavaObjectInstance obj = (IJavaObjectInstance)bp.getEObject() ;
@@ -715,9 +718,8 @@ public static void updateInstanceInitString(BeanPart bp) {
     CodeExpressionRef exp = getInstanceInitializationExpr(bp) ;
     // if there is no constructor decoder, initialize the allocation directly from the code
     if (exp != null && exp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
-        Statement e = exp.getExpression() ;
-        if (e instanceof Assignment || e instanceof LocalDeclaration)
-            obj.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(CodeGenUtil.getResolvedInitString(e, bp.getModel())));
+    	// we should not be here anymore !!!!!!!!
+    	JavaVEPlugin.log("BeanPartFactory.updateInstanceInitString(): Should not be here",Level.WARNING);    	
     }
 }
 

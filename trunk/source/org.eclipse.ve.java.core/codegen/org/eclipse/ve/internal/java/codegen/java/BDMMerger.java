@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-23 21:20:49 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -383,8 +385,8 @@ public class BDMMerger {
 		CodeEventRef newe = new CodeEventRef(m, b);
 		newe.setState(CodeExpressionRef.STATE_NO_MODEL, e.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
 		newe.setState(CodeExpressionRef.STATE_INIT_EXPR, e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR));
-		newe.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //fExpr.getState() | fExpr.STATE_SRC_LOC_FIXED) ;
-		newe.setExpression(e.getExpression()) ;
+		newe.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //fexpStmt.getState() | fexpStmt.STATE_SRC_LOC_FIXED) ;
+		newe.setExprStmt(e.getExprStmt()) ;
 		newe.setContent(e.getContentParser()) ;
 		newe.setOffset(e.getOffset()) ;
 		newe.setEventInvocation(e.getEventInvocation());
@@ -551,7 +553,11 @@ public class BDMMerger {
 		runSyncDisplay(new Runnable(){
 			public void run(){
 				// New bean - add it and any methods associated with it
-				BeanPart newBP = new BeanPart(referenceBP.getFieldDecl()) ;
+				BeanPart newBP ;
+				if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
+					newBP = new BeanPart((FieldDeclaration)referenceBP.getFieldDecl()) ;
+				else
+					newBP = new BeanPart((VariableDeclarationStatement)referenceBP.getFieldDecl());
 				newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
 				newBP.setInstanceVar(referenceBP.isInstanceVar()) ;
 				newBP.setModel(mainModel) ;
@@ -619,8 +625,8 @@ public class BDMMerger {
 				IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(mainModel).getRule(IThisReferenceRule.RULE_ID) ;
 				String typeName = referenceBP.getModel().resolveThis() ;
 				String superName = null ;
-				if (referenceBP.getModel().getTypeRef().getTypeDecl().superclass != null)
-					superName = referenceBP.getModel().resolve(CodeGenUtil.tokensToString(referenceBP.getModel().getTypeRef().getTypeDecl().superclass.getTypeName())) ;
+				if (referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass() != null)
+					superName = CodeGenUtil.resolve(referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass(),referenceBP.getModel()) ;
 				ResourceSet rs = mainModel.getCompositionModel().getModelResourceSet() ;
 				// The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
 				// So, try the super first    
@@ -713,8 +719,8 @@ public class BDMMerger {
 				// Remove bean if type has changed
 				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());
 				boolean isThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
-				String mainType = isThisPart?CodeGenUtil.tokensToString(mainBean.getModel().getTypeDecleration().superclass.getTypeName()) : mainBean.getType();
-				String newType = isThisPart?CodeGenUtil.tokensToString(newBean.getModel().getTypeDecleration().superclass.getTypeName()) : newBean.getType();
+				String mainType = isThisPart?CodeGenUtil.resolve(mainBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) : mainBean.getType();
+				String newType = isThisPart?CodeGenUtil.resolve(newBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) : newBean.getType();
 				boolean typeChanged = !mainType.equals(newType) ;
 				if(typeChanged){
 					logFiner("Removing changed type bean "+ mainBean.getSimpleName());

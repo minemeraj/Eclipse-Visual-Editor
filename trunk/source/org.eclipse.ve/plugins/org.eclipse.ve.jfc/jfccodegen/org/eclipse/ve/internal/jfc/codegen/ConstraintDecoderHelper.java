@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:16 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:46 $ 
  */
 
 
@@ -21,7 +21,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
@@ -87,14 +89,15 @@ public static void addDimensionFeatureValue (MemberContainer pOwner, EObject tar
 protected boolean	addConstraintFeature() throws CodeGenException {
 	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null) throw new CodeGenException ("null EObject:"+fExpr) ;       //$NON-NLS-1$
 		
+	MethodInvocation exp = (MethodInvocation)getExpression();
 	try {
         if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_BOUND)) {
      	    // TODO  Need to deal with Rectangle arg
-    	    if (((MessageSend)fExpr).arguments.length == 4)   {
+    	    if (exp.arguments().size() == 4)   {
    		   // Create a dimension from the width and height of the rectangle
    		   fConstraints = new int[4] ;
    		   for (int i=0; i<4; i++) 
-   		     fConstraints[i] = Integer.parseInt(((MessageSend)fExpr).arguments[i].toString()) ;
+   		     fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString()) ;
                addRectangleFeatureValue(fbeanPart.getInitMethod().getCompMethod(),
    		                       fbeanPart.getEObject(),
    		                       fConstraints,
@@ -109,10 +112,10 @@ protected boolean	addConstraintFeature() throws CodeGenException {
         else
         	if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_SIZE)) {
 		       	// TODO  Need to deal with Dimension arg
-		       	if (((MessageSend)fExpr).arguments.length == 2)  {
+		       	if (exp.arguments().size() == 2)  {
 		       	   fConstraints = new int[2] ;
 		   		   for (int i=0; i<2; i++) 
-		   		     fConstraints[i] = Integer.parseInt(((MessageSend)fExpr).arguments[i].toString()) ;
+		   		     fConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString()) ;
 		       	   
 		       	   // Create a dimension from the width and height of the rectangle    
 		       	  addDimensionFeatureValue(fbeanPart.getInitMethod().getCompMethod(),  	
@@ -129,10 +132,10 @@ protected boolean	addConstraintFeature() throws CodeGenException {
           else 
           		// Check if only string is inside. We assume that this decoder helper 
           		// _really_ trusts the expression it has been given to handle.
-			if((((MessageSend)fExpr).arguments.length == 1) && 
-			   (((MessageSend)fExpr).arguments[1] instanceof StringLiteral)){
+			if((exp.arguments().size() == 1) && 
+			   (exp.arguments().get(0) instanceof StringLiteral)){
 				// String is the constraint parameter 
-		            String constraint = ((MessageSend)fExpr).arguments[1].toString() ;
+		            String constraint = exp.arguments().get(0).toString() ;
 		            // Add the constraint to the added part
 		           	CodeGenUtil.addConstraintString(fbeanPart.getInitMethod().getCompMethod(),
 		           	                                fbeanPart.getEObject(), constraint,

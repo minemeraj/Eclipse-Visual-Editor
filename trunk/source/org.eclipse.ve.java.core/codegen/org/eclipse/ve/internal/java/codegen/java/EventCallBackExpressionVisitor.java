@@ -10,12 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventCallBackExpressionVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
 

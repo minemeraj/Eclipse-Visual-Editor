@@ -14,14 +14,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
@@ -64,12 +66,16 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 		return valid ;
 	}
 	
-	protected boolean isSameArgs(AbstractMethodDeclaration md, Method m) {
+	protected boolean isSameArgs(MethodDeclaration md, Method m) {
 		boolean result = true ;
 		for (int i=0; i<m.getParameters().size(); i++) {
 			JavaParameter p = (JavaParameter) m.getParameters().get(i) ;
-			Argument a = md.arguments[i] ;
-			String atype = fbeanPart.getModel().resolve(a.type.toString()) ;
+			SingleVariableDeclaration a = (SingleVariableDeclaration) md.parameters().get(i) ;
+			String atype ;
+			if (a.getType() instanceof SimpleType)
+				atype = CodeGenUtil.resolve(((SimpleType)a.getType()).getName(),fbeanPart.getModel());
+			else
+				atype = a.getType().toString();  // Need more specifics for arrays
 			if (!p.getJavaType().getQualifiedName().equals(atype)) {
 				result = false ;
 				break ;
@@ -80,25 +86,34 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 		return result ;
 	}
 	
+	protected List getMethods(List bodyDecleration) {
+		List methods = new ArrayList();
+		for (int i = 0; i < bodyDecleration.size(); i++) {
+			if (bodyDecleration.get(i) instanceof MethodDeclaration)
+				methods.add(bodyDecleration.get(i));
+		}
+		return methods;
+	}
 	/**
 	 * Parse an anonymouse type and find the list of (event) methods that it implements
 	 */
-	protected List getAnonymousTypeEventMethods(TypeDeclaration exp) {
-		AbstractMethodDeclaration[] methods = exp.methods ;
+	protected List getAnonymousTypeEventMethods(AnonymousClassDeclaration exp) {
+		List methods = getMethods(exp.bodyDeclarations()) ;
 		List ml = new ArrayList() ;
 		List listenMethods = getDecorator().getListenerMethods() ;
 		IEventMethodParsingRule rule = (IEventMethodParsingRule) CodeGenUtil.getEditorStyle(fbeanPart.getModel()).getRule(IEventMethodParsingRule.RULE_ID) ;
 		if (methods!=null) {
-			for (int i = 0; i < methods.length; i++) {
+			for (int i = 0; i < methods.size(); i++) {
+				MethodDeclaration md = (MethodDeclaration)methods.get(i);
 				for (Iterator itr = listenMethods.iterator(); itr.hasNext();) {
 					Method m = ((MethodProxy) itr.next()).getMethod();
-					if (m.getName().equals(new String(methods[i].selector))) {
+					if (m.getName().equals(md.getName().getIdentifier())) {
 						int s1, s2;
 						s1 = m.getParameters().size();
-						s2 = methods[i].arguments == null ? 0 : methods[i].arguments.length;
-						if (s1 == s2 && isSameArgs(methods[i],m)) {
+						s2 = md.parameters().size();
+						if (s1 == s2 && isSameArgs(md,m)) {
 							// TODO Need to compare return, and param sig
-							if (!rule.ignoreAnonymousEventMethod(methods[i]))
+							if (!rule.ignoreAnonymousEventMethod(md))
 								ml.add(m);
 						}
 					}
@@ -176,13 +191,13 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.EventDecoderHelper#isValidArguments(org.eclipse.jdt.internal.compiler.ast.Expression[])
 	 */
-	protected boolean isValidArguments(Expression[] exps) {
-		boolean result = exps != null && exps.length == 1;
+	protected boolean isValidArguments(List exps) {
+		boolean result = exps != null && exps.size() == 1;
 		if (result) {
 			JavaParameter p = (JavaParameter) fEventDecorator.getAddListenerMethod().getParameters().get(0);
-			if (exps[0] instanceof QualifiedAllocationExpression) {
-				QualifiedAllocationExpression e = (QualifiedAllocationExpression) exps[0];
-				String type = fbeanPart.getModel().resolve(e.type.toString());
+			if (exps.get(0) instanceof ClassInstanceCreation) {
+				ClassInstanceCreation e = (ClassInstanceCreation) exps.get(0);
+				String type = CodeGenUtil.resolve(e.getName(),fbeanPart.getModel()); 
 				StringBuffer b = new StringBuffer(type) ;
 				if (type.indexOf("Adapter") >= 0) {   //$NON-NLS-1$
 				    b.replace(type.indexOf("Adapter"), type.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    

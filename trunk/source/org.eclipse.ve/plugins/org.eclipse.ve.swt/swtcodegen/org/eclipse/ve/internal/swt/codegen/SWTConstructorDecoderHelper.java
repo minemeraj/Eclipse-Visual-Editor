@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-05 19:20:35 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:50 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 

@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
+
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -49,8 +49,6 @@ public interface IBeanDeclModel extends ITypeResolver{
 	public BeanPart getBeanReturned(String methodName) ;
 	public TypeDeclaration getTypeDecleration()  ;
 	public void setTypeDecleration(TypeDeclaration decl)  ;
-	public void setJDOM(CompilationUnitDeclaration dom)  ;
-	public CompilationUnitDeclaration getJDOM() ;
 	public IDiagramModelInstance getCompositionModel() ;
 	public void setCompositionModel(IDiagramModelInstance cm) ;	
 	public ICompilationUnit getCompilationUnit() ;

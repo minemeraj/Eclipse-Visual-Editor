@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -20,10 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
-//  The following will suport a working copy for the working copy
-//import org.eclipse.jdt.internal.core.BufferManager;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -51,8 +48,7 @@ public class BeanDeclModel implements IBeanDeclModel {
 	
 	TypeDeclaration				fTypeDeclaration = null ;           // The class element of the JDOM model
 	CodeTypeRef                 fTypeRef = null ;
-	List						fEventHandlers = new ArrayList() ;  // CodeEventHandlerRef list
-	CompilationUnitDeclaration	fJDOM = null  ;                     // Root of the JDOM
+	List						fEventHandlers = new ArrayList() ;  // CodeEventHandlerRef list	
 	IWorkingCopyProvider		fWorkCopyP = null ;
 //  The following will suport a working copy for the working copy
 //	ICompilationUnit			fworkingWC = null ;					// Will be used as a temporary working copy for the working copy	
@@ -296,12 +292,7 @@ public TypeDeclaration getTypeDecleration() {
 public void setTypeDecleration(TypeDeclaration decl) {
     fTypeDeclaration=decl ;
 }
-/**
- *  
- */
-public CompilationUnitDeclaration getJDOM() {
-   return fJDOM ;
-}
+
 
 public CodeTypeRef getTypeRef() {
 	return fTypeRef ;
@@ -310,12 +301,6 @@ public void setTypeRef (CodeTypeRef tr) {
 	fTypeRef = tr ;
 }
 
-/**
- *  Set Type Compilation Unit Decleration
- */
-public void setJDOM(CompilationUnitDeclaration dom) {
-    fJDOM=dom ;
-}
 
 public IDiagramModelInstance getCompositionModel() {
 	return fCompositionModel ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.11 $  $Date: 2004-02-23 19:56:12 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -20,9 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration;
-import org.eclipse.jdt.internal.core.util.Util;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -46,7 +44,7 @@ public class BeanPart {
 	String 	fName = null ;
 	String	fUniqueName = null ;
 	String 	fType ;
-	AbstractVariableDeclaration fFieldDecl = null ;
+	ASTNode 		fFieldDecl = null ;
 	ArrayList		fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
 	ArrayList      	fBeanRefExpressions =  new ArrayList () ;		// JCMMethod/s which update bean attributes
 	ArrayList       fBeanEventExpressions = new ArrayList() ;
@@ -69,14 +67,24 @@ public class BeanPart {
     boolean			fSettingProcessingRequired = false ;
     
 
-/**
- *  
- */
-public  BeanPart (AbstractVariableDeclaration decl) {
+
+public  BeanPart (FieldDeclaration decl) {
 	
 	fFieldDecl = decl ;
-	fName = String.valueOf(decl.name) ;		
-	setType(decl.type.toString());
+	//TODO: support multi fields per decleration
+	processFragment((VariableDeclaration)decl.fragments().get(0), decl.getType());
+}
+
+protected void processFragment(VariableDeclaration vd, Type tp) {
+	fName = vd.getName().getIdentifier();
+	if (tp instanceof SimpleType)
+		setType(((SimpleType)tp).getName());
+}
+
+public  BeanPart (VariableDeclarationStatement decl) {	
+	fFieldDecl = decl ;
+	//TODO: support multi fields per decleration
+	processFragment((VariableDeclaration)decl.fragments().get(0), decl.getType());
 }
 
 /**
@@ -131,7 +139,7 @@ public String getFieldDeclHandle() {
 /**
  *  
  */
-public  BeanPart (AbstractVariableDeclaration decl,CodeMethodRef method,boolean initMethod)  {
+public  BeanPart (FieldDeclaration decl,CodeMethodRef method,boolean initMethod)  {
 	
 	this(decl) ;
 	
@@ -145,7 +153,7 @@ public  BeanPart (AbstractVariableDeclaration decl,CodeMethodRef method,boolean 
 /**
  *  
  */
-public  BeanPart (AbstractVariableDeclaration decl,CodeExpressionRef exp)  {
+public  BeanPart (FieldDeclaration decl,CodeExpressionRef exp)  {
 	
 	this(decl) ;
 
@@ -398,7 +406,7 @@ public String getType () {
 /**
  *
  */
-public AbstractVariableDeclaration getFieldDecl() {
+public ASTNode getFieldDecl() {
       return fFieldDecl ;	
 }
 ///**
@@ -471,6 +479,13 @@ public void setEObject (EObject obj) {
 	   fModel.UpdateRefObjKey(this,old) ;
 }
 
+/**
+ * 
+ * @param fType
+ * 
+ * @since 1.0.0
+ * @deprecated use void setType(Name t)
+ */
 protected void setType(String fType){	
 	// The BeanSubClassComposition pseodo bean part as an empty type
     if (getModel() != null && fType !=null && !fType.equals("")) { //$NON-NLS-1$
@@ -488,6 +503,18 @@ protected void setType(String fType){
     else
       this.fType = fType ;
 }
+
+protected void setType(Name t){	
+	// The BeanSubClassComposition pseodo bean part has an empty type
+	String result=t.toString();
+	if (getModel() != null && t !=null && !t.toString().equals("")) { //$NON-NLS-1$
+		String r=CodeGenUtil.resolve(t, getModel());
+		if (r!=null)
+			result=r;
+	}
+	fType=result;
+}
+
 
 /**
  *
@@ -650,7 +677,7 @@ public  void dispose() {
 			Object[] added = exp.getAddedInstances();
 			if (added!=null)
 				for (int j = 0; j < added.length; j++) {
-					if (added[j].equals(getEObject())) {
+					if (added[j]!=null && added[j].equals(getEObject())) {
 						exp.dispose();
 						break;
 					}
@@ -866,22 +893,16 @@ public   void removeFromJVEModel()  {
 		fSettingProcessingRequired = settingProcessingRequired;
 	}
 	
-	public boolean isInitMethod(AbstractMethodDeclaration method) {
-		AbstractMethodDeclaration md = getInitMethod() == null ? null : getInitMethod().getDeclMethod();
+	public boolean isInitMethod(MethodDeclaration method) {
+		MethodDeclaration md = getInitMethod() == null ? null : getInitMethod().getDeclMethod();
 		if (md == null || method == null)
 			return false;
 
-		if (Util.compare(method.selector, md.selector) == 0) {
-			if (method.arguments == null)
-				if (md.arguments != null)
-					return false;
-				else
-					return true;
-			else if (md == null)
+		if (method.getName().getIdentifier().equals(md.getName().getIdentifier())) {
+			if (md.parameters().size() != method.parameters().size())
 				return false;
-			// TODO Need to be more specif
-			if (method.arguments.length == md.arguments.length)
-				return true;
+			else
+				return true ;//TODO Need to be more specif
 
 		}
 		return (false);

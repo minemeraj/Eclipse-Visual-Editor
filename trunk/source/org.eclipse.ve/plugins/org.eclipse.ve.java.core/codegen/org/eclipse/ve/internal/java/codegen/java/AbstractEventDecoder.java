@@ -10,15 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.ve.internal.jcm.Callback;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.BeanMethodTemplate;
@@ -78,8 +78,8 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 */
 	public boolean decode() throws CodeGenException {
 		// Refresh decoder 
-		if ((getExprRef().getExpression() != null) && (getExprRef().getExpression() != fExpr))
-			fExpr = getExprRef().getExpression();
+		if ((getExprRef().getExprStmt() != null) && (getExprRef().getExprStmt() != fExpr))
+			fExpr = getExprRef().getExprStmt();
 
 		if (!Initialize(fEventInvocation))
 			return false;
@@ -117,7 +117,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 		if (!(expr instanceof CodeEventRef))  throw new CodeGenException("Invalid Parameter") ; //$NON-NLS-1$
 	
 		fEventRef = (CodeEventRef) expr;
-		fExpr = (Statement) expr.getExpression();
+		fExpr = (Statement) expr.getExprStmt();
 		fEventRef.setDecoder(this);
 		if (fExpr != null)
 			fdebugString = fExpr.toString();
@@ -258,7 +258,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 
 	/**
 	 * Sets the eventInvocation.  It is expected that if envocation is changed,
-	 * The expression (fExpr) has changed as well.
+	 * The expression (fexpStmt) has changed as well.
 	 * 
 	 */
 	public void setEventInvocation(AbstractEventInvocation ei) {
@@ -368,6 +368,14 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 */
 	public void removePropertyEvent(PropertyEvent pe) {
 		getHelper().removePropertyEvent(pe) ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#setStatement(org.eclipse.jdt.core.dom.Statement)
+	 */
+	public void setStatement(Statement s) {
+		fExpr = s;
+		getHelper().setDecodingContent(s);
 	}
 
 }

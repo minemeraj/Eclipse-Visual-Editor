@@ -11,16 +11,17 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
@@ -53,15 +54,15 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	/**
 	 *  Figure out what is the initialization string for an attribute
 	 */
-	protected String getInitString(Literal arg, EStructuralFeature sf) {
+	protected String getInitString(Expression arg, EStructuralFeature sf) {
 		if (arg instanceof NullLiteral)
 			return null;
 		else if (arg instanceof StringLiteral) {
-			String val = new String(arg.source());
+			String val = ((StringLiteral)arg).getLiteralValue();
 			return (BeanUtilities.createStringInitString(val));
 		} else {
 			// TODO  Need more thinking
-			return new String(arg.source());
+			return arg.toString();
 		}
 	}
 
@@ -71,7 +72,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			if (fFmapper.getDecorator() != null)
 				methodName = fFmapper.getDecorator().getWriteMethod().getName();
 			if (methodName == null)
-				methodName = CodeGenUtil.getWriteMethod(fExpr);
+				methodName = AbstractFeatureMapper.getWriteMethod(fExpr);
 			if(methodName!=null)
 				return fFmapper.getPriorityIncrement(methodName) + super.getSFPriority();
 		}
@@ -84,21 +85,21 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			if (fFmapper.getDecorator() != null)
 				method = fFmapper.getDecorator().getWriteMethod().getName();
 		if (method == null)
-			method = CodeGenUtil.getWriteMethod(fExpr);
+			method = AbstractFeatureMapper.getWriteMethod(fExpr);
 		return method != null && method.equals(writeMethodName);
 	}
 
 	/**
 	 *  Figure out what is the initialization string for an attribute
 	 */
-	protected String getInitString(QualifiedNameReference arg) {
-		String initString = CodeGenUtil.tokensToString(arg.tokens);
+	protected String getInitString(QualifiedName arg) {
+		String initString = arg.toString();
 		try{
 			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
 			   fbeanPart.getModel().getCompilationUnit()!=null && 
 			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
 				//String resType = CodeGenUtil.resolveTypeComplex(fbeanPart.getModel().getCompilationUnit().getTypes()[0], initString);
-				String resType = fbeanPart.getModel().resolve(initString);
+				String resType = CodeGenUtil.resolve(arg,fbeanPart.getModel());
 				if(resType!=null)	{
                     fUnresolveInitString = initString ;
 					initString = resType;
@@ -110,13 +111,12 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		return initString;
 	}
 	
-	protected String getInitString(MessageSend msg){
+	protected String getInitString(MethodInvocation msg){
 		String initstring = msg.toString();
-		if (msg.receiver instanceof QualifiedNameReference ||
-			msg.receiver instanceof SingleNameReference){
-			String unResolved = msg.receiver.toString();
-			if(fbeanPart!=null && fbeanPart.getModel()!=null){
-				String resolved = fbeanPart.getModel().resolve(unResolved);
+		if (msg.getExpression() instanceof Name){
+			String unResolved = msg.getExpression().toString();
+		    if(fbeanPart!=null && fbeanPart.getModel()!=null){
+				String resolved = CodeGenUtil.resolve((Name)msg.getExpression(), fbeanPart.getModel());
 				if(!resolved.equals(unResolved)){
 					int from = initstring.indexOf(unResolved);
 					int to = from+unResolved.length();
@@ -134,14 +134,14 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	/**
 	 *  Figure out what is the initialization string for an attribute
 	 */
-	protected String getInitString(AllocationExpression arg) {
+	protected String getInitString(ClassInstanceCreation arg) {
 		String initString = arg.toString();
 		fUnresolveInitString = arg.toString();
 		try{
 			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
 			   fbeanPart.getModel().getCompilationUnit()!=null && 
 			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
-			   	String type = CodeGenUtil.tokensToString(arg.type.getTypeName());
+			   	String type = arg.getName().toString(); //CodeGenUtil.tokensToString(arg.type.getTypeName());
 			   	String resolvedType = null;
 		   		//String rt = CodeGenUtil.resolveTypeComplex(fbeanPart.getModel().getCompilationUnit().getTypes()[0], type);
 		   		String rt = fbeanPart.getModel().resolve(type);
@@ -152,10 +152,10 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 				StringBuffer initConstruction = new StringBuffer("new "); //$NON-NLS-1$
 				initConstruction.append(resolvedType);
 				initConstruction.append("("); //$NON-NLS-1$
-				for(int i=0;arg.arguments!=null && i<arg.arguments.length;i++){
-					initConstruction.append(CodeGenUtil.expressionToString(arg.arguments[i]));
-					if(i!=arg.arguments.length-1)
-						initConstruction.append(", "); //$NON-NLS-1$
+				for(int i=0; i<arg.arguments().size();i++){
+					initConstruction.append(arg.arguments().get(i).toString());
+					if(i!=arg.arguments().size()-1)
+						initConstruction.append(","); //$NON-NLS-1$
 				}
 				initConstruction.append(")"); //$NON-NLS-1$
 				initString = initConstruction.toString();
@@ -166,11 +166,12 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		return initString;
 	}
 	
-	protected String getInitString(SingleNameReference snr){
-		int loc = snr.sourceStart;
+	protected String getInitString(SimpleName snr){
+		int loc = snr.getStartPosition();
 		if(fOwner.getExprRef()!=null && fOwner.getExprRef().getMethod()!=null)
 			loc = fOwner.getExprRef().getOffset()+fOwner.getExprRef().getMethod().getOffset();
 		return fOwner.getBeanModel().resolveSingleNameReference(snr.toString(), loc);
+		
 	}
 	/**
 	 * 
@@ -178,16 +179,18 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	protected String parseInitString(Expression exp) {
 		String initString = null;
 		try{
-		    if (exp instanceof Literal)
-    			initString = getInitString((Literal)exp, fFmapper.getFeature(fExpr));
-    		else if (exp instanceof QualifiedNameReference)
-    			initString = getInitString((QualifiedNameReference)exp);
-    		else if(exp instanceof AllocationExpression)
-    			initString = getInitString((AllocationExpression)exp);
-    		else if(exp instanceof MessageSend)
-    			initString = getInitString((MessageSend)exp);
-    		else if (exp instanceof SingleNameReference)
-    			initString = getInitString((SingleNameReference)exp);
+		    if (exp instanceof NullLiteral ||
+		        exp instanceof NumberLiteral ||
+		        exp instanceof StringLiteral)
+    			initString = getInitString(exp, fFmapper.getFeature(fExpr));
+    		else if (exp instanceof QualifiedName)
+    			initString = getInitString((QualifiedName)exp);
+    		else if(exp instanceof ClassInstanceCreation)
+    			initString = getInitString((ClassInstanceCreation)exp);
+    		else if(exp instanceof MethodInvocation)
+    			initString = getInitString((MethodInvocation)exp);
+    		else if (exp instanceof SimpleName)
+    			initString = getInitString((SimpleName)exp);
     		else{
     			// TODO  Will do for now?????
     			initString = exp.toString();
@@ -199,11 +202,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		return initString;
     }
     
-    protected boolean dealwithInternalBean(AllocationExpression exp) {
+    protected boolean dealwithInternalBean(ClassInstanceCreation exp) {
         
         try {
-          String unresolved = CodeGenUtil.tokensToString(exp.type.getTypeName());
-          String resolved = fbeanPart.getModel().resolve(unresolved) ;
+          String unresolved = exp.getName().toString(); //CodeGenUtil.tokensToString(exp.type.getTypeName());
+          String resolved = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()) ; 
           
           String origInitString = exp.toString() ;
           int start = origInitString.indexOf(unresolved);
@@ -257,7 +260,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
             EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
             if (sf == null) throw new CodeGenException("Invalid SF"); //$NON-NLS-1$
             argType = sf.getEType() ;   
-            fInitString = parseInitString(((Assignment)fExpr).expression) ;
+            fInitString = parseInitString(((Assignment)getExpression()).getRightHandSide()) ;
         }
         else {
             // Regular setter JCMMethod
@@ -267,12 +270,12 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			argType =  pd.getPropertyType();            
 			// TODO  We really need to parse the argument for the true value
 		    //As the PD type may be an abstract or interface !!!!!!!" 
-		    Expression[] argExpr = ((MessageSend)fExpr).arguments;
-		    if (argExpr.length != 1) throw new CodeGenException("Expression has more than one argument"); //$NON-NLS-1$
-            if (argExpr[0] instanceof AllocationExpression) 
-               return dealwithInternalBean((AllocationExpression)argExpr[0]) ;
+		    List argExpr = ((MethodInvocation)getExpression()).arguments();
+		    if (argExpr.size() != 1) throw new CodeGenException("Expression has more than one argument"); //$NON-NLS-1$
+            if (argExpr.get(0) instanceof ClassInstanceCreation) 
+               return dealwithInternalBean((ClassInstanceCreation)argExpr.get(0)) ;
     		// Determine the value of the attribute
-    		fInitString = parseInitString(argExpr[0]) ;		    
+    		fInitString = parseInitString((Expression)argExpr.get(0)) ;		    
         }
 
 		try {
@@ -412,8 +415,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			throw new CodeGenException("null Feature:" + fExpr); //$NON-NLS-1$
 		}
 
-		if ((fExpr instanceof Assignment) ||
-		    ((fExpr instanceof MessageSend) && ((MessageSend)fExpr).arguments.length == 1))
+		Expression exp = getExpression();
+		if ((exp instanceof Assignment) ||
+		    ((exp instanceof MethodInvocation) && ((MethodInvocation)exp).arguments().size() == 1))
 			return (addFeature());
 		else {
 			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format",false) ; //$NON-NLS-1$

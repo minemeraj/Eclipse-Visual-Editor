@@ -11,14 +11,16 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
@@ -39,7 +41,7 @@ public class MethodVisitor extends SourceVisitor {
  *  A bean is declared locally in this method.
  *  At this time, no deferentiation to the variable's scope.
  */	
-protected void	processLocalDecleration (LocalDeclaration stmt) {
+protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	IMethodVariableRule methodVarRule = (IMethodVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IMethodVariableRule.RULE_ID) ;
 	if (methodVarRule!=null && methodVarRule.ignoreVariable(stmt,fModel,fModel.getCompositionModel())) return ;
 	
@@ -48,20 +50,23 @@ protected void	processLocalDecleration (LocalDeclaration stmt) {
 	bp.setInstanceVar(false) ;
 	bp.addInitMethod(fMethod) ;
 	fModel.addBean (bp) ;
-	if (stmt.initialization instanceof AllocationExpression || 
-	    stmt.initialization instanceof ArrayAllocationExpression ||
-	    stmt.initialization instanceof CastExpression || 
-	    stmt.initialization instanceof MessageSend) {
+	//TODO: deal with multi expression lines
+    VariableDeclaration vd = (VariableDeclaration)stmt.fragments().get(0);
+    Expression init = vd.getInitializer();
+	if (init instanceof ClassInstanceCreation || 
+	    init instanceof ArrayCreation ||
+	    init instanceof CastExpression || 
+	    init instanceof MethodInvocation) {
 	    // Decleration and initialization
-	    new ExpressionVisitor(fMethod,(Statement)stmt,fModel,fReTryLater).visit();
+	    new ExpressionVisitor(fMethod,stmt,fModel,fReTryLater).visit();
 	}		
 }	
 		
 /**
  *   Drive processAStatement() for each element.
  */	
-protected  void  processStatementArray (Statement[] statements) throws CodeGenException {
-	if (statements == null) {
+protected  void  processStatementArray (List statements) throws CodeGenException {
+	if (statements == null || statements.size()==0) {
 		// Typically a "new" allocation statement will initialize a method, so would a this.setFoo().  But
 		// and empty Initialize() method need some help.
 		IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(fModel).getRule(IThisReferenceRule.RULE_ID) ;
@@ -75,31 +80,31 @@ protected  void  processStatementArray (Statement[] statements) throws CodeGenEx
 		return ;
 	}
 	
-      for (int i=0; i<statements.length; i++)
-	   processAStatement(statements[i]) ;	
+      for (int i=0; i<statements.size(); i++)
+	   processAStatement((Statement)statements.get(i)) ;	
 }		
 		
 /**
  *   Re-drive a statement block
  */	
 protected  void  processBlockStatement(Block stmt) throws CodeGenException {	
-	processStatementArray(stmt.statements) ;
+	processStatementArray(stmt.statements()) ;
 } 
 
 /**
  *   Re-drive a Sync block
  */	
 protected  void  processSynchStatement(SynchronizedStatement stmt)  throws CodeGenException  {	
-	processBlockStatement(stmt.block) ;
+	processBlockStatement(stmt.getBody()) ;
 } 
 /**
  *   Re-drive a Sync block
  */	
 protected  void  processTryStatement(TryStatement stmt)  throws CodeGenException  {	
-	if(stmt.tryBlock!=null)
-		processBlockStatement(stmt.tryBlock) ;
-	if(stmt.finallyBlock!=null)
-		processBlockStatement(stmt.finallyBlock);
+	if(stmt.getBody()!=null)
+		processBlockStatement(stmt.getBody()) ;
+	if(stmt.getFinally()!=null)
+		processBlockStatement(stmt.getFinally());
 } 
 
  
@@ -122,10 +127,10 @@ protected void	processIFStatement(IfStatement stmt) throws CodeGenException{
 	
 	int processPattern = ifRule.whichPartToProcess(fMethod.getDeclMethod(),stmt) ;
 	if ((processPattern & IIfStatementRule.PROCESS_IF) > 0) 
-         processAStatement(stmt.thenStatement) ;	
+         processAStatement(stmt.getThenStatement()) ;	
 	
 	if ((processPattern & IIfStatementRule.PROCESS_ELSE) > 0) 
-         processAStatement(stmt.elseStatement) ;
+         processAStatement(stmt.getElseStatement()) ;
 		
 }
 
@@ -136,8 +141,8 @@ protected void	processIFStatement(IfStatement stmt) throws CodeGenException{
 protected void	processAStatement(Statement stmt) throws CodeGenException {
 		
 	// Local Variable Decleration
-      if (stmt instanceof LocalDeclaration) 
-          processLocalDecleration((LocalDeclaration)stmt) ;
+      if (stmt instanceof VariableDeclarationStatement) 
+          processLocalDecleration((VariableDeclarationStatement)stmt) ;
       // Block Statement
       else if (stmt instanceof Block)
           processBlockStatement((Block)stmt) ;
@@ -154,8 +159,8 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
           new ReturnStmtVisitor(fMethod,(ReturnStatement)stmt,fModel,fReTryLater).visit();
 
       // Handle an Expression          
-      else if (stmt instanceof Expression) 
-          new ExpressionVisitor(fMethod,(Expression)stmt,fModel,fReTryLater).visit();
+      else if (stmt instanceof ExpressionStatement) 
+          new ExpressionVisitor(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater).visit();
       else
          JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, Level.FINE) ; //$NON-NLS-1$
 }	
@@ -163,12 +168,12 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
 /**
  *
  */		
-public MethodVisitor (AbstractMethodDeclaration node, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
+public MethodVisitor (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
 	super(node,model,reTryList) ;	
 	fMethod = new CodeMethodRef (node,typeRef,methodHandle,range,content) ;
 }
 
-public MethodVisitor (AbstractMethodDeclaration node, IBeanDeclModel model,List reTryList,CodeMethodRef m) {
+public MethodVisitor (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeMethodRef m) {
 	super(node,model,reTryList) ;	
 	fMethod = m ;
 }
@@ -193,13 +198,13 @@ public void visit() {
 	// A temporary limitation so that if one add local JFrame for example,
 	// and set its content pane with an instance JPanel, we will loose it as
 	// the JFrame is local and would not put in the FF
-	if (fMethod.getDeclMethod() instanceof ConstructorDeclaration) {
+	if (fMethod.getDeclMethod().isConstructor()) {
 		JavaVEPlugin.log("Skiping Custructor parsing: "+fMethod.getMethodName()) ; //$NON-NLS-1$
 		return ;
 	}	
 	
 	try {
-	  processStatementArray(fMethod.getDeclMethod().statements) ;		
+	  processStatementArray(fMethod.getDeclMethod().getBody().statements()) ;		
 	}
 	catch (CodeGenException  e) {
 		// Will have to pass it on later on

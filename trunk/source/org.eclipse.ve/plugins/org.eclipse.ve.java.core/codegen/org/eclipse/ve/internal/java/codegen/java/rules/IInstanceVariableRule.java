@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IInstanceVariableRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
+
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -29,7 +31,7 @@ static String RULE_ID = "ruleInstanceVariable" ;	 //$NON-NLS-1$
 /**
  * Give the parser a hint if an instance variable is to be ignored.
  */
-public boolean ignoreVariable(AbstractVariableDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) ;
+public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) ;
 /**
  * Forces the parser to consider the returned method as the initialization method.
  * 
@@ -37,7 +39,7 @@ public boolean ignoreVariable(AbstractVariableDeclaration field, ITypeResolver r
  * @param resolver
  * @return  init method's name, or null for no specific overide
  */
-public String   getDefaultInitializationMethod(AbstractVariableDeclaration field, ITypeResolver resolver, TypeDeclaration typeDec) ;
+public String   getDefaultInitializationMethod(FieldDeclaration field, ITypeResolver resolver, TypeDeclaration typeDec) ;
 	
 
 }

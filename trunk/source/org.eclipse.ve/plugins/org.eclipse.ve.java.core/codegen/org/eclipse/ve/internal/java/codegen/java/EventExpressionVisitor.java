@@ -10,14 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
@@ -39,25 +40,25 @@ public class EventExpressionVisitor extends SourceVisitor {
 CodeMethodRef				fMethod  ;
 CodeEventRef				fExpression  ;
 BeanPart					fBean ;
-CompilationUnitDeclaration	fDom ;
+CompilationUnit				fastDom ;
 List						fEventSigs ;
 	
 
-EventExpressionVisitor(BeanPart b,Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnitDeclaration dom) {
+EventExpressionVisitor(BeanPart b, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
 	super((ASTNode)stmt,model,null) ;	
 	fMethod = b.getInitMethod() ;
 	fBean = b ;
 	fExpression = new CodeEventRef (stmt,fMethod, dom) ;
-	fDom = dom ;
+	fastDom = dom ;
 	fEventSigs = eSigs ;
 }
 
-EventExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnitDeclaration dom) {
+EventExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
 	super((ASTNode)stmt,model,null) ;	
 	fMethod = mref ;
 	fBean = b ;
 	fExpression = new CodeEventRef (stmt,fMethod, dom) ;
-	fDom = dom ;
+	fastDom = dom ;
 	fEventSigs = eSigs ;
 }
 
@@ -67,11 +68,11 @@ EventExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclM
  *  Figure out which BeanPart (if any) this expression is acting on.
  */
 protected void processAMessageSend() {
-	MessageSend stmt = (MessageSend) fExpression.getExpression();
+	MethodInvocation stmt = (MethodInvocation) ((ExpressionStatement)fExpression.getExprStmt()).getExpression();
 	if (stmt == null)
 		return;
 
-	String selector = new String(stmt.selector);
+	String selector = stmt.getName().getIdentifier();
 	AbstractEventInvocation ei ;
 	if (selector.equals(PropertyChangedAllocationStyleHellper.DEFAULT_PROPERTY_CHANGED_ADD_METHOD)) {
 		// Property Changed signiture
@@ -109,7 +110,8 @@ protected void processAMessageSend() {
  */
 public void visit(){
 	
-	if (fExpression.getExpression() instanceof MessageSend)
+	if (fExpression.getExprStmt() instanceof ExpressionStatement &&
+	    ((ExpressionStatement)fExpression.getExprStmt()).getExpression() instanceof MethodInvocation)
 	   processAMessageSend () ;
     else
        JavaVEPlugin.log ("\t[Event] ExpressionVisitor: *** did not process Expression:"+fExpression, Level.FINE) ; //$NON-NLS-1$

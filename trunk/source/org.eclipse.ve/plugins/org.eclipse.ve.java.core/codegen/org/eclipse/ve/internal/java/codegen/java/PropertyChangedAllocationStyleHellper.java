@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,11 +23,8 @@ import java.util.ArrayList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
-import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.java.*;
 
@@ -54,16 +51,16 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 	protected String[] parseProperties(Expression exp) {
 		final ArrayList props = new ArrayList() ;
 		ASTVisitor visitor = new ASTVisitor() {
-			public boolean visit(IfStatement ifStatement, BlockScope scope) {
-					if (ifStatement.condition instanceof MessageSend) {
-						MessageSend m = (MessageSend) ifStatement.condition;
-						if (m.receiver instanceof MessageSend) {
-							MessageSend left = (MessageSend) m.receiver;
-							if (new String(left.selector).endsWith(PROPERTY_NAME_GETTER)) {
-								if (m.arguments != null && m.arguments.length == 1 && m.arguments[0] instanceof StringLiteral){								
-								    // remove the ""
-								    String p = m.arguments[0].toString().substring(1) ;
-								    p = p.substring(0,p.length()-1) ;
+			public boolean visit(IfStatement ifStatement) {
+					Expression exp = ((ParenthesizedExpression)ifStatement.getExpression()).getExpression();
+					if (exp instanceof MethodInvocation) {
+						MethodInvocation m = (MethodInvocation) exp;
+						if (m.getExpression() instanceof MethodInvocation) {
+							MethodInvocation left = (MethodInvocation) m.getExpression();
+							if (left.getName().getIdentifier().endsWith(PROPERTY_NAME_GETTER)) {
+								if (m.arguments().size()== 1 && m.arguments().get(0) instanceof StringLiteral){								
+								    // remove the "" of the string.
+								    String p = ((StringLiteral)m.arguments().get(0)).getLiteralValue();								    
 									props.add(p);
 								}
 							}
@@ -73,15 +70,15 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 					return false;
 			}
 		};		
-		exp.traverse(visitor, null);
+		exp.accept(visitor);
 		return (String[]) props.toArray(new String[props.size()]);
 	}
 	
 	protected Method[] parseCallBacks(Expression exp, final JavaClass listener) {
 		final ArrayList methods = new ArrayList();
 		ASTVisitor visitor = new ASTVisitor() {
-			public boolean visit(MethodDeclaration methodDeclaration, ClassScope scope) {
-				if (new String(methodDeclaration.selector).equals(PROPERTY_CALLBACK_NAME)) {
+			public boolean visit(MethodDeclaration methodDeclaration) {
+				if (methodDeclaration.getName().getIdentifier().equals(PROPERTY_CALLBACK_NAME)) {
 					ArrayList args = new ArrayList() ;
 					args.add(PREPERTY_CALLBACK_ARG_TYPE); 	
 					Method m = listener.getMethodExtended(PROPERTY_CALLBACK_NAME,args);		
@@ -91,13 +88,13 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 			}
 		};
 
-        exp.traverse(visitor, null);
+        exp.accept(visitor);
 		return (Method[]) methods.toArray(new Method[methods.size()]);
 	}
 	
 	
-	protected boolean processEvent(MessageSend event) {
-		Expression exp = event.arguments[event.arguments.length-1] ;
+	protected boolean processEvent(MethodInvocation event) {
+		Expression exp = (Expression) event.arguments().get(event.arguments().size()-1) ;
 				                                		
 		
 		cleanUpPreviousIfNedded() ;
@@ -110,84 +107,83 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
         if (listenRegMethod != null)
            ee.setAddMethod(listenRegMethod) ;	            
 		
-		if (exp instanceof QualifiedAllocationExpression) {
-			// Anonymous allocation
-			QualifiedAllocationExpression qe = (QualifiedAllocationExpression) exp;
-			JavaClass clazz = getAllocatedType(qe.type);
-			if (clazz == null || !clazz.isExistingType())
-				return false;
+		if (exp instanceof ClassInstanceCreation) {
+			ClassInstanceCreation qe = (ClassInstanceCreation) exp;
+			if (qe.getAnonymousClassDeclaration() != null) {
+				// Anonymous allocation
+				JavaClass clazz = getAllocatedType(qe.getName());
+				if (clazz == null || !clazz.isExistingType())
+					return false;
 
-			Listener l;
-			if (clazz.isInterface())
-				l = getAnonymousListener(null, new Object[] { clazz });
-			else
-				l = getAnonymousListener(clazz, null);
-			ee.setListener(l);
-						
-			if (event.arguments.length == 1) {
-				String[] props = parseProperties(exp);
-				if (props.length > 0) {
-					for (int i = 0; i < props.length; i++) {
+				Listener l;
+				if (clazz.isInterface())
+					l = getAnonymousListener(null, new Object[] { clazz });
+				else
+					l = getAnonymousListener(clazz, null);
+				ee.setListener(l);
+
+				if (event.arguments().size() == 1) {
+					String[] props = parseProperties(exp);
+					if (props.length > 0) {
+						for (int i = 0; i < props.length; i++) {
+							PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
+							pe.setPropertyName(props[i]);
+							pe.setUseIfExpression(true);
+							ee.getProperties().add(pe);
+						}
+					}
+				} else if (event.arguments().size() == 2) {
+					if (event.arguments().get(0) instanceof SimpleName) {
+						String pname = ((SimpleName) event.arguments().get(0)).getIdentifier();
+						pname = pname.substring(1, pname.length() - 1);
 						PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
-						pe.setPropertyName(props[i]);
+						pe.setPropertyName(pname);
+						//					pe.setUseIfExpression(false);
+						// We are using this flag to denote that we can parse/control this property
 						pe.setUseIfExpression(true);
 						ee.getProperties().add(pe);
 					}
 				}
-			}
-			else if (event.arguments.length == 2) {
-				if (event.arguments[0] instanceof StringLiteral) {
-					String pname = ((StringLiteral) event.arguments[0]).toString();
-					pname = pname.substring(1, pname.length() - 1);
-					PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
-					pe.setPropertyName(pname);
-//					pe.setUseIfExpression(false);
-                    // We are using this flag to denote that we can parse/control this property
-					pe.setUseIfExpression(true);
-					ee.getProperties().add(pe);
-				}
-			}
-			
-			
-			Method[] callbacks = parseCallBacks(exp,clazz) ;
-			for (int i = 0; i < callbacks.length; i++) {
-				addMethod(ee, callbacks[i], true) ;
-			}
-			addInvocationToModel(ee, index);
-			return true;
-		}
-		else if (exp instanceof AllocationExpression) {
-			// Allocation of a new class
-			AllocationExpression ae = (AllocationExpression) exp;
-			JavaClass clazz = getAllocatedType(ae.type);
-			if (clazz == null)
-				return false;
-			Listener l = getIsClassListener(clazz);
-			if (l == null)
-				return false;
 
-			ee.setListener(l);
-			
-//			// Fill in the propertyChanged callback
-//			List impl = getExplicitTypeEventMethods(clazz);
-//			for (Iterator itr = impl.iterator(); itr.hasNext();) {
-//				JCMMethod m = (JCMMethod) itr.next();
-//				addMethod(ee,m,false) ;
-//			}
-			
-			if (event.arguments.length == 2) {
-				if (event.arguments[0] instanceof StringLiteral) {
-					String pname = ((StringLiteral) event.arguments[0]).toString();
-					pname = pname.substring(1, pname.length() - 1);
-					PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
-					pe.setPropertyName(pname);
-					pe.setUseIfExpression(!isInnerClass(clazz));
-					ee.getProperties().add(pe);
+				Method[] callbacks = parseCallBacks(exp, clazz);
+				for (int i = 0; i < callbacks.length; i++) {
+					addMethod(ee, callbacks[i], true);
 				}
+				addInvocationToModel(ee, index);
+				return true;
+			} else {
+				// Allocation of a new class
+				ClassInstanceCreation ae = (ClassInstanceCreation) exp;
+				JavaClass clazz = getAllocatedType(ae.getName());
+				if (clazz == null)
+					return false;
+				Listener l = getIsClassListener(clazz);
+				if (l == null)
+					return false;
+
+				ee.setListener(l);
+
+				//			// Fill in the propertyChanged callback
+				//			List impl = getExplicitTypeEventMethods(clazz);
+				//			for (Iterator itr = impl.iterator(); itr.hasNext();) {
+				//				JCMMethod m = (JCMMethod) itr.next();
+				//				addMethod(ee,m,false) ;
+				//			}
+
+				if (event.arguments().size() == 2) {
+					if (event.arguments().get(0) instanceof SimpleName) {
+						String pname = ((SimpleName) event.arguments().get(0)).getIdentifier();
+						pname = pname.substring(1, pname.length() - 1);
+						PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent();
+						pe.setPropertyName(pname);
+						pe.setUseIfExpression(!isInnerClass(clazz));
+						ee.getProperties().add(pe);
+					}
+				}
+
+				addInvocationToModel(ee, index);
+				return true;
 			}
-			
-			addInvocationToModel(ee,index);
-			return true;
 		}
 		return false;
 	}

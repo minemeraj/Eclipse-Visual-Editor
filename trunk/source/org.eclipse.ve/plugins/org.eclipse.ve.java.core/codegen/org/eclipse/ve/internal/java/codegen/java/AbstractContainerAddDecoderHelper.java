@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.ArrayList;
@@ -19,7 +19,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -203,7 +204,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 
 	}
 
-	protected abstract BeanPart parseAddedPart(MessageSend exp) throws CodeGenException;
+	protected abstract BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException;
 
 	/**
 	 *   Add new Componet to target Bean,
@@ -214,7 +215,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 
 		clearPreviousIfNeeded();
 
-		fAddedPart = parseAddedPart((MessageSend) fExpr);
+		fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
 		if (fAddedPart != null)
 			fAddedInstance = (IJavaObjectInstance) fAddedPart.getEObject();
 		if (fAddedPart == null && fAddedInstance == null)
@@ -225,7 +226,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 				oldAddedPart.removeBackRef(fbeanPart, true);
 			}
 
-		Expression[] args = ((MessageSend) fExpr).arguments;
+		List args = ((MethodInvocation) getExpression(fExpr)).arguments();
 		if (fAddedPart != null)
 			fAddedPart.addToJVEModel();
 		else
@@ -233,7 +234,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		return parseAndAddArguments(args);
 	}
 
-	protected abstract boolean parseAndAddArguments(Expression[] args) throws CodeGenException;
+	protected abstract boolean parseAndAddArguments(List args) throws CodeGenException;
 
 	/**
 	 *  Look for our added part, 
@@ -343,7 +344,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		try {
 			if (fAddedPart == null && expr != null) {
 				// Brand new expression
-				BeanPart bp = parseAddedPart((MessageSend) expr);
+				BeanPart bp = parseAddedPart((MethodInvocation) getExpression(expr));
 				if (bp != null)
 					result = new Object[] { bp.getType() + "[" + bp.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$      	    
 			} else if (fAddedPart != null) {

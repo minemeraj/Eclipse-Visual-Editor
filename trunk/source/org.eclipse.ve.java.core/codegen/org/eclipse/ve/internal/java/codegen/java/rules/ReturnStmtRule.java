@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ReturnStmtRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.ReturnStatement;
+
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.ReturnStatement;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -26,7 +28,7 @@ public class ReturnStmtRule implements IReturnStmtRule {
 	/**
 	 *   Use the default ReturnVisitor
 	 */
-	public ISourceVisitor overideReturnVisit(AbstractMethodDeclaration method, ReturnStatement stmt, IBeanDeclModel model) {
+	public ISourceVisitor overideReturnVisit(MethodDeclaration method, ReturnStatement stmt, IBeanDeclModel model) {
 		return null;
 	}
 

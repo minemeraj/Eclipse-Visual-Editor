@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslatorHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -37,7 +37,11 @@ import org.eclipse.ve.internal.java.codegen.core.TransientErrorEvent;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
+/**
+ * @deprecated
+ * @author Gili Mendel
+ * @since 1.0.0
+ */
 public class CodeSnippetTranslatorHelper {
 
 

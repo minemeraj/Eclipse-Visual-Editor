@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:46 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Expression;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.java.AbstractFeatureMapper;
 
@@ -41,7 +40,7 @@ public class JTabbedPaneFeatureMapper extends AbstractFeatureMapper {
 	     return fSF ;		
 	}
 	
-	public String getMethodName(Expression expr) {
+	public String getMethodName(Statement expr) {
 		String name = super.getMethodName(expr) ;
 		if (name == null) 
 		   name = JTabbedPaneDecoder.JTABBED_PANE_METHOD ;

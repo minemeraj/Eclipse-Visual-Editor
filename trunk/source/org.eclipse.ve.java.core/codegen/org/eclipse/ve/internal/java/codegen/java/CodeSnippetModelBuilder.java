@@ -11,24 +11,20 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.core.BasicCompilationUnit;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
-public class CodeSnippetModelBuilder 
-	extends JavaBeanShadowModelBuilder {
+public class CodeSnippetModelBuilder  extends JavaBeanShadowModelBuilder {
 
 
 protected String contents;
@@ -62,14 +58,14 @@ protected char[] getFileContents() throws CodeGenException {
 	return contents.toCharArray();
 }
 
-public CompilationUnitDeclaration getModelFromParser(
-	ProblemReporter reporter,
-	CompilationResult result,
-	BasicCompilationUnit cu){
-	CompilationUnitDeclaration decl = super.getModelFromParser(reporter, result, cu);
-	updateModelPositions(decl);
-	return decl;
-}
+//g public CompilationUnitDeclaration getModelFromParser(
+//	ProblemReporter reporter,
+//	CompilationResult result,
+//	BasicCompilationUnit cu){
+//	CompilationUnitDeclaration decl = super.getModelFromParser(reporter, result, cu);
+//	updateModelPositions(decl);
+//	return decl;
+//}
 
 /**
  * JDT and old AST differ in the way they look at things like comments of elements etc.
@@ -80,33 +76,33 @@ public CompilationUnitDeclaration getModelFromParser(
  * comment blocks belong to that method.   
  * 
  * @param decl
- */protected void updateModelPositions(CompilationUnitDeclaration decl){
-	TypeDeclaration type = decl.types[0];
-	FieldDeclaration[] decls = type.fields;
-	AbstractMethodDeclaration[] methods = type.methods;
-	if(decl!=null && fieldStarts!=null && decls != null && decls.length==fieldStarts.length){ 
-		// liner mapping.. no problems.
-		for(int dc=0;dc<decls.length;dc++){
-			decls[dc].sourceStart = fieldStarts[dc];
-			decls[dc].sourceEnd = fieldEnds[dc];
-		}
-	}
-	if(methods!=null && methodStarts!=null){
-		int usefulMethodIndex = 0;
-		for(int mc=0;mc<methods.length;mc++){
-			if(	methods[mc]!=null && 
-					// Since Methods are the only things we care about
-					methods[mc] instanceof MethodDeclaration) {
-				methods[mc].declarationSourceStart=methodStarts[usefulMethodIndex];
-				methods[mc].declarationSourceEnd=methodEnds[usefulMethodIndex];
-				usefulMethodIndex++;
-			}
-		}
-	}
+ */protected void updateModelPositions(CompilationUnit decl){
+//g	TypeDeclaration type = decl.types[0];
+//	FieldDeclaration[] decls = type.fields;
+//	AbstractMethodDeclaration[] methods = type.methods;
+//	if(decl!=null && fieldStarts!=null && decls != null && decls.length==fieldStarts.length){ 
+//		// liner mapping.. no problems.
+//		for(int dc=0;dc<decls.length;dc++){
+//			decls[dc].sourceStart = fieldStarts[dc];
+//			decls[dc].sourceEnd = fieldEnds[dc];
+//		}
+//	}
+//	if(methods!=null && methodStarts!=null){
+//		int usefulMethodIndex = 0;
+//		for(int mc=0;mc<methods.length;mc++){
+//			if(	methods[mc]!=null && 
+//					// Since Methods are the only things we care about
+//					methods[mc] instanceof MethodDeclaration) {
+//				methods[mc].declarationSourceStart=methodStarts[usefulMethodIndex];
+//				methods[mc].declarationSourceEnd=methodEnds[usefulMethodIndex];
+//				usefulMethodIndex++;
+//			}
+//		}
+//	}
 }
 
-protected void visitType(TypeDeclaration type, IBeanDeclModel model, char[] content, List tryAgain){
-	new TypeVisitor(type,model,content,methodHandles,tryAgain,true).visit()  ;
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  List tryAgain){
+	new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true).visit()  ;
 }
 
 

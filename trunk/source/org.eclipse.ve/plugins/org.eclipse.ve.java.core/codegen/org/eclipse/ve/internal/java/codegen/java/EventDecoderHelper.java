@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,8 +20,8 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -75,16 +75,17 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     /**
      * Validates that the code is adding an event to the bean associated with this decoder
      */
-    protected boolean isValidReceiver(MessageSend exp) {
-    	if (exp.receiver instanceof MessageSend) {
-    		MessageSend r = (MessageSend) exp.receiver ;
+    protected boolean isValidReceiver(MethodInvocation exp) {
+    	Expression e = exp.getExpression();
+    	if (e instanceof MethodInvocation) {
+    		MethodInvocation r = (MethodInvocation) e ;
     		if (fbeanPart.getInitMethod() != null && 
-    		    fbeanPart.getInitMethod().getMethodName().equals(new String(r.selector))) {
+    		    fbeanPart.getInitMethod().getMethodName().equals(r.getName().getIdentifier())) {
     		    return true ;
     		}
-    	} else if (exp.receiver instanceof SingleNameReference ||
-    	            exp.receiver instanceof ThisReference) {
-    		String receiver = exp.receiver.toString() ;
+    	} else if (e instanceof SimpleName ||
+    	           e instanceof ThisExpression) {
+    		String receiver = e.toString() ;
     		if (fbeanPart.getSimpleName().equals(receiver))
     		   return true ;
     	}
@@ -95,16 +96,10 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      * Validate that the bean.addFooEvent() method reflects the event setting of this decoder
      */
     protected abstract boolean isValidSelector(String selector) ;
-    protected abstract boolean isValidArguments (Expression[] exps) ;
+    protected abstract boolean isValidArguments (List exps) ;
     
-    protected JavaClass getAllocatedType(TypeReference type) {
-    	String name = null ;    	
-    	if (type instanceof QualifiedTypeReference)    	
-    	   name = CodeGenUtil.tokensToString(((QualifiedTypeReference)type).tokens) ;
-    	else if (type instanceof SingleTypeReference) {
-    	   name = fbeanPart.getModel().resolve(new String (((SingleTypeReference)type).token)) ;
-    	}
-    	   
+    protected JavaClass getAllocatedType(Name type) {
+    	String name = CodeGenUtil.resolve(type, fbeanPart.getModel()) ;    	    	   
     	if (name != null)
     	  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
     	
@@ -359,17 +354,17 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      * Process the Anonymous  type
      * @return true if sucessful
      */
-    protected abstract boolean processEvent(MessageSend event)  ;
+    protected abstract boolean processEvent(MethodInvocation event)  ;
     
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#decode()
 	 */
 	public boolean decode() throws CodeGenException {
-		if (fExpr != null && fExpr instanceof MessageSend) {
-			MessageSend exp = (MessageSend)fExpr ;
+		if (fExpr != null && getExpression() instanceof MethodInvocation) {
+			MethodInvocation exp = (MethodInvocation)getExpression() ;
 			if (isValidReceiver(exp) &&
-			    isValidSelector(new String (exp.selector)) &&
-			    isValidArguments(exp.arguments)) {
+			    isValidSelector(exp.getName().getIdentifier()) &&
+			    isValidArguments(exp.arguments())) {
 				return processEvent(exp) ;
 			}
 		}		
@@ -602,26 +597,35 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		return null;
 	}
 	
+	List getMethods(AnonymousClassDeclaration cd) {
+		List l = new ArrayList();
+		for (int i=0; i< cd.bodyDeclarations().size(); i++) {
+			if (cd.bodyDeclarations().get(i) instanceof MethodDeclaration)
+			   l.add(cd.bodyDeclarations().get(i));
+		}
+		return l;
+	}
 	protected String getEventArgName() {
 			String result = null ;
-			if (fExpr != null && fExpr instanceof MessageSend) {
-				MessageSend ms = (MessageSend) fExpr ;
-				if (ms.arguments != null && ms.arguments.length>0 && ms.arguments[0] instanceof QualifiedAllocationExpression) {
-					QualifiedAllocationExpression alt = (QualifiedAllocationExpression) ms.arguments[0] ;
+			if (fExpr != null && getExpression() instanceof MethodInvocation) {
+				MethodInvocation ms = (MethodInvocation) getExpression() ;
+				if (ms.arguments().size()>0 && ms.arguments().get(0) instanceof ClassInstanceCreation) {
+					ClassInstanceCreation alt = (ClassInstanceCreation) ms.arguments().get(0) ;
 				
-					if (alt.anonymousType instanceof TypeDeclaration) {
-						TypeDeclaration lt = (TypeDeclaration) alt.anonymousType ;
-						if(lt.methods != null && lt.methods.length>0) {
-							MethodDeclaration md = (MethodDeclaration) lt.methods[0] ;
-							if (md.arguments != null && md.arguments.length>0 && (md.arguments[0] instanceof Argument)) {
-								Argument arg = (Argument) md.arguments[0] ;
-								return String.valueOf(arg.name);
+					if (alt.getAnonymousClassDeclaration() != null) {
+						AnonymousClassDeclaration lt =  alt.getAnonymousClassDeclaration();
+						List methods = getMethods(lt);
+						if(methods.size()>0) {
+							MethodDeclaration md = (MethodDeclaration) methods.get(0) ;
+							if (md.parameters().size()>0 && (md.parameters().get(0) instanceof SingleVariableDeclaration)) {
+								SingleVariableDeclaration arg = (SingleVariableDeclaration) md.parameters().get(0);
+								return arg.getName().getIdentifier();
 							}
 						}
 					}													
 				}						
 			}
-			return result ;
+			return result ; 
 		}
 	
 	/**
@@ -681,6 +685,25 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			return null ;
 		}    	    	
 		return ml ;    	
+	}
+	
+	/**
+	 * One type statement are possible 
+	 * Expression Statement 
+	 * @param stmt
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected Expression getExpression(Statement stmt) {
+		if (stmt==null) return null;
+		if (stmt instanceof ExpressionStatement)
+			return ((ExpressionStatement)stmt).getExpression();
+		
+		return null ;
+	}
+	protected Expression getExpression() {
+		return getExpression(fExpr);
 	}
 
 

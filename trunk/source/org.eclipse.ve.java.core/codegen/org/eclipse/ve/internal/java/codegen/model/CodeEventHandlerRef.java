@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventHandlerRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+
 
 /**
  * @author Gili Mendel
