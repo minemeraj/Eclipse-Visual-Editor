@@ -11,10 +11,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-12 17:51:34 $ 
+ *  $Revision: 1.11 $  $Date: 2004-08-16 17:57:06 $ 
  */
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.FigureListener;
@@ -150,7 +150,7 @@ protected List getModelChildren() {
 	if (isOnScrollPane) {
 		return getChildJavaBeans();
 	} else {
-		return new ArrayList();
+		return Collections.EMPTY_LIST;
 	}
 }
 
