@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2004-07-12 16:17:56 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.8 $ $Date: 2004-08-27 15:35:50 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -90,7 +90,8 @@ public class ResourceProxyAdapter extends BeanProxyAdapter {
 							disposeWidgetMethodProxy.invoke(resourceBeanProxy);
 							return null;
 						}
-				});			}
+				});
+			}
 		}
 		super.releaseBeanProxy();
 	}

@@ -1,7 +1,6 @@
-package org.eclipse.ve.internal.java.vce.rules;
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,9 +8,10 @@ package org.eclipse.ve.internal.java.vce.rules;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-04 22:31:20 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:10 $ 
  */
 
 import java.util.*;
