@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 /*******************************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +13,7 @@
 
 public class VisualClassSourceWizardSkeleton implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-public String generateSource(String typeName, String superClassName) {
+public String generateSource(String typeName, String superClassName, HashMap argumentMatrix) {
 	return "";
 }
 

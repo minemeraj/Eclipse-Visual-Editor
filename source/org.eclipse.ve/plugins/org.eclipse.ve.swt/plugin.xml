@@ -169,6 +169,30 @@
       <contributor container="SWT_CONTAINER" plugin="org.eclipse.swt"
             class="org.eclipse.ve.internal.swt.SWTChooseBeanContributor">
       </contributor>
-   </extension>   
+   </extension>
+
+<!-- Contribute to the New Visual wizard to populate the Style tree -->
+
+  <extension
+ 		point="org.eclipse.ve.java.core.newStyleComponent">
+		<category
+			name="SWT"
+			id="org.eclipse.ve.swt.cat"
+			priority="100"
+			defaultExpand="true">
+		</category>
+			<visualElement
+				name="Application"
+				category="org.eclipse.ve.swt.cat"
+				type="java.lang.Object"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Composite"
+				category="org.eclipse.ve.swt.cat"
+				type="org.eclipse.swt.widgets.Composite"
+				contributor="STILL.UNDER.DEVELOPMENT.org.eclipse.ve.internal.swt.codegen.contributors.SetSizeSourceContributor">
+			</visualElement>
+  </extension>   
 
 </plugin>
