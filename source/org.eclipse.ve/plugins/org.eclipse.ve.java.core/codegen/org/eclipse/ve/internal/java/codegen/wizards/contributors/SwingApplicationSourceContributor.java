@@ -1,10 +1,3 @@
-/*
- * Created on Jun 2, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.java.codegen.wizards.contributors;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -17,8 +10,10 @@ package org.eclipse.ve.internal.java.codegen.wizards.contributors;
  *******************************************************************************/
 /*
  *  $RCSfile: SwingApplicationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-11-16 21:34:23 $ 
+ *  $Revision: 1.2 $  $Date: 2004-11-19 16:00:56 $ 
  */
+
+package org.eclipse.ve.internal.java.codegen.wizards.contributors;
 
 import java.net.URL;
 
