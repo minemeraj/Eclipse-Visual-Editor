@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-10 17:52:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -1119,7 +1119,15 @@ public class TypeResolver {
 	
 
 	private IType findType(IType outerType, String innerTypeName) throws JavaModelException {
-		return javaProject.findType(outerType.getPackageFragment().getElementName(), outerType.getTypeQualifiedName('.')+'.'+innerTypeName);		
+	IJavaElement[] children = outerType.getChildren();
+	for (int i = 0; i < children.length; i++) {
+		if (children[i].getElementType() == IJavaElement.TYPE) {
+			IType t = (IType) children[i];
+			if (t.getElementName().equals(innerTypeName))
+				return t;
+		}
+	}
+	return null;
 	}
 	
 	private ResolvedType addToResolved(String simpleName, IType resolvedType) {
@@ -1590,7 +1598,7 @@ public class TypeResolver {
 						pkgBuild.append('.');	// Add the separator for ext package fragment.
 					}
 					
-					if (rt == null)
+					if (rt == null) 
 						return null;	// We went all of the way and never found a type.
 				}				
 			}

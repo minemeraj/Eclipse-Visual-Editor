@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2004-07-16 15:52:10 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-10 17:52:26 $ 
  */
 
 import java.util.List;
@@ -159,7 +159,7 @@ public void setModel(Object model) {
 private IBeanProxy getHeaderProxy() {
 	if (fHeaderProxy == null || !fHeaderProxy.isValid()) {
 		IBeanProxy tableProxy = getComponentProxy().getBeanProxy();
-		IMethodProxy getTableHeader = tableProxy.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(tableProxy.getTypeProxy().getTypeName(), "getTableHeader", null); //$NON-NLS-1$
+		IInvokable getTableHeader = tableProxy.getTypeProxy().getInvokable("getTableHeader"); //$NON-NLS-1$
 		fHeaderProxy = getTableHeader.invokeCatchThrowableExceptions(tableProxy);
 	}
 	return fHeaderProxy;
@@ -167,7 +167,7 @@ private IBeanProxy getHeaderProxy() {
 
 private IMethodProxy getGetHeaderRect() {
 	if (fGetHeaderRect == null) {
-		fGetHeaderRect = getHeaderProxy().getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(getHeaderProxy().getTypeProxy().getTypeName(), "getHeaderRect", new String[] { "int" }); //$NON-NLS-1$ //$NON-NLS-2$
+		fGetHeaderRect = getHeaderProxy().getTypeProxy().getMethodProxy("getHeaderRect", new String[] { "int" }); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return fGetHeaderRect;
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFrameProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-10 17:52:26 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -54,10 +54,10 @@ public class JFrameProxyAdapter extends WindowProxyAdapter {
 			IBeanTypeProxy intType = getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int"); //$NON-NLS-1$
 			try {
 				IIntegerBeanProxy intBeanProxy = (IIntegerBeanProxy) intType.newInstance("javax.swing.JFrame.DO_NOTHING_ON_CLOSE"); //$NON-NLS-1$
-				IMethodProxy setDefaultCloseOperationMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("setDefaultCloseOperation", "int"); //$NON-NLS-1$ //$NON-NLS-2$
-
-				if (intBeanProxy != null && setDefaultCloseOperationMethodProxy != null)
-					setDefaultCloseOperationMethodProxy.invokeCatchThrowableExceptions(getBeanProxy(), intBeanProxy);
+				if (intBeanProxy != null) {
+					IInvokable setDefaultCloseOperationInvokable = getBeanProxy().getTypeProxy().getInvokable("setDefaultCloseOperation", "int"); //$NON-NLS-1$ //$NON-NLS-2$
+					setDefaultCloseOperationInvokable.invokeCatchThrowableExceptions(getBeanProxy(), intBeanProxy);
+				}
 			} catch (ThrowableProxy e) {
 			} catch (InstantiationException e) {
 			}

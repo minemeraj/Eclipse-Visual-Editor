@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-10 17:52:26 $ 
  */
 
 import java.util.Iterator;
@@ -47,14 +47,13 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 			// Creating proxy worked.
 			// Query the current table model - If it is the Default then replace it with our one
 			// That has preview data
-			IBeanProxy tableModelProxy = getBeanProxy().getTypeProxy().getMethodProxy("getModel").invokeCatchThrowableExceptions(getBeanProxy()); //$NON-NLS-1$
+			IBeanProxy tableModelProxy = getBeanProxy().getTypeProxy().getInvokable("getModel").invokeCatchThrowableExceptions(getBeanProxy()); //$NON-NLS-1$
 			if (tableModelProxy.getTypeProxy().getTypeName().equals("javax.swing.table.DefaultTableModel")) { //$NON-NLS-1$
 				// Set the table model to be a special one we have on the target VM
 				IBeanTypeProxy previewTypeProxy =
 					getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.PreviewTableModel");	//$NON-NLS-1$
-				IMethodProxy setModelProxy = getBeanProxy().getTypeProxy().getMethodProxy("setModel", "javax.swing.table.TableModel");	//$NON-NLS-1$ //$NON-NLS-2$
 				try {
-					setModelProxy.invoke(getBeanProxy(), previewTypeProxy.newInstance());
+					getBeanProxy().getTypeProxy().getInvokable("setModel", "javax.swing.table.TableModel").invoke(getBeanProxy(), previewTypeProxy.newInstance());
 				} catch (ThrowableProxy exc) {
 					JavaVEPlugin.log(exc, Level.WARNING);
 				}

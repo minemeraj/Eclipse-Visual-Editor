@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.11 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.12 $  $Date: 2004-08-10 17:52:23 $ 
  */
 
 import java.util.HashMap;
@@ -40,6 +40,9 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
+		if (resolveType(field.getType(), resolver) == null)
+			return true;	// If not resolved, ignore it.
+
 		if (isModelled(field.getType(), resolver, di))
 			return false;
 		if (AnnotationDecoderAdapter.isDeclarationParseable(field))
@@ -51,6 +54,9 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	public boolean ignoreVariable(VariableDeclarationStatement stmt, TypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
+		if (resolveType(stmt.getType(), resolver) == null)
+			return true;	// If not resolved, ignore it.
+		
 		if (isModelled(stmt.getType(), resolver, di))
 			return false;
 		if (AnnotationDecoderAdapter.isDeclarationParseable(stmt))
@@ -60,36 +66,24 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	}
 	
 	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, TypeResolver resolver, IVEModelInstance di) {
-		try {
-			String name = decl.getName().getIdentifier();
-			if (name.startsWith("ivj")) {
-				// Ignore VCE connections
-				if (name.startsWith("ivjConn")) //$NON-NLS-1$
-					return true;
-				else {
-					String type = resolveType(tp, resolver);
-					if (type == null)
-						return true;
-					if (type.indexOf("$") >= 0) //$NON-NLS-1$
-						type = type.substring(type.indexOf("$") + 1); //$NON-NLS-1$
-
-					if (type.startsWith("Ivj"))
-						return true; // ignore IvjEventHandler and such //$NON-NLS-1$
-				}
-				return false;
-			} 
-			
-			String type = resolveType(tp, resolver);
-			if (type == null)
+		String name = decl.getName().getIdentifier();
+		if (name.startsWith("ivj")) {
+			// Ignore VCE connections
+			if (name.startsWith("ivjConn")) //$NON-NLS-1$
 				return true;
-			String t = type.indexOf("$") >= 0 ? type.substring(type.indexOf("$") + 1) : type; //$NON-NLS-1$ //$NON-NLS-2$
-			if (t.startsWith("Ivj"))
-				return true; // ignore IvjEventHandler and such //$NON-NLS-1$
-
-			return true;
-		} catch (Throwable t) {
-			return true;
-		}
+			else {
+				String type = resolveType(tp, resolver);
+				if (type == null)
+					return true;
+				// Find the index of the first inner class (i.e. x.y.z.Q$Ivj...) If this is actually an inner of
+				// an inner class, it is the first inner class that counts. We know the pattern from VAJ has Ivj...
+				// as an immediate inner class of the main class. These are event handlers and should be ignored.
+				int firstInner = type.indexOf('$', type.lastIndexOf('.')+1)+1;
+				return type.startsWith("Ivj", firstInner);	// ignore IvjEventHandler and such //$NON-NLS-1$
+			}
+		} 
+		
+		return true;
 	}
 	
 	protected String resolveType(Type t, TypeResolver resolver) {
@@ -103,27 +97,28 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	 */
 	protected boolean isModelled(Type tp, TypeResolver resolver, IVEModelInstance di) {
 
+		String resolvedType = resolveType(tp, resolver);
+		if (resolvedType == null)
+			return false;
+		
 		// Try to bypass resolving, and isAssignableFrom
 		if (modelledBeansCache == null)
 			modelledBeansCache = new HashMap(200);
-		Boolean internal = (Boolean) modelledBeansCache.get(resolveType(tp, resolver));
+		
+		Boolean internal = (Boolean) modelledBeansCache.get(resolvedType);
 		if (internal != null)
 			return internal.booleanValue();
-
-		String t = resolveType(tp, resolver);
 		
-		if (t == null)
-			return false;
 		try {
-			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(t, di.getModelResourceSet());
+			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(resolvedType, di.getModelResourceSet());
 			boolean result = InstanceVariableCreationRule.isModelled(iClass, iClass.eResource().getResourceSet());
-			modelledBeansCache.put(resolveType(tp,resolver), new Boolean(result));
+			modelledBeansCache.put(resolvedType, result ? Boolean.TRUE : Boolean.FALSE);
 			return result;
 		} catch (Exception e) {
-			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
+			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + resolvedType, Level.FINE); //$NON-NLS-1$
 		}
 
-		modelledBeansCache.put(resolveType(tp,resolver), Boolean.FALSE);
+		modelledBeansCache.put(resolvedType, Boolean.FALSE);
 		return false;
 	}
 	public static void clearCache() {
