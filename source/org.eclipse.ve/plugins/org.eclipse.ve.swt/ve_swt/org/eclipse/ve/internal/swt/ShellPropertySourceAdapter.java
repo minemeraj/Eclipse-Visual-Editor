@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-19 23:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-15 21:24:56 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,6 +32,7 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 		if (allocationExpression instanceof PTClassInstanceCreation) {
 			PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) allocationExpression;
 			PTExpression newArg = null;
+			PTExpression currentArg = null;
 			switch (classInstanceCreation.getArguments().size()) {
 				case 0:
 					// No args. So get changed arg. Tricky here, but if changed arg does not contain SHELL_TRIM, we need
@@ -62,7 +63,8 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 					// to or it in and will again get bad code. But maybe better than ignoring it.
 					newArg = (PTExpression) classInstanceCreation.getArguments().get(0);
 					if (newArg instanceof PTFieldAccess || newArg instanceof PTInfixExpression) {
-						newArg = getChangedStyleExpression((PTExpression) classInstanceCreation.getArguments().get(0), propertyID, styleBit);
+						currentArg = (PTExpression) classInstanceCreation.getArguments().set(0, InstantiationFactory.eINSTANCE.createPTNullLiteral());
+						newArg = getChangedStyleExpression(currentArg, propertyID, styleBit);
 						if (newArg != null)
 							classInstanceCreation.getArguments().set(0, newArg);
 						else
@@ -90,7 +92,8 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 				case 2:
 					// If 2, then style is definitely the second arg. We will not add in trim if we have an arg
 					// because trim has already been taken care of (i.e. they added it or wasn't there, don't force it).
-					newArg = getChangedStyleExpression((PTExpression) classInstanceCreation.getArguments().get(1), propertyID, styleBit);
+					currentArg = (PTExpression) classInstanceCreation.getArguments().set(1, InstantiationFactory.eINSTANCE.createPTNullLiteral());
+					newArg = getChangedStyleExpression(currentArg, propertyID, styleBit);
 					if (newArg != null)
 						classInstanceCreation.getArguments().set(1, newArg);
 					else {
@@ -101,7 +104,8 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 				default:
 					// If >2, then style is definitely the second arg. We will not add in trim if we have an arg
 					// because trim has already been taken care of (i.e. they added it or wasn't there, don't force it).
-					newArg = getChangedStyleExpression((PTExpression) classInstanceCreation.getArguments().get(1), propertyID, styleBit);
+					currentArg = (PTExpression) classInstanceCreation.getArguments().set(0, InstantiationFactory.eINSTANCE.createPTNullLiteral());
+					newArg = getChangedStyleExpression(currentArg, propertyID, styleBit);
 					if (newArg != null)
 						classInstanceCreation.getArguments().set(1, newArg);
 					else {

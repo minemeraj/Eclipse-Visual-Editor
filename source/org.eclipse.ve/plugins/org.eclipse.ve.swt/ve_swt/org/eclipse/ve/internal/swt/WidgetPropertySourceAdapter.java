@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.16 $ $Date: 2004-06-03 14:45:07 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.17 $ $Date: 2004-06-15 21:24:56 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -678,7 +678,12 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			// Use >= 2 because some have three or more, but the second arg is the style.
 			// TODO It would be nice if we could get this info from introspection instead of hard-coding.
 			if (classInstanceCreation.getArguments().size() >= 2) {
-				PTExpression newArg = getChangedStyleExpression((PTExpression) classInstanceCreation.getArguments().get(1), propertyID, styleBit);
+				// Put "null" there as a place-holder so that we don't loose the entry from arg list. This could happen because the
+				// current arg(1) could be pulled and put into a new expression. This would then remove the setting from index 1.
+				// This could accidently collapse the third arg into the second arg. By putting the placeholder there we don't loose
+				// the spot.
+				PTExpression currentArg = (PTExpression) classInstanceCreation.getArguments().set(1, InstantiationFactory.eINSTANCE.createPTNullLiteral());
+				PTExpression newArg = getChangedStyleExpression(currentArg, propertyID, styleBit);
 				if (newArg == null) {
 					// Set go back to no style expression. The default for Widget is SWT.NONE.
 					PTName name = InstantiationFactory.eINSTANCE.createPTName(SWT_TYPE_ID);
