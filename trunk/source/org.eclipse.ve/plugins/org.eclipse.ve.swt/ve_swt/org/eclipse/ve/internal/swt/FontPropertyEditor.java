@@ -12,9 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -50,22 +48,9 @@ public class FontPropertyEditor implements PropertyEditor {
 	}
 	
 	public String getJavaInitializationString() {
-		String SWT_PREFIX = "org.eclipse.swt.SWT"; //$NON-NLS-1$
-		if (customFontEditor != null)
-			value = customFontEditor.getValue();
-		if (value == null)
-			return "null"; //$NON-NLS-1$
-		FontData fd = value.getFontData()[0];
-		String style;
-		switch (fd.getStyle()) {
-			case SWT.NORMAL : style = SWT_PREFIX + ".NORMAL"; break; //$NON-NLS-1$
-			case SWT.BOLD   : style = SWT_PREFIX + ".BOLD"; break; //$NON-NLS-1$
-			case SWT.ITALIC : style = SWT_PREFIX + ".ITALIC"; break; //$NON-NLS-1$
-			case SWT.BOLD | SWT.ITALIC : style = SWT_PREFIX + ".BOLD | " + SWT_PREFIX + ".ITALIC"; break; //$NON-NLS-1$ //$NON-NLS-2$
-			default :
-				style = SWT_PREFIX + ".NORMAL"; //$NON-NLS-1$
-		}
-		return "new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), \"" + fd.getName() + "\", " + String.valueOf(fd.getHeight()) + ", " + style + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if(customFontEditor != null)
+			return customFontEditor.getJavaInitializationString();
+		return "null";
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if(customFontEditor != null)
