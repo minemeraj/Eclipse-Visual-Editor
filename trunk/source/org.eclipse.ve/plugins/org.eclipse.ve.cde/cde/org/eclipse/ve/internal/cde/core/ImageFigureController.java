@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageFigureController.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-03 20:06:30 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:25:06 $ 
  */
 
 package org.eclipse.ve.internal.cde.core;
@@ -235,9 +235,9 @@ public class ImageFigureController {
 						}
 
 						if (!isCrossHatch())
-							lightenImageData = ImageDataHelper.mixAlphaWithinRegion(imageData, region, .25, lightenColor);
+							lightenImageData = ImageDataHelper.mixAlphaWithinRegion(imageData, region, getAlpha(), getLightenColor());
 						else
-							lightenImageData = ImageDataHelper.mixAlphaAndCrossHatchWithinRegion(imageData, region, .25, lightenColor,
+							lightenImageData = ImageDataHelper.mixAlphaAndCrossHatchWithinRegion(imageData, region, getAlpha(), getLightenColor(),
 									getCrossHatchColor());
 					} finally {
 						region.dispose();
@@ -276,7 +276,8 @@ public class ImageFigureController {
 		synchronized (this) {
 			if (lightenFigures == null)
 				lightenFigures = new ArrayList(2);
-			if(lightenFigures.indexOf(fig) != -1) return; // If the figure is already being lightened then don't do it again
+			if(lightenFigures.contains(fig)) 
+				return; // If the figure is already being lightened then don't do it again
 			lightenFigures.add(fig); // Add to our watched list
 			if (fig != figure) {
 				// If the fig is this same fig, no need to listen because we already
@@ -344,6 +345,8 @@ public class ImageFigureController {
 		synchronized (this) {
 			if (unlightenFigures == null)
 				unlightenFigures = new ArrayList(2);
+			if (unlightenFigures.contains(aFigure))
+				return;	// Already added, don't add again.
 			unlightenFigures.add(aFigure); // Add to our watched list
 			if (aFigure != figure) {
 				// If the fig is this same fig, no need to listen because we already
@@ -408,7 +411,7 @@ public class ImageFigureController {
 	}
 
 	/**
-	 * @param lightenColor The lightenColor to set.
+	 * @param lightenColor The lightenColor to set. <code>null</code> to reset back to default color.
 	 */
 	public void setLightenColor(RGB lightenColor) {
 		if (lightenColor == null)
@@ -425,7 +428,7 @@ public class ImageFigureController {
 	}
 
 	/**
-	 * @param crossHatchColor The crossHatchColor to set.
+	 * @param crossHatchColor The crossHatchColor to set. <code>null</code> to reset to default color.
 	 */
 	public void setCrossHatchColor(RGB crossHatchColor) {
 		if (crossHatchColor == null)
@@ -442,7 +445,7 @@ public class ImageFigureController {
 	}
 
 	/**
-	 * @param alpha The alpha to set.
+	 * @param alpha The alpha to set. (0.0 to 1.0 is valid, outside of this range will reset to default alpha).
 	 */
 	public void setAlpha(double alpha) {
 		if (alpha < 0.0 || alpha > 1.0)
