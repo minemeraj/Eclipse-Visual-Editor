@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-05 23:11:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-24 17:56:08 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -35,7 +35,6 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	
 	public TableColumnProxyAdapter(IBeanProxyDomain aDomain) {
 		super(aDomain);
-
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
 		sfModelIndex = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_MODELINDEX);		
 		sfHeaderValue = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_HEADERVALUE);
@@ -48,9 +47,9 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 */
 	public void validateBeanProxy() {
 	
-		EObject table = ((EObject) getTarget()).eContainer();
-		// If we are on the freeform then container will not be an instance of table.
-		if (table instanceof IJavaObjectInstance) {
+		EObject table = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(),sfTableColumns);
+		// If we are on the freeform then container will not be an instance of table
+		if (table != null) {
 			IBeanProxyHost tableProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) table);
 			// The table is a Component so this should refresh the shell and the image
 			tableProxyHost.revalidateBeanProxy();
@@ -61,8 +60,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(EStructuralFeature, Object, int)
 	 */
 	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		super.applied(sf, newValue, position);
-		
+		super.applied(sf, newValue, position);		
 		modelIndexChanged(sf);
 	}
 

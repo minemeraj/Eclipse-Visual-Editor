@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-20 23:03:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-24 17:56:08 $ 
  */
 
 import java.util.*;
@@ -98,9 +98,8 @@ private void refreshColumns(){
 }
 
 protected List getModelChildren() {
-	return Collections.EMPTY_LIST;
-//  TODO - TableColumn graphical edit part not completed yet - JRW
-//	return (List) getBean().eGet(getSFColumns());
+	if(true)return Collections.EMPTY_LIST;
+	return (List) getBean().eGet(sfColumns);
 }
 /**
  * TableColumnGraphicalEditPart is not allowed on the free form as it is specially designed for a TableColumn
