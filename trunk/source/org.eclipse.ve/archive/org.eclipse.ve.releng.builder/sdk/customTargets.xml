@@ -39,7 +39,7 @@
 
 	<property name="mapVersionTag" value="HEAD" />
 	<cvs cvsRoot="${mapCvsRoot}"
-		package="org.eclipse.gef.releng"
+		package="org.eclipse.ve.releng"
 		dest="${buildDirectory}/maps"
 		tag="${mapVersionTag}"
 	/>
