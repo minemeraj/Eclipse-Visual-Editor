@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.18 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.19 $  $Date: 2004-05-24 13:02:26 $ 
  */
 
 import java.util.Iterator;
@@ -294,12 +294,16 @@ public CodeExpressionRef parseInitExpression() {
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);	
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
 	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-	
+	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);		
 	// add it into the BDM
 	exp.setBean(fBeanPart) ;
-	fExpr = exp ;
-	
+	fExpr = exp;
+	try {
+		// Force the decoder to generate ... it will also adapt to the VE model
+		exp.getExpDecoder().generate(exp.getSF(),null);
+	} catch (CodeGenException e) {
+		JavaVEPlugin.log(e);
+	}
 	return fExpr ;		
 }
 
