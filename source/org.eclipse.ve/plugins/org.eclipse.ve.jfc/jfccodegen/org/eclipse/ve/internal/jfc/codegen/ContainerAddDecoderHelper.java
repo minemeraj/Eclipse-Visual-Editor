@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.18 $  $Date: 2005-02-21 22:51:22 $ 
  */
 
 import java.util.*;
@@ -231,6 +231,14 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			cleanProperty(fAddedInstance);
 		cleanProperty(fAddedConstraintInstance);
 	}
+	
+	protected JavaAllocation getAllocation (Expression exp, List ref) {
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		   JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+		 		  ConstructorDecoderHelper.getParsedTree(exp,
+		 		  expOfMethod,fbeanPart.getModel(),ref));
+		return alloc;
+	}
 
 	protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 		// TODO   Need to deal with multiple arguments, and nesting
@@ -257,15 +265,19 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
 		} else if (args.get(0) instanceof ClassInstanceCreation) {
-			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
-			if (resolved == null)
+			if (fAddedInstance==null) {
+ 			 Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
+			 if (resolved == null)
 				return null;
-			String clazzName = resolved.getName();  			
-			IJavaObjectInstance obj =
+			 String clazzName = resolved.getName();  			
+			 IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
-			JavaClass c = (JavaClass) obj.getJavaType();
-			if (c.isExistingType())
-				fAddedInstance = obj;
+			 JavaClass c = (JavaClass) obj.getJavaType();
+			 if (c.isExistingType()) {
+				  fAddedInstance = obj;
+			      fAddedInstance.setAllocation(getAllocation((Expression)args.get(0),null));
+			 }
+			}
 		}
 		if (bp != null)
 			fAddedInstance = (IJavaObjectInstance) bp.getEObject();
@@ -303,9 +315,6 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 	}
 	protected IJavaObjectInstance parseAllocatedConstraint(ClassInstanceCreation exp) {
-		// resolve class qualification 
-//		String initString = addQualifier(exp.toString(), exp.type.toString(), type);
-//		initString = resolveArgQualification(exp.arguments, initString);
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fbeanPart.getModel(), null);
 		IJavaObjectInstance result = null;
@@ -354,7 +363,23 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 	}
 
 	protected boolean understandAddArguments(List args, BeanPart oldAddedPart, BeanPart newAddedPart) throws CodeGenException {
-		boolean addedPartChanged = newAddedPart!=oldAddedPart;
+		boolean addedPartChanged = newAddedPart!=oldAddedPart;		
+		if (!addedPartChanged) {			
+			// added part may be a property e.g., add (new JPanel()) .. no BeanParts
+			if (fCC!=null) {
+				if (args.get(0) instanceof ClassInstanceCreation) {
+				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
+				   JavaAllocation astAlloc = getAllocation((Expression)args.get(0),null);
+				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
+				   if (!curAllocation.equals(astAllocation)) {
+				   	fAddedInstance.setAllocation(astAlloc);
+				   	addedPartChanged = true;
+				   }
+				}
+			}
+			else
+				addedPartChanged = fAddedInstance != null;
+		}
 		boolean constraintChanged = !canAddingBeSkippedByOffsetChanges(oldAddedPart, newAddedPart);
 		
 		IJavaObjectInstance tmpAddedConstraintInstance = null;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-21 22:51:22 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -65,6 +65,11 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			// fAddedIndex may inforce an insert mathod, vs. and add method
 			//  fAddedIndex = Integer.toString(i) ;
 		}
+		
+		if (toAdd.eContainer()==null){
+	    	//  not in the model yet ... no Bean Part
+	       fbeanPart.getInitMethod().getCompMethod().getProperties().add(toAdd);
+		}
 
 		CodeGenUtil.eSet(target.getEObject(), 
 				fFmapper.getFeature(null), 
@@ -102,27 +107,32 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			
 		
 		// Parse the arguments to figure out which bean to add to this container
-		if (args.get(0) instanceof MethodInvocation)  {
+		if (args.get(getAddedPartArgIndex(args.size())) instanceof MethodInvocation)  {
 			// Look to see of if this method returns a Bean
-			String selector = ((MethodInvocation)args.get(0)).getName().getIdentifier();  
+			String selector = ((MethodInvocation)args.get(getAddedPartArgIndex(args.size()))).getName().getIdentifier();  
 			bp = fOwner.getBeanModel().getBeanReturned(selector) ;       	
 		}
-		else if (args.get(0) instanceof SimpleName){
+		else if (args.get(getAddedPartArgIndex(args.size())) instanceof SimpleName){
 			// Simple reference to a bean
-			String beanName =((SimpleName)args.get(0)).getIdentifier();
+			String beanName =((SimpleName)args.get(getAddedPartArgIndex(args.size()))).getIdentifier();
 			bp = fOwner.getBeanModel().getABean(beanName) ;
 			if(bp==null)
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),beanName));
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
 		}
-		else if (args.get(0) instanceof ClassInstanceCreation) {
-			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
-			if (resolved == null)
-				return null;
-			String clazzName = resolved.getName();			
-			IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
-			JavaClass c = (JavaClass) obj.getJavaType() ;
-			if (c.isExistingType()) fAddedInstance = obj ;      
+		else if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
+			if (fAddedInstance==null) {
+				Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(getAddedPartArgIndex(args.size()))).getName());
+				if (resolved == null)
+					return null;
+				String clazzName = resolved.getName();			
+				IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
+				JavaClass c = (JavaClass) obj.getJavaType() ;
+				if (c.isExistingType()) {
+					fAddedInstance = obj ;
+					obj.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null));
+				}
+			}
 		}
 		return bp ;
 	}
@@ -330,7 +340,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	protected EObject getRootObject(boolean cache) {
 		if (fRootObj != null && cache)
 			return fRootObj;
-		if (fAddedPart != null) fAddedInstance = fAddedPart.getEObject() ;		
+		if (fAddedPart != null) fAddedInstance = (IJavaObjectInstance) fAddedPart.getEObject() ;		
 		// No actual MetaRoot ... so return null, if are not added to our parent
 		EObject targetRoot = fbeanPart.getEObject();
 		if (fAddedInstance != null &&
@@ -484,5 +494,8 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	 */
 	protected int getIndexPriority() {		
 		return SWTConstructorDecoderHelper.getIndexPriority(fAddedPart,getIndexedEntries());
+	}
+	protected int getAddedPartArgIndex(int argsSize) {		
+		return 0;
 	}
 }

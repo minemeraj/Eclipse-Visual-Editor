@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-21 22:51:21 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -140,7 +140,9 @@ public class VEModelInstance implements IVEModelInstance {
 		return isFromCache;
 	}
 	public void loadFromCacheComplete() {
-		VEModelCacheUtility.removeCacheAnnotationFromEMFModel(this);
-		isFromCache=false;
+		if (isFromCache) {
+		  VEModelCacheUtility.removeCacheAnnotationFromEMFModel(this);
+		  isFromCache=false;
+		}
 	}
 }

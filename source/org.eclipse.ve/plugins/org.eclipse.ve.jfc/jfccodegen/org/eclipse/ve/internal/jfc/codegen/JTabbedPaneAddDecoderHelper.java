@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.16 $  $Date: 2005-02-21 22:51:22 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -103,6 +103,11 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			// fAddedIndex may inforce an insert mathod, vs. and add method
 			//  fAddedIndex = Integer.toString(i) ;
 		}
+		
+		if (toAdd.eContainer()==null) {
+			// not in the model yet ... no Bean Part
+			fbeanPart.getInitMethod().getCompMethod().getProperties().add(toAdd);
+		}
 
 		EClass rootClass = getRootClass();
 		EObject root = (EObject) rootClass.getEPackage().getEFactoryInstance().create(rootClass);
@@ -164,15 +169,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 				//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+selector);
 			}
 		} else if (arg instanceof ClassInstanceCreation) {
-			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)arg).getName());
-			if (resolved == null)
+			if (fAddedInstance==null) {
+			  Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)arg).getName());
+			  if (resolved == null)
 				return null;
-			String clazzName = resolved.getName();
-			IJavaObjectInstance obj =
+			  String clazzName = resolved.getName();
+			  IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
-			JavaClass c = (JavaClass) obj.getJavaType();
-			if (c.isExistingType())
+			  JavaClass c = (JavaClass) obj.getJavaType();
+			  if (c.isExistingType()) {
 				fAddedInstance = obj;
+				fAddedInstance.setAllocation(getAllocation(arg,null));
+			  }
+			}
 		}
 
 		return bp;
@@ -188,14 +197,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		List args = exp.arguments();
 
-		if (args.size() >= 4)
-			bp = resolveAddedComponent((Expression)args.get(2));
-		else if (args.size() == 2)
-			bp = resolveAddedComponent((Expression)args.get(1));
-		else if (args.size() == 1)
-			bp = resolveAddedComponent((Expression)args.get(0));
-		else
-			throw new CodeGenException("Bad Arguments !!! " + exp); //$NON-NLS-1$
+		bp = resolveAddedComponent((Expression)args.get(getAddedPartArgIndex(args.size())));
 
 		return bp;
 	}
@@ -435,15 +437,6 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 				|| sf.equals(rootEClass.getEStructuralFeature(TAB_TOOLTIP_ATTR_NAME))
 				|| sf.equals(rootEClass.getEStructuralFeature(TAB_TITLE_ATTR_NAME)));
 
-		//	if (sf != null) {
-		//		for (int i=0; i<hSF.length; i++) {
-		//		  if (sf.equals(hSF[i])) {
-		////		   || (hSF[i].((XMIResource)eResource()).getID(this) != null && hSF[i].((XMIResource)eResource()).getID(this).((XMIResource)equals(sf.eResource()).getID(equals(sf)))) 
-		//		     return true ;
-		//		  }
-		//		}
-		//	}
-		//	return false ;
 	}
 
 	/**
@@ -555,6 +548,20 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			}
 		}
 		return shouldCommit;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#getAddedPartArgIndex()
+	 */
+	protected int getAddedPartArgIndex(int argsSize) {	
+		if (argsSize >= 4)
+			return 2;
+		else if (argsSize == 2)
+			return 1;
+		else if (argsSize == 1)
+			return 0;
+		else 
+			throw new IllegalArgumentException("Bad number of Arguments !!! "); //$NON-NLS-1$		
 	}
 
 }
