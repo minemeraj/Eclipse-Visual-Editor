@@ -78,7 +78,7 @@ while [ "$#" -gt 0 ] ; do
         shift 1
 done
 
-if [ -z $target && -z $buildType ] ; then
+if [[ -z $target && -z $buildType ]] ; then
 	usage
 	exit 0
 fi
