@@ -9,7 +9,7 @@ package org.eclipse.ve.internal.swt;
  **************************************************************************************************/
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.4 $ $Date: 2004-06-14 22:04:53 $
+ * $Revision: 1.5 $ $Date: 2004-07-19 18:45:51 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -440,10 +440,11 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				}
 			} else if (helper.isOnSameRow(epIndex - 1, epIndex)) {
 				// between two elements on the same row
-				Rectangle other = getAbsoluteBounds((GraphicalEditPart)getHost().getChildren().get(epIndex - 1));
-				x = other.right() + (r.x - other.right()) / 2;
-				if (other.height < r.height) {
-					r = other;
+				Rectangle otherFigure = getAbsoluteBounds((GraphicalEditPart)getHost().getChildren().get(epIndex - 1));
+				Rectangle otherGrid = getGridLayoutGridFigure().getGridBroundsForCellBounds(helper.getChildrenDimensions()[epIndex - 1]);
+				x = otherGrid.right() + (r.x - otherGrid.right()) / 2;
+				if (otherFigure.height < r.height) {
+					r = otherFigure;
 				}
 			} else if (helper.isCellEmptyBefore(epIndex)){
 				// There's empty cells on the preceeding row, so put on the right edge of

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-07 12:46:42 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-19 18:45:51 $ 
  */
 
 import org.eclipse.draw2d.ColorConstants;
@@ -381,6 +381,46 @@ public Rectangle getCellBounds(int x, int y) {
 	} 
 	return new Rectangle(cellxpos, cellypos, cellwidth, cellheight);
 }
+
+/**
+ * Get the grid point size dimensions for the specified cell dimensions.  The cells dimensions
+ * are packed into a Rectangle according to the following rules:
+ * 
+ * rect.x = column position
+ * rect.y = row position
+ * rect.width = horizontal span
+ * rect.height = vertical span
+ * 
+ * @param cellsBounds  The cell area to calculate
+ * @return the point dimensions for the grid representing these cells.
+ * 
+ * @since 1.0.0
+ */
+public Rectangle getGridBroundsForCellBounds(Rectangle cellsBounds) {
+	Rectangle r = new Rectangle();
+	if (rowPositions != null && columnPositions != null && cellsBounds.y <= rowPositions.length - 1 &&
+			cellsBounds.x <= columnPositions.length - 1) {
+		r.x = columnPositions[cellsBounds.x];
+		r.y = rowPositions[cellsBounds.y];
+		
+		if (cellsBounds.x + cellsBounds.width > columnPositions.length - 1) {
+			r.width = columnPositions[columnPositions.length - 1];
+		} else {
+			r.width = columnPositions[cellsBounds.x + cellsBounds.width];
+		}
+		r.width -= r.x;
+		
+		if (cellsBounds.y + cellsBounds.height > rowPositions.length - 1) {
+			r.height = rowPositions[rowPositions.length - 1];
+		} else {
+			r.height = rowPositions[cellsBounds.y + cellsBounds.height];
+		}
+		r.height -= r.y;
+	}
+	return r;
+	
+}
+
 public Point getColumnStartPosition(int x) {
 	if (columnStartPositions != null) {
 		for (int i = 0; i < columnPositions.length; i++) {
