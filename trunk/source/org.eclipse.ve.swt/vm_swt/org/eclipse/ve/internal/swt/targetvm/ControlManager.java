@@ -82,7 +82,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 			try {
 				fServer.doCallback(new ICallbackRunnable() {
 					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackWithParms(fCallbackID, CO_REFRESHED, null);						
+						return handler.callbackWithParms(fCallbackID, CO_REFRESHED, getBounds());						
 					}
 				});
 			} catch (CommandException exp) {
@@ -119,9 +119,10 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	}
 	/**
 	 * The bounds of the control expressed relative to the parent bounds origin rather than the
-	 * origin of the client area  
+	 * origin of the client area
+	 * Returned as four Integer[] objects
 	 */
-	public Rectangle getBounds(){
+	public Object[] getBounds(){
 		final Rectangle[] bounds = new Rectangle[1];
 		if (isValidControl(fControl)) {
 			Environment.getDisplay().syncExec(new Runnable() {
@@ -138,7 +139,12 @@ public abstract class ControlManager implements ICallback , ControlListener {
 				}
 			});
 		}
-		return bounds[0];
+		Rectangle result = bounds[0];
+		return new Integer[]{
+		        new Integer(result.x),
+		        new Integer(result.y),
+		        new Integer(result.width),
+		        new Integer(result.height)};
 	}
 	/**
 	 * The size of the client area expressed as a box whose top left corner is relative to its bounds

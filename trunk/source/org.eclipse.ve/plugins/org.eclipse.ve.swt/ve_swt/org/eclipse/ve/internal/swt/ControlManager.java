@@ -140,9 +140,6 @@ private void invoke_setControlManager(IBeanProxy controlManagerProxy, IBeanProxy
 
 public Object calledBack(int msgID, IBeanProxy parm){
 	switch ( msgID ) {		
-		case CO_REFRESHED :
-			fireControlRefreshed();
-			break;
 		case IMAGE_FINISHED :
 			fDataCollector.setComplete();			
 	}
@@ -189,6 +186,13 @@ public Object calledBack(int msgID, Object[] parms){
 				((IIntegerBeanProxy)parms[1]).intValue()
 			);
 			break;	
+		case CO_REFRESHED :
+		    fX = ((IIntegerBeanProxy)parms[0]).intValue();
+		    fY = ((IIntegerBeanProxy)parms[1]).intValue();
+		    fWidth = ((IIntegerBeanProxy)parms[2]).intValue();
+		    fHeight = ((IIntegerBeanProxy)parms[3]).intValue();
+		    fireControlRefreshed();
+		    break;			
 		case IMAGE_INITIAL_LENGTH :
 			fDataCollector = new DataCollector();
 			fDataCollector.setLength(((IIntegerBeanProxy)parms[0]).intValue());
@@ -227,12 +231,9 @@ public Point getLocation(){
 	return new Point(fX,fY);
 }
 public Rectangle getBounds(){
-	if (fControlManagerProxy != null && fControlBeanProxy != null){
-		IRectangleBeanProxy boundsProxy = (IRectangleBeanProxy) getControlManagerBoundsMethodProxy().invokeCatchThrowableExceptions(fControlManagerProxy);
-		return boundsProxy != null ? new Rectangle(boundsProxy.getX(),boundsProxy.getY(),boundsProxy.getWidth(),boundsProxy.getHeight()) : new Rectangle(0,0,0,0);			
-	} else {
-		return new Rectangle(0,0,0,0);		
-	}
+    
+    return new Rectangle(fX,fY,fWidth,fHeight);
+    
 }
 /**
  * Send out a refresh notification - to avoid deadlocks do this asynchronously so that this method
