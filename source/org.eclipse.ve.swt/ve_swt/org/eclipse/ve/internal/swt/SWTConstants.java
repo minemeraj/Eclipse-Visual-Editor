@@ -42,7 +42,9 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_PACK,
 		SF_ROW_LAYOUT_SPACING,
 		SF_ROW_LAYOUT_TYPE,
-		SF_ROW_LAYOUT_WRAP;
+		SF_ROW_LAYOUT_WRAP,
+		
+		SF_TABLE_COLUMNS;
 		
 	public static final String
 		POINT_CLASS_NAME,
@@ -92,6 +94,8 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_SPACING = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/spacing");    //$NON-NLS-1$
 		SF_ROW_LAYOUT_TYPE = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/type");    //$NON-NLS-1$
 		SF_ROW_LAYOUT_WRAP = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/wrap");    //$NON-NLS-1$
+		
+		SF_TABLE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableColumns");    //$NON-NLS-1$
 
 	}
 }	
