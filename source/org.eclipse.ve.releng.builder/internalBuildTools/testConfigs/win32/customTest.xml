@@ -1,0 +1,26 @@
+<project name="Customized testing instructions">
+	<target name="customSetup">
+		<!--copy the script which invokes the tests on relengbuildwin2-->
+		<exec dir="${tester}" executable="rcp">
+			<arg line="relengbuildwin2.bat ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+		
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/${buildLabel}/VE-runtime-${buildId}.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/../eclipse-SDK.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/../emf.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+		
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/../gef.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+
+	</target>
+
+</project>
