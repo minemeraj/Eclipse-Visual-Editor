@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JMenuBarBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -329,7 +329,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JMenuBarMessages.getString("selectionModel.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JMenuBarMessages.getString("selectionModel.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// helpMenu
@@ -340,12 +340,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DESIGNTIMEPROPERTY, Boolean.FALSE //TODO - not implemented as of 1.4; check again for 1.5 (aka Java 5) + up
 	    		}
 	    	),
-	    	// selectionModel
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	    	// UI
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JMenuBarMessages.getString("ui.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JMenuBarMessages.getString("ui.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		BOUND, Boolean.TRUE
 	    		}
 	    	)
 		};
