@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-04 23:27:36 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-25 22:05:24 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -700,6 +700,8 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 * Refresh the image if it is currently invalid.
 	 */
 	public void refreshImage() {
+		if (!isBeanProxyInstantiated())
+			return;
 		// Need to capture validity before going in and start because there would be a deadlock while
 		// waiting for completion because it would tie up "this" while DataCollectedRunnable would also
 		// try to synchronize on "this" and it couldn't because we had and are waiting in waitForCompletion.
