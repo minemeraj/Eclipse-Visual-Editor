@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-04 21:33:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-24 14:49:16 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -58,7 +58,9 @@ public class ToolTipContentHelper {
 				Iterator iter = fContentAssistProcessors.iterator();
 				while(iter.hasNext()){
 					IFigure figure = ((ToolTipAssistFactory.TooltipDetails)iter.next()).createFigure();
-					add(figure);
+					if(figure != null){
+						add(figure);
+					}
 				}
 			}
 		}
