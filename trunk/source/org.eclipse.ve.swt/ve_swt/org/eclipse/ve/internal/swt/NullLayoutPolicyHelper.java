@@ -74,10 +74,14 @@ private Command  createInitStringCommand(IJavaObjectInstance child, IJavaObjectI
 	// set the arguments
 	PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
 	ir.setObject(parent) ;	
-	PTName flags = InstantiationFactory.eINSTANCE.createPTName() ;
-	flags.setName("org.eclipse.swt.SWT.None"); 	// Hard code the flags for now
-	ic.getArguments().add(0,ir);
-	ic.getArguments().add(1,flags) ;
+	PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
+	PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT") ;
+	fa.setField("NONE");
+	fa.setReceiver(name) ;
+	
+	
+	ic.getArguments().add(ir);
+	ic.getArguments().add(fa) ;
 	
 	
 	JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);

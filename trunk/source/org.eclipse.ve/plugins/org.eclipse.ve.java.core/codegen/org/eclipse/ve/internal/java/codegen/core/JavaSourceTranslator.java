@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-06 22:03:38 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -175,6 +175,9 @@ String fUri;
 					public String resolve(String unresolved) {
 						return localCodegenResolver.resolveTypeComplex(unresolved);
 					}
+					public String resolveType(String unresolved) {
+						return localCodegenResolver.resolveTypeComplex(unresolved,true);
+					}					
 					public String resolveThis() {
 						return localCodegenResolver.resolveTypeComplex(CodeGenUtil.getMainType(fWorkingCopy.getWorkingCopy(true)).getElementName());
 					}
