@@ -226,13 +226,9 @@ public Point getLocation(){
 	return new Point(fX,fY);
 }
 public Rectangle getBounds(){
-	if (fControlManagerProxy != null){
-		try{
-			IRectangleBeanProxy boundsProxy = (IRectangleBeanProxy) getControlManagerBoundsMethodProxy().invoke(fControlManagerProxy);
-			return new Rectangle(boundsProxy.getX(),boundsProxy.getY(),boundsProxy.getWidth(),boundsProxy.getHeight());			
-		} catch (ThrowableProxy exc) {
-			return new Rectangle(0,0,0,0);			
-		}
+	if (fControlManagerProxy != null && fControlBeanProxy != null){
+		IRectangleBeanProxy boundsProxy = (IRectangleBeanProxy) getControlManagerBoundsMethodProxy().invokeCatchThrowableExceptions(fControlManagerProxy);
+		return boundsProxy != null ? new Rectangle(boundsProxy.getX(),boundsProxy.getY(),boundsProxy.getWidth(),boundsProxy.getHeight()) : new Rectangle(0,0,0,0);			
 	} else {
 		return new Rectangle(0,0,0,0);		
 	}
@@ -277,22 +273,20 @@ private IMethodProxy getControlManagerBoundsMethodProxy(){
  * is inset by the trim
  */
 public Rectangle getClientBox() {
-	if(fClientBoxMethodProxy == null){
-		fClientBoxMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getClientBox");		
+	if (fControlManagerProxy != null && fControlBeanProxy != null) {
+		if (fClientBoxMethodProxy == null) {
+			fClientBoxMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getClientBox");
+		}
+		IRectangleBeanProxy fClientBoxBeanProxy = (IRectangleBeanProxy) fClientBoxMethodProxy.invokeCatchThrowableExceptions(fControlManagerProxy);
+		return fClientBoxBeanProxy != null ? new Rectangle(fClientBoxBeanProxy.getX(), fClientBoxBeanProxy.getY(), fClientBoxBeanProxy.getWidth(), fClientBoxBeanProxy
+				.getHeight()) : null;
 	}
-	try {
-		IRectangleBeanProxy fClientBoxBeanProxy = (IRectangleBeanProxy) fClientBoxMethodProxy.invoke(fControlManagerProxy);
-		return new Rectangle(fClientBoxBeanProxy.getX(),fClientBoxBeanProxy.getY(),fClientBoxBeanProxy.getWidth(),fClientBoxBeanProxy.getHeight());
-	} catch (ThrowableProxy exc) {
-		return null;
-	}
+	return null;
 }
 public void captureImage(){
-	IMethodProxy collectImageMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("captureImage");
-	try{
-		collectImageMethodProxy.invoke(fControlManagerProxy);
-	} catch (ThrowableProxy exc){
-		exc.printStackTrace();
+	if (fControlManagerProxy != null && fControlBeanProxy != null) {
+		IMethodProxy collectImageMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("captureImage");
+		collectImageMethodProxy.invokeCatchThrowableExceptions(fControlManagerProxy);
 	}
 }
 }

@@ -120,16 +120,21 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getBounds(){
 		final Rectangle[] bounds = new Rectangle[1];
-		Environment.getDisplay().syncExec(new Runnable(){
-			public void run(){
-				bounds[0] = fControl.getBounds();
-				if(fControl.getParent() != null){
-					Point parentClientOrigin = getClientOrigin(fControl.getParent());
-					bounds[0].x += parentClientOrigin.x;
-					bounds[0].y += parentClientOrigin.y;
+		if (fControl != null) {
+			Environment.getDisplay().syncExec(new Runnable() {
+
+				public void run() {
+					if (fControl != null) {
+						bounds[0] = fControl.getBounds();
+						if (fControl.getParent() != null) {
+							Point parentClientOrigin = getClientOrigin(fControl.getParent());
+							bounds[0].x += parentClientOrigin.x;
+							bounds[0].y += parentClientOrigin.y;
+						}
+					}
 				}
-			}
-		});
+			});
+		}
 		return bounds[0];
 	}
 	/**
@@ -137,16 +142,21 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getClientBox(){
 		final Rectangle[] clientBox = new Rectangle[1];
-		Environment.getDisplay().syncExec(new Runnable(){
-			public void run(){
-				clientBox[0] = ((Composite)fControl).getClientArea();
-				// The width and height are good, but the location of the client area is always 0,0 and not expressed
-				// as relative to the bounds of the composite itself
-				Point clientOrigin = getClientOrigin(fControl);
-				clientBox[0].x = clientOrigin.x;
-				clientBox[0].y = clientOrigin.y;
-			}
-		});
+		if (fControl != null) {
+			Environment.getDisplay().syncExec(new Runnable() {
+
+				public void run() {
+					if (fControl != null) {
+						clientBox[0] = ((Composite) fControl).getClientArea();
+						// The width and height are good, but the location of the client area is always 0,0 and not expressed
+						// as relative to the bounds of the composite itself
+						Point clientOrigin = getClientOrigin(fControl);
+						clientBox[0].x = clientOrigin.x;
+						clientBox[0].y = clientOrigin.y;
+					}
+				}
+			});
+		}
 		return clientBox[0];
 	}	
 	private Point getClientOrigin(Control aControl){
@@ -167,83 +177,93 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	private Point getOverallLocation(){
 		
  		final Point[] location = new Point[1];
- 		Environment.getDisplay().syncExec(new Runnable(){
-			public void run(){
-				// If the control has no parent then just return its location
-				if(fControl.getParent() == null){
-					location[0] = fControl.getLocation();
-				} else {
-					Control parentControl = fControl.getParent();
-					Point parentClientOrigin = getClientOrigin(parentControl);
-					Point controlLocation = fControl.getLocation();
-					location[0] = new Point(parentClientOrigin.x + controlLocation.x,parentClientOrigin.y + controlLocation.y);					
+ 		if (fControl != null) {
+			Environment.getDisplay().syncExec(new Runnable() {
+
+				public void run() {
+					if (fControl != null) {
+						// If the control has no parent then just return its location
+						if (fControl.getParent() == null) {
+							location[0] = fControl.getLocation();
+						} else {
+							Control parentControl = fControl.getParent();
+							Point parentClientOrigin = getClientOrigin(parentControl);
+							Point controlLocation = fControl.getLocation();
+							location[0] = new Point(parentClientOrigin.x + controlLocation.x, parentClientOrigin.y + controlLocation.y);
+						}
+					}
 				}
-			}
-		});
+			});
+		}
 		return location[0];	
 	}
 	
 	public abstract IImageCapture getImageCapturer();
 	
 	public void captureImage(){
-		Environment.getDisplay().syncExec(new Runnable(){
-			public void run(){
-				DataOutputStream os = null;
-				Image image = null;
-				try{
-					final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID,0));
-					//----					
-					IImageCapture grabber = getImageCapturer();
-					//----
-					image = grabber.getImage(fControl,true);
-					final ImageData imageData = image.getImageData();
-					image.dispose();
-					image = null;
-					final byte[] data = imageData.data;					
-					// Send the length back to the IDE which is the total length and then width and height
-					fServer.doCallback(new ICallbackRunnable(){
-						public Object run(ICallbackHandler handler) throws CommandException{
-							return handler.callbackWithParms(fCallbackID,IMAGE_INITIAL_LENGTH,
-								new Object[]{new Integer(data.length), new Integer(imageData.width), new Integer(imageData.height)});
-						}
-					});
-					// Send back the masks used by the image so the IDE can reconstitute it correctly
-					// This is a 4 arg int array of depth and then the red, green and blue mask
-					fServer.doCallback(new ICallbackRunnable(){
-						public Object run(ICallbackHandler handler) throws CommandException{
-							return handler.callbackWithParms(fCallbackID,IMAGE_COLOR_MASKS,
-								new Object[]{
-										   new Integer(imageData.depth),
-										   new Integer(imageData.palette.redMask), 
-										   new Integer(imageData.palette.greenMask), 
-										   new Integer(imageData.palette.blueMask)});
-						}
-					});
-					// Send back all of the image data
-					for (int i = 0; i < data.length; i++) {
-						outputStream.write( (int) data[i]);		
-					}
+		if (fControl != null) {
+			Environment.getDisplay().syncExec(new Runnable() {
 
-					outputStream.close();
-					os = null;
-					fServer.doCallback(new ICallbackRunnable(){
-						public Object run(ICallbackHandler handler) throws CommandException{
-							return handler.callbackWithParms(fCallbackID,IMAGE_FINISHED,null);
-						}
-					});
-				} catch (Exception exc){
-					exc.printStackTrace();	
-				} finally {
-					if (image != null)
-						image.dispose();
-					if (os != null)
+				public void run() {
+					if (fControl != null) {
+						DataOutputStream os = null;
+						Image image = null;
 						try {
-							os.close();
-						} catch (IOException e) {
-							e.printStackTrace();
+							final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID, 0));
+							//----					
+							IImageCapture grabber = getImageCapturer();
+							//----
+							image = grabber.getImage(fControl, true);
+							final ImageData imageData = image.getImageData();
+							image.dispose();
+							image = null;
+							final byte[] data = imageData.data;
+							// Send the length back to the IDE which is the total length and then width and height
+							fServer.doCallback(new ICallbackRunnable() {
+
+								public Object run(ICallbackHandler handler) throws CommandException {
+									return handler.callbackWithParms(fCallbackID, IMAGE_INITIAL_LENGTH, new Object[] { new Integer(data.length),
+											new Integer(imageData.width), new Integer(imageData.height)});
+								}
+							});
+							// Send back the masks used by the image so the IDE can reconstitute it correctly
+							// This is a 4 arg int array of depth and then the red, green and blue mask
+							fServer.doCallback(new ICallbackRunnable() {
+
+								public Object run(ICallbackHandler handler) throws CommandException {
+									return handler.callbackWithParms(fCallbackID, IMAGE_COLOR_MASKS, new Object[] { new Integer(imageData.depth),
+											new Integer(imageData.palette.redMask), new Integer(imageData.palette.greenMask),
+											new Integer(imageData.palette.blueMask)});
+								}
+							});
+							// Send back all of the image data
+							for (int i = 0; i < data.length; i++) {
+								outputStream.write((int) data[i]);
+							}
+
+							outputStream.close();
+							os = null;
+							fServer.doCallback(new ICallbackRunnable() {
+
+								public Object run(ICallbackHandler handler) throws CommandException {
+									return handler.callbackWithParms(fCallbackID, IMAGE_FINISHED, null);
+								}
+							});
+						} catch (Exception exc) {
+							exc.printStackTrace();
+						} finally {
+							if (image != null)
+								image.dispose();
+							if (os != null)
+								try {
+									os.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
 						}
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }

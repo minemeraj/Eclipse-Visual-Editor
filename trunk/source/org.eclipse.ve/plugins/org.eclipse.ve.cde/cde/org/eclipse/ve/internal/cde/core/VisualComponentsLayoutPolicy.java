@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:35:34 $ 
+ *  $Revision: 1.7 $  $Date: 2004-10-28 15:48:03 $ 
  */
 
 import java.util.Iterator;
@@ -138,17 +138,21 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		
 		protected void signalRefresh() {
 			// Get the current bounds and set the figure's constraint.
-			final Rectangle bounds = visualComponent.getBounds().getCopy();
-			getDisplay().asyncExec(new Runnable() {
-				/**
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run() {
-					EditPart ep = getHost();
-					if (ep.isActive())
-						((GraphicalEditPart) VisualComponentsLayoutPolicy.this.getHost()).setLayoutConstraint(getHost(), ((GraphicalEditPart) getHost()).getFigure(), bounds);					
-				}
-			});
+			if (visualComponent != null) {
+				final Rectangle bounds = visualComponent.getBounds().getCopy();
+				getDisplay().asyncExec(new Runnable() {
+
+					/**
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run() {
+						EditPart ep = getHost();
+						if (ep.isActive())
+							((GraphicalEditPart) VisualComponentsLayoutPolicy.this.getHost()).setLayoutConstraint(getHost(),
+									((GraphicalEditPart) getHost()).getFigure(), bounds);
+					}
+				});
+			}
 		}
 		
 		public void componentMoved(final int x, final int y) {
