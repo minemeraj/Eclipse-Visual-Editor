@@ -2,5 +2,5 @@
 <event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
     featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.examples.java/org.eclipse.ve.examples.java.BasicTypesBeanProxyAdapter"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.examples/org.eclipse.ve.examples.java.BasicTypesBeanProxyAdapter"/>
 </event:Add>
