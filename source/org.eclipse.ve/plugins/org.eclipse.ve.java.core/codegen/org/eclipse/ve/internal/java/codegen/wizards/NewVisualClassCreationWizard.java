@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.21 $  $Date: 2004-11-12 19:45:12 $ 
+ *  $Revision: 1.22 $  $Date: 2004-11-16 21:34:23 $ 
  */
 
 import java.io.IOException;
@@ -233,7 +233,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 //						TextEdit te = formatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS,source,0, source.length(), 1, NEWLINE);
 //						source = te.toString();
 					}
-					toType.createField(source+NEWLINE, null, true, monitor);
+					toType.createField(source, null, true, monitor);
 				}
 				if (child instanceof IMethod) {
 					IMethod method = (IMethod) child;
