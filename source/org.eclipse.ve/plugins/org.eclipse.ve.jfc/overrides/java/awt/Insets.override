@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:com.ibm.etools.java="java.xmi" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:event="event.xmi">
+  <event:Add  featureName="eAnnotations">
+    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.InsetsJavaClassLabelProvider"
+        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.InsetsJavaClassCellEditor"
+        entryExpandable="false"/>
+  </event:Add>
+  <event:AddMany  featureName="eReferences">
+    <addedEObjects xsi:type="ecore:EReference" name="top" eType="com.ibm.etools.java:JavaDataType java:/#int"
+        unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+    </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="left" eType="com.ibm.etools.java:JavaDataType java:/#int"
+        unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+    </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="bottom" eType="com.ibm.etools.java:JavaDataType java:/#int"
+        unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+    </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="right" eType="com.ibm.etools.java:JavaDataType java:/#int"
+        unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+    </addedEObjects>
+  </event:AddMany>
+</xmi:XMI>

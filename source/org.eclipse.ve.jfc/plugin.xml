@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.jfc"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName"
+   class="org.eclipse.ve.internal.jfc.core.JFCVisualPlugin">
+
+   <runtime>
+      <library name="jfc.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.jfc.core"/>
+      </library>
+      <library name="common.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.jfc.common"/>
+      </library>
+      <library name="codegen.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.jfc.codegen"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ve.java.core" export="true"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+   </requires>
+   
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <variable
+            path="JRE_LIB">
+         <beaninfos>
+            <beaninfo
+                  kind="plugin"
+                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
+               <searchpath
+                     package="org.eclipse.ve.internal.jfc.beaninfo">
+               </searchpath>
+            </beaninfo>
+         </beaninfos>
+      </variable>
+   </extension>
+<!-- The followin will allow the visuals to come up in web/ejb projects -->
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <variable
+            path="SERVERJDK_PLUGINDIR/jre/lib/rt.jar">
+         <beaninfos>
+            <beaninfo
+                  kind="plugin"
+                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
+               <searchpath
+                     package="org.eclipse.ve.internal.jfc.beaninfo">
+               </searchpath>
+            </beaninfo>
+         </beaninfos>
+      </variable>
+   </extension>
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <variable
+            path="SERVERJDK_50_PLUGINDIR/jre/lib/rt.jar">
+         <beaninfos>
+            <beaninfo
+                  kind="plugin"
+                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
+               <searchpath
+                     package="org.eclipse.ve.internal.jfc.beaninfo">
+               </searchpath>
+            </beaninfo>
+         </beaninfos>
+      </variable>
+   </extension>
+   <extension
+         point="org.eclipse.jem.beaninfo.overrides">
+<!-- Doing java.awt and javax.swing specifically because there are too many matches that
+         we don't care about if we did just java and javax. -->
+      <override
+            package="java.awt"
+            path="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt">
+      </override>
+      <override
+            package="javax.swing"
+            path="platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing">
+      </override>
+      <override
+            package="java.applet"
+            path="platform:/plugin/org.eclipse.ve.jfc/overrides/java/applet">
+      </override>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.registrations">
+      <variable
+            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
+            path="JRE_LIB"
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
+      </variable>
+   </extension>
+<!-- The followin will allow the visuals to come up in web/ejb projects -->
+   <extension
+         point="org.eclipse.ve.java.core.registrations">
+      <variable
+            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
+            path="SERVERJDK_PLUGINDIR/jre/lib/rt.jar"
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
+      </variable>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.registrations">
+      <variable
+            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
+            path="SERVERJDK_50_PLUGINDIR/jre/lib/rt.jar"
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
+      </variable>
+   </extension>
+<!-- ======================================================================== -->
+<!-- Extend the popup menu on Edit parts                                      -->
+<!-- ======================================================================== -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+<!-- For object contributions that are to be added to the popup menu
+	 in both the graph viewer and beans viewer, use the following object class:
+	 
+		objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor">
+
+	The following object contribution is the "Set text" action which popups
+	in the graph viewer and beans viewer on components that have a 'text' property.
+	You must specify an action delegate to handle the the defined action, in this
+	case class="org.eclipse.ve.internal.jfc.core.SetTextObjectActionDelegate".
+
+	It has a filtering mechanism in which the workbench looks for a filter and
+	if a filter is found the workbench will pass each name value pair to the filter
+	to determine if it matches the state of the selected object.  If so, the action 
+	will be added to the context menu for the object (see org.eclipse.ui.IActionFilter).
+	In this case a JVE action filter, org.eclipse.ve.internal.jfc.core.JavaBeanActionFilter
+	was implemented to provide general capability for AWT/Swing beans which use either
+	ComponentGraphicalEditPart or ComponentTreeEditPart.
+		
+	To add menu items for a specific class that inherits from java.awt.Component,
+	just add object contributions that specify:
+		- objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor">
+		- a filter with a name/value pair that declares:
+			- name="BEANTYPE"
+			- the target class name (i.e. javax.swing.JPanel)
+	-->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.jfc.core.JTabbedPaneGraphicalEditPart"
+            id="org.eclipse.ve.java.editorpart.jtabbedpane.action.popup.object">
+         <action
+               label="%PopupMenus.SwitchToAction.Label Switch to"
+               style="pulldown"
+               class="org.eclipse.ve.internal.jfc.core.JTabbedPaneSwitchToObjectActionDelegate"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.ve.java.editorpart.jtabbedpane.switchto">
+         </action>
+      </objectContribution>	
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.settextaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Component">
+         </filter>
+         <filter
+               name="PROPERTY"
+               value="text">
+         </filter>
+         <action
+               label="%PopupMenus.SetTextAction.Label  Set Text"
+               class="org.eclipse.ve.internal.jfc.core.SetTextObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.settextaction">
+         </action>
+      </objectContribution>
+<!-- Add a popup to edit the label property -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.setlabelaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Component">
+         </filter>
+         <filter
+               name="PROPERTY"
+               value="label">
+         </filter>
+         <action
+               label="%PopupMenus.SetLabelAction.Label  Set Label"
+               class="org.eclipse.ve.internal.jfc.core.SetLabelObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.setlabelaction">
+         </action>
+      </objectContribution>
+<!-- Add a popup to edit the title property -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.settitleaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Component">
+         </filter>
+         <filter
+               name="PROPERTY"
+               value="title">
+         </filter>
+         <action
+               label="%PopupMenus.SetTitleAction.Label  Set Title"
+               class="org.eclipse.ve.internal.jfc.core.SetTitleObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.settitleaction">
+         </action>
+      </objectContribution>
+<!-- Add Create Content Pane action for RootPaneContainers. -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.contentpane.popup.object">
+         <visibility>
+            <objectState
+                  name="BEANTYPE"
+                  value="javax.swing.RootPaneContainer">
+            </objectState>
+         </visibility>
+         <action
+               label="%PopupMenus.ContentPane.Label &amp;Create Content Pane"
+               class="org.eclipse.ve.internal.jfc.core.CreateContentPaneObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.content.pane">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%Swing"
+            parentCategory="org.eclipse.jdt.ui.java"
+            id="org.eclipse.ve.internal.java.core.swing">
+      </category>
+      <category
+            name="%AWT"
+            parentCategory="org.eclipse.jdt.ui.java"
+            id="org.eclipse.ve.internal.java.core.awt">
+      </category>
+      <wizard
+            name="%Visual.Class.JFrame.Name"
+            icon="icons/full/ctool16/newframe_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swing"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:javax.swing.JFrame"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.JFrame">
+         <description>
+            %Visual.Class.JFrame.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.JPanel.Name"
+            icon="icons/full/ctool16/newpanel_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swing"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:javax.swing.JPanel"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.JPanel">
+         <description>
+            %Visual.Class.JPanel.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.JApplet.Name"
+            icon="icons/full/ctool16/newapplet_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swing"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:javax.swing.JApplet"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.JApplet">
+         <description>
+            %Visual.Class.JApplet.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.Frame.Name"
+            icon="icons/full/ctool16/newframe_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.awt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:java.awt.Frame"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Frame">
+         <description>
+            %Visual.Class.Frame.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.Panel.Name"
+            icon="icons/full/ctool16/newpanel_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.awt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:java.awt.Panel"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Panel">
+         <description>
+            %Visual.Class.Panel.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.Applet.Name"
+            icon="icons/full/ctool16/newapplet_wiz.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.awt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:java.applet.Applet"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Applet">
+         <description>
+            %Visual.Class.Applet.Desc
+         </description>
+      </wizard>
+      <category
+            name="%Example.AWT.SWING"
+            parentCategory="org.eclipse.ui.Examples"
+            id="org.eclipse.ve.jfc.SwingExample">
+      </category>
+      <wizard
+            name="SimpleTextEditor"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SimpleTextEditor"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleTextEditor">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+      <wizard
+            name="Slider Game"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SliderGame"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SliderGame">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+      <wizard
+            name="ToDoList"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:ToDoList"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.ToDoList">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+      <wizard
+            name="BasicSwingComponents"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:BasicSwingComponents"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.BasicSwingComponents">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+      <wizard
+            name="AWTComponents"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:AwtComponents"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.AwtComponents">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+      <wizard
+            name="MoreSwingComponents"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.jfc.SwingExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:MoreSwingComponents"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.MoreSwingComponents">
+         <description>
+            %example.label
+         </description>
+      </wizard>
+  </extension>
+
+<!-- ======================================================================== -->
+<!-- Contributors for the Visual class sources                                       -->
+<!-- ======================================================================== -->
+   <extension
+         point="org.eclipse.ve.java.core.newsource">
+      <contributor
+            type="javax.swing.JFrame"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JApplet"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+      </contributor>
+      <contributor
+            type="java.applet.Applet"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JDialog"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JWindow"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JInternalFrame"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JPanel"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JScrollPane"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JSplitPane"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JTabbedPane"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="javax.swing.JDesktopPane"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="java.awt.Window"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
+      </contributor>
+      <contributor
+            type="java.awt.Panel"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="java.awt.Frame"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+      <contributor
+            type="java.awt.Dialog"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
+      </contributor>
+      <contributor
+            type="java.awt.ScrollPane"
+            class="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+      </contributor>
+   </extension>
+
+</plugin>

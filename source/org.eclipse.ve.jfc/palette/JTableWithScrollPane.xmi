@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:java="java.xmi"
+  xmlns:javax.swing="java:/javax.swing">
+    
+  <javax.swing:JScrollPane xmi:id="JScrollPane_1" viewportView="JTable_1"/>
+  
+  <javax.swing:JTable xmi:id="JTable_1"/>
+  
+  <cdm:AnnotationEMF annotates="JScrollPane_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jScrollPane"/>
+  </cdm:AnnotationEMF>  
+  <cdm:AnnotationEMF annotates="JTable_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTable"/>
+  </cdm:AnnotationEMF>
+
+</xmi:XMI>

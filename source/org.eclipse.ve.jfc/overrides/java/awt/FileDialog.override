@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event:AddMany xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
+    featureName="eAnnotations">
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+      treeViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart"
+      graphViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FileDialogProxyAdapter"/>
+</event:AddMany>

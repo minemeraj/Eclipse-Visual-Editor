@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI" 
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+  xmlns:java="java.xmi"
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:jcm="http:///org/eclipse/ve/internal/jcm.ecore"  
+  xmlns:decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore">
+  <ecore:EPackage 
+    xmi:id="jtabbedPaneVisuals.xmi" 
+    nsURI="platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/jtabbedPaneVisuals.ecore" 
+    nsPrefix="jtabbedPaneVisuals"
+    name="jtabbedPaneVisuals">
+  
+  <!-- JTabComponent is the "component" of a javax.swing.JTabbedPane. -->
+	<eClassifiers xmi:type="ecore:EClass" xmi:id="JTabComponent" name="JTabComponent">
+      <eReferences xmi:id="JTabComponent/component" name="component"
+        eType="java:JavaClass java:/javax.swing#JComponent">
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" hidden="true"/>
+        <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>         
+      </eReferences>
+      <eReferences xmi:id="JTabComponent/tabTitle" name="tabTitle"
+        eType="java:JavaClass java:/java.lang#String">
+        <eAnnotations xsi:type="decorators:BasePropertyDecorator" nullInvalid="true"/>  
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="true">
+          <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabTitle" bundle="jtabbedPaneBundle"/>
+        </eAnnotations>
+      </eReferences>
+      <eReferences xmi:id="JTabComponent/tabTooltipText" name="tabTooltipText"
+        eType="java:JavaClass java:/java.lang#String">
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="true">
+          <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabTooltipText" bundle="jtabbedPaneBundle"/>
+        </eAnnotations>
+      </eReferences>
+      <eReferences xmi:id="JTabComponent/tabIcon" name="tabIcon"
+        eType="java:JavaClass java:/javax.swing#Icon">
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="false">
+          <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabIcon" bundle="jtabbedPaneBundle"/>
+        </eAnnotations> 
+      </eReferences>
+      
+      <eAnnotations xsi:type="decorators:PropertySourceAdapterInformation"
+        propertySourceAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabComponentPropertySourceAdapter"/>
+ 
+    </eClassifiers>
+    
+  </ecore:EPackage>
+  
+  <!-- Bundle used by decorators for tabTitle, tabTooltipText, tabIcon-->
+  <utility:URLResourceBundle xmi:id="jtabbedPaneBundle" bundleName="JTabbedPaneVisuals">
+    <bundleURLs>platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/</bundleURLs>
+  </utility:URLResourceBundle>
+  
+</xmi:XMI>
