@@ -1363,7 +1363,17 @@ IDE or Visual Editor specific behavior for a class.<span
  style="font-weight: bold;"></span></span></span><br>
 <h2>The Override mechanism</h2>
 <p>At the heart of the Visual Editor is an EMF model that describes a
-class being edited.&nbsp; This model describes the instances<br>
+class being edited.&nbsp; This model describes the instances, their
+relationships and property settings. Instances of objects in this model
+implement org.eclipse.jem.internal.instantiation.base.IJavaInstance<br>
+<br>
+</p>
+<p>EMF is a self describing structure, so behind the instance model
+there
+is a meta-model that describes the classes themselves - their methods,
+properties, events and hierarchy. The meta-model is created by the
+Visual Editor using a combination of reflection and JavaBeans
+Introspection.&nbsp; <br>
 <br>
 </p>
 <p><br>
