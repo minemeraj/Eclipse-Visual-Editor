@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-09-14 21:26:46 $ 
+ *  $Revision: 1.11 $  $Date: 2004-09-22 22:49:32 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -730,7 +730,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 							}
 
 							public void imageData(ImageData data) {
-								synchronized (ComponentProxyAdapter.this) {
+								synchronized (imageAccessorSemaphore) {
 									fImageValid = VALID;
 								}
 
@@ -751,7 +751,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 							}
 
 							public void imageNotCollected(int status) {
-								synchronized (ComponentProxyAdapter.this) {
+								synchronized (imageAccessorSemaphore) {
 									fImageValid = INVALID; // Invalid, but no longer collecting.
 								}
 							}
@@ -786,7 +786,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					}
 					ErrorType err = new ErrorType(MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_failed_ERROR_"), new Object[] {eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
 					processError(IMAGE_DATA_COLLECTION_ERROR_KEY, err);
-					synchronized (this) {
+					synchronized (imageAccessorSemaphore) {
 						fImageValid = INVALID;
 					}
 				}
