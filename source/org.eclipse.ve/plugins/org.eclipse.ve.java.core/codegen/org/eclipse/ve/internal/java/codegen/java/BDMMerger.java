@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.25 $  $Date: 2004-10-15 22:46:02 $ 
+ *  $Revision: 1.26 $  $Date: 2004-10-31 20:30:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -543,8 +543,75 @@ public class BDMMerger {
 		logFiner("Remove deleted expression "+deletedExp.getCodeContent());
 		deletedExp.dispose() ;
 	}
+	
+	/*
+	 * This method figures out which equivalent expressions have offset changes, then changes their offsets 
+	 * and marks them for re-decoding. Later on when the expressions are really merged in processEquivalentExpressions(), 
+	 * even though the offset hasnt changed, if the expression is in the marked list it is re-decoded.
+	 * 
+	 * This process of marking all expressions, updating their offsets and then decoding them is required as 
+	 * when an expression is decoded it expects all other expressions to be having the correct offsets. When
+	 * decoding is done without updating the offsets of other expressions, problems arise with expressions 
+	 * like constructors where the index of the component is determined from offsets (77074). 
+	 */
+	protected void updateChangedOffsetsAndMarkExpressions(Collection mainExpressions, Collection updatedExpressions){
+		List mainExpTobeProcessed = new ArrayList(mainExpressions);
+		List updatedExpTobeProcessed = new ArrayList(updatedExpressions);
+		
+		for (int updatedExpCount = 0 ; updatedExpCount < updatedExpTobeProcessed.size(); updatedExpCount++) {
+			CodeExpressionRef updExp = (CodeExpressionRef) updatedExpTobeProcessed.get(updatedExpCount);
+			boolean equivalentExpFound = false ;
+			for(int mainExpCount = 0; mainExpCount < mainExpTobeProcessed.size(); mainExpCount++ ){
+				CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(mainExpCount);
+				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
+					int equivalency = -1;
+					try {
+						equivalency = mainExp.isEquivalent(updExp) ;
+					} catch (CodeGenException e) {} 
+					if ( equivalency < 0) 
+						continue ; // Not the same expressions
+					equivalentExpFound = true;
+					
+					switch(equivalency){
+						case 0:
+							if(!mainExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)){
+								if(mainExp.getOffset()!=updExp.getOffset())
+									mainExp.setOffset(updExp.getOffset());
+								needToRedecodeExpressions.add(mainExp);
+							}
+						   break;
+						case 1:
+							if(mainExp.getOffset()!=updExp.getOffset()){
+								// Offset has been changed - might have to decode it as it might contain
+								// expression ordering in it. Ex: add(comp1); add(comp2) etc.
+								mainExp.setOffset(updExp.getOffset());
+								needToRedecodeExpressions.add(mainExp);
+							}
+							break;
+					}
+						
+					mainExpTobeProcessed.remove(mainExpTobeProcessed.indexOf(mainExp)) ;
+					updatedExpTobeProcessed.remove(updatedExpTobeProcessed.indexOf(updExp)) ;
+					mainExpCount -- ;
+					updatedExpCount -- ;
+					break;
+				}
+			}
+			if(!equivalentExpFound){
+				// No Equivalent expression was found 
+				// Now add the newly added expressions
+				updatedExpTobeProcessed.remove(updatedExpTobeProcessed.indexOf(updExp));
+				updatedExpCount--;
+			}
+		}
+	}
 
 	protected boolean processExpressions(Collection mainExpressions, Collection updatedExpressions) {
+		// Before merging the expressions, we should update all the changed offsets and mark them.
+		// This is required so that expressions which are offset sensitive dont decode erroneously becuase 
+		// offsets of following expressions arent updated yet.
+		updateChangedOffsetsAndMarkExpressions(mainExpressions, updatedExpressions);
+		
 		boolean processed = true;
 		List mainExpTobeProcessed = new ArrayList(mainExpressions);
 		List updatedExpTobeProcessed = new ArrayList(updatedExpressions);
