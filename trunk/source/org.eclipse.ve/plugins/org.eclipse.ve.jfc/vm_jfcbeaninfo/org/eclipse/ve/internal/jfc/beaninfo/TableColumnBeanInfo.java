@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-24 20:11:25 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-14 21:01:35 $ 
  */
 
 import java.beans.*;
@@ -116,7 +116,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, TableColumnMessages.getString("getIdentifier().Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Get the identifier for this column",
-	      		EXPERT, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -236,7 +235,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, TableColumnMessages.getString("setIdentifier(Object).Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Set an identifier for the column",
-	      		EXPERT, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {
 	    			createParameterDescriptor("identifier", new Object[] { //$NON-NLS-1$
@@ -392,7 +390,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"identifier", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, TableColumnMessages.getString("identifier.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("identifier.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 	    	// maxWidth
