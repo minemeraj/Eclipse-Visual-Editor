@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.12 $  $Date: 2004-09-08 20:38:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -306,11 +306,13 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 					      lt.getImplements().add(it) ;
 				}
 			}
-			Resolved superClass = fbeanPart.getModel().getResolver().resolveType(cType.getSuperclassName()) ;
-			if (superClass!=null) {
-			    JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(superClass.getName(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
-			    if (it != null && it.isExistingType() && lt.getExtends()!= it)
-			       lt.setExtends(it)  ;
+			if(cType.getSuperclassName()!=null){
+				Resolved superClass = fbeanPart.getModel().getResolver().resolveType(cType.getSuperclassName()) ;
+				if (superClass!=null) {
+				    JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(superClass.getName(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
+				    if (it != null && it.isExistingType() && lt.getExtends()!= it)
+				       lt.setExtends(it)  ;
+				}
 			}
 		
 		    // enter it to the model if needed	       
