@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-03-08 23:41:02 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -21,10 +21,15 @@ import java.util.Map;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+
+import org.eclipse.jem.internal.beaninfo.core.BeanInfoCacheController;
  
 
 /**
  * @since 1.1.0
+ * 
+ * @deprecated with Eclipse 3.1 we should not require a builder... a clean
+ *             notification can be used.
  */
 public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 
@@ -155,7 +160,10 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		   cleanMetaDirectory(currentProjectPath,false);
 		   // this is an over kill, but will take it on a clean
 		   deleteDirectoryConntent(getJetDirectory(),false);
-		}
+		   // TODO: This is a temporary hack to delete BeanInfo cache
+		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(getProject()).toFile(),false);
+		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(null).toFile(),false);
+		}		
 		monitor.done();
 		currentProjectPath=null;
 		currentMonitor=null;

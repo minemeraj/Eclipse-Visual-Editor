@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.64 $  $Date: 2005-02-23 23:23:39 $ 
+ *  $Revision: 1.65 $  $Date: 2005-03-08 23:41:02 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1329,8 +1329,10 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		  
 	}
 	public void doSave(IProgressMonitor monitor) {
-		VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
-		// We may have stopped processing bottom up so that the model will not change.
-		fSrcSync.resumeProcessing();
+		if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+		  VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
+		  // We may have stopped processing bottom up so that the model will not change.
+		  fSrcSync.resumeProcessing();
+		}
 	}
 }
