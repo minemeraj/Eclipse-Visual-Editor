@@ -9,14 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-05-24 17:56:08 $
+ * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-06-02 15:57:29 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;

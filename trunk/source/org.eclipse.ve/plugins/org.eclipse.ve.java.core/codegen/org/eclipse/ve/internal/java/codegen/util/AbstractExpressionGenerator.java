@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -93,7 +93,7 @@ public abstract class AbstractExpressionGenerator {
 			List list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
 			list.addAll(TemplateUtil.getPlatformJREPath());
 			String[] classPath = (String[]) list.toArray(new String[list.size()]);
-			String   templatePath = TemplateUtil.getPluginInstallPath(getBasePlugin(), getTemplatePath()) ;
+			String   templatePath = TemplateUtil.getPathForBundleFile(getBasePlugin(), getTemplatePath()) ;
 			
 			fTemplate = (IExpressionTemplate)
 			TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 

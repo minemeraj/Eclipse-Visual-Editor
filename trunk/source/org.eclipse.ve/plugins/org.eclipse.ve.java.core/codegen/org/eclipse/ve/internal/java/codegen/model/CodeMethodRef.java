@@ -11,14 +11,12 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.17 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -266,136 +264,6 @@ protected void resetExpressionPriorities(){
 }
 
 /**
- * Manipulates the input List to rearrange the expressions based on the beans.
- * 
- * @param newfExpressions  The list in which expressions are sorted based on the 
- * @return  Two Objects: { 
- * 	the first offset that can be used to place an expression (Integer), 
- * 	the first filler that can be used (String) 
- * }
- * @deprecated
- */
-protected static List sortExpressionsByBeans(List newfExpressions){
-	Hashtable beanToExpHash = new Hashtable();
-	for(int count=0;count<newfExpressions.size();count++){
-		CodeExpressionRef exp = (CodeExpressionRef)newfExpressions.get(count);
-		if (exp.isStateSet(CodeExpressionRef.STATE_DELETE)) continue ;
-		
-		if(!beanToExpHash.containsKey(exp.getBean())){
-			beanToExpHash.put(exp.getBean(), new ArrayList());;
-		}
-		List expHolder = (List) beanToExpHash.get(exp.getBean());
-		expHolder.add(exp);
-	}
-	
-	List tmpFinalOrder = new ArrayList();
-	//int firstReferenceIndex = -1;
-	//int firstReferenceOffset = Integer.MAX_VALUE;
-	//String firstReferenceFiller = null;
-	// Now there are unique beans (as keys) in the hashtable.
-	Enumeration beansToBeVisited = determineBeanOrder(beanToExpHash.keys());
-	while(beansToBeVisited.hasMoreElements()){
-		Vector sortedExpressions = new Vector();  // Will hold the expressions sorted purely by priority.
-		List expressions = (List) beanToExpHash.get(beansToBeVisited.nextElement());
-		SortedSet methodSorterSet = new TreeSet(getDefaultMethodComparator());
-		for(int ec=0;ec<expressions.size();ec++){
-			methodSorterSet.add(expressions.get(ec));
-		}
-		Iterator sorted = methodSorterSet.iterator();
-		while(sorted.hasNext())
-			sortedExpressions.add(sorted.next());
-
-		Vector beanFinalOrder = new Vector(sortedExpressions.size());
-		for(int expc=0;expc<sortedExpressions.size();expc++){
-			CodeExpressionRef exp = (CodeExpressionRef)sortedExpressions.get(expc);
-			if(exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)){
-				// Record the top-most available STATE_SRC_LOC_FIXED,
-				// as this is our reference for newly generated expressions.
-//				if(exp.getOffset()<firstReferenceOffset){
-//					firstReferenceOffset=exp.getOffset();
-//					firstReferenceIndex=expc;
-//					firstReferenceFiller=exp.getFillerContent();
-//				}
-				// Location fixed.. find the right place 
-				// in the final order, irrespective of 
-				// priority
-				int bestPosition = expc;
-				for(int i=0;i<beanFinalOrder.size();i++){
-					CodeExpressionRef texp = (CodeExpressionRef)beanFinalOrder.get(i);
-					if(texp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)){
-						if(texp.getOffset()>exp.getOffset()){
-							bestPosition=i;	// insert at this place
-						}else{
-							// Do nothing as the expression is in the right place.
-						}
-					}
-				}
-				beanFinalOrder.insertElementAt(exp, bestPosition);
-			}else{
-				beanFinalOrder.add(expc, exp);
-			}
-		}
-		tmpFinalOrder.addAll(beanFinalOrder);
-	};
-	return tmpFinalOrder;
-}
-
-/**
- * @deprecated
- */
-protected List reorderInitExpsToTop(List unordered){
-	int maxPriorityCount = 0;
-	Iterator allExpressions = unordered.iterator();
-	ArrayList ordered = new ArrayList(unordered.size());
-	ArrayList orderedPri = new ArrayList(unordered.size());
-	while(allExpressions.hasNext()){
-		CodeExpressionRef exp = (CodeExpressionRef) allExpressions.next();
-//		int[] expPriorities = (int[])exp.getPriority();
-//		if(expPriorities==null){
-//			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
-//			expPriorities = new int[]{-1, -1};
-//		}
-//		if(expPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR ||
-//			expPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR){
-//			if(exp.getBean()!=null &&
-//			   exp.getBean().getReturnedMethod()!=null &&
-//			   exp.getBean().getReturnedMethod().equals(this)) {
-//				ordered.add(0,exp);
-//				orderedPri.add(0,expPriorities);
-//			}
-//			else {
-//				int i;
-//				for (i=maxPriorityCount; i>0; i--) {
-//					if (expPriorities[1]< ((int[])orderedPri.get(i-1))[1])
-//						break;						
-//				}				
-//				ordered.add(i,exp);
-//				orderedPri.add(i,expPriorities);
-//			}
-//			maxPriorityCount++;
-//		}else{
-//			ordered.add(exp);
-//			orderedPri.add(expPriorities);
-//		}
-}
-	return ordered;
-}
-
-/**
- * 
- * @param expressions
- * @return
- * @todo Generated comment
- * @deprecated
- */
-protected List orderExpressions(List expressions){
-	List tmpExpressionOrder = new ArrayList(expressions);
-	tmpExpressionOrder = sortExpressionsByBeans(tmpExpressionOrder);
-	tmpExpressionOrder = reorderInitExpsToTop(tmpExpressionOrder);
-	return tmpExpressionOrder;
-}
-
-/**
  * Called if this is the first expresson, and we need an offset from expression that is 
  * not in our model
  */
@@ -435,93 +303,6 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	}
 	return new Object[] {new Integer(offset), filler};
 }
-/**
- * Updates the expression order so that:
- * 
- * (*) Expressions modifying a particular bean always stick
- *     togeether. Except the declaration statements, because
- *     they might be used by other beans
- * 
- * The way it is done is:
- * (*) Determine the priority of all the expressions. Priority
- *     of expressions is determined by the expression's decoders.
- *     If the expression contains a 'new', it is assigned 
- *     Integer.MAX_VALUE priority. If any problem occurs, the
- *     expression is set a priority of -1.
- * (*) 
- * @deprecated --- still here so that we can reference the old manner
- *                 in which method was sorted
- */
-public  void ORIupdateExpressionOrder() throws CodeGenException{
-
-	resetExpressionPriorities();
-	
-	List sortedExpressions = orderExpressions(fExpressions);
-	List sortedEventExpressions = orderExpressions(fEventExpressions);
-	
-	List allExpressions = new ArrayList(sortedExpressions);
-	allExpressions.addAll(sortedEventExpressions);
-
-	// Get the best usable filler and offset for placing new expressions.
-	int bestUsablePosition = -1;
-	String bestUsableFiller = new String();
-	try {
-		Object[] ret = getUsableOffsetAndFiller();
-		bestUsablePosition = ((Integer)ret[0]).intValue();
-		bestUsableFiller = (String)ret[1];
-	} catch (CodeGenException e) {
-		JavaVEPlugin.log(e, Level.WARNING);
-	}
-	
-	// Place the expressions
-	for(int c=0;c<allExpressions.size();c++){
-		CodeExpressionRef exp = (CodeExpressionRef)allExpressions.get(c);
-		if(exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)){
-			if(bestUsablePosition<(exp.getOffset()+exp.getLen())){
-				bestUsableFiller = exp.getFillerContent();
-				bestUsablePosition = exp.getOffset() + exp.getLen();
-			}
-		}else{
-			if(bestUsableFiller!=null)
-				exp.setFillerContent(bestUsableFiller);
-			{// TODO: why are we doing this here???? sorting should resolve everyting!
-				// ALWAYS keep an expression which is floating after ALL
-			  // the 'new' expressions in the method ! 
-				if (!exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-						Iterator itr = allExpressions.iterator();
-						while (itr.hasNext()) {
-							CodeExpressionRef tmpexp = (CodeExpressionRef) itr
-									.next();
-//							int[] tmpexpPriorities = (int[]) tmpexp
-//									.getPriority();
-//							if (tmpexpPriorities == null) {
-//								JavaVEPlugin.log(new Status(IStatus.ERROR,
-//										JavaVEPlugin.getPlugin()
-//												.getDescriptor()
-//												.getUniqueIdentifier(),
-//										IStatus.OK, "Priority is null", null));
-//								tmpexpPriorities = new int[]{-1, -1};
-//							}
-//							if (tmpexp
-//									.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)
-//									&& (tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_CONSTRUCTOR)
-//									&& tmpexp.getOffset() > bestUsablePosition)
-//								bestUsablePosition = tmpexp.getOffset()
-//										+ tmpexp.getLen();
-						}
-					}
-			}
-			exp.setOffset(bestUsablePosition);
-			bestUsablePosition += exp.getLen();
-			exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //exp.setState(exp.getState() | exp.STATE_SRC_LOC_FIXED); // line is not readjusted again
-		}
-	}
-	
-	fExpressions = (ArrayList) sortedExpressions;
-	fEventExpressions = (ArrayList) sortedEventExpressions;
-}
-
-
 /**
  *  @return 0 if equal, 1 if p1>p2, -1 if p1<p2
  **/
@@ -786,70 +567,6 @@ protected static Comparator getDefaultBeanOrderComparator(){
 		}
 	};
 }
-
-/**
- *  @return a negative integer, zero, or a positive integer as the
- * 	       first argument is less than, equal to, or greater than the
- *	       second.
- *  warning: Never return zero, as values are overwritten if equal.
- * @deprecated
- */
-protected static Comparator getDefaultMethodComparator(){
-	// TODO  SortedMap doesnt store equal objects - please investigate
-	return 
-	new Comparator(){
-		public int compare(Object e1, Object e2){
-			CodeExpressionRef r1 = (CodeExpressionRef)e1;
-			CodeExpressionRef r2 = (CodeExpressionRef)e2;
-//			int[] r1Priorities = (int[])r1.getPriority();
-//			int[] r2Priorities = (int[])r2.getPriority();
-//			if(r1Priorities==null){
-//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
-//				r1Priorities = new int[]{-1, -1};
-//			}
-//			if(r2Priorities==null){
-//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), IStatus.OK, "Priority is null", null));
-//				r2Priorities = new int[]{-1, -1};
-//			}
-//			int sfPriority1 = r1Priorities[0];
-//			int sfPriority2 = r2Priorities[0];
-//			int indexPriority1 = r1Priorities[1];
-//			int indexPriority2 = r2Priorities[1];
-//			int o1 = r1.getOffset();
-//			int o2 = r2.getOffset();
-//			if(o1<0)					// If the offsets are less than 0
-//				o1 = Integer.MAX_VALUE;		// then the expression is a new one.
-//			if(o2<0)					// Setting their offsets to MAX will
-//				o2 = Integer.MAX_VALUE;		// make the expression add itself at the end of the 
-//			if(sfPriority1<sfPriority2){					// list of similar priority expressions.
-//				return 1;  // Descending
-//			}else{
-//				if(sfPriority1==sfPriority2){ // Same Priority, look at offsets
-//					if(indexPriority1<indexPriority2){
-//						return 1;
-//					}else{
-//						if(indexPriority1==indexPriority2){
-//							if(o1<o2){
-//								return -1; // Less Than
-//							}else{
-//								return 1; // Greater than
-//							}
-//						}else{
-//							return -1;
-//						}
-//					}
-//				}else{
-//					return -1;  //Descending
-//				}
-//			}
-return -1;
-		}
-		public boolean equals(Object o){
-			return super.equals(o);
-		}
-	};
-}
-
 
 /**
  * This method will remove itself and of of its expressions from the model.

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: JVEStyleRegistry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +87,7 @@ public class JVEStyleRegistry implements IStyleRegistry {
 		if (result != null)
 			return result;
 
-		IExtensionPoint xp = Platform.getPluginRegistry().getExtensionPoint(RULE_OVERRIDE_ID);
+		IExtensionPoint xp = Platform.getExtensionRegistry().getExtensionPoint(RULE_OVERRIDE_ID);
 		if (xp != null) {
 			IExtension[] extensions = xp.getExtensions();
 			if (extensions.length > 0) {
@@ -128,7 +128,7 @@ public class JVEStyleRegistry implements IStyleRegistry {
 	public String[] getStyleIDs() {
 
 		ArrayList sl = new ArrayList();
-		IExtensionPoint xp = Platform.getPluginRegistry().getExtensionPoint(RULE_OVERRIDE_ID);
+		IExtensionPoint xp = Platform.getExtensionRegistry().getExtensionPoint(RULE_OVERRIDE_ID);
 		if (xp != null) {
 			IExtension[] extensions = xp.getExtensions();
 			if (extensions.length > 0) {

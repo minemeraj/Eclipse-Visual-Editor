@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.ve.examples"
    name="%pluginName"
@@ -32,6 +33,7 @@
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jem.beaninfo"/>
       <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.core.runtime"/>
    </requires>
 
 
@@ -41,7 +43,7 @@
             default="true"
             name="%dinnerPlanner"
             extensions="dinner"
-            icon="images\graph.gif"
+            icon="images/graph.gif"
             class="org.eclipse.ve.examples.cdm.dept.dinner.ui.DinnerGraphicalEditorPart"
             contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
             id="Dinner Planner">
@@ -50,7 +52,7 @@
             default="true"
             name="%companyEditor"
             extensions="cdmcmp"
-            icon="images\graph.gif"
+            icon="images/graph.gif"
             class="org.eclipse.ve.examples.cdm.dept.ui.CompanyGraphicalEditorPart"
             contributorClass="org.eclipse.ve.internal.cde.core.ActionBarContributor"
             id="Company Editor">

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-18 13:56:08 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 
@@ -86,7 +86,7 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 				
 		// Classpath - Make sure it has the launcher added to it
 		String[] classpath = getClasspath(configuration);
-		String[] remoteVMLocations = ProxyPlugin.getPlugin().localizeFromPluginDescriptorAndFragments(JavaVEPlugin.getPlugin().getDescriptor(), "vm/vcelauncher.jar");	 //$NON-NLS-1$
+		String[] remoteVMLocations = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(JavaVEPlugin.getPlugin().getBundle(), "vm/vcelauncher.jar");	 //$NON-NLS-1$
 		String[] newClassPath = new String[classpath.length + remoteVMLocations.length];
 		System.arraycopy(remoteVMLocations, 0, newClassPath, 0, remoteVMLocations.length);
 		System.arraycopy(classpath,0,newClassPath,remoteVMLocations.length,classpath.length);
@@ -134,7 +134,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	if (configuration.getAttribute("isSWT", false)) {
 		// Add in the SWT lib if the user hasn't added it already
 		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) {
-			String swtLib = ProxyPlugin.getPlugin().localizeFromPluginDescriptor(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.swt"), "$os$");
+			String swtLib = ProxyPlugin.getPlugin().localizeFromBundle(Platform.getBundle("org.eclipse.swt"), "$os$");
 			if (swtLib != null) {
 				// chop off the beginning / if there is one
 				if (swtLib.charAt(0) == '/') {

@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AttributeFeatureMapper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-28 14:21:37 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:29 $ 
  */
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.emf.common.util.URI;
 
-import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.java.PropertyFeatureMapper;
 import org.eclipse.ve.internal.jfc.core.JFCConstants;
 

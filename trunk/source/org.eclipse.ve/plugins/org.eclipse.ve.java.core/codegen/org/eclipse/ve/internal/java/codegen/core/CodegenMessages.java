@@ -11,13 +11,11 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenMessages.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodegenMessages {
 
@@ -36,13 +34,5 @@ public class CodegenMessages {
 		} catch (MissingResourceException e) {
 			return '!' + key + '!';
 		}
-	}
-	public static String getPluginPropertyString(String key){
-		try {		
-			// TODO Why were these strings in the plugin.properties. I couldn't find them being used by the plugin.xml. That is usually why they would be in plugin.properties.
-			return JavaVEPlugin.getPlugin().getDescriptor().getResourceString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}			
 	}
 }

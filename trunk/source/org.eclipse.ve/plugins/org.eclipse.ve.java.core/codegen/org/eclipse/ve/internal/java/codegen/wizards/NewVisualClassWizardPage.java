@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.SelectionButtonDialogFieldGroup;
@@ -33,15 +33,15 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 
 	protected SelectionButtonDialogFieldGroup fSwingAWTGroup;
 	String[] widgetSetNames = new String[] { 
-		CodegenMessages.getPluginPropertyString("swing") ,  //$NON-NLS-1$
-		CodegenMessages.getPluginPropertyString("awt" ) }; //$NON-NLS-1$
+		CodegenMessages.getString("swing") ,  //$NON-NLS-1$
+		CodegenMessages.getString("awt" ) }; //$NON-NLS-1$
 
 	protected SelectionButtonDialogFieldGroup fVisualTypesGroup;
 	Button[] buttons;
 	String[] buttonNames = new String[] { 
-		CodegenMessages.getPluginPropertyString("frame") ,  //$NON-NLS-1$
-		CodegenMessages.getPluginPropertyString("panel") , 	//$NON-NLS-1$
-		CodegenMessages.getPluginPropertyString("applet") , //$NON-NLS-1$
+		CodegenMessages.getString("frame") ,  //$NON-NLS-1$
+		CodegenMessages.getString("panel") , 	//$NON-NLS-1$
+		CodegenMessages.getString("applet") , //$NON-NLS-1$
 	};
 	String[] swingButtonClasses = new String[] { "javax.swing.JFrame" , "javax.swing.JPanel" , "javax.swing.JApplet" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	String[] AWTButtonClasses = new String[] { "java.awt.Frame" , "java.awt.Panel" , "java.applet.Applet" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -64,7 +64,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			buttons[i] = createRadioButton(classesGroup,buttonNames[i],swingButtonClasses[i],AWTButtonClasses[i],false);
 		}
 		// Add a fourth button for java.lang.Object
-		buttons[3] = createRadioButton(classesGroup,CodegenMessages.getPluginPropertyString("other") ,"java.lang.Object","java.lang.Object",true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		buttons[3] = createRadioButton(classesGroup,CodegenMessages.getString("other") ,"java.lang.Object","java.lang.Object",true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 //		((GridData)classesGroup.getLayoutData()).horizontalSpan = 1;
 

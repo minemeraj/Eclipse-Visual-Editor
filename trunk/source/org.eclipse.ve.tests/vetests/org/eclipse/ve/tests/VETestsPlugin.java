@@ -1,4 +1,3 @@
-package org.eclipse.ve.tests;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,9 +10,10 @@ package org.eclipse.ve.tests;
  *******************************************************************************/
 /*
  *  $RCSfile: VETestsPlugin.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:32 $ 
  */
-import org.eclipse.core.runtime.IPluginDescriptor;
+package org.eclipse.ve.tests;
+
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -28,8 +28,7 @@ public class VETestsPlugin extends Plugin {
 	/**
 	 * @param descriptor
 	 */
-	public VETestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public VETestsPlugin() {
 		PLUGIN = this;
 	}
 	

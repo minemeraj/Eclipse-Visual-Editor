@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -30,7 +30,7 @@ import org.eclipse.emf.codegen.jet.JETException;
  */
 public class TemplateObjectFactory {
 	
-	public static final IPath OBJECT_DESTINATION_PATH = Platform.getPluginStateLocation(Platform.getPlugin("org.eclipse.ve.java.core")).append("JetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final IPath OBJECT_DESTINATION_PATH = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("JetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
 	static Hashtable fEmitters = new Hashtable();
 
 	protected static TemplateObjectEmitter getEmitter(String[] templateURIPath, String template, long ts, String classname) {

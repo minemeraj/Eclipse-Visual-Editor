@@ -10,15 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-15 22:51:21 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.java.codegen.model.*;

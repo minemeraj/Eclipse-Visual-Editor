@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultRuleProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -83,8 +83,8 @@ public class DefaultRuleProvider implements IRuleProvider {
 		// Get the rule to find class name.
 		Object rule = getRule();
 		if (rule != null)
-			return TemplateUtil.getPluginInstallPath(
-				ce.getDeclaringExtension().getDeclaringPluginDescriptor(),
+			return TemplateUtil.getPathForBundleFile(
+				ce.getDeclaringExtension().getNamespace(),
 				rule.getClass().getName().replace('.', '/'));
 		else
 			return null;
@@ -112,7 +112,7 @@ public class DefaultRuleProvider implements IRuleProvider {
 	 * @see org.eclipse.ve.internal.java.core.codegen.java.rules.IRuleProvider#getProviderID()
 	 */
 	public String getProviderID() {
-		return ce.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
+		return ce.getDeclaringExtension().getNamespace();
 	}
 
 }

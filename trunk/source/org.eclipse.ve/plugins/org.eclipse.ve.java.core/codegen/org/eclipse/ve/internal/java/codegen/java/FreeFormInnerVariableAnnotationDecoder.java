@@ -10,17 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormInnerVariableAnnotationDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 
 /**

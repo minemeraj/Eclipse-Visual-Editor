@@ -10,11 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-29 22:24:48 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -43,7 +42,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
@@ -70,7 +68,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		public ShowOverviewAction() {
 			super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
 			setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));
-			setImageDescriptor(getImageDescriptor("elcl16/showbasic_ps.gif"));	// Don't know what showbasic_ps is, but it looks good (looks like the show overview that GEF has in its logic example).
+			setImageDescriptor(getUIImageDescriptor("elcl16/showbasic_ps.gif"));	// Don't know what showbasic_ps is, but it looks good (looks like the show overview that GEF has in its logic example).
 		}			
 
 		public void run() {
@@ -84,46 +82,22 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 			showOverview(isChecked());
 			CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.PREF_SHOW_OVERVIEW_KEY, isChecked());
 		}
-		
-		/*
-		 * Copied from Resource navigator to do the same thing.
-		 */
-		protected ImageDescriptor getImageDescriptor(String relativePath) {
-			String iconPath = "icons/full/"; //$NON-NLS-1$
-			try {
-				AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-				URL installURL = plugin.getDescriptor().getInstallURL();
-				URL url = new URL(installURL, iconPath + relativePath);
-				return ImageDescriptor.createFromURL(url);
-			} catch (MalformedURLException e) {
-				// should not happen
-				return ImageDescriptor.getMissingImageDescriptor();
-			}
-		}
 
+	}
+	
+	/*
+	 * Copied from Resource navigator to do the same thing.
+	 */
+	protected ImageDescriptor getUIImageDescriptor(String relativePath) { 
+		URL url = Platform.getBundle(PlatformUI.PLUGIN_ID).getEntry("icons/full/" + relativePath);	//$NON-NLS-1$
+		return url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
 	}
 	
 	private class CollapseAllAction extends Action {
 		public CollapseAllAction() {
 			super(ResourceNavigatorMessages.getString("CollapseAllAction.title"), IAction.AS_PUSH_BUTTON); //$NON-NLS-1$
 			setToolTipText(ResourceNavigatorMessages.getString("CollapseAllAction.toolTip")); //$NON-NLS-1$
-			setImageDescriptor(getImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
-		}
-		
-		/*
-		 * Copied from Resource navigator to do the same thing.
-		 */
-		protected ImageDescriptor getImageDescriptor(String relativePath) {
-			String iconPath = "icons/full/"; //$NON-NLS-1$
-			try {
-				AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-				URL installURL = plugin.getDescriptor().getInstallURL();
-				URL url = new URL(installURL, iconPath + relativePath);
-				return ImageDescriptor.createFromURL(url);
-			} catch (MalformedURLException e) {
-				// should not happen
-				return ImageDescriptor.getMissingImageDescriptor();
-			}
+			setImageDescriptor(getUIImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
 		}
 		
 		public void run() {

@@ -1,8 +1,7 @@
 package com.ibm.etools.jbcf.swt.targetvm;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 public class Foo {
 	

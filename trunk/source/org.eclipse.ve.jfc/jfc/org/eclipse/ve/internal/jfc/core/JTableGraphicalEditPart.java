@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-24 17:56:08 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.*;
@@ -24,7 +24,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
@@ -117,7 +116,6 @@ protected EditPart createChild(Object child) {
  */
 public void setModel(Object model) {
 	super.setModel(model);
-	JavaClass modelType = (JavaClass) ((EObject) model).eClass();
 	sfColumns = JavaInstantiation.getSFeature(((EObject) model).eClass().eResource().getResourceSet(), JFCConstants.SF_JTABLE_COLUMNS);
 }
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-30 00:21:08 $ 
+ *  $Revision: 1.9 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.util.*;
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
@@ -54,10 +55,6 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static Image fAppletImage;
 	public static Image CHECK_IMAGE;
 
-	// Map of registered variable contributors, mapped key is path, value is IConfigurationElement[].
-	// It is allowed to have more than one. They will be concatenated together when used.
-//	private HashMap variableContributors;
-
 	private static ImageDescriptor WIZARD_TITLE_DESC;
 
 	public static final String SHOW_EVENTS = "SHOW_EVENTS"; // Plugin preferences key //$NON-NLS-1$
@@ -65,8 +62,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final int EVENTS_BASIC = 1; // Plugin preferences value
 	public static final int EVENTS_EXPERT = 2; // Plugin preferences value
 
-	public JavaVEPlugin(IPluginDescriptor pd) {
-		super(pd);
+	public JavaVEPlugin() {
 		PLUGIN = this;
 	}
 
@@ -269,20 +265,10 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		return CHECK_IMAGE;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#initializeDefaultPluginPreferences()
-	 */
-	protected void initializeDefaultPluginPreferences() {
-		super.initializeDefaultPluginPreferences();
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
 		getPluginPreferences().setDefault(SHOW_EVENTS, EVENTS_BASIC);
 		VCEPreferences.initializeDefaultPluginPreferences(getPluginPreferences());
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#shutdown()
-	 */
-	public void shutdown() throws CoreException {
-		savePluginPreferences();
 	}
 	
 	/*

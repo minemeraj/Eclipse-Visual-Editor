@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainerWizardPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-30 00:21:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.wizard;
 
@@ -199,7 +199,7 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 		containerid = config.getAttributeAsIs("id");
 		String name = config.getAttribute("name"); 
 		// Get the registration element for this container. It will be the first one found. Can't handle more than one.
-		IConfigurationElement[] configs = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint(JavaVEPlugin.PI_JBCF_REGISTRATIONS).getConfigurationElements();
+		IConfigurationElement[] configs = Platform.getExtensionRegistry().getConfigurationElementsFor(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), JavaVEPlugin.PI_JBCF_REGISTRATIONS);
 		for (int i = 0; i < configs.length; i++) {
 			String ctrid = configs[i].getAttributeAsIs(JavaVEPlugin.PI_CONTAINER);
 			if (containerid.equals(ctrid)) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-20 18:45:38 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -126,7 +126,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 			List list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
 			list.addAll(TemplateUtil.getPlatformJREPath());
 			String[] classPath = (String[]) list.toArray(new String[list.size()]);
-			String   templatePath = TemplateUtil.getPluginInstallPath(getBasePlugin(), getTemplatePath()) ;
+			String   templatePath = TemplateUtil.getPathForBundleFile(getBasePlugin(), getTemplatePath()) ;
 			
 			fMethodTemplate = (IMethodTemplate)
 				TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-22 23:48:52 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-02 15:57:25 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.util.HashMap;
@@ -46,11 +46,11 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
 		// Add the jar file with the supporting classes required for the JVE into the classpath
 		// In development model the file proxy.jars redirects this to the plugin development project
-		controller.contributeClasspath(SwtPlugin.getDefault().getDescriptor(), "jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
+		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
 		
 		// Get the location of the swt dll in the workbench path and add it.
 		// we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
-		controller.contributeClasspath(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
 	}
 
 	/* (non-Javadoc)

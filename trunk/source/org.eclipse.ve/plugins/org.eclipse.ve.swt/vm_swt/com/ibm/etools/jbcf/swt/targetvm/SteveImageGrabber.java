@@ -62,12 +62,12 @@ public class SteveImageGrabber {
 		Rectangle rect = control.getBounds ();
 		Image image = new Image (display, rect.width, rect.height);
 		int WM_PRINT = 0x0317;
-		int PRF_CHECKVISIBLE = 0x00000001;
+//		int PRF_CHECKVISIBLE = 0x00000001;
 		int PRF_NONCLIENT = 0x00000002;
 		int PRF_CLIENT = 0x00000004;
 		int PRF_ERASEBKGND = 0x00000008;
 		int PRF_CHILDREN = 0x00000010;
-		int PRF_OWNED = 0x00000020;
+//		int PRF_OWNED = 0x00000020;
 		int bits = PRF_CLIENT | PRF_NONCLIENT | PRF_CHILDREN | PRF_ERASEBKGND;
 		GC gc = new GC (image);
 		OS.SendMessage (control.handle, WM_PRINT, gc.handle, bits);

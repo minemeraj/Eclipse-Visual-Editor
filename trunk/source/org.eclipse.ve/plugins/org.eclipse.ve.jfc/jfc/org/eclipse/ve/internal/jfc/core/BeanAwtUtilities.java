@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-20 09:05:28 $ 
+ *  $Revision: 1.13 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.List;
@@ -21,8 +21,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.proxy.awt.*;

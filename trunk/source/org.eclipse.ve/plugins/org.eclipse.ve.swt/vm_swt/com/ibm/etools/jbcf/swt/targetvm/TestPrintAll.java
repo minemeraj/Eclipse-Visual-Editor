@@ -2,7 +2,6 @@ package com.ibm.etools.jbcf.swt.targetvm;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ImageProducer;
 
 import javax.swing.*;
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-20 13:01:30 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:29 $ 
  */
 
 import java.util.ArrayList;
@@ -327,22 +327,6 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		char[] noQualifiers = CharOperation.replace(original.toCharArray(), fullyQualified.toCharArray(), mayBeQualified.toCharArray());
 
 		return new String(CharOperation.replace(noQualifiers, mayBeQualified.toCharArray(), fullyQualified.toCharArray()));
-
-	}
-	protected String resolveArgQualification(List args, String initString) {
-		String result = initString;
-		if (args != null)
-			for (int i = 0; i < args.size(); i++) {
-				if (args.get(i) instanceof ClassInstanceCreation) {
-					ClassInstanceCreation ae = (ClassInstanceCreation) args.get(i);
-					String argType = CodeGenUtil. resolve (ae.getName(),fbeanPart.getModel()); 
-					CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-                    PTExpression pt = ConstructorDecoderHelper.getParsedTree(ae,expOfMethod,fbeanPart.getModel(),null); 					
-//					result = addQualifier(result, ae.type.toString(), argType);
-//					result = resolveArgQualification(ae.arguments, result);
-				}
-			}
-		return result;
 
 	}
 	protected IJavaObjectInstance parseAllocatedConstraint(ClassInstanceCreation exp) {

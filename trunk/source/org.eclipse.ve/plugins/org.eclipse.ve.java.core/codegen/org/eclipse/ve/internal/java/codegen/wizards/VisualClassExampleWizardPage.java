@@ -11,29 +11,26 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
-import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -192,18 +189,13 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 		}
 	}	
 	protected URL getFileLocation() {
-		Plugin p=null ;
+		Bundle b=null ;
 		if (fPluginName != null)
-		   p = Platform.getPlugin(fPluginName) ;
-		if (p == null)
-		   p = JavaVEPlugin.getPlugin();
+		   b = Platform.getBundle(fPluginName);
+		if (b == null)
+		   b = JavaVEPlugin.getPlugin().getBundle();
 		String fileLocation = "Examples/" + getTypeName() + ".java"; //$NON-NLS-1$ //$NON-NLS-2$
-		URL result = null;
-		try {
-			result = new URL(p.getDescriptor().getInstallURL(), fileLocation);
-		} catch (MalformedURLException e) {
-		}
-		return result;
+		return Platform.find(b, new Path(fileLocation));
 	}
 	public String getExampleFileContents(){
 

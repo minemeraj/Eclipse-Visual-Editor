@@ -11,22 +11,22 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-13 13:23:48 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:14 $ 
  */
-
-import org.eclipse.gef.*;
-import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.ui.palette.PaletteViewer;
-
-import org.eclipse.ui.IEditorPart;
 
 import java.util.*;
 
-import org.eclipse.ve.internal.cde.commands.AddAnnotationsCommand;
-import org.eclipse.ve.internal.cde.rules.*;
-import org.eclipse.ve.internal.cdm.*;
-
+import org.eclipse.gef.*;
+import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
+
+import org.eclipse.ve.internal.cde.commands.AddAnnotationsCommand;
+import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 /**
  * Common Diagram Editor EditDomain.
@@ -300,23 +300,11 @@ public class EditDomain extends DefaultEditDomain {
 	public Class getDefaultAddAnnotationsCommandClass() {
 		return defaultAddAnnotationsCommand;
 	}
-	
-	public void setPaletteRoot(PaletteRoot root){
-		super.setPaletteRoot(root);
-		setData(PaletteRoot.class,root);
-	}
-	public void setPaletteViewer(PaletteViewer viewer){
-		super.setPaletteViewer(viewer);
-		setData(PaletteViewer.class,viewer);
-	}
-	public PaletteRoot getPaletteRoot(){
-		return (PaletteRoot) getData(PaletteRoot.class);
-	}
-	
-	public PaletteViewer getPaletteViewer() {
-		return (PaletteViewer) getData(PaletteViewer.class);
-	}
 
+	public PaletteRoot getPaletteRoot(){
+		return getPaletteViewer().getPaletteRoot();
+	}
+	
 	/**
 	 * The rule registry allows customization of function via rules.
 	 * If your application doesn't require such customization, then

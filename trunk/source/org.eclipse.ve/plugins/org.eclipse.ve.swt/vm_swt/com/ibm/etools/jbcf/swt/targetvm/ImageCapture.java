@@ -61,13 +61,13 @@ public class ImageCapture {
 			return new Image(aControl.getDisplay(), 1, 1);	// TODO we are getting invalid rect for some reason. Figure out why later.
 		Image image = new Image (aControl.getDisplay(), rect.width, rect.height);
 		int WM_PRINT = 0x0317;
-		int WM_PRINTCLIENT = 0x0318;		
-		int PRF_CHECKVISIBLE = 0x00000001;
+//		int WM_PRINTCLIENT = 0x0318;		
+//		int PRF_CHECKVISIBLE = 0x00000001;
 		int PRF_NONCLIENT = 0x00000002;
 		int PRF_CLIENT = 0x00000004;
 		int PRF_ERASEBKGND = 0x00000008;
 		int PRF_CHILDREN = 0x00000010;
-		int PRF_OWNED = 0x00000020;
+//		int PRF_OWNED = 0x00000020;
 		int print_bits = PRF_NONCLIENT | PRF_CLIENT | PRF_ERASEBKGND;
 		// This method does not print immediate children because the z-order doesn't work correctly and needs to be
 		// dealt with separately, however Table's TableColumn widgets are children so much be handled differently

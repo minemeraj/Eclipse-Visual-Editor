@@ -11,41 +11,28 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-27 19:00:00 $ 
+ *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
  */
 
-import java.util.*;
-
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.viewers.ILabelProvider;
 
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.*;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
+import org.eclipse.ve.internal.cdm.CDMFactory;
+
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-
-import org.eclipse.ve.internal.jcm.BeanComposition;
-
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMFactory;
-import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 
 public class BeanUtilities {
 	
