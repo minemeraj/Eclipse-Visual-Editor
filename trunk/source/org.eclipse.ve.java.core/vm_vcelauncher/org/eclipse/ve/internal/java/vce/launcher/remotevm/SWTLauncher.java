@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-10 18:46:13 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-26 14:25:36 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -127,6 +127,7 @@ public class SWTLauncher implements ILauncher {
 		if (!shellList.isEmpty()) {
 			if (shellList.size() == 1) {
 				runShell((ShellInfo)shellList.get(0), bean);
+				return;
 			}
 			// There's more than one shell, display a prompt to the user to
 			// choose which to run.
@@ -232,6 +233,7 @@ public class SWTLauncher implements ILauncher {
 		shell.setLocation(
 				(Display.getDefault().getBounds().width - shell.getSize().x) / 2,
 				(Display.getDefault().getBounds().height - shell.getSize().y) / 2 );
+		shell.pack();
 		
 		runEventLoop(shell);
 		
