@@ -3,7 +3,7 @@
   xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
   xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
   <palette:CategoryCmp xmi:id="swtCat">
-    <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="SWT"/>
+    <categoryLabel xsi:type="utility:TranslatableString" xmi:id="string0" key="Palette.Category.SWTComponents" bundle="bundle"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/Shell.xmi#Shell_1">
@@ -92,4 +92,7 @@
       </cmpEntries>                                       
     </cmpGroups>    
   </palette:CategoryCmp>
+  <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
+    <bundleURLs>platform:/plugin/org.eclipse.ve.swt/</bundleURLs>
+  </utility:URLResourceBundle>
 </xmi:XMI>
