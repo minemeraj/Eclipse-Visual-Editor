@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-01 18:52:24 $ 
+ *  $Revision: 1.9 $  $Date: 2004-04-08 11:00:14 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -131,6 +131,7 @@ public class BeanUtilities {
 	 */
 	public static IJavaInstance getFeatureValue(IJavaObjectInstance javaObject, String featureName) {
 		EStructuralFeature feature = javaObject.eClass().getEStructuralFeature(featureName);
+		if(feature == null) return null;
 		Object featureValue = javaObject.eGet(feature);
 		if(featureValue != null){
 			return (IJavaInstance)featureValue;
