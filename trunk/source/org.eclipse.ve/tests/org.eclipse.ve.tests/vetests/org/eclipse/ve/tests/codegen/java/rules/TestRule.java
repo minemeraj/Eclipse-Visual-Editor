@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:43:45 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-09 00:07:14 $ 
  */
 
 import java.util.*;
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -30,7 +30,6 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
@@ -54,28 +53,37 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		return utilityClasses;
 	}
 
-	public boolean ignoreVariable(AbstractVariableDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected String getVariablename(List fragments){
+		String name = "";
+		if(fragments!=null && fragments.size()>0 && (fragments.get(0) instanceof VariableDeclarationFragment)) {
+				VariableDeclarationFragment vF = (VariableDeclarationFragment) fragments.get(0);
+				name = vF.getName().toString();
+		}
+		return name;
+	}
+	
+	protected boolean ignoreVariable(Type type, List fragments, ITypeResolver resolver, IDiagramModelInstance di) {
 
 		//  Need to filter arrays, 
 		//
-		if (isUtilityVariable(field, resolver, di))
+		if (isUtilityVariable(type, resolver, di))
 			return false;
 
 		try {
 			// VAJava legacy
-			if (String.valueOf(field.name).startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
-				if (String.valueOf(field.name).startsWith("ivjConn")) //$NON-NLS-1$
+			if (getVariablename(fragments).startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
+				if (getVariablename(fragments).startsWith("ivjConn")) //$NON-NLS-1$
 					return true;
 				else
 					return false;
 
 			} else {
-				String type = resolveType(field, resolver);
-				if (type == null)
+				String type1 = resolveType(type, resolver);
+				if (type1 == null)
 					return true;
 
 				ResourceSet rs = di.getModelResourceSet();
-				EClassifier meta = JavaRefFactory.eINSTANCE.reflectType(type, rs);
+				EClassifier meta = JavaRefFactory.eINSTANCE.reflectType(type1, rs);
 
 				String pre = InstanceVariableCreationRule.getPrefix(meta, rs);
 				if (pre == null || pre.length() == 0)
@@ -87,28 +95,29 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		}
 	}
 
-	protected String getType(AbstractVariableDeclaration field) {
+	protected String getType(Type type) {
 		String t = null;
-		if (field.type instanceof SingleTypeReference)
-			t = new String(((SingleTypeReference) field.type).token);
-		else if (field.type instanceof QualifiedTypeReference) {
-			t = CodeGenUtil.tokensToString(((QualifiedTypeReference) field.type).tokens);
+		if (type instanceof SimpleType)
+			t = new String(((SimpleType) type).getName().toString());
+		else if (type instanceof QualifiedType) {
+			t = ((QualifiedType) type).getName().toString();
 		} else
 			return null;
 		return t;
 	}
-	protected String resolveType(AbstractVariableDeclaration field, ITypeResolver resolver) {
-		String theType = getType(field);
+	
+	protected String resolveType(Type type, ITypeResolver resolver) {
+		String theType = getType(type);
 		if (theType == null)
 			return null;
-		return resolver.resolve(getType(field));
+		return resolver.resolve(getType(type));
 	}
 
 	/**
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isUtilityVariable(AbstractVariableDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean isUtilityVariable(Type type, ITypeResolver resolver, IDiagramModelInstance di) {
 		// TODO Need to support arrays etc.
 
 		// This will also clear the internalsCache
@@ -117,12 +126,12 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		// Try to bypass resolving, and isAssignableFrom
 		if (internalsCache == null)
 			internalsCache = new HashMap(200);
-		Boolean internal = (Boolean) internalsCache.get(getType(field));
+		Boolean internal = (Boolean) internalsCache.get(getType(type));
 		if (internal != null)
 			return internal.booleanValue();
 
-		String t = resolveType(field, resolver);
-		;
+		String t = resolveType(type, resolver);
+		
 		if (t == null)
 			return false;
 		try {
@@ -130,7 +139,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 			for (Iterator iterator = utilClasses.iterator(); iterator.hasNext();) {
 				JavaClass uc = (JavaClass) iterator.next();
 				if (uc.isAssignableFrom(iClass)) {
-					internalsCache.put(getType(field), Boolean.TRUE);
+					internalsCache.put(getType(type), Boolean.TRUE);
 					return true;
 				}
 			}
@@ -138,9 +147,10 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
 		}
 
-		internalsCache.put(getType(field), Boolean.FALSE);
+		internalsCache.put(getType(type), Boolean.FALSE);
 		return false;
 	}
+	
 	public static void clearCache() {
 		utilityRS = null;
 		utilityClasses = null;
@@ -149,7 +159,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#getDefaultInitializationMethod(org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.jdt.internal.compiler.ast.TypeDeclaration)
 	 */
-	public String getDefaultInitializationMethod(AbstractVariableDeclaration field, ITypeResolver resolver, TypeDeclaration typeDec) {
+	public String getDefaultInitializationMethod(FieldDeclaration field, ITypeResolver resolver, TypeDeclaration typeDec) {
 		return null;
 	}
 
@@ -157,6 +167,20 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	 * @see org.eclipse.ve.internal.cde.rules.IRule#setRegistry(org.eclipse.ve.internal.cde.rules.IRuleRegistry)
 	 */
 	public void setRegistry(IRuleRegistry registry) {
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.FieldDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
+	 */
+	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+		return ignoreVariable(field.getType(), field.fragments(), resolver, di);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IMethodVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.VariableDeclarationStatement, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
+	 */
+	public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver, IDiagramModelInstance di) {
+		return ignoreVariable(localField.getType(), localField.fragments(), resolver, di);
 	}
 
 }
