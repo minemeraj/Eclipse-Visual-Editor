@@ -36,8 +36,7 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  */
 public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 
-	private EditDomain fEditDomain;
-	private String currentStringValue;
+	private EditDomain fEditDomain;	
 
 	public CustomLabelEditor(Composite aComposite) {
 		super(aComposite);
@@ -63,7 +62,7 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 			}
 			protected Control createDialogArea(Composite parent) {
 				content = new LabelDialogContent(parent, SWT.NONE);
-				content.setString(getCurrentStringValue());
+				content.setString((String)getValue());
 				return content;
 			}
 			
@@ -87,18 +86,10 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 		fEditDomain = (EditDomain) data;
 	}
 
-	public String getCurrentStringValue() {
-		if (currentStringValue==null) {
-			IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) getValue());		
-			currentStringValue = stringBeanProxy.stringValue();
-		}
-		return currentStringValue;
-	}
-
 	protected void updateContents(Object value) {
 		if (value!=null) {
 		   IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);
-		   value = stringBeanProxy.stringValue();
+		   value = stringBeanProxy.stringValue();		   
 		}
 		super.updateContents(value);
 	}
