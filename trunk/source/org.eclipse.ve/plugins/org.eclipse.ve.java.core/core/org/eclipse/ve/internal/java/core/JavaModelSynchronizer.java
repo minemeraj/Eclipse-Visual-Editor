@@ -11,14 +11,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-18 17:55:53 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-09 22:47:02 $ 
  */
 
-import java.util.*;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.*;
 
 import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
@@ -32,8 +29,6 @@ import org.eclipse.jem.internal.proxy.core.IStandardBeanTypeProxyFactory;
 public class JavaModelSynchronizer extends JavaModelListener {
 	protected IBeanProxyDomain proxyDomain;
 	protected IJavaProject fProject; // The project this listener is opened on.
-	protected IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-	private static final IPath CLASSPATH_PATH = new Path(".classpath"); //$NON-NLS-1$	
 	private boolean recycleVM = false;
 	private Runnable terminateRun;		
 
@@ -52,6 +47,13 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		JavaCore.addElementChangedListener(this, ElementChangedEvent.POST_CHANGE);	
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#getJavaProject()
+	 */
+	protected IJavaProject getJavaProject() {
+		return fProject;
+	}
+	
 	public void setProject(IJavaProject project) {
 		fProject = project;
 	}
@@ -61,97 +63,6 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 */
 	public void stopSynchronizer() {
 		JavaCore.removeElementChangedListener(this);
-	}
-
-	protected IJavaProject getJavaProject(IClasspathEntry entry) {
-		IProject proj = workspaceRoot.getProject(entry.getPath().segment(0));
-		if (proj != null)
-			return (IJavaProject) JavaCore.create(proj);
-		return null;
-	}
-	
-	private boolean isClassPathChange(IJavaElementDelta delta) {
-		int flags = delta.getFlags();
-		return (
-			delta.getKind() == IJavaElementDelta.CHANGED
-				&& ((flags & IJavaElementDelta.F_ADDED_TO_CLASSPATH) != 0)
-				|| ((flags & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) != 0)
-				|| ((flags & IJavaElementDelta.F_REORDER) != 0));
-	}
-
-	/**
-	 * This method will check to see if a <code>javaProject</code> is a project in the
-	 * classpath of the adapterFactory java project.
-	 */
-	protected boolean isInClasspath(IJavaProject javaProject) {
-		IJavaProject adapterJavaProject = fProject;
-		if (javaProject.equals(adapterJavaProject))
-			return true;
-		return isInClasspath(javaProject, adapterJavaProject, true, new HashSet());
-	}
-
-	protected boolean isInClasspath(IJavaProject testProject, IJavaProject targetProject, boolean isFirstLevel, Set visited) {
-		if (visited.contains(targetProject))
-			return false;
-		visited.add(targetProject);
-		IClasspathEntry[] entries = null;
-		try {
-			entries = targetProject.getRawClasspath();
-		} catch (JavaModelException e) {
-			return false;
-		}
-		IClasspathEntry entry, resEntry;
-		IJavaProject proj = null;
-		List projects = null;
-		for (int i = 0; i < entries.length; i++) {
-			entry = entries[i];
-			if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-				resEntry = JavaCore.getResolvedClasspathEntry(entry);
-				proj = getJavaProject(resEntry);
-				if (isFirstLevel || resEntry.isExported()) {
-					if (proj.equals(testProject))
-						return true;
-					else {
-						if (projects == null)
-							projects = new ArrayList();
-						projects.add(proj);
-					}
-				}
-			}
-		}
-		return isInClasspath(testProject, projects, false, visited);
-	}
-	
-	protected boolean isInClasspath(IJavaProject testProject, List someJavaProjects, boolean isFirstLevel, Set visited) {
-		if (someJavaProjects == null)
-			return false;
-		int size = someJavaProjects.size();
-		IJavaProject javaProj = null;
-		for (int i = 0; i < size; i++) {
-			javaProj = (IJavaProject) someJavaProjects.get(i);
-			return isInClasspath(testProject, javaProj, isFirstLevel, visited);
-		}
-		return false;
-	}
-
-	/*
-	 * Test if .classpath is part of the change. This is necessary
-	 * because .classpath changes of DEPENDENT PROJECTS are not signaled
-	 * through classpath change mechanisms of the top project.
-	 */
-	private boolean isClasspathResourceChange(IJavaElementDelta delta) {
-		IResourceDelta[] resources = delta.getResourceDeltas();
-		if (resources == null)
-			return false;
-		IPath path = null;
-		for (int i = 0; i < resources.length; i++) {
-			if (resources[i].getKind() == IResourceDelta.CHANGED) {
-				path = resources[i].getProjectRelativePath();
-				if (path.equals(CLASSPATH_PATH))
-					return true;
-			}
-		}
-		return false;
 	}
 
 	protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
@@ -182,31 +93,25 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 * If it is not a content change then process the children.
 	 */
 	protected void processJavaElementChanged(ICompilationUnit element, IJavaElementDelta delta) {
-		if (!element.isWorkingCopy()) {
-			if ((delta.getKind() == IJavaElementDelta.CHANGED || delta.getKind() == IJavaElementDelta.ADDED)) {
-				try {
-					IType[] flushTypes = element.getAllTypes();
-					IStandardBeanTypeProxyFactory btypeFactory = proxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory();
-					for (int i = 0; i < flushTypes.length; i++) {
-						String typeName = flushTypes[i].getFullyQualifiedName();
-						if (btypeFactory.isBeanTypeRegistered(typeName) || btypeFactory.isBeanTypeNotFound(typeName)) {
-							recycleVM = true;
-							return;	// Don't need to process further since we will recycle.
-						}
-					}
-				} catch (JavaModelException e) {
-				}
+		switch (delta.getKind()) {
+			case IJavaElementDelta.CHANGED : {
+				// A file save had occurred. It doesn't matter if currently working copy or not.
+				// It means something has changed to the file on disk, but don't know what.
+				if ((delta.getFlags() & IJavaElementDelta.F_PRIMARY_RESOURCE) != 0) {
+					testForInnerClasses(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
+				}						
+				
+				break;
 			}
-			if (delta.getKind() == IJavaElementDelta.REMOVED) {
+			case IJavaElementDelta.ADDED :
+			case IJavaElementDelta.REMOVED : {
 				// It doesn't matter if totally removed or just moved somewhere else, recycle
 				// because there could be a rename which would be a different class.
 				// Currently the element is already deleted and there is no way to find the types in the unit to remove.
 				// So instead we ask factory to see if any registered that start with it plus for inner classes.
-				testForInnerClasses(getFullNameFromElement(element));
-				return;
-				// Since the compilation unit was removed we don't need to process the children (actually the children list will be empty
+				testForInnerClasses(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
+				break;
 			}
-			processChildren(element, delta);
 		}
 	}
 
@@ -238,6 +143,20 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		}
 		processChildren(element, delta);
 	}
+	
+	protected void processJavaElementChanged(IPackageFragment element, IJavaElementDelta delta) {
+		switch (delta.getKind()) {
+			case IJavaElementDelta.ADDED:
+				break;	// Don't need to do anything on a new package. If this was from a new fragroot, we would recycle already. Otherwise, it will find this package on the first use.
+			case IJavaElementDelta.REMOVED:
+				if (delta.getAffectedChildren().length == 0)
+					recycleVM = true;	// Since package was removed, we should recyle to get a clean classloader.
+				break;
+			default :
+				super.processJavaElementChanged(element, delta);
+		}
+	}
+	
 
 	protected String getFullNameFromElement(IJavaElement element) {
 		String name = element.getElementName();		

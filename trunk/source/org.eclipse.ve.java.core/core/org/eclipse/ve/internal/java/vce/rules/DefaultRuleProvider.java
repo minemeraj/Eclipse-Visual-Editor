@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultRuleProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-09 22:47:02 $ 
  */
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -55,17 +55,20 @@ public class DefaultRuleProvider implements IRuleProvider {
 		if (noRule)
 			return null;
 		if (fRule == null) {
-			try {
-				fRule = (IRule) ce.createExecutableExtension(EXT_CLASS);
-				fRule.setRegistry(ruleRegistry);
-			} catch (CoreException e) {
-				noRule = true;
-				JavaVEPlugin.log(e);
-				return null;
-			} catch (ClassCastException e) {
-				noRule = true;
-				JavaVEPlugin.log(e);
-				return null;				
+			synchronized (this) {
+				try {
+					IRule rule = (IRule) ce.createExecutableExtension(EXT_CLASS);
+					rule.setRegistry(ruleRegistry);
+					fRule = rule;
+				} catch (CoreException e) {
+					noRule = true;
+					JavaVEPlugin.log(e);
+					return null;
+				} catch (ClassCastException e) {
+					noRule = true;
+					JavaVEPlugin.log(e);
+					return null;
+				}
 			}
 		}
 		return fRule;

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditorStyle.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-09 22:47:02 $ 
  */
 package org.eclipse.ve.internal.java.vce.rules;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -28,8 +29,8 @@ import org.eclipse.ve.internal.cde.rules.IRule;
  */
 public class EditorStyle implements IEditorStyle {
 	
-	private HashMap				fRules 	   = null ;
-	private HashMap				fTemplates = null ;
+	private Map				fRules 	   = null ;
+	private Map				fTemplates = null ;
 	private String					fID ;
 	private String					fDescription ;
 	private IEditorStylePrefUI		fPrefUI = null ;
@@ -52,7 +53,7 @@ public class EditorStyle implements IEditorStyle {
 	 * of the given plugin
 	 * 
 	 */
-	protected HashMap getRules() {
+	protected Map getRules() {
 		if (fRules != null) return fRules ;
 		
 		synchronized (this) {
@@ -60,15 +61,16 @@ public class EditorStyle implements IEditorStyle {
 			// condition to create the rules map.
 			// Now that synced, check that someone else didn't create it before us.
 			if (fRules == null) {
-				fRules = new HashMap() ;
+				Map rules = new HashMap() ;
 				IConfigurationElement[] elements = fConfig.getChildren() ;
 				for (int i = 0; i < elements.length; i++) {
 					IConfigurationElement ce = elements[i];
 					if (ce.getName().equals(EXT_RULE)) {
 						IRuleProvider rp = new DefaultRuleProvider(ce, fID, this);
-						fRules.put(rp.getRuleID(), rp);
+						rules.put(rp.getRuleID(), rp);
 					}
 				}
+				fRules = rules;	// Now assign, don't want to assign before we built it because if race, someone will think it is there, but it will be empty.
 			}
 		}
 		return fRules ;
@@ -77,7 +79,7 @@ public class EditorStyle implements IEditorStyle {
 	/**
 	 * @see org.eclipse.ve.internal.java.core.vce.IEditorStyle#getTemplates()
 	 */
-	protected HashMap getTemplates() {
+	protected Map getTemplates() {
 		return fTemplates ;
 	}
 
