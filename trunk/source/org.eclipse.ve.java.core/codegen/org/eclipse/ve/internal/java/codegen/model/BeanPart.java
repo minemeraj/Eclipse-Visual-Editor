@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.23 $  $Date: 2004-09-01 21:58:30 $ 
+ *  $Revision: 1.24 $  $Date: 2004-09-07 19:15:56 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -124,10 +124,10 @@ public FreeFormAnnoationDecoder getFFDecoder() {
         VisualInfo vi = ant.getVisualInfo(getModel().getCompositionModel().getDiagram()) ;
         if (vi != null) {
             ICodeGenAdapter va = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(vi,ICodeGenAdapter.JVE_CODEGEN_ANNOTATION_ADAPTER) ;
-            if (va != null && newDecoder) {
-              vi.eAdapters().remove(va) ;
-              vi.eAdapters().add(a) ;
+            if (va != null) {
+              vi.eAdapters().remove(va) ;              
             }
+            vi.eAdapters().add(a) ;
         }           
     }
 
