@@ -6,7 +6,10 @@
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.ve.internal.cdm.DiagramData;;
+import org.eclipse.ve.internal.cdm.DiagramData;
+
+import org.eclipse.ve.internal.cde.core.IContainmentHandler;
+;
 
 /**
  * @author JoeWin
@@ -14,7 +17,7 @@ import org.eclipse.ve.internal.cdm.DiagramData;;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class FFOnlyModelAdapter extends ControlModelAdapter {
+public class FFOnlyModelAdapter extends ControlModelAdapter implements IContainmentHandler {
 	
 	public FFOnlyModelAdapter(Object model) {
 		super(model);
