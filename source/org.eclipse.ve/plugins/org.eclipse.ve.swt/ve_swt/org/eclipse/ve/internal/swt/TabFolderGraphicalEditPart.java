@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-20 22:39:14 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-23 17:50:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -196,8 +196,10 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	 * The selected page of the JTabbedPane has changed. Bring this page to the front.
 	 */
 	protected void pageSelected(EditPart page) {
-		fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
-		getTabFolderProxyAdapter().setSelection(getChildren().indexOf(page));
+		if (page != null) {
+			fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
+			getTabFolderProxyAdapter().setSelection(getChildren().indexOf(page));
+		}
 	}
 
 	/*
