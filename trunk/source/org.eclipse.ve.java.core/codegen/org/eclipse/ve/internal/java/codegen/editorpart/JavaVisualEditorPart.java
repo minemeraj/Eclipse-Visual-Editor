@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.45 $  $Date: 2004-06-11 19:22:51 $ 
+ *  $Revision: 1.46 $  $Date: 2004-06-14 16:50:52 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2120,9 +2120,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		}
 	}
-	// allow a thread to wait, if needed until JVE finished to load
-	public void waitIfLoading(Display disp) {
-		if (disp==null) {
+	/**
+	 * Suspend thread, if a reaload is pending until the load is completed.
+	 * @param displayThread  if true will spawn a thread and not block the UI display loop.
+	 */
+	public void waitIfLoading(boolean displayThread) {
+		if (!isLoadPending)
+			return ;   // most likely case
+		
+		if (!displayThread) {
 			// Sleep until load is complete
 		 synchronized (loadCompleteSync) {			
 			while (isLoadPending)
