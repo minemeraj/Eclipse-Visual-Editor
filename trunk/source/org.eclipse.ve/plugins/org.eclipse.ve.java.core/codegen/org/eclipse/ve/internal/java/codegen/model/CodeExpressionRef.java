@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.31 $  $Date: 2004-09-02 14:42:19 $ 
+ *  $Revision: 1.32 $  $Date: 2004-09-03 21:07:07 $ 
  */
 
 
@@ -493,7 +493,7 @@ public  void updateDocument(ExpressionParser newParser) {
 		getMethod().refreshIMethod();
 		int docOff = off + getMethod().getOffset();
 		String newContent = getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
-		fBean.getModel().getDocumentBuffer().replace(docOff, len, newContent);
+		updateDocument(docOff,len,newContent);
 
 		setOffset(off);
 		setState(STATE_UPDATING_SOURCE, false); 
