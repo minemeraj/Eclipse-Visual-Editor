@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanEventUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-13 12:57:26 $ 
  */
 
 import java.text.Collator;
@@ -410,9 +410,8 @@ public class JavaBeanEventUtilities {
 		PropertyChangeEventInvocation propertyChangeEventInvocation = JCMFactory.eINSTANCE.createPropertyChangeEventInvocation();
 		PropertyEvent pe = JCMFactory.eINSTANCE.createPropertyEvent() ;
 		// If the method is the single argument add then the useCaseBlock flag should be set
-		if (javaMethod.getParameters().size() == 1){
-			pe.setUseIfExpression(true);
-		}
+		pe.setUseIfExpression(true);
+		
 		pe.setPropertyName(propertyName);
 		propertyChangeEventInvocation.getProperties().add(pe);
 		propertyChangeEventInvocation.setAddMethod(javaMethod);
