@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-25 18:16:18 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-02 22:25:07 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -95,22 +95,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 				if (positionBeforeChild != null)
 					positionBeforeItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
 							positionBeforeChild);
-				IJavaObjectInstance tabItem = (IJavaObjectInstance) visualsFact.create(classTabItem);
-				PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
-				ic.setType(tabItem.getJavaType().getJavaName());
-
-				// set the arguments
-				PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-				ir.setObject((IJavaObjectInstance) getContainer());
-				PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();
-				PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");
-				fa.setField("NONE");
-				fa.setReceiver(name);
-				ic.getArguments().add(ir);
-				ic.getArguments().add(fa);
-
-				JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
-				tabItem.setAllocation(alloc);
+				IJavaObjectInstance tabItem = createTabItem();
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 				cb.applyAttributeSetting((EObject) tabItem, sf_tabItemControl, child);
 				cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeItem);
@@ -127,7 +112,13 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	public Command getDeleteDependentCommand(Object child) {
 		return getDeleteTabItemCommand(child).chain(super.getDeleteDependentCommand(child));
 	}
-
+	/**
+	 * 
+	 * @param child
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
 	private Command getDeleteTabItemCommand(final Object child) {
 		Command deleteTabItemCommand = new CommandWrapper() {
 
@@ -154,7 +145,28 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getOrphanChildrenCommand(java.util.List)
 	 */
 	public Command getOrphanChildrenCommand(List children) {
-		return super.getOrphanChildrenCommand(children);
+		return getOrphanTabItemCommand(children).chain(super.getOrphanChildrenCommand(children));
+	}
+
+	private Command getOrphanTabItemCommand(final List children) {
+		Command orphanItemCommand = new CommandWrapper() {
+
+			protected boolean prepare() {
+				return true;
+			}
+
+			public void execute() {
+				// Process throught the list and remove the TabItem from the parent
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+				for (int i = 0; i < children.size(); i++) {
+					EObject child = (EObject) children.get(i);
+					cb.append(getDeleteTabItemCommand(child));
+				}
+				command = cb.getCommand();
+				command.execute();
+			}
+		};
+		return orphanItemCommand;
 	}
 
 	/*
@@ -177,8 +189,10 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 
 			public void execute() {
 				// First get the TabItem of the positionBeforeChild
-				EObject positionBeforeTab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems,
-						sf_tabItemControl, positionBeforeChild);
+				EObject positionBeforeItem = null;
+				if (positionBeforeChild != null)
+					positionBeforeItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
+							positionBeforeChild);
 				// Process throught the list and cancel/apply each TabItem before the positional TabItem
 				for (int i = 0; i < children.size(); i++) {
 					EObject child = (EObject) children.get(i);
@@ -186,12 +200,72 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 							child);
 					RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 					cb.cancelAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem);
-					cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeTab);
+					cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeItem);
 					command = cb.getCommand();
 					command.execute();
 				}
 			}
 		};
 		return moveTabItemCommand;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#primAddCommand(java.util.List, java.lang.Object,
+	 *      org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.primAddCommand(children, positionBeforeChild, containmentSF)
+				.chain(getAddTabItemCommand(children, (EObject) positionBeforeChild));
+	}
+
+	private Command getAddTabItemCommand(final List children, final EObject positionBeforeChild) {
+		Command addTabItemCommand = new CommandWrapper() {
+
+			protected boolean prepare() {
+				return true;
+			}
+
+			public void execute() {
+				// Process throught the list and create a TabItem, apply the child to its 'control' feature
+				// apply it before the positional TabItem
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+				for (int i = 0; i < children.size(); i++) {
+					EObject child = (EObject) children.get(i);
+					cb.append(getCreateTabItemCommand(child, positionBeforeChild));
+				}
+				command = cb.getCommand();
+				command.execute();
+			}
+		};
+		return addTabItemCommand;
+	}
+
+	/**
+	 * Create a new TabItem and the necessary Parse tree allocation
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	private IJavaObjectInstance createTabItem() {
+		IJavaObjectInstance tabItem = (IJavaObjectInstance) visualsFact.create(classTabItem);
+		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
+		ic.setType(tabItem.getJavaType().getJavaName());
+
+		// set the arguments
+		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+		ir.setObject((IJavaObjectInstance) getContainer());
+		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");
+		fa.setField("NONE");
+		fa.setReceiver(name);
+		ic.getArguments().add(ir);
+		ic.getArguments().add(fa);
+
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
+		tabItem.setAllocation(alloc);
+		return tabItem;
 	}
 }
