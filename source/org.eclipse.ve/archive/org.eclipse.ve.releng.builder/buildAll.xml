@@ -63,14 +63,14 @@
 		<!--<parallel>-->
 
 		<ant antfile="${test.xml}">
-			<property name="tester" value="internalBuildTools/testConfigs/win32-local" />
+			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/win32-local" />
 		</ant>
 
 		<!--ant antfile="${test.xml}">
-			<property name="tester" value="internalBuildTools/testConfigs/win32" />
+			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/win32" />
 		</ant>
 		<ant antfile="${test.xml}">
-			<property name="tester" value="internalBuildTools/testConfigs/linux-gtk" />
+			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/linux-gtk" />
 		</ant-->
 		<!--</parallel>-->
 	</target>
