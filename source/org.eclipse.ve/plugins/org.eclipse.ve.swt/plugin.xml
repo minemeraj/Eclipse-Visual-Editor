@@ -270,4 +270,45 @@
      <super type="org.eclipse.core.resources.problemmarker"/>
   </extension>
 
+<!-- JFace extensions -->
+<!-- Register the override folders for JFace -->
+    
+  <extension point="org.eclipse.jem.beaninfo.registrations">
+    <registration 
+      container="SWT_CONTAINER"
+      plugin="org.eclipse.ui.workbench">
+      <override
+        package="org.eclipse.ui.part"
+        path="overrides/org/eclipse/ui/part">
+      </override>  
+    </registration>       
+  </extension>
+  
+<!-- If the plugin org.eclipse.jface is in the build path enable the contributor which adds the correct target VM jars -->  
+  
+  <extension
+    point="org.eclipse.jem.proxy.contributors">
+    <contributor
+      plugin="org.eclipse.jface"
+      class="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.JFaceConfigurationContributor">
+    </contributor>
+  </extension>  
+  
+<!-- RCP ViewPart is a new style on the Create Visual Class Wizard -->  
+  
+   <extension
+ 		point="org.eclipse.ve.java.core.newStyleComponent">
+   <category
+         defaultExpand="true"
+         id="org.eclipse.ve.rcp.cat"
+         name="RCP"
+         priority="50"/>
+   <visualElement
+         category="org.eclipse.ve.rcp.cat"
+         contributor="org.eclipse.ve.internal.jface.RCPViewClassCreationSourceContributor"
+         icon="icons/full/clcl16/rcp_app.gif"
+         name="View"
+         type="org.eclipse.ui.part.ViewPart"/>
+  </extension>   
+
 </plugin>
