@@ -34,6 +34,9 @@
     <addedEObjects xsi:type="ecore:EReference" name="horizontalAlignment" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
+          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="horizontalAlignment"/>
       </eAnnotations>
@@ -55,6 +58,9 @@
     <addedEObjects xsi:type="ecore:EReference" name="verticalAlignment" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
+          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>      
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="verticalAlignment"/>
       </eAnnotations>
