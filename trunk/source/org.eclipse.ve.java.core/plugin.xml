@@ -485,13 +485,13 @@
    </extension>
    <extension
          point="org.eclipse.ve.java.core.choosebean">
-      <contributor
+      <contributor container="org.eclipse.jdt.launching.JRE_CONTAINER"
             class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor">
       </contributor>
-      <contributor
+      <contributor container="org.eclipse.jdt.launching.JRE_CONTAINER"
             class="org.eclipse.ve.internal.java.choosebean.SwingChooseBeanContributor">
       </contributor>
-      <contributor
+      <contributor container="org.eclipse.jdt.launching.JRE_CONTAINER"
             class="org.eclipse.ve.internal.java.choosebean.AWTChooseBeanContributor">
       </contributor>
    </extension>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-04 23:27:16 $ 
+ *  $Revision: 1.19 $  $Date: 2004-06-11 19:23:24 $ 
  */
 
 import java.util.*;
@@ -40,6 +40,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -82,6 +83,16 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	
 	private EditDomain feditDomain = null ;
 	
+	/**
+	 * ChooseBeanDialog. 
+	 * @param shell parent shell
+	 * @param packageFragment packageFragment to determine where the new bean will be (and to determine which classes are valid for this fragment).
+	 * @param contributors list of contributors, <code>null</code> will determine list that is visible to project thru the extension point. If no contributors are desired, use <code>ChooseBeanDialog.NO_CONTRIBS</code> 
+	 * @param choice index into <code>contributors</code> of preselected contributor, use <code>-1</code> for no preselection.
+	 * @param disableOthers if there is a  <code>choice</code> then <code>true</code> means disable all of the other contributors.
+	 * 
+	 * @since 1.0.0
+	 */
 	public ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
 		super(
 			shell, 
@@ -94,7 +105,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		this.project = packageFragment.getJavaProject();
 		this.selectionHistory = new ArrayList();
 		this.disableOthers = disableOthers;
-		this.contributors = contributors;
+		this.contributors = contributors != null ? contributors : determineContributors(project);
 		setTitle(ChooseBeanMessages.getString("MainDialog.title")); //$NON-NLS-1$
 		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
 		setStatusLineAboveButtons(true);
@@ -106,53 +117,60 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		loadSelectionHistory();
 	}
 	 	
-	private static IChooseBeanContributor[] pluginContributors;
-	public static IChooseBeanContributor[] determineContributors(){
-		if(pluginContributors != null) return pluginContributors;
-		List contributorList = new ArrayList();
-		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "choosebean"); //$NON-NLS-1$
-		IExtension[] extensions = exp.getExtensions();
-		
-		if(extensions!=null && extensions.length>0){
-			
-			// Ensure that the org.eclipse.ve.java plugins are the first in the list
-			IExtension[] orderedExtensions = new IExtension[extensions.length];
-			int index = 0;
-			String veBaseBundleName = JavaVEPlugin.getPlugin().getBundle().getSymbolicName();
-			for (int i = 0; i < extensions.length; i++) {
-				if(extensions[i].getNamespace().equals(veBaseBundleName)) {
-					orderedExtensions[index] = extensions[i];
-					index++;
-					extensions[i] = null; // Remove the one we took out
+	public static final String PI_CONTAINER = "container"; //$NON-NLS-1$	
+	public static final String PI_PLUGIN = "plugin"; //$NON-NLS-1$
+	
+	private IChooseBeanContributor[] determineContributors(IJavaProject project){
+		Map containerIDs = new HashMap();
+		Map pluginsIDs = new HashMap();
+		try {
+			ProxyPlugin.getPlugin().getIDsFound(project, containerIDs, new HashMap(), pluginsIDs, new HashMap());
+			List contributorList = new ArrayList();
+			IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),
+					"choosebean"); //$NON-NLS-1$
+			IExtension[] extensions = exp.getExtensions();
+
+			if (extensions.length > 0) {
+
+				// Ensure that the org.eclipse.ve.java plugins are the first in the list
+				IExtension[] orderedExtensions = new IExtension[extensions.length];
+				int index = 0;
+				String veBaseBundleName = JavaVEPlugin.getPlugin().getBundle().getSymbolicName();
+				for (int i = 0; i < extensions.length; i++) {
+					if (extensions[i].getNamespace().equals(veBaseBundleName)) {
+						orderedExtensions[index++] = extensions[i];
+					}
 				}
-			}
-			// Any remaining extensions go to the end
-			for (int i = 0; i < extensions.length; i++) {;
-				if(extensions[i] != null){
-					orderedExtensions[index] = extensions[i];
-					index++;
+				// Any remaining extensions go to the end
+				for (int i = 0; i < extensions.length; i++) {
+					if (!extensions[i].getNamespace().equals(veBaseBundleName)) {
+						orderedExtensions[index++] = extensions[i];
+					}
 				}
-			}						
-			
-			boolean contributorFound = false;
-			for(int ec=0;ec<orderedExtensions.length && !contributorFound;ec++){
-				IConfigurationElement[] configElms = orderedExtensions[ec].getConfigurationElements();
-				for(int cc=0;cc<configElms.length && !contributorFound;cc++){
-					IConfigurationElement celm = configElms[cc];
-					try {
-						IChooseBeanContributor contributor = (IChooseBeanContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
-						contributorList.add(contributor);
-					} catch (CoreException e) {
-						JavaVEPlugin.log(e, Level.FINE);
-					} catch (ClassCastException e) {
-						JavaVEPlugin.log(e, Level.FINE);
+
+				for (int ec = 0; ec < orderedExtensions.length; ec++) {
+					IConfigurationElement[] configElms = orderedExtensions[ec].getConfigurationElements();
+					for (int cc = 0; cc < configElms.length; cc++) {
+						IConfigurationElement celm = configElms[cc];
+						if (containerIDs.get(celm.getAttributeAsIs(PI_CONTAINER)) == Boolean.TRUE
+								|| pluginsIDs.get(celm.getAttributeAsIs(PI_PLUGIN)) == Boolean.TRUE) {
+							try {
+								IChooseBeanContributor contributor = (IChooseBeanContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
+								contributorList.add(contributor);
+							} catch (CoreException e) {
+								JavaVEPlugin.log(e, Level.FINE);
+							} catch (ClassCastException e) {
+								JavaVEPlugin.log(e, Level.FINE);
+							}
+						}
 					}
 				}
 			}
+			return !contributorList.isEmpty() ? (IChooseBeanContributor[]) contributorList.toArray(new IChooseBeanContributor[contributorList.size()]) : NO_CONTRIBS;
+		} catch (JavaModelException e) {
+			JavaVEPlugin.log(e, Level.FINE);
+			return NO_CONTRIBS;
 		}
-		pluginContributors = new IChooseBeanContributor[contributorList.size()];
-		contributorList.toArray(pluginContributors);
-		return pluginContributors;
 	}
 	
 	private void loadSelectionHistory(){
@@ -182,12 +200,34 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	private QualifiedName getQualifiedName(){
 		return new QualifiedName(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), JBCF_CHOOSEBEAN_SELHIST_KEY);
 	}
-	
+
+	public static final IChooseBeanContributor[] NO_CONTRIBS = new IChooseBeanContributor[0];
+	/**
+	 * ChooseBeanDialog
+	 * @param shell parent shell
+	 * @param file file to determine what is visible
+	 * @param resourceSet resourceset where choosen beans will be added
+	 * @param contributors list of contributors, <code>null</code> will determine list that is visible to project thru the extension point. If no contributors are desired, use <code>ChooseBeanDialog.NO_CONTRIBS</code> 
+	 * @param choice index into <code>contributors</code> of preselected contributor, use <code>-1</code> for no preselection.
+	 * @param disableOthers if there is a  <code>choice</code> then <code>true</code> means disable all of the other contributors.
+	 * 
+	 * @since 1.0.0
+	 */
 	public ChooseBeanDialog(Shell shell, IFile file, ResourceSet resourceSet, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
 		this(shell, (IPackageFragment) JavaCore.create(file).getParent(), contributors, choice, disableOthers);
 		this.resourceSet = resourceSet;
 	}
 	
+	/**
+	 * ChooseBeanDialog.
+	 * @param shell parent shell
+	 * @param ed editDomain to use
+	 * @param contributors list of contributors, <code>null</code> will determine list that is visible to project thru the extension point. If no contributors are desired, use <code>ChooseBeanDialog.NO_CONTRIBS</code> 
+	 * @param choice index into <code>contributors</code> of preselected contributor, use <code>-1</code> for no preselection.
+	 * @param disableOthers if there is a  <code>choice</code> then <code>true</code> means disable all of the other contributors.
+	 * 
+	 * @since 1.0.0
+	 */
 	public ChooseBeanDialog(Shell shell, EditDomain ed, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
 			this(shell, ((FileEditorInput)ed.getEditorPart().getEditorInput()).getFile(),
 		                 JavaEditDomainHelper.getResourceSet(ed), 
@@ -196,11 +236,11 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	}
 	
 	protected boolean anyContributors(){
-		return contributors != null && contributors.length > 0;
+		return contributors.length > 0;
 	}
 	
 	protected boolean isValidContributor(){
-		return anyContributors() && selectedContributor > -1 && selectedContributor < contributors.length ;
+		return selectedContributor > -1 && selectedContributor < contributors.length ;
 	}
 	
 	/*
@@ -284,7 +324,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 
 	protected void createClassArea(Composite parent){
 		if(isValidContributor()){
-			int numEntries = anyContributors()?contributors.length:0;
+			int numEntries = contributors.length;
 			Composite c = new Composite(parent, SWT.NONE);
 			GridData gd= new GridData();
 			gd.grabExcessHorizontalSpace= true;
