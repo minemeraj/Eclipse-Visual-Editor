@@ -10,25 +10,30 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SliderBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-08 16:09:19 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.*;
 import java.beans.BeanDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.beans.EventSetDescriptor;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
  
 /**
  * 
  * @since 1.0.0
  */
-public class SliderBeanInfo extends SimpleBeanInfo {
+public class SliderBeanInfo extends IvjBeanInfo {
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Slider.class;
+	}
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Slider.class);
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
@@ -46,7 +51,7 @@ public BeanDescriptor getBeanDescriptor() {
  */
 public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[] {
-			SelectionListenerEventSet.getEventSetDescriptor(Slider.class)
+			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
 }
 }
