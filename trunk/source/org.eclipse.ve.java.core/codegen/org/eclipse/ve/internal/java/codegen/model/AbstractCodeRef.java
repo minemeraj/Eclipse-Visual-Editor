@@ -14,7 +14,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCodeRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-09-09 18:11:50 $ 
  */
 
 
@@ -58,6 +58,10 @@ public void setContent(String content) {
       else
             fsrcLen = content.length() ;                  
 	fContent = content ;      
+}
+
+protected void setLen(int len) {
+	fsrcLen = len;
 }
 
 public String toString() {
