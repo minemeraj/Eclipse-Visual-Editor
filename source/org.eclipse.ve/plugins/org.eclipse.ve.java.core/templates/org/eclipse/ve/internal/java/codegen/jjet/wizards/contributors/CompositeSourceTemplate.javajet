@@ -1,25 +1,23 @@
 <%
 /*
  * This was created from the javajet file: 
- *  $RCSfile: ShellSourceTemplate.javajet,v $
- *  $Revision: 1.2 $ $Date: 2004-07-15 13:04:30 $
+ *  $RCSfile: CompositeSourceTemplate.javajet,v $
+ *  $Revision: 1.1 $ $Date: 2004-07-15 13:04:30 $
  */
 %>
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
-	class="ShellSourceGenerator" %>
-	
-public class <%=typeName%> {
+	class="CompositeSourceGenerator" %>
 
-	private org.eclipse.swt.widgets.Shell sShell = null;
-	
-	/**
-	 * This method initializes sShell
-	 */
-	private void createSShell() {
-		sShell = new org.eclipse.swt.widgets.Shell();		   
-		sShell.setSize(new org.eclipse.swt.graphics.Point(300,200));
+public class <%=typeName%> extends Composite {
+
+	public <%=typeName%>(Composite arg0, int arg1) {
+		super(arg0, arg1);
+		initialize();
+	}
+	private void initialize() {
+		setSize(new org.eclipse.swt.graphics.Point(300,200));
 	}
 }
 <% 	
@@ -31,11 +29,12 @@ public class <%=typeName%> {
 		 * -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.0\os\win32\x86"
 		 */
 		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();		
-		<%=typeName%> thisClass = new <%=typeName%>();
-		thisClass.createSShell() ;
-		thisClass.sShell.open();
+		org.eclipse.swt.widgets.Shell shell = new org.eclipse.swt.widgets.Shell(display);
+		shell.setSize(new org.eclipse.swt.graphics.Point(300,200));
+		<%=typeName%> thisClass = new <%=typeName%>(shell, org.eclipse.swt.SWT.NONE);
+		shell.open();
 		
-		while (!thisClass.sShell.isDisposed()) {
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) display.sleep ();
 		}
 		display.dispose();		
