@@ -478,16 +478,14 @@
             parentCategory="org.eclipse.ui.Examples"
             id="org.eclipse.ve.java.core.examples">
       </category>
-<!--
-   Eclipse 3.1 - not sure how to fix this but removed the following statement from after the <wizard statement
-            javatype="true"
--->
       <wizard
             name="%visualclass"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
             category="org.eclipse.jdt.ui.java"
-            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard"
             id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
+            <class class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
+               <parameter name="javatype" value="true"/>
+            </class>
          <description>
             %visual.class
          </description>
