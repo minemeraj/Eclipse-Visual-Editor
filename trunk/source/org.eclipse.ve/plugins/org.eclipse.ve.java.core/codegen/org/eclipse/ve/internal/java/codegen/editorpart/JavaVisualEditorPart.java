@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.93 $  $Date: 2005-03-28 22:16:29 $ 
+ *  $Revision: 1.94 $  $Date: 2005-04-04 22:21:24 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1878,6 +1878,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			ResourceSet rs = nature.newResourceSet();
 			EMFEditDomainHelper.setResourceSet(rs, editDomain);
 			editDomain.setData(NATURE_KEY, nature);	// Need to save the nature so we can check for validity later if project is renamed.
+			
+			// Save the JavaProject for later use
+			JavaEditDomainHelper.setJavaProject(JavaCore.create(proj), editDomain);
 			
 			// Add the property source and property descriptor adapter factories
 			rs.getAdapterFactories().add(new PropertySourceAdapterFactory(editDomain));
