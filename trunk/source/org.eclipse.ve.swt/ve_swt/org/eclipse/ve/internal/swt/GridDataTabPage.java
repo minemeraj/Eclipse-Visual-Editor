@@ -1,0 +1,1003 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: GridDataTabPage.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-07 12:46:42 $ 
+ */
+
+package org.eclipse.ve.internal.swt;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.*;
+import org.eclipse.gef.commands.*;
+import org.eclipse.gef.editparts.AbstractEditPart;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
+import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
+import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
+
+/**
+ * This Tab page resides on the Alignment window notebook along with the X/Y tab page (and whatever else gets added later)
+ * It shows and allows selection of the "alignment" and "grab" properties of an SWT GridData object which is
+ * the constraint on a component that is a child of a container that uses a GridLayout as it's layout manager. 
+ */
+public class GridDataTabPage extends AlignmentTabPage {
+	protected IEditorPart fEditorPart;
+	
+	private final static String resAlignmentPrefix = "AlignmentAction."; //$NON-NLS-1$
+	
+	private final static String[] resAlignmentValuePrefix = {
+		"beginning.", //$NON-NLS-1$
+		"center.", //$NON-NLS-1$
+		"end.", //$NON-NLS-1$
+	};
+	
+	public final static int BEGINNING = 0, CENTER = 1, END = 2, FILL = 3;
+	protected static String[] alignmentInitStrings = new String[] {
+			"org.eclipse.swt.layout.GridData.BEGINNING", //$NON-NLS-1$
+			"org.eclipse.swt.layout.GridData.CENTER", //$NON-NLS-1$
+			"org.eclipse.swt.layout.GridData.END", //$NON-NLS-1$
+			"org.eclipse.swt.layout.GridData.FILL", //$NON-NLS-1$
+	};
+	
+	protected static int[] alignmentSWTValues = new int[] {
+			GridData.BEGINNING,
+			GridData.CENTER,
+			GridData.END,
+			GridData.FILL,
+	};
+	
+	protected static int getOffetFromConstant(int constant) {
+		for ( int i = 0; i < alignmentSWTValues.length; i++) {
+			if (alignmentSWTValues[i] == constant) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+
+	public final static int HORIZONTAL = 0, VERTICAL = 1;
+	
+	protected AlignmentAction[] alignmentActions = {
+			new AlignmentAction(BEGINNING, BEGINNING),
+			new AlignmentAction(CENTER, BEGINNING),
+			new AlignmentAction(END, BEGINNING),
+			new AlignmentAction(BEGINNING, CENTER),
+			new AlignmentAction(CENTER, CENTER),
+			new AlignmentAction(END, CENTER),
+			new AlignmentAction(BEGINNING, END),
+			new AlignmentAction(CENTER, END),
+			new AlignmentAction(END, END)
+	};
+	
+	private final static String[] resFillPrefix = {
+			"FillAction.horizontal.", //$NON-NLS-1$
+			"FillAction.vertical." //$NON-NLS-1$
+	};
+	
+	private FillAction[] fillActions = {
+			new FillAction(HORIZONTAL),
+			new FillAction(VERTICAL)
+	};
+	
+	private final static String[] resGrabPrefix = { 
+			"GrabAction.horizontal.", //$NON-NLS-1$
+			"GrabAction.vertical." //$NON-NLS-1$
+	};
+	
+	private GrabAction[] grabActions = {
+		new GrabAction(HORIZONTAL),
+		new GrabAction(VERTICAL)
+	};
+
+	protected EReference sfControlLayoutData;
+	protected EStructuralFeature sfHorizontalAlignment, sfVerticalAlignment, sfHorizontalGrab, sfVerticalGrab, sfHorizontalSpan, sfVerticalSpan;
+	protected ResourceSet rset;
+	protected AlignmentAction selectedAlignmentAction;
+	protected boolean fillVertical = false, fillHorizontal = false;
+	
+	protected Spinner horizontalSpanSpinner, verticalSpanSpinner;
+	protected int horizontalSpanValue = 1, verticalSpanValue = 1;
+
+	/*
+	 * 
+	 * Inner class used for the Alignment Actions
+	 */
+	public class AlignmentAction extends Action {
+
+		protected int fHorizontalAlign;
+		protected int fVerticalAlign;
+
+		public AlignmentAction(int horizontalAlign, int verticalAlign) {
+			super(null, Action.AS_CHECK_BOX);
+			
+			
+			// Default to center anchor if the anchor type is incorrect
+			if (!(horizontalAlign >= 0 && horizontalAlign < resAlignmentValuePrefix.length))
+				fHorizontalAlign = CENTER;
+			else
+				fHorizontalAlign = horizontalAlign;
+			if (!(verticalAlign >= 0 && verticalAlign < resAlignmentValuePrefix.length))
+				fVerticalAlign = CENTER;
+			else
+				fVerticalAlign = verticalAlign;
+
+			
+			String sAlignmentType = getActionId(fHorizontalAlign, fVerticalAlign);
+					
+			setText(SWTMessages.getString(sAlignmentType + "label")); //$NON-NLS-1$
+			setToolTipText(SWTMessages.getString(sAlignmentType + "tooltip")); //$NON-NLS-1$
+			// There are three images, one for full color ( that is the hover one )
+			// one for disabled and one for enabled
+			String graphicName = SWTMessages.getString(sAlignmentType + "image"); //$NON-NLS-1$
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dnavpal/" + graphicName)); //$NON-NLS-1$
+			
+			setId(sAlignmentType);
+			setEnabled(true);
+		}
+		
+		public int getHorizontalAlignment() {
+			return fHorizontalAlign;
+		}
+		
+		public int getVerticalAlignment() {
+			return fVerticalAlign;
+		}
+
+		/**
+		 * Static method that returns the action id based on the alignment type.
+		 */
+		public String getActionId(int horizontalAlign, int verticalAlign) {
+			if (horizontalAlign < 0 || horizontalAlign > END) horizontalAlign = CENTER;
+			if (verticalAlign < 0 || verticalAlign > END) verticalAlign = CENTER;
+
+			return resAlignmentPrefix + resAlignmentValuePrefix[horizontalAlign] + resAlignmentValuePrefix[verticalAlign];
+		}
+		
+		protected boolean calculateEnabled() {
+			return true;
+		}
+		protected void setEditorPart(IEditorPart part) {
+			fEditorPart = part;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 * This anchor type was selected. Deselect all the others to
+		 * emulate a checkbox group so that only one checkbox button shows selected.
+		 * Then execute the commands to apply the anchor type to the selected editparts.
+		 */
+		public void run() {
+			super.run();
+//			if (selectedAlignmentAction != this) {
+				execute(createAlignmentCommand(getSelectedObjects(), fHorizontalAlign, fVerticalAlign));
+				selectedAlignmentAction = this;
+//			}
+			for (int i = 0; i < alignmentActions.length; i++) {
+				if (!(alignmentActions[i] == this))
+					alignmentActions[i].setChecked(false);
+				else if (!isChecked())
+					setChecked(true);
+			}
+		}
+
+	}
+	
+	/*
+	 * 
+	 * Inner class used for the Fill Actions
+	 */
+	public class FillAction extends Action {
+
+		protected int fOrientation;
+		protected int previousValue = CENTER;
+
+		public FillAction(int orientation) {
+			super(null, Action.AS_CHECK_BOX);
+
+			// Default to HORIZONTAL if an invalid orientation is given.
+			if (orientation < 0 || orientation >= resFillPrefix.length) {
+				fOrientation = HORIZONTAL;
+			} else {
+				fOrientation = orientation;
+			}
+			
+			String sFillType = resFillPrefix[orientation];
+					
+			setText(SWTMessages.getString(sFillType + "label")); //$NON-NLS-1$
+			setToolTipText(SWTMessages.getString(sFillType + "tooltip")); //$NON-NLS-1$
+			// There are three images, one for full color ( that is the hover one )
+			// one for disabled and one for enabled
+			String graphicName = SWTMessages.getString(sFillType + "image"); //$NON-NLS-1$
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dnavpal/" + graphicName)); //$NON-NLS-1$
+			
+			setId(sFillType);
+			setEnabled(true);
+		}
+
+		/**
+		 * Static method that returns the action id based on the fill type.
+		 */
+		public String getActionId(int orientation) {
+			return (orientation >= 0 && orientation < resFillPrefix.length) ? resFillPrefix[orientation] : resFillPrefix[HORIZONTAL];
+		}
+		
+		protected boolean calculateEnabled() {
+			return true;
+		}
+		protected void setEditorPart(IEditorPart part) {
+			fEditorPart = part;
+		}
+		
+		protected void updateAlignmentEnablement() {
+			for (int i = 0; i < alignmentActions.length; i++) {
+				AlignmentAction c = alignmentActions[i];
+				c.setEnabled(! ((fillHorizontal && c.getHorizontalAlignment() != CENTER) || 
+						(fillVertical && c.getVerticalAlignment() != CENTER)));
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 * This fill type was selected.
+		 */
+		public void run() {
+			super.run();
+			int newValue = -1;
+			
+			// enable the alignment buttons cooresponding with this orientation
+			if (fOrientation == HORIZONTAL) {
+				fillHorizontal = this.isChecked();
+			} else {
+				fillVertical = this.isChecked();
+			}
+			updateAlignmentEnablement();
+			
+			if (this.isChecked()) {				
+				if (selectedAlignmentAction != null) {
+					AlignmentAction newSelection;
+					if (fOrientation == HORIZONTAL) {
+						previousValue = selectedAlignmentAction.getHorizontalAlignment();
+						newValue = selectedAlignmentAction.getVerticalAlignment();
+						// index into alignment actions will pull out the vertical alignemnt
+						// button with the horizontal alignment centered
+						newSelection = alignmentActions[3 * newValue + CENTER];
+					} else {
+						previousValue = selectedAlignmentAction.getVerticalAlignment();
+						newValue = selectedAlignmentAction.getHorizontalAlignment();
+						// index into alignment actions will pull out the horizontal alignemnt
+						// button with the vertical alignment centered
+						newSelection = alignmentActions[3 * CENTER + newValue];
+					}
+					if (previousValue != CENTER) {
+						if (newSelection.isEnabled()) {
+							newSelection.setChecked(true);
+							newSelection.run();
+						}
+					} else {
+						selectedAlignmentAction.run();
+					}
+				}
+			} else {			
+				// check the previously selected alignment
+				if (selectedAlignmentAction != null) {
+					if (previousValue != CENTER) {
+						AlignmentAction newSelection;
+						if (fOrientation == HORIZONTAL) {
+							newValue = selectedAlignmentAction.getVerticalAlignment();
+							newSelection = alignmentActions[3 * newValue + previousValue];
+						} else {
+							newValue = selectedAlignmentAction.getHorizontalAlignment();
+							newSelection = alignmentActions[3 * previousValue + newValue];
+						}
+						if (newSelection.isEnabled()) {
+							newSelection.setChecked(true);
+							newSelection.run();
+						}
+					} else {
+						selectedAlignmentAction.run();
+					}
+				}
+				previousValue = CENTER;
+			}
+		}
+
+	}
+	
+	/*
+	 * Inner class used for the Grab actions
+	 */
+	public class GrabAction extends Action {
+
+		protected int fGrabType;
+
+		public GrabAction(int grabType) {
+			super(null, Action.AS_CHECK_BOX);
+			// Default to center anchor if the anchor type is incorrect
+			if (!(grabType >= 0 && grabType < resGrabPrefix.length))
+				fGrabType = HORIZONTAL;
+			else
+				fGrabType = grabType;
+			String sGrabType = resGrabPrefix[fGrabType];
+			setText(SWTMessages.getString(sGrabType + "label")); //$NON-NLS-1$
+			setToolTipText(SWTMessages.getString(sGrabType + "tooltip")); //$NON-NLS-1$
+			// There are three images, one for full color ( that is the hover one )
+			// one for disabled and one for enabled
+			String graphicName = SWTMessages.getString(sGrabType + "image"); //$NON-NLS-1$
+			// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
+			// /icons/full/clc16/anchorleft_obj.gif for the color one
+			// and elc16 for enabled and dlc16 for disasbled
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
+			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dnavpal/" + graphicName));	 //$NON-NLS-1$
+			setEnabled(true);
+			setId(getActionId(fGrabType));
+		}
+
+		/**
+		 * Static method that returns the action id based on the alignment type.
+		 */
+		public String getActionId(int grabType) {
+			return ((grabType >= 0 && grabType < resGrabPrefix.length) ? resGrabPrefix[grabType] : resGrabPrefix[HORIZONTAL]);
+		}
+		protected boolean calculateEnabled() {
+			return true;
+		}
+		protected void setEditorPart(IEditorPart part) {
+			fEditorPart = part;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 * 
+		 * This grab type was selected.
+		 */
+		public void run() {
+			super.run();			
+			execute(createGrabCommand(getSelectedObjects(), fGrabType, grabActions[fGrabType].isChecked()));
+		}
+
+	}
+	
+	/*
+	 * Returns a List containing the currently selected objects.
+	 */
+	protected List getSelectedObjects() {
+		if (!(getSelection() instanceof IStructuredSelection))
+			return Collections.EMPTY_LIST;
+		return ((IStructuredSelection)getSelection()).toList();
+	}
+	/*
+	 * Return the commands to set the anchor value for the selected editparts
+	 * The alignment value is based on the type of action.
+	 */
+	protected Command createAlignmentCommand(List editparts, int horizontalAlign, int verticalAlign) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				EObject control = (EObject)editpart.getModel();
+				if (control != null) {
+					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
+					if (gridData == null) {
+						// Create a new grid data if one doesn't already exist.
+						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					if (gridData != null) {
+						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						
+						String init;
+						// Apply horizontal alignment
+						if (fillHorizontal) {
+							init = alignmentInitStrings[FILL];
+						} else {
+							init = alignmentInitStrings[horizontalAlign];
+						}
+						Object alignObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						componentCB.applyAttributeSetting(gridData, sfHorizontalAlignment, alignObject);
+
+						if (fillVertical) {
+							init = alignmentInitStrings[FILL]; 
+						} else {
+							init = alignmentInitStrings[verticalAlign];
+						}
+						alignObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						componentCB.applyAttributeSetting(gridData, sfVerticalAlignment, alignObject);
+
+						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
+						cb.append(componentCB.getCommand());
+					}
+				}
+			}
+			return cb.getCommand();
+		}
+		return UnexecutableCommand.INSTANCE;
+	}
+
+	/*
+	 * Return the commands to set the fill value for the selected editparts
+	 * The fill value is based on the type of action and is retrieved from the fillAWTValue table.
+	 */
+	protected Command createGrabCommand(List editparts, int grabType, boolean value) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				EObject control = (EObject)editpart.getModel();
+				if (control != null) {
+					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
+					if (gridData == null) {
+						// Create a new grid data if one doesn't already exist.
+						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					if (gridData != null) {
+						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						String init = String.valueOf(value);
+						Object alignObject = BeanUtilities.createJavaObject("boolean", rset, init); //$NON-NLS-1$
+						if (grabType == HORIZONTAL) {
+							componentCB.applyAttributeSetting(gridData, sfHorizontalGrab, alignObject);
+						} else {
+							componentCB.applyAttributeSetting(gridData, sfVerticalGrab, alignObject);
+						}
+						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
+						cb.append(componentCB.getCommand());
+					}
+				}
+			}
+			return cb.getCommand();
+		}
+		return UnexecutableCommand.INSTANCE;
+	}
+	
+	protected Command createSpanCommand(List editparts, int value, int orientation, Spinner spinner) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				EObject control = (EObject)editpart.getModel();
+				if (control != null) {
+					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
+					if (gridData == null) {
+						// Create a new grid data if one doesn't already exist.
+						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					if (gridData != null) {
+						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						String init = String.valueOf(value);
+						Object spanObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						if (orientation == HORIZONTAL) {
+							componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, spanObject);
+						} else {
+							componentCB.applyAttributeSetting(gridData, sfVerticalSpan, spanObject);
+						}
+						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
+						cb.append(componentCB.getCommand());
+					}
+				}
+			}
+			cb.append(new EnableSpinnerCommand(spinner));
+			return cb.getCommand();
+		}
+		spinner.setEnabled(true);
+		return UnexecutableCommand.INSTANCE;
+	}
+	
+	/*
+	 * Command that is used to re-enable the spinner since we don't want the user
+	 * changing the span while the span is being updated. This prevents a ConcurrentModificationException
+	 * that is caused when the span is being read from the spinner side while the apply attribute setting
+	 * command is being executed in a separate thread.
+	 * 
+	 * This command should be the last command executed after all the insets commands are complete
+	 */
+	protected class EnableSpinnerCommand extends AbstractCommand {
+		protected Spinner spinner;
+		public EnableSpinnerCommand(Spinner spinner) {
+			super();
+			this.spinner = spinner;
+		}
+
+		/* 
+		 * Enable the spinner
+		 */
+		public void execute() {
+			if (spinner != null)
+				spinner.setEnabled(true);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gef.commands.Command#canExecute()
+		 */
+		public boolean canExecute() {
+			return true;
+		}
+
+	};
+
+	/**
+	 * Create the contents of this tab page
+	 */
+	public Control getControl(Composite parent) {
+
+		Composite mainComposite = new Composite(parent, SWT.NONE);
+		mainComposite.setLayout(new GridLayout(2, false));
+		
+		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Alignment"), 2, 0, 0); //$NON-NLS-1$
+		GridData gd1 = new GridData(GridData.FILL_VERTICAL);
+		gd1.verticalSpan = 2;
+		alignmentGroup.setLayoutData(gd1);
+		
+		Composite alignmentGrid = new Composite(alignmentGroup, SWT.NONE);
+		GridLayout grid = new GridLayout();
+		grid.numColumns = 3;
+		grid.horizontalSpacing = 0;
+		grid.verticalSpacing = 0;
+		grid.marginHeight = 0;
+		alignmentGrid.setLayout(grid);
+		for (int i = 0; i < alignmentActions.length; i++) {
+			ActionContributionItem ac = new ActionContributionItem(alignmentActions[i]);
+			ac.fill(alignmentGrid);
+		}
+		
+		Group fillGroup = createGroup(alignmentGroup, SWTMessages.getString("GridDataTabPage.Fill"), 1, 0, 0); //$NON-NLS-1$
+		for (int i = 0; i < fillActions.length; i++) {
+			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
+			ac.fill(fillGroup);
+		}
+
+		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Span"), 2, 0, 0); //$NON-NLS-1$
+		createSpanControl(spanGroup);
+		
+		Group grabGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Grab"), 2, 0, 0); //$NON-NLS-1$
+		for (int i = 0; i < grabActions.length; i++) {
+			ActionContributionItem ac = new ActionContributionItem(grabActions[i]);
+			ac.fill(grabGroup);
+		}
+		
+		return mainComposite;
+	}
+	
+	protected Group createGroup(Composite aParent, String title, int numColumns, int verticalSpacing, int horizontalSpacing) {
+		Group group = new Group(aParent, SWT.NONE);
+		group.setText(title);
+		GridLayout gridLayout = new GridLayout(numColumns, false);
+		gridLayout.verticalSpacing = verticalSpacing;
+		gridLayout.horizontalSpacing = horizontalSpacing;
+		group.setLayout(gridLayout);
+		return group;
+	}
+	
+	protected void createSpanControl(Group spanGroup) {
+		Label horizontalLabel = new Label(spanGroup, SWT.NONE);
+		horizontalLabel.setText(SWTMessages.getString("GridDataTabPage.SpanHorizontal")); //$NON-NLS-1$
+		
+		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
+		horizontalSpanSpinner.setMinimum(1);
+		horizontalSpanSpinner.setValue(horizontalSpanValue);
+		horizontalSpanSpinner.setEnabled(true);
+		
+		Label verticalLabel = new Label(spanGroup, SWT.NONE);
+		verticalLabel.setText(SWTMessages.getString("GridDataTabPage.SpanVertical")); //$NON-NLS-1$
+		
+		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
+		verticalSpanSpinner.setMinimum(1);
+		verticalSpanSpinner.setValue(verticalSpanValue);
+		verticalSpanSpinner.setEnabled(true);
+		
+		horizontalSpanSpinner.addModifyListener(new Listener() {
+			public void handleEvent(Event e) {
+				int value = horizontalSpanSpinner.getValue();
+				if (value != horizontalSpanValue) {
+					horizontalSpanValue = value;
+					execute(createSpanCommand(getSelectedObjects(), value, HORIZONTAL, horizontalSpanSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					horizontalSpanSpinner.setEnabled(true);
+				}
+			}
+		});
+		
+		verticalSpanSpinner.addModifyListener(new Listener() {
+			public void handleEvent(Event e) {
+				int value = verticalSpanSpinner.getValue();
+				if (value != verticalSpanValue) {
+					verticalSpanValue = value;
+					execute(createSpanCommand(getSelectedObjects(), value, VERTICAL, verticalSpanSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					verticalSpanSpinner.setEnabled(true);
+				}
+			}
+		});
+	}
+
+	protected void enableAlignmentActions(boolean enable) {
+		for (int i = 0; i < alignmentActions.length; i++) {
+			alignmentActions[i].setEnabled(enable);
+			if (!enable) {
+				alignmentActions[i].setChecked(false);
+			}
+		}
+		for (int i = 0; i < fillActions.length; i++) {
+			fillActions[i].setEnabled(enable);
+			if (!enable) {
+				fillActions[i].setChecked(false);
+			}
+		}
+	}
+	protected void enableGrabActions(boolean enable) {
+		for (int i = 0; i < grabActions.length; i++) {
+			grabActions[i].setEnabled(enable);
+			if (!enable)
+				grabActions[i].setChecked(false);
+		}
+	}
+	protected void enableSpanSpinners(boolean enable) {
+		if (horizontalSpanSpinner != null)
+			horizontalSpanSpinner.setEnabled(enable);
+		if (verticalSpanSpinner != null)
+			verticalSpanSpinner.setEnabled(enable);
+	}
+
+	/*
+	 * Executes the given command
+	 */
+	protected void execute(Command command) {
+		if (command == null || !command.canExecute())
+			return;
+		CommandStack cmdStack = (CommandStack)getEditorPart().getAdapter(CommandStack.class);
+		if (cmdStack != null)
+			cmdStack.execute(command);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getImage()
+	 */
+	public Image getImage() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getText()
+	 */
+	public String getText() {
+		return SWTMessages.getString("GridDataTabPage.Grid"); //$NON-NLS-1$
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getToolTipText()
+	 */
+	public String getToolTipText() {
+		return SWTMessages.getString("GridDataTabPage.ToolTipText"); //$NON-NLS-1$
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
+	 * 
+	 * The editorpart changed. Pass this on to the AnchorActions and fillActions 
+	 * and reset the resource set and structural features.
+	 */
+	protected void handleEditorPartChanged(IEditorPart oldEditorPart) {
+		IEditorPart newEditorPart = getEditorPart();
+		for (int i = 0; i < alignmentActions.length; i++) {
+			alignmentActions[i].setEditorPart(newEditorPart);
+		}
+		for (int i = 0; i < grabActions.length; i++) {
+			grabActions[i].setEditorPart(newEditorPart);
+		}
+		resetVariables();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
+	 * 
+	 * The selection list has changed, enable/disable and check/uncheck the AnchorActions based on whether the
+	 * components selected have the same parent, the parent's layout is a GridBagLayout, and whether the anchor
+	 * property values are equal.
+	 */
+	protected void handleSelectionChanged(ISelection oldSelection) {
+		ISelection newSelection = getSelection();
+		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
+			List editparts = ((IStructuredSelection) newSelection).toList();
+			EditPart firstParent;
+			boolean enableAll = true;
+			if (editparts.get(0) instanceof EditPart && ((EditPart) editparts.get(0)).getParent() != null) {
+				firstParent = ((EditPart) editparts.get(0)).getParent();
+				// Check the parent to ensure its layout policy is a GridBagLayout
+				if (isValidParent(firstParent)) {
+					EditPart ep = (EditPart) editparts.get(0);
+					/*
+					 * Need to iterate through the selection list and ensure each selection is:
+					 * - an EditPart
+					 * - they share the same parent
+					 * - it's parent has a GridBagLayout as it's layout manager
+					 */
+					for (int i = 1; i < editparts.size(); i++) {
+						if (editparts.get(i) instanceof EditPart) {
+							ep = (EditPart) editparts.get(i);
+							// Check to see if we have the same parent
+							if (ep.getParent() == null || ep.getParent() != firstParent) {
+								enableAll = false;
+								break;
+							}
+						} else {
+							enableAll = false;
+							break;
+						}
+					}
+					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
+					if (enableAll) {
+						enableAlignmentActions(true);
+						enableGrabActions(true);
+						enableSpanSpinners(true);
+						handleSelectionChangedForAlignmentActions(editparts);
+						handleSelectionChangedForGrabActions(editparts);
+						handleSelectionChangedForSpanSpinners(editparts);
+						return;
+					}
+				}
+			}
+		}
+		// By default if the initial checks failed, disable and uncheck all the actions.
+		enableAlignmentActions(false);
+		enableGrabActions(false);
+		enableSpanSpinners(false);
+		return;
+	}
+	
+	/*
+	 * If the alignment value for each component is the same, check the appropriate action
+	 * otherwise, uncheck all of them. 
+	 */
+	protected void handleSelectionChangedForAlignmentActions(List editparts) {
+		boolean setChecked = true;
+		int firstHorizontalValue = getHorizontalAlignValue((EditPart) editparts.get(0));
+		int firstVerticalValue = getVerticalAlignValue((EditPart) editparts.get(0));
+		for (int i = 1; i < editparts.size(); i++) {
+			if (firstHorizontalValue != getHorizontalAlignValue((EditPart) editparts.get(i)) ||
+					firstVerticalValue != getVerticalAlignValue((EditPart) editparts.get(i))) {
+				setChecked = false;
+				break;
+			}
+		}
+
+		if (setChecked) {
+			// calculate the fill button values
+			fillHorizontal = firstHorizontalValue == alignmentSWTValues[FILL];
+			fillVertical = firstVerticalValue == alignmentSWTValues[FILL];
+			// enable/disable the alignment grid depening on fill values
+			fillActions[HORIZONTAL].updateAlignmentEnablement();
+			// check the fill buttons if necessary
+			fillActions[HORIZONTAL].setChecked(fillHorizontal);
+			fillActions[VERTICAL].setChecked(fillVertical);
+
+			// set the alignment grid selection to the center value if necessary
+			if (fillHorizontal)
+				firstHorizontalValue = alignmentSWTValues[CENTER];
+			if (fillVertical)
+				firstVerticalValue = alignmentSWTValues[CENTER];
+			
+			for (int i = 0; i < alignmentActions.length; i++) {		
+				if (alignmentSWTValues[i % 3] == firstHorizontalValue &&
+						alignmentSWTValues[i / 3] == firstVerticalValue) {
+					alignmentActions[i].setChecked(true);
+					selectedAlignmentAction = alignmentActions[i];
+				}
+				else
+					alignmentActions[i].setChecked(false);
+			}
+		} else {
+			for (int i = 0; i < alignmentActions.length; i++) {
+				alignmentActions[i].setChecked(false);
+			}
+		}
+
+	}
+
+	/*
+	 * If the fill value for each component is the same, check the appropriate action
+	 * otherwise, uncheck all of them. 
+	 */
+	protected void handleSelectionChangedForGrabActions(List editparts) {
+		boolean setChecked = true;
+		boolean firstGrabHorizValue = getGrabValue((EditPart) editparts.get(0), HORIZONTAL);
+		for (int i = 1; i < editparts.size(); i++) {
+			if (firstGrabHorizValue != getGrabValue((EditPart) editparts.get(i), HORIZONTAL)) {
+				setChecked = false;
+				break;
+			}
+		}
+		if (setChecked) {
+			grabActions[HORIZONTAL].setChecked(firstGrabHorizValue);
+		} else {
+			grabActions[HORIZONTAL].setChecked(false);
+		}
+		
+		setChecked = true;
+		boolean firstGrabVerticalValue = getGrabValue((EditPart) editparts.get(0), VERTICAL);
+		for (int i = 1; i < editparts.size(); i++) {
+			if (firstGrabVerticalValue != getGrabValue((EditPart) editparts.get(i), VERTICAL)) {
+				setChecked = false;
+				break;
+			}
+		}
+		if (setChecked) {
+			grabActions[VERTICAL].setChecked(firstGrabVerticalValue);
+		} else {
+			grabActions[VERTICAL].setChecked(false);
+		}
+	}
+	
+	protected void handleSelectionChangedForSpanSpinners(List editparts) {
+		for (int i = 0; i < editparts.size(); i++) {
+			EditPart ep = (EditPart) editparts.get(i);
+			if ( ep.getSelected() == AbstractEditPart.SELECTED_PRIMARY && ep.getModel() instanceof IJavaObjectInstance) {
+				horizontalSpanValue = getSpanValue(ep, HORIZONTAL);
+				verticalSpanValue = getSpanValue(ep, VERTICAL);
+				break;
+			}
+		}
+		if (horizontalSpanSpinner != null)
+			horizontalSpanSpinner.setValue(horizontalSpanValue);
+		if (verticalSpanSpinner != null)
+			verticalSpanSpinner.setValue(verticalSpanValue);
+	}
+	
+	protected int getHorizontalAlignValue(EditPart ep) {
+		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
+			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object horizPV = gridData.getPropertyValue(sfHorizontalAlignment);
+				if (horizPV != null && horizPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) horizPV, rset);
+					return intProxy.intValue();
+				}
+			}
+		}
+		return GridData.CENTER;
+	}
+	
+	protected int getVerticalAlignValue(EditPart ep) {
+		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
+			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object vertPV = gridData.getPropertyValue(sfVerticalAlignment);
+				if (vertPV != null && vertPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) vertPV, rset);
+					return intProxy.intValue();
+				}
+			}
+		}
+		return GridData.CENTER;
+	}
+	
+	protected boolean getGrabValue(EditPart ep, int grabType) {
+		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
+			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object grabPV = gridData.getPropertyValue((grabType == HORIZONTAL) ? sfHorizontalGrab : sfVerticalGrab);
+				if (grabPV != null && grabPV instanceof IJavaDataTypeInstance) {
+					IBooleanBeanProxy booleanProxy = (IBooleanBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) grabPV, rset);
+					return booleanProxy.booleanValue();
+				}
+			}
+		}
+		return false;
+	}
+	
+	protected int getSpanValue(EditPart ep, int orientation) {
+		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
+			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object spanPV = gridData.getPropertyValue((orientation == HORIZONTAL) ? sfHorizontalSpan : sfVerticalSpan);
+				if (spanPV != null && spanPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) spanPV, rset);
+					return intProxy.intValue();
+				}
+			}
+		}
+		return 1;
+	}
+	
+	/*
+	 * reset the resource set and structural features
+	 */
+	private void resetVariables() {
+		rset = null;
+		sfControlLayoutData = null;
+		sfHorizontalAlignment = null;
+		sfVerticalAlignment = null;
+		sfHorizontalGrab = null;
+		sfVerticalGrab = null;
+		sfHorizontalSpan = null;
+		sfVerticalSpan = null;
+	}
+	/*
+	 * Return the ResourceSet for this editpart. Initialize the structural features also. 
+	 */
+	protected ResourceSet getResourceSet(EditPart editpart) {
+		if (rset == null) {
+			rset = EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(editpart));
+			sfControlLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
+			sfHorizontalAlignment = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HORIZONTAL_ALIGN);
+			sfVerticalAlignment = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_VERTICAL_ALIGN);
+			sfHorizontalGrab = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HORIZONTAL_GRAB);
+			sfVerticalGrab = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_VERTICAL_GRAB);
+			sfHorizontalSpan = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HORIZONTAL_SPAN);
+			sfVerticalSpan = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_VERTICAL_SPAN);
+		}
+		return rset;
+	}
+	
+	protected void handleSelectionProviderInitialization(ISelectionProvider selectionProvider) {
+		// We don't use GEF SelectionActions, so don't need this.
+	}
+	
+	/*
+	 * Return true if the parent's layout policy is a GridLayout.
+	 * If parent is a tree editpart (selected from the Beans viewer, we need to get its
+	 * corresponding graphical editpart from the Graph viewer in order to check its layout policy.
+	 */
+	public boolean isValidParent(EditPart parent) {
+		if (parent instanceof TreeEditPart) {
+			EditDomain ed = EditDomain.getEditDomain(parent);
+			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
+			if (viewer != null) {
+				// Get the graphical editpart using the model that is common between the two viewers
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)parent).getModel());
+				if (ep != null)
+					parent = ep;
+			}
+		}
+		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
+		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "GridLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+			return true;
+		}
+		return false;
+	}
+}
