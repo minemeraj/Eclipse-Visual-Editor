@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-15 19:34:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-15 22:51:21 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -84,7 +84,7 @@ public void visit()  {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					 methods[i] instanceof MethodDeclaration) {
-					new EventMethodCallBackVisitor(methods[i],fModel,fType,((IMethod)cuMethods[i]).getHandleIdentifier(),
+					new EventMethodCallBackVisitor(methods[i],fModel,fType,cuMethods[i].getHandle(),
 								cuMethods[i].getSourceRange(),
 								cuMethods[i].getContent()).visit();
 				}
