@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2004-06-04 18:35:12 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-07 20:12:36 $ 
  */
 
 import java.util.Iterator;
@@ -310,8 +310,6 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
 		Object currentValue = target.eGet(sf);
-		if(currentValue==null && newPropInstance==null)
-			return true;
 		if(currentValue!=null && newPropInstance!=null){
 			String currentClassName = currentValue.getClass().getName();
 			String newClassName = newPropInstance.getClass().getName();
