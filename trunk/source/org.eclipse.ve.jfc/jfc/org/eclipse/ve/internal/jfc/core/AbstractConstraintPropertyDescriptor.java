@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractConstraintPropertyDescriptor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-07 16:45:54 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-08 14:49:54 $ 
  */
 import java.util.logging.Level;
 
@@ -45,7 +45,6 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  */
 public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropertyDescriptor {
 	
-	private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always	
 	/**
 	 * Construct with the Constraint Structural Feature from the Constraint class.
 	 */
@@ -109,9 +108,6 @@ public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropert
 	 * default is not sufficient, overrides should provide the appropriate one.
 	 */
 	public ILabelProvider getLabelProvider() {
-		if(labelProvider == null){
-			labelProvider = new DefaultLabelProvider();
-		}
-		return labelProvider;
+		return new DefaultLabelProvider();
 	}
 }
