@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-14 22:04:53 $ 
+ *  $Revision: 1.11 $  $Date: 2004-07-12 17:57:52 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -347,6 +347,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		ExpressionRefFactory eGen = new ExpressionRefFactory(fAddedPart, JavaInstantiation.getAllocationFeature((IJavaInstance)fAddedPart.getEObject()));		
 		try {
 			CodeExpressionRef newExpr = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
+			newExpr.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 			newExpr.insertContentToDocument();
 			return newExpr;
 
