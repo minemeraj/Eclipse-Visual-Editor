@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-20 00:44:30 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-04 12:32:02 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -1825,7 +1825,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			CDEUtilities.setModelAdapterFactory(editDomain, new DefaultModelAdapterFactory(policy));
 
 			NameInCompositionPropertyDescriptor desc = new NameInCompositionPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName")); //$NON-NLS-1$
-			desc.setReadOnly(true); // These are read-only because we use an action to do renames.
 			editDomain.registerKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY, desc);
 			// Make the default add annotations command be the one to make names unique.
 			try {
