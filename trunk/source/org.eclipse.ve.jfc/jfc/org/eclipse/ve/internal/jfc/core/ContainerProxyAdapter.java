@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-21 10:39:35 $ 
  */
 
 import java.util.Iterator;
@@ -29,6 +29,7 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.TypeKind;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
@@ -88,6 +89,13 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 				}
 			}
 		}
+
+		// Bugzilla 59391 - force a release of the layout
+		IJavaInstance layoutValue = (IJavaInstance)getEObject().eGet(getEObject().eClass().getEStructuralFeature("layout"));
+		if(layoutValue != null){
+			IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost(layoutValue);
+			layoutProxyHost.releaseBeanProxy();
+		}		
 
 		super.releaseBeanProxy();
 	}
