@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-09 17:40:57 $ 
  */
 
 import java.util.logging.Level;
@@ -256,6 +256,31 @@ public static int indexOfSemiColon(String targetSrc) {
 	catch(InvalidInputException e){
 		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
 	}		
+    return targetSrc.length();
+}
+
+public static int indexOfLastSemiColon(String targetSrc) {
+	Scanner scanner = new Scanner() ;
+	scanner.setSource(targetSrc.toCharArray()) ;
+	scanner.recordLineSeparator = false ;
+	scanner.tokenizeWhiteSpace = true ;
+	scanner.tokenizeComments = true ;
+	int semicolonIndex = -1;
+	try{
+		int token = scanner.getNextToken();
+		for(int i=0;i<targetSrc.length();i++){
+			if(token==Scanner.TokenNameEOF)
+				break;
+			if(token==Scanner.TokenNameSEMICOLON)
+				semicolonIndex = scanner.currentPosition - 1; // current position goes to the position after getNextToken() 
+			token = scanner.getNextToken();
+		}
+	}
+	catch(InvalidInputException e){
+		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
+	}
+	if(semicolonIndex>-1 && semicolonIndex<targetSrc.length())
+		return semicolonIndex;
     return targetSrc.length();
 }
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.15 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.16 $  $Date: 2004-03-09 17:40:57 $ 
  */
 
 
@@ -103,6 +103,8 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method, int delta) {
 //    else {
         start = exp.getStartPosition()+delta ;
         end = exp.getStartPosition()+exp.getLength()+delta ;
+        String fromSource = method.getContent().substring(start-method.getOffset(), end-method.getOffset());
+        end = ExpressionParser.indexOfLastSemiColon(fromSource)-1+start;
 //    }
         
 	ExpressionParser fCP = createExpressionParser(method.getContent(),
