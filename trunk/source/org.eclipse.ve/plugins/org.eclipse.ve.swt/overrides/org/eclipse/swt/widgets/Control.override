@@ -11,5 +11,9 @@
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
     graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart">
   </addedEObjects>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
+    propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositePropertySourceAdapter"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
+    beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
 </event:AddMany>
+
