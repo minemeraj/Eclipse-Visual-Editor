@@ -11,21 +11,15 @@ package org.eclipse.ve.examples.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaExampleContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 16:14:17 $ 
  */
 
-import java.io.File;
-import java.util.List;
-
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
 public class JavaExampleContributor implements IConfigurationContributor {
 
-	public void contributeClasspaths(List classPaths, IClasspathContributionController controller) {
-	}
-	
 	/**
 	 * To demonstrate the JSR-57 persistence of beans we use this as the mechanism to add
 	 * archiver.jar and crimson.jar to the bootclasspath
@@ -34,27 +28,14 @@ public class JavaExampleContributor implements IConfigurationContributor {
 	 * an example of how to manipulate the bootclasspath ( which is only required for 1.3 ).
 	 * 1.4 includes this in the JDK.
 	 */
-	public void contributeToConfiguration(VMRunnerConfiguration aConfig) {
-		String[] existingVMArgs = aConfig.getVMArguments();
-		// archiver.jar and crimson.jar are in the plugin root
-		String archiverPath =
-			ProxyPlugin.getPlugin().localizeFromPlugin(JavaExamplePlugin.getPlugin(), "archiver.jar"); //$NON-NLS-1$
-		String crimsonPath =
-			ProxyPlugin.getPlugin().localizeFromPlugin(JavaExamplePlugin.getPlugin(), "crimson.jar"); //$NON-NLS-1$
-		if (archiverPath != null && crimsonPath != null) {
-			// This is done rather than using the getBootClassPath and setBootClassPath
-			// of VMRunnerConfiguration because that doesn't put a /p in which means that the 
-			// the path is not prepended to but is totally replaced and this causes problems
-			String archiverArgs =
-				"-Xbootclasspath/p:" + archiverPath + File.pathSeparator + crimsonPath + File.pathSeparator; //$NON-NLS-1$
-	
-			int length = existingVMArgs.length;
-			String[] newVMArgs = new String[length + 1];
-			System.arraycopy(existingVMArgs, 0, newVMArgs, 0, length);
-			newVMArgs[length] = archiverArgs;
-			aConfig.setVMArguments(newVMArgs);
-		}
+	public void contributeClasspaths(IConfigurationContributionController controller) {
+		controller.contributeClasspath(JavaExamplePlugin.getPlugin(), "archiver.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);
+		controller.contributeClasspath(JavaExamplePlugin.getPlugin(), "crimson.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);		
 	}
+	
+	public void contributeToConfiguration(ILaunchConfigurationWorkingCopy aConfig) {
+	}
+	
 	/*
 	 * @see IConfigurationContributor#contributeToRegistry(ProxyFactoryRegistry)
 	 */

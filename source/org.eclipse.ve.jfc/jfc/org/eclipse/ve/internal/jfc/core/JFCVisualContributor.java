@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCVisualContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 16:13:57 $ 
  */
 
-import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -26,18 +25,15 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JFCVisualContributor implements IConfigurationContributor {
 
-	public void contributeClasspaths(List classPaths, IClasspathContributionController controller) {
+	public void contributeClasspaths(IConfigurationContributionController controller) {
 		// Add the visualvm.jar and nls jars to the end of the classpath. This jar contains the vm stuff
 		// needed for doing JVE editing.
-		controller.contributeClasspath(
-			ProxyPlugin.getPlugin().urlLocalizeFromPluginDescriptorAndFragments(JFCVisualPlugin.getPlugin().getDescriptor(), "vm/jfcvm.jar"), //$NON-NLS-1$
-			classPaths,
-			-1);
+		controller.contributeClasspath(JFCVisualPlugin.getPlugin(), "vm/jfcvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
 	}
 	/*
 	 * @see IConfigurationContributor#contributeToConfiguration(VMRunnerConfiguration)
 	 */
-	public void contributeToConfiguration(VMRunnerConfiguration config) {
+	public void contributeToConfiguration(ILaunchConfigurationWorkingCopy config) {
 	}
 
 	/*

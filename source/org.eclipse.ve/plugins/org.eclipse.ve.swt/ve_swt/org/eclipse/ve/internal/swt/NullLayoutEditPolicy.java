@@ -177,7 +177,6 @@ protected boolean isChildResizeable(EditPart aChild) {
 	return true;
 }
 private int getX(IBeanProxy anSWTRectangleBeanProxy){
-	IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry());
 	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("x");
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
@@ -188,7 +187,6 @@ private int getX(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getY(IBeanProxy anSWTRectangleBeanProxy){
-	IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry());
 	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("y");
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
@@ -199,7 +197,6 @@ private int getY(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getWidth(IBeanProxy anSWTRectangleBeanProxy){
-	IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry());
 	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("width");
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
@@ -210,7 +207,6 @@ private int getWidth(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getHeight(IBeanProxy anSWTRectangleBeanProxy){
-	IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry());
 	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("height");
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);

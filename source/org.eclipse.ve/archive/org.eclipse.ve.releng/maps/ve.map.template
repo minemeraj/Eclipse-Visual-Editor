@@ -15,7 +15,7 @@ fragment@org.eclipse.ant.optional.junit=v20030401,:pserver:anonymous@dev.eclipse
 
 plugin@org.eclipse.jem=@org.eclipse.jem-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo=@org.eclipse.jem.beaninfo-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.beaninfo.ui=@org.eclipse.jem.beaninfo.ui-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.ui=@org.eclipse.jem.ui-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=@org.eclipse.jem.proxy-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.tests=@org.eclipse.jem.tests-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.workbench=@org.eclipse.jem.workbench-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,

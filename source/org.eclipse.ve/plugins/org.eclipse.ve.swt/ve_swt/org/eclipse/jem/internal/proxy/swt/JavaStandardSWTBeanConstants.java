@@ -67,10 +67,6 @@ public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isReg
 	rectangleYProxy = rectangleTypeProxy.getFieldProxy("y");//$NON-NLS-1$
 	
 	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment"); //$NON-NLS-1$
-	try {
-		displayProxy = environmentBeanTypeProxy.getFieldProxy("display").get(null);
-	} catch (ThrowableProxy e) {
-	}
 }
 /**
  * getPointXFieldProxy method comment.
@@ -114,6 +110,8 @@ public IBeanTypeProxy getEnvironmentBeanTypeProxy(){
 }
 
 public IBeanProxy getDisplayProxy() {
+	if (displayProxy == null)
+		displayProxy = environmentBeanTypeProxy.getMethodProxy("getDisplay").invokeCatchThrowableExceptions(null);
 	return displayProxy;
 }
 
