@@ -49,7 +49,7 @@
       <classpathContainerPage
             name="%classContainerPageName"
             class="org.eclipse.ve.internal.swt.SWTContainerWizardPage"
-            id="org.eclipse.ve.internal.swt.swtcontainerwizardpage">
+            id="SWT_CONTAINER">
       </classpathContainerPage>
    </extension>
 <!-- There is also an initializer to resolve the wizard entry into an actual SWTContainer -->
