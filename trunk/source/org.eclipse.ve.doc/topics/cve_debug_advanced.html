@@ -53,7 +53,7 @@ it is documented in case you need to perform debugging of your Java beans
 at design time. To perform remote debugging you will need two workbenchs running:
 one with the Java beans that you want to debug, and one that can perform socket
 based remote debugging. The second workbench could be running on the same
-machine or a different machine. To enable debugging of the Visual Editor's
+machine or a different machine. To enable debugging of the visual editor's
 VM, the -DEBUG file should contain the line:</p>
 <p> <tt class="sysout">org.eclipse.jem.proxy/debug/debugvm=true</tt> </p>
 <p>Each time the visual editor starts a VM it will ask you whether you want
@@ -65,7 +65,7 @@ will be written System.out.</p>
 of Y or N and wait on System.in:</p>
 <p><tt class="sysout">Do you want to start the remote vm (Project (Test)-VM for
 HelloFrame.java) in debug mode? (Enter Y or N):</tt> </p>
-<p>The above dialog is for when the class <tt class="sysout">HelloFrame.java</tt> in
+<p>The previous dialog is for when the class <tt class="sysout">HelloFrame.java</tt> in
 the project Test is opened with the visual editor . If you select Yes, or
 enter Y and press Enter in the console, then the VM is started in suspend
 mode with the  <tt class="sysout">-Xdebug</tt> using a socket connector.
@@ -85,7 +85,7 @@ If the other application is another instance of the workbench, you can begin
 remote debugging by using the menu option <span class="uicontrol">Debug &gt; Debug</span> and
 creating a new Remote Java Application configuration.</p>
 <p> <img src="../images/RemoteDebuAttach.gif" alt="" /> </p>
-<p>Enter the port number that was written to stdout earlier by the debuggee,
+<p>Enter the port number that was previously written to stdout,
 in this case 7078. If the debugger is on a different machine, in the <span class="uicontrol">Host</span> field
 you should enter the IP address of the machine running the workbench that
 is being debugged. To begin the remote debugger, click <span class="uicontrol">Debug</span> and
@@ -98,10 +98,10 @@ itself:</p>
 in debug mode? (Enter Y or N):</tt> </p>
 <p>This is for the VM that is used for introspection and the  <tt class="sysout">java.beans.Introspector</tt> is
 run in, and can be distinguished from the VM for the visual editor because
-it doesn't specify a particular Java source file name. This VM is started
+it does not specify a particular Java source file name. This VM is started
 the first time any bean info is required for a Java bean within a project,
-and remains active as long as the project remains open. Debugging this project
-allows you to step through and analyze any code in your BeanInfo classes as
+and remains active as long as the project remains open. By debugging this project
+you can step through and analyze any code in your BeanInfo classes as
 your Java beans are being introspected. Introspection occurs once for each
 Java bean class for each project it is used in. The result is held in a cache
 to help performance. If at any time you need to clear the cache of BeanInfo

@@ -42,7 +42,7 @@ A second project, MyBeanInfoProject, contains the package beaninfoclasses.MyJava
 a BeanInfo class needs to know the class it represents, MyBeanInfoProject
 must include MyProject in its Java build path. Note that the reverse is not
 true - MyProject should not include MyBeanInfoProject in its Java build path,
-because this would create a circular reference.</p>
+because this creates a circular reference.</p>
 <p>To configure your workbench
 setup so that BeanInfo classes are stored in a different project from your
 .java files:</p>
@@ -85,17 +85,17 @@ for the project that contains the referenced beans, click the <span class="uicon
 export</span> tab and confirm that the packages containing BeanInfo classes are
 selected. Then select the <span class="uicontrol">Java Build Path</span> properties for the same
 project and confirm that the packages containing the BeanInfo classes are
-not excluded from export there. Excluding them here would override including
+not excluded from export there. Excluding them here overrides including
 them on the BeanInfo Path page.</li>
-<li>If a BeanInfo package export flag can't be changed, the given export status
+<li>If a BeanInfo package export flag cannot be changed, the given export status
 is required. For example, if a package is not exported in the Java Build Path,
-then it can't be exported in the BeanInfo search path and may also not be
+then it cannot be exported in the BeanInfo search path and may also not be
 set to not exported. This can happen if package is marked as exported in the
 Java Build Path. For BeanInfo packages that come from non-java build path
 locations, then the export flag can be changed. Also note that if you change
 the Java Build path you need to close the properties dialog and reopen it
 to see the changes in the BeanInfo path page. This is because the Java Build
-path changes aren't actually applied until the window is closed.</li>
+path changes are not actually applied until the window is closed.</li>
 <li>Currently, by default, whenever an entry is added to the BeanInfo classes
 it is not exported, so you must always go to the Order and Export page, and
 explicitly export the entry.</li>
@@ -105,7 +105,7 @@ explicitly export the entry.</li>
 
 <div>
 <p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and runtime to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
+<b class="parentlink">Parent topic:</b> <a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
 </p>
 <p><b class="relconceptshd">Related concepts</b><br />
 <a href="../topics/cve_beaninfo.html" title="If you are creating new components or beans for use within the visual editor (for example, adding components to the palette), you can control their behavior by supplying a BeanInfo class.">BeanInfo classes and introspection</a><br />

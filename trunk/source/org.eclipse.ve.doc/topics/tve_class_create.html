@@ -11,8 +11,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Creating a new Java visual class" />
-<meta name="abstract" content="You can use a wizard to quickly create a Java visual class for use within the visual editor for Java." />
-<meta name="description" content="You can use a wizard to quickly create a Java visual class for use within the visual editor for Java." />
+<meta name="abstract" content="You can use the New Java Visual Class wizard to quickly create a Java visual class for use within the visual editor for Java." />
+<meta name="description" content="You can use the New Java Visual Class wizard to quickly create a Java visual class for use within the visual editor for Java." />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_developing.dita" />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_class_open.dita" />
 <meta name="DC.Format" content="XHTML" />
@@ -29,9 +29,10 @@
 <body id="tve_class_create"><a name="tve_class_create"><!-- --></a>
 
 <h1 class="topictitle1">Creating a new Java visual class</h1>
-<div><p>You can use a wizard to quickly create a Java visual class for
-use within the visual editor for Java.</p>
-<div class="p">You need to have a Java project and a package for the visual class.</div>
+<div><p>You can use the New Java Visual Class wizard to quickly create
+a Java visual class for use within the visual editor for Java.</p>
+<div class="p">Before you can create a new Java visual class, you need to have a
+Java project and a package where you can place the visual class.</div>
 <div class="skipspace">When you are developing a Java application with a graphical interface,
 you can use the New Java Visual Class wizard to create new visual classes.
 The wizard uses templates based on your selections on the wizard to create
@@ -49,9 +50,10 @@ visual class for use in the visual editor for Java:</p>
 folder where the class will be saved. This will default to your current project.</span></li>
 <li class="skipspace"><span>In the <span class="uicontrol">Package</span> field, enter the name of
 the Java package where you want the visual Java class to be packaged.</span> <b>Tip:</b> If you open the wizard from the pop-up menu of the package,
-this field will default to that package name.</li>
-<li class="skipspace"><span>Do <u>not</u> select the <span class="uicontrol">Enclosing type</span> check
-box. This would allow you to create an inner class in another class.</span></li>
+this field defaults to that package name.</li>
+<li class="skipspace"><span>Ensure that the <span class="uicontrol">Enclosing type</span> check box
+is cleared. Selecting this option creates an inner class in another class
+that you specify, so no new visual class is created.</span></li>
 <li class="skipspace"><span>In the <span class="uicontrol">Name</span> field, enter the name for the
 new Java visual class.</span></li>
 <li class="skipspace"><span>Select <i>one</i> of the following modifiers to specify access
@@ -70,25 +72,25 @@ subclassed</li>
 </li>
 <li class="skipspace"><span>In the <span class="uicontrol">Style</span> list, select the toolkit and
 visual element that you want your new visual class to extend.</span> For
-example, you could select SWT composite or Swing JPanel. The <span class="uicontrol">Superclass</span> field
-will display the appropriate class name. If you select Other as the style,
-you need to specify the superclass that you want to extend or accept the default <samp class="codeph">java.lang.Object</samp>.
-The <samp class="codeph">java.lang.Object</samp> superclass could be used, for example
-for a SWT application that uses a SWT Shell.</li>
+example, you can select SWT composite or Swing JPanel. The <span class="uicontrol">Superclass</span> field
+displays the appropriate class name. If you select <span class="uicontrol">Other</span> as
+the style, you need to specify the superclass that you want to extend or accept
+the default <samp class="codeph">java.lang.Object</samp>. The <samp class="codeph">java.lang.Object</samp> superclass
+can be used, for example, for a SWT application that uses a SWT Shell.</li>
 <li class="skipspace"><strong>Optional: </strong><span>To import and implement an additional interface
-in your new visual class, click the <span class="uicontrol">Add</span> button and
-select the interface, then click <span class="uicontrol">OK</span>. The interfaces
-to be implemented are listed in the <span class="uicontrol">Interfaces</span> field.
-Repeat this step for each interface.</span></li>
+in your new visual class, click <span class="uicontrol">Add</span> and select the
+interface, then click <span class="uicontrol">OK</span>. The interfaces to be implemented
+are listed in the <span class="uicontrol">Interfaces</span> field. Repeat this step
+for each interface.</span></li>
 <li class="skipspace"><strong>Optional: </strong><span>Select any of the following check boxes to
 generate additional method stubs in your new visual class:</span><ul><li><span class="uicontrol">public static void main(String[] args)</span> - generates
 a stub main() method for running the class as a Java application. For SWT
 applications, the visual editor also generates the necessary display loop
 in the main method.</li>
 <li><span class="uicontrol">Constructors from superclass</span> - generates constructor
-stubs to initialize methods inherited from the superclass</li>
+stubs to initialize methods inherited from the superclass.</li>
 <li><span class="uicontrol">Inherited abstract methods</span> - generates stubs
-for additional abstract methods inherited from the superclass</li>
+for additional abstract methods inherited from the superclass.</li>
 </ul>
 </li>
 <li class="skipspace"><span>Click <span class="uicontrol">Finish</span>.</span></li>
@@ -99,7 +101,7 @@ class, and the class opens in the visual editor for Java</div>
 
 <div>
 <p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_developing.html" title="You can use the visual editor for Java to compose Java class files visually using SWT, Swing, and AWT.">Developing Java classes with the visual editor</a><br />
+<b class="parentlink">Parent topic:</b> <a href="../topics/tve_developing.html" title="You can use the visual editor to visually compose and preview Java classes using SWT, Swing, and AWT components.">Developing Java classes with the visual editor</a><br />
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tve_class_open.html" title="If the visual editor for Java is not the default editor for .java files, you can still open Java classes in the visual editor.">Opening an existing Java class in the visual editor</a><br />

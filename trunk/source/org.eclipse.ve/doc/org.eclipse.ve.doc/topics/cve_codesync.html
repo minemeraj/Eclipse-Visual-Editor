@@ -11,8 +11,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="concept" />
 <meta name="DC.Title" content="How the visual editor synchronizes code" />
-<meta name="abstract" content="As you change the contents of the Java source file with the Java Visual Editor open, it performs incremental analysis of the changes to determine how the change affects the Java beans." />
-<meta name="description" content="As you change the contents of the Java source file with the Java Visual Editor open, it performs incremental analysis of the changes to determine how the change affects the Java beans." />
+<meta name="abstract" content="As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine how the change affects the Java beans." />
+<meta name="description" content="As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine how the change affects the Java beans." />
 <meta name="DC.Relation" scheme="URI" content="../topics/cve_codegen.dita" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_codesync" />
@@ -28,8 +28,7 @@
 <body id="cve_codesync"><a name="cve_codesync"><!-- --></a>
 
 <h1 class="topictitle1">How the visual editor synchronizes code</h1>
-<div><p>As you change the contents of the Java source file with the Java
-Visual Editor open, it performs incremental analysis of the changes to determine
+<div><p>As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine
 how the change affects the Java beans.</p>
 <p>Changes to the code can be made in the Source view included with the visual
 editor, or within another editor open on the same file within the workbench.
@@ -42,7 +41,7 @@ with the source code for any reason, you can click the reload <img src="../image
 The first model is a representation of the Java beans that is used by the
 Java Beans view, the Properties view, and the Design view. The second model
 is the source that represents the code that, when compiled and executed, will
-re-create the Java beans in a runtime VM. As you make changes to either model,
+re-create the Java beans in a run-time VM. As you make changes to either model,
 the visual editor maintains the other model for you by performing synchronization.
 You can see the status of the synchronization of the two models in the status
 bar <img src="../images/sync_insync.gif" alt="code in sync" /> at

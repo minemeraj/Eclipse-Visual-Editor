@@ -41,10 +41,10 @@ is hidden, then it will not be available within the Properties viewer. However,
 set methods of hidden properties will still be parsed by the code generator
 and will be applied to the live beans.</p>
 <p>When a property is hidden it
-is still used by code parsing, but it will not be included in any other Visual
-Editor view or feature. Visual Age for Java allowed a property to be excluded
-from the Properties view, but was still available for other functions. For
-example, making connections by making it design time  <var class="varname">false</var>.
+is still used by code parsing, but it will not be included in any other visual
+editor view or feature. VisualAge for Java allowed a property
+to be excluded from the Properties view, but was still available for other
+functions. For example, making connections by making it design time  <var class="varname">false</var>.
 Although the visual editor for Java does not have connection capability, the
 concept of design time properties is carried forward. To make a property design
 time false, an attribute value should be set with the key of  <tt class="sysout">ivjDesignTimeProperty</tt>,
@@ -79,7 +79,7 @@ Integer(myclasses.CompassPoint.WEST),"myclasses.CompassPoint.WEST"
     return result;
 }</pre>
 <p>When a property is selected in the Properties view, an editor
-is created in the Value column that allows you to specify a new value. To
+is created in the Value column where you can specify a new value. To
 calculate the editor for a property, the java.beans.PropertyDescriptor is
 queried for a property editor. If an associated property editor is found,
 then it is used. Otherwise, one is located that is defined to work with the
@@ -122,9 +122,9 @@ referenced in the string should be fully qualified and not rely on any import
 statements in the class being composed. If your BeanInfo specializes the template
 JRE class <tt class="sysout">java.beans.SimpleBeanInfo</tt>, then the
 method is not abstract and will be inherited to return '???'. You must remember
-to specialize it correctly. </p>
+to specialize it correctly.</p>
 <p>In addition to using the public String[]
-getTags() method on a property descriptor to get a drop-down list, there is
+getTags() method on a property descriptor to get a list, there is
 a shorter way of specifying a list of values. An attribute value is created
 with the key of  <tt class="sysout">enumerationValues</tt>, a value that
 is an array of triplicate entries of the displayName in the list, the value
@@ -189,7 +189,7 @@ as a named attribute with a key of "eventAdapterClass", for example</p>
 </p>
 <p><b class="reltaskshd">Related tasks</b><br />
 <a href="../topics/tve_beaninfo.html" title="You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.">Controlling BeanInfo information for plug-in developers</a><br />
-<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and runtime to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
+<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
 </p>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />

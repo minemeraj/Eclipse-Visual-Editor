@@ -41,13 +41,13 @@ can also start with the layout manager set to null and then change to a layout
 (like the GridBagLayout) to get the constraint setting calculated by the visual
 editor for Java. The advantage of having each component control its size and
 position is that you can specify the x, y, width, and height and be sure that
-these will always be used at runtime. The disadvantage of having fixed size
+these will always be used at run time. The disadvantage of having fixed size
 and height is that they will not resize if the application is resized by the
 user or if the labels on components such as buttons or check boxes change
 size based on the user's font or locale.</p>
 <p>To see this behavior in the
-visual editor for Java you can use the drop-down list of values in the Properties
-view for the layout property and select <span class="uicontrol">null</span>.</p>
+visual editor for Java you can use the list of values in the Properties
+view for the <span class="uicontrol">layout</span> property and select <span class="uicontrol">null</span>.</p>
 <p>When
 you set the layout manager for an existing container to null, the Design view
 does not change in appearance. The visual editor calculates the current bounds
@@ -63,7 +63,7 @@ only has its label property set, as shown here:</p>
     return ivjJLabel;
 }</pre>
 <p>If you then use the Properties view to change the layout manager
-to null, the code would look something like this:  </p>
+to null, the code looks something like this:</p>
 <pre>private javax.swing.JLabel getIvjJLabel(){
     if(ivjJLabel == null) {
        ivjJLabel = new javax.swing.JLabel();
@@ -74,14 +74,14 @@ to null, the code would look something like this:  </p>
 }</pre>
 <p>In the same example, as soon as you set the layout manager
 to null, the Properties view for each component displays values for bounds,
-size, and location. These values do not appear when the parent container uses
+size, and location. These values do not display when the parent container uses
 any other layout manager, because component properties do not change when
 the layout manager controls positioning and sizing.</p>
 <p>When you set the
 layout for a container to null, the handles for each component in the Design
 view allow resizing. You can also size a bean as you add it from the palette.
 Simply hold down the left mouse button when you drop the bean in the Design
-view, and drag the mouse pointer until the bean is the desired size. A target
+view, and drag the mouse pointer until the bean is the required size. A target
 feedback rectangle shows you the initial size. In any other layout manager
 you are only allowed to move or add components.</p>
 </div>
