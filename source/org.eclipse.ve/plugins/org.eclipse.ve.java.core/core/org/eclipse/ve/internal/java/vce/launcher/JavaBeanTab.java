@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-05 16:25:16 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-20 13:30:09 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -166,9 +166,10 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		fLookAndFeelClasses = new ArrayList();
 		fLookAndFeelList = new List(mainComp,SWT.BORDER);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
-		data.verticalAlignment = GridData.BEGINNING;
+		data.verticalAlignment = GridData.FILL;
+		data.grabExcessVerticalSpace = true;
 		data.horizontalSpan = 3;		
 		fLookAndFeelList.setLayoutData(data);
 
@@ -202,6 +203,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
 		fLocaleText.setData(data);
+		fLocaleText.setText(Locale.getDefault().toString());
 		
 		Label fSuggestionLabel = new Label(localeComp,SWT.NONE);
 		fSuggestionLabel.setText(VCELauncherMessages.getString("BeanTab.localesuggest.label")); //$NON-NLS-1$
@@ -286,6 +288,11 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		// reflects the L&Fs available in the IDE's JRE, not the remote vm.
 		UIManager.LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
 		for ( int i = 0; i < lnfs.length; i++ ) {
+			// TODO: Hack to remove the Windows L&F from Linux (Sun bug 4843282)
+			if (lnfs[i].getClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel") && //$NON-NLS-1$
+			System.getProperty("os.name").equals("Linux"))  //$NON-NLS-1$ //$NON-NLS-2$
+				continue; 
+			
 		    fLookAndFeelList.add(lnfs[i].getName());
 		    fLookAndFeelClasses.add(lnfs[i].getClassName());
 		}
@@ -332,7 +339,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			String locale = config.getAttribute(JavaBeanLaunchConfigurationDelegate.LOCALE, ""); //$NON-NLS-1$
 			if ( locale.equals("") ){ //$NON-NLS-1$
 				fDefaultLocaleButton.setSelection(true);
-				fLocaleText.setText(""); //$NON-NLS-1$
+//				fLocaleText.setText(""); //$NON-NLS-1$
 			} else {
 				fDefaultLocaleButton.setSelection(false);
 				fLocaleText.setEnabled(true);
