@@ -122,11 +122,9 @@
 	</target>
 	
 	<target name="test-linux-gtk-local" if="isLinuxGTK">
-	<!--
 		<ant antfile="${test.xml}">
 			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/linux-gtk-local" />
 		</ant>	
-		-->
 	</target>	
 	
 	<target name="publish" depends="init">

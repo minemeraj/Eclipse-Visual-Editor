@@ -130,7 +130,7 @@
 <!-- (e.g., testing, posting, emailing, ...) -->
 <!-- ===================================================================== -->
 <target name="postBuild">
-	<!-- antcall target="packageTestFramework" / -->	
+	<antcall target="packageTestFramework" />	
 </target>
 
 <!-- ===================================================================== -->
