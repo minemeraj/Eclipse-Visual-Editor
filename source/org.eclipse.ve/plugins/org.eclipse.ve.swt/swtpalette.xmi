@@ -77,6 +77,22 @@
           creationClassURI="java:/org.eclipse.swt.browser#Browser"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Browser"/>
       </cmpEntries>                                      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Push.xmi#ToolItemPush_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Push"/>
+      </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-CheckBox.xmi#ToolItemCheckBox_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Check"/>
+      </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Radio.xmi#ToolItemRadio_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Radio"/>
+      </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/choice_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Dropdown.xmi#ToolItemDropdown_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Dropdown"/>
+      </cmpEntries>      
     </cmpGroups>    
   </palette:CategoryCmp>
   <palette:CategoryCmp xmi:id="swtCat1">

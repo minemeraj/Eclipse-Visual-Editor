@@ -33,11 +33,6 @@ public class ToolBarBeanInfo extends IvjBeanInfo {
 							DISPLAYNAME, ToolBarMessages.getString("itemCountDN"), //$NON-NLS-1$
 									SHORTDESCRIPTION, ToolBarMessages.getString("itemCountSD"), //$NON-NLS-1$
 							}),
-					// items
-					super.createPropertyDescriptor(getBeanClass(), "items", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, ToolBarMessages.getString("itemsDN"), //$NON-NLS-1$
-									SHORTDESCRIPTION, ToolBarMessages.getString("itemsSD"), //$NON-NLS-1$
-							}),
 					// rowCount
 					super.createPropertyDescriptor(getBeanClass(), "rowCount", new Object[] { //$NON-NLS-1$
 							DISPLAYNAME, ToolBarMessages.getString("rowCountDN"), //$NON-NLS-1$
@@ -53,9 +48,7 @@ public class ToolBarBeanInfo extends IvjBeanInfo {
 
 	protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
 		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
-
 		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { DESIGNTIMEPROPERTY, Boolean.FALSE,});
-
 		return newPDs;
 	}
 
