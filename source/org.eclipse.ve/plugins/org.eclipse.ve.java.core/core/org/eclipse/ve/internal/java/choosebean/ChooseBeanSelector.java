@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanSelector.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 18:14:26 $ 
  */
 
 import java.util.logging.Level;
@@ -30,8 +30,7 @@ public class ChooseBeanSelector
  
 protected SelectionCreationToolEntry creationToolEntry = null;
 
-public ChooseBeanSelector(){
-}
+public ChooseBeanSelector(){}
 
 protected String getPluginName(){
 	return ResourcesPlugin.getPlugin().getDescriptor().getLabel();
@@ -42,7 +41,8 @@ public Object[] getNewObjectAndType(SelectionCreationToolEntry.SelectionCreation
 	ChooseBeanDialog dialog = new ChooseBeanDialog(
 							Display.getDefault().getActiveShell(), 
 							ed,
-							ChooseBeanDialog.CHOICE_DEFAULT,
+							ChooseBeanDialog.determineContributors(),
+							-1,
 							false);
 	if(dialog.open()==Window.OK){
 		try{
