@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-23 22:25:07 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-24 21:34:38 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -71,8 +71,8 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 	};
 
 	public void activate() {
-		((EObject) getModel()).eAdapters().add(containerAdapter);
 		super.activate();
+		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
 	protected void createEditPolicies() {
