@@ -51,12 +51,6 @@
       <import plugin="com.ibm.wtp.emf.workbench"/>
    </requires>
 
-<!-- ===================================================================================== -->
-<!-- Editor Part adapters allow additional plugins to contribute to the getAdapter(Object) -->
-<!-- method on JavaVisualEditorPart.  This method is typically used by viewers to ask      -->
-<!-- the editor part for an IPageBook                                                      -->
-<!-- ===================================================================================== -->
-	<extension-point id="editorpartadapters" name="Editor Part Adapters"/>
 
    <extension-point id="style" name="Parsing/generation style"/>
 <!-- The syntax for creating a look and feel is								-->
