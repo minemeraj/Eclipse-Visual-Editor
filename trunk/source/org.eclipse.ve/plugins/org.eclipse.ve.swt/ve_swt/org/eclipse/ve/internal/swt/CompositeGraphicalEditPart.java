@@ -11,14 +11,23 @@ import java.util.*;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+
+import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 /**
  * ViewObject for the awt Container.
@@ -36,7 +45,7 @@ public CompositeGraphicalEditPart(Object model) {
 }
 
 protected ContainerPolicy getContainerPolicy() {
-	return new JavaContainerPolicy(sf_compositeControls,EditDomain.getEditDomain(this));	// AWT standard Contained Edit Policy
+	return new CompositeContainerPolicy(EditDomain.getEditDomain(this));	// SWT standard Composite/Container Edit Policy
 }
 
 protected IFigure createFigure() {
@@ -66,17 +75,41 @@ protected EditPart createChild(Object model) {
 protected void createLayoutEditPolicy() {
 
 	EditPolicy layoutPolicy = null;
-	ControlProxyAdapter beanProxyAdapter = (ControlProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
-	layoutPolicy = new NullLayoutEditPolicy(getContainerPolicy(),beanProxyAdapter.getClientBox());
-	removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
-	// Layout policies put figure decorations for things like grids so we should remove this
-	installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
+	CompositeProxyAdapter beanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
+	// See the layout of the composite to determine the edit policy
+	IBeanProxy compositeBeanProxy = beanProxyAdapter.getBeanProxy();
+	IBeanProxy layoutBeanProxy = null;
+	try {
+		layoutBeanProxy = compositeBeanProxy.getTypeProxy().getMethodProxy("getLayout").invoke(compositeBeanProxy);
+	} catch (ThrowableProxy e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	// If the layoutBeanProxy is null then we use the null layout edit policy
+	if(layoutBeanProxy == null){
+		layoutPolicy = new NullLayoutEditPolicy((VisualContainerPolicy)getContainerPolicy(),beanProxyAdapter.getClientBox());		
+	} else {
+		// Get the layoutPolicyFactory
+		ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(layoutBeanProxy.getTypeProxy(),EditDomain.getEditDomain(this));
+		// If we have one then try to get the EditPolicy from it
+		if(layoutPolicyFactory != null && layoutPolicyFactory.getLayoutInputPolicyClass() != null){
+			layoutPolicy = VisualUtilities.getLayoutPolicy(layoutPolicyFactory.getLayoutInputPolicyClass(),getContainerPolicy());
+		}
+	}
+	if(layoutPolicy != null){
+		removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
+		//	Layout policies put figure decorations for things like grids so we should remove this
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
+	}
 }
 	
 protected List getModelChildren() {
 	return (List) ((EObject) getModel()).eGet(sf_compositeControls);
 }
-
+/**
+ * When the controls relationship is updated refresh the children, and when the layout property
+ * is updated recalculate the edit policy for the specific layout
+ */
 private Adapter containerAdapter = new Adapter() {
 	public void notifyChanged(Notification notification) {
 		if (notification.getFeature() == sf_compositeControls)
