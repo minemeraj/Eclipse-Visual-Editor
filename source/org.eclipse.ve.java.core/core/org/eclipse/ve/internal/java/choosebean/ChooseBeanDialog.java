@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-01 09:53:25 $ 
+ *  $Revision: 1.14 $  $Date: 2004-05-19 20:20:42 $ 
  */
 
 import java.util.*;
@@ -40,6 +40,7 @@ import org.eclipse.ui.dialogs.FilteredList;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.CDMFactory;
@@ -424,15 +425,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	
 	protected void setBeanName(EObject obj, String name){
 		if(obj!=null) {
-			CDMFactory fact = CDMFactory.eINSTANCE;
-			AnnotationEMF an = fact.createAnnotationEMF();
-			if(an!=null){
-				EStringToStringMapEntryImpl sentry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
-				sentry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-				sentry.setValue(name);
-				CDEUtilities.putEMapEntry(an.getKeyedValues(), sentry);
-				an.setAnnotates(obj);
-			}
+			BeanUtilities.setBeanName((IJavaInstance)obj,name);
 		}
 	}
 	

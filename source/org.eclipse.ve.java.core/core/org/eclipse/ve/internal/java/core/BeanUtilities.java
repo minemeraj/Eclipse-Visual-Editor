@@ -11,18 +11,33 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2004-05-04 22:31:20 $ 
+ *  $Revision: 1.12 $  $Date: 2004-05-19 20:20:21 $ 
  */
 
+import java.util.Iterator;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
+import org.eclipse.ve.internal.cdm.CDMFactory;
+import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 
 public class BeanUtilities {
 	
@@ -108,6 +123,23 @@ public class BeanUtilities {
 		}
 		sb.append('"');
 		return sb.toString();
+	}
+	
+	/** 
+	 * @param newJavaBean   - A newly created JavaBean
+	 * @param name		 	- The beanName which will become the field name
+	 */
+	public static void setBeanName(IJavaInstance newJavaBean, String name){
+		
+		CDMFactory fact = CDMFactory.eINSTANCE;
+		AnnotationEMF an = fact.createAnnotationEMF();
+		if(an!=null){
+			EStringToStringMapEntryImpl sentry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+			sentry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			sentry.setValue(name);
+			CDEUtilities.putEMapEntry(an.getKeyedValues(), sentry);
+			an.setAnnotates(newJavaBean);
+		}
 	}
 
 	/**
