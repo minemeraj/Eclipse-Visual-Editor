@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-05 23:11:10 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -57,7 +57,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		if (Display.getCurrent().getActiveShell() != null)
 			Display.getCurrent().getActiveShell().setFocus();
 			// Force the focus back to the editor part so that knows it has re-gained focus
-			domain.getEditDomain().getEditorPart().setFocus();
+			getBeanProxyDomain().getEditDomain().getEditorPart().setFocus();
 
 		return getBeanProxy();
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-05 23:11:10 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -36,7 +36,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	public TableColumnProxyAdapter(IBeanProxyDomain aDomain) {
 		super(aDomain);
 
-		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
 		sfModelIndex = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_MODELINDEX);		
 		sfHeaderValue = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_HEADERVALUE);
 		sfTableColumns = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABLE_COLUMNS);

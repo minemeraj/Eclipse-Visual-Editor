@@ -10,6 +10,8 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+
 import org.eclipse.ve.internal.java.core.*;
  
 public class CompositeProxyAdapter extends ControlProxyAdapter {
@@ -47,7 +49,11 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		if(getLayoutMethodProxy == null){
 			getLayoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getLayout");
 		}
-		return getEnvironmentInvoke0ArgMethodProxy().invokeCatchThrowableExceptions(getBeanProxy(),getLayoutMethodProxy);
+		return (IBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				return getLayoutMethodProxy.invoke(getBeanProxy());
+			}
+		}); 
 	}
 	
 	protected void addControl(IJavaObjectInstance aControl, int position) throws ReinstantiationNeeded {

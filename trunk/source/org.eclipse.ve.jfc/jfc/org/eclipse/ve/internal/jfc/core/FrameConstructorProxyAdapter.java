@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-05 23:11:10 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -41,7 +41,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 			if ( constructorWithFrame != null ) {
 				if(fFrameBeanProxy == null){
 					try {			
-						IBeanTypeProxy frameClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("java.awt.Frame"); //$NON-NLS-1$
+						IBeanTypeProxy frameClass = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("java.awt.Frame"); //$NON-NLS-1$
 						fFrameBeanProxy = frameClass.newInstance();
 					} catch (ThrowableProxy e) {
 						return null;

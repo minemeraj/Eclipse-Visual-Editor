@@ -7,12 +7,14 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.java.core.*;
-
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
+import org.eclipse.ve.internal.cde.core.VisualComponentSupport;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 /**
  * This is the IDE class that is the callback listener for com.ibm.etools.jbcf.visual.vm.ComponentListener
  * that is running in the target VM
@@ -21,7 +23,7 @@ import org.eclipse.jem.internal.proxy.core.*;
  */
 public class ControlManager implements ICallback {
 	
-	private IMethodProxy fLocationMethodProxy;
+//	private IMethodProxy fLocationMethodProxy;
 	private IMethodProxy fClientBoxMethodProxy;	
 	private IMethodProxy fControlManagerBoundsMethodProxy;		
 	public static final int 
@@ -34,11 +36,7 @@ public class ControlManager implements ICallback {
 	protected VisualComponentSupport vcSupport = new VisualComponentSupport();
 	protected IBeanProxy fControlManagerProxy;
 	protected IBeanProxy fControlBeanProxy;
-	protected int fWidth, fHeight, fX, fY;
-	private IBeanTypeProxy environmentBeanTypeProxy;
-	private IMethodProxy environmentInvoke0ArgMethodProxy;	
-	private IMethodProxy environmentInvoke1ArgMethodProxy;	
-	private IMethodProxy environmentGetFieldMethodProxy;	
+	protected int fWidth, fHeight, fX, fY;	
 	
 	class DataCollector{
 		int fPointer , fWidth, fHeight;
@@ -109,42 +107,8 @@ public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
 }
 
 private void invoke_setControlManager(IBeanProxy controlManagerProxy, IBeanProxy controlBeanProxy) {
-
-	try {
-		IBeanTypeProxy controlBeanTypeProxy = controlManagerProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control"); //$NON-NLS-1$
-		IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setControl",new IBeanTypeProxy[]{controlBeanTypeProxy});
-		getEnvironmentInvoke1ArgMethodProxy().invoke(getEnvironmentBeanTypeProxy(),new IBeanProxy[] {setControlMethodProxy,controlManagerProxy,controlBeanProxy});			
-	} catch (ThrowableProxy exc){
-		JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);			
-	}	
-}
-
-protected IMethodProxy getEnvironmentInvoke0ArgMethodProxy(){
-	if(environmentInvoke0ArgMethodProxy == null){
-		environmentInvoke0ArgMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("invoke",new String[] {"java.lang.reflect.Method","java.lang.Object"});
-	}
-	return environmentInvoke0ArgMethodProxy;
-}
-
-protected IMethodProxy getEnvironmentInvoke1ArgMethodProxy(){
-	if(environmentInvoke1ArgMethodProxy == null){
-		environmentInvoke1ArgMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("invoke",new String[] {"java.lang.reflect.Method","java.lang.Object","java.lang.Object"});
-	}
-	return environmentInvoke1ArgMethodProxy;
-}	
-
-protected final IBeanTypeProxy getEnvironmentBeanTypeProxy(){
-	if(environmentBeanTypeProxy == null){	
-		environmentBeanTypeProxy = fControlManagerProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment"); //$NON-NLS-1$		
-	}
-	return environmentBeanTypeProxy;
-}
-
-protected final IMethodProxy getEnvironmentGetFieldMethodProxy(){
-	if(environmentGetFieldMethodProxy == null){	
-		environmentGetFieldMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("get",new String[] {"java.lang.reflect.Field","java.lang.Object"});		
-	}
-	return environmentGetFieldMethodProxy;	
+	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setControl","org.eclipse.swt.widgets.Control");
+	setControlMethodProxy.invokeCatchThrowableExceptions(controlManagerProxy, controlBeanProxy);
 }
 
 public Object calledBack(int msgID, IBeanProxy parm){
@@ -155,6 +119,9 @@ public Object calledBack(int msgID, IBeanProxy parm){
 		case IMAGE_FINISHED :
 			fDataCollector.setComplete();			
 	}
+	return null;
+}
+public Object calledBack(int msgID, Object parm){
 	return null;
 }
 public void calledBackStream(int msgID, java.io.InputStream is){
@@ -170,7 +137,7 @@ public void calledBackStream(int msgID, java.io.InputStream is){
 					nextInt = dataInput.read();		
 				}
 			} catch (Exception exc) {
-				exc.printStackTrace();
+				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
 			}
 			break;
 		default:
@@ -266,12 +233,12 @@ public void dispose(){
 		fControlManagerProxy = null;
 	}
 }
-private IMethodProxy getComponentManagerLocationMethodProxy(){
-	if(fLocationMethodProxy == null){
-		fLocationMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getLocation");
-	}
-	return fLocationMethodProxy;	
-}
+//private IMethodProxy getComponentManagerLocationMethodProxy(){
+//	if(fLocationMethodProxy == null){
+//		fLocationMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getLocation");
+//	}
+//	return fLocationMethodProxy;	
+//}
 private IMethodProxy getControlManagerBoundsMethodProxy(){
 	if(fControlManagerBoundsMethodProxy == null){
 		fControlManagerBoundsMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getBounds");

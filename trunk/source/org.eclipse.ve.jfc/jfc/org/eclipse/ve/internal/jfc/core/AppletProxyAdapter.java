@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AppletProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-05 23:11:10 $ 
  */
 
 
@@ -31,7 +31,7 @@ protected void primInstantiateBeanProxy(){
 
 	if (getErrorStatus() != ERROR_SEVERE /* TODO when we have instantiateUsing back, bring this back && !((IJavaObjectInstance)target).isSetInstantiateUsing() */) {
 		// We didn't use instantiateUsing, so we need to use the DummyAppletStub.
-		IBeanTypeProxy dummyStubType = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub"); //$NON-NLS-1$
+		IBeanTypeProxy dummyStubType = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub"); //$NON-NLS-1$
 		dummyStubType.getMethodProxy("initializeApplet", "java.applet.Applet").invokeCatchThrowableExceptions(null, getBeanProxy()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

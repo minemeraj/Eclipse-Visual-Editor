@@ -31,16 +31,23 @@ public class ControlManager implements ICallback , ControlListener {
 		fCallbackID = callbackID;
 	}
 	
-	public void setControl(Control aControl) {
-		if (fControl != null) {
-			fControl.removeControlListener(this);
-		}
-		fControl = aControl;
-		if (fControl != null) {
-			fControl.addControlListener(this);
-			// Queue up a refresh to get the bounds, even if not yet showing, get something at least.
-			queueRefresh();	
-		}
+	public void setControl(final Control aControl) {
+		final boolean[] queue = new boolean[1];
+		Environment.display.syncExec(new Runnable() {
+			public void run() {
+				if (fControl != null) {
+					fControl.removeControlListener(ControlManager.this);
+				}
+				fControl = aControl;
+				if (fControl != null) {
+					fControl.addControlListener(ControlManager.this);
+					// Queue up a refresh to get the bounds, even if not yet showing, get something at least.
+					queue[0] = true;	
+				}
+			}
+		});
+		if (queue[0])
+			queueRefresh();
 	}	
 	
 	/**
