@@ -55,7 +55,16 @@
 		</ant>
 	</target>
 
-	<target name="test" depends="init">
+	<target name="determinePlatform">
+		<condition property="isWinXP">
+			<equals arg1="winxp" arg2="${platform}"/>
+		</condition>
+	</target>
+	
+	<target name="test" depends="init,determinePlatform,testWinXP">
+	</target>
+	
+	<target name="testWinXP" if="isWinXP">
 		<!-- run just local for now. Need a better way for all build machines. -->
 		<property name="testdir" value="${basedir}/ve-testing"/>
 	  
@@ -72,7 +81,7 @@
 		<mkdir dir="${buildDirectory}/${buildLabel}/testResults/consoleLogs"/>
 		<property name="testingproperties" value="${testdir}/testing.properties"/>
 		<echo file="${testingproperties}">
-			platform=winxp
+			platform=${platform}
 		</echo>
 
 		<filelist dir="${buildDirectory}/${buildLabel}" files="testResults" id="results.filelist"/>		
@@ -81,7 +90,7 @@
 			results=${resultsdir}
 		</echo>
 				
-		<exec dir="${testdir}" executable="cmd.exe" output="${buildDirectory}/${buildLabel}/testResults/consoleLogs/winxp_consolelog.txt">
+		<exec dir="${testdir}" executable="cmd.exe" output="${buildDirectory}/${buildLabel}/testResults/consoleLogs/${platform}_consolelog.txt">
 			<arg line='/C runtests -vm "${vm}" -properties "${testingproperties}" all'/>
 		</exec>
 	</target>
