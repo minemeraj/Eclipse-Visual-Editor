@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-07 16:45:54 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -45,8 +45,12 @@ public class GridBagLayoutPolicyFactory implements ILayoutPolicyFactory {
 
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
 		return new AbstractConstraintPropertyDescriptor(sfConstraint) {
+			private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always			
 			public ILabelProvider getLabelProvider() {
-				return new GridBagConstraintsJavaClassLabelProvider();
+				if(labelProvider == null){
+					labelProvider = new GridBagConstraintsJavaClassLabelProvider();
+				}
+				return labelProvider;
 			}
 		};
 	}

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-07 16:46:03 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -58,6 +58,7 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 	protected Class editorClass , labelProviderClass; // The editor class is cache'd to save repeated calculation - The instance however cannot be as this involves
 	private String editorClassNameAndData;
 	private String labelProviderClassNameAndData;
+	private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always	
 	
 public CellEditor createPropertyEditor(Composite parent){
 	
@@ -184,10 +185,15 @@ public Object getHelpContextIds(){
  */
 public ILabelProvider getLabelProvider(){
 	
-	if ( labelProviderClass != null )
-		return createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
-	else if ("".equals(labelProviderClassNameAndData)) //$NON-NLS-1$
-		return null;	// Explicitly said no label provider
+	if(labelProvider != null) return labelProvider;
+	
+	if ( labelProviderClass != null ) {
+		labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
+		return labelProvider;
+	} else if ("".equals(labelProviderClassNameAndData)) { //$NON-NLS-1$
+		labelProvider = null;
+		return labelProvider;	// Explicitly said no label provider
+	}
 		
 	// Step 1 - See if the emf feature decorator has a label provider.
 	BasePropertyDecorator decorator = getBaseDecorator();
@@ -196,7 +202,8 @@ public ILabelProvider getLabelProvider(){
 			String classNameAndData = decorator.getLabelProviderClassname();
 			if (classNameAndData == null) {
 				labelProviderClassNameAndData = ""; //$NON-NLS-1$
-				return null;	// It is explicitly set to no label provider.
+				labelProvider = null;
+				return labelProvider;	// It is explicitly set to no label provider.
 			}
 			labelProviderClass = CDEPlugin.getClassFromString(classNameAndData);
 			labelProviderClassNameAndData = classNameAndData;	// Set here so that it stays unset if class not found
@@ -217,16 +224,18 @@ public ILabelProvider getLabelProvider(){
 				// java.beans.PropertyEditorManager does not allow property editors to be de-registered
 				// Sun provide a number of defaults that we de-register by placing a placeholder 
 				// DummyPropertyEditor there that we must detect here
-				return new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
+				labelProvider = new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
+				return labelProvider;
 			}
 			// 3	-	Look for the enumeration values
 			Iterator propertyAttributes = propertyDecorator.getAttributes().iterator();			
 			while ( propertyAttributes.hasNext() ) {
 				FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyAttributes.next();
 				if (featureValue.getName().equals(ATTRIBUTE_NAME_ENUMERATIONVALUES)){
-					return new EnumeratedLabelProvider(
+					labelProvider = new EnumeratedLabelProvider(
 						(IArrayBeanProxy)featureValue.getValueProxy(),
 						(JavaHelpers) ((EStructuralFeature)target).getEType());
+					return labelProvider;
 				}
 			}			
 		}			
@@ -248,16 +257,18 @@ public ILabelProvider getLabelProvider(){
 	}	
 	
 	if ( labelProviderClass != null ) {
-		return createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
+		labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
+		return labelProvider;
 	} else {
 		// Step 5 - BeanCellRenderer will simply do toBeanString.
-		return new BeanCellRenderer();
+		labelProvider = new BeanCellRenderer();
+		return labelProvider;
 	}
 }
 public boolean isExpandable() {
 	// Step 1 - See if the feature decorator has it.
 	BasePropertyDecorator decorator = getBaseDecorator();
-	if (decorator != null && decorator.isSetEntryExpandable())
+	if (decorator != null && decorator.isSetEntryExpandable()) 
 		return decorator.isEntryExpandable();				
 			
 	// Step 2 - If not on feature, then get it from the type, look for BasePropertyDecorator.

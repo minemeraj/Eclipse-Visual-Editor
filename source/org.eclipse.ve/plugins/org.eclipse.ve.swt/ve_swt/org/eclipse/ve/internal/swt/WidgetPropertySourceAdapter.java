@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-07 16:05:33 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-07 16:45:58 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -56,6 +56,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		String[] fNames;
 		String[] fInitStrings;
 		Integer[] fValues;
+		private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always		
 		public StyleBitPropertyDescriptor(String propertyName, String[] names, String[] initStrings, Integer[] values){
 			super(new StyleBitPropertyID(propertyName,values),propertyName);
 			fPropertyName = propertyName;
@@ -67,7 +68,10 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			return new EnumeratedIntValueCellEditor(parent,fNames,fValues,fInitStrings);
 		}
 		public ILabelProvider getLabelProvider() {
-			return new EnumeratedIntValueLabelProvider(fNames,fValues);
+			if(labelProvider == null){
+				return new EnumeratedIntValueLabelProvider(fNames,fValues);
+			}
+			return labelProvider;
 		}
 	};
 	

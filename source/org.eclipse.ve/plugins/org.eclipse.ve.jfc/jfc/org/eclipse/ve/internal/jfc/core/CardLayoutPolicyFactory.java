@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutPolicyFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-07 16:45:54 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -55,6 +55,7 @@ public class CardLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 */
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
 		return new AbstractConstraintPropertyDescriptor(sfConstraint) {
+			private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always			
 			{
 				setNullInvalid(true);	// nulls are invalid.
 			}
@@ -62,7 +63,10 @@ public class CardLayoutPolicyFactory implements ILayoutPolicyFactory {
 				return new StringJavaClassCellEditor(parent);
 			}
 			public ILabelProvider getLabelProvider() {
-				return new StringJavaClassLabelProvider(); // It is a string for display purposes.
+				if(labelProvider == null){
+					labelProvider = new StringJavaClassLabelProvider(); // It is a string for display purposes.
+				}
+				return labelProvider;
 			}
 		};
 	}

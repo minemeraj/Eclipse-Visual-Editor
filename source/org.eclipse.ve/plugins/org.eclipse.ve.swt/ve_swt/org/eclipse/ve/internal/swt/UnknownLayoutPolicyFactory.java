@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-04 12:05:19 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-07 16:45:58 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -60,15 +60,18 @@ public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 * Return a default constraint property descriptor.
 	 */
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
-		// Return one where the constraint is a string.
-		return new EToolsPropertyDescriptor(sfConstraint,"layoutData") {
 
+		return new EToolsPropertyDescriptor(sfConstraint,"layoutData") {
+			private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always
 			public CellEditor createPropertyEditor(Composite parent) {
 				return new StringJavaClassCellEditor(parent);
 			}
 
 			public ILabelProvider getLabelProvider() {
-				return new StringJavaClassLabelProvider();
+				if(labelProvider == null){
+					labelProvider = new StringJavaClassLabelProvider();
+				} 
+				return labelProvider;
 			}
 		};
 	}
