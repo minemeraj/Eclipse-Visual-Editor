@@ -8,6 +8,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import com.ibm.wtp.common.logger.proxy.Logger;
+import com.ibm.wtp.logger.proxyrender.EclipseLogger;
+
 /**
  * The main plugin class to be used in the desktop.
  */
@@ -64,4 +67,13 @@ public class SwtPlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
+	
+	private Logger logger;
+	public Logger getLogger() {
+		if (logger == null)
+			logger = EclipseLogger.getEclipseLogger(this);
+		return logger;
+	}
+	
+	
 }

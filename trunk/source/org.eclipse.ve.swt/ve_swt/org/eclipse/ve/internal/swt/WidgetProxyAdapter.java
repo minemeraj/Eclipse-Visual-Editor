@@ -60,6 +60,10 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 		}
 		super.releaseBeanProxy();
 	}
+	// Replace this with code that listens to the expression being applied to the allocation - JRW
+	public void hackRefresh(){
+		reinstantiateBeanProxy();
+	}
 
 	/**
 	 * @return the int style value by interrogate getStyle() on the targetVM on the correct thread
@@ -80,5 +84,5 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 			});
 		}
 		return style;
-	}		
+	} 
 }
