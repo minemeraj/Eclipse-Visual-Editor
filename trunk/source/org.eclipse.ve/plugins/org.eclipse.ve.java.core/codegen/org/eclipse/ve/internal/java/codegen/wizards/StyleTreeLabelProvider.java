@@ -8,7 +8,10 @@
  * Contributors:
  *     Red Hat, Inc. - 1.0 implementation
  *******************************************************************************/
-
+/*
+ *  $RCSfile: StyleTreeLabelProvider.java,v $
+ *  $Revision: 1.4 $  $Date: 2004-07-30 16:38:18 $ 
+ */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
 import java.util.*;
