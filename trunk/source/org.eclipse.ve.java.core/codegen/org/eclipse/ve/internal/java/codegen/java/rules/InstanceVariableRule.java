@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-17 20:28:14 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-19 20:49:51 $ 
  */
 
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		if (AnnotationDecoderAdapter.hasMetaInformation(stmt))
 			return false;
 		//TODO: support multi declerations
-		return !ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
+		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
 	}
 	
 	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
