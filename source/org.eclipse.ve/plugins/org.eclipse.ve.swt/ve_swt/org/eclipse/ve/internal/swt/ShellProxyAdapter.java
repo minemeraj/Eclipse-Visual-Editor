@@ -9,38 +9,30 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.10 $ $Date: 2004-09-03 22:12:34 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.11 $ $Date: 2004-09-10 22:40:33 $
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
-import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+
+import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
 import org.eclipse.ve.internal.cde.core.IModelChangeController;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.swt.NullLayoutPolicyHelper.NullConstraint;
 
 /**
  * Proxy adapter for SWT Shell

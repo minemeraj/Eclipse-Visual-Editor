@@ -62,11 +62,13 @@ public class Environment {
 		initialize();
 		return display;
 	}
-	public static Shell getFreeFormHost() {
+	public static Shell getFreeFormHost(int x, int y) {
 		if (freeFormHost == null) {
-			freeFormHost = new Shell(display);
+			Shell dialogParent = new Shell(display);
+			freeFormHost = new Shell(dialogParent, SWT.SHELL_TRIM );
 			freeFormHost.setBounds(0, 0, 100, 100);
-			freeFormHost.setLocation(-10000, -10000);
+			freeFormHost.setLocation(x, y);
+			freeFormHost.addShellListener(new PreventShellCloseMinimizeListener());
 			freeFormHost.open();
 		}
 		return freeFormHost;

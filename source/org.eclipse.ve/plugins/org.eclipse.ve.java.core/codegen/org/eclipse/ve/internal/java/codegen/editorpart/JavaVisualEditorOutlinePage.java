@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-19 18:32:40 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-10 22:40:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -233,7 +233,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		jve.getSelectionSynchronizer().addViewer(getViewer());
 		getViewer().setEditPartFactory(new DefaultTreeEditPartFactory(ClassDescriptorDecoratorPolicy.getPolicy(jve.editDomain)));
 					
-		getViewer().setContents(new SubclassCompositionComponentsTreeEditPart(jve.modelBuilder.getModelRoot()!=null ? jve.modelBuilder.getModelRoot() : null));			
+		getViewer().setContents(new SubclassCompositionComponentsTreeEditPart(jve.modelReady ? jve.modelBuilder.getModelRoot() : null));			
 		
 		Control control = getViewer().getControl();
 		

@@ -72,16 +72,6 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		return layoutMethodProxy;
 	}
 	
-	protected IBeanProxy basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws IAllocationProcesser.AllocationException {
-		if (aString != null)
-			return super.basicInitializationStringAllocation(aString, targetClass);
-		else {
-			// TODO This is a KLUDGE just to handle composite subclassing. It should be done in a way that
-			// we have a freeform host that can handle this.
-			return super.beanProxyAllocation(null);
-		}
-	}
-	
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
 		// Find the index of the child - remove it and re-insert it at this position
 		IJavaObjectInstance child = (IJavaObjectInstance)aChildProxyHost.getTarget();
@@ -122,7 +112,8 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		Iterator iter = controls.iterator();
 		while(iter.hasNext()){
 			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)iter.next());
-			value.releaseBeanProxy();
+			if (value != null)
+				value.releaseBeanProxy();
 		}
 		super.releaseBeanProxy();
 	}

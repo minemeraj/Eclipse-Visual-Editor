@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.61 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.62 $  $Date: 2004-09-10 22:40:29 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -144,6 +144,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
 	protected IDiagramModelBuilder modelBuilder;
+	
+	// Is the model ready. This is needed because sometimes the viewers come up before the model has been
+	// instantiated but it is in the modelBuilder. This causes NPE's. So only when we are about
+	// to set in the model to the root will it be available.
+	protected boolean modelReady;	
 
 	protected ProxyFactoryRegistry proxyFactoryRegistry;
 	protected JavaModelSynchronizer modelSynchronizer;
@@ -326,6 +331,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		boolean acquiredLock = false;
 		try {
 			if (root == null) {
+				modelReady = false;
 				// We are going away. Try to build the path to the selected editparts so they can be restored later.
 				// Have to gather them all first because individually set the roots of the viewers to null will
 				// destroy the selection for the following viewers. The viewers may have slightly different selections
@@ -355,6 +361,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				acquiredLock = true;
 				if (root.eResource() == null || root.eResource().getResourceSet() == null) 
 					return; // This root has already been released. Means probably another reload in progress.
+				modelReady = true;
 			}
 
 			Iterator itr = editDomain.getViewers().iterator();
@@ -984,6 +991,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.startStep("Dispose", null);
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			
+			if (proxyFactoryRegistry != null) {
+				// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
+				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
+			}
+			
 			boolean queuedJobDispose = setupJob != null && setupJob.getState() != Job.NONE;
 			if (queuedJobDispose) {
 				// We can't actually wait for it because we could get into a deadlock since it may
@@ -1027,6 +1039,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.startStep("Dispose Common Action Registry", TimerTests.CURRENT_PARENT_ID);
 			commonActionRegistry.dispose();
 			TimerTests.basicTest.stopStep("Dispose Common Action Registry");
+			
 			if (!queuedJobDispose)
 				finalDispose();
 		} catch (Exception e) {
@@ -1051,8 +1064,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
 			TimerTests.basicTest.startStep("Dispose Proxy Registry", TimerTests.CURRENT_PARENT_ID);
-			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
-			proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();

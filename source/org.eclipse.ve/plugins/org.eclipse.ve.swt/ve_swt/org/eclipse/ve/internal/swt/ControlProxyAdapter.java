@@ -12,7 +12,9 @@ package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
@@ -25,7 +27,6 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
-import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -69,7 +70,35 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
 					try {
-						return ControlProxyAdapter.super.basicInitializationStringAllocation(aString, targetClass);
+						if (aString != null)
+							return ControlProxyAdapter.super.basicInitializationStringAllocation(aString, targetClass);
+						
+						// We are doing subclassing if the string is null.
+						// Get FF host as parent.
+						org.eclipse.swt.graphics.Point offscreen = BeanSWTUtilities.getOffScreenLocation();
+						IIntegerBeanProxy intXBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
+								offscreen.x);
+						IIntegerBeanProxy intYBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
+								offscreen.y);
+						IBeanProxy parentBeanProxy = getEnvironmentFreeFormHostMethodProxy().invoke(null,
+								new IBeanProxy[] { intXBeanProxy, intYBeanProxy});
+						
+						// Get the constructor to create the control, new Control(Composite,int);
+						// First get the arg types.
+						IBeanTypeProxy compositeBeanTypeProxy =
+							getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+								"org.eclipse.swt.widgets.Composite");
+						
+						IBeanTypeProxy intBeanTypeProxy =
+							getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");
+						
+						// Now we have the target type and the argument types, get the constructor
+						IConstructorProxy createControlProxy =
+							targetClass.getConstructorProxy(new IBeanTypeProxy[] { compositeBeanTypeProxy, intBeanTypeProxy });
+						// Create a proxy for the value zero
+						IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
+						return createControlProxy.newInstance(new IBeanProxy[] { parentBeanProxy, zeroBeanProxy });
+
 					} catch (AllocationException e) {
 						throw new RunnableException(e);
 					}
@@ -90,43 +119,11 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		try {
 			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-					// TODO Need a better way to get a parent in it if parent is null. (i.e. on
-					// freeform). Then we can use the standard allocation mechanism.
-					// If parent cannot be found, Create the control with the constructor of its parent composite
-					// but it doesn't use the allocation at all, so it will have SWT.NONE.
-					// Right now we've kludged it in for composite to call here with no allocation
-					// or parent when subclassing. 
-					IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
-					IJavaObjectInstance composite = getParentComposite(control);
-					IBeanProxy compositeBeanProxy = null;
-					// The parent composite either comes because we are logically owned by a
-					// composite
-					if (composite != null) {
-						try {
-							return beanProxyAdapterBeanProxyAllocation(allocation);
-						} catch (AllocationException e) {
-							throw new RunnableException(e);
-						}
-					} else {
-						// or else are on the free form
-						compositeBeanProxy = getEnvironmentFreeFormHostMethodProxy().invoke(null);
+					try {
+						return beanProxyAdapterBeanProxyAllocation(allocation);
+					} catch (AllocationException e) {
+						throw new RunnableException(e);
 					}
-					// Get the constructor to create the control, new Control(Composite,int);
-					IBeanTypeProxy compositeBeanTypeProxy =
-						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-							"org.eclipse.swt.widgets.Composite");
-					IBeanTypeProxy intBeanTypeProxy =
-						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");
-					// Get the class of the control
-					IBeanTypeProxy controlBeanTypeProxy =
-						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-							((JavaClass) control.getJavaType()).getJavaName());
-					// Now we have the control type and the argument types, get the constructor
-					IConstructorProxy createControlProxy =
-						controlBeanTypeProxy.getConstructorProxy(new IBeanTypeProxy[] { compositeBeanTypeProxy, intBeanTypeProxy });
-					// Create a proxy for the value zero
-					IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
-					return createControlProxy.newInstance(new IBeanProxy[] { compositeBeanProxy, zeroBeanProxy });
 				}
 			});
 			return (IBeanProxy) result;
@@ -136,6 +133,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			throw (AllocationException) e.getCause();	// We know it is an allocation exception because that is the only runnable exception we throw.
 		}
 	}
+	
+
 	
 	protected IJavaObjectInstance getParentComposite(IJavaObjectInstance control) {
 		return (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
@@ -147,7 +146,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	private IMethodProxy getEnvironmentFreeFormHostMethodProxy(){
 		if(environmentFreeFormHostMethodProxy == null){
-			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost");
+			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost", new String[] {"int", "int"});
 		}
 		return environmentFreeFormHostMethodProxy;
 	}
@@ -314,7 +313,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	}
 	
 	public void childValidated(ControlProxyAdapter childProxy) {
-		parentProxyAdapter.childValidated(childProxy);
+		if (parentProxyAdapter != null)
+			parentProxyAdapter.childValidated(childProxy);
 	}
 		
 	public void setTarget(Notifier newTarget) {
