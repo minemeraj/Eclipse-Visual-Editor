@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-05 16:13:46 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-05 19:36:51 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -63,7 +63,11 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	 * @see AbstractCompositionalDecoder#getAppropriateFeatureMapper(String)
 	 */
 	protected IJavaFeatureMapper getAppropriateFeatureMapper(String structuralFeature) {
-		return new CompositeFeatureMapper();
+		if (structuralFeature.equals(AllocationFeatureMapper.ALLOCATION_FEATURE))
+			return new AllocationFeatureMapper();
+		else if (structuralFeature.equals(ADD_METHOD_SF_NAME))
+		    return new CompositeFeatureMapper();
+		return null ;
 	}
 
 	/**
