@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.compiler.*;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.6 $  $Date: 2004-07-02 00:32:45 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-19 18:17:22 $ 
  */
 /**
  * @version 	1.0
@@ -269,7 +269,9 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
        int start = getAnnotationStart(src) ;
        if (start < 0) return null ;
        int end = getAnnotationEnd(src,start) ;
-       if (end<0) return null ;
+       if (end<0) end = src.lastIndexOf(ANNOTATION_SEPERATOR); 
+       if (end<0)
+       	   return null ;
                     
        return src.substring(start,end+1) ;
                             
