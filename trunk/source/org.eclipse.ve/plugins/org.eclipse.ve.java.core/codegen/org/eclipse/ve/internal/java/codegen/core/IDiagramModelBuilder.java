@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-02 16:37:44 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-09 19:46:56 $ 
  */
 
 
@@ -34,6 +34,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 public interface IDiagramModelBuilder  {
 	
 
+	public final static String MODEL_BUILDER_KEY = "IDiagramModelBuilder";
 	/**
 	 * A call to this API will reParse/reCreate a new JVE model
 	 * 
