@@ -65,22 +65,6 @@
   	<!--  Insert Build Name  -->
 	<replace file="${result}/${indexFileName}" token="@build@" value="${buildId}"/>
 
-	<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
-		
- 	<!--  Insert url for supported required drops-->
-	<replace file="${result}/${indexFileName}" token="@eclipseBuildID@" value="${eclipseBuildID}"/>
-	<replace file="${result}/${indexFileName}" token="@eclipseURL@" value="${eclipseURL}"/>
-	<replace file="${result}/${indexFileName}" token="@eclipseZipURL@" value="${eclipseZipURL}"/>
-
-	<replace file="${result}/${indexFileName}" token="@emfBuildID@" value="${emfBuildID}"/>
-	<replace file="${result}/${indexFileName}" token="@emfURL@" value="${emfURL}"/>
-	<replace file="${result}/${indexFileName}" token="@emfZipURL@" value="${emfZipURL}"/>
-
-	<replace file="${result}/${indexFileName}" token="@gefBuildID@" value="${gefBuildID}"/>
-	<replace file="${result}/${indexFileName}" token="@gefURL@" value="${gefURL}"/>
-	<replace file="${result}/${indexFileName}" token="@gefZipURL@" value="${gefZipURL}"/>
-	
-	
   	<!--  Update timestamp on file to permit overwrite through Ant copy task  -->
 	<touch file="${result}/${indexFileName}" />
 </target>
