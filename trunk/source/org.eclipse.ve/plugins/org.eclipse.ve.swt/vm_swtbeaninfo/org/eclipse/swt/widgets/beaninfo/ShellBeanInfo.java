@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-08 21:59:44 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,7 +37,7 @@ public class ShellBeanInfo extends IvjBeanInfo {
 		descriptor.setValue(
 			SweetHelper.STYLE_BITS_ID,
 		    new Object[] [] {
-				{ "modality" , ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				{ "modality" , ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.ApplicationModal") , "org.eclipse.swt.SWT.APPLICATION_MODAL" , new Integer(SWT.APPLICATION_MODAL) ,				 //$NON-NLS-1$ //$NON-NLS-2$
 				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.Modeless") , "org.eclipse.swt.SWT.MODELESS" , new Integer(SWT.MODELESS) , //$NON-NLS-1$ //$NON-NLS-2$
 					ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.PrimaryModal") , "org.eclipse.swt.SWT.PRIMARY_MODAL" , new Integer(SWT.PRIMARY_MODAL), //$NON-NLS-1$ //$NON-NLS-2$
