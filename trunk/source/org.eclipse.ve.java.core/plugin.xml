@@ -47,7 +47,7 @@
 <!-- temporary hack, to get M5 working.  Should be removed before GA -->
       <import plugin="org.eclipse.core.filebuffers"/>
       <import plugin="org.eclipse.core.runtime.compatibility"/>
-      <import plugin="com.ibm.wtp.common"/>
+      <import plugin="com.ibm.wtp.common.util"/>
    </requires>
 
 
@@ -119,7 +119,6 @@
 		The class specified to the class attribute should implement
 		org.eclipse.ve.internal.jfc.wizards.IVisualClassCreationSourceContributor-->
    <extension-point id="newsource" name="%newSourceContrbutorsName"/>
-
 <!--
 	This extension point allows for providing contributors for the Choosebean dialog.
 	A contributor should implement the interface org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor,
@@ -128,7 +127,7 @@
 		<contributor class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor"/>
 	</extension>
 -->
-	<extension-point id="choosebean" name="%choosebeanContributorsName"/>
+   <extension-point id="choosebean" name="%choosebeanContributorsName"/>
 
 <!-- This container initializer is part of an experimental API that may be changed in future releases and is not guaranteed to be supported
         It is to be used in combination with the palette extension APIs to allow a JAVA_BEANS container to be created by the container wizard
@@ -243,8 +242,8 @@
       <shortcut
             label="%shortcut.label Java Bean"
             icon="icons/full/ctool16/java_bean_launcher.gif"
-            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             modes="run, debug"
+            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             id="org.eclipse.ve.internal.java.core.vce.localJavaShortcut">
          <perspective
                id="org.eclipse.jdt.ui.JavaPerspective">
@@ -337,12 +336,12 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            default="false"
             name="%jveeditor Visual Editor"
-            extensions="java"
+            default="false"
             icon="icons/full/obj16/javavisualeditor_obj.gif"
-            class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
+            extensions="java"
             contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
+            class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
             id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
       </editor>
    </extension>
@@ -436,14 +435,14 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ResourceNavigator"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="bottom">
+               relationship="bottom"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
                relative="org.eclipse.ui.views.ContentOutline"
                visible="false"
-               id="org.eclipse.ui.views.PropertySheet"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ui.views.PropertySheet">
          </view>
       </perspectiveExtension>
    </extension>
@@ -464,15 +463,15 @@
          <view
                relative="org.eclipse.jdt.ui.MembersView"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
                ratio="0.75"
                relative="org.eclipse.ui.editorss"
                visible="false"
-               id="org.eclipse.ui.views.PropertySheet"
-               relationship="right">
+               relationship="right"
+               id="org.eclipse.ui.views.PropertySheet">
          </view>
       </perspectiveExtension>
    </extension>
@@ -486,8 +485,8 @@
          <view
                relative="org.eclipse.ui.views.ContentOutline"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
       </perspectiveExtension>
    </extension>
@@ -522,11 +521,17 @@
          </description>
       </wizard>
    </extension>
-   
-	<extension point = "org.eclipse.ve.java.core.choosebean">
-		<contributor class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor"/>
-		<contributor class="org.eclipse.ve.internal.java.choosebean.SwingChooseBeanContributor"/>
-		<contributor class="org.eclipse.ve.internal.java.choosebean.AWTChooseBeanContributor"/>
-	</extension>
+   <extension
+         point="org.eclipse.ve.java.core.choosebean">
+      <contributor
+            class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor">
+      </contributor>
+      <contributor
+            class="org.eclipse.ve.internal.java.choosebean.SwingChooseBeanContributor">
+      </contributor>
+      <contributor
+            class="org.eclipse.ve.internal.java.choosebean.AWTChooseBeanContributor">
+      </contributor>
+   </extension>
 
 </plugin>

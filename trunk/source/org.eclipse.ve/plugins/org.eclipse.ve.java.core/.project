@@ -3,7 +3,7 @@
 	<name>org.eclipse.ve.java.core</name>
 	<comment></comment>
 	<projects>
-		<project>com.ibm.wtp.common</project>
+		<project>com.ibm.wtp.common.util</project>
 		<project>org.eclipse.core.filebuffers</project>
 		<project>org.eclipse.core.resources</project>
 		<project>org.eclipse.core.runtime.compatibility</project>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: DecoratedPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-06 11:28:13 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-06 18:38:42 $ 
  */
 
 import java.text.MessageFormat;
@@ -39,9 +39,6 @@ import org.eclipse.ve.internal.propertysheet.*;
  * This is class is used when the decorator is the standard CDE FeatureDescriptorDecorator.
  */
 public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescriptorAdapter implements IEToolsPropertyDescriptor {
-
-	private BasePropertyDecorator baseDecorator;
-
 	/*
 	 * This is a label provider for types where none was specifically provided. It will find
 	 * the default BasePropertyDecorator entry in the current domain. If it doesn't find
@@ -123,11 +120,8 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 	}
 
 	protected BasePropertyDecorator getBaseDecorator() {
-		if(baseDecorator == null){ 
-			// Return the BasePropertyDecorator for this feature.
-			baseDecorator = (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
-		}
-		return baseDecorator;
+		// Return the BasePropertyDecorator for this feature.
+		return (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
 	}
 
 	public String getDescription() {
