@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-26 18:23:30 $ 
  */
 
 import java.util.*;
@@ -25,6 +25,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.editparts.AbstractEditPart;
+import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
@@ -35,7 +37,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
  * Composition Graphical Edit Part for Java Beans Compositions.
  */
-public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEditPart {
+public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEditPart implements ICDEContextMenuContributor {
 
 
 	public CompositionComponentsGraphicalEditPart(Object model) {
@@ -116,6 +118,9 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	}
 
 	public Object getAdapter(Class key) {
+		if (key == IActionFilter.class)
+			return getCompositionActionFilter();
+		
 		Object result = super.getAdapter(key);
 		if (result == null && getModel() != null) {
 			// See if any of the MOF adapters on our target can return a value for the request
@@ -131,6 +136,24 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 			}
 		}
 		return result;
+	}
+	
+	protected IActionFilter getCompositionActionFilter() {
+		return CDEActionFilter.INSTANCE;
+	}
+	
+	/**
+	 * Return a list of edit policies.
+	 * 
+	 * This should not be needed but GEF doesn't make the edit policies public except by a specific key.
+	 */
+	public List getEditPolicies() {
+		List result = new ArrayList();
+		AbstractEditPart.EditPolicyIterator i = super.getEditPolicyIterator();
+		while (i.hasNext()) {
+			result.add(i.next());
+		}
+		return result.isEmpty() ? Collections.EMPTY_LIST : result;
 	}
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-11 18:36:23 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-26 18:23:27 $ 
  */
 
 
@@ -604,7 +604,7 @@ public boolean testAttribute(Object target, String name, String value) {
 			value.equals("true") && //$NON-NLS-1$
 			gridController.isGridShowing() )
 		return true;
-	else if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$
+	else if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$
 		return true;
 		
 	return false;
