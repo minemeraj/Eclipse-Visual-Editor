@@ -11,13 +11,11 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.32 $  $Date: 2004-04-29 20:32:39 $ 
+ *  $Revision: 1.33 $  $Date: 2004-04-29 22:24:48 $ 
  */
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
@@ -27,10 +25,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.draw2d.LightweightSystem;
-import org.eclipse.draw2d.Viewport;
-import org.eclipse.draw2d.parts.ScrollableThumbnail;
-import org.eclipse.draw2d.parts.Thumbnail;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
@@ -55,7 +49,6 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
@@ -71,12 +64,9 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
-import org.eclipse.ui.part.IPageSite;
-import org.eclipse.ui.part.PageBook;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.IStatusField;
+import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 import org.eclipse.ui.views.properties.*;
 
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
@@ -147,9 +137,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected BeanProxyAdapterFactory beanProxyAdapterFactory;
 	protected boolean rebuildPalette = true;
 	
-	protected EToolsPropertySheetPage propertySheetPage;
+	protected JavaVisualEditorPropertySheetPage propertySheetPage;
 	
-	protected JavaOutlinePage beansListPage;
+	protected JavaVisualEditorOutlinePage beansListPage;
 	
 	protected String currentStatusMessage = "";
 	
@@ -1108,6 +1098,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			IStatusField field= getStatusField(category);
 			if (field != null)
 				field.setText(currentStatusMessage);
+			// Also update the aux viewers status fields if they exist.
+			// It is possible that the property sheet page is created, but not yet initialized so the action bars aren't ready yet.
+			if (propertySheetPage != null && propertySheetPage.jveStatusField != null)
+				propertySheetPage.jveStatusField.setText(currentStatusMessage);
+			// It is possible that the outline page is created, but not yet initialized so the action bars aren't ready yet.
+			if (beansListPage != null && beansListPage.jveStatusField != null)
+				beansListPage.jveStatusField.setText(currentStatusMessage);
+			
 		} else
 			super.updateStatusField(category);
 	}
@@ -1120,17 +1118,18 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		return propertySheetPage;
 	}
 	
+	/*
+	 * This is the property sheet page for this editor. There
+	 * is one page per editor. There is only one PropertySheet, but it
+	 * switches to the appropriate page for the current editor automatically.
+	 * 
+	 * This page can be created and disposed at any time, and recreated again. 
+	 */
+	protected JavaVisualEditorPropertySheetPage createPropertySheetPageClass() {
+		return new JavaVisualEditorPropertySheetPage(this);
+	}
 	protected void createPropertySheetPage() {
-		propertySheetPage = new EToolsPropertySheetPage() {
-			public void setActionBars(IActionBars actionBars) {
-				super.setActionBars(actionBars);
-				// The menu and toolbars have RetargetActions for UNDO and REDO and pause/reload.
-				// Set an action handler to redirect these to the action registry's actions so they work when the property sheet is enabled
-				actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(ActionFactory.UNDO.getId()));
-				actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(ActionFactory.REDO.getId()));
-				actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(ReloadAction.RELOAD_ACTION_ID));
-			}
-		};
+		propertySheetPage = createPropertySheetPageClass();
 
 		rootPropertySheetEntry = new JavaCommandStackPropertySheetEntry(editDomain, editDomain.getCommandStack(), null, null);
 		rootPropertySheetEntry.setData(editDomain);
@@ -1727,274 +1726,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected IContentOutlinePage getContentOutlinePage(){
 		if (beansListPage == null)
-			beansListPage = new JavaOutlinePage(new TreeViewer());
+			beansListPage = new JavaVisualEditorOutlinePage(this, new TreeViewer());
 		return beansListPage;
 	}
 
-	/*
-	 * This is the beans list outline page for this editor. There
-	 * is one page per editor. There is only one BeansList, but it
-	 * switches to the appropriate page for the current editor automatically.
-	 * 
-	 * This page can be created and disposed at any time, and recreated again. 
-	 */
-	private class JavaOutlinePage extends ContentOutlinePage {
-
-		private class ShowOverviewAction extends ResourceAction {
-			private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
-			public ShowOverviewAction() {
-				super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
-				// TODO Eventually we need to also get the hover and disabled images.
-				setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));
-				// TODO Hack until we can find out what the heck is up with this image.
-				setImageDescriptor(getImageDescriptor("elcl16/showbasic_ps.gif"));
-			}			
-
-			public void run() {
-				if (isChecked()) {
-					setText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"labelOutline")); //$NON-NLS-1$
-					setToolTipText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"tooltipOutline")); //$NON-NLS-1$
-				} else {
-					setText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"label")); //$NON-NLS-1$
-					setToolTipText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"tooltip"));					 //$NON-NLS-1$
-				}
-				showOverview(isChecked());
-				CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.PREF_SHOW_OVERVIEW_KEY, isChecked());
-			}
-			
-			/*
-			 * Copied from Resource navigator to do the same thing.
-			 */
-			protected ImageDescriptor getImageDescriptor(String relativePath) {
-				String iconPath = "icons/full/"; //$NON-NLS-1$
-				try {
-					AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-					URL installURL = plugin.getDescriptor().getInstallURL();
-					URL url = new URL(installURL, iconPath + relativePath);
-					return ImageDescriptor.createFromURL(url);
-				} catch (MalformedURLException e) {
-					// should not happen
-					return ImageDescriptor.getMissingImageDescriptor();
-				}
-			}
-
-		}
-		
-		private class CollapseAllAction extends Action {
-			public CollapseAllAction() {
-				super(ResourceNavigatorMessages.getString("CollapseAllAction.title"), IAction.AS_PUSH_BUTTON); //$NON-NLS-1$
-				setToolTipText(ResourceNavigatorMessages.getString("CollapseAllAction.toolTip")); //$NON-NLS-1$
-				setImageDescriptor(getImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
-				setHoverImageDescriptor(getImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
-				setDisabledImageDescriptor(getImageDescriptor("dlcl16/collapseall.gif")); //$NON-NLS-1$
-			}
-			
-			/*
-			 * Copied from Resource navigator to do the same thing.
-			 */
-			protected ImageDescriptor getImageDescriptor(String relativePath) {
-				String iconPath = "icons/full/"; //$NON-NLS-1$
-				try {
-					AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-					URL installURL = plugin.getDescriptor().getInstallURL();
-					URL url = new URL(installURL, iconPath + relativePath);
-					return ImageDescriptor.createFromURL(url);
-				} catch (MalformedURLException e) {
-					// should not happen
-					return ImageDescriptor.getMissingImageDescriptor();
-				}
-			}
-			
-			public void run() {
-				Tree tree = (Tree) outline;
-				collapse(tree.getItems());			
-			}
-			
-			private void collapse(TreeItem[] items) {
-				for (int i = 0; i < items.length; i++) {
-					TreeItem item = items[i];
-					item.setExpanded(false);
-					collapse(item.getItems());
-				}
-			}
-		}
-		
-		private class ShowHideEventsAction extends Action {
-			int fStyle;
-			public ShowHideEventsAction(String text, int style, int currentStyle){
-				super(text,AS_RADIO_BUTTON);
-				fStyle = style;
-				setChecked(currentStyle == fStyle);
-			}
-			public void run() {
-				// See whether we are now checked or unchecked
-				// If we are checked then our style becomes the one used
-				// If we are unchecked then reverse this and check us
-				if (isChecked()) {
-					editDomain.setData(JavaVEPlugin.SHOW_EVENTS, new Integer(fStyle));
-					// Also update the stored preferences.
-					JavaVEPlugin.getPlugin().getPluginPreferences().setValue(JavaVEPlugin.SHOW_EVENTS, fStyle);					
-					// We need to refresh the viewer each time someone is checked
-					TreeViewer gefTreeViewer = (TreeViewer)getViewer();
-					refreshAll(gefTreeViewer.getContents());
-				}
-			}
-			
-			private void refreshAll(EditPart ep) {
-				ep.refresh();
-				List children = ep.getChildren();
-				for(int i=0; i<children.size(); i++)
-					refreshAll((EditPart) children.get(i));
-			}			
-		}
-		
-
-		private PageBook pageBook;
-		private Control outline;
-		private Canvas overview;
-		private Thumbnail thumbnail;		
-		private ShowOverviewAction showOverviewAction;
-		private CollapseAllAction collapseAllAction;
-		private DeleteAction deleteAction;
-
-		public JavaOutlinePage(EditPartViewer viewer ){
-			super(viewer);
-		}
-		
-		public void init(IPageSite pageSite) {
-			super.init(pageSite);
-			
-			IActionBars actionBars = pageSite.getActionBars();
-			
-			// The menu and toolbars have RetargetActions for DELETE, UNDO and REDO
-			// Set an action handler to redirect these to the action registry's actions so they work
-			// with the content outline without having to separately contribute these
-			// to the outline page's toolbar
-			deleteAction = new DeleteAction((IWorkbenchPart) JavaVisualEditorPart.this);
-			
-			actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);	// However, we don't actually add it the beanslist toolbar, we use the retarget from the editor contributor instead.
-			actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(ActionFactory.UNDO.getId()));
-			actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(ActionFactory.REDO.getId()));
-			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID));
-			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID));
-			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID));
-			actionBars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, getAction(CustomizeJavaBeanAction.ACTION_ID));
-			actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(ReloadAction.RELOAD_ACTION_ID));
-
-			IToolBarManager tbm = actionBars.getToolBarManager();
-			collapseAllAction = new CollapseAllAction();
-			tbm.add(collapseAllAction);			
-			showOverviewAction = new ShowOverviewAction();
-			tbm.add(showOverviewAction);
-			
-			IMenuManager mm = actionBars.getMenuManager();
-			int showEvents = 0;
-			Integer showEventsInt = (Integer) editDomain.getData(JavaVEPlugin.SHOW_EVENTS);
-			if (showEventsInt == null) {
-				// First beans list for this editor, so get it out of preferences
-				showEvents = JavaVEPlugin.getPlugin().getPluginPreferences().getInt(JavaVEPlugin.SHOW_EVENTS);
-				editDomain.setData(JavaVEPlugin.SHOW_EVENTS, new Integer(showEvents));	// Save current style for this editor.
-			} else {
-				// We've closed this beanslist once already, so reuse the setting at the time of the close.
-				showEvents = showEventsInt.intValue();
-			}
-			// Create three actions - No events , Basic events and Expert events
-			ShowHideEventsAction noEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.NoEvents"),JavaVEPlugin.EVENTS_NONE, showEvents); //$NON-NLS-1$
-			ShowHideEventsAction basicEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.ShowEvents"),JavaVEPlugin.EVENTS_BASIC, showEvents); //$NON-NLS-1$
-			ShowHideEventsAction expertEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.ExpertEvents"),JavaVEPlugin.EVENTS_EXPERT, showEvents); //$NON-NLS-1$
-			// Put the event actions - None, Basic and Export on the menu	
-			mm.add(noEventsAction);
-			mm.add(basicEventsAction);
-			mm.add(expertEventsAction);			
-		}
-	
-		public void createControl(Composite parent){
-			pageBook = new PageBook(parent, SWT.NONE);
-			pageBook.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					beansListPage = null;
-				}
-			});
-			
-			outline = getViewer().createControl(pageBook);
-
-			editDomain.addViewer(getViewer());
-			KeyHandler outlineKeyHandler = new KeyHandler();
-			outlineKeyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);			
-			getViewer().setKeyHandler(outlineKeyHandler);
-			getSelectionSynchronizer().addViewer(getViewer());
-			getViewer().setEditPartFactory(new DefaultTreeEditPartFactory(ClassDescriptorDecoratorPolicy.getPolicy(editDomain)));
-						
-			getViewer().setContents(new SubclassCompositionComponentsTreeEditPart(modelBuilder.getModelRoot()!=null ? modelBuilder.getModelRoot() : null));			
-			
-			Control control = getViewer().getControl();
-			
-			MenuManager menuMgr = new MenuManager();
-			menuMgr.setRemoveAllWhenShown(true);
-			Menu menu = menuMgr.createContextMenu(control);
-			control.setMenu(menu);
-			menuMgr.addMenuListener(new IMenuListener() {
-				public void menuAboutToShow(IMenuManager menuMgr) {					
-					GEFActionConstants.addStandardActionGroups(menuMgr);
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, new Separator(IContextMenuConstants.GROUP_OPEN));
-					openActionGroup.setContext(new ActionContext(getViewer().getSelection()));
-					openActionGroup.fillContextMenu(menuMgr);
-					openActionGroup.setContext(null);					
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.UNDO.getId()));
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));										
-					menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, deleteAction);
-					IAction customize = graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
-					if (customize.isEnabled()) 
-						menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, customize);
-				}
-			});
-			getSite().registerContextMenu("JavaVisualEditor.beansViewer", menuMgr, getViewer()); //$NON-NLS-1$
-			
-			showOverview(showOverviewAction.isChecked());
-			
-			deleteAction.setSelectionProvider(getViewer());
-			getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					deleteAction.update();
-				}
-			});
-		}
-	
-		public void dispose(){
-			getSelectionSynchronizer().removeViewer(getViewer());
-			editDomain.removeViewer(getViewer());		
-			super.dispose();
-		}
-	
-		public Control getControl() {
-			return pageBook;
-		}
-
-		protected void initializeOverview() {
-			overview = new Canvas(pageBook, SWT.NONE);			
-			LightweightSystem lws = new LightweightSystem(overview);
-			ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart) primaryViewer.getRootEditPart();
-			thumbnail = new ScrollableThumbnail((Viewport)root.getFigure());
-			thumbnail.setSource(root.getLayer(LayerConstants.PRINTABLE_LAYERS));
-			lws.setContents(thumbnail);
-		}
-	
-		protected void showOverview(boolean show) {
-			if (!show) {
-				if (overview != null)
-					thumbnail.setVisible(false);
-				pageBook.showPage(outline);
-				collapseAllAction.setEnabled(true);
-			} else {
-				if (overview == null)
-					initializeOverview();
-				collapseAllAction.setEnabled(false);					
-				thumbnail.setVisible(true);
-				pageBook.showPage(overview);
-			}
-		}
-	}
-	
 	/*
 	 * The purpose of this class is to listen to the Workbench page selection service.
 	 * This way we only get one notification of selection whether it came from the BeansList,
@@ -2116,6 +1851,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected IAction superGetAction(String id) {
 		return super.getAction(id);
 	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.ITextEditor#getAction(java.lang.String)
 	 */
