@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentWindowAction.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-20 22:24:52 $ 
+ *  $Revision: 1.3 $  $Date: 2003-11-21 17:16:51 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -126,7 +125,7 @@ public class AlignmentWindowAction extends Action {
 	
 	private ISelectionListener selListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if (selection instanceof IStructuredSelection && !selection.isEmpty() && ((IStructuredSelection)selection).getFirstElement() instanceof EditPart)
+			if (fDialog != null && !fDialog.isHidden())
 				update(selection);			
 		}
 	};
@@ -266,12 +265,13 @@ public class AlignmentWindowAction extends Action {
 						persistPreferences();
 						setChecked(false);
 						fDialog = null;
+						update(StructuredSelection.EMPTY);
 					}
 				});			
 			} else
-				fDialog.open();	// Reshow it.
+				fDialog.open();	// Reshow it.				
 			fDialog.setEditorPart(editorPart); // Reinitialize it
-			update(workbenchWindow.getSelectionService().getSelection());
+			update(workbenchWindow.getSelectionService().getSelection());			
 		}
 	}
 
@@ -284,7 +284,7 @@ public class AlignmentWindowAction extends Action {
 	}
 	
 	protected void update(ISelection selection) {
-		selectionProvider.setSelection(selection);
+		selectionProvider.setSelection(selection);		
 		if (fDialog != null) {
 			fDialog.update(selection);
 		}
