@@ -183,6 +183,7 @@ public class ControlManager implements ICallback , ControlListener {
 					//----
 					Image image = grabber.getImage(fControl,true);
 					final ImageData imageData = image.getImageData();
+					image.dispose();
 					byte[] data = imageData.data;					
 					final int[] pixels = new int[data.length];
 					for(int i = 0; i < data.length; i++){
