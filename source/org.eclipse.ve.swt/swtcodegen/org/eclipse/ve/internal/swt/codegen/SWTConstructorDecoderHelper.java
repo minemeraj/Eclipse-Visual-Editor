@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-05 17:50:37 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-05 19:20:35 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -20,8 +20,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;

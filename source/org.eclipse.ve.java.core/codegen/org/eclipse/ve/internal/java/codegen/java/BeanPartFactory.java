@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.14 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.15 $  $Date: 2004-02-05 19:20:39 $ 
  */
 
 import java.util.*;
@@ -705,7 +705,8 @@ public static void updateInstanceInitString(BeanPart bp) {
     IJavaObjectInstance obj = (IJavaObjectInstance)bp.getEObject() ;
     if (obj == null) return ;
     CodeExpressionRef exp = getInstanceInitializationExpr(bp) ;
-    if (exp != null) {
+    // if there is no constructor decoder, initialize the allocation directly from the code
+    if (exp != null && exp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
         Statement e = exp.getExpression() ;
         if (e instanceof Assignment || e instanceof LocalDeclaration)
             obj.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(CodeGenUtil.getResolvedInitString(e, bp.getModel())));
