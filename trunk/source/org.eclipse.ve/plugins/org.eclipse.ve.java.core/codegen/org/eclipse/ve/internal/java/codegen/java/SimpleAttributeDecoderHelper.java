@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2004-06-07 20:36:47 $ 
+ *  $Revision: 1.20 $  $Date: 2004-06-07 20:46:36 $ 
  */
 
 import java.util.Iterator;
@@ -220,12 +220,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
 		Object currentValue = target.eGet(sf);
-		if(currentValue==null && attr==null)
-			return true;
-		if(currentValue!=null && attr!=null){
-			String currentClassName = currentValue.getClass().getName();
-			String newClassName = attr.getClass().getName();
-			if(currentClassName.equals(newClassName) && currentValue instanceof IJavaInstance){
+		boolean currentValueSet = target.eIsSet(sf);
+		if(currentValueSet){
+			if(currentValue==null && attr==null)
+				return true;
+			if(currentValue!=null && attr!=null){
 				IJavaInstance currentInstance = (IJavaInstance) currentValue;
 				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
 				String newInitString = CodeGenUtil.getInitString(attr, fOwner.getBeanModel(), null);
