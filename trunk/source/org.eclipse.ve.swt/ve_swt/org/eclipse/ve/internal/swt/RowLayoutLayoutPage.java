@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:14 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-01 17:46:58 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -147,6 +147,9 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		
 		topSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.topLabel")); //$NON-NLS-1$
 		
+		// Now set the spacing group tab order so that it goes top/down instead of left/right. Works better.
+		spacingGroup.setTabList(new Control[] {spacingSpinner, heightSpinner, widthSpinner, bottomSpinner, leftSpinner, rightSpinner, topSpinner});
+		
 		Group configGroup = new Group(c, SWT.NONE);
 		configGroup.setText(SWTMessages.getString("RowLayoutLayoutPage.configGroupTitle")); //$NON-NLS-1$
 		gd = new GridData();
@@ -160,6 +163,9 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		justifyCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.justifyLabel")); //$NON-NLS-1$
 		packCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.packLabel")); //$NON-NLS-1$
 		wrapCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.wrapLabel")); //$NON-NLS-1$
+		
+		// Now set the overall tabbing so that it goes up/down instead of left right. Works better.
+		c.setTabList(new Control[]{orientationGroup, configGroup, spacingGroup});
 		
 		if (fEditPart != null) {
 			initialized = false;
