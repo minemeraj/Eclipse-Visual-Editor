@@ -204,6 +204,78 @@ developers of the Visual Editor project itself.</td>
     </tr>
   </tbody>
 </table>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#0080c0" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica"> Java EMF Model Runtime </font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download is for the Java EMF Model installation. It is here
+for other projects that only need the JEM runtime and not the entire VE runtime. VE users should use
+the VE runtime or VE SDK instead. The VE runtime and VE SDK already include JEM within their downloads.
+This download contains only the runtime files. There is no source or developer files. It is to be used for the normal
+customer installation of the JEM EMF Model for those who need only the JEM component.</td>
+    </tr>
+  </tbody>
+</table>
+
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
+      <div align="left"><b>Status</b></div>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+      %runtimeJEM%
+    </tr>
+  </tbody>
+</table>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#999999" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica">Java EMF Model SDK</font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download is for the Java EMF Model
+developer's SDK. It contains source and documentation for developers
+that want to extend the JEM component. VE users should use
+the VE SDK instead. The VE SDK already includes JEM within its download.</td>
+    </tr>
+  </tbody>
+</table>
+
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
+      <div align="left"><b>Status</b></div>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+       %sdkJEM%
+    </tr>
+  </tbody>
+</table>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+
 <p>&nbsp;</p>
 </body>
 </html>

@@ -2,10 +2,10 @@
 <topLevel>
 <zipTypes>
 	<zipType name="SDK">
-		<platform id="SDK" name="All" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
+		<platform id="SDK" name="AWT/Swing: Win32/Linux, SWT: Win32" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Runtime">
-		<platform id="RUN" name="All" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
+		<platform id="RUN" name="AWT/Swing: Win32/Linux, SWT: Win32" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Examples">
 		<platform id="EX" name="All" fileName='&lt;a href="VE-examples-@build@.zip">VE-examples-@build@.zip&lt;/a>'></platform>
@@ -13,6 +13,12 @@
 	<zipType name="Tests">
 		<platform id="T" name="All" fileName='&lt;a href="VE-Automated-Tests-@build@.zip">VE-Automated-Tests-@build@.zip&lt;/a>'></platform>
 	</zipType>
+	<zipType name="SDKJEM">
+		<platform id="SDKJEM" name="All" fileName='&lt;a href="JEM-SDK-@build@.zip">JEM-SDK-@build@.zip&lt;/a>'></platform>
+	</zipType>
+	<zipType name="RuntimeJEM">
+		<platform id="RUNJEM" name="All" fileName='&lt;a href="JEM-runtime-@build@.zip">JEM-runtime-@build@.zip&lt;/a>'></platform>
+	</zipType>	
 </zipTypes>
 
 <logFiles>
@@ -23,6 +29,8 @@
 	<logFile name="org.eclipse.jem.tests_linux.gtk.xml">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 
 <!-- Comment out for now until we get tests on various platforms.
@@ -39,54 +47,80 @@
 	<logFile name="plugins/org.eclipse.jem.beaninfo.ui_*/beaninfoui.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.beaninfo_*/beaninfo.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.beaninfo_*/vm/beaninfovm.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/initparser.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/proxy.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/proxycommon.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/proxyide.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/proxyremote.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/remotecommon.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.proxy_*/vm/remotevm.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem.workbench_*/workbench.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem._*/javainst.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 	<logFile name="plugins/org.eclipse.jem._*/mofjava.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
+		<effectedFile id="SDKJEM"></effectedFile>
+		<effectedFile id="RUNJEM"></effectedFile>				
 	</logFile>
 
 	<logFile name="plugins/org.eclipse.ve.cde_*/cde.jar.bin.log">
