@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-04-05 20:11:45 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-04-06 22:28:21 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,21 +18,20 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
