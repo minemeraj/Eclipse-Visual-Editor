@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-23 21:20:49 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -189,8 +189,35 @@ public class BDMMerger {
 		return true ;
 	}
 	
+	protected void updateReturnMethod(BeanPart mainBP, BeanPart updatedBP){
+		CodeMethodRef retMainBP = mainBP.getReturnedMethod();
+		CodeMethodRef retUpdatedBP = updatedBP.getReturnedMethod();
+		if(retMainBP==null && retUpdatedBP==null)
+			return ;
+		if(retMainBP==null && retUpdatedBP!=null){
+			CodeMethodRef mainRetM = mainModel.getMethod(retUpdatedBP.getMethodHandle());
+			if(mainRetM!=null){
+				mainBP.addReturnMethod(mainRetM);
+			}
+			return ;
+		}
+		if(retMainBP!=null && retUpdatedBP==null){
+			mainBP.removeReturnMethod(retMainBP);
+			return ;
+		}
+		if(!retMainBP.getMethodHandle().equals(retUpdatedBP.getMethodHandle())){
+			mainBP.removeReturnMethod(retMainBP);
+			CodeMethodRef mainRetM = mainModel.getMethod(retUpdatedBP.getMethodHandle());
+			if(mainRetM!=null){
+				mainBP.addReturnMethod(mainRetM);
+			}
+			return ;
+		}
+	}
+	
 	protected boolean updateBeanPart(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
 		updateMethodOffset(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
+		updateReturnMethod(mainBeanPart, updatedBeanPart);
 		List allMainBPExpressions = new ArrayList(mainBeanPart.getRefExpressions()) ;
 		List allUpdateBPExpressions = new ArrayList(updatedBeanPart.getRefExpressions()) ;
 		allMainBPExpressions.addAll(mainBeanPart.getRefEventExpressions()) ;
