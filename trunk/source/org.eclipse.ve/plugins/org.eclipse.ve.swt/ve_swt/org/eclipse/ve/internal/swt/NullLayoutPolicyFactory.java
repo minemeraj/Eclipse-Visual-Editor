@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-11 15:27:25 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-15 22:31:11 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,7 +34,6 @@ public class NullLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory#getLayoutSwitcher(org.eclipse.ve.internal.java.visual.VisualContainerPolicy)
 	 */
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep) {
-		// TODO Auto-generated method stub
 		return new NullLayoutSwitcher(ep);
 	}
 	/* (non-Javadoc)
@@ -49,21 +48,18 @@ public class NullLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory#getLayoutPolicyHelper(org.eclipse.ve.internal.java.visual.VisualContainerPolicy)
 	 */
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
-		// TODO Auto-generated method stub
 		return new NullLayoutPolicyHelper(ep);
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory#getConstraintPropertyDescriptor(org.eclipse.emf.ecore.EStructuralFeature)
 	 */
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory#getLayoutManagerInstance(org.eclipse.jem.java.JavaHelpers, org.eclipse.emf.ecore.resource.ResourceSet)
 	 */
 	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -1,55 +1,88 @@
 package org.eclipse.ve.internal.swt;
 
-import java.util.logging.Level;
-
-import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.EClassifier;
 
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
-import org.eclipse.ve.internal.jcm.BeanDecorator;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 public class BeanSWTUtilities {
 
-	public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClassifier layoutManagerClass, EditDomain domain) {
+    // JCMMethod proxies are cached in a registry constants.
+    public IMethodProxy getLayoutMethodProxy;
 
-		if (layoutManagerClass == null)
-			return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
-		if (!(layoutManagerClass instanceof JavaClass))
-			return null;	// Not a java class.
+    public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
 
-		ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(domain);
-		BeanDecorator decr = (BeanDecorator) policy.findDecorator(layoutManagerClass, BeanDecorator.class, ILayoutPolicyFactory.LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
-		String layoutFactoryClassname = null;
-		if (decr != null)
-			layoutFactoryClassname = (String) decr.getKeyedValues().get(ILayoutPolicyFactory.LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
-		if (layoutFactoryClassname != null) {
-			try {
-				Class factoryClass = CDEPlugin.getClassFromString(layoutFactoryClassname);
-				ILayoutPolicyFactory fact = (ILayoutPolicyFactory) factoryClass.newInstance();
-				CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
-				return fact;
-			} catch (ClassNotFoundException e) {
-				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
-			} catch (ClassCastException e) {
-				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
-			} catch (InstantiationException e) {
-				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
-			} catch (IllegalAccessException e) {
-				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
-			} catch (CoreException e) {
-				JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, SwtPlugin.getDefault().getDescriptor().getUniqueIdentifier(), 0, "", e), Level.WARNING); //$NON-NLS-1$
-			}
-		}
-	
-	return new UnknownLayoutPolicyFactory();
-	// TODO - Need to add the unknown factory return 
-	}
+    public static BeanSWTUtilities getConstants(ProxyFactoryRegistry registry) {
+        BeanSWTUtilities constants = (BeanSWTUtilities) registry.getConstants(REGISTRY_KEY);
+        if (constants == null) registry.registerConstants(REGISTRY_KEY, constants = new BeanSWTUtilities());
+        return constants;
+    }
+
+    protected static BeanSWTUtilities getConstants(IBeanProxy proxy) {
+        return getConstants(proxy.getProxyFactoryRegistry());
+    }
+
+    /**
+     * Return the ILayoutPolicyFactory for the layout of a compositeProxy
+     */
+    public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanProxy compositeProxy, EditDomain domain) {
+        IBeanProxy layoutProxy = invoke_getLayout(compositeProxy);
+        return getLayoutPolicyFactoryFromLayout(layoutProxy, domain);
+    }
+
+    /**
+     * Return the ILayoutPolicyFactory for the layout of a LayoutProxy.
+     * Note: if compositeProxy is null, then editdomain can be null.
+     */
+    public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayout(IBeanProxy layoutProxy, EditDomain domain) {
+        if (layoutProxy == null) 
+            return new NullLayoutPolicyFactory(); // There is nothing we can check against, so we hardcode null.
+        ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(layoutProxy.getTypeProxy(), domain);
+        if (factory == null) {
+            return getDefaultLayoutPolicyFactory();
+        } else {
+            return factory;
+        }
+    }
+
+    public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayout(EClassifier classifier, EditDomain editDomain) {
+    	if (classifier == null)
+    		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+    	if (!(classifier instanceof JavaClass))
+    		return null;	// Not a java class.
+    	ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(classifier, editDomain);
+    	if(layoutPolicyFactory == null){
+    		return getDefaultLayoutPolicyFactory();
+    	} else {
+    		return layoutPolicyFactory;
+    	}
+    }
+    public static IBeanProxy invoke_getLayout(final IBeanProxy aCompositeBeanProxy) {
+        BeanSWTUtilities constants = getConstants(aCompositeBeanProxy);
+        if (constants.getLayoutMethodProxy == null) {
+            constants.getLayoutMethodProxy = aCompositeBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+                    "org.eclipse.swt.widgets.Composite").getMethodProxy("getLayout"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if (constants.getLayoutMethodProxy != null) {
+            final IMethodProxy layoutMethodProxy = constants.getLayoutMethodProxy;
+            return (IBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aCompositeBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return layoutMethodProxy.invoke(aCompositeBeanProxy);
+                        }
+                    });
+        }
+        return null;
+    }
+    private static ILayoutPolicyFactory getDefaultLayoutPolicyFactory(){
+   		return new UnknownLayoutPolicyFactory();
+    }
 }

@@ -14,14 +14,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
-import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
-import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
@@ -71,15 +68,6 @@ public Command getCreateChildCommand(Object childComponent, Object parent, Objec
 	command.append(createContributionCmd);
 
 	return command.unwrap();
-}
-
-/**
- * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getOrphanConstraintsCommand(List)
- */
-public Command getOrphanConstraintsCommand(List children) {
-	RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
-	cancelConstraints(cb, children);
-	return cb.getCommand();
 }
 
 protected void cancelConstraints(CommandBuilder cb, List children) {

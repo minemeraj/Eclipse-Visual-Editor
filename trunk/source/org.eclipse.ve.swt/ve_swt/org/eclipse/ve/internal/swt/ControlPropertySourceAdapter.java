@@ -11,24 +11,27 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-06 11:26:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-15 22:31:11 $ 
  */
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.java.visual.VisualUtilities;
-
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+
+import org.eclipse.ve.internal.propertysheet.INeedData;
 /**
  * Default PropertySourceAdapter for org.eclipse.swt.widgets.Control
  * 
@@ -52,19 +55,15 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 		}
 		
 		boolean explicitUserSizing = false;
-		boolean ignoreLayoutData = false;
 		// Top level things like Shells don't have a parent
 		if (compositeJavaObjectInstance == null) {
 			explicitUserSizing = true;
 		} else {
 			CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);
-			IBeanProxy layoutBeanProxy = compositeProxyAdapter.getLayoutBeanProxy();
+			IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeProxyAdapter.getBeanProxy());
 			// null layout and FillLayout don't have layout data
 			if (layoutBeanProxy == null) 
 				explicitUserSizing = true;
-			else if (layoutBeanProxy.getTypeProxy().getTypeName().equals("org.eclipse.swt.layout.FillLayout")) {
-				ignoreLayoutData = true;
-			}
 		}
 		
 		List descriptorList = new ArrayList(descriptors.length);			
@@ -82,27 +81,20 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 					if ("bounds".equals(fn) || "size".equals(fn) || "location".equals(fn)) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						continue loop;
 				}
-				if("layoutData".equals(fn) && ignoreLayoutData)
-					continue loop;
+
 				// LayoutData is wrappered so it is treated differently to allow values on un-set layoutData instances to be set
 				if("layoutData".equals(fn)){
 					// We need the class of the layoutData to set.  This comes from looking at the policyFactory
 					// for our container's layoutManager
 					CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter)BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);					
 					EditDomain domain = compositeProxyAdapter.getBeanProxyDomain().getEditDomain();
-					ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(compositeProxyAdapter.getLayoutBeanProxy().getTypeProxy(),domain);
-					LayoutDataPropertyDescriptor layoutPD = null;
-					if(factory != null){
-						layoutPD = (LayoutDataPropertyDescriptor) factory.getConstraintPropertyDescriptor(sf);
-						// Handle the case in which there is property descriptor defined 
-						if (layoutPD == null)
-							layoutPD = new LayoutDataPropertyDescriptor(null);
-					} else {
-						layoutPD = new LayoutDataPropertyDescriptor(null);
+					ILayoutPolicyFactory factory = BeanSWTUtilities.getLayoutPolicyFactory(compositeProxyAdapter.getBeanProxy(), domain);
+					IPropertyDescriptor layoutPD = factory.getConstraintPropertyDescriptor(sf);
+					if (layoutPD != null) {
+					    if (layoutPD instanceof INeedData) 
+					        ((INeedData)layoutPD).setData(domain);
+						descriptorList.add(layoutPD);
 					}
-					layoutPD.setPropertyDescriptor(pd);
-					layoutPD.setEditDomain(domain);
-					descriptorList.add(layoutPD);
 				} else {
 					descriptorList.add(pd);
 				}

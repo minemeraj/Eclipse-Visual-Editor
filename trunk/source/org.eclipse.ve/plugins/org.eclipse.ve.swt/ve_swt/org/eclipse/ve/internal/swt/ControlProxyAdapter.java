@@ -5,8 +5,8 @@ import java.util.*;
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
@@ -23,6 +23,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
@@ -32,9 +33,12 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	protected ImageNotifierSupport imSupport;	
 	public IMethodProxy environmentFreeFormHostMethodProxy;
 	protected CompositeProxyAdapter parentProxyAdapter;
+	protected EReference sf_layoutData;
 
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);				
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
+		sf_layoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
 	
 	/**
@@ -290,5 +294,20 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public void setParentProxyHost(CompositeProxyAdapter adapter) {
 		parentProxyAdapter = adapter;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 * We need to apply null to the layout data when it's cancelled to prevent ClassCastExceptions
+	 * caused by a mismatch of the wrong layoutData with a specific layout (e.g GridData on a RowLayout).
+	 *  
+	 * Note: The Layout switcher is responsible to cancel or set the layoutdata for each of the controls.
+	 */
+	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
+		if (sf == sf_layoutData) {
+			applyBeanPropertyProxyValue(sf, null);
+		} else {
+			super.canceled(sf, oldValue, position);
+		}
 	}
 }

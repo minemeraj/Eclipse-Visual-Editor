@@ -10,30 +10,24 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutDataPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 19:28:57 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-15 22:31:11 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.properties.PropertySourceAdapterFactory;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanPropertyDescriptorAdapter;
-import org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter;
 
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.ve.internal.propertysheet.ISourcedPropertyDescriptor;
+import org.eclipse.ve.internal.propertysheet.*;
  
 /**
  * For a Composite that is in RowLayout there might not be any RowData on its controls.  Likewise for GridData and GridData, etc...
@@ -43,19 +37,21 @@ import org.eclipse.ve.internal.propertysheet.ISourcedPropertyDescriptor;
  * 
  * @since 1.0.0
  */
-public class LayoutDataPropertyDescriptor extends BeanPropertyDescriptorAdapter implements ISourcedPropertyDescriptor  {
+public class LayoutDataPropertyDescriptor extends EToolsPropertyDescriptor implements ISourcedPropertyDescriptor, INeedData  {
 	
 	private String layoutDataClassName;
-	private IPropertyDescriptor propertyDescriptor;
 	private EditDomain fEditDomain;
+	
 
-	public LayoutDataPropertyDescriptor(String aLayoutDataClassName){
+	public LayoutDataPropertyDescriptor(String aLayoutDataClassName, EStructuralFeature sf, boolean nullsInvalid){
+	    super(sf, "layoutData");
+	    setNullInvalid(nullsInvalid);
 		layoutDataClassName = aLayoutDataClassName;
 	}
 
 	public Object getValue(IPropertySource source) {
 		// See whether the actual value is set
-		Object actualValue = source.getPropertyValue(propertyDescriptor.getId());
+		Object actualValue = source.getPropertyValue(getId());
 		// If there is no layout data class name return null		
 		if(actualValue != null || layoutDataClassName == null) return actualValue;
 		// If we have no value then create a dummy one based on the layoutData class so the property sheet gets
@@ -74,16 +70,12 @@ public class LayoutDataPropertyDescriptor extends BeanPropertyDescriptorAdapter 
 	}
 
 	public boolean isSet(IPropertySource source) {
-		return source.isPropertySet(propertyDescriptor.getId());
+		return source.isPropertySet(getId());
 	}
 
-	public void setPropertyDescriptor(IPropertyDescriptor pd) {
-		propertyDescriptor = pd;
-		setTarget(((BeanPropertyDescriptorAdapter)pd).getTarget());
-	}
 
-	public void setEditDomain(EditDomain domain) {
-		fEditDomain = domain;
+	public void setData(Object domain) {
+		fEditDomain = (EditDomain)domain;
 	}
 
 	public ILabelProvider getLabelProvider() {

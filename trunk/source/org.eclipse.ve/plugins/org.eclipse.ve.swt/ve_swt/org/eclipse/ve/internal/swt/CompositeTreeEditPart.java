@@ -92,9 +92,9 @@ public class CompositeTreeEditPart extends JavaBeanTreeEditPart {
 			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE){
 				CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
 				// Get the type of the layout proxy from the composite
-				IBeanProxy layoutProxyAdapter = compositeProxyAdapter.getLayoutBeanProxy();				
-				if (layoutProxyAdapter != null) {
-					ILayoutPolicyFactory lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutProxyAdapter.getTypeProxy(), EditDomain.getEditDomain(this));
+				IBeanProxy layoutProxy = BeanSWTUtilities.invoke_getLayout(compositeProxyAdapter.getBeanProxy());				
+				if (layoutProxy != null) {
+					ILayoutPolicyFactory lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutProxy.getTypeProxy(), EditDomain.getEditDomain(this));
 					if(lpFactory != null) lpHelper = lpFactory.getLayoutPolicyHelper(null);
 				} else {
 					lpHelper = new NullLayoutPolicyHelper(getContainerPolicy());

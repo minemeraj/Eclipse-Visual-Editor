@@ -11,21 +11,18 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-11 15:27:25 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-15 22:31:11 $ 
  */
 
-import java.util.*;
+import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.HoldProcessingCommand;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
@@ -50,27 +47,14 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain(), "change layout"); //$NON-NLS-1$
 		
 		List components = (List) compositeBean.eGet(JavaInstantiation.getSFeature(compositeBean, SWTConstants.SF_COMPOSITE_CONTROLS));		
-		//		
 		if (!components.isEmpty()) {
 			// Get the layout policy helper class from the layout policy factory and
-			// set it in the container helper policy for the current layout, so that we can switch out.	
-			CompositeProxyAdapter compositeBeanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(compositeBean);
-			if (compositeBeanProxyAdapter != null) {
-				IBeanProxy layoutBeanProxy = compositeBeanProxyAdapter.getLayoutBeanProxy();
-				ILayoutPolicyFactory lpFactory;
-				// If the layoutBeanProxy is null then we use the null layout policy factory
-				if(layoutBeanProxy == null)
-					lpFactory = new NullLayoutPolicyFactory();
-				else 
-					lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutBeanProxy.getTypeProxy(), policy.getEditDomain());
-				if (lpFactory != null) {
-					ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);
-					if (lpHelper != null)
-						cb.append(lpHelper.getOrphanConstraintsCommand(components));
-				}
-			}
+			// set it in the container helper policy for the current layout, so that we can switch out.
+			IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(compositeBean);			
+			ILayoutPolicyFactory lpFactory = BeanSWTUtilities.getLayoutPolicyFactory(containerProxy, policy.getEditDomain());
+			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
+			cb.append(lpHelper.getOrphanConstraintsCommand(components));
 		}
-		
 		// Set the new layout into the composite 
 		cb.applyAttributeSetting(compositeBean, sf, newManager);
 		
