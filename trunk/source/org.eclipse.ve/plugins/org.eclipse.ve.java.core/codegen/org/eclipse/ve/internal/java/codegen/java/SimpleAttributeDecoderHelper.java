@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2004-09-01 17:36:42 $ 
+ *  $Revision: 1.25 $  $Date: 2004-09-09 16:14:15 $ 
  */
 
 import java.util.Iterator;
@@ -212,6 +212,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
           		ConstructorDecoderHelper.getParsedTree(exp,expOfMethod,fbeanPart.getModel(),null));
 
           Resolved resolved = fbeanPart.getModel().getResolver().resolveType(exp.getName()) ;
+          
+          if (resolved==null) return false;
+          
           EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
         
           IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved.getName(), fbeanPart.getModel().getCompositionModel()) ;

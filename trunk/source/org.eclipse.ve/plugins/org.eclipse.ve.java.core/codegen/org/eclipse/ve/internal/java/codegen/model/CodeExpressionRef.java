@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.32 $  $Date: 2004-09-03 21:07:07 $ 
+ *  $Revision: 1.33 $  $Date: 2004-09-09 16:14:14 $ 
  */
 
 
@@ -448,6 +448,10 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 		int off = getOffset() ;
 		
 		
+		int curState = primGetState();
+	    ExpressionParser curParser = getContentParser();
+	    Statement  curStatement = getExprStmt();
+	    
 		// extract new changes
 		setContent(exp.getParser()) ;
         updateLimboState(exp) ;
@@ -460,7 +464,14 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 			primGetDecoder().setExpression(this);
 			// TODO This assumes that there is NO preveious value
 			try {
-			  primGetDecoder().decode();		
+			  if (!primGetDecoder().decode()) {
+			  	// Decoder failed to decode... potentially because of import resolution problems...
+			  	// do not pick up the chnage... pick it up when the import is added
+			  	setContent(curParser);
+			  	primSetState(curState);
+			  	setExprStmt(curStatement);
+			  	primGetDecoder().setExpression(this);
+			  }
 			}
 			catch (Throwable t) {
 				JavaVEPlugin.log(t) ;
