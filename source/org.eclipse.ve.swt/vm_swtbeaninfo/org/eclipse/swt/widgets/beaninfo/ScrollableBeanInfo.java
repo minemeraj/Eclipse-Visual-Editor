@@ -10,24 +10,29 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-01 18:04:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.BeanDescriptor;
-import java.beans.SimpleBeanInfo;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
  
 /**
  * 
  * @since 1.0.0
  */
-public class ScrollableBeanInfo extends SimpleBeanInfo {
+public class ScrollableBeanInfo extends IvjBeanInfo {
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Scrollable.class;
+	}
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Scrollable.class);
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {							

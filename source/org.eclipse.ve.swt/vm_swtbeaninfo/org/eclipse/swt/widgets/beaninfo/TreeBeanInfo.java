@@ -10,24 +10,30 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-26 16:43:44 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.BeanDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.beans.EventSetDescriptor;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
  
 /**
  * 
  * @since 1.0.0
  */
-public class TreeBeanInfo extends SimpleBeanInfo {
+public class TreeBeanInfo extends IvjBeanInfo {
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Tree.class;
+	}
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Tree.class);
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		"SWEET_STYLEBITS",
 	    new Object[] [] {				
@@ -43,5 +49,12 @@ public BeanDescriptor getBeanDescriptor() {
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
-	
+/* (non-Javadoc)
+ * @see java.beans.BeanInfo#getEventSetDescriptors()
+ */
+public EventSetDescriptor[] getEventSetDescriptors() {
+	return new EventSetDescriptor[] {
+			TreeListenerEventSet.getEventSetDescriptor(getBeanClass())
+	};
+}
 }

@@ -10,24 +10,29 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-01 18:04:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
  
 /**
  * 
  * @since 1.0.0
  */
-public class ControlBeanInfo extends SimpleBeanInfo {
+public class ControlBeanInfo extends IvjBeanInfo {
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Control.class;
+	}
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Control.class);
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
@@ -37,6 +42,23 @@ public BeanDescriptor getBeanDescriptor() {
 		}
 	);
 	return descriptor;
+}
+
+/* (non-Javadoc)
+ * @see java.beans.BeanInfo#getEventSetDescriptors()
+ */
+public EventSetDescriptor[] getEventSetDescriptors() {
+	return new EventSetDescriptor[] {
+		ControlListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		FocusListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		HelpListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		KeyListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		MouseListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		MouseMoveListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		MouseTrackListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		PaintListenerEventSet.getEventSetDescriptor(getBeanClass()),
+		TraverseListenerEventSet.getEventSetDescriptor(getBeanClass()),
+	};
 }
 	
 }

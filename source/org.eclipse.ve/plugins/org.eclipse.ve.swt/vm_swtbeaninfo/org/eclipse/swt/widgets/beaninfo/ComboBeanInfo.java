@@ -10,24 +10,29 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-26 16:43:44 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
  
 /**
  * 
  * @since 1.0.0
  */
-public class ComboBeanInfo extends SimpleBeanInfo {
+public class ComboBeanInfo extends IvjBeanInfo {
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Combo.class;
+	}	
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Combo.class);
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 		new Object[] [] {
@@ -43,5 +48,15 @@ public BeanDescriptor getBeanDescriptor() {
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
-	
+
+/* (non-Javadoc)
+ * @see java.beans.BeanInfo#getEventSetDescriptors()
+ */
+public EventSetDescriptor[] getEventSetDescriptors() {
+	return new EventSetDescriptor[] {
+			ModifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
+			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
+	};
+}
+
 }
