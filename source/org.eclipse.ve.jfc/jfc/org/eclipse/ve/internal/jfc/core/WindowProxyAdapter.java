@@ -11,21 +11,32 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-07 14:58:55 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
 import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;
 
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IInvokable;
+import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 /**
  * Windows need explicit disposing when the proxy is disposed
@@ -142,5 +153,39 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 
 		super.appliedSize(as, newValue, position);
 	}
-
+	protected void primInstantiateBeanProxy() {
+		super.primInstantiateBeanProxy();
+		if (isBeanProxyInstantiated()) {
+			IJavaObjectInstance frame = getJavaObject();
+			final EReference sf = JavaInstantiation.getReference(frame,JFCConstants.SF_FRAME_TITLE);
+			if (!frame.eIsSet(sf)) {
+				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
+				AnnotationLinkagePolicy policy = getBeanProxyDomain().getEditDomain().getAnnotationLinkagePolicy();
+				Annotation ann = policy.getAnnotation(frame);
+				String name = null;
+				if (ann != null) {
+					name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				}
+				if (name!=null){
+				final IJavaInstance titleInstance = BeanUtilities.createString(rset, name);
+				Display.getDefault().asyncExec(new Runnable() {
+					/**
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run() {
+						IModelChangeController controller =
+							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+						controller.run(new Runnable() {
+							public void run() {
+								RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
+								cbld.applyAttributeSetting((EObject) target, sf, titleInstance);
+								cbld.getCommand().execute();
+							}
+						}, true);
+					}
+				});
+				}
+			}
+		}
+	}
 }
