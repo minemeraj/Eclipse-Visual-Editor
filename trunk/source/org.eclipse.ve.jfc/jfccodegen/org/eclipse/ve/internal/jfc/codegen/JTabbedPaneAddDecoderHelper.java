@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-21 22:51:22 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-25 23:07:53 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -474,39 +474,18 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		boolean shouldCommit = super.shouldCommit(oldAddedPart, newAddedPart, newAddedInstance, args);
 		// Affected by offset changes?
 		if(!shouldCommit){
-			if (args.size() >= 4) {
-				String currentTitle = fTitleInstance==null?null:CodeGenUtil.getInitString(fTitleInstance, fbeanPart.getModel(), null);
-				String currentIcon = fIconInstance==null?null:CodeGenUtil.getInitString(fIconInstance, fbeanPart.getModel(), null);
-				String currentTooltip = fToolTipInstance==null?null:CodeGenUtil.getInitString(fToolTipInstance, fbeanPart.getModel(), null);
-				
-				String newTitle =  calculateInitString((Expression)args.get(0));
-				String newIcon =  calculateInitString((Expression)args.get(1));
-				String newTooltip =  calculateInitString((Expression)args.get(3));
-				
-				boolean titleChanged = true;
-				boolean iconChanged = true;
-				boolean tooltipChanged = true;
-				
-				if(newTitle==currentTitle || (newTitle!=null && newTitle.equals(currentTitle)) || (currentTitle!=null && currentTitle.equals(newTitle)))
-					titleChanged = false;
-				if(newIcon==currentIcon || (newIcon!=null && newIcon.equals(currentIcon)) || (currentIcon!=null && currentIcon.equals(newIcon)))
-					iconChanged = false;
-				if(newTooltip==currentTooltip || (newTooltip!=null && newTooltip.equals(currentTooltip)) || (currentTooltip!=null && currentTooltip.equals(newTooltip)))
-					tooltipChanged = false;
-				
-				shouldCommit = titleChanged || iconChanged || tooltipChanged;
-				
+			if (args.size() >= 4) {				
+				if (!sameInitString(fTitleInstance,(Expression)args.get(0)) ||
+					!sameInitString(fIconInstance,(Expression)args.get(1)) ||
+					!sameInitString(fToolTipInstance,(Expression)args.get(3)))
+					shouldCommit=true;									
+								
 			} else if (args.size() == 2) {
 				if (args.get(0) instanceof StringLiteral){
-					String currentTitle = fTitleInstance==null?null:CodeGenUtil.getInitString(fTitleInstance, fbeanPart.getModel(), null);
-					String newTitle =  calculateInitString((Expression)args.get(0));
-					boolean titleChanged = true;
-					if(newTitle==currentTitle || (newTitle!=null && newTitle.equals(currentTitle)) || (currentTitle!=null && currentTitle.equals(newTitle)))
-						titleChanged = false;
-					shouldCommit = titleChanged;
+					if (!sameInitString(fTitleInstance,(Expression)args.get(0)))
+					     shouldCommit = true;
 				}
 			}
-
 			if(!shouldCommit){
 				if (args.size() == 5 && args.get(4) instanceof NumberLiteral) {}
 				else shouldCommit = !canAddingBeSkippedByOffsetChanges();
@@ -564,4 +543,13 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			throw new IllegalArgumentException("Bad number of Arguments !!! "); //$NON-NLS-1$		
 	}
 
+	public boolean restore() throws CodeGenException {
+		boolean result = super.restore();
+		if (result && fRootObj!=null) {
+			fIconInstance = getIcon(fRootObj);
+			fTitleInstance = getTabTitle(fRootObj);
+			fToolTipInstance = getToolTip(fRootObj);
+		}
+		return result;
+	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-21 22:51:21 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-25 23:07:18 $ 
  */
 
 import java.util.*;
@@ -210,6 +210,17 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	protected abstract BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException;
 	protected abstract int		getAddedPartArgIndex(int totalArgs);
 	
+	protected boolean sameInitString(IJavaObjectInstance cur, Expression proposed) {
+		if (proposed==null || proposed instanceof NullLiteral) 
+			return cur==null;		
+		if (cur==null)
+			return false;		
+	  String curStr = ConstructorDecoderHelper.convertToString(cur.getAllocation());
+	  JavaAllocation pAlloc = getAllocation(proposed,null);
+	  String proposedStr = ConstructorDecoderHelper.convertToString(pAlloc);
+	  return (curStr.equals(proposedStr));
+	}
+	
 	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args){
 		boolean addedInstanceChanged = oldAddedPart!=newAddedPart;
 		if(!addedInstanceChanged){
@@ -314,8 +325,9 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
 			if (fAddedPart!=null) {
 			   fAddedInstance = (IJavaObjectInstance)fAddedPart.getEObject();
-				fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
-				fbeanPart.addChild(fAddedPart) ;
+			   getRootObject(false);
+			   fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
+			   fbeanPart.addChild(fAddedPart) ;
 			   return true; 			   
 			}			
 		}		

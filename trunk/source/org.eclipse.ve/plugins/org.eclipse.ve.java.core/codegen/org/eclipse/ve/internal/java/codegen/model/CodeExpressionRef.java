@@ -11,13 +11,16 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.39 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.40 $  $Date: 2005-02-25 23:07:45 $ 
  */
 
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
@@ -463,8 +466,16 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 		if((!isStateSet(STATE_EXP_IN_LIMBO)) && (!isStateSet(STATE_NO_MODEL))) { //((fState&STATE_EXP_IN_LIMBO)==0 && (fState&STATE_NO_OP)==0){
 			// Let the decoder refresh its JDOM Expression
 			primGetDecoder().setExpression(this);
-			// TODO This assumes that there is NO preveious value
+
+			final Boolean[] changed = { Boolean.FALSE };
+			Adapter changedAdapter = new AdapterImpl() {
+		  		public void notifyChanged(Notification msg){
+		  			if (msg.getEventType()!= Notification.REMOVING_ADAPTER)
+		  			    changed[0] = Boolean.TRUE;
+		  	    }
+		    };
 			try {
+			  fBean.getEObject().eAdapters().add(changedAdapter);
 			  if (!primGetDecoder().decode()) {
 			  	// Decoder failed to decode... potentially because of import resolution problems...
 			  	// do not pick up the chnage... pick it up when the import is added
@@ -480,12 +491,15 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 			catch (Throwable t) {
 				JavaVEPlugin.log(t) ;
 			}
+			finally {
+				fBean.getEObject().eAdapters().remove(changedAdapter);				
+			}
+			if (changed[0].booleanValue())
+			    // Model is in update mode already here
+			    CodeGenUtil.snoozeAlarm(fBean.getEObject(),fBean.getModel().getCompositionModel().getModelResourceSet(), new HashMap()) ;
 		}
 	    setOffset(off) ;
-	    
-	    // Model is in update mode already here
-	    CodeGenUtil.snoozeAlarm(fBean.getEObject(),fBean.getModel().getCompositionModel().getModelResourceSet(), new HashMap()) ;
-	    
+	    	    
 	    
 	}catch(Exception e){
 		JavaVEPlugin.log(e, Level.WARNING) ;

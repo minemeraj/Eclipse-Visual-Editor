@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.18 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.19 $  $Date: 2005-02-25 23:07:18 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -132,6 +132,15 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
           		return noAnnotationInSource(false); // hide from FF
           	}
           }
+          
+          try {
+			Object curVal = getAnnotationValue();
+			if (curVal instanceof Rectangle) {
+				Rectangle rVal = (Rectangle) curVal;
+				if (args[0] == rVal.x && args[1] == rVal.y)
+					return true;
+			}
+		  } catch (CodeGenException e1) {}
           
 	      KeyedConstraintImpl c = (KeyedConstraintImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedConstraint());
 	      c.setValue(new Rectangle(args[0],args[1],-1,-1)) ;
