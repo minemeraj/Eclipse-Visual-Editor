@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 00:31:58 $ 
  */
 import java.util.logging.Level;
 
@@ -48,12 +48,6 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 		return !fisMethod;
 	}
 
-	protected boolean isFieldAccess(EStructuralFeature sf) {
-
-		BeanFeatureDecorator bdec = (BeanFeatureDecorator) Utilities.getDecorator(sf, BeanFeatureDecorator.class);
-		return (bdec != null && "org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator".equals(bdec.getBeanProxyMediatorName())); //$NON-NLS-1$
-	}
-
 	public void setFeature(EStructuralFeature sf) {
 		fSF = sf;
 		if (sf != null) {
@@ -66,9 +60,9 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 					JavaVEPlugin.log(e, Level.WARNING);
 				}
 			}
-			if (fPD == null && isFieldAccess(sf)) {
+			if (fPD != null && fPD.getField() != null) {
 				fisMethod = false;
-				fMethodName = sf.getName();
+				fMethodName = fPD.getField().getName();
 			}
 		}
 	}
@@ -88,7 +82,7 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 			if (fPD != null && fPD.getWriteMethod() != null) {
 				fMethodName = fPD.getWriteMethod().getName();
 			}
-		}
+		}		
 		return fMethodName;
 	}
 

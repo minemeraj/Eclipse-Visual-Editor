@@ -1,4 +1,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
+
+import java.awt.Dimension;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +14,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: DimensionBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
  */
 
 
@@ -20,13 +23,19 @@ public Class getBeanClass() {
 	return java.awt.Dimension.class;
 }
 /**
- * There should be no properties for dimension
- * Returning an empty array means the introspector will not use defualt
- * introspection
+ * @return java.beans.PropertyDescriptor[] for the width and height fields
  */
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
-	return new java.beans.PropertyDescriptor[0];
+	try {
+		return new java.beans.PropertyDescriptor[] {
+				createFieldPropertyDescriptor("width", Dimension.class.getField("width"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("height", Dimension.class.getField("height"), EMPTY_ARGS)
+		};
+	} catch (SecurityException e) {
+		handleException(e);
+	} catch (NoSuchFieldException e) {
+		handleException(e);
+	}
+	return null;
 }
 }
-
-

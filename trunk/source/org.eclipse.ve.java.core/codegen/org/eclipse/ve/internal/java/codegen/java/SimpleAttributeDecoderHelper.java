@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.30 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.31 $  $Date: 2005-02-16 00:36:16 $ 
  */
 
 import java.util.Iterator;
@@ -55,7 +55,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		if(fFmapper!=null){
 			String methodName = null;
 			if (fFmapper.getDecorator() != null)
-				methodName = fFmapper.getDecorator().getWriteMethod().getName();
+				methodName = fFmapper.getMethodName();
 			if (methodName == null)
 				methodName = AbstractFeatureMapper.getWriteMethod(fExpr);
 			if(methodName!=null)

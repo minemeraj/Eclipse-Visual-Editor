@@ -12,14 +12,4 @@
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         modelled="true"/>
   </event:AddMany>
-  <event:AddMany  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="width" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="ecore:EReference" name="height" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
-    </addedEObjects>
-  </event:AddMany>
 </xmi:XMI>

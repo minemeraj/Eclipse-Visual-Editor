@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.beaninfo;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,12 +10,16 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
  */
+package org.eclipse.ve.internal.jfc.beaninfo;
+
+import java.awt.Rectangle;
+
 
 
 public class RectangleBeanInfo extends IvjBeanInfo {
-	/**
+/**
  * Gets the bean class.
  * @return java.lang.Class
  */
@@ -24,12 +27,22 @@ public Class getBeanClass() {
 	return java.awt.Rectangle.class;
 }
 /**
- * There should be no properties for rectangle.
- * Returning an empty array means the introspector will not use defualt
- * introspection
+ * @return java.beans.PropertyDescriptor[] for the x,y, width and height
  */
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
-	return new java.beans.PropertyDescriptor[0];
+	try {
+		return new java.beans.PropertyDescriptor[] {
+				createFieldPropertyDescriptor("x", Rectangle.class.getField("x"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("y", Rectangle.class.getField("y"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("width", Rectangle.class.getField("width"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("height", Rectangle.class.getField("height"), EMPTY_ARGS)
+		};
+	} catch (SecurityException e) {
+		handleException(e);
+	} catch (NoSuchFieldException e) {
+		handleException(e);
+	}
+	return null;
 }
 }
 

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-02-16 00:39:59 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -145,7 +145,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 				// Get the layout policy helper for the correct layout manager
 				IJavaInstance layoutManager =  (IJavaInstance) container.eGet(sf_containerLayout);
 				if(layoutManager != null){
-					BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManager(layoutManager,EditDomain.getEditDomain(this)).getLayoutPolicyHelper(null);
+					lpHelper = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManager(layoutManager,EditDomain.getEditDomain(this)).getLayoutPolicyHelper(null);
 				} else {
 					IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(container);
 					IBeanProxy layoutManagerProxy = BeanAwtUtilities.invoke_getLayout(containerProxy);

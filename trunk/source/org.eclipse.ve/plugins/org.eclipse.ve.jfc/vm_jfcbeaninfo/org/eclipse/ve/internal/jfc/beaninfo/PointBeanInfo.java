@@ -1,4 +1,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
+
+import java.awt.Point;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +14,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: PointBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
  */
 
 
@@ -23,12 +26,20 @@ public Class getBeanClass() {
 	return java.awt.Point.class;
 }
 /**
- * There should be no properties for point
- * Returning an empty array means the introspector will not use defualt
- * introspection
+ * @return java.beans.PropertyDescriptor[] for the x and y
  */
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
-	return new java.beans.PropertyDescriptor[0];
+	try {
+		return new java.beans.PropertyDescriptor[] {
+				createFieldPropertyDescriptor("x", Point.class.getField("x"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("y", Point.class.getField("y"), EMPTY_ARGS)
+		};
+	} catch (SecurityException e) {
+		handleException(e);
+	} catch (NoSuchFieldException e) {
+		handleException(e);
+	}
+	return null;
 }
 }
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 00:33:44 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -146,37 +146,34 @@ public EStructuralFeature getFeature (Statement exprStmt) {
 			try {
 				PropertyDecorator pd = (PropertyDecorator) itr.next();
 
-				Method m = pd.getWriteMethod();
-				if (m == null
-					|| !m.getName().equals(fMethodName)
-					|| args == null
-					|| (m.listParametersWithoutReturn().length != args.size()))
-					continue;
+				if (pd.getField() == null){
+					Method m = pd.getWriteMethod();
+					if (m == null
+							|| !m.getName().equals(fMethodName)
+							|| args == null
+							|| (m.listParametersWithoutReturn().length != args.size()))
+						continue;
 
-				//TODO: Need to check argument types
-				fSF = (EStructuralFeature) pd.getEModelElement();
-				fSFname = fSF.getName();
-				fPD = pd;
-				break;
+					//TODO: Need to check argument types
+					fSF = (EStructuralFeature) pd.getEModelElement();
+					fSFname = fSF.getName();
+					fPD = pd;
+					break;
+				} else {
+					if (pd.getField().getName().equals(fMethodName)){
+						fSF = (EStructuralFeature) pd.getEModelElement();
+						fSFname = fSF.getName();
+						fPD = pd;
+						fisMethod = false;						
+						break;						
+					}
+				}
 			} catch (Exception e) {
 				if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
 					JavaVEPlugin.log("AttributeFeatureMapper.getFeature() : " + e, Level.WARNING); //$NON-NLS-1$
 				continue;
 			}
 
-		}
-		if (fSF == null && fMethodName != null) {
-			// Try to see if our write method is actually a public field access
-			EList properties = ((JavaClass) fRefObj.getJavaType()).getAllProperties();
-			for (itr = properties.iterator(); itr.hasNext();) {
-				EStructuralFeature sf = (EStructuralFeature) itr.next();
-				if (fMethodName.equals(sf.getName()) && isFieldAccess(sf)) {
-					fSF = sf;
-					fSFname = sf.getName();
-					fisMethod = false;
-					break;
-				}
-			}
 		}
 	}
 
