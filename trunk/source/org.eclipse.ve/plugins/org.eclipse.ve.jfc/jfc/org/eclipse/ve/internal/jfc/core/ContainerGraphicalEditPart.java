@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-27 16:36:10 $ 
  */
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -77,24 +77,10 @@ protected void createLayoutEditPolicy() {
 	IBeanProxy containerProxy = getComponentProxy().getBeanProxy();
 	if (containerProxy != null) {
 		// a container was created. 
-		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
-		if (lpFactory.getLayoutInputPolicyClass() != null) {
-			try {
-				Class policyClass = lpFactory.getLayoutInputPolicyClass();
-				// See if there is a ctor that takes an IContainerInputPolicyHelper, and if there is,
-				// use that ctor with the helper assigned to this view object.
-				Constructor ctor = null;
-				try {
-					ctor = policyClass.getConstructor(new Class[] {ContainerPolicy.class});
-					layoutPolicy = (EditPolicy) ctor.newInstance(new Object[] {getContainerPolicy()});
-				} catch (NoSuchMethodException e) {
-					layoutPolicy = (EditPolicy) policyClass.newInstance();
-				}
-			} catch (Throwable e) {
-				JavaVEPlugin.log("Unable to create the layout policy", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-			}
-		};
+		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, EditDomain.getEditDomain(this));
+		if(lpFactory.getLayoutInputPolicyClass() != null){
+			layoutPolicy = VisualUtilities.getLayoutPolicy(lpFactory.getLayoutInputPolicyClass(),getContainerPolicy());
+		}
 	}
 	// If the LayoutPolicyFactory didn't specifiy a LayoutInputPolicy, use UnknownLayoutInputPolicy
 	if (layoutPolicy == null) {

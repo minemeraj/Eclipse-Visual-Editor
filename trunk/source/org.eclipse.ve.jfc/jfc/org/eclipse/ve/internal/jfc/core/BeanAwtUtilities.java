@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-27 16:36:10 $ 
  */
 
 import java.util.List;
@@ -36,6 +36,8 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
+
 import org.eclipse.ve.internal.jcm.BeanDecorator;
 /** 
  * Helper class with useful methods for working with awt bean proxies
@@ -390,67 +392,46 @@ public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentM
 }
 
 /**
- * Return the ILayoutPolicyFactory for the layout manager of a containerProxy
- */
-public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanProxy containerProxy, EditDomain domain) {
-	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
-	return getLayoutPolicyFactoryFromLayoutManger(layoutManagerProxy, domain);
-}
-
-public static final String LAYOUT_POLICY_FACTORY_CLASSNAME_KEY = "org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"; //$NON-NLS-1$
-/**
  * Return the ILayoutPolicyFactory for the layout manager of a LayoutManagerProxy
  * Note: if containerProxy is null, then editdomain can be null.
  */
-public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanProxy layoutManagerProxy, EditDomain domain) {
-	if (layoutManagerProxy == null)
-		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanProxy containerProxy, EditDomain domain) {
 
-	ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);	
-	EClassifier javaType = Utilities.getJavaClass(layoutManagerProxy.getTypeProxy(), rset);
-	return getLayoutPolicyFactoryFromLayoutManger(javaType, domain);
-}
-
-/**
- * Return the ILayoutPolicyFactory for the layout manager of a LayoutManager EClassifier
- * Note: if containerProxy is null, then editdomain can be null.
- */
-public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClassifier layoutManagerClass, EditDomain domain) {
-
-	if (layoutManagerClass == null)
-		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
-	if (!(layoutManagerClass instanceof JavaClass))
-		return null;	// Not a java class.
-
-	ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(domain);
-	BeanDecorator decr = (BeanDecorator) policy.findDecorator(layoutManagerClass, BeanDecorator.class, LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
-	String layoutFactoryClassname = null;
-	if (decr != null)
-		layoutFactoryClassname = (String) decr.getKeyedValues().get(LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
-	if (layoutFactoryClassname != null) {
-		try {
-			Class factoryClass = CDEPlugin.getClassFromString(layoutFactoryClassname);
-			ILayoutPolicyFactory fact = (ILayoutPolicyFactory) factoryClass.newInstance();
-			CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
-			return fact;
-		} catch (ClassNotFoundException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		} catch (ClassCastException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		} catch (InstantiationException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		} catch (IllegalAccessException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		} catch (CoreException e) {
-			JavaVEPlugin.getPlugin().getMsgLogger().log(new Status(IStatus.WARNING, JFCVisualPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e), MsgLogger.LOG_WARNING); //$NON-NLS-1$
-		}
+	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
+	if(layoutManagerProxy == null) return new NullLayoutPolicyFactory(); // There is nothing we can check against, so we hardcode null.
+	
+	ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(layoutManagerProxy.getTypeProxy(),domain);
+	if(factory == null){
+		// Need to see if it is type LayoutManager2
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
+		EClassifier layoutManagerClass = Utilities.getJavaClass(layoutManagerProxy.getTypeProxy(), rset);
+		return getDefaultLayoutPolicyFactory(layoutManagerClass);
+	} else {
+		return factory;
 	}
 	
-	// Need to see if it is type LayoutManager2
+}
+private static ILayoutPolicyFactory getDefaultLayoutPolicyFactory(EClassifier layoutManagerClass){
 	if (((JavaClass) Utilities.getJavaClass("java.awt.LayoutManager2", layoutManagerClass.eResource().getResourceSet())).isAssignableFrom(layoutManagerClass)) //$NON-NLS-1$
 		return new UnknownLayout2PolicyFactory();
 	else
 		return new UnknownLayoutPolicyFactory();
+}
+/**
+ * @param classifier
+ * @param editDomain
+ * @return layoutPolicyFactory
+ * 
+ * @since 1.0.0
+ */
+public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClassifier classifier, EditDomain editDomain) {
+	// TODO Auto-generated method stub
+	ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(classifier, editDomain);
+	if(layoutPolicyFactory == null){
+		return getDefaultLayoutPolicyFactory(classifier);
+	} else {
+		return layoutPolicyFactory;
+	}
 }
 
 /**
@@ -728,4 +709,5 @@ public static void hideGrids (EditPart editpart) {
 
 protected BeanAwtUtilities() {
 }
+
 }
