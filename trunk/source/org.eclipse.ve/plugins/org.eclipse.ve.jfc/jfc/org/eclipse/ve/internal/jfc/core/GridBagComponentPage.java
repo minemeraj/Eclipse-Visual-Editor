@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:16 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-19 20:17:47 $ 
  */
 
 import java.util.Collections;
@@ -142,9 +142,9 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
 			String graphicName = JFCMessages.getString(sAnchorType + "image"); //$NON-NLS-1$
-			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
-			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dnavpal/" + graphicName)); //$NON-NLS-1$
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
+			setHoverImageDescriptor(getImageDescriptor());
+			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
 			setEnabled(true);
 			setId(getActionId(fAnchorType));
 		}
@@ -206,9 +206,9 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
 			// /icons/full/clc16/anchorleft_obj.gif for the color one
 			// and elc16 for enabled and dlc16 for disasbled
-			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cnavpal/" + graphicName)); //$NON-NLS-1$
-			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dnavpal/" + graphicName));	 //$NON-NLS-1$
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
+			setHoverImageDescriptor(getImageDescriptor()); 
+			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName));	 //$NON-NLS-1$
 			setEnabled(true);
 			setId(getActionId(fFillType));
 		}
