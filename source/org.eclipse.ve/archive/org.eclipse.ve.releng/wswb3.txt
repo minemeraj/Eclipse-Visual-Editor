@@ -1,0 +1,2 @@
+VE-SDK-N20040216.zip=http://download.eclipse.org/tools/ve/downloads/drops/N-N20040216-200402161757/ | | eclipse/ | runtime, source
+VE-examples-N20040216.zip=http://download.eclipse.org/tools/ve/downloads/drops/N-N20040216-200402161757/ | | eclipse/ | examples
