@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: ShellMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-23 21:04:12 $ 
+ *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-01-27 01:12:11 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -25,12 +25,15 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  
 /**
+ * This method generator is a generic method generator for a method with no arguments, 
+ * no return, and null construction for its init bean.
+ * 
  * @author Gili Mendel
  * @since 1.0.0
  */
-public class ShellMethodTextGenerator extends AbstractMethodTextGenerator {
+public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerator {
 
-	public static final String METHOD_TEMPLATE_CLASS_NAME = "ShellMethodTemplate" ; //$NON-NLS-1$
+	public static final String METHOD_TEMPLATE_CLASS_NAME = "NoArgNoReturnMethodTemplate" ; //$NON-NLS-1$
 	public static final String METHOD_TEMPLATE_NAME = METHOD_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;
 	
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
@@ -44,7 +47,7 @@ public class ShellMethodTextGenerator extends AbstractMethodTextGenerator {
        return fInfo ;
 	}
 		
-	public ShellMethodTextGenerator(EObject component, IBeanDeclModel model) {
+	public NoArgNoReturnMethodTextGenerator(EObject component, IBeanDeclModel model) {
 		super(component,model) ;
 	}
 	

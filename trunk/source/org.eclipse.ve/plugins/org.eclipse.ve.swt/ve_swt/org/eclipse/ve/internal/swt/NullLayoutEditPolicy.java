@@ -60,11 +60,12 @@ protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 
 protected Command getCreateCommand(CreateRequest aRequest) {
 	Object child = aRequest.getNewObject();
+	Object parent = getHost().getModel() ;
 	Object constraint = translateToModelConstraint(getConstraintFor(aRequest));			
 	
 	NullLayoutPolicyHelper.NullConstraint nullconst = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, true, true);
 	
-	return helper.getCreateChildCommand(child, nullconst, null);
+	return helper.getCreateChildCommand(child, parent, nullconst, null);
 }
 
 protected Command getDeleteDependantCommand(Request aRequest) {

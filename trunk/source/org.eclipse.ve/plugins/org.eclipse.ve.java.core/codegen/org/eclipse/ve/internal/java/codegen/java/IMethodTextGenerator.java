@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-27 01:12:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -64,5 +64,22 @@ public interface IMethodTextGenerator {
 	 * @since 1.0.0
 	 */
 	public void setComments (String[] comments);
+	
+	/**
+	 * Optionally set the arguments that initialize the bean that is initialized
+	 * by this method
+	 * @param fbeanInitArgs
+	 * 
+	 * @since 1.0.0
+	 */
+	public void setBeanInitArgs(String[] fbeanInitArgs) ;
+
+	/**
+	 * Optionally set the arguments that are part of the method's signiture.
+	 * This will be "type name" array
+	 * 
+	 * @param fmethodArguments The fmethodArguments to set.
+	 */
+	public void setMethodArguments(String[] fmethodArguments) ;
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-27 01:12:06 $ 
  */
 
 
@@ -407,7 +407,12 @@ public synchronized String  generateSource(EStructuralFeature sf) throws CodeGen
       setContent(p) ;
       setOffset(-1) ;
       setFillerContent(BeanMethodTemplate.getInitExprFiller());
-	  refreshAST();
+      try {
+	     refreshAST();
+      }
+      catch (Exception e1) {
+//      	JavaVEPlugin.log(e1) ;
+      }
       return result ;
 }
 
