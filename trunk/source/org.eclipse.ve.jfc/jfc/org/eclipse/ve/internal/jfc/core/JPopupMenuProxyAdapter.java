@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JPopupMenuProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-19 20:04:39 $ 
  */
 
 import org.eclipse.swt.widgets.Display;
@@ -54,8 +54,9 @@ public class JPopupMenuProxyAdapter extends JMenuProxyAdapter {
 
 		// Having done this the frame on the target VM will now possibly be visible
 		// We should attempt to restore focus to the IDE
-		if (Display.getCurrent().getActiveShell() != null)
-			Display.getCurrent().getActiveShell().setFocus();
+		// TODO: Check to see if a window really causes a loss of focus in other systems (Ex:linux)
+//		if (Display.getCurrent().getActiveShell() != null)
+//			Display.getCurrent().getActiveShell().setFocus();
 
 		return super.instantiateBeanProxy();
 
