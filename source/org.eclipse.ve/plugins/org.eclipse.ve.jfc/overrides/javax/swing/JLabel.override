@@ -12,7 +12,7 @@
         value="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.LabelCreationPolicy:JLabel,text"/>
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/label_obj.gif"/>
     </addedEObjects>
-    <addedEObjects xsi:type="jcm:BeanDecorator" beanLocation="LOCAL"/>    
+    <addedEObjects xsi:type="jcm:BeanDecorator" beanLocation="GLOBAL_LOCAL"/>    
   </event:AddMany>
   <event:AddMany  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="displayedMnemonic" unsettable="true">
