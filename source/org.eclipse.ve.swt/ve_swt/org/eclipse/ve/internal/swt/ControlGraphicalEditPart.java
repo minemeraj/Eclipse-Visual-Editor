@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-03-28 22:09:51 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-04-01 14:30:26 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -176,7 +176,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		return JavaBeanActionFilter.INSTANCE;
 	}
 	
-	private class ControlVisualModelAdapter extends ControlModelAdapter {
+	public class ControlVisualModelAdapter extends ControlModelAdapter {
 		
 		protected IJavaObjectInstance control;		
 
