@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-11 16:03:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -607,8 +607,8 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 				if (ms.arguments != null && ms.arguments.length>0 && ms.arguments[0] instanceof QualifiedAllocationExpression) {
 					QualifiedAllocationExpression alt = (QualifiedAllocationExpression) ms.arguments[0] ;
 				
-					if (alt.anonymousType instanceof AnonymousLocalTypeDeclaration) {
-						AnonymousLocalTypeDeclaration lt = (AnonymousLocalTypeDeclaration) alt.anonymousType ;
+					if (alt.anonymousType instanceof TypeDeclaration) {
+						TypeDeclaration lt = (TypeDeclaration) alt.anonymousType ;
 						if(lt.methods != null && lt.methods.length>0) {
 							MethodDeclaration md = (MethodDeclaration) lt.methods[0] ;
 							if (md.arguments != null && md.arguments.length>0 && (md.arguments[0] instanceof Argument)) {

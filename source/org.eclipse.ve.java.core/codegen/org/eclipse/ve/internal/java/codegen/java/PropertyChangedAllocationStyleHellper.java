@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-11 16:03:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.internal.compiler.AbstractSyntaxTreeVisitorAdapter;
+import org.eclipse.jdt.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
@@ -53,7 +53,7 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 	
 	protected String[] parseProperties(Expression exp) {
 		final ArrayList props = new ArrayList() ;
-		AbstractSyntaxTreeVisitorAdapter visitor = new AbstractSyntaxTreeVisitorAdapter() {
+		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visit(IfStatement ifStatement, BlockScope scope) {
 					if (ifStatement.condition instanceof MessageSend) {
 						MessageSend m = (MessageSend) ifStatement.condition;
@@ -79,7 +79,7 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 	
 	protected Method[] parseCallBacks(Expression exp, final JavaClass listener) {
 		final ArrayList methods = new ArrayList();
-		AbstractSyntaxTreeVisitorAdapter visitor = new AbstractSyntaxTreeVisitorAdapter() {
+		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visit(MethodDeclaration methodDeclaration, ClassScope scope) {
 				if (new String(methodDeclaration.selector).equals(PROPERTY_CALLBACK_NAME)) {
 					ArrayList args = new ArrayList() ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.12 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.13 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 
@@ -262,7 +262,7 @@ protected boolean isDuplicate() {
 	return result ;
 }
 
-private class ExpressionRefVisitor extends AbstractSyntaxTreeVisitorAdapter{
+private class ExpressionRefVisitor extends ASTVisitor{
 	
 	private ITypeResolver resolver = null;
 	private List fqns = null;
@@ -863,11 +863,9 @@ public String getMethodNameContent(){
 public void dispose() {
 	// A dispose will be called after a delete.
   
-	try {
-		if (!isStateSet(STATE_DELETE) && primGetDecoder() != null) {
-			primGetDecoder().dispose();
-		}
-	} catch (Exception e) {}
+	if (!isStateSet(STATE_DELETE) && primGetDecoder() != null) {
+		primGetDecoder().dispose();		
+	}
 	fDecoder = null ;
 	clearState();	
 	setState(STATE_DELETE, true) ;
@@ -1029,5 +1027,4 @@ public Object[] getAddedInstances() {
 }
 
 }
-
 

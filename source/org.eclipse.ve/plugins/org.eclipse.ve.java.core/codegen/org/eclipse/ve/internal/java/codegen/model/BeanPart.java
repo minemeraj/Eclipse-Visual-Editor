@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-11 16:03:22 $ 
  */
 import java.util.*;
 
@@ -21,21 +21,22 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration;
-import org.eclipse.jdt.internal.core.Util;
-
-import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.ve.internal.cdm.VisualInfo;
+import org.eclipse.jdt.internal.core.util.Util;
 
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.cdm.Annotation;
+import org.eclipse.ve.internal.cdm.VisualInfo;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.IParentChildRelationship;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class BeanPart {
     
@@ -638,7 +639,7 @@ public  void dispose() {
     	fFFDecoder.dispose() ;
     fFFDecoder=null;
 	if (fModel != null)
-	  fModel.removeBean(this) ;
+	  fModel.removeBean(this) ;	
 	
 	for (int i = 0; i < fbackReferences.size(); i++) {
 		// This should be empty if decoders had the chance to do their thing

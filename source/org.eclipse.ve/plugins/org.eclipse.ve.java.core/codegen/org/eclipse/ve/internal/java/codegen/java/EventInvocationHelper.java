@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -83,7 +83,7 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	/**
 	 * Parse an anonymouse type and find the list of (event) methods that it implements
 	 */
-	protected List getAnonymousTypeEventMethods(AnonymousLocalTypeDeclaration exp) {
+	protected List getAnonymousTypeEventMethods(TypeDeclaration exp) {
 		AbstractMethodDeclaration[] methods = exp.methods ;
 		List ml = new ArrayList() ;
 		List listenMethods = getDecorator().getListenerMethods() ;

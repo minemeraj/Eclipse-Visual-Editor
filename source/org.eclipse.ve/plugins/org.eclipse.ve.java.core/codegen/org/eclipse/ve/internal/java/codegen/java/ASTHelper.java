@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ASTHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.util.*;
 
-import org.eclipse.jdt.internal.compiler.AbstractSyntaxTreeVisitorAdapter;
+import org.eclipse.jdt.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.lookup.*;
 
@@ -33,10 +33,10 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 public class ASTHelper {
 
 public static class SingleNameReferenceValueSyntaxTreeVisitor 
-	extends AbstractSyntaxTreeVisitorAdapter{
+	extends ASTVisitor{
 	
 	private String selector = null;
-	private AstNode value = null;
+	private ASTNode value = null;
 	private Hashtable varToValHash = null;
 	private Stack scopeStack = null;
 	private int selectorLocation = -1;
@@ -66,7 +66,7 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 		}
 		return selector;
 	}
-	private boolean isValuable(AstNode node){
+	private boolean isValuable(ASTNode node){
 		if (node instanceof Literal)
 			return true;
 		if (node instanceof ArrayInitializer)
@@ -188,7 +188,7 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 		if(scopeStart<0 || scopeEnd<0 || scopeStart>scopeEnd)
 			return;
 		if(selectorLocation>=scopeStart && selectorLocation <=scopeEnd && value==null)
-			value = (AstNode) getHash().get(selector);
+			value = (ASTNode) getHash().get(selector);
 		popScope();
 	}
 

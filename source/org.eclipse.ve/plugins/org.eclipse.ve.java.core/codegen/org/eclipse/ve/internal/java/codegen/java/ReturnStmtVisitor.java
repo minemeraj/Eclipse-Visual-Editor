@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 
@@ -36,7 +36,7 @@ ReturnStatement		  fReturnStmt = null ;
 	
 
 ReturnStmtVisitor(CodeMethodRef method,ReturnStatement stmt,IBeanDeclModel model,List reTryList) {
-	super((AstNode)stmt,model,reTryList) ;	
+	super((ASTNode)stmt,model,reTryList) ;	
 	fMethod = method ;
 	fReturnStmt = stmt ;
 }

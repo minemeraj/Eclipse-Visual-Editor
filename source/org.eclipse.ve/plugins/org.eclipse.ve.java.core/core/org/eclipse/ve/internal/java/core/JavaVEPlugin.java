@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.util.*;
@@ -51,7 +51,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 
 	// Map of registered variable contributors, mapped key is path, value is IConfigurationElement[].
 	// It is allowed to have more than one. They will be concatenated together when used.
-	private HashMap variableContributors = new HashMap();
+	private HashMap variableContributors;
 
 	private static ImageDescriptor WIZARD_TITLE_DESC;
 
@@ -65,17 +65,16 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		PLUGIN = this;
 	}
 
-	public static JavaVEPlugin getPlugin() {
-		return PLUGIN;
+	private Map getVariableContributors() {
+		if (variableContributors == null) {
+			variableContributors = new HashMap(30);
+			processRegistrationExtensionPoint();
+		}
+		return variableContributors;
 	}
 
-	/*
-	 * @see Plugin#startup()
-	 */
-	public void startup() throws CoreException {
-		super.startup();
-
-		processRegistrationExtensionPoint();
+	public static JavaVEPlugin getPlugin() {
+		return PLUGIN;
 	}
 
 	protected void processRegistrationExtensionPoint() {
@@ -166,7 +165,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * the variable's path to share the same registration information.
 	 */
 	public void registerRegistration(IPath path, IConfigurationElement registration) {
-		IConfigurationElement[] registered = (IConfigurationElement[]) variableContributors.get(path);
+		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
 		if (registered == null)
 			registered = new IConfigurationElement[] { registration };
 		else {
@@ -176,7 +175,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 			registered[old.length] = registration;
 		}
 
-		variableContributors.put(path, registered);
+		getVariableContributors().put(path, registered);
 	}
 
 	/**
@@ -187,7 +186,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * the variable's path to share the same beaninfo registration information.
 	 */
 	public void registerRegistration(IPath path, IConfigurationElement[] registrations) {
-		IConfigurationElement[] registered = (IConfigurationElement[]) variableContributors.get(path);
+		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
 		if (registered == null) {
 			registered = new IConfigurationElement[registrations.length];
 			System.arraycopy(registrations, 0, registered, 0, registrations.length);
@@ -198,14 +197,14 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 			System.arraycopy(registrations, 0, registered, old.length, registrations.length);
 		}
 
-		variableContributors.put(path, registered);
+		getVariableContributors().put(path, registered);
 	}
 
 	/**
 	 * Return the registrations for a specified path. Return null if not registered.
 	 */
 	public IConfigurationElement[] getRegistrations(IPath path) {
-		return (IConfigurationElement[]) variableContributors.get(path);
+		return (IConfigurationElement[]) getVariableContributors().get(path);
 	}
 
 	public MsgLogger getMsgLogger() {

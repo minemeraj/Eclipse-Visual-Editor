@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SourceVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.ast.AstNode;
+import org.eclipse.jdt.internal.compiler.ast.ASTNode;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 
@@ -26,12 +26,12 @@ import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
  */
 public abstract class SourceVisitor implements ISourceVisitor {
 	
-	protected AstNode 		fVisitedNode = null ;
+	protected ASTNode 		fVisitedNode = null ;
 	protected IBeanDeclModel 	fModel ; 
 	protected List			fReTryLater = null ;
 	
 		
-public SourceVisitor (AstNode node, IBeanDeclModel model, List reTryList) {
+public SourceVisitor (ASTNode node, IBeanDeclModel model, List reTryList) {
 	fVisitedNode = node ;
 	fReTryLater = reTryList ;
 	fModel = model ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.util.Iterator;
@@ -35,7 +35,7 @@ CodeExpressionRef	        fExpression = null ;
 	
 
 ExpressionVisitor(CodeMethodRef method,Statement stmt,IBeanDeclModel model,List reTryList) {
-	super((AstNode)stmt,model,reTryList) ;	
+	super((ASTNode)stmt,model,reTryList) ;	
 	fMethod = method ;
 	fExpression = new CodeExpressionRef (stmt,fMethod) ;
 //try {	
