@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-01 21:35:38 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-16 19:32:18 $ 
  */
 
 import java.util.*;
@@ -57,16 +57,6 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
   private   ImageDescriptorRegistry fJavaImageRegistry= JavaPlugin.getImageDescriptorRegistry();
   Label		 fpreviousLabel = null ;  // remember the last label, in case we are paused
   
-  String     traceMsg[] = { "CREATE", //$NON-NLS-1$
-	                    	"SET", //$NON-NLS-1$
-	                    	"UNSET",    //$NON-NLS-1$
-          	            	"ADD", //$NON-NLS-1$
- 	                    	"REMOVE", //$NON-NLS-1$
-	                    	"ADD_MANY", //$NON-NLS-1$
- 	                    	"REMOVE_MANY", //$NON-NLS-1$
-	                    	"MOVE", //$NON-NLS-1$
-                        	"TOUCH", //$NON-NLS-1$
-                        	"REMOVING_ADAPTER" } ; //$NON-NLS-1$
                         	
   EStructuralFeature fEventsSF = null ;
   
@@ -461,11 +451,10 @@ public void notifyChanged(Notification msg) {
 		if (ignoreMsg(msg))
 			return;
 
-		String action = null;
+		
 		switch (msg.getEventType()) {
 
 			case Notification.ADD_MANY :
-				action = "ADD_MANY"; //$NON-NLS-1$
 				List al = (List) msg.getNewValue();
 				int i = 0;
 				Iterator aitr = al.iterator();
@@ -478,7 +467,6 @@ public void notifyChanged(Notification msg) {
 				}
 				break;
 			case Notification.REMOVE_MANY :
-				action = "REMOVE_MANY"; //$NON-NLS-1$
 				List rl = (List) msg.getOldValue();
 				Iterator ritr = rl.iterator();
 				pos = msg.getPosition();
@@ -489,7 +477,6 @@ public void notifyChanged(Notification msg) {
 				}
 				break;
 			case Notification.ADD :
-				action = "ADD"; //$NON-NLS-1$
 				if (msg.getFeature().equals(getEventsSF())) {
 					addEventElement(msg);
 				}
@@ -499,8 +486,7 @@ public void notifyChanged(Notification msg) {
 
 			case Notification.SET : // New, Different Value
 				if (!CDEUtilities.isUnset(msg)) {
-					if (!msg.isTouch())
-						action = "SET"; //$NON-NLS-1$
+
 					if (msg.getFeature().equals(getEventsSF())) {
 						JavaVEPlugin.log("Event feature setting ?????? on : "+msg.getNewValue(),Level.FINE); //$NON-NLS-1$
 					}
@@ -509,7 +495,6 @@ public void notifyChanged(Notification msg) {
 					break;
 				} // Else flow into unset because really is unset.
 			case Notification.UNSET :
-				action = "UNSET"; //$NON-NLS-1$
 				ICodeGenAdapter a = getExistingAdapter(msg);
 				if (a != null) {
 					a.notifyChanged(msg);
@@ -517,8 +502,7 @@ public void notifyChanged(Notification msg) {
 
 				break;
 
-			case Notification.REMOVE :
-				action = "REMOVE"; //$NON-NLS-1$
+			case Notification.REMOVE :	
 				if (msg.getFeature().equals(getEventsSF())) {
 					// TODO We need to drive the removal of the invocation method here
 					// It works now, becase when the listener is removed from the Inv. JCMMethod
@@ -535,8 +519,6 @@ public void notifyChanged(Notification msg) {
 				return;
 
 		}
-		JavaVEPlugin.log(this +" action= " + action + " completed.", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		JavaVEPlugin.log("SourceRange: " + getJavaSourceRange(), Level.FINE); //$NON-NLS-1$
 	}
 	catch (Throwable t) {
 		JavaVEPlugin.log(t, Level.WARNING);
