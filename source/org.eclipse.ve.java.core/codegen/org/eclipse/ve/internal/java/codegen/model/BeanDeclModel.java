@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-02 14:34:34 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-07 22:48:31 $ 
  */
 
 import java.util.*;
@@ -708,5 +708,12 @@ public void updateBeanNameChange(BeanPart bp) {
 		} catch (JavaModelException e1) {
 			JavaVEPlugin.log(e1, Level.WARNING);
 		}
+	}
+	
+	public void suspendSynchronizer() {
+		fSrcSync.stallProcessing();
+	}
+	public void resumeSynchronizer() {
+		fSrcSync.resumeProcessing();
 	}
 }

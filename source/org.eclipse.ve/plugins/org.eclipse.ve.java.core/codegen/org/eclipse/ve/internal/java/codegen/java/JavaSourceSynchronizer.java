@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-07 14:40:32 $ 
+ *  $Revision: 1.9 $  $Date: 2004-04-07 22:48:31 $ 
  */
 
 import java.util.ArrayList;
@@ -66,6 +66,7 @@ public class JavaSourceSynchronizer {
 		
 		private volatile boolean fCanceled= false;
 		private volatile boolean fReset= false;
+		private volatile boolean fStall=false;  // Suspend until we are told to go now
 		private volatile boolean fIsDirty= false;
 		private volatile boolean fIsActive= false;
 		private volatile boolean fgoNow = false ; // Hack for now
@@ -102,7 +103,8 @@ public class JavaSourceSynchronizer {
 		}
 		
 		/**
-		 * Reset the background thread 
+		 * Force the synchronizer to go through the wait cycle again.
+		 * Typically called when the document has changed. 
 		 */
 		public void reset() {			
 			if (fDelay > 0) {				
@@ -116,17 +118,27 @@ public class JavaSourceSynchronizer {
 				goNow() ;
 			}
 		}
-		
+		/**
+		 * Wake up the sync. and make him process asap
+		 */
 		public void goNow() {
 				synchronized(this) {
 					fIsDirty= true;
 					fReset=false ;					
 					synchronized (fSyncPoint) {
 					  fgoNow=true ;
+					  fStall=false;
 					  fSyncPoint.notifyAll();					  
 				    }
 				}	
 					
+		}
+		
+		public void Stall() {
+			synchronized(this) {
+				fgoNow=false;
+				fStall=true;				
+			}
 		}
 		
 		/**
@@ -139,14 +151,22 @@ public class JavaSourceSynchronizer {
 				synchronized (fSyncPoint) {
 					try {
 						if (!fgoNow)
-						  fSyncPoint.wait(fDelay);
+						  if (!fStall)
+						    fSyncPoint.wait(fDelay);
+						  else {
+						  	fStall=false;
+						  	fSyncPoint.wait();
+						  }
 					} catch (InterruptedException x) {}
 				}
 				
 				if (fCanceled)
 					break;
 				
-				fDelayFactor-- ;
+				if (fgoNow)  
+					fDelayFactor=0; 
+				else
+					fDelayFactor--;
 															
 				synchronized (this) {							
 				 if (!fIsDirty && !fgoNow)
@@ -174,7 +194,7 @@ public class JavaSourceSynchronizer {
 				synchronized (this) {
 					// Work Element may have been added between the process and now.
 					// 
-					fIsDirty = fIsDirty || notifierList.size() > 0 ;
+					fIsDirty = notifierList.size() > 0 ;
 					fgoNow = fgoNow && fIsDirty;
 				}
 				
@@ -496,6 +516,21 @@ public class JavaSourceSynchronizer {
 
 public ICodegenLockManager getLockMgr() {
 	return lockManager;
+}
+
+/**
+ * The next cycle around, the thread will wait, untill a resume is called
+ */
+public void stallProcessing() {
+	fThread.Stall();
+}
+
+/**
+ * Processing will be started immediately
+ * 
+ */
+public void resumeProcessing() {
+	fThread.goNow();
 }
 
 }
