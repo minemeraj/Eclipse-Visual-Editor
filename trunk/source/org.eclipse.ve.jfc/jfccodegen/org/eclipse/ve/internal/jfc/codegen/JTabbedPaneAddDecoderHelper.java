@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.13 $  $Date: 2004-11-11 00:03:33 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -21,14 +21,14 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -206,6 +206,13 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			setInitString(fTitleInstance, ((StringLiteral)arg).getLiteralValue());
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
+		}else if(arg != null){
+			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
+            CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+            JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            fTitleInstance.setAllocation(alloc);
+			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
 		}
 	}
 
@@ -213,9 +220,11 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// TODO  Need to support local declarations
 		if (arg instanceof NullLiteral)
 			fIconInstance = null;
-		else if (arg instanceof ClassInstanceCreation) {
-			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.ImageIcon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(arg.toString()));
+		else if (arg != null) {
+			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.Icon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
+			CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null)));
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fIconInstance);
 		}
 	}
@@ -228,8 +237,14 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			setInitString(fToolTipInstance, ((StringLiteral) arg).getLiteralValue());
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fToolTipInstance);
+		}else if(arg != null){
+			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
+            CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+            JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            fToolTipInstance.setAllocation(alloc);
+			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fToolTipInstance);
 		}
-
 	}
 
 	protected boolean parseAndAddArguments(List args) throws CodeGenException {
@@ -444,6 +459,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		return exp.toString();
 	}
 
+	protected String calculateInitString(Expression e){
+		String initString = null;
+		if (e instanceof StringLiteral) {
+			StringLiteral string = (StringLiteral) e;
+			initString = "\""+string.getLiteralValue()+"\"";
+		}else if(e instanceof NullLiteral) {
+			initString = null;
+		}else if(e!=null){
+			initString = e.toString(); 
+		}
+		return initString;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#shouldCommit(org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.emf.ecore.EObject, java.util.List)
 	 */
@@ -456,9 +484,9 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 				String currentIcon = fIconInstance==null?null:CodeGenUtil.getInitString(fIconInstance, fbeanPart.getModel(), null);
 				String currentTooltip = fToolTipInstance==null?null:CodeGenUtil.getInitString(fToolTipInstance, fbeanPart.getModel(), null);
 				
-				String newTitle =  args.get(0) instanceof StringLiteral?"\""+((StringLiteral)args.get(0)).getLiteralValue()+"\"":null;
-				String newIcon =  args.get(1) instanceof StringLiteral?"\""+((StringLiteral)args.get(1)).getLiteralValue()+"\"":null;
-				String newTooltip =  args.get(3) instanceof StringLiteral?"\""+((StringLiteral)args.get(3)).getLiteralValue()+"\"":null;
+				String newTitle =  calculateInitString((Expression)args.get(0));
+				String newIcon =  calculateInitString((Expression)args.get(1));
+				String newTooltip =  calculateInitString((Expression)args.get(3));
 				
 				boolean titleChanged = true;
 				boolean iconChanged = true;
@@ -476,7 +504,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			} else if (args.size() == 2) {
 				if (args.get(0) instanceof StringLiteral){
 					String currentTitle = fTitleInstance==null?null:CodeGenUtil.getInitString(fTitleInstance, fbeanPart.getModel(), null);
-					String newTitle =  args.get(0) instanceof StringLiteral?"\""+((StringLiteral)args.get(0)).getLiteralValue()+"\"":null;
+					String newTitle =  calculateInitString((Expression)args.get(0));
 					boolean titleChanged = true;
 					if(newTitle==currentTitle || (newTitle!=null && newTitle.equals(currentTitle)) || (currentTitle!=null && currentTitle.equals(newTitle)))
 						titleChanged = false;
