@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanCustomizeLayoutPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-09 14:09:17 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
  */
 package org.eclipse.ve.internal.java.core;
 

@@ -3,16 +3,16 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 /*******************************************************************************
  * Copyright (c) 2004 Red Hat, Inc. and others.
  * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     Red Hat, Inc. - 1.0 implementation
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.9 $  $Date: 2004-07-30 20:08:50 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
  */
 
 import java.util.HashMap;

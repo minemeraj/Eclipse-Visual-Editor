@@ -2,9 +2,9 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 /*******************************************************************************
  * Copyright (c) 2004 Red Hat, Inc. and others.
  * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     Red Hat, Inc. - 1.0 implementation
@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.22 $  $Date: 2004-11-16 21:34:23 $ 
+ *  $Revision: 1.23 $  $Date: 2005-02-15 23:28:35 $ 
  */
 
 import java.io.IOException;
