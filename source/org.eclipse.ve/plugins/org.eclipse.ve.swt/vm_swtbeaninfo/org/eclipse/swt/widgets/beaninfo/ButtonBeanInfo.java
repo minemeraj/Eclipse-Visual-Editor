@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -67,5 +66,44 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[] {
 			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// alignment
+			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ButtonMessages.getString("alignmentDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ButtonMessages.getString("alignmentSD"), //$NON-NLS-1$
+			}
+			),
+			// image
+			super.createPropertyDescriptor(getBeanClass(),"image", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ButtonMessages.getString("imageDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ButtonMessages.getString("imageSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ButtonMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ButtonMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// text
+			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ButtonMessages.getString("textDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ButtonMessages.getString("textSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 }

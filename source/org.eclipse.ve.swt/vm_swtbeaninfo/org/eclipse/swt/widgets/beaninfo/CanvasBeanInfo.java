@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CanvasBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -47,14 +47,32 @@ public BeanDescriptor getBeanDescriptor() {
 			} } ,
 			{ "noRedrawResize" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRedrawResize.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRedrawResize.Value.NoRedrawResize") , "org.eclipse.swt.SWT.NO_REDRAW_RESIZE" , new Integer(SWT.NO_REDRAW_RESIZE)				 //$NON-NLS-1$ //$NON-NLS-2$
-			} } ,
-			{ "noRadioGroup" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRadioGroup.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
-				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRadioGroup.Value.NoRadioGroup") , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				 //$NON-NLS-1$ //$NON-NLS-2$
-			} } 			
+			} }			
 		}
 	);
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// caret
+			super.createPropertyDescriptor(getBeanClass(),"caret", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, CanvasMessages.getString("caretDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CanvasMessages.getString("caretSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 
 }

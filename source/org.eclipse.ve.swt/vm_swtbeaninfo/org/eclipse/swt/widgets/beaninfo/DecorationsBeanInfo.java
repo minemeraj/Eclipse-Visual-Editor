@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.BeanDescriptor;
+import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Scrollable;
@@ -65,6 +66,93 @@ public BeanDescriptor getBeanDescriptor() {
 	// Do not inherit from Composite otherwise we will pick up things like noMergePaintEvents and noBackground
 	SweetHelper.mergeStyleBits(descriptor, new Class[] {Scrollable.class,});
 	return descriptor;
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// bounds
+			super.createPropertyDescriptor(getBeanClass(),"bounds", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("boundsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("boundsSD"), //$NON-NLS-1$
+			}
+			),
+			// clientArea
+			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("clientAreaDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("clientAreaSD"), //$NON-NLS-1$
+			}
+			),
+			// defaultButton
+			super.createPropertyDescriptor(getBeanClass(),"defaultButton", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("defaultButtonDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("defaultButtonSD"), //$NON-NLS-1$
+			}
+			),
+			// image
+			super.createPropertyDescriptor(getBeanClass(),"image", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("imageDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("imageSD"), //$NON-NLS-1$
+			}
+			),
+			// images
+			super.createPropertyDescriptor(getBeanClass(),"images", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("imagesDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("imagesSD"), //$NON-NLS-1$
+			}
+			),
+			// location
+			super.createPropertyDescriptor(getBeanClass(),"location", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("locationDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("locationSD"), //$NON-NLS-1$
+			}
+			),
+			// maximized
+			super.createPropertyDescriptor(getBeanClass(),"maximized", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("maximizedDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("maximizedSD"), //$NON-NLS-1$
+			}
+			),
+			// menuBar
+			super.createPropertyDescriptor(getBeanClass(),"menuBar", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("menuBarDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("menuBarSD"), //$NON-NLS-1$
+			}
+			),
+			// minimized
+			super.createPropertyDescriptor(getBeanClass(),"minimized", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("minimizedDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("minimizedSD"), //$NON-NLS-1$
+			}
+			),
+			// reparentable
+			super.createPropertyDescriptor(getBeanClass(),"reparentable", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("reparentableDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("reparentableSD"), //$NON-NLS-1$
+			}
+			),
+			// size
+			super.createPropertyDescriptor(getBeanClass(),"size", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("sizeDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("sizeSD"), //$NON-NLS-1$
+			}
+			),
+			// text
+			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, DecorationsMessages.getString("textDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, DecorationsMessages.getString("textSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 	
 }

@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-16 12:38:15 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -56,5 +55,62 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[] {
 			TreeListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// itemCount
+			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("itemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("itemCountSD"), //$NON-NLS-1$
+			}
+			),
+			// itemHeight
+			super.createPropertyDescriptor(getBeanClass(),"itemHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("itemHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("itemHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// items
+			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("itemsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("itemsSD"), //$NON-NLS-1$
+			}
+			),
+			// parentItem
+			super.createPropertyDescriptor(getBeanClass(),"parentItem", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("parentItemDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("parentItemSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionCount
+			super.createPropertyDescriptor(getBeanClass(),"selectionCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("selectionCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("selectionCountSD"), //$NON-NLS-1$
+			}
+			),
+			// topItem
+			super.createPropertyDescriptor(getBeanClass(),"topItem", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TreeMessages.getString("topItemDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TreeMessages.getString("topItemSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 }

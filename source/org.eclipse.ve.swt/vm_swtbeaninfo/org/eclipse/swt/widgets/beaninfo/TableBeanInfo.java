@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-16 16:03:59 $ 
+ *  $Revision: 1.9 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
-import java.beans.EventSetDescriptor;
+import java.beans.*;
 
 import org.eclipse.swt.SWT;
  
@@ -62,5 +61,104 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 	return new EventSetDescriptor[] {
 			SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 	};
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// columnCount
+			super.createPropertyDescriptor(getBeanClass(),"columnCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("columnCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("columnCountSD"), //$NON-NLS-1$
+			}
+			),
+			// columns
+			super.createPropertyDescriptor(getBeanClass(),"columns", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("columnsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("columnsSD"), //$NON-NLS-1$
+			}
+			),
+			// gridLineWidth
+			super.createPropertyDescriptor(getBeanClass(),"gridLineWidth", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("gridLineWidthDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("gridLineWidthSD"), //$NON-NLS-1$
+			}
+			),
+			// headerHeight
+			super.createPropertyDescriptor(getBeanClass(),"headerHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("headerHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("headerHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// headerVisible
+			super.createPropertyDescriptor(getBeanClass(),"headerVisible", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("headerVisibleDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("headerVisibleSD"), //$NON-NLS-1$
+			}
+			),
+			// itemCount
+			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("itemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("itemCountSD"), //$NON-NLS-1$
+			}
+			),
+			// itemHeight
+			super.createPropertyDescriptor(getBeanClass(),"itemHeight", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("itemHeightDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("itemHeightSD"), //$NON-NLS-1$
+			}
+			),
+			// items
+			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("itemsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("itemsSD"), //$NON-NLS-1$
+			}
+			),
+			// linesVisible
+			super.createPropertyDescriptor(getBeanClass(),"linesVisible", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("linesVisibleDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("linesVisibleSD"), //$NON-NLS-1$
+			}
+			),
+			// selection
+			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("selectionDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("selectionSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionCount
+			super.createPropertyDescriptor(getBeanClass(),"selectionCount", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("selectionCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("selectionCountSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionIndex
+			super.createPropertyDescriptor(getBeanClass(),"selectionIndex", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("selectionIndexDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("selectionIndexSD"), //$NON-NLS-1$
+			}
+			),
+			// selectionIndices
+			super.createPropertyDescriptor(getBeanClass(),"selectionIndices", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("selectionIndicesDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("selectionIndicesSD"), //$NON-NLS-1$
+			}
+			),
+			// topIndex
+			super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("topIndexDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("topIndexSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 }

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-25 18:40:10 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.BeanDescriptor;
+import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
  
@@ -46,6 +47,39 @@ public BeanDescriptor getBeanDescriptor() {
 	);
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
+}
+
+/**
+ * Return the property descriptors for this bean.
+ * @return java.beans.PropertyDescriptor[]
+ */
+public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+	try {
+		PropertyDescriptor aDescriptorList[] = {
+			// clientArea
+			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ScrollableMessages.getString("clientAreaDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ScrollableMessages.getString("clientAreaSD"), //$NON-NLS-1$
+			}
+			),
+			// horizontalBar
+			super.createPropertyDescriptor(getBeanClass(),"horizontalBar", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ScrollableMessages.getString("horizontalBarDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ScrollableMessages.getString("horizontalBarSD"), //$NON-NLS-1$
+			}
+			),
+			// verticalBar
+			super.createPropertyDescriptor(getBeanClass(),"verticalBar", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, ScrollableMessages.getString("verticalBarDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ScrollableMessages.getString("verticalBarSD"), //$NON-NLS-1$
+			}
+			),
+		};
+		return aDescriptorList;
+	} catch (Throwable exception) {
+		handleException(exception);
+	};
+	return null;
 }
 	
 }
