@@ -361,6 +361,10 @@
                package="java.applet"
                path="overrides/java/applet">
          </override>
+         <override
+               package="java.util"
+               path="overrides/java/util">
+         </override>
       </registration>
    </extension>
    <extension
