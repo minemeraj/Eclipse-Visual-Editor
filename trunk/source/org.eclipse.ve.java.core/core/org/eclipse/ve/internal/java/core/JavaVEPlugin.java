@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.18 $  $Date: 2005-01-07 20:51:41 $ 
+ *  $Revision: 1.19 $  $Date: 2005-01-21 21:20:55 $ 
  */
 
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -37,6 +38,9 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
+	public static final String VE_BUILDER_ID = "org.eclipse.ve.java.core.vebuilder"; //$NON-NLS-1$
+	public static final IPath  VE_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("VEModelCache"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("JetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
 	// ID of the registrations extension point.
 
 	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$

@@ -517,5 +517,15 @@
 				type="java.lang.Object">
 			</visualElement>
 	</extension>
+	
+   <extension
+         id="vebuilder"
+         name="%Builder.Description"
+         point="org.eclipse.core.resources.builders">
+         <builder>
+		 	<run class="org.eclipse.ve.internal.java.core.JavaVisualEditorBuilder">
+		</run>
+	</builder>
+   </extension>
 
 </plugin>

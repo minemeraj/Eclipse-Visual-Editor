@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.76 $  $Date: 2005-01-20 19:11:43 $ 
+ *  $Revision: 1.77 $  $Date: 2005-01-21 21:19:50 $ 
  */
 
 import java.io.*;
@@ -83,6 +83,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -481,6 +482,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						// So that we can get the editor up and displaying as soon as possible we will push this off to
 						// the next async cycle.	
 						openVCEViewersIfRequired(getEditorSite());
+						IProject p = ((IFileEditorInput)getEditorInput()).getFile().getProject();
+						try {
+							ProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID,p);
+						} catch (CoreException e1) {
+							JavaVEPlugin.log(e1);
+						}
 					}			
 				} catch (PartInitException e) {
 					JavaVEPlugin.log(e);
@@ -1992,7 +1999,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			//      uses a package protected AdapterSourceViewer to handle command's target.
 			ICommand c = commandMgr.getCommand("org.eclipse.ui.edit.delete") ; //$NON-NLS-1$
 			try {
-				Class cmdClazz = getClass().getClassLoader().loadClass("org.eclipse.ui.internal.commands.Command"); //$NON-NLS-1$
+				Class cmdClazz = c.getClass();				
 				Method m = cmdClazz.getDeclaredMethod("setDefined", new Class[] { boolean.class } ); //$NON-NLS-1$
 				m.setAccessible(true);
 				m.invoke(c, new Object[] {new Boolean(flag)}) ;				
