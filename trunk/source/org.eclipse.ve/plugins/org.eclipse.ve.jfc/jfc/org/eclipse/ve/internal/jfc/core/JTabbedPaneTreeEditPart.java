@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-10-27 17:37:13 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-10-28 18:35:32 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -77,13 +78,12 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	public void activate() {
 		((EObject) getModel()).eAdapters().add(containerAdapter);
-		// We need add a listener to dispose of the special decorator used for the 
+		// We need add a listener to dispose of the special decorator used for the
 		// JTabbedPane's children when the child is removed.
 		addEditPartListener(new EditPartListener.Stub() {
 
 			public void removingChild(EditPart editpart, int index) {
-				if (((ComponentTreeEditPart)editpart).getLabelDecorator() != null)
-					((ComponentTreeEditPart)editpart).getLabelDecorator().dispose();
+				disposeLabelDecorator(editpart);
 			}
 		});
 		super.activate();
@@ -91,6 +91,10 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	public void deactivate() {
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
+		// Need to remove the label decorator from each of the children
+		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
+			disposeLabelDecorator((EditPart) iter.next());
+		}
 		super.deactivate();
 	}
 
@@ -139,5 +143,20 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
 		else
 			childEP.setPropertySource(null);
+	}
+
+	/**
+	 * @param editpart
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void disposeLabelDecorator(EditPart editpart) {
+		if (editpart instanceof ComponentTreeEditPart) {
+			ILabelDecorator labelDecorator2 = ((ComponentTreeEditPart)editpart).getLabelDecorator();
+			if (labelDecorator2 != null) {
+				((ComponentTreeEditPart)editpart).setLabelDecorator(null);
+				labelDecorator2.dispose();
+			}
+		}
 	}	
 }

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-08-27 15:34:10 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-10-28 18:35:30 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -228,7 +228,8 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	// so that the user doesn't have to explicitly expand it
 	protected void refreshVisuals() {
 		super.refreshVisuals();
-		((TreeItem) getWidget()).setExpanded(true);
+		if (checkTreeItem())
+			((TreeItem) getWidget()).setExpanded(true);
 	}
 
 	/**
