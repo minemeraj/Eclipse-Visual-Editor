@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-01 23:12:53 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-05 03:38:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -104,6 +104,8 @@ public class BDMMerger {
 						bean.isInstanceVar()){
 					if(bean.getFFDecoder()!=null)
 						bean.getFFDecoder().decode();
+				}else{
+					bean.getFFDecoder();
 				}
 			}
 		} catch (CodeGenException e) {
