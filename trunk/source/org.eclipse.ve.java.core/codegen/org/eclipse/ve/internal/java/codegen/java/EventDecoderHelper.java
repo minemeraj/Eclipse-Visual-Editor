@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-11 22:40:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -520,17 +520,21 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		boolean  sanityCheck = false ;  
 		CodeEventRef exp = (CodeEventRef) fOwner.getExprRef() ;
 		for (Iterator events = exp.getMethod().getEventExpressions(); events.hasNext(); ){
-			// Events are ordered according to their offsets
+			// Events are ordered according to their src. offsets
+			// Find the event's code index
 			CodeEventRef e = (CodeEventRef)events.next();
 			if (e == exp) {
 				// passed our test
 				sanityCheck = true ;
 				break ;
 			}
-			index++;
+			else
+			  // Consider events for a given bean (e.g., initConnectons())
+			  if (e.getBean().equals(fbeanPart))
+			     index++;
 		}		
 		List events = (List)fbeanPart.getEObject().eGet(getEventSF()) ;
-		sanityCheck |= events.size()>=index;
+		sanityCheck &= events.size()>=index;
 		return sanityCheck?index : -1;						
 	}
 	
