@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFrameProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-03 22:11:30 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-07 14:58:55 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -72,6 +72,7 @@ public class JFrameProxyAdapter extends WindowProxyAdapter {
 				if (ann != null) {
 					name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 				}
+				if(name!=null){
 				final IJavaInstance titleInstance = BeanUtilities.createString(rset, name);
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
@@ -89,6 +90,7 @@ public class JFrameProxyAdapter extends WindowProxyAdapter {
 						}, true);
 					}
 				});
+				}
 			}
 			IBeanTypeProxy intType = getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int"); //$NON-NLS-1$
 			try {
