@@ -57,6 +57,12 @@ public class VisualElementModel {
 		return parent;
 	}
 
+	public String getIconFile() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("icon");
+		return null;
+	}
+
 	/**
 	 * @return Returns the contributorBundleName.
 	 */

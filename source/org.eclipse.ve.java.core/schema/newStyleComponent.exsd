@@ -103,6 +103,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="icon" type="string">
+            <annotation>
+               <documentation>
+                  Icon to use to represent the class
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="container" type="string">
             <annotation>
                <documentation>

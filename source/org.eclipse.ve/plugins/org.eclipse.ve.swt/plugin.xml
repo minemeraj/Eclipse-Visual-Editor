@@ -179,19 +179,21 @@
 			name="SWT"
 			id="org.eclipse.ve.swt.cat"
 			priority="100"
-			defaultExpand="true">
+			defaultExpand="false">
 		</category>
 			<visualElement
-				name="Application"
-				category="org.eclipse.ve.swt.cat"
-				type="java.lang.Object"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor">
+         type="java.lang.Object"
+         icon="icons/full/clcl16/shell_obj.gif"
+         category="org.eclipse.ve.swt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
+         name="Application">
 			</visualElement>
 			<visualElement
-				name="Composite"
-				category="org.eclipse.ve.swt.cat"
-				type="org.eclipse.swt.widgets.Composite"
-				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor">
+         type="org.eclipse.swt.widgets.Composite"
+         icon="icons/full/clcl16/composite_obj.gif"
+         category="org.eclipse.ve.swt.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
+         name="Composite">
 			</visualElement>
   </extension>   
 
