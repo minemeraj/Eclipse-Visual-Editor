@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-04-23 19:49:07 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-05-18 19:48:32 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -36,6 +36,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -66,6 +67,9 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		}
 		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
 		fig.add(fErrorIndicator);
+		
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this));
+		fig.setToolTip(ToolTipFig);
 				
 		return fig;
 	}
