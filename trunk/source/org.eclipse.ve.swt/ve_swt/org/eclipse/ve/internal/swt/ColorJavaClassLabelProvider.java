@@ -12,6 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -22,7 +23,7 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 public class ColorJavaClassLabelProvider extends LabelProvider {
 
 	public String getText(Object element) {
-		if (element instanceof IJavaInstance) {
+		if (element instanceof IJavaInstance && !(((IJavaInstance)element).getAllocation() instanceof ParseTreeAllocation)) {
 			return BeanProxyUtilities.getBeanProxy((IJavaInstance) element).toBeanString();
 		} else {
 			return "";
