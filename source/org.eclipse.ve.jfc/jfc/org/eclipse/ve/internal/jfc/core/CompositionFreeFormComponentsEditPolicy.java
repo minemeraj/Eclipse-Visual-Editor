@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionFreeFormComponentsEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2003-11-12 18:57:07 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-16 21:05:15 $ 
  */
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
@@ -74,6 +74,7 @@ public class CompositionFreeFormComponentsEditPolicy extends AbstractEditPolicy 
 		super.deactivate();
 		if (fFreeFormHost != null) {
 			fFreeFormHost.disposeDialogs();
+			fFreeFormHost.getTarget().eAdapters().remove(fFreeFormHost);
 			fFreeFormHost = null;
 		}
 	}
