@@ -11,27 +11,15 @@
 package org.eclipse.ve.tests.perf;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.text.DateFormat;
+import java.util.*;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jem.tests.JavaProjectUtil;
-import org.eclipse.jem.util.PerformanceMonitorUtil;
-import org.eclipse.jem.util.PerformanceMonitorUtil.PerformanceEvent;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -39,11 +27,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.ICategoryActivityBinding;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
-import org.eclipse.ui.internal.IPreferenceConstants;
-import org.eclipse.ui.internal.IWorkbenchConstants;
-import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.*;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
+
+import org.eclipse.jem.tests.JavaProjectUtil;
+import org.eclipse.jem.util.PerformanceMonitorUtil;
+import org.eclipse.jem.util.PerformanceMonitorUtil.PerformanceEvent;
+
 import org.eclipse.ve.tests.VETestsPlugin;
 
 /**
@@ -182,7 +173,9 @@ public class PerfSuite extends TestSetup {
 		JavaProjectUtil.setAutoBuild(oldAutoBuildingState);
 
 		joinAutoBuild();
-
+		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
+			System.out.println("-- uploaded successfully -- ");
+		}
 		System.out.println("-- performance suite complete --");
 	}
 
@@ -224,8 +217,7 @@ public class PerfSuite extends TestSetup {
 	}
 
 	static public void waitFor(int step, long timeout) {
-		boolean done = false;
-		PerformanceListener pl = new PerformanceListener(step);
+	PerformanceListener pl = new PerformanceListener(step);
 		PerformanceMonitorUtil.getMonitor().addPerformanceListener(pl);
 		long end = System.currentTimeMillis() + timeout;
 		while (!pl.done && timeout != 0 && end > System.currentTimeMillis()) {
