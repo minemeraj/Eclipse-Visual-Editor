@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 17:09:27 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-11 16:14:07 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -37,7 +37,12 @@ public class JFCConstants {
 		SF_CONTAINER_COMPONENTS,	// java.awt.Container, components
 		SF_CONTAINER_LAYOUT,	// java.awt.Container, layout
 		
-		SF_DIALOG_MODAL,		// java.awt.Dialog, modal		
+		SF_DIALOG_MODAL,		// java.awt.Dialog, modal
+		
+		SF_GRIDLAYOUT_COLUMNS, // java.awt.GridLayout, columns
+		SF_GRIDLAYOUT_ROWS,
+		SF_GRIDLAYOUT_HGAP,
+		SF_GRIDLAYOUT_VGAP,
 		
 		SF_GRIDBAGCONSTRAINTS_GRIDX,	// java.awt.GridBagConstraints, gridx
 		SF_GRIDBAGCONSTRAINTS_GRIDY,
@@ -120,6 +125,11 @@ public class JFCConstants {
 		SF_GRIDBAGCONSTRAINTS_IPADX = URI.createURI("java:/java.awt#GridBagConstraints/ipadx"); //$NON-NLS-1$
 		SF_GRIDBAGCONSTRAINTS_IPADY = URI.createURI("java:/java.awt#GridBagConstraints/ipady");																				 //$NON-NLS-1$
 		SF_GRIDBAGCONSTRAINTS_ANCHOR = URI.createURI("java:/java.awt#GridBagConstraints/anchor");																				 //$NON-NLS-1$
+		
+		SF_GRIDLAYOUT_COLUMNS = URI.createURI("java:/java.awt#GridLayout/columns"); //$NON-NLS-1$
+		SF_GRIDLAYOUT_ROWS = URI.createURI("java:/java.awt#GridLayout/rows"); //$NON-NLS-1$
+		SF_GRIDLAYOUT_HGAP = URI.createURI("java:/java.awt#GridLayout/hgap"); //$NON-NLS-1$
+		SF_GRIDLAYOUT_VGAP = URI.createURI("java:/java.awt#GridLayout/vgap"); //$NON-NLS-1$
 		
 		SF_LABEL_TEXT = URI.createURI("java:/java.awt#Label/text");																				 //$NON-NLS-1$		
 		

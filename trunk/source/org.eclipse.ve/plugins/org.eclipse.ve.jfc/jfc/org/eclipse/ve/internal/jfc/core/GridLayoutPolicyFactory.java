@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-20 09:04:47 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-11 16:14:07 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -32,7 +32,7 @@ public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 	}
 	
 	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
-		return new FlowLayoutEditPolicy(containerPolicy);
+		return new GridLayoutEditPolicy(containerPolicy);
 	}
 	
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
