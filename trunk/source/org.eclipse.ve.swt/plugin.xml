@@ -90,6 +90,10 @@
                package="org.eclipse.swt.layout"
                path="overrides/org/eclipse/swt/layout">
          </override>
+         <override
+               package="org.eclipse.swt.browser"
+               path="overrides/org/eclipse/swt/browser">
+         </override>
       </registration>
    </extension>
    <extension
