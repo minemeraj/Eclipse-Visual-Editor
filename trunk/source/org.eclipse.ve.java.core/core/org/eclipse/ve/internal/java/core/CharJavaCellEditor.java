@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CharJavaCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-03 14:38:53 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -77,7 +77,7 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 		if (!fIsCharacterClass) {
 			return BeanUtilities.createJavaObject(fDataType, fResourceSet, initString);
 		} else {
-			initString = "new Character(" + initString + ")";
+			initString = "new Character(" + initString + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			return BeanUtilities.createJavaObject(fDataType, fResourceSet, initString);
 		}
 		
@@ -162,9 +162,9 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 		fEditDomain = (EditDomain) data;
 		fResourceSet = JavaEditDomainHelper.getResourceSet(fEditDomain);
 		if (fIsCharacterClass) {
-			fDataType = JavaRefFactory.eINSTANCE.reflectType("java.lang.Character", fResourceSet);
+			fDataType = JavaRefFactory.eINSTANCE.reflectType("java.lang.Character", fResourceSet); //$NON-NLS-1$
 		} else {
-			fDataType = JavaRefFactory.eINSTANCE.reflectType("char", fResourceSet);
+			fDataType = JavaRefFactory.eINSTANCE.reflectType("char", fResourceSet); //$NON-NLS-1$
 		}
 	}
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: YesNoListChooseBeanContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-20 21:43:03 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -99,7 +99,7 @@ public class YesNoListChooseBeanContributor implements IChooseBeanContributor {
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress(){
 				public void run(IProgressMonitor pm) throws InterruptedException {
-					pm.beginTask("Search types", 100*(types.length/2));
+					pm.beginTask(ChooseBeanMessages.getString("YesNoListChooseBeanContributor.0"), 100*(types.length/2)); //$NON-NLS-1$
 					for (int c = 0; c < types.length; c+=2) {
 						if (pm.isCanceled())
 							throw new InterruptedException();

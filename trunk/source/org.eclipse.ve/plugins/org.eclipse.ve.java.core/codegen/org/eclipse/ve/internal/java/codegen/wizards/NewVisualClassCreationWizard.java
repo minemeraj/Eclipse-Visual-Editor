@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.12 $  $Date: 2004-06-03 14:39:30 $ 
  */
 
 import java.io.IOException;
@@ -43,8 +43,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	private String superClassName = null;
 	private IVisualClassCreationSourceContributor contributor = null;
 	private String contributorBundleName = null;
-	public static final String VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY = "VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY";
-	private static String DEFAULT_SUPER_CLASS = "javax.swing.JFrame";
+	public static final String VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY = "VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY"; //$NON-NLS-1$
+	private static String DEFAULT_SUPER_CLASS = "javax.swing.JFrame"; //$NON-NLS-1$
 	public static String NEWLINE =  System.getProperty("line.separator") ; //$NON-NLS-1$
 
 	public NewVisualClassCreationWizard() {
@@ -75,7 +75,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 				for(int cc=0;cc<configElms.length && !contributorFound;cc++){
 					IConfigurationElement celm = configElms[cc];
 					try {
-						String typeName = celm.getAttribute("type");
+						String typeName = celm.getAttribute("type"); //$NON-NLS-1$
 						if(superClass.getFullyQualifiedName().equals(typeName)){
 							contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
 							if(contributor!=null){
@@ -157,8 +157,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			int toBodyStart = toCUSource.indexOf('{', toNameOffset)+1;
 			int toBodyEnd = toCUSource.lastIndexOf('}', toEnd)-1;
 			
-			StringTokenizer toNLs = new StringTokenizer(toCUSource.substring(toBodyStart, toBodyEnd), "\r\n", false);
-			StringTokenizer fromNLs = new StringTokenizer(fromCUSource.substring(fromBodyStart, fromBodyEnd), "\r\n", false);
+			StringTokenizer toNLs = new StringTokenizer(toCUSource.substring(toBodyStart, toBodyEnd), "\r\n", false); //$NON-NLS-1$
+			StringTokenizer fromNLs = new StringTokenizer(fromCUSource.substring(fromBodyStart, fromBodyEnd), "\r\n", false); //$NON-NLS-1$
 			List toLines = new ArrayList();
 			List fromLines = new ArrayList();
 			int bestToLineIndex = 0;
@@ -167,7 +167,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 				toLines.add(token);	
 				//	We shouldnt be adding lines after the 'return something;' statement.
 				// As it would result in errors.
-				if(token.indexOf("return")>-1) 
+				if(token.indexOf("return")>-1)  //$NON-NLS-1$
 					break;
 				bestToLineIndex++;
 			}
@@ -177,11 +177,11 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 				String fromLine = (String)fromLines.get(fc);
 				String fromLineNoSpaces = removeWhiteSpaces(fromLine);
 				boolean foundInToLines = false;
-				boolean fromLineIsSuperConstructorCall = from.isConstructor() && fromLineNoSpaces.indexOf("super(")>-1; 
+				boolean fromLineIsSuperConstructorCall = from.isConstructor() && fromLineNoSpaces.indexOf("super(")>-1;  //$NON-NLS-1$
 				for(int tc=0;tc<toLines.size();tc++){
 					String toLine = (String) toLines.get(tc);
 					String toLineNoSpaces = removeWhiteSpaces(toLine);
-					boolean toLineIsSuperConstructorCall = to.isConstructor() && toLineNoSpaces.indexOf("super(")>-1;
+					boolean toLineIsSuperConstructorCall = to.isConstructor() && toLineNoSpaces.indexOf("super(")>-1; //$NON-NLS-1$
 					if(toLineNoSpaces.equals(fromLineNoSpaces) || (toLineIsSuperConstructorCall && fromLineIsSuperConstructorCall)){
 						foundInToLines = true;
 						break;
@@ -321,7 +321,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			if(found)
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, fPage.getSuperClass());
 			else
-			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, "java.lang.Object");
+			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, "java.lang.Object"); //$NON-NLS-1$
 		}
 		fPage.createType(monitor); // use the full progress monitor
 		

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.37 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.38 $  $Date: 2004-06-03 14:39:30 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -110,7 +110,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		// If the controller is inTransaction, that means top down on display thread.
   		// CodeGen should have been marked as busy before it starts processing
 		if(controller!=null && controller.inTransaction())
-		    throw new RuntimeException("should not be here") ;
+		    throw new RuntimeException(CodegenEditorPartMessages.getString("JavaSourceTranslator.ShouldNotBeHere_EXC_")) ; //$NON-NLS-1$
 
 		// We have no idea when the load will be called by the editor.
 		// We need to stop the synch. from driving snippets, as we are going
@@ -632,7 +632,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 		// loadModel is not synchronized as to
 		// not block calls to isBusy(), pause() and such while the loadModel is going on
 		pm.beginTask("", 100);
-		pm.subTask("Loading model from source code");	
+		pm.subTask(CodegenEditorPartMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
 		Object l = fWorkingCopy==null? new Object() : fWorkingCopy.getDocLock();
 		synchronized (l) {
 			floadInProgress = true;
@@ -645,7 +645,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 				}
 			}
 		}
-		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD"));
+		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
 
 		fFile = input.getFile();
 		try {
@@ -655,7 +655,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 				fmodelLoaded = true;
 			}
 			fireProcessingPause(fdisconnected);
-			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
+			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
 			fireParseError(false);
 		} catch (CodeGenSyntaxError e) {
 			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.			
@@ -1208,7 +1208,7 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	public void fireSnippetProcessing(boolean flag) {
 	    String msg;
 	    if (fparseError)
-	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR");
+	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"); //$NON-NLS-1$
 	    else
 	      if (flag) {
 	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
@@ -1222,9 +1222,9 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	protected void fireParseError(boolean error) {
 		fparseError=error;	
 		if (error)
-		    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
+		    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
 		else
-			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
+			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
 	    }

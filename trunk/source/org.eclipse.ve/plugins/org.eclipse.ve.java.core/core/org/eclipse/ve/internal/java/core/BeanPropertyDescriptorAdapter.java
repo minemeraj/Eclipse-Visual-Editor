@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2004-05-04 22:31:20 $ 
+ *  $Revision: 1.14 $  $Date: 2004-06-03 14:38:53 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -370,7 +370,7 @@ protected CellEditor createCellEditorInstance(Class clazz,Composite aComposite, 
 		if (validator != null)
 			editor.setValidator(validator);
 	} catch (Exception exc) {
-		String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] {clazz});		
+		String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] {clazz});		 //$NON-NLS-1$
 		JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc), Level.WARNING);
 	}
 	return editor;

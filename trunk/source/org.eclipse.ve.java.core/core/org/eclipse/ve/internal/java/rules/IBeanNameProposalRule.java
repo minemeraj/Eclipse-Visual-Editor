@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanNameProposalRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.rules;
 
@@ -26,7 +26,7 @@ import org.eclipse.ve.internal.cde.rules.IRule;
  */
 public interface IBeanNameProposalRule extends IRule {
 	
-	public static final String RULE_ID = "ruleBeanNameProposal";
+	public static final String RULE_ID = "ruleBeanNameProposal"; //$NON-NLS-1$
 
     /**
      * Return a default name proposal for a given type

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeansLauncher.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-18 13:56:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:39:55 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -117,9 +117,9 @@ public static void main(String[] args){
 private static List getLaunchers() {
 	List launchers = new ArrayList();
 	
-	String launcherprop = System.getProperty("vce.launchers");
+	String launcherprop = System.getProperty("vce.launchers"); //$NON-NLS-1$
 	if (launcherprop != null) {
-		String[] classes = launcherprop.split(",");
+		String[] classes = launcherprop.split(","); //$NON-NLS-1$
 		for (int i = 0; i < classes.length; i++) {
 			try {
 				Class aClass = Class.forName(classes[i]);
@@ -129,10 +129,10 @@ private static List getLaunchers() {
 				if (launcherObj instanceof ILauncher) {
 					launchers.add(launcherObj);
 				} else {
-					System.err.println("Invalid launcher class " + classes[i]);
+					System.err.println(MessageFormat.format(VCELauncherMessages.getString("JavaBeansLauncher.InvalidLauncherClass_ERROR_"), new Object[]{classes[i]})); //$NON-NLS-1$
 				}
 			} catch (Exception e) {
-				System.err.println("Error creating launcher class " + classes[i] +": " + e.getMessage());
+				System.err.println(MessageFormat.format(VCELauncherMessages.getString("JavaBeansLauncher.ErrorCreatingLauncherClass_ERROR_"), new Object[]{classes[i], e.getMessage()})); //$NON-NLS-1$
 			}
 		}
 	}

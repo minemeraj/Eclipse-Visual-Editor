@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-20 21:43:03 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -30,7 +30,7 @@ public class NamedTypeChooseBeanContributor extends YesNoListChooseBeanContribut
 	 * @see org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor#createFilterMatcher()
 	 */
 	protected FilterMatcher createFilterMatcher() {
-		return new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs(), "*");
+		return new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs(), "*"); //$NON-NLS-1$
 	}
 	
 }

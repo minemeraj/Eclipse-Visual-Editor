@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-03 14:39:30 $ 
  */
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class JavaSourceSynchronizer {
  public final static		int NO_OF_UPDATE_WORKERS = 2 ;
  public final static		int DEFAULT_SYNC_DELAY = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_SYNC_DELAY ;
  public       static		int L2R_DELAY_FACTOR = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_L2R_FACTOR  ;  // Extra Delay if only L2R deltas
- public final static 	String RELOAD_HANDLE = "Reload Request";
+ public final static 	String RELOAD_HANDLE = "Reload Request"; //$NON-NLS-1$
  
  private                Object fSyncPoint;
  private                BackgroundThread fThread;	
@@ -354,7 +354,7 @@ public class JavaSourceSynchronizer {
 	private void driveStrategy(List allDocEvents, IBackGroundWorkStrategy strategy) throws InterruptedException {
 		if (allDocEvents.isEmpty()) return ;
 		
-		fsrcTranslator.fireStatusChanged("Synchronizing") ;  
+		fsrcTranslator.fireStatusChanged(CodeGenJavaMessages.getString("JavaSourceSynchronizer.Synchronizing")) ;   //$NON-NLS-1$
 		
 		if (strategy == null) {
 			JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PrototypeFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-17 12:23:39 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.*;
  */
 public interface PrototypeFactory {
 	
-	public static final String PROTOTYPE_FACTORY_KEY = "org.eclipse.ve.internal.prototypefactory";	
+	public static final String PROTOTYPE_FACTORY_KEY = "org.eclipse.ve.internal.prototypefactory";	 //$NON-NLS-1$
 	
 EObject createPrototype(EClass aClass);
 	
