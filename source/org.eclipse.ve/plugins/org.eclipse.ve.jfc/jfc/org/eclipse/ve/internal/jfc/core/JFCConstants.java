@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -100,9 +100,9 @@ public class JFCConstants {
 		RECTANGLE_CLASS_NAME;
 		
 	static {
-		POINT_CLASS_NAME = "java.awt.Point";
-		DIMENSION_CLASS_NAME = "java.awt.Dimension";
-		RECTANGLE_CLASS_NAME = "java.awt.Rectangle";
+		POINT_CLASS_NAME = "java.awt.Point"; //$NON-NLS-1$
+		DIMENSION_CLASS_NAME = "java.awt.Dimension"; //$NON-NLS-1$
+		RECTANGLE_CLASS_NAME = "java.awt.Rectangle"; //$NON-NLS-1$
 	}
 		
 	static {

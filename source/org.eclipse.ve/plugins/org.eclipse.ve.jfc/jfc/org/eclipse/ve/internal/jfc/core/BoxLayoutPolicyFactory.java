@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BoxLayoutPolicyFactory.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:42:04 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -67,13 +67,13 @@ public class BoxLayoutPolicyFactory implements ILayoutPolicyFactory {
 
 		// Class Creation tree - new javax.swing.BoxLayout()
 		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
-		ic.setType("javax.swing.BoxLayout") ;
+		ic.setType("javax.swing.BoxLayout") ; //$NON-NLS-1$
 		
 		// set the arguments
 		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
 		ir.setObject(container) ;	
 		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
-		PTName name = InstantiationFactory.eINSTANCE.createPTName("javax.swing.BoxLayout") ;
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("javax.swing.BoxLayout") ; //$NON-NLS-1$
 		if (javaClass.getName().equals("BoxLayoutY_Axis")) { //$NON-NLS-1$
 			fa.setField("Y_AXIS"); //$NON-NLS-1$ 
 		} else {

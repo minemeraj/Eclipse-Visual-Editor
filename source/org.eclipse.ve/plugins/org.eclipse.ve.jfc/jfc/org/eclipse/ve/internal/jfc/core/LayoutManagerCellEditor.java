@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-03-16 21:11:57 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import org.eclipse.ve.internal.propertysheet.*;
  * user can pick one.
  */
 public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData , ISourced {
-	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.jfc.core.LayoutManagerCellEditor";
+	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.jfc.core.LayoutManagerCellEditor"; //$NON-NLS-1$
 	public static final int CLASSNAMES_INDEX = 0;
 	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
@@ -142,16 +142,16 @@ public void setData(Object data){
 		String[][] layoutManagerLists = (String[][]) editDomain.getData(EDITDOMAINKEY_ITEMS_LIST);
 		if (layoutManagerLists == null) {
 			ResourceSet rset = JavaEditDomainHelper.getResourceSet(editDomain);
-			JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("java.awt.LayoutManager", rset);
+			JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("java.awt.LayoutManager", rset); //$NON-NLS-1$
 			if (javaClass != null) {
 				List classNames = new ArrayList();
 				List displayNames = new ArrayList();
 				List annotations = ((JavaClass) javaClass).getEAnnotations();
 				for (int i = 0; i < annotations.size(); i++) {
-					if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) {
+					if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) { //$NON-NLS-1$
 						EMap details = ((EAnnotation) annotations.get(i)).getDetails();
-						String layoutClassName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerClass");
-						String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName");
+						String layoutClassName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerClass"); //$NON-NLS-1$
+						String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"); //$NON-NLS-1$
 						if (layoutClassName != null && layoutDisplayName != null) {
 							classNames.add(layoutClassName);
 							displayNames.add(layoutDisplayName);
@@ -161,9 +161,9 @@ public void setData(Object data){
 				if (classNames.size() > 0) {
 					layoutManagerLists = new String [2][];
 					layoutManagerLists[CLASSNAMES_INDEX] = new String[classNames.size() + 1];
-					layoutManagerLists[CLASSNAMES_INDEX][0] = "";
+					layoutManagerLists[CLASSNAMES_INDEX][0] = ""; //$NON-NLS-1$
 					layoutManagerLists[DISPLAYNAMES_INDEX]  = new String[displayNames.size() + 1];
-					layoutManagerLists[DISPLAYNAMES_INDEX][0] = "null";
+					layoutManagerLists[DISPLAYNAMES_INDEX][0] = "null"; //$NON-NLS-1$
 					System.arraycopy(classNames.toArray(new String [classNames.size()]), 0, layoutManagerLists[CLASSNAMES_INDEX], 1, classNames.size());
 					System.arraycopy(displayNames.toArray(new String [displayNames.size()]), 0, layoutManagerLists[DISPLAYNAMES_INDEX], 1, displayNames.size());
 					editDomain.setData(EDITDOMAINKEY_ITEMS_LIST, layoutManagerLists);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.*;
@@ -793,7 +793,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 
 			primInt = Utilities.getJavaType("int", rset); //$NON-NLS-1$
 			primDouble = Utilities.getJavaType("double", rset); //$NON-NLS-1$
-			gridBagConstraints = Utilities.getJavaClass("java.awt.GridBagConstraints", rset);
+			gridBagConstraints = Utilities.getJavaClass("java.awt.GridBagConstraints", rset); //$NON-NLS-1$
 		}
 		resetLists();
 	}

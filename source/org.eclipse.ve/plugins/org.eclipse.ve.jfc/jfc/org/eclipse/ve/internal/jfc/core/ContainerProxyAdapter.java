@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.Iterator;
@@ -94,7 +94,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 			}
 
 			// Bugzilla 59391 - force a release of the layout TODO Needs to be handled in a generic way because if this goes invalid (i.e. class deleted) then this layout will not be released.
-			IJavaInstance layoutValue = (IJavaInstance) getEObject().eGet(getEObject().eClass().getEStructuralFeature("layout"));
+			IJavaInstance layoutValue = (IJavaInstance) getEObject().eGet(getEObject().eClass().getEStructuralFeature("layout")); //$NON-NLS-1$
 			if (layoutValue != null) {
 				IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost(layoutValue);
 				layoutProxyHost.releaseBeanProxy();

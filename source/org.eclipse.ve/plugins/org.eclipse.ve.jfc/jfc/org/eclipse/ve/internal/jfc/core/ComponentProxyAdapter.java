@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-02-23 23:19:41 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-05 21:53:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -875,7 +875,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					}		            
 		        }
 		    },
-		    ModelChangeController.createHashKey(this,"INVALIDATE"),
+		    ModelChangeController.createHashKey(this,"INVALIDATE"), //$NON-NLS-1$
 		    new Object[] {ModelChangeController.SETUP_PHASE,ModelChangeController.INIT_VIEWERS_PHASE});
 		}
 	}

@@ -14,7 +14,7 @@ import java.awt.Insets;
  *******************************************************************************/
 /*
  *  $RCSfile: InsetsBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:52:42 $ 
  */
 
 
@@ -31,10 +31,10 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("top", Insets.class.getField("top"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("bottom", Insets.class.getField("bottom"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("left", Insets.class.getField("left"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("right", Insets.class.getField("right"), EMPTY_ARGS),				
+				createFieldPropertyDescriptor("top", Insets.class.getField("top"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("bottom", Insets.class.getField("bottom"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("left", Insets.class.getField("left"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("right", Insets.class.getField("right"), EMPTY_ARGS),				 //$NON-NLS-1$ //$NON-NLS-2$
 		};
 	} catch (
 			SecurityException e) {

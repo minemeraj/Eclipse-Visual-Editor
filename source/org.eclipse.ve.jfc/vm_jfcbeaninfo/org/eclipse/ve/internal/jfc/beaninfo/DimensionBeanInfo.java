@@ -14,7 +14,7 @@ import java.awt.Dimension;
  *******************************************************************************/
 /*
  *  $RCSfile: DimensionBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 21:52:42 $ 
  */
 
 
@@ -28,8 +28,8 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("width", Dimension.class.getField("width"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("height", Dimension.class.getField("height"), EMPTY_ARGS)
+				createFieldPropertyDescriptor("width", Dimension.class.getField("width"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("height", Dimension.class.getField("height"), EMPTY_ARGS) //$NON-NLS-1$ //$NON-NLS-2$
 		};
 	} catch (SecurityException e) {
 		handleException(e);

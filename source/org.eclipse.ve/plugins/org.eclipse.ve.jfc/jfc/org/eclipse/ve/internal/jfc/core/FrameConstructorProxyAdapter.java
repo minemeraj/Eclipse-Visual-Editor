@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 				List args = newClass.getArguments();
 				if (args.size() == 1) {
 					PTExpression arg1 = (PTExpression) args.get(0);
-					disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation && "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); 
+					disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation && "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType());  //$NON-NLS-1$
 				}
 			}
 		}
@@ -87,7 +87,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 			return super.basicInitializationStringAllocation(aString, targetClass);
 		
 		// We need to create using one frame.
-		IBeanTypeProxy frameType = targetClass.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("java.awt.Frame");		
+		IBeanTypeProxy frameType = targetClass.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("java.awt.Frame");		 //$NON-NLS-1$
 		IConstructorProxy ctor = targetClass.getConstructorProxy(new IBeanTypeProxy[] {frameType});
 		if (ctor == null)
 			return super.basicInitializationStringAllocation(aString, targetClass);	// None that takes a frame, just go on and take the hit.
