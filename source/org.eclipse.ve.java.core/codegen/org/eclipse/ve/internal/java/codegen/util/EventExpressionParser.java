@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionParser.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-21 19:25:20 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-20 22:05:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.compiler.InvalidInputException;
 
 import org.eclipse.ve.internal.java.codegen.java.CodeGenSourceRange;
 import org.eclipse.ve.internal.java.codegen.java.ICodeGenSourceRange;
+import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /**
  * @author gmendel
@@ -36,15 +37,15 @@ public class EventExpressionParser extends ExpressionParser {
 	 * @param expOffset
 	 * @param expLen
 	 */
-	public EventExpressionParser(String sourceSnippet, int expOffset, int expLen) {
-		super(sourceSnippet, expOffset, expLen);		
+	public EventExpressionParser(String sourceSnippet, int expOffset, int expLen, IScannerFactory scannerFactory) {
+		super(sourceSnippet, expOffset, expLen, scannerFactory);		
 	}
 
 	/**
 	 * @param field
 	 */
-	public EventExpressionParser(IField field) {
-		super(field);		
+	public EventExpressionParser(IField field, IScannerFactory scannerFactory) {
+		super(field, scannerFactory);		
 	}
 	
 	/**
@@ -70,7 +71,7 @@ public class EventExpressionParser extends ExpressionParser {
 		// Note: using here the new AST parser.
 		if (fCallBackOffset.get(name) != null)  
 		   return ((Integer)fCallBackOffset.get(name)).intValue() ;
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().toCharArray());
 		try {
 			int token;
@@ -115,7 +116,7 @@ public class EventExpressionParser extends ExpressionParser {
 		if (startingOffset < 0) throw new CodeGenException("JCMMethod not found") ; //$NON-NLS-1$
 
 		// Note: using here the new AST parser.		
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().substring(startingOffset).toCharArray());
 		int start = -1;
 		int end = -1;
@@ -158,9 +159,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(start, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString(), fScannerFactory)-1;
 		int len = end1-off+1;
-		return new EventExpressionParser(buff.toString(),off,len) ;
+		return new EventExpressionParser(buff.toString(),off,len, fScannerFactory) ;
 	}
 	
 	
@@ -170,7 +171,7 @@ public class EventExpressionParser extends ExpressionParser {
 			throw new CodeGenException("JCMMethod not found"); //$NON-NLS-1$
 
 		// Note: using here the new AST parser.		
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().substring(startingOffset).toCharArray());
 		int start = -1;
 		int end = -1;
@@ -240,13 +241,13 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(startingOffset, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString(), fScannerFactory)-1;
 		int len = end1-off+1;
-		return new EventExpressionParser(buff.toString(),off,len) ;
+		return new EventExpressionParser(buff.toString(),off,len, fScannerFactory) ;
 	}
 	
 	protected int getEventBodyStart() {
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().toCharArray());
 		int startingOffset = -1;
 		try {
@@ -272,14 +273,14 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.insert(offset,content) ;
 		
 		int off = fFillerLen ;
-		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString(), fScannerFactory)-1;
 		int len = end1-off+1;
-		return new EventExpressionParser(buff.toString(),off,len) ;
+		return new EventExpressionParser(buff.toString(),off,len, fScannerFactory) ;
 	}
 	
 	public EventExpressionParser addPropertyBlock (String content) throws CodeGenException {
 		int start = getEventBodyStart();
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().substring(start).toCharArray());
 		int startingOffset = -1;
 		try {
@@ -299,15 +300,15 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.insert(start + startingOffset, content);
 		
 		int off = fFillerLen ;
-		int end = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int end = ExpressionParser.indexOfLastSemiColon(buff.toString(), fScannerFactory)-1;
 		int len = end-off+1;
-		return new EventExpressionParser(buff.toString(), off, len);
+		return new EventExpressionParser(buff.toString(), off, len, fScannerFactory);
 		
 	}
 	
 	
 	protected int getPropertyStart(String property) {		
-		org.eclipse.jdt.core.compiler.IScanner scanner = org.eclipse.jdt.core.ToolFactory.createScanner(false, false, false, true);
+		org.eclipse.jdt.core.compiler.IScanner scanner = fScannerFactory.getScanner(false, false, true);
 		scanner.setSource(getExpression().toCharArray());
 		int ifOffset = -1;
 		int startingOffset = - 1 ;
@@ -386,9 +387,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(start, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString(), fScannerFactory)-1;
 		int len = end1-off+1;
-		return new EventExpressionParser(buff.toString(),off,len) ;
+		return new EventExpressionParser(buff.toString(),off,len, fScannerFactory) ;
 	
 	}
 	

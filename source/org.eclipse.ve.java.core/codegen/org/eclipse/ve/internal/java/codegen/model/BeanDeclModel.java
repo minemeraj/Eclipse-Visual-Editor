@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.15 $  $Date: 2005-01-20 22:05:20 $ 
  */
 
 import java.util.*;
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 /*
  *  This class is the root for the Bean Decleration Model
  */
-public class BeanDeclModel implements IBeanDeclModel {
+public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclModel {
 	
 	ArrayList   fBeans=null ;                           // Root Beans
 	Hashtable   fBeansKey = new Hashtable () ;   	    // Keep a hash key for the fBeans vector

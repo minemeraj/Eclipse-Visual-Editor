@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.17 $  $Date: 2005-01-20 22:05:20 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -174,7 +174,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 				(comment.getStartPosition()+comment.getLength())>source.length())
 			return false;
 		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
-		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource);
+		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource, new DefaultScannerFactory());
 		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_INFO_DECL)>-1)
 			return true;
 		return false;

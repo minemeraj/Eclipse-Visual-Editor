@@ -11,8 +11,9 @@ package org.eclipse.ve.tests.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: FieldTest.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-20 22:05:26 $ 
  */
+import org.eclipse.ve.internal.java.codegen.model.DefaultScannerFactory;
 import org.eclipse.ve.internal.java.codegen.util.ExpressionParser;
 
 import junit.framework.TestCase;
@@ -62,7 +63,7 @@ public abstract class FieldTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		parser = new ExpressionParser(field, codeStartLength[0], codeStartLength[1]);
+		parser = new ExpressionParser(field, codeStartLength[0], codeStartLength[1], new DefaultScannerFactory());
 	}
 
 	/**

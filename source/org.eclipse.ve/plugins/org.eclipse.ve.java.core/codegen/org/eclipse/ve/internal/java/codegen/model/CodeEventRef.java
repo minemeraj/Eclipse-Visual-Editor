@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.11 $  $Date: 2005-01-20 22:05:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -215,7 +215,7 @@ public void setFillerContent(String filler) throws CodeGenException {
  * @see org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef#createExpressionParser(java.lang.String, int, int)
  */
 protected ExpressionParser createExpressionParser(String sourceSnippet, int expOffset, int expLen) {
-	return new EventExpressionParser(sourceSnippet, expOffset, expLen);
+	return new EventExpressionParser(sourceSnippet, expOffset, expLen, fDecoder.getBeanModel());
 }
 
 public synchronized void refreshFromComposition() throws CodeGenException {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.23 $  $Date: 2004-09-08 22:37:44 $ 
+ *  $Revision: 1.24 $  $Date: 2005-01-20 22:05:20 $ 
  */
 
 import java.util.Iterator;
@@ -79,7 +79,7 @@ public CodeExpressionRef createInitExpression() {
 		return null;
 	}
 	String content;
-	if (exp.isStateSet(exp.STATE_NO_SRC)) {
+	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 		exp.clearState();
 		exp.setNoSrcExpression(false);
 		exp.setState(CodeExpressionRef.STATE_EXIST, true);
@@ -121,10 +121,10 @@ public CodeExpressionRef createInitExpression() {
 		Statement Stmt = getInitExpression(classContent);
 		int contentStart = classContent.indexOf(content);
 		int start = Stmt.getStartPosition() - contentStart;
-		int end = ExpressionParser.indexOfLastSemiColon(classContent.substring(Stmt.getStartPosition(), Stmt.getStartPosition()+Stmt.getLength())) - 1 + Stmt.getStartPosition() - contentStart;
+		int end = ExpressionParser.indexOfLastSemiColon(classContent.substring(Stmt.getStartPosition(), Stmt.getStartPosition()+Stmt.getLength()), fBeanPart.getModel()) - 1 + Stmt.getStartPosition() - contentStart;
 		int len = end - start + 1;
 		
-		ExpressionParser p = new ExpressionParser (content, start, len);
+		ExpressionParser p = new ExpressionParser (content, start, len, fBeanPart.getModel());
 		
 		exp.setContent(p) ;
 		exp.setExprStmt(Stmt);
@@ -324,7 +324,7 @@ public static CodeExpressionRef createShadowExpression(String content, int SrcOf
 	//exp.setState(exp.STATE_EXIST) ;
 	exp.clearState();
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
-	exp.setContent(new ExpressionParser(content,SrcOffset,len)) ;
+	exp.setContent(new ExpressionParser(content,SrcOffset,len, b.getModel())) ;
 	exp.setOffset(ExpOffset) ;
 	return exp ;
 }   

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-20 22:05:24 $ 
  */
 
 import java.util.logging.Level;
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.*;
 
+import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -55,27 +56,29 @@ public class ExpressionParser {
 	int    fFillerOff = -1 ; // Prefixed  white space
 	int    fFillerLen = -1 ;
 	
-	
+	IScannerFactory fScannerFactory = null; // Factory to provide scanner
 	
 /**
  *  @param sourceSnippet the source code body where the expression is part off
  *  @param expOffset  where the expression java source starts (    >setFoo() <;)
  *  @param expLen     the length of the source .
  */	
-public ExpressionParser(String sourceSnippet, int expOffset, int expLen) {
+public ExpressionParser(String sourceSnippet, int expOffset, int expLen, IScannerFactory scannerFactory) {
 		fSource = sourceSnippet ;
 		fSourceOff = expOffset ;
 		fSourceLen = expLen ;
+		fScannerFactory = scannerFactory;
 }
 
 /**
  * Expression sources now contain the comments inside of them.
  */
-public ExpressionParser(IField field){
+public ExpressionParser(IField field, IScannerFactory scannerFactory){
 	try{
 		fSource = field.getCompilationUnit().getSource();
 		fSourceOff = field.getSourceRange().getOffset();
-		fSourceLen = indexOfSemiColon(field.getSource());
+		fSourceLen = indexOfSemiColon(field.getSource(), scannerFactory);
+		fScannerFactory = scannerFactory;
 	}catch(JavaModelException e){
 		JavaVEPlugin.log(e, Level.WARNING);
 	}
@@ -173,7 +176,7 @@ public String getSelectorContent() {
 	//scanner.tokenizeWhiteSpace = true ;
 	//scanner.tokenizeComments = true ;
 	
-	IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+	IScanner scanner = fScannerFactory.getScanner(true, true, true);
 	scanner.setSource(code.toCharArray());
 	int token ;
 	String prevIdentifier=null ;
@@ -216,7 +219,7 @@ protected int skipSemiColonifNeeded(int right) {
 		//scanner.recordLineSeparator = true ;
 		//scanner.tokenizeWhiteSpace = true ;
 		//scanner.tokenizeComments = true ;
-		IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+		IScanner scanner = fScannerFactory.getScanner(true, true, true);
 		scanner.setSource(targetSrc.toCharArray());
 		
 		try{
@@ -238,13 +241,13 @@ protected int skipSemiColonifNeeded(int right) {
     
 }
 
-public static int indexOfSemiColon(String targetSrc) {
+public static int indexOfSemiColon(String targetSrc, IScannerFactory scannerFactory) {
 	//Scanner scanner = new Scanner() ;
 	//scanner.setSource(targetSrc.toCharArray()) ;
 	//scanner.recordLineSeparator = false ;
 	//scanner.tokenizeWhiteSpace = true ;
 	//scanner.tokenizeComments = true ;
-	IScanner scanner = ToolFactory.createScanner(true, true, false, false);
+	IScanner scanner = scannerFactory.getScanner(true, true, false);
 	scanner.setSource(targetSrc.toCharArray());
 	
 	try{
@@ -264,13 +267,13 @@ public static int indexOfSemiColon(String targetSrc) {
     return targetSrc.length();
 }
 
-public static int indexOfLastSemiColon(String targetSrc) {
+public static int indexOfLastSemiColon(String targetSrc, IScannerFactory scannerFactory) {
 	//Scanner scanner = new Scanner() ;
 	//scanner.setSource(targetSrc.toCharArray()) ;
 	//scanner.recordLineSeparator = false ;
 	//scanner.tokenizeWhiteSpace = true ;
 	//scanner.tokenizeComments = true ;
-	IScanner scanner = ToolFactory.createScanner(true, true, false, false);
+	IScanner scanner = scannerFactory.getScanner(true, true, false);
 	scanner.setSource(targetSrc.toCharArray());
 
 	int semicolonIndex = -1;
@@ -312,7 +315,7 @@ protected void primParseExpression() {
 	//scanner.recordLineSeparator = true ;
 	//scanner.tokenizeWhiteSpace = true ;
 	//scanner.tokenizeComments = true ;
-	IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+	IScanner scanner = fScannerFactory.getScanner(true, true, true);
 	scanner.setSource(fSource.substring(right).toCharArray());
 	
 	try {
@@ -429,7 +432,7 @@ protected void primParseComment() {
 	//scanner.setSource(scannerString.toCharArray()) ;
 	//scanner.recordLineSeparator = true ;
 	//scanner.tokenizeComments = true ;
-	IScanner scanner = ToolFactory.createScanner(true, false, false, true);
+	IScanner scanner = fScannerFactory.getScanner(true, false, true);
 	scanner.setSource(scannerString.toCharArray());
 	
 	try {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.8 $  $Date: 2005-01-20 22:05:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -28,6 +28,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import org.eclipse.ve.internal.java.codegen.model.DefaultScannerFactory;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -231,7 +232,7 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 		String s = m.getCompilationUnit().getSource();
 
 		if (m instanceof IField) {
-			ExpressionParser p = new ExpressionParser((IField) m);
+			ExpressionParser p = new ExpressionParser((IField) m, new DefaultScannerFactory());
 			return p.getExpression();
 		} else {
 			// JCMMethod
