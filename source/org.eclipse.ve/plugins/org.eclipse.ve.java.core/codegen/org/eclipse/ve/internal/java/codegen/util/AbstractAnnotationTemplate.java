@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationTemplate.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-29 19:55:26 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-19 18:17:22 $ 
  */
 /**
  * @version 	1.0
@@ -20,8 +20,8 @@ package org.eclipse.ve.internal.java.codegen.util;
 public abstract class AbstractAnnotationTemplate {
     
 	
-	
-final public static String ANNOTATION_SIG 	=	"@jve:" ; //$NON-NLS-1$
+final public static String ANNOTATION_SEPERATOR = ":";	//$NON-NLS-1$
+final public static String ANNOTATION_SIG 	=	"@jve"+ANNOTATION_SEPERATOR ;
 // TODO No Support, yet for multi line def, so just stick it here
 final public static String VISUAL_INFO_DECL    = "decl-index=" ; //$NON-NLS-1$
 final public static String VISUAL_INFO_TYPE	=	VISUAL_INFO_DECL+"0" ; //$NON-NLS-1$
@@ -61,7 +61,7 @@ public String toString () {
 	   st.append(ExpressionTemplate.SPACE) ;	
     st.append(ANNOTATION_SIG) ;
     st.append(fAnnotationType) ;
-    st.append(":") ;
+    st.append(ANNOTATION_SEPERATOR) ;
     st.append(getContent()) ;
     
     //st.append(fSeperator) ;
