@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2004-04-23 20:26:43 $ 
+ *  $Revision: 1.15 $  $Date: 2004-04-27 21:35:21 $ 
  */
 
 import java.util.*;
@@ -952,10 +952,15 @@ public void setBeanProxy(IBeanProxy beanProxy) {
  * editor. The PropertyEditor for LayoutManager doesn't
  * exist. You want to know it is a FlowLayoutManager.
  * So when it comes back as a FlowLayoutManager.
+ * 
+ * Subclasses may override setupBeanProxy, but they should always
+ * call super.setupBeanProxy().
  */
 protected void setupBeanProxy(IBeanProxy beanProxy) {
 	fBeanProxy = beanProxy;
-	if (beanProxy != null && !beanProxy.getTypeProxy().isPrimitive()) {
+	if (beanProxy == null)
+		processInstantiationError(new IllegalStateException("No Bean instantiated for some reason."));
+	else if (!beanProxy.getTypeProxy().isPrimitive()) {
 		// We are trying to set a non-primitive and non-null proxy. Primitives aren't valid here because
 		// this proxy adapter is only valid for non-primitives.
 		String qualifiedClassName = beanProxy.getTypeProxy().getTypeName();

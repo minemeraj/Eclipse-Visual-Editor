@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-27 21:35:25 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -611,15 +611,11 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			notInstantiatedClasses.remove(notInstantiatedClasses.size()-1);	// The last one WILL be for Component. We want to be able to apply component settings.
 		}
 		super.setupBeanProxy(beanProxy);
-		if (isBeanProxyInstantiated()) {
-			// Creating proxy worked.
-			// Now add in the component listener if one is required.
-			if (fComponentListeners != null && !fComponentListeners.isEmpty())
-				createComponentManager();
-			// Now add in the image listener if one is required.
-			if (hasImageListeners())
-				createImageCollector();
-		}
+		if (fComponentListeners != null && !fComponentListeners.isEmpty())
+			createComponentManager();
+		// Now add in the image listener if one is required.
+		if (hasImageListeners())
+			createImageCollector();
 	}
 
 	protected void applyAllSettings() {

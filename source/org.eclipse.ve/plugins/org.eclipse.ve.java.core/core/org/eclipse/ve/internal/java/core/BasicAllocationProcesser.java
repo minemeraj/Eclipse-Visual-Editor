@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-07 18:34:12 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-27 21:35:21 $ 
  */
  
 import java.text.MessageFormat;
@@ -134,6 +134,8 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		} catch (ThrowableProxy e) {
 			throw new AllocationException(e);
 		} catch (NoExpressionValueException e) {
+			throw new AllocationException(e);
+		} catch (RuntimeException e) {
 			throw new AllocationException(e);
 		}
 	}
