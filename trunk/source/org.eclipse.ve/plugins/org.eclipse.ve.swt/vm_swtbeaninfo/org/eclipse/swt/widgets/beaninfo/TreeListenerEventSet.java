@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeListenerEventSet.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-16 12:38:15 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -68,7 +68,7 @@ public class TreeListenerEventSet {
 				IvjBeanInfo.PREFERRED, Boolean.TRUE,
 				IvjBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.TreeAdapter"			 //$NON-NLS-1$
 		   		}, 
-				aDescriptorList, org.eclipse.swt.events.ControlListener.class,
+				aDescriptorList, org.eclipse.swt.events.TreeListener.class,
 				"addTreeListener", "removeTreeListener");//$NON-NLS-2$//$NON-NLS-1$
 
 		return aDescriptor;
