@@ -22,9 +22,9 @@
   </event:AddMany>
   <event:AddMany  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="items" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#ToolItem"
-        upperBound="-1" containment="false">
+        upperBound="-1">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD" beanLocation="LOCAL"/>
        <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" mergeIntrospection="false"/>           
     </addedEObjects>
   </event:AddMany>
