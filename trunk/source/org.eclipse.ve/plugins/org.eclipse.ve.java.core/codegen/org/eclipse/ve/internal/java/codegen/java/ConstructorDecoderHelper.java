@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-11 14:05:54 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -201,5 +201,28 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	protected int getSFPriority() {		
 		return IJavaFeatureMapper.PRIORITY_CONSTRUCTOR;
 	}
-
+	
+	/* 
+	 * Determines the index priority for the constructor expressions.
+	 * NOTE: Since the hierarchy of the beans should be known for the 
+	 * index values to turn out correctly, it is assumed that the decoding
+	 * process has been completed when this code gets called.
+	 * 
+	 * 
+	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
+	 */
+	protected int getIndexPriority() {
+		if(fbeanPart!=null){
+			// TODO Warning: Hierarchy of beans is assumed to be known at this point, 
+			// to figure out constructor expression index priority.
+			BeanPart obj = fbeanPart;
+			int parentCount = 0;
+			while(obj!=null){
+				parentCount++;
+				obj = CodeGenUtil.determineParentBeanpart(obj);
+			}
+			return Integer.MAX_VALUE - parentCount;
+		}
+		return super.getIndexPriority();
+	}
 }

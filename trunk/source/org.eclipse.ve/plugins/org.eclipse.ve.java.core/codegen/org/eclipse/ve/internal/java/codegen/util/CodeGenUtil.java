@@ -11,14 +11,12 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.13 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.14 $  $Date: 2004-03-11 14:05:54 $ 
  */
 
 
 
 import java.util.*;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
@@ -34,6 +32,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -48,8 +47,7 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
@@ -906,6 +904,55 @@ public static int[] indexOfIgnoringSpace(String main, String find){
 		return new int[] {-1,-1};
 	}
 }
+
+public static BeanPart determineParentBeanpart(final BeanPart child){
+	// FIRST - Try to figure out by the BDM parent-child relationships
+	BeanPart[] brefs = child.getBackRefs();
+	if(brefs!=null){
+		for (int i = 0; i < brefs.length; i++) {
+			if(brefs[i]!=null){
+				Iterator children = brefs[i].getChildren();
+				while (children.hasNext()) {
+					BeanPart child1 = (BeanPart) children.next();
+					if(child.equals(child1))
+						return brefs[i];
+				}
+			}
+		}
+	}
+	// SECOND - Try to find parent by parse tree 
+	// (SWT - doesnt allocate parent-child when instantiaing)
+	if(child.getEObject()!=null && child.getEObject() instanceof IJavaObjectInstance){
+		IJavaObjectInstance jo = (IJavaObjectInstance) child.getEObject();
+		JavaAllocation ja = jo.getAllocation();
+		if (ja instanceof ParseTreeAllocation) {
+			ParseTreeAllocation pta = (ParseTreeAllocation) ja;
+			PTExpression expression = pta.getExpression();
+			final BeanPart bps[] = new BeanPart[1];
+			NaiveExpressionFlattener bpFinder = new NaiveExpressionFlattener(){
+				public boolean visit(PTInstanceReference node) {
+					IJavaObjectInstance obj = node.getObject() ;
+				    BeanPart bp = child.getModel().getABean(obj);
+				    if (bp!=null)
+				    	  bps[0] = bp;
+				    else {
+				    	if (obj.isSetAllocation()) {
+				    		JavaAllocation alloc = obj.getAllocation();
+				    		if (alloc instanceof ParseTreeAllocation)
+				    			((ParseTreeAllocation) alloc).getExpression().accept(this);
+				    	} 
+				    }
+					return super.visit(node);
+				}
+			};
+			expression.accept(bpFinder);
+			if(bps[0]!=null)
+				return bps[0];
+		}
+	}
+	return null;
+}
+
 
 }
 
