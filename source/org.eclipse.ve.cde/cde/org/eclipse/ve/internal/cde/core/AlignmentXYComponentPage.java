@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
 import java.util.List;
@@ -39,6 +39,9 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 	private AlignmentAction fAlignBottomAction = new AlignmentAction(AlignmentCommandRequest.BOTTOM_ALIGN);
 	private AlignmentAction fMatchWidthAction = new AlignmentAction(AlignmentCommandRequest.MATCH_WIDTH);
 	private AlignmentAction fMatchHeightAction = new AlignmentAction(AlignmentCommandRequest.MATCH_HEIGHT);
+	
+	private RestorePreferredSizeAction fRestorePreferredSizeAction = new RestorePreferredSizeAction();
+	
 	private ShowDistributeBoxAction fShowDistributeBoxAction = new ShowDistributeBoxAction();
 	private DistributeAction fDistributeHorizontalAction = new DistributeAction(DistributeCommandRequest.HORIZONTAL);
 	private DistributeAction fDistributeVerticalAction = new DistributeAction(DistributeCommandRequest.VERTICAL);
@@ -53,6 +56,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 		fAlignBottomAction.setSelectionProvider(selectionProvider);
 		fMatchWidthAction.setSelectionProvider(selectionProvider);
 		fMatchHeightAction.setSelectionProvider(selectionProvider);
+		fRestorePreferredSizeAction.setSelectionProvider(selectionProvider);
 		fDistributeHorizontalAction.setSelectionProvider(selectionProvider);
 		fDistributeVerticalAction.setSelectionProvider(selectionProvider);
 	}
@@ -82,7 +86,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 		ToolBarManager mgr3 = new ToolBarManager(toolBar3);
 		mgr3.add(fAlignRightAction);
 		mgr3.add(fAlignBottomAction);
-		mgr3.add(new NullAction());
+		mgr3.add(fRestorePreferredSizeAction);
 		mgr3.add(fDistributeVerticalAction);
 		mgr3.update(true);
 
@@ -130,6 +134,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 						fAlignBottomAction.update();
 						fMatchWidthAction.update();
 						fMatchHeightAction.update();
+						fRestorePreferredSizeAction.update();
 						fDistributeHorizontalAction.update();
 						fDistributeVerticalAction.update();
 						return true;
@@ -174,6 +179,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 		fAlignBottomAction.setWorkbenchPart(newEditorPart);
 		fMatchWidthAction.setWorkbenchPart(newEditorPart);
 		fMatchHeightAction.setWorkbenchPart(newEditorPart);
+		fRestorePreferredSizeAction.setWorkbenchPart(newEditorPart);
 		fDistributeHorizontalAction.setWorkbenchPart(newEditorPart);
 		fDistributeVerticalAction.setWorkbenchPart(newEditorPart);
 		fShowDistributeBoxAction.setWorkbenchPart(newEditorPart);

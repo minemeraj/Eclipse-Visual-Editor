@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
 
@@ -212,6 +212,8 @@ public Command getCommand(Request request){
 		return getDistributeChildCommand(request);
 	if (RequestConstantsCDE.REQ_ALIGNMENT_CHILD.equals(request.getType()))
 		return getAlignmentChildCommand(request);
+	if (RequestConstantsCDE.REQ_RESTORE_PREFERRED_SIZE_CHILD.equals(request.getType()))
+		return getRestorePreferredSizeChildCommand(request);
 	return super.getCommand(request);
 }
 
@@ -414,6 +416,25 @@ protected Command getDistributeChildCommand(Request request) {
 	newRect.y = relativeRect.y;
 	Command cmd = createChangeConstraintCommand(child,translateToModelConstraint(newRect), true, false);
 	return cmd != null ? cmd : NoOpCommand.INSTANCE;	// If no changes (i.e. null returned) we still must return something to indicate we processed the request.	
+}
+
+protected Command getRestorePreferredSizeChildCommand(Request request) {
+	GraphicalEditPart child = (GraphicalEditPart)((ChildRequest)request).getChildEditPart();
+	Point clientAreaOffset = getHostFigure().getClientArea().getLocation().negate();
+	Rectangle currRect = new Rectangle(child.getFigure().getBounds());
+	currRect.translate(clientAreaOffset);
+	currRect = (Rectangle)getConstraintFor(currRect);
+	
+	// Set the size to -1, -1 to cause the reset to occur
+	currRect.height = -1;
+	currRect.width = -1;
+	
+	Command cmd = createChangeConstraintCommand(child,translateToModelConstraint(currRect), false, true);
+	return cmd != null ? cmd : NoOpCommand.INSTANCE;	// If no changes (i.e. null returned) we still must return something to indicate we processed the request.
+}
+
+protected Command getResetToPreferredSizeChildCommand(Request request) {
+	return null;
 }
 /*
  * Get the constraint from the super class and adjust it using the zoom factor.

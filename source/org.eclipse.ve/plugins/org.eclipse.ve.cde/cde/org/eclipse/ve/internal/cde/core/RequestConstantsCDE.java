@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: RequestConstantsCDE.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
 /**
@@ -21,8 +21,10 @@ public interface RequestConstantsCDE {
 	public static String
 		REQ_ALIGNMENT = "cde align",	//$NON_NLS-1$ //$NON-NLS-1$
 		REQ_ALIGNMENT_CHILD = "cde align child",	//$NON-NLS-1$
-		
+		REQ_RESTORE_PREFERRED_SIZE = "restore preferred", //$NON-NLS-1$
+		REQ_RESTORE_PREFERRED_SIZE_CHILD = "restore preferred child", //$NON-NLS-1$
 		REQ_DISTRIBUTE = "distribute",	//$NON-NLS-1$
 		REQ_DISTRIBUTE_CHILD = "distribute child";	//$NON-NLS-1$
+	    
 
 }
