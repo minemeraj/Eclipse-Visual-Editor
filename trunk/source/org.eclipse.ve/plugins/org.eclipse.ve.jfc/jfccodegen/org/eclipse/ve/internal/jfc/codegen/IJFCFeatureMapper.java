@@ -52,6 +52,13 @@ public interface IJFCFeatureMapper extends IJavaFeatureMapper {
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_FEATURE_NAME = "autoCreateColumnsFromModel";
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME = "setAutoCreateColumnsFromModel";
 	
+	public static String  ABSTRACTBUTTON_ACTION_FEATURE_NAME	="action";
+	public static String  ABSTRACTBUTTON_ACTION_NAME			="setAction";
+	
+	public static String  COMPONENT_VISIBLE_FEATURE_NAME	="visible";
+	public static String  COMPONENT_VISIBLE_NAME			="setVisible";
+	
+	
 	
 	// Some priorities that are used by the JFC feature mappers
 	final static int PRIORITY_JTABLE_MODEL = IJavaFeatureMapper.PRIORITY_DEFAULT;
@@ -59,6 +66,9 @@ public interface IJFCFeatureMapper extends IJavaFeatureMapper {
 	final static int PRIORITY_JTABLE_AUTOCREATECOLUMNSFROMMODEL = PRIORITY_JTABLE_MODEL + 1000 ;
 	final static int PRIORITY_JTABLECOLUMN_ADDCOLUMN = IJavaFeatureMapper.PRIORITY_ADD+1000 ; // a bit more than a regular add
 	final static int PRIORITY_LAYOUT = IJavaFeatureMapper.PRIORITY_DEFAULT + 3000;
+	final static int PRIORITY_ACTION = IJavaFeatureMapper.PRIORITY_DEFAULT+1000;
+	final static int PRIORITY_VISIBLE = IJavaFeatureMapper.PRIORITY_ADD - 1000;
+	
 	
 	
 }

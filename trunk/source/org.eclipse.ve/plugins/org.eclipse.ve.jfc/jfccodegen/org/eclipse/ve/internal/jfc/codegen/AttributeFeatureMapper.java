@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AttributeFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-07-10 20:15:01 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-13 16:16:53 $ 
  */
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -113,6 +113,10 @@ public int getFeaturePriority(String methodType) {
 		return PRIORITY_JTABLE_MODEL;
 	if(methodType.equals(IJFCFeatureMapper.JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME)) //$NON-NLS-1$
 		return PRIORITY_JTABLE_AUTOCREATECOLUMNSFROMMODEL;
+	if (methodType.equals(IJFCFeatureMapper.ABSTRACTBUTTON_ACTION_NAME)) //$NON-NLS-1$
+		return PRIORITY_ACTION;
+	if (methodType.equals(IJFCFeatureMapper.COMPONENT_VISIBLE_NAME)) //$NON-NLS-1$
+		return PRIORITY_VISIBLE;
 	return super.getFeaturePriority(methodType);
 }
 
