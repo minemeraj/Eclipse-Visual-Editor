@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-23 20:26:41 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-24 17:55:52 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -40,6 +40,12 @@ public class DefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	public void activate() {
 		super.activate();
+		setupLabelProvider();
+		refreshVisuals(); // Because refreshVisuals is called normally BEFORE activation.
+	}
+	
+	protected void setupLabelProvider(){
+		
 		labelProviderNotifier = new DefaultLabelProviderNotifier();
 		labelProviderNotifier
 			.setModel(
@@ -56,8 +62,8 @@ public class DefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 						});
 					}
 				},
-				ClassDescriptorDecoratorPolicy.getPolicy(this).getLabelProvider(((EObject) getModel()).eClass()));
-		refreshVisuals(); // Because refreshVisuals is called normally BEFORE activation.
+				ClassDescriptorDecoratorPolicy.getPolicy(this).getLabelProvider(((EObject) getModel()).eClass()));		
+		
 	}
 
 	public void deactivate() {
