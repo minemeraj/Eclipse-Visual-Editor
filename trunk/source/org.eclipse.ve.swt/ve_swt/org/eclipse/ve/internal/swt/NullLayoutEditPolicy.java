@@ -220,7 +220,7 @@ private IBeanTypeProxy environmentBeanTypeProxy;
 private IMethodProxy getFieldMethodProxy; 
 protected final IBeanTypeProxy getEnvironmentBeanTypeProxy(ProxyFactoryRegistry aProxyFactoryRegistry){
 	if(environmentBeanTypeProxy == null){	
-		environmentBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment"); //$NON-NLS-1$		
+		environmentBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$		
 	}
 	return environmentBeanTypeProxy;
 }

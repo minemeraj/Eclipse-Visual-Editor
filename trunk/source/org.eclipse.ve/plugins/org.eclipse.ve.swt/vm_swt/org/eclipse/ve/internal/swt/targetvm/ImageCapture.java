@@ -1,4 +1,4 @@
-package com.ibm.etools.jbcf.swt.targetvm;
+package org.eclipse.ve.internal.swt.targetvm;
 import org.eclipse.swt.*;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.*;

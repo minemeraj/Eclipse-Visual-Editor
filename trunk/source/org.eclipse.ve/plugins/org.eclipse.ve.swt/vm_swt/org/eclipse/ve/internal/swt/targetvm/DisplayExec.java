@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayExec.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-05 23:11:19 $ 
+ *  $Revision: 1.1 $  $Date: 2004-06-25 16:04:50 $ 
  */
-package com.ibm.etools.jbcf.swt.targetvm;
+package org.eclipse.ve.internal.swt.targetvm;
 
 import org.eclipse.swt.widgets.Display;
 

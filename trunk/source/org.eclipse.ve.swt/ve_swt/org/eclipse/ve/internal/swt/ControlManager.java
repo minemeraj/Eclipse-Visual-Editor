@@ -103,7 +103,7 @@ public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
  		try {
 			if (fControlManagerProxy == null) {
 				// Get a new instance of a control manager proxy on the target VM				
-				IBeanTypeProxy componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.ControlManager"); //$NON-NLS-1$
+				IBeanTypeProxy componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.ControlManager"); //$NON-NLS-1$
 				fControlManagerProxy = componentManagerType.newInstance();
 				// Register a callback link between the target VM and us so that we get called back by it
 				// when the control moves or is resized
