@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-11 18:13:21 $ 
  */
 
 import java.util.*;
@@ -931,7 +931,7 @@ public Label getReturnMethodDisplayInformation() {
 		if (d == null)
 			d = JavaElementImageProvider.getMethodImageDescriptor(false, 0);
 		l.setIcon(fJavaImageRegistry.get(d));
-		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.getString("JFCBeanDecoderAdapter.()_5")); //$NON-NLS-1$
+		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.getString("BeanDecoderAdapter.()_5")); //$NON-NLS-1$
 		fpreviousLabel = l ;
 	}
 	else {
@@ -957,13 +957,13 @@ public String getToolTipContent() {
 	StringBuffer st = new StringBuffer() ;
 	st.append(fBean.getSimpleName()) ;
 	if (fBean.isInstanceVar())
-	    st.append(CodeGenJavaMessages.getString("JFCBeanDecoderAdapter._is_an_instance_variable_of_type__1")) ; //$NON-NLS-1$
+	    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._is_an_instance_variable_of_type__1")) ; //$NON-NLS-1$
 	else
-	    st.append(CodeGenJavaMessages.getString("JFCBeanDecoderAdapter._is_a_local_variable_of_type__2")) ; //$NON-NLS-1$
-    st.append(fBean.getType()+CodeGenJavaMessages.getString("JFCBeanDecoderAdapter.._3")) ; //$NON-NLS-1$
-    st.append(CodeGenJavaMessages.getString("JFCBeanDecoderAdapter._nIt_is_initialized_by_the_method___4")+fBean.getInitMethod().getMethodName()+CodeGenJavaMessages.getString("JFCBeanDecoderAdapter.()_5")) ; //$NON-NLS-1$ //$NON-NLS-2$
-    st.append (CodeGenJavaMessages.getString("JFCBeanDecoderAdapter._n_6")+CodeGenJavaMessages.getString("JFCBeanDecoderAdapter.Paste_to_source_7")) ; //$NON-NLS-1$ //$NON-NLS-2$
-    st.append (CodeGenJavaMessages.getString("JFCBeanDecoderAdapter._n_8")+CodeGenJavaMessages.getString("JFCBeanDecoderAdapter.Copy_text_to_clipboard_9")); //$NON-NLS-1$ //$NON-NLS-2$
+	    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._is_a_local_variable_of_type__2")) ; //$NON-NLS-1$
+    st.append(fBean.getType()+CodeGenJavaMessages.getString("BeanDecoderAdapter.._3")) ; //$NON-NLS-1$
+    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._nIt_is_initialized_by_the_method___4")+fBean.getInitMethod().getMethodName()+CodeGenJavaMessages.getString("BeanDecoderAdapter.()_5")) ; //$NON-NLS-1$ //$NON-NLS-2$
+    st.append (CodeGenJavaMessages.getString("BeanDecoderAdapter._n_6")+CodeGenJavaMessages.getString("BeanDecoderAdapter.Paste_to_source_7")) ; //$NON-NLS-1$ //$NON-NLS-2$
+    st.append (CodeGenJavaMessages.getString("BeanDecoderAdapter._n_8")+CodeGenJavaMessages.getString("BeanDecoderAdapter.Copy_text_to_clipboard_9")); //$NON-NLS-1$ //$NON-NLS-2$
     
     return st.toString();
 }
