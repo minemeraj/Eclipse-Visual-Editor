@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.50 $  $Date: 2004-06-29 18:20:23 $ 
+ *  $Revision: 1.51 $  $Date: 2004-06-29 18:31:26 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -192,7 +192,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				e.printStackTrace();
 			}
 		}	
-		*//
+		**/
 	}
 	
 	/* (non-Javadoc)
