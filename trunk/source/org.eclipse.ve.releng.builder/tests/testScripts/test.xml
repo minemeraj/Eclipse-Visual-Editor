@@ -36,6 +36,10 @@
     	</exec>
 	
 		<exec dir="." executable="unzip">
+			<arg line="-o -qq VE-SDK-*.zip -d ${install}/eclipse"/>
+    	</exec>
+    	
+		<exec dir="." executable="unzip">
 			<arg line="-o -qq VE-junit-tests-*.zip -d ${install}"/>
     	</exec>
 	</target>
