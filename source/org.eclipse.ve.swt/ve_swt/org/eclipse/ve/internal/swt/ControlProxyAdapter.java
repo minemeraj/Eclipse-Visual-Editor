@@ -10,9 +10,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -24,11 +22,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
-
-import com.sun.rsasign.c;
 
 public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
 	
