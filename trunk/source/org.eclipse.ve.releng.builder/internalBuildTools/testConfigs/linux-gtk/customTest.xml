@@ -1,0 +1,27 @@
+<project name="Customized testing instructions">
+
+	<target name="customSetup">
+		<!--copy the script which invokes the tests on trelenggtk-->
+		<chmod file="trelenggtk.sh" perm="755" />
+		<exec dir="." executable="rcp">
+			<arg line="trelenggtk.sh ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+	
+		<!--get eclipse linux-gtk SDK for testing then copy to test machine-->		
+		<get src="${eclipseURL}/eclipse-SDK-${eclipseBuildID}-linux-gtk.zip" dest="${tester}/eclipse-SDK-linux-gtk.zip" usetimestamp="true" />
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${tester}/eclipse-SDK-linux-gtk.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/../emf.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/../gef.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+		<exec dir="${tester}" executable="rcp">
+			<arg line="${buildDirectory}/${buildLabel}/VE-runtime-${buildId}.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+		</exec>
+
+	</target>
+
+</project>
