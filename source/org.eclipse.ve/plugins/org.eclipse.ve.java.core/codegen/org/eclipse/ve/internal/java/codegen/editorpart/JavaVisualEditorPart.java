@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.87 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.88 $  $Date: 2005-03-01 22:50:37 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -504,12 +504,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						// So that we can get the editor up and displaying as soon as possible we will push this off to
 						// the next async cycle.	
 						openVCEViewersIfRequired(getEditorSite());
-						IProject p = ((IFileEditorInput)getEditorInput()).getFile().getProject();
-						try {
-							JavaProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID,p);
-						} catch (CoreException e1) {
-							JavaVEPlugin.log(e1);
-						}
 					}			
 				} catch (PartInitException e) {
 					JavaVEPlugin.log(e);
@@ -1887,6 +1881,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		protected void initializeForProject(IFile file) throws CoreException {
 			IProject proj = file.getProject();
 			BeaninfoNature nature = BeaninfoNature.getRuntime(proj);
+			JavaProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID, proj);
 			ResourceSet rs = nature.newResourceSet();
 			EMFEditDomainHelper.setResourceSet(rs, editDomain);
 			editDomain.setData(NATURE_KEY, nature);	// Need to save the nature so we can check for validity later if project is renamed.
