@@ -94,6 +94,10 @@
                package="org.eclipse.swt.browser"
                path="overrides/org/eclipse/swt/browser">
          </override>
+         <override
+               package="org.eclipse.swt.custom"
+               path="overrides/org/eclipse/swt/custom">
+         </override>
       </registration>
    </extension>
    <extension
