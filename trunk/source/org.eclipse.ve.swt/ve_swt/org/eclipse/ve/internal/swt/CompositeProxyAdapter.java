@@ -42,7 +42,9 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 			while(iter.hasNext()){
 				primAddControl((IJavaObjectInstance)iter.next());
 			}
-		}
+			childValidated(this);
+		} else 
+			super.appliedList(sf, newValues, position, testValidity);
 	}
 
 	protected void applied(EStructuralFeature as, Object newValue, int position) {
