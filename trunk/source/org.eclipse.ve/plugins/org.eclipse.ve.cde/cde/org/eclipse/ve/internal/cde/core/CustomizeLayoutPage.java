@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-01 21:07:49 $ 
  */
 
 import org.eclipse.jface.viewers.*;
@@ -90,7 +90,19 @@ public abstract class CustomizeLayoutPage {
 	 * 
 	 * @param oldSelection The previous selection.
 	 */
-	protected abstract boolean handleSelectionChanged(ISelection oldSelection); 
+	protected abstract boolean handleSelectionChanged(ISelection oldSelection);
+	
+	/*
+	 * Called to determine whether a Layout page applies to the selection or
+	 * a component's parent container.  This is used to raise the Layout tab
+	 * to the front when the selection is a container and has a customizer page. 
+	 * 
+	 * This returns false by default, so Component pages do not have to override.  Layout
+	 * pages should override this method if they want to be able to be raised.
+	 */
+	protected boolean selectionIsContainer(ISelection oldSelection) {
+		return false;
+	}
 	
 	private ISelectionProvider selectionProvider;
 	

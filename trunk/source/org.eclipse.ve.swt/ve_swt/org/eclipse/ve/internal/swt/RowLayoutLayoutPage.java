@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:33 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-01 21:07:54 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -298,6 +298,24 @@ public class RowLayoutLayoutPage extends CustomizeLayoutPage {
 		IActionFilter af = (IActionFilter) ((IAdaptable) target).getAdapter(IActionFilter.class);
 		if (af != null && af.testAttribute(target, LAYOUT_FILTER_KEY, RowLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
+		}
+		return false;
+	}
+	
+	protected boolean selectionIsContainer(ISelection oldSelection) {
+		ISelection newSelection = getSelection();
+		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
+			List editparts = ((IStructuredSelection) newSelection).toList();
+			EditPart firstParent;
+			
+			// Check to see if this is a single selected container
+			if (editparts.size() == 1 && editparts.get(0) instanceof EditPart) {
+				firstParent = (EditPart)editparts.get(0);
+				// check to see if this is a container with a GridLayout
+				if (isValidTarget(firstParent)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}

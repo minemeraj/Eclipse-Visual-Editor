@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-24 23:23:39 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-01 21:07:49 $ 
  */
 
 import java.util.ArrayList;
@@ -305,6 +305,7 @@ public class CustomizeLayoutWindow extends Window {
 	public void update(ISelection selection) {
 		this.selection = selection;
 		boolean found = false;
+		boolean isLayout = false;
 		for (int i = 0; i < layoutPages.size(); i++) {
 			CustomizeLayoutPage page = (CustomizeLayoutPage) layoutPages.get(i);
 			if (page != null)
@@ -317,7 +318,12 @@ public class CustomizeLayoutWindow extends Window {
 				}
 				layoutPageLayout.topControl = control;
 				layoutPage.layout();
-				break;
+				// If the selection is a container and this is the container's
+				// layout, stop looking through the available pages.
+				if (page.selectionIsContainer(selection)) {
+					isLayout = true;
+					break;
+				}
 			}
 		}
 		if (!found) {
@@ -344,6 +350,17 @@ public class CustomizeLayoutWindow extends Window {
 		if (!found) {
 			componentPageLayout.topControl = noComponentPage;
 			componentPage.layout();
+		}
+		
+		// if the layout page is a container or there isn't a component page
+		if (isLayout || !found) {
+			// Set the layout tab to the top
+			if (tabFolder.getSelectionIndex() != 0)
+				tabFolder.setSelection(0);
+		} else {
+			// else set the component tab to the top
+			if (tabFolder.getSelectionIndex() != 1)
+				tabFolder.setSelection(1);
 		}
 	}
 	
