@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.32 $  $Date: 2004-05-11 20:50:54 $ 
+ *  $Revision: 1.33 $  $Date: 2004-05-12 11:39:40 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -45,8 +45,6 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.CodegenEditorPartMessages;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
-import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -1202,4 +1200,9 @@ public synchronized boolean isBusy() {
 	else
 		return true;
 }
+
+public IWorkingCopyProvider getWorkingCopyProvider() {
+	return fWorkingCopy;
+}
+
 }
