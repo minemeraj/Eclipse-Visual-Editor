@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-16 16:03:04 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -67,29 +67,11 @@ public class ShellBeanInfo extends IvjBeanInfo {
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		try {
 			PropertyDescriptor aDescriptorList[] = {
-				// bounds
-				super.createPropertyDescriptor(getBeanClass(),"bounds", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("boundsDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("boundsSD"), //$NON-NLS-1$
-				}
-				),
-				// enabled
-				super.createPropertyDescriptor(getBeanClass(),"enabled", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("enabledDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("enabledSD"), //$NON-NLS-1$
-				}
-				),
 				// imeInputMode
 				super.createPropertyDescriptor(getBeanClass(),"imeInputMode", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, ShellMessages.getString("imeInputModeDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ShellMessages.getString("imeInputModeSD"), //$NON-NLS-1$
 					EXPERT, Boolean.TRUE,
-				}
-				),
-				// location
-				super.createPropertyDescriptor(getBeanClass(),"location", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("locationDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("locationSD"), //$NON-NLS-1$
 				}
 				),
 				// region
@@ -111,18 +93,6 @@ public class ShellBeanInfo extends IvjBeanInfo {
 					DISPLAYNAME, ShellMessages.getString("shellsDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ShellMessages.getString("shellsSD"), //$NON-NLS-1$
 					DESIGNTIMEPROPERTY, Boolean.FALSE
-				}
-				),
-				// size
-				super.createPropertyDescriptor(getBeanClass(),"size", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("sizeDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("sizeSD"), //$NON-NLS-1$
-				}
-				),
-				// visible
-				super.createPropertyDescriptor(getBeanClass(),"visible", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("visibleDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("visibleSD"), //$NON-NLS-1$
 				}
 				),
 			};

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-25 21:26:06 $ 
+ *  $Revision: 1.7 $  $Date: 2004-07-16 16:03:04 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -75,20 +75,6 @@ public BeanDescriptor getBeanDescriptor() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
-			// bounds
-			super.createPropertyDescriptor(getBeanClass(),"bounds", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, DecorationsMessages.getString("boundsDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, DecorationsMessages.getString("boundsSD"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
-			}
-			),
-			// clientArea
-			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, DecorationsMessages.getString("clientAreaDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, DecorationsMessages.getString("clientAreaSD"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
-			}
-			),
 			// defaultButton
 			super.createPropertyDescriptor(getBeanClass(),"defaultButton", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("defaultButtonDN"), //$NON-NLS-1$
@@ -109,13 +95,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
-			// location
-			super.createPropertyDescriptor(getBeanClass(),"location", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, DecorationsMessages.getString("locationDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, DecorationsMessages.getString("locationSD"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
-			}
-			),
 			// maximized
 			super.createPropertyDescriptor(getBeanClass(),"maximized", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("maximizedDN"), //$NON-NLS-1$
@@ -132,19 +111,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"minimized", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("minimizedDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("minimizedSD"), //$NON-NLS-1$
-			}
-			),
-			// reparentable
-			super.createPropertyDescriptor(getBeanClass(),"reparentable", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, DecorationsMessages.getString("reparentableDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, DecorationsMessages.getString("reparentableSD"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
-			}
-			),
-			// size
-			super.createPropertyDescriptor(getBeanClass(),"size", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, DecorationsMessages.getString("sizeDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, DecorationsMessages.getString("sizeSD"), //$NON-NLS-1$
 			}
 			),
 			// text
