@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.33 $  $Date: 2004-09-09 16:14:14 $ 
+ *  $Revision: 1.34 $  $Date: 2004-09-09 18:11:50 $ 
  */
 
 
@@ -467,10 +467,13 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 			  if (!primGetDecoder().decode()) {
 			  	// Decoder failed to decode... potentially because of import resolution problems...
 			  	// do not pick up the chnage... pick it up when the import is added
+			  	int len = getLen();
 			  	setContent(curParser);
 			  	primSetState(curState);
 			  	setExprStmt(curStatement);
 			  	primGetDecoder().setExpression(this);
+			  	// Set the document len... so that a top down could replace it correclty.
+			  	setLen(len);
 			  }
 			}
 			catch (Throwable t) {
