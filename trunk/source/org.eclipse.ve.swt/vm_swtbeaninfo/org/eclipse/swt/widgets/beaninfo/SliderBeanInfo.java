@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SliderBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-26 16:43:44 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
+import java.beans.*;
 import java.beans.BeanDescriptor;
 import java.beans.SimpleBeanInfo;
 
@@ -40,5 +41,12 @@ public BeanDescriptor getBeanDescriptor() {
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
-	
+/* (non-Javadoc)
+ * @see java.beans.BeanInfo#getEventSetDescriptors()
+ */
+public EventSetDescriptor[] getEventSetDescriptors() {
+	return new EventSetDescriptor[] {
+			SelectionListenerEventSet.getEventSetDescriptor(Slider.class)
+	};
+}
 }
