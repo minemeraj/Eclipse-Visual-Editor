@@ -67,6 +67,15 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		return layoutMethodProxy;
 	}
 	
+	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
+		// Find the index of the child - remove it and re-insert it at this position
+		IJavaObjectInstance child = (IJavaObjectInstance)aChildProxyHost.getTarget();
+		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
+		int indexOfChild = controls.indexOf(child);
+		removeControl(child);
+		addControl(child,indexOfChild);
+	}
+	
 	protected void addControl(IJavaObjectInstance aControl, int position) throws ReinstantiationNeeded {
 		
 		// Whenever a control is added unless it is at the end there is no way to insert it at a particular

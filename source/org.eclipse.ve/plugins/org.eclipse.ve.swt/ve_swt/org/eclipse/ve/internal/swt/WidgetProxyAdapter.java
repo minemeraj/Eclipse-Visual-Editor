@@ -1,7 +1,7 @@
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
@@ -61,12 +61,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 		}
 		super.releaseBeanProxy();
 	}
-	// Replace this with code that listens to the expression being applied to the allocation - JRW
-	public void hackRefresh(){
-		releaseBeanProxy();	
-		instantiateBeanProxy();
-	}
-
+	
 	/**
 	 * @return the int style value by interrogate getStyle() on the targetVM on the correct thread
 	 * 
