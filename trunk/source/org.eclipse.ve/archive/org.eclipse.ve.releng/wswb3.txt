@@ -1,2 +1,2 @@
-ve-20040408_1030.zip=http://jvelinux.raleigh.ibm.com/cgi-bin/downloads/ | | eclipse/ | runtime, source
-VE-examples-I20040311a.zip=http://download.eclipse.org/tools/ve/downloads/drops/I-I20040311a-200403111132/ | | eclipse/ | examples
+VE-SDK-I20040415.zip=http://download.eclipse.org/tools/ve/downloads/drops/I-I20040415-200404151247/ | | | runtime, source
+VE-examples-I20040415.zip=http://download.eclipse.org/tools/ve/downloads/drops/I-I20040415-200404151247/ | | | examples
