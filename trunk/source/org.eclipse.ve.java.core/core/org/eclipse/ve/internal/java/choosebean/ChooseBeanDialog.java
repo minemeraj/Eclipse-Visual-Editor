@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-23 16:10:31 $ 
  */
 
 import java.util.*;
@@ -57,7 +57,6 @@ import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  * All: 
  * Swing Types: Subclasses of JComponent, JFrame, JDialog, JWindow, JApplet, TableColumn
  * AWT Types: Subclasses of Component, but not subclass of Swing Types.
- * Web Proxy Types: Classes which are in packages called 'soap.proxy'.
  */
 public class ChooseBeanDialog extends TwoPaneElementSelector {
 
@@ -67,15 +66,11 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	public static int CHOICE_ALL = 0;
 	public static int CHOICE_SWING = 1;
 	public static int CHOICE_AWT = 2;
-	public static int CHOICE_WEBPROXY = 3;
 	public static int CHOICE_DEFAULT = CHOICE_ALL;
 	public static final String EmptyString = new String() ;
 	private String[] choices = {	ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.ALL"),  //$NON-NLS-1$
 												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.SWING"),  //$NON-NLS-1$
-												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.AWT"),  //$NON-NLS-1$
-												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.WebProxy")}; //$NON-NLS-1$
-	
-	public static String WEB_SERVICE_PROXY_PACKAGE = "proxy.soap";//$NON-NLS-1$
+												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.AWT")}; //$NON-NLS-1$
 	
 	private static TypeInfoLabelProvider classLabelProvider = new TypeInfoLabelProvider(TypeInfoLabelProvider.SHOW_TYPE_ONLY);
 	private static TypeInfoLabelProvider packageLabelProvider = new TypeInfoLabelProvider(TypeInfoLabelProvider.SHOW_TYPE_CONTAINER_ONLY + TypeInfoLabelProvider.SHOW_ROOT_POSTFIX);
@@ -85,8 +80,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	private java.util.List selectionHistory;
 	
 	private IJavaSearchScope scope = null;
-	private WebServicesHelper wsHelper = null;
-	
 	private Button[] typeChoices = null;
 	private int selectedChoice = 0;
 	private boolean disableOthers = false;
@@ -96,8 +89,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	// TypeInfos for the above mentioned base classes
 	private List awtTypeInfos = new ArrayList();
 	private List swingTypeInfos = new ArrayList();
-	// List of strings
-	private List webServicesTypes = null;
 	private List swingTypes = null;
 	private List awtTypes = null;
 	private List allTypes = new ArrayList();
@@ -114,132 +105,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 // TODO TimerStep comment	private int originalTestId;	// used for performance measurements
 	
 	private EditDomain feditDomain = null ;
-	
-	public static class WebServicesHelper{
-		public static String[] SERVICE_INTERFACE = {"javax.xml.rpc", "Service"}; //$NON-NLS-1$ //$NON-NLS-2$
-		public static String[] REMOTE_INTERFACE = {"java.rmi","Remote"}; //$NON-NLS-1$ //$NON-NLS-2$
-		protected IJavaProject javaProject = null;
-		protected IType serviceType = null;
-		protected IType remoteType = null;
-		protected ITypeHierarchy serviceTypeHierarchy = null;
-		protected ITypeHierarchy remoteTypeHierarchy = null;
-		
-		public WebServicesHelper(IJavaProject javaProject){
-			try {
-				init(javaProject.findType(SERVICE_INTERFACE[0], SERVICE_INTERFACE[1]), 
-					javaProject.findType(REMOTE_INTERFACE[0], REMOTE_INTERFACE[1]),
-					javaProject);
-			} catch (JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
-			}
-		}
-		
-		protected void init(IType serviceType, IType remoteType, IJavaProject javaProject){
-			this.serviceType = serviceType;
-			this.remoteType = remoteType;
-			this.javaProject = javaProject;
-			if(javaProject!=null && serviceType!=null)
-				try {
-					serviceTypeHierarchy = serviceType.newTypeHierarchy(javaProject, null);
-				} catch (JavaModelException e) {
-					JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
-				}
-			if(javaProject!=null && remoteType!=null)
-				try {
-					remoteTypeHierarchy = remoteType.newTypeHierarchy(javaProject, null);
-				} catch (JavaModelException e1) {
-					JavaVEPlugin.log(e1, MsgLogger.LOG_FINE);
-				}
-		}
-		
-		/**
-		 * Valid services are Classes which do all of the following: 
-		 *  (*) Extends/Implements the interface javax.xml.rpc.Service.
-		 *  (*) Returns an Interface which has extended the interface java.rmi.Remote 
-		 *  
-		 * @return
-		 */
-		public List getValidServices(){
-			List wsTypes = new ArrayList();
-			if(remoteType!=null && remoteTypeHierarchy!=null && serviceType!=null && serviceTypeHierarchy!=null){
-				List serviceClasses = getSubTypes(serviceTypeHierarchy, serviceType, true);
-				if(serviceClasses!=null){
-					for(int i=0;i<serviceClasses.size();i++){
-						IType serviceClass = (IType) serviceClasses.get(i);
-						if(isValidService(serviceClass)){
-							if(!wsTypes.contains(serviceClass.getFullyQualifiedName()))
-								wsTypes.add(serviceClass.getFullyQualifiedName());
-						}
-					}
-				}
-			}
-			return wsTypes;
-		}
-		
-		public boolean isValidProxySoapService(IType type){
-			if(type.getPackageFragment().getElementName().equals(WEB_SERVICE_PROXY_PACKAGE))
-				return true;
-			return false;
-		}
-		
-		public boolean isValidJAXRPCService(IType type){
-			return isExtendingService(type) && getRemoteReturnedByService(type)!=null;
-		}
-		
-		public boolean isValidService(IType type){
-			return isValidProxySoapService(type) || isValidJAXRPCService(type);
-		}
-		
-		public boolean isExtendingService(IType type){
-			if(serviceTypeHierarchy!=null){
-				IType[] subTypes = serviceTypeHierarchy.getAllSubtypes(serviceType);
-				for(int i=0;i<subTypes.length;i++)
-					if(subTypes[i].equals(type))
-						return true;
-			}
-			return false;
-		}
-		
-		public IType getRemoteReturnedByService(IType inputService){
-			try {
-				List remoteExtendingInterfaces = getSubTypes(remoteTypeHierarchy, remoteType, false);
-				ITypeHierarchy typeHierarchy = inputService.newSupertypeHierarchy(null);
-				IType[] allSuperClasses = typeHierarchy.getAllSuperclasses(inputService);
-				IType[] superClasses = new IType[allSuperClasses.length+1];
-				System.arraycopy(allSuperClasses,0,superClasses,1,allSuperClasses.length);
-				superClasses[0] = inputService;
-				for(int sc=0;sc<superClasses.length;sc++){
-					for(int mc=0;mc<superClasses[sc].getMethods().length;mc++){
-						IMethod method = superClasses[sc].getMethods()[mc];
-						if(method.getParameterTypes().length>0 ||
-							Signature.SIG_VOID.equals(method.getReturnType()) ||
-							method.getReturnType().indexOf(Signature.C_ARRAY)>-1 ||
-							!Flags.isPublic(method.getFlags()))
-							continue;
-						String retType = Signature.toString(Signature.getReturnType(method.getSignature()));
-						String[][] resolvedTypes = superClasses[sc].resolveType(retType);
-						if(resolvedTypes!=null && resolvedTypes.length>0){
-							for(int rtc=0;rtc<resolvedTypes.length;rtc++){
-								String pkg = resolvedTypes[rtc][0];
-								String cls = resolvedTypes[rtc][1];
-								for(int reic=0;reic<remoteExtendingInterfaces.size();reic++){
-									IType remoteExtendingInterface = (IType) remoteExtendingInterfaces.get(reic);
-									if(remoteExtendingInterface.getElementName().equals(cls) &&
-										remoteExtendingInterface.getPackageFragment().getElementName().equals(pkg))
-											return remoteExtendingInterface;
-								}
-							}
-						}
-					}
-				}
-			} catch (JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
-			} catch (IllegalArgumentException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
-			}		
-			return null;
-		}
-	}
 	
 	private static class TypeFilterMatcher implements FilteredList.FilterMatcher {
 
@@ -379,12 +244,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 							matched = true;
 					}
 					break;
-				case 3 :
-					if(typeInfo.getPackageName().equals(WEB_SERVICE_PROXY_PACKAGE))
-						matched = true;
-					if(webServicesTypes.contains(typeInfo.getFullyQualifiedName()))
-						matched = true;
-				break;
 				default :
 					break;
 			}
@@ -407,7 +266,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
 		setStatusLineAboveButtons(true);
 		loadSelectionHistory();
-		wsHelper = new WebServicesHelper(this.project);
 	}
 	
 	private void loadSelectionHistory(){
@@ -540,7 +398,7 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	}
 
 	protected void createClassArea(Composite parent){
-		int numCols = 4;
+		int numCols = choices.length;
 		Composite c = new Composite(parent, SWT.NONE);
 		GridData gd= new GridData();
 		gd.grabExcessHorizontalSpace= true;
@@ -552,11 +410,10 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		cLayout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		c.setLayout(cLayout);
 		
-		typeChoices = new Button[4];
+		typeChoices = new Button[choices.length];
 		for(int i=0;i<typeChoices.length;i++){
 			typeChoices[i] = new Button(c, SWT.RADIO);
 			gd = new GridData();
-			gd.horizontalSpan=numCols/4;
 			typeChoices[i].setLayoutData(gd);
 			typeChoices[i].setText(choices[i]);
 			typeChoices[i].addSelectionListener(new SelectionListener() {
@@ -642,19 +499,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 				});
 		}
 		
-		if(typeChoices[3].getSelection()){
-			if(!(currentFilterMatcher instanceof ShowAllTypeChoiceFilter)){
-				currentFilterMatcher = anShowAllTypeChoiceFilter;
-				fFilteredList.setFilterMatcher(currentFilterMatcher);
-			}
-			if(webServicesTypes==null)
-				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					public void run() {
-						webServicesTypes = getWebServicesTypes();
-					}
-				});
-		}
-
 		// Force the filtered list to reload
 		setFilter(getFilter());
 	}
@@ -724,12 +568,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		return list;
 	}
 	
-	private List getWebServicesTypes(){
-		if(wsHelper!=null)
-			return wsHelper.getValidServices();
-		return new ArrayList();
-	}
-
 	protected IJavaSearchScope getJavaSearchScope(){
 		if(scope==null)
 			scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { ((IJavaProject)project) });
