@@ -11,37 +11,21 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyNullLayoutConstraintCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
  */
 
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
-
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.core.DimensionJavaClassCellEditor;
+import org.eclipse.ve.internal.java.visual.NullLayoutConstraintCommand;
+ 
 /**
- * Command to apply the Null Layout constraint(s). This is
- * a command because it is complicated because of the
- * possibility of storing in bounds, size, and/or location.
+ * Command to apply the Null Layout constraint(s) for AWT components
  */
-public class ApplyNullLayoutConstraintCommand extends CommandWrapper {
-	
-	protected IJavaObjectInstance target;
-	protected ResourceSet rset;
-	protected Rectangle constraint;	// Could be a Rectangle, Point, or Dimension.
-	protected byte changed = NO_CHANGE;
-	protected EditDomain domain;
-	protected final static byte
-		NO_CHANGE = 0,
-		MOVED = 0x1,
-		RESIZED = 0x2;
+public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintCommand {
 	
 	public ApplyNullLayoutConstraintCommand(String label) {
 		super(label);
@@ -49,96 +33,51 @@ public class ApplyNullLayoutConstraintCommand extends CommandWrapper {
 
 	public ApplyNullLayoutConstraintCommand() {
 	}
-
-
-	public void setTarget(IJavaObjectInstance target) {
-		this.target = target;
+	/**
+	 * Return the location for java.awt.Dimension
+	 */
+	protected IJavaInstance createLocationInstance(int x, int y) {
+		return BeanUtilities.createJavaObject(
+			"java.awt.Point", //$NON-NLS-1$
+			rset,
+			PointJavaClassCellEditor.getJavaInitializationString(x, y, "java.awt.Point"));
+	}	
+	/**
+	 * Return the size for java.awt.Dimension
+	 */
+	protected IJavaInstance createSizeInstance(int width, int height) {
+		return BeanUtilities.createJavaObject(
+			JFCConstants.DIMENSION_CLASS_NAME,
+			rset,
+			DimensionJavaClassCellEditor.getJavaInitializationString(width, height));						
 	}
-
-	public void setDomain(EditDomain domain) {
-		this.domain = domain;
-		rset = EMFEditDomainHelper.getResourceSet(domain);
+	/**
+	 * Return the bounds for java.awt.Rectangle
+	 */
+	protected IJavaInstance createBoundsInstance(int x, int y, int width, int height) {
+		return BeanUtilities.createJavaObject(
+			JFCConstants.RECTANGLE_CLASS_NAME,
+			rset,
+			RectangleJavaClassCellEditor.getJavaInitializationString(x, y, width, height,JFCConstants.RECTANGLE_CLASS_NAME));		
+	}	
+	/**
+	 * Return the structural feature URI for AWT component bounds
+	 */
+	protected URI getSFBounds() {
+		return JFCConstants.SF_COMPONENT_BOUNDS;
+	}	
+	/**
+	 * Return the structural feature URI for AWT component size
+	 */	
+	protected URI getSFSize() {
+		return JFCConstants.SF_COMPONENT_SIZE;		
 	}
-			
-	public void setConstraint(Rectangle constraint, boolean moved, boolean resized) {
-		if (moved)
-			changed |= MOVED;
-		if (resized)
-			changed |= RESIZED;
-		this.constraint = constraint;
-	}
+	/**
+	 * Return the structural feature URI for AWT component location
+	 */	
+	protected URI getSFLocation() {
+		return JFCConstants.SF_COMPONENT_LOCATION;		
+	}	
 	
-	protected boolean prepare() {
-		// Need to override prepare because prepare expects to have a command
-		// create, and at the time of prepare being called, we don't have a command yet.
-		return target != null && rset != null && constraint != null;
-	}
-	
-	public void execute() {
-		// It will determine what to set. If bounds are set, it will set that, otherwise it will try size/location. If neither
-		// is set, then it will set a bounds.
-		RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-		EReference sfComponentBounds = JavaInstantiation.getReference(target, JFCConstants.SF_COMPONENT_BOUNDS);					
-		if (target.eIsSet(sfComponentBounds)) {
-			// We have a bounds.
-			IRectangleBeanProxy oldBounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaObjectInstance) target.eGet(sfComponentBounds), rset);
-			int x, y, width, height;
-			if ((changed & MOVED) != 0) {
-				x = constraint.x;
-				y = constraint.y;
-			} else {
-				x = oldBounds.getX();
-				y = oldBounds.getY();
-			}
-			if ((changed & RESIZED) != 0) {
-				width = constraint.width;
-				height = constraint.height;
-			} else {
-				width = oldBounds.getWidth();
-				height = oldBounds.getHeight();
-			}
-			IJavaInstance bounds = BeanUtilities.createJavaObject("java.awt.Rectangle", rset, //$NON-NLS-1$
-				RectangleJavaClassCellEditor.getJavaInitializationString(x, y, width, height));
-			cb.applyAttributeSetting(target, sfComponentBounds, bounds);
-		} else {
-			EReference sfComponentSize = JavaInstantiation.getReference(target, JFCConstants.SF_COMPONENT_SIZE);			
-			if ((changed & RESIZED) != 0 && (changed & MOVED) == 0) {
-				// We want size only. In that case, we will set the size. This is usually on the freeform.
-				IJavaInstance size = BeanUtilities.createJavaObject(
-					"java.awt.Dimension", //$NON-NLS-1$
-					rset,
-					DimensionJavaClassCellEditor.getJavaInitializationString(constraint.width, constraint.height));				
-				cb.applyAttributeSetting(target, sfComponentSize, size);
-			} else {
-				EReference sfComponentLocation = JavaInstantiation.getReference(target, JFCConstants.SF_COMPONENT_LOCATION);
-				if (target.eIsSet(sfComponentSize) || target.eIsSet(sfComponentLocation)) {
-					// One of them is set, so we are not using bounds. If neither was set, we would drop to bounds.
-					if ((changed & RESIZED) != 0) {
-						IJavaInstance size = BeanUtilities.createJavaObject(
-							"java.awt.Dimension", //$NON-NLS-1$
-							rset,
-							DimensionJavaClassCellEditor.getJavaInitializationString(constraint.width, constraint.height));
-						cb.applyAttributeSetting(target, sfComponentSize, size);
-					}
-					
-					if ((changed & MOVED) != 0) {
-						IJavaInstance loc = BeanUtilities.createJavaObject(
-							"java.awt.Point", //$NON-NLS-1$
-							rset,
-							PointJavaClassCellEditor.getJavaInitializationString(constraint.x, constraint.y));												
-						cb.applyAttributeSetting(target, sfComponentLocation, loc);
-					}
-				} else {
-					// If we got this far, then we are applying bounds because we had no bounds, size, or location set.
-					IJavaInstance bounds = BeanUtilities.createJavaObject(
-						"java.awt.Rectangle", //$NON-NLS-1$
-						rset,
-						RectangleJavaClassCellEditor.getJavaInitializationString(constraint));
-					cb.applyAttributeSetting(target, sfComponentBounds, bounds);
-				}
-			}
-		}
-		command = cb.getCommand();
-		command.execute();
-	}
+
 }

@@ -11,18 +11,21 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
  */
 
 import java.util.StringTokenizer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 /**
  * Cell Editor for Rectangle Beans.
  */
-public class RectangleJavaClassCellEditor extends DefaultJavaClassCellEditor {
+public class RectangleJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension {
+	
+	private String rectangleClassName;
 	
 public RectangleJavaClassCellEditor(Composite aComposite){
 	super(aComposite);
@@ -42,7 +45,9 @@ protected String getJavaInitializationString(String rectString) {
 	// want to make sure nicely formed (i.e. no extra spaces). This assumes the string is valid. This shouldn't be called if it isn't.
 	StringTokenizer st = new StringTokenizer(rectString, ","); //$NON-NLS-1$
 	StringBuffer sb = new StringBuffer(rectString.length());
-	sb.append("new java.awt.Rectangle("); //$NON-NLS-1$
+	sb.append("new "); //$NON-NLS-1$
+	sb.append(rectangleClassName);
+	sb.append('(');
 	sb.append(st.nextToken().trim());
 	while (st.hasMoreTokens()) {
 		sb.append(',');
@@ -75,22 +80,24 @@ protected String isCorrectString(String text) {
 
 public void setData(Object data) {
 	super.setData(data);
-	setJavaType(JavaClassImpl.reflect("java.awt.Rectangle", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
+	setJavaType(JavaClassImpl.reflect(rectangleClassName, JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
 }
 
 /**
  * Helper to return a well formed Java Initialization string for an Rectangle.
  */
-public static String getJavaInitializationString(Rectangle rect) {
-	return getJavaInitializationString(rect.x, rect.y, rect.width, rect.height);
+public static String getJavaInitializationString(Rectangle rect,String aRectangleClassName) {
+	return getJavaInitializationString(rect.x, rect.y, rect.width, rect.height,aRectangleClassName);
 }
 
 /**
  * Helper to return a well formed Java Initialization string for an x, y, width, and height.
  */
-public static String getJavaInitializationString(int x, int y, int width, int height){
+public static String getJavaInitializationString(int x, int y, int width, int height,String aRectangleClassName){
 	StringBuffer buffer = new StringBuffer();
-	buffer.append("new java.awt.Rectangle("); //$NON-NLS-1$
+	buffer.append("new "); //$NON-NLS-1$
+	buffer.append(aRectangleClassName);
+	buffer.append('(');
 	buffer.append(String.valueOf(x));
 	buffer.append(',');
 	buffer.append(String.valueOf(y));
@@ -100,6 +107,14 @@ public static String getJavaInitializationString(int x, int y, int width, int he
 	buffer.append(String.valueOf(height));
 	buffer.append(')');
 	return buffer.toString();
+}
+/**
+ * The rectangle class name is a contained in the initialization data to allow this class to be configurable
+ */
+public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
+	if (initData instanceof String){
+		rectangleClassName = (String)initData;
+	}				
 }
 
 }

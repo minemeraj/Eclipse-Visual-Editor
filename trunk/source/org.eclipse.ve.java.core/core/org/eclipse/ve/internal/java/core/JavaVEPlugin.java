@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
  */
 
 import java.util.*;
@@ -32,6 +32,8 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	// ID of the registrations extension point.
 
 	public static final String PI_VARIABLE = "variable"; // <variable> in extension point. //$NON-NLS-1$
+	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
+	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$
 	public static final String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
@@ -84,21 +86,21 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		for (int i = 0; i < configs.length; i++) {
 			IConfigurationElement iConfigurationElement = configs[i];
 			if (PI_VARIABLE.equals(iConfigurationElement.getName())) {
-				if (iConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
-					|| iConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
-					|| iConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
-					String varpathstr = iConfigurationElement.getAttributeAsIs(PI_PATH);
-					if (varpathstr == null)
-						continue; // Not proper format.
-					IPath varpath = new Path(varpathstr);
-					List varentry = (List) registrations.get(varpath);
-					if (varentry == null) {
-						varentry = new ArrayList(1);
-						registrations.put(varpath, varentry);
-					}
-					varentry.add(iConfigurationElement);
-				}
+				processLibraryEntry(iConfigurationElement,registrations);
 			}
+			// This is format for allowing containers or library to be used by a plugin
+			// <library 
+			//     container="FOO_CONTAINER"  OR  library="FOO_LIB"
+			//	   palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
+ 			//	   contributor="com.foo.FOOConfigurationContributor">
+			// </library>
+			if (PI_LIBRARY.equals(iConfigurationElement.getName())) {
+				if(iConfigurationElement.getAttributeAsIs(PI_VARIABLE) != null){
+					processLibraryEntry(iConfigurationElement,registrations);
+				} else if(iConfigurationElement.getAttributeAsIs(PI_CONTAINER) != null){
+					processContainerEntry(iConfigurationElement,registrations);
+				}
+			}			
 		}
 
 		// Now we've processed all of the extensions.
@@ -111,7 +113,51 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 				(IConfigurationElement[]) registrationsList.toArray(new IConfigurationElement[registrationsList.size()]));
 		}
 	}
-
+	private void processLibraryEntry(IConfigurationElement aConfigurationElement,Map registrations){
+		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
+			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
+			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
+			String varpathstr = aConfigurationElement.getAttributeAsIs(PI_PATH);
+			if (varpathstr == null)
+				return; // Not proper format.
+			IPath varpath = new Path(varpathstr);
+			List varentry = (List) registrations.get(varpath);
+			if (varentry == null) {
+				varentry = new ArrayList(1);
+				registrations.put(varpath, varentry);
+			}
+			varentry.add(aConfigurationElement);
+		}		
+	}
+/**	
+ * Process the extension point for a container registration
+ * Example syntax is 
+ * <pre>
+ * 	<extension point="org.eclipse.ve.java.core.registrations">
+ *	  <library
+ *		  container="SWT_CONTAINER"
+ *		  palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
+ *		  contributor="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
+ *	  </library>
+ *	</extension>
+ * </pre>
+ **/
+	private void processContainerEntry(IConfigurationElement aConfigurationElement,Map registrations){
+		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
+			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
+			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
+			String containerName = aConfigurationElement.getAttributeAsIs(PI_CONTAINER);
+			if (containerName == null)
+				return; // Not proper format.
+			IPath containerpath = new Path(containerName);
+			List containerentry = (List) registrations.get(containerpath);
+			if (containerentry == null) {
+				containerentry = new ArrayList(1);
+				registrations.put(containerpath, containerentry);
+			}
+			containerentry.add(aConfigurationElement);
+		}		
+	}	
 	/**
 	 * Register one registration for the path.
 	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
