@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * Copyright (c) 2001, 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,36 +10,73 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureComboBoxCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:35:50 $ 
  */
+package org.eclipse.ve.internal.java.core;
 
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public class BeanFeatureComboBoxCellEditor extends ComboBoxCellEditor implements BeanFeatureEditor.IWrappedCellEditor {
+import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
+/*
+ * Combo box cell editor for working with BeanFeatureEditor. It uses the tags as both the text and the items.
+ * The BeanFeatureEditor knows how to turn the tags back into the appropriate real object.
+ * 
+ * <package-protected> because it only makes sense working with the BeanFeatureEditor.
+ * Too tightly tied together. 
+ * 
+ * @since 1.0.0
+ */
+class BeanFeatureComboBoxCellEditor extends ObjectComboBoxCellEditor implements BeanFeatureEditor.IWrappedCellEditor {
 
-	protected String[] items;
 	/**
 	 * Constructor for BeanFeatureComboBoxCellEditor.
 	 * @param parent
 	 * @param items
 	 */
 	public BeanFeatureComboBoxCellEditor(Composite parent, String[] items) {
-		super(parent, items);
-		this.items = items;
+		super(parent, items, SWT.READ_ONLY);
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see IWrappedCellEditor#newValue(String)
 	 */
 	public void newValue(String text) {
-		// Find where the text value occurs in the list of valid tags and use this as the value
-		// This is because CellEditor's value is the Integer index of the value in the list
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].equals(text)) {
-				setValue(new Integer(i));
-			}
-		}
-		
+		setValue(text);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor#doGetIndex(java.lang.Object)
+	 */
+	protected int doGetIndex(Object value) {
+		if (value instanceof String) {
+			String text = (String) value;
+			String[] items = getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(text)) {
+					return i;
+				}
+			}
+		}
+		return NO_SELECTION;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor#doGetObject(int)
+	 */
+	protected Object doGetObject(int index) {
+		String[] items = getItems();
+		if (index >= 0 && index < items.length)
+			return items[index];
+		else
+			return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor#isCorrectObject(java.lang.Object)
+	 */
+	protected String isCorrectObject(Object value) {
+		return null;	// We'll accept anything here, let the Java PropertyEditor handle the validation.
+	}
 }

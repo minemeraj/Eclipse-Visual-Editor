@@ -2,7 +2,7 @@
   <palette:PaletteCmp xmi:id="java_palette">
     <cmpControlGroup xsi:type="palette:GroupCmp" xmi:id="control">
       <groupLabel xsi:type="utility:TranslatableString" key="group.Controls" bundle="bundle"/>
-      <cmpEntries xsi:type="palette:ToolEntry" defaultEntry="true" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/arrow16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.SelectionTool">
+      <cmpEntries xsi:type="palette:ToolEntry" defaultEntry="true" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/arrow16.gif" toolClassName="org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.CDESelectionTool">
         <entryLabel xsi:type="utility:TranslatableString" key="entry.Selection" bundle="bundle"/>
       </cmpEntries>
       <cmpEntries xsi:type="palette:ToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/marquee16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.MarqueeSelectionTool">

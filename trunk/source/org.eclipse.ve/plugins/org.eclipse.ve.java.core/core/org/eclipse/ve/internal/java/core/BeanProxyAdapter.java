@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-01 21:35:50 $ 
  */
 
 import java.util.*;
@@ -822,6 +822,8 @@ protected void primInstantiateBeanProxy() {
 					setupBeanProxy(beanProxyAllocation(allocation));
 				} catch (IAllocationProcesser.AllocationException e) {
 					processInstantiationError(e.getCause());
+				} catch (IllegalArgumentException e) {
+					processInstantiationError(e);
 				}
 				return;
 			}

@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,9 +9,11 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: EnumeratedCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $RCSfile: BeanPropertyEnumeratedCellEditor.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-01 21:35:49 $ 
  */
+package org.eclipse.ve.internal.java.core;
+
 
 import java.util.logging.Level;
 
@@ -27,8 +28,15 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
-
-public class EnumeratedCellEditor extends ObjectComboBoxCellEditor implements INeedData {
+/*
+ * Works with BeanPropertyDescriptorAdapter to show the Enumerations from the PropertyDescriptor's attribute
+ * for enums.
+ * 
+ * <package-protected> because it works tightly with the BeanPropertyDescriptorAdapter.
+ * 
+ * @since 1.0.0
+ */
+class BeanPropertyEnumeratedCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	
 	protected String[] fDisplayNames;
 	protected IBeanProxy[] fBeanProxies;
@@ -38,7 +46,7 @@ public class EnumeratedCellEditor extends ObjectComboBoxCellEditor implements IN
 	protected ProxyFactoryRegistry fProxyFactoryRegistry;
 	protected IBeanTypeProxy fBeanTypeProxy;
 
-public EnumeratedCellEditor(Composite aComposite, IArrayBeanProxy arrayOfValues, JavaHelpers featureType){
+public BeanPropertyEnumeratedCellEditor(Composite aComposite, IArrayBeanProxy arrayOfValues, JavaHelpers featureType){
 	super(aComposite);
 	fFeatureType = featureType;
 	// Iterate over the array of values, these are stored in the format
@@ -96,7 +104,7 @@ protected int doGetIndex(Object anObject){
 			return i;
 		}
 	}
-	return sNoSelection;
+	return NO_SELECTION;
 }
 public void setData(Object data){
 	fEditDomain = (EditDomain) data;
@@ -112,11 +120,9 @@ public void setData(Object data){
 	} catch ( ThrowableProxy exc ) {
 		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
 		JavaVEPlugin.log(exc, Level.WARNING);
-		// TODO Rather than null, probably should do this in a validation step so the property sheet entry knows to not apply the bad value"); //$NON-NLS-1$
 	} catch (InstantiationException exc) {			
 		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
 		JavaVEPlugin.log(exc, Level.WARNING);
-		// TODO Rather than null, probably should do this in a validation step so the property sheet entry knows to not apply the bad value"); //$NON-NLS-1$
 	}		
 }
 }

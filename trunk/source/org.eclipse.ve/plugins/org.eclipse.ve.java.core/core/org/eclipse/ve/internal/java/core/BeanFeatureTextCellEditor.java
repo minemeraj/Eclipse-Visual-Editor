@@ -10,26 +10,28 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: BeanTextCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $RCSfile: BeanFeatureTextCellEditor.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-01 21:35:49 $ 
  */
 
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.java.core.BeanFeatureEditor.IWrappedCellEditor;
+/*
+ * BeanTextCellEditor for working with the BeanFeatureEditor.
+ * <package-protected> because it only makes sense working with the BeanFeatureEditor.
+ * Too tightly tied together. 
+ * 
+ * @since 1.0.0
+ */
+class BeanFeatureTextCellEditor extends TextCellEditor implements IWrappedCellEditor {
 
-public class BeanTextCellEditor extends TextCellEditor implements IWrappedCellEditor {
-
-	/**
-	 * Constructor for BeanTextCellEditor.
-	 * @param parent
-	 */
-	public BeanTextCellEditor(Composite parent) {
+	public BeanFeatureTextCellEditor(Composite parent) {
 		super(parent);
 	}
 
-	/**
+	/*
 	 * @see IWrappedCellEditor#newValue(String)
 	 */
 	public void newValue(String text) {

@@ -10,8 +10,8 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: BeanDialogCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $RCSfile: BeanFeatureDialogCellEditor.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-01 21:35:49 $ 
  */
 
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -20,19 +20,23 @@ import org.eclipse.swt.widgets.Control;
 
 import org.eclipse.ve.internal.java.common.Common;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-/**
+/*
  * Dialog Editor for working with Bean Custom Dialogs.
  * This will invoke a property editor on a remote VM
  * and maintain a pseudo-modal conversation with it
+ * 
+ * <package-protected> because it only makes sense working with the BeanFeatureEditor.
+ * Too tightly tied together. 
+ * 
  */
-public class BeanDialogCellEditor extends DialogCellEditor implements BeanFeatureEditor.IWrappedCellEditor {
+class BeanFeatureDialogCellEditor extends DialogCellEditor implements BeanFeatureEditor.IWrappedCellEditor {
 	protected PropertyEditorBeanProxyWrapper fEditorProxy;
 	protected String fPropertyName;
 
 /**
  * BeanDialogCellEditor constructor comment.
  */
-protected BeanDialogCellEditor(Composite aComposite , PropertyEditorBeanProxyWrapper anEditorProxy, String propertyName) {
+protected BeanFeatureDialogCellEditor(Composite aComposite , PropertyEditorBeanProxyWrapper anEditorProxy, String propertyName) {
 	super(aComposite);
 	fEditorProxy = anEditorProxy;
 	fPropertyName = propertyName;

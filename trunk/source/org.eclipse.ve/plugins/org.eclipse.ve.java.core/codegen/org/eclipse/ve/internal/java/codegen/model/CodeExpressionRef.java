@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.16 $  $Date: 2004-03-09 17:40:57 $ 
+ *  $Revision: 1.17 $  $Date: 2004-04-01 21:35:50 $ 
  */
 
 
@@ -833,7 +833,7 @@ public ExpressionParser getContentParser() {
 }
 
 public ICodeGenSourceRange getTargetSourceRange() {
-    if (fBean == null || fBean.getModel() == null) return null ;
+    if (fBean == null || fBean.getModel() == null || fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return null ;
     ISourceRange mSR = fBean.getModel().getWorkingCopyProvider().getSourceRange(fMethod.getMethodHandle()) ;   
     if (mSR == null) return null ;
     CodeGenSourceRange result = new CodeGenSourceRange (mSR.getOffset()+getOffset(),getLen()) ;

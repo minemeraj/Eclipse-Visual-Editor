@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-01 21:35:49 $ 
  */
 
 import java.text.MessageFormat;
@@ -89,9 +89,7 @@ public class BeanFeatureEditor
 	protected boolean rebuildActualCellEditor = true;
 	private IJavaInstance fValue;
 	protected Composite fComposite;
-	private ICellEditorValidator fValidator = null;
 	protected IBeanProxy fLastKnownBeanProxy = null;
-	protected boolean fValid;
 	private boolean fGotANull;
 	// The actual java.beans.PropertyEditor class can be known and given to us
 	// It is either stored as a string ( passed into the initialization Data )
@@ -102,6 +100,8 @@ public class BeanFeatureEditor
 
 	// A cell editor listener that will handle a setAsText for the strings from
 	// the actual cell editor.
+	// The text cell editor nevers has an invalid input because it has no validators sent to it.
+	// We will run the validators locally within the setAsText() method.
 	protected class SetAsTextEditorListener implements ICellEditorListener {
 		public void applyEditorValue() {
 			// Treat as editValueChanged because editValueChanged is not always sent before finish.
@@ -240,14 +240,22 @@ public class BeanFeatureEditor
 		//	cellEditor.setErrorMessage(errMsg);
 		// The cell editor listener for text expects the value to be a String
 		// it will be an integer so we must do the conversion using the tags array
+		// There are no validators on actual cell editor, so everything will always be valid
+		// from that side. We need to run the validators locally from ourself.
+		// setAsText(text) will do the appropriate validation.
 		cellEditor.addListener(new ICellEditorListener() {
 			public void applyEditorValue() {
 				String textValue = getComboTextValue();
-				// Treat as editValueChanged because editValueChanged is not always sent before finish.
 				setAsText(textValue);
+				markDirty();
 				fireApplyEditorValue();
 			}
 			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+				// This is actually never sent by the combobox cell editor, but to be on the
+				// safe side, if they did in the future.
+				
+				// The old/new valid start from the notifier is not of any value to us
+				// since it doesn't do validation. We will do the validation here.
 				boolean oldVState = isValueValid();
 				setAsText(getComboTextValue());
 				fireEditorValueChanged(oldVState, isValueValid());
@@ -256,7 +264,7 @@ public class BeanFeatureEditor
 				fireCancelEditor();
 			}
 			protected String getComboTextValue() {
-				return fTags[((Integer) getActualCellEditor().getValue()).intValue()];
+				return (String) getActualCellEditor().getValue();
 			}
 		});
 		fActualCellEditor = cellEditor;
@@ -266,9 +274,12 @@ public class BeanFeatureEditor
 	 */
 	protected void createDialogCellEditor() {
 		setProxyValue(fValue); // Put the value into the property editor, see if valid.
-		final BeanDialogCellEditor cellEditor =
-			new BeanDialogCellEditor(fComposite, fPropertyEditorWrapperProxy, getDisplayName());
+		final BeanFeatureDialogCellEditor cellEditor =
+			new BeanFeatureDialogCellEditor(fComposite, fPropertyEditorWrapperProxy, getDisplayName());
 		cellEditor.newValue(getAsText());
+		// There are no validators on actual cell editor, so everything will always be valid
+		// from that side. We need to run the validators locally from ourself.	
+		// getProxyValueFromPropertyEditor() will run the validators for us.
 		cellEditor.addListener(new ICellEditorListener() {
 			public void applyEditorValue() {
 				getProxyValueFromPropertyEditor();
@@ -279,6 +290,7 @@ public class BeanFeatureEditor
 				// getAsText fires we get the correct up to date text
 				fPropertyEditorWrapperProxy.setValue(fPropertyEditorWrapperProxy.getValue());
 				cellEditor.newValue(getAsText()); // Update the label in the DialogCellEditor
+				markDirty();
 				fireApplyEditorValue();
 			}
 			public void cancelEditor() {
@@ -308,7 +320,7 @@ public class BeanFeatureEditor
 	 */
 	protected void createTextCellEditor() {
 		setProxyValue(fValue); // Put the value into the property editor, see if valid.
-		BeanTextCellEditor cellEditor = new BeanTextCellEditor(fComposite);
+		BeanFeatureTextCellEditor cellEditor = new BeanFeatureTextCellEditor(fComposite);
 		cellEditor.newValue(getAsText());
 		cellEditor.addListener(new SetAsTextEditorListener());
 		fActualCellEditor = cellEditor;
@@ -400,19 +412,14 @@ public class BeanFeatureEditor
 		getBeanPropertyEditorProxy(); // Create it if necessary
 		setProxyValue(fValue); // Now load the value into the editor
 
-		return fValid ? fPropertyEditorWrapperProxy.getJavaInitializationString() : null;
+		return isValueValid() ? fPropertyEditorWrapperProxy.getJavaInitializationString() : null;
 	}
-	/**
-	 * getValidator method comment.
-	 */
-	public ICellEditorValidator getValidator() {
-		return fValidator;
-	}
+
 	/**
 	 * getValue method comment.
 	 */
 	public Object doGetValue() {
-		if (fValid)
+		if (isValueValid())
 			return fValue;
 		else
 			return null;
@@ -427,12 +434,7 @@ public class BeanFeatureEditor
 			return null;
 		}
 	}
-	/**
-	 * isValueValid method comment.
-	 */
-	public boolean isValueValid() {
-		return fValid;
-	}
+
 	/**
 	 * Get the current proxy value and set it to the current value.
 	 * Called whenever need to sync up witht the proxy editor, ie. it was
@@ -469,7 +471,7 @@ public class BeanFeatureEditor
 			}
 			fValue = bean;
 			fLastKnownBeanProxy = newProxy;
-			fValid = true;
+			setValueValid(isCorrect(fValue));
 		}
 	}
 	protected JavaHelpers getFeatureType() {
@@ -482,17 +484,14 @@ public class BeanFeatureEditor
 	 */
 	protected void setAsText(String text) {
 		if (fGotANull && text.length() == 0) {
-			fValid = true; // We originally had a null, and it is still null
 			getProxyValueFromPropertyEditor();
 		} else {
 			try {
 				fPropertyEditorWrapperProxy.setAsText(text);
-				setErrorMessage(null);
-				fValid = true;
 				fGotANull = false;
 				getProxyValueFromPropertyEditor();
 			} catch (IllegalArgumentException e) {
-				fValid = false;
+				setValueValid(false);
 				if (e.getMessage().equals("")) { //$NON-NLS-1$
 					setErrorMessage(
 						MessageFormat.format(
@@ -503,7 +502,7 @@ public class BeanFeatureEditor
 						MessageFormat.format(JavaNls.BEANFEATUREEDITOR_ERRSETWITHMSG, new Object[] { e.getMessage()}));
 				}
 			} catch (Throwable e) {
-				fValid = false;
+				setValueValid(false);
 				setErrorMessage(
 					MessageFormat.format(
 						JavaNls.BEANFEATUREEDITOR_ERRSETWITHNOMSG,
@@ -533,16 +532,15 @@ public class BeanFeatureEditor
 			if (getBeanPropertyEditorProxy() != null) {
 				fPropertyEditorWrapperProxy.setValue(fLastKnownBeanProxy);
 			}
-			fValid = true;
-			setErrorMessage(null);
+			setValueValid(isCorrect(value));
 		} catch (IllegalArgumentException e) {
 			// Catch the error from the remote VM which is nicely re-thrown as an IllegalArgumentException on this VM
-			fValid = false;
+			setValueValid(false);
 			setErrorMessage(
 				MessageFormat.format(JavaNls.BEANFEATUREEDITOR_ERRSETWITHMSG, new Object[] { e.getMessage()}));
 		} catch (Throwable e) {
 			// Other errors might be things like null pointers or the like - Should not occurr but deal with them anyway
-			fValid = false;
+			setValueValid(false);
 			setErrorMessage(
 				MessageFormat.format(
 					JavaNls.BEANFEATUREEDITOR_ERRSETWITHNOMSG,
@@ -565,18 +563,12 @@ public class BeanFeatureEditor
 			source = (IJavaObjectInstance) sources[0];
 		}
 	}
-	/**
-	 * setValidator method comment.
-	 */
-	public void setValidator(ICellEditorValidator validator) {
-		fValidator = validator;
-	}
+
 	/**
 	 * setSource method comment.
 	 */
 	public void doSetValue(Object value) {
 		fValue = (IJavaInstance) value;
-		fValid = true;
 		if (isActivated())
 			setCellEditorNewValue();
 	}

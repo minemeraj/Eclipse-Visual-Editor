@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,42 +10,43 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-26 19:31:52 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:35:50 $ 
  */
+package org.eclipse.ve.internal.java.core;
 
 import java.util.logging.Level;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringEvaluationException;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
 import org.eclipse.ve.internal.propertysheet.*;
 /**
- * Cell editor for an int field that is enumerated
+ * Cell editor for an int field that is enumerated.
+ * It works only with simple init strings. Not complicated ones.
  */
 public class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	protected EditDomain fEditDomain;
 	protected Object[] fSources; 
-	protected Integer[] FILL_VALUES;
-	protected String[] FILL_NAMES;
-	protected String[] FILL_INITSTRINGS;
+	protected Integer[] fill_values;
+	protected String[] fill_names;
+	protected String[] file_initStrings;
 	
-public EnumeratedIntValueCellEditor(Composite aComposite, String[] NAMES, Integer[] VALUES, String[] INITSTRINGS){
+public EnumeratedIntValueCellEditor(Composite aComposite, String[] names, Integer[] values, String[] initStrings){
 	// Create the combo editor with the list of possible fill values
-	super(aComposite, NAMES);
-	FILL_NAMES = NAMES;
-	FILL_INITSTRINGS = INITSTRINGS;
-	if(VALUES != null){
-		FILL_VALUES = VALUES;
+	super(aComposite, names);
+	fill_names = names;
+	file_initStrings = initStrings;
+	if(values != null){
+		fill_values = values;
 	} else {
 		// Evaluate the initStrings to find the Init values
-		FILL_VALUES = new Integer[INITSTRINGS.length];
-		for (int i = 0; i < INITSTRINGS.length; i++) {
+		fill_values = new Integer[initStrings.length];
+		for (int i = 0; i < initStrings.length; i++) {
 			try {
-				FILL_VALUES[i] = (Integer) InitializationStringParser.evaluate(INITSTRINGS[i]);
+				fill_values[i] = (Integer) InitializationStringParser.evaluate(initStrings[i]);
 			} catch (InitializationStringEvaluationException e) {
 				JavaVEPlugin.log(e,Level.WARNING);
 			}
@@ -59,10 +59,10 @@ public EnumeratedIntValueCellEditor(Composite aComposite, String[] NAMES, Intege
  */
 protected Object doGetObject(int index){
 	String initString = ""; //$NON-NLS-1$
-	if (index < FILL_INITSTRINGS.length)
-		initString = FILL_INITSTRINGS[index];
+	if (index < file_initStrings.length)
+		initString = file_initStrings[index];
 	else
-		initString = FILL_INITSTRINGS[0];
+		initString = file_initStrings[0];
 	
 	return BeanUtilities.createJavaObject(
 		"int", //$NON-NLS-1$
@@ -82,12 +82,12 @@ protected int doGetIndex(Object anObject){
 	} else {
 		fillValue = ((Integer)anObject).intValue();
 	}
-	for (int i = 0; i < FILL_VALUES.length; i++) {
-		if (fillValue == FILL_VALUES[i].intValue()) {
+	for (int i = 0; i < fill_values.length; i++) {
+		if (fillValue == fill_values[i].intValue()) {
 			return i;
 		}
 	}
-	return sNoSelection;
+	return NO_SELECTION;
 }
 public String isCorrectObject(Object anObject){
 	return null;

@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * Copyright (c) 2001, 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +10,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaCommandStackPropertySheetEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:35:49 $ 
  */
+package org.eclipse.ve.internal.java.core;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,18 +23,22 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.properties.ModelChangeControllerPropertySheetEntry;
+
 import org.eclipse.ve.internal.jcm.JCMPackage;
+
 import org.eclipse.ve.internal.java.rules.RuledPropertySetCommand;
 import org.eclipse.ve.internal.java.rules.RuledRestoreDefaultPropertyCommand;
+
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
-import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
 
 /**
  * This is used in the JBCF to handle JBCF entries appropriately.
  * @version 	1.0
  * @author
  */
-public class JavaCommandStackPropertySheetEntry extends CommandStackPropertySheetEntry {
+public class JavaCommandStackPropertySheetEntry extends ModelChangeControllerPropertySheetEntry {
 
 	
 	
@@ -47,9 +52,9 @@ public class JavaCommandStackPropertySheetEntry extends CommandStackPropertyShee
 	public JavaCommandStackPropertySheetEntry(
 		EditDomain domain,
 		CommandStack stack,
-		CommandStackPropertySheetEntry parent,
+		JavaCommandStackPropertySheetEntry parent,
 		IPropertySourceProvider provider) {
-		super(stack, parent, provider);
+		super((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY), stack, parent, provider);
 		this.domain = domain;
 	}
 
