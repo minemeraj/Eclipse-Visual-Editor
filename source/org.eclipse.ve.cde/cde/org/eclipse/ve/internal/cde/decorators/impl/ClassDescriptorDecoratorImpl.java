@@ -1,10 +1,3 @@
-/**
- * <copyright>
- * </copyright>
- *
- * %W%
- * @version %I% %H%
- */
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
@@ -18,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-01-31 19:18:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -37,10 +30,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -55,7 +46,6 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
-import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
  * <!-- begin-user-doc -->
@@ -293,18 +283,31 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		return treeViewClassname;
 	}
 
+  public void setTreeViewClassname(String newTreeViewClassname) {
+  	hasRetrievedTreeEditPartClass = false;
+  	treeEditPartClass = null;
+  	treeEditPartConstructor = null;
+  	setTreeViewClassnameGen(newTreeViewClassname);
+  }
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void setTreeViewClassname(String newTreeViewClassname) {
+  public void setTreeViewClassnameGen(String newTreeViewClassname) {
 		String oldTreeViewClassname = treeViewClassname;
 		treeViewClassname = newTreeViewClassname;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__TREE_VIEW_CLASSNAME, oldTreeViewClassname, treeViewClassname));
 	}
 
+  public void setGraphViewClassname(String newGraphViewClassname) {
+  	hasRetrievedGraphicalEditPartClass = false;
+  	graphicalEditPartClass = null;
+  	graphicalEditPartConstructor = null;
+  	setGraphViewClassnameGen(newGraphViewClassname);
+  }
+  
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -319,7 +322,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void setGraphViewClassname(String newGraphViewClassname) {
+  public void setGraphViewClassnameGen(String newGraphViewClassname) {
 		String oldGraphViewClassname = graphViewClassname;
 		graphViewClassname = newGraphViewClassname;
 		if (eNotificationRequired())
@@ -377,12 +380,18 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		return labelProviderClassname;
 	}
 
+  public void setLabelProviderClassname(String newLabelProviderClassname) {
+  	hasRetrievedLabelProviderClass = false;
+  	labelProviderClass = null;
+  	setLabelProviderClassnameGen(newLabelProviderClassname);
+  }
+  
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void setLabelProviderClassname(String newLabelProviderClassname) {
+  public void setLabelProviderClassnameGen(String newLabelProviderClassname) {
 		String oldLabelProviderClassname = labelProviderClassname;
 		labelProviderClassname = newLabelProviderClassname;
 		if (eNotificationRequired())
@@ -712,12 +721,33 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		eDynamicUnset(eFeature);
 	}
 
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return eIsSetGen(eFeature);
+		}
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public boolean eIsSet(EStructuralFeature eFeature) {
+  public boolean eIsSetGen(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
 				return eAnnotations != null && !eAnnotations.isEmpty();
@@ -830,26 +860,30 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 
 	private Constructor graphicalEditPartConstructor;	// Cached only if there is a constructor that takes an argument
 	private Class graphicalEditPartClass;  // Cache of the graphical edit part class
+	private boolean hasRetrievedGraphicalEditPartClass;
 	/** 
 	 * Return graphical edit part for the argument, caching the EditPart class and constructor used
 	 */
 	public GraphicalEditPart createGraphicalEditPart(Object object) {
 
 		try {		
-			if(graphicalEditPartClass == null){
-				graphicalEditPartClass = CDEPlugin.getClassFromString(getGraphViewClassname());
-				try{
-					graphicalEditPartConstructor = graphicalEditPartClass.getConstructor(new Class[] {Object.class});
-				} catch (NoSuchMethodException exc){
-					// It's possible there is no argument with a constructor so just continue
-				}
+			if (!hasRetrievedGraphicalEditPartClass) {
+				if (getGraphViewClassname() != null) {
+					graphicalEditPartClass = CDEPlugin.getClassFromString(getGraphViewClassname());
+					try {
+						graphicalEditPartConstructor = graphicalEditPartClass.getConstructor(new Class[] { Object.class});
+					} catch (NoSuchMethodException exc) {
+						// It's possible there is no argument with a constructor so just continue
+					}
+				} 
+				hasRetrievedGraphicalEditPartClass= true;
 			} 		
 
 			if(graphicalEditPartClass != null){
 				if(graphicalEditPartConstructor == null){
-					return (GraphicalEditPart)graphicalEditPartClass.newInstance();
+					return (GraphicalEditPart)CDEPlugin.setInitializationData(graphicalEditPartClass.newInstance(), getGraphViewClassname(), null);
 				} else {
-					return (GraphicalEditPart)graphicalEditPartConstructor.newInstance(new Object[] { object });
+					return (GraphicalEditPart) CDEPlugin.setInitializationData(graphicalEditPartConstructor.newInstance(new Object[] { object }), getGraphViewClassname(), null);
 				}
 			} 
 		} catch (Exception e){
@@ -865,26 +899,33 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	
 	private Constructor treeEditPartConstructor;	// Cached only if there is a constructor that takes an argument
 	private Class treeEditPartClass;  // Cache of the tree edit part class
+	private boolean hasRetrievedTreeEditPartClass;
+	
 	/** 
 	 * Return Tree edit part for the argument, caching the EditPart class and constructor used
 	 */
 	public TreeEditPart createTreeEditPart(Object object) {
 
 		try {		
-			if(treeEditPartClass == null){
-				treeEditPartClass = CDEPlugin.getClassFromString(getTreeViewClassname());
-				try{
-					treeEditPartConstructor = treeEditPartClass.getConstructor(new Class[] {Object.class});
-				} catch (NoSuchMethodException exc){
-					// It's possible there is no argument with a constructor so just continue
+			if (!hasRetrievedTreeEditPartClass) {
+				if (getTreeViewClassname() != null) {
+					treeEditPartClass = CDEPlugin.getClassFromString(getTreeViewClassname());
+					if (treeEditPartClass != null) {
+						try {
+							treeEditPartConstructor = treeEditPartClass.getConstructor(new Class[] { Object.class});
+						} catch (NoSuchMethodException exc) {
+							// It's possible there is no argument with a constructor so just continue
+						}
+					}
 				}
+				hasRetrievedTreeEditPartClass = true;
 			} 		
 
 			if(treeEditPartClass != null){
 				if(treeEditPartConstructor == null){
-					return (TreeEditPart)treeEditPartClass.newInstance();
+					return (TreeEditPart)CDEPlugin.setInitializationData(treeEditPartClass.newInstance(), getTreeViewClassname(), null);
 				} else {
-					return (TreeEditPart)treeEditPartConstructor.newInstance(new Object[] { object });
+					return (TreeEditPart)CDEPlugin.setInitializationData(treeEditPartConstructor.newInstance(new Object[] { object }), getTreeViewClassname(), null);
 				}
 			} 
 		} catch (Exception e){
@@ -899,23 +940,30 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	}
 
 	private Class labelProviderClass;
+	private boolean hasRetrievedLabelProviderClass;
+	
 	/**
 	 * Return LabelProvider using a cache'd instance of the label provider class
 	 */
 	public ILabelProvider getLabelProvider() {
 
-		try{
-			if(labelProviderClass == null){
-				labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());
+		try {
+			if (!hasRetrievedLabelProviderClass) {
+				if (getLabelProviderClassname() != null) {
+					labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());
+				}
+				hasRetrievedLabelProviderClass = true;
 			}
-			ILabelProvider result = (ILabelProvider) labelProviderClass.newInstance();
-			// Set the initData
-			CDEPlugin.setInitializationData(result,getLabelProviderClassname(),null);
-			return result;
+			if (labelProviderClass != null) {
+				ILabelProvider result = (ILabelProvider) labelProviderClass.newInstance();
+				// Set the initData
+				CDEPlugin.setInitializationData(result, getLabelProviderClassname(), null);
+				return result;
+			}
 		} catch (Exception exc) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass }); //$NON-NLS-1$
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass}); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
-		}	
+		}
 		return null;
 	}	
 

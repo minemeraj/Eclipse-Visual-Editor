@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.util.Collection;
@@ -373,7 +373,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	public static void collectFreeFormParts(String classNameToCollect, List objects, List labels, BeanComposition beanComposition,EditDomain editDomain){
 		
 		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
-		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(classNameToCollect,((BeanComposition)editDomain.getDiagramData()).eResource().getResourceSet());
+		JavaClass javaClass = Utilities.getJavaClass(classNameToCollect,((BeanComposition)editDomain.getDiagramData()).eResource().getResourceSet());
 		
 		Iterator components = beanComposition.getMembers().iterator();
 		while(components.hasNext()){

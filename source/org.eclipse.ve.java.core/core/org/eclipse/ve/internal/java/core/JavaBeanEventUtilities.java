@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.text.Collator;
@@ -391,7 +391,7 @@ public class JavaBeanEventUtilities {
 		// Create a new Listener Type
 		ListenerType listenerType = JCMFactory.eINSTANCE.createListenerType();
 		// This implements PropertyChangeListener
-		JavaClass propertyChangeListener = (JavaClass)Utilities.getJavaClass("java.beans.PropertyChangeListener",javaBean.eResource().getResourceSet()); //$NON-NLS-1$
+		JavaClass propertyChangeListener = Utilities.getJavaClass("java.beans.PropertyChangeListener",javaBean.eResource().getResourceSet()); //$NON-NLS-1$
 		listenerType.getImplements().add(propertyChangeListener);
 
 		// The listener type is owned by the BeanComposition

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.*;
@@ -791,8 +791,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			sfIPadX = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADX);
 			sfIPadY = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADY);
 
-			primInt = Utilities.getJavaClass("int", rset); //$NON-NLS-1$
-			primDouble = Utilities.getJavaClass("double", rset); //$NON-NLS-1$
+			primInt = Utilities.getJavaType("int", rset); //$NON-NLS-1$
+			primDouble = Utilities.getJavaType("double", rset); //$NON-NLS-1$
 			gridBagConstraints = Utilities.getJavaClass("java.awt.GridBagConstraints", rset);
 		}
 		resetLists();

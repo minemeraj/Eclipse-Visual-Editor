@@ -11,22 +11,20 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-01 20:14:54 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
-import java.net.URL;
-import java.text.MessageFormat;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.TreeEditPart;
+import org.eclipse.gef.*;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.decorators.*;
 import org.eclipse.ve.internal.cde.utility.GIFFileGraphic;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;

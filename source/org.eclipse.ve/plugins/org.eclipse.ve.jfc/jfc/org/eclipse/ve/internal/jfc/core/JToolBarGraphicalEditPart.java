@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JToolBarGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-08-27 15:34:48 $
+ * $RCSfile: JToolBarGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-02-04 23:12:12 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -92,7 +92,7 @@ public class JToolBarGraphicalEditPart extends ContainerGraphicalEditPart {
 		JavaClass modelType = (JavaClass) ((EObject) model).eClass();
 		sfItems = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
 		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
-		classAction = (JavaClass) Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
+		classAction = Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
 	}
 
 	/**

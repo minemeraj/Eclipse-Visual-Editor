@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JListBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -339,15 +339,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	),
-		  	// isOpaque
-			super.createMethodDescriptor(getBeanClass(),"isOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JListMessages.getString("isOpaque.Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE if the list is opaque"
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
 		  	),
 		  	// isSelectedIndex(int)
 			super.createMethodDescriptor(getBeanClass(),"isSelectedIndex",  //$NON-NLS-1$
@@ -677,17 +668,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	),
-		  	// updateUI()
-			super.createMethodDescriptor(getBeanClass(),"updateUI",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JListMessages.getString("updateUI().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "update the UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
 		  	)
 		};
 		return aDescriptorList;
@@ -752,13 +732,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JListMessages.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	    		}
-	    	),
-			// opaque
-			super.createPropertyDescriptor(getBeanClass(),"opaque", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JListMessages.getString("opaque.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JListMessages.getString("opaque.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// preferredScrollableViewportSize

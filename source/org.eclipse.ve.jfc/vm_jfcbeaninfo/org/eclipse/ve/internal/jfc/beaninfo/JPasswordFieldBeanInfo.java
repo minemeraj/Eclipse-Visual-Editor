@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JPasswordFieldBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -67,17 +67,6 @@ public java.awt.Image getIcon(int kind) {
 public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	try {
 		MethodDescriptor aDescriptorList[] = {
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JPasswordFieldMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessibility context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 			// echoCharIsSet()
 			super.createMethodDescriptor(getBeanClass(),"echoCharIsSet",  //$NON-NLS-1$
 				new Object[] {

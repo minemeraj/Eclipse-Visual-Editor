@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTableBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -219,17 +219,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 		  	// editingCanceled(ChangeEvent) - discard
 		  	// editingStopped(ChangeEvent) - discard
 		  	
-			// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, resJTable.getString("GetAccessibleContext.Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessible context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// getAutoCreateColumnsFromModel()
 			super.createMethodDescriptor(getBeanClass(),"getAutoCreateColumnsFromModel",  //$NON-NLS-1$
 				new Object[] {
@@ -680,15 +669,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, resJTable.getString("IsEditing.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, resJTable.getString("IsEditing.Desc") //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isOpaque
-			super.createMethodDescriptor(getBeanClass(),"isOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, resJTable.getString("IsOpaque.Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE if the tree is opaque"
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -1349,17 +1329,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			boolean.class
 	      		}		    		
-		  	),
-		  	// updateUI()
-			super.createMethodDescriptor(getBeanClass(),"updateUI",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, resJTable.getString("UpdateUI.Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "update the UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
 		  	)
 		};
 		return aDescriptorList;
@@ -1485,13 +1454,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resJTable.getString("Model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	    		}
-	    	),
-			// opaque
-			super.createPropertyDescriptor(getBeanClass(),"opaque", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, resJTable.getString("opaque.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, resJTable.getString("opaque.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// preferredScrollableViewportSize

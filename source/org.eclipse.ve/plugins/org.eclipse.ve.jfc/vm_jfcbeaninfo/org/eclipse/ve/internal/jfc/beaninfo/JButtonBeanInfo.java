@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JButtonBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -19,59 +19,13 @@ import java.beans.*;
 public class JButtonBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle JButtonMessages = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.jbutton");  //$NON-NLS-1$
-private static java.util.ResourceBundle resAbstractButton = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.abstractbutton");  //$NON-NLS-1$
-
-/**
- * Gets the actionevent set descriptor.
- * @return java.beans.EventSetDescriptor
- */
-public java.beans.EventSetDescriptor actionEventSetDescriptor() {
-	EventSetDescriptor aDescriptor = null;
-	Class[] paramTypes = { java.awt.event.ActionEvent.class };
-	MethodDescriptor aDescriptorList[] = {
-			super.createMethodDescriptor(java.awt.event.ActionListener.class,
-				"actionPerformed",  //$NON-NLS-1$
-				new Object[] {
-				DISPLAYNAME, resAbstractButton.getString("MthdDesc.ActionPerformed.Name"), //$NON-NLS-1$
-				SHORTDESCRIPTION, resAbstractButton.getString("MthdDesc.ActionPerformed.Desc"), //$NON-NLS-1$
-				PREFERRED, Boolean.TRUE
-				}, 
-				new ParameterDescriptor[] {
-					createParameterDescriptor("actionEvent", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, resAbstractButton.getString("ParamDesc.ActionPerformed.actionEvent.Name"), //$NON-NLS-1$
-					// SHORTDESCRIPTION, "Event on clicking the button",
-					}
-				)
-			},
-			paramTypes
-			)
-		};	
-		aDescriptor = super.createEventSetDescriptor(getBeanClass(),
-						"action", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, resAbstractButton.getString("EventSetDesc.ActionPerformed.Action.name"), //$NON-NLS-1$
-						SHORTDESCRIPTION, resAbstractButton.getString("EventSetDesc.ActionPerformed.Action.Desc"), //$NON-NLS-1$
-						INDEFAULTEVENTSET, Boolean.TRUE,
-						}, 
-						aDescriptorList, java.awt.event.ActionListener.class,
-						"addActionListener", "removeActionListener"); //$NON-NLS-1$ //$NON-NLS-2$
-
-	return aDescriptor;
-}
 
 /**
  * Return the event set descriptors for this bean.
  * @return java.beans.EventSetDescriptor[]
  */
 public java.beans.EventSetDescriptor[] getEventSetDescriptors() {
-	try {
-		EventSetDescriptor aDescriptorList[] = {
-			actionEventSetDescriptor(),
-		};
-		return aDescriptorList;
-	} catch (Throwable exception) {
-		handleException(exception);
-	};
-	return null;
+	return new EventSetDescriptor[0];
 }
 /**
  * Gets the bean class.
@@ -113,17 +67,6 @@ public java.beans.BeanDescriptor getBeanDescriptor() {
 public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	try {
 		MethodDescriptor aDescriptorList[] = {
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JButtonMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessible context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// isDefaultButton
 			super.createMethodDescriptor(getBeanClass(),"isDefaultButton",  //$NON-NLS-1$
 				new Object[] {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.52 $  $Date: 2005-01-20 19:14:26 $ 
+ *  $Revision: 1.53 $  $Date: 2005-02-04 23:12:03 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1396,14 +1396,8 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		if (fBeanModel!=null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
 			cu = fBeanModel.getCompilationUnit();
 		}
-		else {
-		  IJavaProject p = JavaCore.create (fVEModel.getFile().getProject());	
-		  try {
-		  	cu = (ICompilationUnit) p.findElement(fVEModel.getFile().getProjectRelativePath());		  
-		  } catch (JavaModelException e) {
-			JavaVEPlugin.log(e);
-			return "???";
-		  }		  
+		if (cu==null) {		
+		  	cu = (ICompilationUnit) JavaCore.create(fVEModel.getFile());	  
 		}
 		IType type = CodeGenUtil.getMainType(cu);
 		return type.getFullyQualifiedName();

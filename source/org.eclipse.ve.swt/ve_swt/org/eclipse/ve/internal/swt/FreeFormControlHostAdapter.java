@@ -41,7 +41,7 @@ public class FreeFormControlHostAdapter extends AdapterImpl {
 	}
 	private void ensureEMFDetailsCached(){
 		if ( classControl == null ) 
-			classControl = (EClass) Utilities.getJavaClass("org.eclipse.swt.widgets.Control", composition.eResource().getResourceSet()); //$NON-NLS-1$		
+			classControl = Utilities.getJavaClass("org.eclipse.swt.widgets.Control", composition.eResource().getResourceSet()); //$NON-NLS-1$		
 	}
 	
 	public void notifyChanged(Notification msg) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JToolBarBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -89,17 +89,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, JToolBarMessages.getString("addSeparator().Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Add a separator",
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JToolBarMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessible context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		

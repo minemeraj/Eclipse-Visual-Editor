@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextAreaBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -185,22 +185,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			int.class
 	      		}		    		
 		  	),
-		  	// setFont(Font)
-			super.createMethodDescriptor(getBeanClass(),"setFont",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextAreaMessages.getString("setFont(Font).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Set the font",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("font", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JTextAreaMessages.getString("setFont(Font).font.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "Font",
-	      				})
-	      		},
-	      		new Class[] {
-	      			java.awt.Font.class
-	      		}		    		
-		  	),
 		  	// setLineWrap(boolean)
 			super.createMethodDescriptor(getBeanClass(),"setLineWrap",  //$NON-NLS-1$
 				new Object[] {
@@ -282,12 +266,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"columns", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextAreaMessages.getString("columns.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextAreaMessages.getString("columns.Desc"), //$NON-NLS-1$
-	    		}
-	    	),
-	    	// font
-			super.createPropertyDescriptor(getBeanClass(),"font", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextAreaMessages.getString("font.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextAreaMessages.getString("font.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
 	    	// lineCount

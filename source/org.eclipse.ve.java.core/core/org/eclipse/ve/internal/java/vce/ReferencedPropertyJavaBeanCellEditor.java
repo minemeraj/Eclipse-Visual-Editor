@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: ReferencedPropertyJavaBeanCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:04 $ 
  */
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public void setSources(Object[] sources, IPropertySource[] propertySources, IPro
 	javaObjects = new ArrayList();
 	javaObjectLabels = new ArrayList();
 	// To do comparisons that allow for inheritance we need to find the EMF JavaClass that represents the class we are searching for
-	JavaClass javaClass = (JavaClass) Utilities.getJavaClass(className,firstSource.eResource().getResourceSet());
+	JavaClass javaClass = Utilities.getJavaClass(className,firstSource.eResource().getResourceSet());
 	EReference propSf = (EReference) javaClass.getEStructuralFeature(propertyName);
 	EObject[] comps = InverseMaintenanceAdapter.getReferencedBy(firstSource, propSf);
 	for ( int i = 0; i < comps.length; i++ ) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: AbstractButtonBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -482,22 +482,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.Icon.class
 	      		}		    		
 		  	),
-		  	// setEnabled(boolean)
-			super.createMethodDescriptor(getBeanClass(),"setEnabled",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, resAbstractButton.getString("MthdDesc.SetEnabled.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, resAbstractButton.getString("MthdDesc.SetEnabled.Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("b", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, resAbstractButton.getString("ParamDesc.SetEnabled.b.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "TRUE to enable",
-	      				})
-	      		},
-	      		new Class[] {
-	      			boolean.class
-	      		}		    		
-		  	),
 		  	// setFocusPainted(boolean)
 			super.createMethodDescriptor(getBeanClass(),"setFocusPainted",  //$NON-NLS-1$
 				new Object[] {
@@ -829,13 +813,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.disabledSelectedIcon.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.disabledSelectedIcon.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE
-	    		}
-	    	),
-	    	// enabled
-			super.createPropertyDescriptor(getBeanClass(),"enabled", new Object[] { //$NON-NLS-1$
-			DISPLAYNAME, resAbstractButton.getString("PropDesc.enabled.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.Enabled.Desc"), //$NON-NLS-1$
-	      	PREFERRED, Boolean.TRUE
 	    		}
 	    	),
 	    	// focusPainted

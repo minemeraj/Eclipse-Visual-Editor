@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultGraphicalEditPartFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-01-31 19:19:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -33,7 +33,6 @@ public class DefaultGraphicalEditPartFactory extends AbstractEditPartFactory {
 
 	protected ClassDescriptorDecoratorPolicy policy;
 	public static Class DEFAULT_EDIT_PART_CLASS = CDEDefaultGraphicalEditPart.class; 
-	private static String DEFAULT_EDIT_PART_NAME = "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultGraphicalEditPart"; //$NON-NLS-1$
 	private static Constructor DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR;
 
 	public DefaultGraphicalEditPartFactory(ClassDescriptorDecoratorPolicy policy) {
@@ -42,7 +41,7 @@ public class DefaultGraphicalEditPartFactory extends AbstractEditPartFactory {
 
 	public EditPart createEditPart(EditPart parentEP, Object modelObject) {
 		
-		EditPart result = policy.createGraphicalEditPart((EObject)modelObject);
+		EditPart result = (modelObject instanceof EObject) ? policy.createGraphicalEditPart((EObject)modelObject) : null;
 		if(result != null){
 			return result;
 		} else {

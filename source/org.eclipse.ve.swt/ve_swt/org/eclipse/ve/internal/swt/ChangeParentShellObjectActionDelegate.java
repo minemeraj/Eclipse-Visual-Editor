@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2004-11-02 22:59:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:06 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -93,7 +93,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 	 * Return a List of model objects whose type is Shell
 	 */
 	protected List getShells() {
-		JavaHelpers shellClass = Utilities.getJavaClass("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) thisEditPart.getModel()).eResource()
+		JavaHelpers shellClass = Utilities.getJavaType("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) thisEditPart.getModel()).eResource()
 				.getResourceSet());
 		List freeformParts = thisEditPart.getParent().getChildren();
 		List shellList = new ArrayList(1);

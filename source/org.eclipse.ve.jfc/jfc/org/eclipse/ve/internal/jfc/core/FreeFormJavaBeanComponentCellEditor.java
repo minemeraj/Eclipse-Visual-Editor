@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormJavaBeanComponentCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.*;
@@ -79,7 +79,7 @@ public void setSources(Object[] sources, IPropertySource[] propertySources, IPro
 	// Now we have a resource set we can get some meta information
 	sf_container_components = JavaInstantiation.getSFeature(rset, JFCConstants.SF_CONTAINER_COMPONENTS);					
 	sf_constraint_component = JavaInstantiation.getSFeature(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
-	componentClass = (JavaClass) Utilities.getJavaClass("java.awt.Component",rset);	 //$NON-NLS-1$
+	componentClass = Utilities.getJavaClass("java.awt.Component",rset);	 //$NON-NLS-1$
 	// walk the chain of a component's parent until we get none
 	// This needs improving as we are assuming here that the component is contained by its container, which works for container/components
 	// but may not work for other relationships

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JLabelBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -214,22 +214,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			char.class
 	      		}		    		
 		  	),
-		  	// setFont(Font)
-			super.createMethodDescriptor(getBeanClass(),"setFont",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JLabelMessages.getString("setFont(Font).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Set the text font",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("font", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JLabelMessages.getString("setFont(Font).aFont.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "Font for text",
-	      				})
-	      		},
-	      		new Class[] {
-	      			java.awt.Font.class
-	      		}		    		
-		  	),
 		  	// setHorizontalAlignment(int)
 			super.createMethodDescriptor(getBeanClass(),"setHorizontalAlignment",  //$NON-NLS-1$
 				new Object[] {
@@ -380,17 +364,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			int.class
 	      		}		    		
 		  	),
-		  	// updateUI()
-			super.createMethodDescriptor(getBeanClass(),"updateUI",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JLabelMessages.getString("updateUI().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "update the UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	)
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -418,12 +391,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JLabelMessages.getString("displayedMnemonic.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	  //    	PROPERTYEDITORCLASS, com.ibm.uvm.abt.edit.MnemonicEditor.class
-	    		}
-	    	),
-	    	// font
-			super.createPropertyDescriptor(getBeanClass(),"font", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JLabelMessages.getString("font.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JLabelMessages.getString("font.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
 	    	// horizontalAlignment

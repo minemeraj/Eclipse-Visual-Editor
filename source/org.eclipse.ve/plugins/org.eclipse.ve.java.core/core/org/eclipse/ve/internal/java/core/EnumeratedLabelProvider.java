@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
 /*
- * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.6 $ $Date: 2004-12-16 18:36:14 $
+ * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.7 $ $Date: 2005-02-04 23:12:03 $
  */
 import java.util.logging.Level;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -66,28 +66,23 @@ public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProv
 		return enumeratedValues;
 	}
 	
-	public EnumeratedLabelProvider(IArrayBeanProxy aBeanInfoValuesArray, JavaHelpers aFeatureType) {
+	public EnumeratedLabelProvider(Object[] aBeanInfoValuesArray, JavaHelpers aFeatureType) {
 		fFeatureType = aFeatureType;
 		// Iterate over the array of values, these are stored in the format
 		// displayName, object, initString
 		// We only care about storing the displayName and the initStrings
-		int length = aBeanInfoValuesArray.getLength();
+		int length = aBeanInfoValuesArray.length;
 		int j = 0;
 		fDisplayNames = new String[length / 3];
 		fInitStrings = new String[length / 3];
-		try {
-			for (int i = 0; i < length; i += 3) {
-				fDisplayNames[j] = ((IStringBeanProxy) aBeanInfoValuesArray.get(i)).stringValue();
-				fInitStrings[j] = ((IStringBeanProxy) aBeanInfoValuesArray.get(i + 2)).stringValue();
-				// NOTE - We cannot in any way use the object that came in from the values array
-				// This came from the VM that did introspection that is NOT the same as the
-				// one the editor is necessarily running in so we must re-create the
-				// bean proxies from the init string each time
-				j++;
-			}
-		} catch (ThrowableProxy exc) {
-			JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc, Level.WARNING);
+		for (int i = 0; i < length; i += 3) {
+			fDisplayNames[j] = (String) aBeanInfoValuesArray[i];
+			fInitStrings[j] = (String) aBeanInfoValuesArray[i+2];
+			// NOTE - We cannot in any way use the object that came in from the values array
+			// This came from the VM that did introspection that is NOT the same as the
+			// one the editor is necessarily running in so we must re-create the
+			// bean proxies from the init string each time
+			j++;
 		}
 	}
 	

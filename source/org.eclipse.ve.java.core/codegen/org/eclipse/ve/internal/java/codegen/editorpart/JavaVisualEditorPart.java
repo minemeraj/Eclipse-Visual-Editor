@@ -11,10 +11,10 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.77 $  $Date: 2005-01-21 21:19:50 $ 
+ *  $Revision: 1.78 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -83,7 +83,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
-import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
+import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -110,8 +110,6 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
-
-import sun.misc.SoftCache;
 
 
 
@@ -148,7 +146,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
 	protected IDiagramModelBuilder modelBuilder;
-
 	
 	// Is the model ready. This is needed because sometimes the viewers come up before the model has been
 	// instantiated but it is in the modelBuilder. This causes NPE's. So only when we are about
@@ -484,7 +481,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						openVCEViewersIfRequired(getEditorSite());
 						IProject p = ((IFileEditorInput)getEditorInput()).getFile().getProject();
 						try {
-							ProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID,p);
+							JavaProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID,p);
 						} catch (CoreException e1) {
 							JavaVEPlugin.log(e1);
 						}
@@ -913,24 +910,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private static final URI basePaletteRoot = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi#java_palette"); //$NON-NLS-1$
-	public static class  PaletteStream extends BufferedInputStream {
-
-		public PaletteStream(InputStream in) {
-			super(in);
-		}
-		public PaletteStream(InputStream in, int size) {
-			super(in, size);
-		}
-		boolean closed = false;
-		public void close() throws IOException {
-			if (!closed)
-			   in.close();			
-		}
-		
-		public boolean markSupported() {
-			return false;
-		}
-	}	
 	/*
 	 * A default contributor that works with the palette extension point format. This here so that 
 	 * the default registration contributor can do the same thing with its palette contribution.
@@ -943,7 +922,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * can be reused.
 		 */
 		public IConfigurationElement paletteContribution;
-		static SoftCache paletteCategories = new SoftCache(10);
+		static Map paletteCategories = new HashMap(10);
 
 		
 		/* (non-Javadoc)
@@ -968,11 +947,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 			URI catsURI = URI.createURI(JEMUtilPlugin.PLATFORM_PROTOCOL+":/"+JEMUtilPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat); //$NON-NLS-1$
 
-			List cats = (List) paletteCategories.get(catsURI.toString());
+			List cats = (List) paletteCategories.get(catsURI);
 			if (cats == null) {			
 				Resource res = rset.getResource(catsURI, true);
 				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
-				paletteCategories.put(catsURI.toString(),cats);				
+				paletteCategories.put(catsURI,cats);				
 			}
 			
 			
@@ -1541,6 +1520,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (DO_TIMER_TESTS)
 					TimerTests.basicTest.testState(true);
 				TimerTests.basicTest.startStep(SETUP_STEP);
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT);
+				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);
@@ -1690,7 +1671,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
-			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);			
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);	
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT);
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);
 			TimerTests.basicTest.stopStep(SETUP_STEP);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}

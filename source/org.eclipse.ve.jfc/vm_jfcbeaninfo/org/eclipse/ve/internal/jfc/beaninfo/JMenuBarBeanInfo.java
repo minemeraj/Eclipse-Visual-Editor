@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JMenuBarBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -86,17 +86,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.JMenu.class
 	      		}		    		
 		  	),
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuBarMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuBarMessages.getString("getAccessibleContext().Desc"), //$NON-NLS-1$
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// getComponentAtIndex(int)
 			super.createMethodDescriptor(getBeanClass(),"getComponentAtIndex",  //$NON-NLS-1$
 				new Object[] {
@@ -165,22 +154,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
-		  	),
-			// remove(int)
-			super.createMethodDescriptor(getBeanClass(),"remove",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuBarMessages.getString("remove(int).Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuBarMessages.getString("remove(int).Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("pos", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JMenuBarMessages.getString("remove(int).position.Name"), //$NON-NLS-1$
-	      				SHORTDESCRIPTION, JMenuBarMessages.getString("remove(int).position.Desc"), //$NON-NLS-1$
-	      				})
-	      		},
-	      		new Class[] {
-	      			int.class
-	      		}		    		
 		  	),
 		  	// setBorderPainted(boolean)
 			super.createMethodDescriptor(getBeanClass(),"setBorderPainted",  //$NON-NLS-1$

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-01-31 19:21:50 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.util.Collection;
@@ -32,18 +32,21 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
-import org.eclipse.ve.internal.java.core.IBeanProxyFeatureMediator;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.jcm.LinkType;
+
+import org.eclipse.ve.internal.java.core.IBeanProxyFeatureMediator;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -194,12 +197,18 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		return beanProxyMediatorName;
 	}
 
+	public void setBeanProxyMediatorName(String newBeanProxyMediatorName) {
+		hasRetrievedProxyMediatorClass = false;
+		beanProxyMediatorClass = null;
+		setBeanProxyMediatorNameGen(newBeanProxyMediatorName);
+	}
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setBeanProxyMediatorName(String newBeanProxyMediatorName) {
+	public void setBeanProxyMediatorNameGen(String newBeanProxyMediatorName) {
 		String oldBeanProxyMediatorName = beanProxyMediatorName;
 		beanProxyMediatorName = newBeanProxyMediatorName;
 		if (eNotificationRequired())
@@ -455,13 +464,34 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		}
 		eDynamicUnset(eFeature);
 	}
+	
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case JCMPackage.BEAN_FEATURE_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return eIsSetGen(eFeature);
+		}
+	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
+	public boolean eIsSetGen(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case JCMPackage.BEAN_FEATURE_DECORATOR__EANNOTATIONS:
 				return eAnnotations != null && !eAnnotations.isEmpty();
@@ -545,16 +575,23 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	}
 	
 	private Class beanProxyMediatorClass;
+	private boolean hasRetrievedProxyMediatorClass;
+	
 	/** 
 	 * @return IBeanProxyFeatureMediator 
 	 * This is cached for performance
 	 */
 	public IBeanProxyFeatureMediator getBeanProxyMediator() {
 		try {		
-			if(beanProxyMediatorClass == null){
-				beanProxyMediatorClass = CDEPlugin.getClassFromString(getBeanProxyMediatorName());
+			if (!hasRetrievedProxyMediatorClass) {
+				if (getBeanProxyMediatorName() != null) {
+					beanProxyMediatorClass = CDEPlugin.getClassFromString(getBeanProxyMediatorName());
+				}
+				hasRetrievedProxyMediatorClass = true;
 			}
-			return (IBeanProxyFeatureMediator) beanProxyMediatorClass.newInstance();
+			
+			if (beanProxyMediatorClass != null)
+				return (IBeanProxyFeatureMediator) beanProxyMediatorClass.newInstance();
 		} catch ( Exception exc ) {
 			JavaVEPlugin.log(exc, Level.WARNING);							
 		}

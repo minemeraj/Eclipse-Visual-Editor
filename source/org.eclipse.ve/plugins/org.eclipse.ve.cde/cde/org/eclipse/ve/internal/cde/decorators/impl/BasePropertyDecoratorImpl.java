@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BasePropertyDecoratorImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-01-31 19:18:32 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-04 23:11:58 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -223,12 +223,18 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 		return labelProviderClassname;
 	}
 
+	public void setLabelProviderClassname(String newLabelProviderClassname) {
+		hasInitializedLabelProvider = false;
+		labelProviderClass = null;
+		labelProviderConstructor = null;
+		setLabelProviderClassnameGen(newLabelProviderClassname);
+	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLabelProviderClassname(String newLabelProviderClassname) {
+	public void setLabelProviderClassnameGen(String newLabelProviderClassname) {
 		String oldLabelProviderClassname = labelProviderClassname;
 		labelProviderClassname = newLabelProviderClassname;
 		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
@@ -237,12 +243,19 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME, oldLabelProviderClassname, labelProviderClassname, !oldLabelProviderClassnameESet));
 	}
 
+	public void unsetLabelProviderClassname() {
+		hasInitializedLabelProvider = false;
+		labelProviderClass = null;
+		labelProviderConstructor = null;
+		unsetLabelProviderClassnameGen();
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void unsetLabelProviderClassname() {
+	public void unsetLabelProviderClassnameGen() {
 		String oldLabelProviderClassname = labelProviderClassname;
 		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
 		labelProviderClassname = LABEL_PROVIDER_CLASSNAME_EDEFAULT;
@@ -494,12 +507,33 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 		return eDynamicGet(eFeature, resolve);
 	}
 
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return eIsSetGen(eFeature);
+		}
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
+	public boolean eIsSetGen(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
 				return eAnnotations != null && !eAnnotations.isEmpty();
@@ -653,23 +687,26 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	public ILabelProvider getLabelProvider(IPropertyDescriptor aPropertyDescriptor){
 		
 		if(!hasInitializedLabelProvider){
-			try {
-				labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());				
-				labelProviderConstructor = labelProviderClass.getConstructor(new Class[] { IPropertyDescriptor.class });
-			} catch (ClassNotFoundException e) {
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$				
-			} catch (NoSuchMethodException e){
-				// Do nothing - it is possible there is no constructor with an IPropertyDescriptor argument
-				// in which case the default constructor will be used instead
+			if (getLabelProviderClassname() != null) {
+				try {
+					labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());
+					labelProviderConstructor = labelProviderClass.getConstructor(new Class[] { IPropertyDescriptor.class});
+				} catch (ClassNotFoundException e) {
+					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$				
+				} catch (NoSuchMethodException e) {
+					// Do nothing - it is possible there is no constructor with an IPropertyDescriptor argument
+					// in which case the default constructor will be used instead
+				}
 			}
 			hasInitializedLabelProvider = true;
 		}
 		try {
 			if (labelProviderConstructor != null) {
-				return (ILabelProvider) labelProviderConstructor.newInstance(new Object[] { aPropertyDescriptor });
-			} else {
-				return (ILabelProvider) labelProviderClass.newInstance();
-			}
+				return (ILabelProvider) CDEPlugin.setInitializationData(labelProviderConstructor.newInstance(new Object[] { aPropertyDescriptor }), getLabelProviderClassname(), null);
+			} else if (labelProviderClass != null) {
+				return (ILabelProvider) CDEPlugin.setInitializationData(labelProviderClass.newInstance(), getLabelProviderClassname(), null);
+			} else
+				return null;
 		} catch (Exception exc) {
 			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));			

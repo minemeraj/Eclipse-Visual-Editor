@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ContainerBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.awt.FocusTraversalPolicy;
@@ -243,26 +243,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
-			// getAlignmentX()
-			super.createMethodDescriptor(getBeanClass(), "getAlignmentX", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "getAlignmentX()",//$NON-NLS-1$
-	   			EXPERT, Boolean.TRUE,
-	      		// SHORTDESCRIPTION, "Get the alignment along x-axis",
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-			// getAlignmentY()
-			super.createMethodDescriptor(getBeanClass(), "getAlignmentY", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "getAlignmentY()",//$NON-NLS-1$
-	   			EXPERT, Boolean.TRUE,
-	      		// SHORTDESCRIPTION, "Get the alignment along y-axis",
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 			// getComponent(int)
 			super.createMethodDescriptor(getBeanClass(), "getComponent", //$NON-NLS-1$
 				new Object[] {
@@ -278,46 +258,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      	},
 	      	new Class[] { 
 	      		int.class 
-	      	}	    		
-		  	),
-			// getComponentAt(int,int)
-			super.createMethodDescriptor(getBeanClass(), "getComponentAt", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "getComponentAt(int,int)",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the component at x,y",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("x", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("xParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "x-coordinate",
-	      			}
-	      		),
-	      		createParameterDescriptor("y", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("yParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "y-coordinate",
-	      			}
-	      		)
-	      	},
-	      	new Class[] { 
-	      		int.class,
-	      		int.class
-	      	}	    		
-		  	),
-			// getComponentAt(Point)
-			super.createMethodDescriptor(getBeanClass(), "getComponentAt", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "getComponentAt(Point)",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the component at point",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("point", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("pointParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "Point contained by component",
-	      			}
-	      		)
-	      	},
-	      	new Class[] { 
-	      		java.awt.Point.class 
 	      	}	    		
 		  	),
 			// getComponentCount()
@@ -433,48 +373,8 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		int.class
 	      	}   		
 		  	),
-			// list(PrintWriter,int)
-			super.createMethodDescriptor(getBeanClass(), "list", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "list(PrintWriter,int)",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Print listing of container to writer",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("out", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("outParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "Writer to print to",
-	      			}
-	      		),
-	      		createParameterDescriptor("indent", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("indentParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "number of spaces to indent",
-	      			}
-	      		)	      		
-	      	},
-	      	new Class[] { 
-	      		java.io.PrintWriter.class,
-	      		int.class
-	      	}   		
-		  	),
-			// paint(Graphics)
-			super.createMethodDescriptor(getBeanClass(), "paint", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "paint(Graphics)",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Paint this container",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("graphics", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("graphicsParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "the graphics context to use",
-	      			}
-	      		)	      		
-	      	},
-	      	new Class[] { 
-	      		java.awt.Graphics.class
-	      	}   		
-		  	),
 			// paintComponents(Graphics)
-			super.createMethodDescriptor(getBeanClass(), "paint", //$NON-NLS-1$
+			super.createMethodDescriptor(getBeanClass(), "paintComponents", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "paintComponents(Graphics)",//$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Paint the components",
@@ -490,25 +390,8 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		java.awt.Graphics.class
 	      	}   		
 		  	),
-			// print(Graphics)
-			super.createMethodDescriptor(getBeanClass(), "print", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "print(Graphics)",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Print this container",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("graphics", new Object[] {//$NON-NLS-1$
-	   				DISPLAYNAME, rescontainer.getString("graphicsParmDN"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "the graphics context to use",
-	      			}
-	      		)	      		
-	      	},
-	      	new Class[] { 
-	      		java.awt.Graphics.class
-	      	}   		
-		  	),
 			// printComponents(Graphics)
-			super.createMethodDescriptor(getBeanClass(), "print", //$NON-NLS-1$
+			super.createMethodDescriptor(getBeanClass(), "printComponents", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "printComponents(Graphics)",//$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Print this container's components",
@@ -642,20 +525,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		java.beans.PropertyDescriptor aDescriptorList[] = {
-			// alignmentX  
-	   	super.createPropertyDescriptor(getBeanClass(), "alignmentX", new Object[] {//$NON-NLS-1$
-		   	DISPLAYNAME, rescontainer.getString("alignmentXDN"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, rescontainer.getString("alignmentXSD"), //$NON-NLS-1$
-	        EXPERT, Boolean.TRUE 
-	    		}
-		  	),
-			// ,alignmentY
-			super.createPropertyDescriptor(getBeanClass(), "alignmentY", new Object[] {//$NON-NLS-1$
-		   	DISPLAYNAME, rescontainer.getString("alignmentYDN"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, rescontainer.getString("alignmentYSD"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE 
-	    		}
-	    	),
 			// componentCount()
 			super.createPropertyDescriptor(getBeanClass(), "componentCount", new Object[] {//$NON-NLS-1$
 		   	DISPLAYNAME, rescontainer.getString("componentCountDN"),				 //$NON-NLS-1$
@@ -674,18 +543,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(), "layout", new Object[] {//$NON-NLS-1$
 		   	DISPLAYNAME, rescontainer.getString("layoutDN"),				 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, rescontainer.getString("layoutSD"), //$NON-NLS-1$
-	    		}
-	    	),
-			// maximumSize
-			super.createPropertyDescriptor(getBeanClass(), "maximumSize", new Object[] {//$NON-NLS-1$
-		   	DISPLAYNAME, rescontainer.getString("maximumSizeDN"),				 //$NON-NLS-1$
-	      	SHORTDESCRIPTION, rescontainer.getString("maximumSizeSD"), //$NON-NLS-1$
-	    		}
-	    	),
-			// minimumSize
-			super.createPropertyDescriptor(getBeanClass(), "minimumSize", new Object[] {//$NON-NLS-1$
-		   	DISPLAYNAME, rescontainer.getString("minimumSizeDN"),				 //$NON-NLS-1$
-	      	SHORTDESCRIPTION, rescontainer.getString("minimumSizeSD"), //$NON-NLS-1$
 	    		}
 	    	),
 			// preferredSize

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JComboBoxBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -321,29 +321,11 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
-		  	// isFocusTraverable
-			super.createMethodDescriptor(getBeanClass(),"isFocusTraversable",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComboBoxMessages.getString("isFocusTraversable.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JComboBoxMessages.getString("isFocusTraversable.Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// isLightWeightPopupEnabled
 			super.createMethodDescriptor(getBeanClass(),"isLightWeightPopupEnabled",  //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, JComboBoxMessages.getString("isLightWeightPopupEnabled.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComboBoxMessages.getString("isLightWeightPopupEnabled.Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isOpaque
-			super.createMethodDescriptor(getBeanClass(),"isOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComboBoxMessages.getString("isOpaque.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JComboBoxMessages.getString("isOpaque.Desc") //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -480,24 +462,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    			createParameterDescriptor("b", new Object[] { //$NON-NLS-1$
 	   					DISPLAYNAME, JComboBoxMessages.getString("setEditable(boolean).aBool.Name"), //$NON-NLS-1$
 	      				// SHORTDESCRIPTION, "TRUE to make combo box editable",
-	      				}
-	      			)
-	      		},
-	      		new Class[] {
-	      			boolean.class
-	      		}		    		
-		  	),
-		  	// setEnabled(boolean)
-			super.createMethodDescriptor(getBeanClass(),"setEnabled",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComboBoxMessages.getString("setEnabled(boolean).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Disable or enable the combo box",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("b", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JComboBoxMessages.getString("setEnabled(boolean).aBool.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "TRUE to enable",
 	      				}
 	      			)
 	      		},
@@ -658,17 +622,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
-		  	// updateUI()
-			super.createMethodDescriptor(getBeanClass(),"updateUI",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComboBoxMessages.getString("updateUI().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "update the UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	)
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -703,13 +656,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	EXPERT, Boolean.TRUE,
 			BOUND, Boolean.TRUE
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-	    		}
-	    	),
-	    	// enabled
-			super.createPropertyDescriptor(getBeanClass(),"enabled", new Object[] { //$NON-NLS-1$
-			DISPLAYNAME, JComboBoxMessages.getString("enabled.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JComboBoxMessages.getString("enabled.Desc"), //$NON-NLS-1$
-	      	PREFERRED, Boolean.TRUE
 	    		}
 	    	),
 	    	// focusTraversable
@@ -758,13 +704,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	BOUND, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE,
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-	    		}
-	    	),
-			// opaque
-			super.createPropertyDescriptor(getBeanClass(),"opaque", new Object[] { //$NON-NLS-1$
-			DISPLAYNAME, JComboBoxMessages.getString("opaque.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JComboBoxMessages.getString("opaque.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 			// popupVisible

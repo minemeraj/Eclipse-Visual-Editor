@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:35:34 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
 import java.net.MalformedURLException;
@@ -139,8 +139,10 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 * passed in, it will look for the first ':' and use the string after that as the data.
 	 * If initdata is passed in, it will be used in place of the data from the className.
 	 * If there is no initdata in the className and the initData is null, then null is used as the class data.
+	 * @return the object sent in. This allows <code>return setInitializationData(o, cn, initdata);</code> so that
+	 * you can take the object, send it in, and then return it.
 	 */
-	static public void setInitializationData(Object o, String className, Object initData) throws CoreException {
+	static public Object setInitializationData(Object o, String className, Object initData) throws CoreException {
 		if (o instanceof IExecutableExtension) {
 			int colonNdx = className.indexOf(':');
 			((IExecutableExtension) o).setInitializationData(
@@ -148,6 +150,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 				null,
 				initData == null ? (colonNdx == -1 ? null : className.substring(colonNdx + 1)) : initData);
 		}
+		return o;
 	}
 
 	/**

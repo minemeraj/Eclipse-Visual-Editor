@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultTreeEditPartFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-01-31 19:19:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -19,12 +19,9 @@ import java.lang.reflect.Constructor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gef.EditPart;
-import org.eclipse.ve.internal.cde.core.CDEDefaultGraphicalEditPart;
-import org.eclipse.ve.internal.cde.core.CDEDefaultTreeEditPart;
-import org.eclipse.ve.internal.cde.core.CDEMessages;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
+import org.eclipse.ve.internal.cde.core.*;
 
 /**
  * Default factory for creating GraphicalEditParts.
@@ -34,7 +31,6 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 public class DefaultTreeEditPartFactory extends AbstractEditPartFactory {
 
 	protected ClassDescriptorDecoratorPolicy policy;
-	public String DEFAULT_EDIT_PART_NAME = "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultTreeEditPart"; //$NON-NLS-1$"
 	public static Class DEFAULT_EDIT_PART_CLASS = CDEDefaultTreeEditPart.class;
 	private Constructor DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR;	
 	
@@ -45,7 +41,7 @@ public class DefaultTreeEditPartFactory extends AbstractEditPartFactory {
 
 	public EditPart createEditPart(EditPart parentEP, Object modelObject) {
 		
-		EditPart result = policy.createTreeEditPart((EObject)modelObject);
+		EditPart result = (modelObject instanceof EObject) ? policy.createTreeEditPart((EObject)modelObject) : null;
 		if(result != null){
 			return result;
 		} else {

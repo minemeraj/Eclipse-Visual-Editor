@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.List;
@@ -48,9 +48,9 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	public JMenuProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		classComponent = (JavaClass) Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
-		classAction = (JavaClass) Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
-		classString = (JavaClass) Utilities.getJavaClass("java.lang.String", rset); //$NON-NLS-1$
+		classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
+		classAction = Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
+		classString = Utilities.getJavaClass("java.lang.String", rset); //$NON-NLS-1$
 	}
 	
 	protected void applied(EStructuralFeature as, Object newValue, int position) {

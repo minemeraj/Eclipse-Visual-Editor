@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEnumeratedCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-04 23:12:03 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -46,31 +46,26 @@ class BeanPropertyEnumeratedCellEditor extends ObjectComboBoxCellEditor implemen
 	protected ProxyFactoryRegistry fProxyFactoryRegistry;
 	protected IBeanTypeProxy fBeanTypeProxy;
 
-public BeanPropertyEnumeratedCellEditor(Composite aComposite, IArrayBeanProxy arrayOfValues, JavaHelpers featureType){
+public BeanPropertyEnumeratedCellEditor(Composite aComposite, Object[] arrayOfValues, JavaHelpers featureType){
 	super(aComposite);
 	fFeatureType = featureType;
 	// Iterate over the array of values, these are stored in the format
 	// displayName, object, initString
-	int length = arrayOfValues.getLength();
+	int length = arrayOfValues.length;
 	int j=0;
 	fDisplayNames = new String[length/3];
 	fInitStrings = new String[length/3];
-	try {
-		for ( int i=0;i<length;i+=3 ) {
-			fDisplayNames[j] = ((IStringBeanProxy)arrayOfValues.get(i)).stringValue();
-			fInitStrings[j] = ((IStringBeanProxy)arrayOfValues.get(i+2)).stringValue();
-			// NOTE - We cannot in any way use the object that came in from the values array
-			// This came from the VM that did introspection that is NOT the same as the
-			// one the editor is necessarily running in so we must re-create the
-			// bean proxies from the init string each time
-			j++;
-		}
-		// Set the display names as the items the user sees in the combo box
-		setItems(fDisplayNames);	
-	} catch ( ThrowableProxy exc ){
-		JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, Level.WARNING);
+	for ( int i=0;i<length;i+=3 ) {
+		fDisplayNames[j] = (String) arrayOfValues[i];
+		fInitStrings[j] = (String) arrayOfValues[i+2];
+		// NOTE - We cannot in any way use the object that came in from the values array
+		// This came from the VM that did introspection that is NOT the same as the
+		// one the editor is necessarily running in so we must re-create the
+		// bean proxies from the init string each time
+		j++;
 	}
+	// Set the display names as the items the user sees in the combo box
+	setItems(fDisplayNames);	
 }
 protected String isCorrectObject(Object value) {
 	return null;

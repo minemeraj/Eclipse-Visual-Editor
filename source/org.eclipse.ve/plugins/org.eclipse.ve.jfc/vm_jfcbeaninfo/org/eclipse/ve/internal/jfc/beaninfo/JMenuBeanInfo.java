@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JMenuBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -108,23 +108,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.JMenuItem.class
 	      		}		    		
 		  	),
-		  	// add(Component)
-			super.createMethodDescriptor(getBeanClass(),"add",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuMessages.getString("add(Component).Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuMessages.getString("add(Component).Desc"), //$NON-NLS-1$
-	      		// EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("comp", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JMenuMessages.getString("add(Component).component.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "Component",
-	      				})
-	      		},
-	      		new Class[] {
-	      			java.awt.Component.class
-	      		}		    		
-		  	),
 		  	// add(String)
 			super.createMethodDescriptor(getBeanClass(),"add",  //$NON-NLS-1$
 				new Object[] {
@@ -155,17 +138,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, JMenuMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Get the accessible context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// getAccelerator()
-			super.createMethodDescriptor(getBeanClass(),"getAccelerator",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuMessages.getString("getAccelerator().Name"), //$NON-NLS-1$
-	      		//SHORTDESCRIPTION, JMenuMessages.getString("getAccelerator().Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
 	      		OBSCURE, Boolean.TRUE
 	    		}, 
@@ -356,32 +328,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.JMenuItem.class
 	      		}		    		
 		  	),
-		  	// remove(int)
-			super.createMethodDescriptor(getBeanClass(),"remove",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuMessages.getString("remove(int).Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuMessages.getString("remove(int).Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("pos", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JMenuMessages.getString("remove(int).position.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "position"
-	      				})
-	      		},
-	      		new Class[] {
-	      			int.class
-	      		}		    		
-		  	),
-		  	// removeAll()
-			super.createMethodDescriptor(getBeanClass(),"removeAll",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuMessages.getString("removeAll().Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuMessages.getString("removeAll().Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// setAccelerator(KeyStroke)
 		  	// Hidden from JMenu by design of Swing
 			super.createMethodDescriptor(getBeanClass(),"setAccelerator",  //$NON-NLS-1$
 				new Object[] {
@@ -469,14 +415,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
-			// accelerator
-			super.createPropertyDescriptor(getBeanClass(),"accelerator", new Object[] { //$NON-NLS-1$
-	      		DISPLAYNAME, JMenuMessages.getString("accelerator.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuMessages.getString("accelerator.Desc"), //$NON-NLS-1$
-	      		//DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      		EXPERT, Boolean.TRUE
-	    		}
-	    	),
 			// delay
 			super.createPropertyDescriptor(getBeanClass(),"delay", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JMenuMessages.getString("delay.Name"), //$NON-NLS-1$

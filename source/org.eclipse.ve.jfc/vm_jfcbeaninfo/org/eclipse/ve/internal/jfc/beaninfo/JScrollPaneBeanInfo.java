@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JScrollPaneBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -191,26 +191,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, JScrollPaneMessages.getString("getViewportBorder().Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Get the viewport border",
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isOpaque()
-			super.createMethodDescriptor(getBeanClass(),"isOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JScrollPaneMessages.getString("isOpaque().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Is the scrollpane opaque",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isValidateRoot()
-			super.createMethodDescriptor(getBeanClass(),"isValidateRoot",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JScrollPaneMessages.getString("isValidateRoot().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE to validate all descendents",
-	      		EXPERT, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -468,12 +448,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("layout.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("layout.Desc"), //$NON-NLS-1$
 	      		DESIGNTIMEPROPERTY, Boolean.FALSE
-	    		}
-	    	),
-	    	// opaque
-			super.createPropertyDescriptor(getBeanClass(),"opaque", new Object[] { //$NON-NLS-1$
-	      		DISPLAYNAME, JScrollPaneMessages.getString("opaque.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("opaque.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
 			// rowHeader
