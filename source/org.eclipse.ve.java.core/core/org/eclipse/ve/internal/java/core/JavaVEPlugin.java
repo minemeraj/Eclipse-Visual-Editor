@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-24 19:34:08 $ 
  */
 
 import java.util.*;
@@ -22,8 +22,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import org.eclipse.wtp.common.logger.proxy.Logger;
-import org.eclipse.wtp.logger.proxyrender.EclipseLogger;
+import com.ibm.wtp.common.logger.proxy.Logger;
+import com.ibm.wtp.logger.proxyrender.EclipseLogger;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 

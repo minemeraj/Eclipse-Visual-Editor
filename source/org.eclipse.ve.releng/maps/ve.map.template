@@ -1,10 +1,10 @@
 !***************  VE CONTRIBUTION  ******************************************************** 
 
 !*** Special binary plugins which are temporarily included until they become open sourced.
-plugin@org.eclipse.wtp.emf=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.wtp.emf
+plugin@com.ibm.wtp.emf=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf
 plugin@com.ibm.etools.emf.event=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
-plugin@org.eclipse.wtp.emf.workbench=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.wtp.emf.workbench
-plugin@org.eclipse.wtp.common=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/org.eclipse.wtp.common
+plugin@com.ibm.wtp.emf.workbench=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.workbench
+plugin@com.ibm.wtp.common=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common
 
 !*** Special ones from eclipse.
 plugin@org.eclipse.test=v20031125,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
