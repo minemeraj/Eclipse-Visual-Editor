@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-07 14:30:08 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -37,15 +37,14 @@ public EnumeratedIntValueLabelProvider(String[] NAMES, Integer[] VALUES){
 }
 
 public String getText(Object element){
-	IIntegerBeanProxy integerValueProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)element, JavaEditDomainHelper.getResourceSet(editDomain));
-	int intValue = integerValueProxy.intValue();
+	int intValue = ((Integer)element).intValue();
 	// Match against the int value
 	for (int i=0; i<FILL_VALUES.length; i++){
 		if(FILL_VALUES[i].intValue() == intValue){
 			return FILL_NAMES[i];
 		}
 	}
-	return "???";
+	return "";
 }
 	/**
 	 * @see INeedData#setData(Object)
