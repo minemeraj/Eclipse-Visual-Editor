@@ -1,0 +1,88 @@
+<project default="run">
+
+	<target name="init">
+		<property name="buildDirectory" value="${basedir}/src/eclipse" />
+		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
+		<antcall target="create.label.properties" />
+		<property file="${buildDirectory}/label.properties" />
+	</target>
+
+	<target name="create.label.properties" unless="label.properties.exists">
+		<mkdir dir="${buildDirectory}" />
+		<tstamp/>
+		<property name="date" value="${DSTAMP}" />
+		<property name="time" value="${TSTAMP}" />
+		<property name="timestamp" value="${date}${time}" />
+		<property name="buildType" value="I" />
+		<property name="buildId" value="${buildType}${date}" />
+
+		<!--this naming convention used by php scripts on download server-->
+		<property name="buildLabel" value="${buildType}-${buildId}-${timestamp}" />
+
+		<!--store the build label information in a file-->
+		<echo file="${buildDirectory}/label.properties" append="true" >
+		buildType=${buildType}
+		</echo>
+		<echo file="${buildDirectory}/label.properties" append="true" >
+		buildId=${buildId}
+		</echo>
+		<echo file="${buildDirectory}/label.properties" append="true" >
+		timestamp=${timestamp}
+		</echo>
+		<echo file="${buildDirectory}/label.properties" append="true" >
+		buildLabel=${buildLabel}
+		</echo>
+	</target>
+
+	<target name="run" depends="init">
+		<antcall target="buildAll" />
+		<antcall target="test" />
+		<antcall target="publish" />
+	</target>
+
+	<target name="buildAll">
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="sdk" />
+		</ant>
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="runtime" />
+		</ant>
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="examples" />
+		</ant>
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="tests" />
+		</ant>
+	</target>
+
+	<target name="test">
+	</target>
+
+	<target name="publish" depends="init">
+		<property name="indexFileName" value="index.html" />
+		<property name="result" value="${buildDirectory}/${buildLabel}" />
+
+		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
+			<ant antfile="publish.xml">
+				<property name="dropTokenList" value="%sdk%,%runtime%,%examples%,%tests%" />
+				<property name="isBuildTested" value="false" />
+			</ant>
+
+	 	<!--  Insert url for supported eclipse drop-->
+		<replace file="${result}/${indexFileName}" token="@eclipseBuildID@" value="${eclipseBuildID}"/>
+		<replace file="${result}/${indexFileName}" token="@eclipseURL@" value="${eclipseURL}"/>
+		<replace file="${result}/${indexFileName}" token="@eclipseZipURL@" value="${eclipseZipURL}"/>		
+	
+	 	<!--  Insert url for supported EMF -->
+		<replace file="${result}/${indexFileName}" token="@emfBuildID@" value="${emfBuildID}"/>
+		<replace file="${result}/${indexFileName}" token="@emfURL@" value="${emfURL}"/>
+		<replace file="${result}/${indexFileName}" token="@emfZipURL@" value="${emfZipURL}"/>		
+
+	 	<!--  Insert url for supported GEF -->
+		<replace file="${result}/${indexFileName}" token="@gefBuildID@" value="${gefBuildID}"/>
+		<replace file="${result}/${indexFileName}" token="@gefURL@" value="${gefURL}"/>
+		<replace file="${result}/${indexFileName}" token="@gefZipURL@" value="${gefZipURL}"/>
+
+	</target>
+	
+</project>
