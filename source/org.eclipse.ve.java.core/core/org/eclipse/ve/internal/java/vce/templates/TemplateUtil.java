@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.11 $  $Date: 2004-09-15 12:47:13 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -257,9 +257,14 @@ public class TemplateUtil {
 			}
 	   } else if (path.charAt(1) == ':') {
 	   	   // C:/com/ibm...
-	   } else
-	       // No a format we support
-	       return null ;
+	   } else {
+	       // most likely a vanilla unix path
+		   // is it a jar file ?
+	       int excMarkIndex = path.indexOf("!"); //$NON-NLS-1$
+		    if (excMarkIndex != -1) {
+				 path = path.substring(0,excMarkIndex); // C:/IBM/TheJar.jar
+		    }
+	   }
 	       
 	  // URL sometimes encodes spaces in a path with %20
 	  return getCorrectPath(path) ;
