@@ -10,10 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-03 23:18:16 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.PTInstanceReference;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
@@ -43,10 +45,19 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 			IJavaObjectInstance obj = node.getObject() ;
 		    BeanPart bp = fmodel.getABean(obj);
 		    if (bp!=null)
-		    	  buffer.append(bp.getSimpleName()) ;
+		    	  getStringBuffer().append(bp.getSimpleName()) ;
 		    else {
-		    	  buffer.append("new ");
-		    	  buffer.append(((JavaHelpers)obj.eClass()).getName());
+		    	if (obj.isSetAllocation()) {
+		    		JavaAllocation alloc = obj.getAllocation();
+		    		if (alloc instanceof InitStringAllocation)
+		    			getStringBuffer().append(((InitStringAllocation) alloc).getInitString());
+		    		else if (alloc instanceof ParseTreeAllocation)
+		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
+		    	} else {
+		    		getStringBuffer().append("new ");
+		    		getStringBuffer().append(((JavaHelpers)obj.eClass()).getJavaName());
+		    		getStringBuffer().append("()");
+		    	}
 		    }
 			return false;
 		}

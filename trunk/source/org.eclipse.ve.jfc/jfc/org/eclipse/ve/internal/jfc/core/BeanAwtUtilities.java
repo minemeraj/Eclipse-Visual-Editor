@@ -11,12 +11,11 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-02 21:14:20 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-03 23:18:20 $ 
  */
 
 import java.util.List;
 
-import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -26,19 +25,18 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.GridController;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
-
-import org.eclipse.ve.internal.jcm.BeanDecorator;
 /** 
  * Helper class with useful methods for working with awt bean proxies
  */
