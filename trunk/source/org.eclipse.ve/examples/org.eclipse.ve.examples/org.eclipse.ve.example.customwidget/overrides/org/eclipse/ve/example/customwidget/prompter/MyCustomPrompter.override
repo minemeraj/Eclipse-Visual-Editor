@@ -11,8 +11,7 @@
 	  </addedEObjects> 
 	  
 	  <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-           expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/>           
-      <!-- methodGenerator="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterMethodTextGenerator"/> -->
+           expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/>                 
   </event:AddMany>   
  
   <event:Add  featureName="eStructuralFeatures">

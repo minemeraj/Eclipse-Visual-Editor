@@ -15,6 +15,7 @@
 package org.eclipse.ve.example.customwidget;
 
 import org.eclipse.draw2d.*;
+import org.eclipse.gef.GraphicalEditPart;
 
 import org.eclipse.ve.internal.cde.core.ImageFigure;
 
@@ -30,16 +31,15 @@ public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
 	protected IFigure createFigure() {
 
 		ImageFigure figure = (ImageFigure) super.createFigure();
+		Label customFigure = new Label("VE Rules",CustomwidgetPlugin.getCustomImage());
+		customFigure.setForegroundColor(ColorConstants.red);
+		customFigure.setTextPlacement(PositionConstants.SOUTH);
+		// ImageFigure has no layout, so we will have to explicitly set the size().
+		// To get a prefered size (before we hoop up to the hierarchy), Label will need a Font
+		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());
+		customFigure.setSize(customFigure.getPreferredSize());
 
-		Figure childFigure = new Figure() {
-
-			public void paint(Graphics graphics) {
-				super.paintFigure(graphics);
-				graphics.drawImage(CustomwidgetPlugin.getSmileyFace(), getLocation().x, getLocation().y);
-			}
-		};
-
-		figure.add(childFigure);
+		figure.add(customFigure);
 
 		return figure;
 	}
