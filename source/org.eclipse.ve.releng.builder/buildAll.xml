@@ -207,7 +207,7 @@
 		</exec>
 	</target>
 	
-	<target name="publishdevupdate">
+	<target name="publishdevupdate" depends="init">
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
 		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml -add4thPart"/>
