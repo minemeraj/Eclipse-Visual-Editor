@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-10 18:37:39 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-11 18:36:28 $ 
  */
 
 import java.util.Collections;
@@ -76,6 +76,7 @@ import org.eclipse.ve.internal.jfc.core.GridBagLayoutPolicyHelper;
 import org.eclipse.ve.internal.jfc.core.JFCConstants;
 
 public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements IGridListener, IActionFilter {
+	public static final String LAYOUT_ID = "java.awt.GridBagLayout"; //$NON-NLS-1$
 	public static final String REQ_GRIDBAGLAYOUT_SPAN = "GridBagLayout span cells"; //$NON-NLS-1$
 	protected GridBagLayoutGridFigure fGridBagLayoutGridFigure = null;
 	protected GridBagLayoutFeedbackFigure fGridBagLayoutCellFigure = null;
@@ -604,7 +605,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			return true;
 		else if (name.startsWith("showgrid") && value.equals("true") && fShowgrid) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
-		else if (name.startsWith("LAYOUTPOLICY") && value.equals("java.awt.GridBagLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 
 		return false;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-11 18:36:25 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -241,7 +241,7 @@ public class GridLayoutLayoutPage extends CustomizeLayoutPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) target).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(target, "EDITPOLICY#LAYOUTPOLICY", "org.eclipse.swt.layout.GridLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (af != null && af.testAttribute(target, "EDITPOLICY#LAYOUTPOLICY", GridLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		}
 		return false;

@@ -9,7 +9,7 @@ package org.eclipse.ve.internal.swt;
  **************************************************************************************************/
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.2 $ $Date: 2004-05-10 18:37:30 $
+ * $Revision: 1.3 $ $Date: 2004-05-11 18:36:25 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +44,9 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 
 public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGridListener, IActionFilter {
+	
+	// unique ID of this layout edit policy
+	public static final String LAYOUT_ID = "org.eclipse.swt.layout.GridLayout"; //$NON-NLS-1$
 	public static final String REQ_GRIDLAYOUT_SPAN = "GridLayout span cells"; //$NON-NLS-1$
 	
 	private final int DEFAULT_EDGE = 5;
@@ -200,7 +203,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			return true;
 		else if (name.startsWith("customizelayout") && value.equals("true")) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
-		else if (name.startsWith("LAYOUTPOLICY") && value.equals("org.eclipse.swt.layout.GridLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$
 			return true;
 
 		return false;
