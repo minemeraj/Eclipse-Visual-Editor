@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.25 $  $Date: 2004-04-08 16:56:17 $ 
+ *  $Revision: 1.26 $  $Date: 2004-04-08 18:15:49 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -112,6 +112,13 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		if(controller!=null && controller.inTransaction())
 		    throw new RuntimeException("should not be here") ;
 
+		// We have no idea when the load will be called by the editor.
+		// We need to stop the synch. from driving snippets, as we are going
+		// to load from scratch anyhow
+		fSrcSync.stallProcessing();
+		try {
+			fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true);
+		} catch (CodeGenException e) {}
 		fireReloadIsNeeded();
  
  	}
@@ -132,6 +139,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		if(primaryType==null)
   			return ;
   		List pureSourceMethods = new ArrayList() ;
+  		primaryType.getCompilationUnit().reconcile(false, false, null, null);
   		IMethod[] methods = primaryType.getMethods() ;
   		if(methods!=null){
   			for (int mc = 0; mc < methods.length; mc++) {
@@ -535,7 +543,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 		fFile = input.getFile();
 		try {
 			synchronized (this) {   // only one thread is to update the model				
-			    decodeDocument(fFile, pm);			
+			    decodeDocument(fFile, pm);					    
 				floadInProgress = false;
 				fmodelLoaded = true;
 			}
@@ -892,7 +900,7 @@ private void deCapitateModel() {
 		try {			
 			fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
 			fBeanModel.setSourceSynchronizer(null);
-			fBeanModel.setWorkingCopyProvider(null);
+			fBeanModel.setWorkingCopyProvider(null);			
 			fBeanModel=null;
 		} catch (CodeGenException e) {}
 		fBeanModel = null ;
