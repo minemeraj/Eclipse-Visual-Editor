@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<toc label="Visual Editor for Java">
-   <!-- topic label="Visual Editor for Java"-->
+<toc label="Visual Editor for Java User Guide" topic="topics/calign.html">
+   <topic label="Using the Visual Editor for Java">
       <topic label="Visually editing Java applications">
          <topic label="Aligning components" href="topics/calign.html"/>
          <topic label="Null layout manager" href="topics/cnullay.html"/>
@@ -17,6 +17,7 @@
       </topic>
       <topic label="Composing classes visually" href="topics/tjveovrvw.html">
          <topic label="Writing a customizer" href="topics/tjvecustomizer.html"/>
+         <topic label="Using a customizer to change Java bean properties" href="topics/tjvelcustomizer.html"/>
          <topic label="Adding a visual bean" href="topics/tjveaddbean.html"/>
          <topic label="Editing a visual bean" href="topics/tjveedit.html"/>
          <topic label="Deleting a visual bean" href="topics/tjvedelete.html"/>
@@ -65,5 +66,5 @@
       <topic label="Reference">
          <topic label="Dragging and Dropping without using the mouse" href="topics/rdraganddrop.html"/>
       </topic>
-   <!--/topic -->
+   </topic>
 </toc>
