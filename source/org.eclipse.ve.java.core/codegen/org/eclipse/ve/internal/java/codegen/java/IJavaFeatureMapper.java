@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-16 19:32:18 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -51,6 +51,7 @@ public static final int PRIORITY_CONSTRAINT_CHANGE = PRIORITY_DEFAULT + INTER_PR
 public static final int PRIORITY_ADD_CHANGE = PRIORITY_CONSTRAINT_CHANGE + INTER_PRIORITY_GAP;
 public static final int PRIORITY_LAYOUT_CHANGE = PRIORITY_ADD_CHANGE + INTER_PRIORITY_GAP;
 public static final int PRIORITY_IMPLICIT = PRIORITY_LAYOUT_CHANGE + INTER_PRIORITY_GAP;
-public static final int PRIORITY_CONSTRUCTOR = PRIORITY_IMPLICIT + INTER_PRIORITY_GAP;
+
 public static final int PRIORITY_INIT_EXPR = Integer.MAX_VALUE;
+public static final int PRIORITY_CONSTRUCTOR = PRIORITY_INIT_EXPR; 
 }
