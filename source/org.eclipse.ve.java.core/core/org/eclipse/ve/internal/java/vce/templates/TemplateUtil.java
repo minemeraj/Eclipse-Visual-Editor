@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.11 $  $Date: 2004-09-15 12:47:13 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-03 18:37:20 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -66,7 +66,7 @@ public class TemplateUtil {
 	 * This will return the absolute class path associated with a Plugin
 	 */
 	static public String getPathForBundleFile (Bundle bundle, String relativePath) {
-	    return getCorrectPath(ProxyPlugin.getPlugin().localizeFromBundle(bundle, relativePath));
+	    return getCorrectPath(ProxyPlugin.getPlugin().localizeFromBundleOnly(bundle, relativePath));
 	}	
 	
 	/**
@@ -103,7 +103,7 @@ public class TemplateUtil {
 			ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
 			if (elements != null) {
 				for (int i = 0; i < elements.length; i++) {
-					String name = ProxyPlugin.getPlugin().localizeFromBundle(bundle, elements[i].getValue());
+					String name = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(bundle, elements[i].getValue());
 					if (!name.equals(".")) {
 						list.add(getCorrectPath(name));
 					}
