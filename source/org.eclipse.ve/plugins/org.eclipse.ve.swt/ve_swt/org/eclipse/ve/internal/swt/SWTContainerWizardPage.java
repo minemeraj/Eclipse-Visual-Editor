@@ -1,17 +1,16 @@
 package org.eclipse.ve.internal.swt;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.ui.wizards.*;
 import org.eclipse.jface.wizard.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ve.internal.java.wizard.InternalMessages;
+import org.eclipse.ui.actions.*;
 
+import org.eclipse.ve.internal.java.wizard.InternalMessages;
 
 public class SWTContainerWizardPage extends WizardPage implements IClasspathContainerPage {
 	

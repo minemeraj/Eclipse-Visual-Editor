@@ -12,14 +12,12 @@ import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.IFileEditorInput;
-
 import org.eclipse.ve.internal.cde.core.*;
-
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.propertysheet.INeedData;
+import org.eclipse.ui.IFileEditorInput;
 
 /**
  * Cell editor for javax.swing.ImageIcon.

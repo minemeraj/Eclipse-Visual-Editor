@@ -11,17 +11,15 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-02 20:49:03 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 14:21:50 $ 
  */
 
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.JavaHelpers;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.*;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.core.*;

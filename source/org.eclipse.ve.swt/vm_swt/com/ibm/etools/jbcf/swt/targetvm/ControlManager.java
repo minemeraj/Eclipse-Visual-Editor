@@ -171,10 +171,7 @@ public class ControlManager implements ICallback , ControlListener {
 				try{
 					final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID,0));
 					//----					
-					// This ImageGrabber uses native C code on Windows and works with 2.1					
-					ImageGrabber grabber = new ImageGrabber();			
-					// This line relies on SWT code only present in the 3.0 stream 		
-//					ImageGrabber_3_0 grabber = new ImageGrabber_3_0();
+					ImageCapture grabber = new ImageCapture();
 					//----
 					Image image = grabber.getImage(fControl,true);
 					final ImageData imageData = image.getImageData();
