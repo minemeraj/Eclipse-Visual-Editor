@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.1 $ $Date: 2004-08-20 22:39:14 $
+ * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.2 $ $Date: 2004-08-25 20:08:20 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -86,13 +86,13 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 	 */
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 
+		Resource res = getEObject().eResource();
+		if (res == null)
+			return new IPropertyDescriptor[0]; // We don't have a resource, we are in anything, really can't go on.
 		ResourceSet rset = (getEObject()).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_COOLBAR_ITEMS);
 		EObject tabFolder = InverseMaintenanceAdapter.getFirstReferencedBy(getEObject(), sf_items);
 		IBeanProxyHost tabFolderProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) tabFolder);
-		Resource res = getEObject().eResource();
-		if (res == null)
-			return new IPropertyDescriptor[0]; // We don't have a resource, we are in anything, really can't go on.
 
 		IJavaObjectInstance component = (IJavaObjectInstance) getEObject().eGet(
 				JavaInstantiation.getSFeature(getEObject().eResource().getResourceSet(), SWTConstants.SF_COOLITEM_CONTROL));
