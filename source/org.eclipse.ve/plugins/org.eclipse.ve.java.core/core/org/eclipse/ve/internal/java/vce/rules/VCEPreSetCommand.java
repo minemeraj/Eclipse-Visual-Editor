@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-23 20:58:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-23 22:03:22 $ 
  */
 
 import java.util.*;
@@ -204,7 +204,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 	protected JCMMethod createInitMethod(CommandBuilder cbld, EObject member) {
 		JCMMethod m = JCMFactory.eINSTANCE.createJCMMethod();
 		m.getInitializes().add(member);
-		m.setReturn(member);
+		// TODO - Hack to make sure the return is not set for SWT
+		if( !(classSWTControl.isInstance(member))) {
+			m.setReturn(member);
+		}
 		cbld.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getBeanSubclassComposition_Methods(), m);
 		return m;
 	}
