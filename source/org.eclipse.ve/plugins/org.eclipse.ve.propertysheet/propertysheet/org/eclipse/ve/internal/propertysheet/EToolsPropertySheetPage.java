@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-08 00:05:53 $ 
  */
 
 
@@ -27,6 +27,7 @@ import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.views.properties.*;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 /**
@@ -243,8 +244,26 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 			});
 		}
 	}
-
+	TableTree tableTree;
 	private void superSelectionChanged(final IWorkbenchPart part, final ISelection selection) {
+		// TODO This is a total hack but it makes switching between entries snapper because there is no visible washing as the
+		// old items are swapped out for the new ones.  Bugzilla 53997 is entered against the platform to have the inherited behavior changed		
+		if(tableTree == null){
+			try{
+				java.lang.reflect.Field viewerField = this.getClass().getSuperclass().getSuperclass().getDeclaredField("viewer");
+				viewerField.setAccessible(true);
+				Object propertySheetViewer = viewerField.get(this);
+				java.lang.reflect.Field tableTreeField = propertySheetViewer.getClass().getDeclaredField("tableTree");
+				tableTreeField.setAccessible(true);
+				tableTree = (TableTree)tableTreeField.get(propertySheetViewer);
+			} catch (Exception exc) {
+				// Do nothing - this is a hack anyway for performance and if it fails it's not important
+				exc.toString();
+			}
+		}
+		tableTree.setRedraw(false);
 		super.selectionChanged(part, selection);
+		tableTree.setRedraw(true);		
+
 	}
-}
+};
