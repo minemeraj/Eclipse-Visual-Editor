@@ -1,4 +1,4 @@
-<project name="Automated GEF Testing" default="all"  basedir="." >
+<project name="Automated VE Testing" default="all"  basedir="." >
 
 	<!--properties file containing the plugin directory name including version number-->
 	<property file="test.properties" />
@@ -36,7 +36,7 @@
     	</exec>
 	
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq VE-SDK-*.zip -d ${install}/eclipse"/>
+			<arg line="-o -qq VE-runtime-*.zip -d ${install}/eclipse"/>
     	</exec>
     	
 		<exec dir="." executable="unzip">

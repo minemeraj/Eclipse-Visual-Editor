@@ -40,7 +40,7 @@
 		<antcall target="publish" />
 	</target>
 
-	<target name="buildAll">
+	<target name="buildAll" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
 		</ant>
@@ -55,7 +55,35 @@
 		</ant>
 	</target>
 
-	<target name="test">
+	<target name="test" depends="init">
+		<!-- run just local for now. Need a better way for all build machines. -->
+		<property name="testdir" value="${basedir}/ve-testing"/>
+	  
+		<!--unzip the automated tests-->
+		<exec dir="${buildDirectory}/${buildLabel}" executable="unzip">
+			<arg line="-o -qq VE-Automated-*.zip -d ${testdir}/.." />
+		</exec>
+	
+		<copy todir="${testdir}">
+			<fileset dir="${buildDirectory}/.." includes="eclipse-SDK.zip,gef.zip,emf.zip"/>
+			<fileset dir="${buildDirectory}/${buildLabel}" includes="VE-runtime*.zip"/>
+		</copy>
+	
+		<mkdir dir="${buildDirectory}/${buildLabel}/testResults/consoleLogs"/>
+		<property name="testingproperties" value="${testdir}/testing.properties"/>
+		<echo file="${testingproperties}">
+			platform=winxp
+		</echo>
+
+		<filelist dir="${buildDirectory}/${buildLabel}" files="testResults" id="results.filelist"/>		
+		<pathconvert dirsep="/" property="resultsdir" refid="results.filelist"/>
+		<echo file="${testingproperties}" append="true">
+			results=${resultsdir}
+		</echo>
+				
+		<exec dir="${testdir}" executable="cmd.exe" output="${buildDirectory}/${buildLabel}/testResults/consoleLogs/winxp_consolelog.txt">
+			<arg line='/C runtests -vm "${vm}" -properties "${testingproperties}" all'/>
+		</exec>
 	</target>
 
 	<target name="publish" depends="init">
