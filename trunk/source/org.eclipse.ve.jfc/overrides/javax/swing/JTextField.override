@@ -6,8 +6,7 @@
     xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore"
     
     featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-      graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentGraphicalEditPart:false">
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
     <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textfield_obj.gif"/>
   </addedEObjects>
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
