@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: BeanMethodTemplate.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-13 02:45:14 $ 
  */
 
 import org.eclipse.core.runtime.Preferences;
@@ -33,6 +33,7 @@ public class BeanMethodTemplate {
     public static final String COMMENT_IMPLICIT =   ExpressionTemplate.COMMENT_GENERATED ;
     public static final String COMMENT_EXPLICIT =   ExpressionTemplate.COMMENT_GENERATED ;
     public static final String VCE_COMMENT =    "This method initializes " ; //$NON-NLS-1$
+    public static final String VOID =    "void" ; //$NON-NLS-1$
     
     
     
@@ -175,7 +176,8 @@ public   String getPrefix() {
             punchLine(sb,COMMENT+fComments[i],CodeTemplateHelper.NORMAL_METHOD_DEF_LEVEL) ;
          punchLine(sb,COMMENT,CodeTemplateHelper.NORMAL_METHOD_DEF_LEVEL) ;
       }      
-      punchLine(sb,COMMENT+"@"+RETURN+ExpressionTemplate.SPACE+fBeanType,CodeTemplateHelper.NORMAL_METHOD_DEF_LEVEL) ; //$NON-NLS-1$
+      if (!fBeanType.equals(VOID))
+          punchLine(sb,COMMENT+"@"+RETURN+ExpressionTemplate.SPACE+fBeanType,CodeTemplateHelper.NORMAL_METHOD_DEF_LEVEL) ; //$NON-NLS-1$
       punchLine(sb,COMMENT_END,CodeTemplateHelper.NORMAL_METHOD_DEF_LEVEL) ;
       
       // JCMMethod Decleration
