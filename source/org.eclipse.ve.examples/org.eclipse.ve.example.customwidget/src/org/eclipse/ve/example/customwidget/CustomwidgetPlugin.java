@@ -16,7 +16,7 @@ public class CustomwidgetPlugin extends AbstractUIPlugin {
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 	
-	public final static String SmileyImageKey = "custom_smiley_image";
+	public final static String SmileyImageKey = "custom_image";
 	
 	/**
 	 * The constructor.
@@ -92,7 +92,7 @@ public class CustomwidgetPlugin extends AbstractUIPlugin {
 
 	protected ImageRegistry createImageRegistry() {		
 		ImageRegistry reg = super.createImageRegistry();
-		reg.put(SmileyImageKey,  getImageDescriptor("icon/custom.gif"));
+		reg.put(SmileyImageKey,  getImageDescriptor("icons/custom.gif"));
 		return reg;
 	}
 }
