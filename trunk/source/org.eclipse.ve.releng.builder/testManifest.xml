@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<topLevel>
+<zipTypes>
+	<zipType name="SDK">
+		<platform id="SDK" name="All" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
+	</zipType>
+	<zipType name="Runtime">
+		<platform id="RUN" name="All" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
+	</zipType>
+	<zipType name="Examples">
+		<platform id="EX" name="All" fileName='&lt;a href="VE-examples-@build@.zip">VE-examples-@build@.zip&lt;/a>'></platform>
+	</zipType>
+	<zipType name="Tests">
+		<platform id="T" name="All" fileName='&lt;a href="VE-Automated-Tests-@build@.zip">VE-Automated-Tests-@build@.zip&lt;/a>'></platform>
+	</zipType>
+</zipTypes>
+
+<logFiles>
+<!-- Comment out for now until we get tests on various platforms.
+	<logFile name="org.eclipse.gef.test_linux.gtk.xml">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="org.eclipse.draw2d.test_linux.gtk.xml">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="org.eclipse.gef.test_winxp.xml">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="org.eclipse.draw2d.test_winxp.xml">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+-->
+	<logFile name="plugins/org.eclipse.jem.beaninfo.ui_*/beaninfoui.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.beaninfo_*/beaninfo.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.beaninfo_*/vm/beaninfovm.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/initparser.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/proxy.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/proxycommon.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/proxyide.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/proxyremote.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/remotecommon.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.proxy_*/vm/remotevm.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.workbench_*/workbench.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem._*/javainst.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem._*/mofjava.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+
+	<logFile name="plugins/org.eclipse.ve.cde_*/cde.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.cde_*/cdm.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.java.core_*/codegen.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.java.core_*/common.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.java.core_*/core.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.java.core_*/vm/javaremotevm.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.java.core_*/vm/vcelauncher.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.jfc_*/jfc.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.jfc_*/jfccodegen.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.jfc_*/jfccommon.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.jfc_*/vm/jfcbeaninfo.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.jfc_*/vm/jfcvm.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.propertysheet_*/propertysheet.jar.bin.log">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
+	
+	<logFile name="plugins/org.eclipse.ve.examples_*/dept.jar.bin.log">
+		<effectedFile id="EX"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.examples_*/javaexamples.jar.bin.log">
+		<effectedFile id="EX"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.examples_*/vm/javaexamplebeaninfo.jar.bin.log">
+		<effectedFile id="EX"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.examples_*/vm/javaexamplebeans.jar.bin.log">
+		<effectedFile id="EX"></effectedFile>
+	</logFile>
+	
+	<logFile name="plugins/org.eclipse.jem.tests_*/javatests.jar.bin.log">
+		<effectedFile id="T"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.jem.tests_*/vm/tests.jar.bin.log">
+		<effectedFile id="T"></effectedFile>
+	</logFile>
+	<logFile name="plugins/org.eclipse.ve.tests_*/vetests.jar.bin.log">
+		<effectedFile id="T"></effectedFile>
+	</logFile>
+	
+</logFiles>
+</topLevel>
+
