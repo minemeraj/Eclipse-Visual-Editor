@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaEditDomainHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-04 22:21:23 $ 
  */
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jdt.core.IJavaProject;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
@@ -27,7 +28,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 public class JavaEditDomainHelper extends EMFEditDomainHelper {
 	
 	public static final String
-		BEAN_PROXY_DOMAIN_KEY = "org.eclipse.ve.internal.java.core.beanproxydomainkey"; //$NON-NLS-1$
+		BEAN_PROXY_DOMAIN_KEY = "org.eclipse.ve.internal.java.core.beanproxydomainkey", //$NON-NLS-1$
+		JAVA_PROJECT_KEY = "org.eclipse.ve.internal.java.core.javaprojectkey"; //$NON-NLS-1$
 		
 		
 	/**
@@ -62,4 +64,17 @@ public class JavaEditDomainHelper extends EMFEditDomainHelper {
 		dom.setData(BEAN_PROXY_DOMAIN_KEY, proxyDomain);
 	}
 
+	/**
+	 * The IJavaProject for the editor.
+	 */
+	public static IJavaProject getJavaProject(EditDomain dom) {
+		return (IJavaProject) dom.getData(JAVA_PROJECT_KEY);
+	}
+
+	/**
+	 * Set the JavaProject into the domain.
+	 */
+	public static void setJavaProject(IJavaProject proxyDomain, EditDomain dom) {
+		dom.setData(JAVA_PROJECT_KEY, proxyDomain);
+	}
 }
