@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.6 $  $Date: 2005-01-21 21:20:33 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-31 22:06:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
+import org.eclipse.core.resources.*;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -55,15 +57,16 @@ public class VEModelCacheUtility {
 	
 	private static boolean isCacheDirectory = false;
 	
-	public static IPath getCacheDirectory() {
+	public static IPath getCacheDirectory(IFile f) {
+		IProject p = f.getProject();
 		if (!isCacheDirectory) {
-			File  dir =   JavaVEPlugin.VE_CACHE_DESTINATION.toFile();
+			File  dir =   JavaVEPlugin.getEMFModelCacheDestination(p).toFile();
 			if (dir.exists())
 				isCacheDirectory=true;
 			else
 				isCacheDirectory= dir.mkdirs();
 		}
-		return isCacheDirectory?JavaVEPlugin.VE_CACHE_DESTINATION : null;			
+		return isCacheDirectory?JavaVEPlugin.getEMFModelCacheDestination(p) : null;			
 	}
 	
 	public static boolean isValidCache (IFile f) {
@@ -76,7 +79,7 @@ public class VEModelCacheUtility {
 	}
 	
 	protected static IPath getCachedPath(IFile f) {
-		IPath savedPath = getCacheDirectory().append(f.getFullPath());
+		IPath savedPath = getCacheDirectory(f).append(f.getProjectRelativePath());
 		return savedPath.removeLastSegments(1).append(savedPath.lastSegment().substring(0,savedPath.lastSegment().indexOf('.'))+".xmi");
 	}
 	
