@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPrefContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-06 22:24:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -284,7 +284,6 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 	protected Control buildUI(Composite parent) {
 
 		TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
-		tabFolder.setLayout(new org.eclipse.jdt.internal.ui.util.TabFolderLayout());
 		createPrefTab(tabFolder);
 		//		TODO need to allow updating templates.		    
 		//	    createTemplateTab(tabFolder) ;	  
