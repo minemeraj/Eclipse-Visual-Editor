@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.78 $  $Date: 2005-02-04 23:12:03 $ 
+ *  $Revision: 1.79 $  $Date: 2005-02-08 21:54:04 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1524,7 +1524,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
-				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);				
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
@@ -1671,7 +1670,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
-			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);	
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT);
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);
 			TimerTests.basicTest.stopStep(SETUP_STEP);
