@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.18 $  $Date: 2004-05-10 18:13:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -234,14 +234,27 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @return 3 for GlobalBlobal, 2 for Global local, and 1 for local local.
 	 */
 	public static int getDefaultBeanPriority(BeanPart b) {
+		int p = 10000000;
 		if (b.isInstanceVar()) {
 			if (b.getReturnedMethod() != null)
-				return 3;
+				p+= 3;
 			else
-				return 2;			
+				p+= 2;			
 		}
 		else
-			return 1;		
+			p+= 1;
+		// Parent should come before its child.
+		//TODO: we actyally need to get the parent priority here
+		return p-100*getParentCount(b);
+	}
+	
+	protected static int getParentCount (BeanPart b) {
+		int count=-1 ;
+		while(b!=null){
+		  count++;
+		  b = CodeGenUtil.determineParentBeanpart(b);
+		}
+		return count;
 	}
 	
 	/* 
