@@ -68,12 +68,11 @@ cd $dir
 # verify os, ws and arch values passed in are valid before running tests
 if [ "$os-$ws-$arch" = "linux-motif-x86" ] || [ "$os-$ws-$arch" = "linux-gtk-x86" ] || [ "$os-$ws-$arch" = "solaris-motif-sparc" ] || [ "$os-$ws-$arch" = "aix-motif-sparc" ] || [ "$os-$ws-$arch" = "hpux-motif-ppc" ] || [ "$os-$ws-$arch" = "qnx-photon-x86" ]
 then
+	# Replace the boot eclipse (The eclipse used to run the main test.xml, this will start another eclipse later)
 	rm -r eclipse
 	rm -r workspace
-	unzip -qq -o eclipse-SDK-*.zip -d target
-	unzip -qq -o emf_*.zip -d target/eclipse
-	unzip -qq -o GEF-runtime-*.zip -d target/eclipse	
-	unzip -qq -o -C VE-junit-tests-*.zip */plugins/org.eclipse.test* -d target
+	unzip -qq -o eclipse-SDK-*.zip
+	unzip -qq -o -C VE-junit-tests-*.zip */plugins/org.eclipse.test*
 	
 	if [ "$installmode" = "noclean" ]
 	then		
