@@ -10,13 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-25 15:46:05 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-25 18:16:18 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Adapter;
@@ -126,7 +124,7 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 	
 	protected void createLayoutEditPolicy() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabFolderLayoutEditPolicy(EditDomain.getEditDomain(this)));
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new UnknownLayoutInputPolicy(new TabFolderContainerPolicy(EditDomain.getEditDomain(this))));
 	}
 
 	/*
