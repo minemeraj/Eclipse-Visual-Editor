@@ -37,7 +37,7 @@ REM ****************************************************************
 unzip -qq -o eclipse-SDK-*.zip
 unzip -qq -o emf_*.zip -d ./eclipse
 unzip -qq -o GEF-runtime-*.zip -d ./eclipse
-unzip -qq -o -C GEF-junit-tests*.zip */plugins/org.eclipse.test*
+unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test*
 
 
 :processcmdlineargs
