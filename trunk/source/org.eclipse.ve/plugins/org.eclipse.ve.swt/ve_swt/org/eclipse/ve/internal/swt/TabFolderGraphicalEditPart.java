@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-10 21:26:19 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-19 19:56:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,9 +18,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
@@ -30,7 +42,7 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * @since 1.0.0
  */
 public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
-
+	private EReference sf_items, sf_tabItemControl;
 	protected TabFolderProxyAdapter tabFolderProxyAdapter;
 
 	private EditPartListener pageListener;
@@ -49,6 +61,7 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	public void activate() {
 		setListener(createPageListener());
 		super.activate();
+		((EObject) getModel()).eAdapters().add(containerAdapter);
 		List children = getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			EditPart page = (EditPart) children.get(i);
@@ -66,8 +79,41 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		Iterator children = getChildren().iterator();
 		while (children.hasNext())
 			removePageListenerFromChildren((EditPart) children.next());
+		((EObject) getModel()).eAdapters().remove(containerAdapter);
 		setListener(null);
 		super.deactivate();
+	}
+
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+
+		public void run() {
+				List children = getChildren();
+				int s = children.size();
+				for (int i = 0; i < s; i++) {
+					EditPart ep = (EditPart) children.get(i);
+					if (ep instanceof ControlGraphicalEditPart)
+						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+				}
+		}
+
+		public void notifyChanged(Notification msg) {
+			if (msg.getFeature() == sf_items)
+				queueExec(TabFolderGraphicalEditPart.this);
+		}
+	};
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#createChild(java.lang.Object)
+	 */
+	protected EditPart createChild(Object model) {
+		EditPart ep = super.createChild(model);
+		if (ep instanceof ControlGraphicalEditPart)
+			setPropertySource((ControlGraphicalEditPart) ep, (EObject) model);
+		return ep;
+	}
+	
+	protected void createLayoutEditPolicy() {
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabFolderLayoutEditPolicy(EditDomain.getEditDomain(this)));
 	}
 
 	/*
@@ -82,6 +128,25 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 				((GraphicalEditPart) children.next()).getFigure().setVisible(bool);
 			fig.revalidate();
 		}
+	}
+
+	protected void setPropertySource(ControlGraphicalEditPart childEP, EObject child) {
+		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_tabItemControl, child);
+		// This is the property source of the actual child, which is the tabitem.
+		if (tab != null)
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
+		else
+			childEP.setPropertySource(null);
+	}
+
+	/*
+	 * @see EditPart#setModel(Object)
+	 */
+	public void setModel(Object model) {
+		super.setModel(model);
+		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
+		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_TABFOLDER_ITEMS);
+		sf_tabItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_TABITEM_CONTROL);
 	}
 
 	protected void setListener(EditPartListener listener) {
