@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Common Public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests.codegen.java.templates;
 /*
  *  $RCSfile: TemplateObjectFactoryTest.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:35:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-15 23:59:09 $ 
  */
 import java.io.File;
 import java.io.FileWriter;
@@ -38,9 +38,9 @@ public class TemplateObjectFactoryTest extends TestCase {
 						"/*******************************************************************************"+NL+
  						" * Copyright (c) 2001, 2003 IBM Corporation and others."+NL+
  						" * All rights reserved. This program and the accompanying materials"+NL+
- 						" * are made available under the terms of the Common Public License v1.0"+NL+
+ 						" * are made available under the terms of the Eclipse Public License v1.0"+NL+
  						" * which accompanies this distribution, and is available at"+NL+
- 						" * http://www.eclipse.org/legal/cpl-v10.html"+NL+
+ 						" * http://www.eclipse.org/legal/epl-v10.html"+NL+
  						" *"+NL+
  						" * Contributors:"+NL+
  						" *     IBM Corporation - initial API and implementation"+NL+
