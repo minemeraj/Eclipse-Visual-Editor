@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-07 20:34:58 $ 
+ *  $Revision: 1.7 $  $Date: 2004-07-16 15:52:10 $ 
  */
 
 import java.util.List;
 
+import org.eclipse.draw2d.FigureListener;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -30,6 +32,8 @@ import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
@@ -43,31 +47,7 @@ public JTableGraphicalEditPart(Object aModel){
 	super(aModel);
 }
 
-private JTableComponentListener fComponentListener;
 private JTableImageListener fImageListener;
-
-protected JTableComponentListener getJTableComponentListener() {
-	if (fComponentListener == null)
-		fComponentListener = new JTableComponentListener();
-	return fComponentListener;
-}
-protected class JTableComponentListener implements IVisualComponentListener {
-	public void componentHidden() {
-	};
-	public void componentMoved(int x, int y) {
-		refreshColumns();		
-	};
-	public void componentRefreshed() {
-		refreshColumns();
-	};
-	public void componentResized(int width, int height) {
-		refreshColumns();
-	};
-	public void componentShown() {
-		refreshColumns();
-	};
-}
-
 protected JTableImageListener getJTableImageListener() {
 	if (fImageListener == null)
 		fImageListener = new JTableImageListener();
@@ -84,7 +64,11 @@ protected class JTableImageListener implements IImageListener {
 		refreshColumns();
 	}	
 }
-
+protected FigureListener hostFigureListener = new FigureListener() {
+	public void figureMoved(IFigure source) {
+			refreshColumns();
+	}
+};
 private Adapter jTableAdapter = new EditPartAdapterRunnable() {
 	public void run() {
 		if (isActive())
@@ -102,13 +86,13 @@ private Adapter jTableAdapter = new EditPartAdapterRunnable() {
 public void activate() {
 	super.activate();
 	((EObject) getModel()).eAdapters().add(jTableAdapter);
-	getVisualComponent().addComponentListener(getJTableComponentListener());	
+	getFigure().addFigureListener(hostFigureListener);	
 	getVisualComponent().addImageListener(getJTableImageListener());
 }
 public void deactivate() {
 	super.deactivate();
 	((EObject) getModel()).eAdapters().remove(jTableAdapter);
-	getVisualComponent().removeComponentListener(getJTableComponentListener());	
+	getFigure().removeFigureListener(hostFigureListener);
 	getVisualComponent().removeImageListener(getJTableImageListener());
 	fHeaderProxy = null;
 	fGetHeaderRect = null;
@@ -189,12 +173,7 @@ private IMethodProxy getGetHeaderRect() {
 }
 
 private Rectangle getBounds() {
-	Rectangle figBounds = getFigure().getBounds().getCopy();
-	if (figBounds.height <= 0) {
-		figBounds.height = getVisualComponent().getBounds().height;
-	}
-
-	return figBounds;
+	return getFigure().getBounds().getCopy();
 }
 
 private Rectangle getColumnBounds(int index) {
