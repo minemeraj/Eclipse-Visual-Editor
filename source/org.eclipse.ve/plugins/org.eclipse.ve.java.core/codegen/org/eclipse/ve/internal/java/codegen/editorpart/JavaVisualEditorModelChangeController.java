@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorModelChangeController.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-22 13:43:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-23 23:13:00 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IRewriteTarget;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.CDEMessages;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -30,7 +30,7 @@ import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
  * 
  * @since 1.0.0
  */
-class JavaVisualEditorModelChangeController extends IModelChangeController {
+class JavaVisualEditorModelChangeController extends ModelChangeController {
 
     private JavaVisualEditorPart part;
     private IDiagramModelBuilder modelBuilder;
@@ -44,8 +44,8 @@ class JavaVisualEditorModelChangeController extends IModelChangeController {
         return part.rootPropertySheetEntry;
     }
 
-    protected synchronized void startChange() {
-        if (compoundChangeCount++ == 0) {
+    protected synchronized void startChange(boolean nested) {
+        if (!nested) {
             // The undomanager doesn't handle nesting of compound changes, so we
             // need to do it here.
             IRewriteTarget rewriteTarget = (IRewriteTarget) this.part
@@ -55,29 +55,33 @@ class JavaVisualEditorModelChangeController extends IModelChangeController {
         }
     }
 
-    protected synchronized void stopChange() {
-        if (--compoundChangeCount <= 0) {
-            compoundChangeCount = 0; // In case we get out of sync.
-            try {
-                modelBuilder.commit();
-            } finally {
-                // this must be done or undo stack will get messed up. Just in
-                // case an error in commit.
-                // Also must be done AFTER commit in case commit changes some
-                // more of the code and that
-                // needs to be under compound change too.
-                IRewriteTarget rewriteTarget = (IRewriteTarget) this.part
-                        .getAdapter(IRewriteTarget.class);
-                rewriteTarget.endCompoundChange();
-                executeAsyncRunnables();
-            }
+    protected synchronized void stopChange(boolean nested) {
+        if (!nested) {
+        	// Put this at the end so that if any queued up atEnd's further change the model this will be the last one and will commit the model and release the rewrite.
+        	execAtEndOfTransaction(
+                new Runnable() {
+
+					public void run() {
+						try {
+							modelBuilder.commit();
+						} finally {
+							// this must be done or undo stack will get messed up. Just in
+							// case an error in commit.
+							// Also must be done AFTER commit in case commit changes some
+							// more of the code and that
+							// needs to be under compound change too.
+							IRewriteTarget rewriteTarget = (IRewriteTarget) JavaVisualEditorModelChangeController.this.part.getAdapter(IRewriteTarget.class);
+							rewriteTarget.endCompoundChange();
+						}
+					}
+				}, MODEL_CHANGES_PHASE);
         }
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldState()
+     * @see org.eclipse.ve.internal.cde.core.ModelChangeController#getHoldState()
      */
     public int getHoldState() {
         Assert.isTrue(Display.getCurrent() != null);
@@ -101,7 +105,7 @@ class JavaVisualEditorModelChangeController extends IModelChangeController {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
+     * @see org.eclipse.ve.internal.cde.core.ModelChangeController#getHoldMsg()
      */
     public String getHoldMsg() {
         if (holdMsg != null)

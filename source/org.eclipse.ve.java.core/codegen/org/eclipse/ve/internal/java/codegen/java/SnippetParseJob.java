@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-22 13:42:24 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-23 23:13:00 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
 import org.eclipse.ve.internal.java.codegen.core.IEditorUpdateState;
 import org.eclipse.ve.internal.java.codegen.util.IBackGroundWorkStrategy;
@@ -66,7 +66,7 @@ public class SnippetParseJob extends ReverseParserJob {
 	 */
 	protected IStatus doRun(IProgressMonitor monitor) {		
 	    
-	    IModelChangeController changeController = (IModelChangeController)fEditDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+	    ModelChangeController changeController = (ModelChangeController)fEditDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 		try {
 		  changeController.transactionBeginning(SNIPPET);
 		  strategyRoutine.run(curDisplay,cu,editorState,docEvents,monitor);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.62 $  $Date: 2005-02-22 13:37:45 $ 
+ *  $Revision: 1.63 $  $Date: 2005-02-23 23:13:00 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -105,7 +105,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	 */
   	private  void Reload(Display disp,IProgressMonitor monitor) {
   		monitor.beginTask(CodegenMessages.getString("JavaSourceTranslator.0"),2); //$NON-NLS-1$
-  		IModelChangeController controller = (IModelChangeController) getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+  		ModelChangeController controller = (ModelChangeController) getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
   		// If the controller is inTransaction, that means top down on display thread.
   		// CodeGen should have been marked as busy before it starts processing
 		if(controller!=null && controller.inTransaction())
@@ -545,7 +545,8 @@ public EditDomain getEditDomain() {
 	return fEDomain;
 }
 
- 
+public static final String LOADING_PHASE = "LOADING_PHASE";
+
 
 /**
  * load the model from a file
@@ -553,8 +554,8 @@ public EditDomain getEditDomain() {
 public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) throws CodeGenException  {	
     
     // Push the code through the change controller which is the gatekeeper for all model updates   
-    IModelChangeController changeController = (IModelChangeController) getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-    changeController.transactionBeginning(IModelChangeController.LOADING_PHASE);
+    ModelChangeController changeController = (ModelChangeController) getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+    changeController.transactionBeginning(LOADING_PHASE);
     try{
         pm.beginTask("", 100); //$NON-NLS-1$
         pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
@@ -573,7 +574,7 @@ public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) 
         decodeDocument(fFile, pm);					    					
         pm.done();
     } finally {
-        changeController.transactionEnded(IModelChangeController.LOADING_PHASE);
+        changeController.transactionEnded(LOADING_PHASE);
     }
 }
 /**
@@ -742,7 +743,8 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		      }
 		      catch (Exception e) {
 		      	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
-		      		JavaVEPlugin.log("Skipping expression: "+codeRef.getCodeContent()+"*****"+e.getCause()==null?e.getMessage():e.getCause().getMessage(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$		      		
+		      		JavaVEPlugin.log("Skipping expression: "+codeRef.getCodeContent(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$		      		
+		      		JavaVEPlugin.log(e, Level.WARNING);
 		      	}
 		        badExprssions.add(codeRef) ;	
 		      }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-22 13:42:24 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-23 23:13:00 $ 
  */
 
 import java.util.ArrayList;
@@ -133,7 +133,7 @@ public class JavaSourceSynchronizer implements ISynchronizable{
 		        workingCopyProvider.getFile(), 
 		        srcTranslator.createSharedToLocalUpdater(), 
 		        getDisplay(),
-				workingCopyProvider.getWorkingCopy(true), 
+				workingCopyProvider.getWorkingCopy(false), 
 				updateStatus, 
 				documentEventList);
 		job.setEditDomain(srcTranslator.getEditDomain());

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.86 $  $Date: 2005-02-22 13:45:46 $ 
+ *  $Revision: 1.87 $  $Date: 2005-02-23 23:13:00 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -83,7 +83,6 @@ import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
-import org.eclipse.jem.internal.proxy.remote.REMProxyConstants;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
@@ -108,6 +107,9 @@ import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.vce.*;
+import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
@@ -131,7 +133,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public final static int PARSE_ERROR_STATE = 3;	// Model controller update state to indicate parse error.
 	
 	public final static String PI_CLASS = "class"; //$NON-NLS-1$
-	public final static String PI_PALETTE = CodegenEditorPartMessages.getString("JavaVisualEditorPart.1"); //$NON-NLS-1$
+	public final static String PI_PALETTE = "palette"; //$NON-NLS-1$
 	public final static String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 	public final static String PI_LOC = "loc"; //$NON-NLS-1$
 	public final static String PI_CATEGORIES = "categories"; //$NON-NLS-1$
@@ -194,12 +196,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	// This is a workaround for the fact that background jobs compete for CPU during bring up
 	public final static int BRING_UP_PRIORITY_BUMP = 1;
 	
-	
-	public JavaVisualEditorPart() {
-	    
-//	    REMProxyConstants.setGatherCounts(true);
-//	    REMProxyConstants.reset();
-	    
+	public JavaVisualEditorPart() {	    
 		bumpUIPriority(true, Thread.currentThread());
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 		if (DO_TIMER_TESTS) {
@@ -242,7 +239,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		} else
 			throw new PartInitException(
-				MessageFormat.format("", new Object[] { input.getName()})); //$NON-NLS-1$
+				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()})); //$NON-NLS-1$
 
 		if (DO_TIMER_TESTS)
 			System.out.println("------------ Measuring class \"" + input.getName() + "\" ------------"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -269,7 +266,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		modelChangeController = new JavaVisualEditorModelChangeController(this, modelBuilder);
 		editDomain.setData(IDiagramModelBuilder.MODEL_BUILDER_KEY, modelBuilder);
 		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));
-		editDomain.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);	
+		editDomain.setData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);	
 		
 		// Create the common actions
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
@@ -296,7 +293,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		ReloadAction.IReloadCallback reloadCallback = new ReloadAction.IReloadCallback() {
 			public void pause() {
-				modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
+				modelChangeController.setHoldState(ModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
 				modelBuilder.pause();
 			}
 			public void reload() {
@@ -329,7 +326,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			recycleCntr = 0;	// Reset the counter because we are a new load and ask for it to be reset.
 		setReloadEnablement(false);	// While reloading, don't want button to be pushed.
 		
-		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// Don't allow updates..
+		modelChangeController.setHoldState(ModelChangeController.NO_UPDATE_STATE, null);	// Don't allow updates..
 		
 		setRootModel(null); // Clear it out so we don't see all of the changes that are about to happen.
 		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.	
@@ -834,8 +831,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			try {
-			    IModelChangeController modelChangeController = (IModelChangeController)editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-			    modelChangeController.transactionBeginning(IModelChangeController.INIT_VIEWERS_PHASE);			    
+			    ModelChangeController modelChangeController = (ModelChangeController)editDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+			    modelChangeController.transactionBeginning(ModelChangeController.INIT_VIEWERS_PHASE);			    
 			    
 				TimerTests.basicTest.startStep("Initialize Viewers"); //$NON-NLS-1$
 				if (doTimerStep)
@@ -846,7 +843,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 				loadingFigureController.showLoadingFigure(false);
 				setReloadEnablement(true);
-				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
+				modelChangeController.setHoldState(ModelChangeController.READY_STATE, null); // Restore to allow updates.
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(119);
@@ -864,8 +861,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				throw e;
 			}
 			finally {
-			    modelChangeController.transactionEnded(IModelChangeController.INIT_VIEWERS_PHASE);
-//				REMProxyConstants.println();			    
+			    modelChangeController.transactionEnded(ModelChangeController.INIT_VIEWERS_PHASE);
 				bumpUIPriority(false,null);
 			}
 		}
@@ -1329,8 +1325,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 					proxyFactoryRegistry.terminateRegistry();			
 				}
-					
-				try {					
+				
+				try {
 					JavaVisualEditorVMController.RegistryResult regResult = JavaVisualEditorVMController.getRegistry(file);
 					
 					// Everything is all set up. Now let's see if we need to rebuild the palette.
@@ -1552,9 +1548,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		protected IStatus run(IProgressMonitor monitor) {
 			int curPriority = Thread.currentThread().getPriority();
-		    IModelChangeController changeController = (IModelChangeController) editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);			
+		    ModelChangeController changeController = (ModelChangeController) editDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);			
 			try {				
-			    changeController.transactionBeginning(IModelChangeController.SETUP_PHASE);			    			   
+			    changeController.transactionBeginning(ModelChangeController.SETUP_PHASE);			    			   
 			    
 				Thread.currentThread().setPriority(curPriority+BRING_UP_PRIORITY_BUMP);
 				if (DO_TIMER_TESTS)
@@ -1701,7 +1697,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 			finally {
 				Thread.currentThread().setPriority(curPriority);
-			    changeController.transactionEnded(IModelChangeController.SETUP_PHASE);				
+			    changeController.transactionEnded(ModelChangeController.SETUP_PHASE);				
 			}
 			
 			if (rebuildPalette && !monitor.isCanceled()) {
@@ -1925,7 +1921,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
 			CDEUtilities.setModelAdapterFactory(editDomain, new DefaultModelAdapterFactory(policy));
 
-			NameInCompositionPropertyDescriptor desc = new NameInMemberPropertyDescriptor("", new FieldNameValidator()); //$NON-NLS-1$
+			NameInCompositionPropertyDescriptor desc = new NameInMemberPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName"), new FieldNameValidator()); //$NON-NLS-1$
 			editDomain.registerKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY, desc);
 			// Make the default add annotations command be the one to make names unique.
 			try {
@@ -2154,7 +2150,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private void processParseError(boolean parseError) {
-		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : IModelChangeController.READY_STATE, null);
+		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : ModelChangeController.READY_STATE, null);
 		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
 	}
 	
@@ -2450,7 +2446,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 	}
 	public void doSave(IProgressMonitor progressMonitor) {
-		progressMonitor.beginTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.27")+getEditorInput().getName(),100); //$NON-NLS-1$
+		progressMonitor.beginTask(MessageFormat.format(CodegenEditorPartMessages.getString("JavaVisualEditorPart.27"), new Object[] {getEditorInput().getName()}),100); //$NON-NLS-1$
 		super.doSave(new SubProgressMonitor(progressMonitor, 50));
 		modelBuilder.doSave(new SubProgressMonitor(progressMonitor,50));
 		progressMonitor.done();		

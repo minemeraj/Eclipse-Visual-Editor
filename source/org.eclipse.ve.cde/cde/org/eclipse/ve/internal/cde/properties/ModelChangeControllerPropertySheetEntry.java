@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeControllerPropertySheetEntry.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-02-23 23:12:41 $ 
  */
 package org.eclipse.ve.internal.cde.properties;
 
@@ -19,21 +19,21 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
 import org.eclipse.ve.internal.propertysheet.DefaultWrapperedValidator;
 import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
  
 
 /**
- * This is a property sheet entry that uses a IModelChangeController to check for the
+ * This is a property sheet entry that uses a ModelChangeController to check for the
  * status of the change controller, and to set error message if not ready for changes.
  * 
  * @since 1.0.0
  */
 public class ModelChangeControllerPropertySheetEntry extends CommandStackPropertySheetEntry {
 
-	protected IModelChangeController changeController;
+	protected ModelChangeController changeController;
 
 	/**
 	 * Create this model change controller property sheet entry.
@@ -45,7 +45,7 @@ public class ModelChangeControllerPropertySheetEntry extends CommandStackPropert
 	 * 
 	 * @since 1.0.0
 	 */
-	public ModelChangeControllerPropertySheetEntry(IModelChangeController changeController, CommandStack stack, ModelChangeControllerPropertySheetEntry parent, IPropertySourceProvider provider) {
+	public ModelChangeControllerPropertySheetEntry(ModelChangeController changeController, CommandStack stack, ModelChangeControllerPropertySheetEntry parent, IPropertySourceProvider provider) {
 		super(stack, parent, provider);
 		this.changeController = changeController;
 	}
