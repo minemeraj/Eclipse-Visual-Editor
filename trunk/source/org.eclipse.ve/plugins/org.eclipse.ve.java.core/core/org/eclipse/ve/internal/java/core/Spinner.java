@@ -1,9 +1,3 @@
-/*
- * Created on Jun 3, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
@@ -36,17 +30,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author pwalker
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 public class Spinner extends Composite {
 	static final int BUTTON_WIDTH = 16;
 
 	protected Text text;
 	protected Button up, down;
+	protected NumberTextVerifier verifier = new NumberTextVerifier();
 	protected int minimum, maximum;
 	protected int fValue = 0;
 	protected boolean commandInProcess = false;
@@ -59,13 +48,13 @@ public class Spinner extends Composite {
 		text = new Text(this, style | SWT.SINGLE | SWT.BORDER);
 		up = new Button(this, style | SWT.ARROW | SWT.UP);
 		down = new Button(this, style | SWT.ARROW | SWT.DOWN);
-		text.addModifyListener(new ModifyListener(){
-			public void modifyText(ModifyEvent e) {		
-				try {
-					setValue(Integer.parseInt(text.getText()));
-				} catch (NumberFormatException ex) {
-					setTextField();
-				}
+		text.addVerifyListener(verifier);
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				settingText = true;
+				setValue(verifier.getNewValue());
+				settingText = false;
+				text.setSelection(text.getCharCount());
 			}
 		});
 		text.addListener(SWT.Traverse, new Listener() {
@@ -98,8 +87,8 @@ public class Spinner extends Composite {
 				resize();
 			}
 		});
-		minimum = 0;
-		maximum = 999;
+		setMinimum(0);
+		setMaximum(999);
 		text.setFont(getFont());
 		fValue = initialValue;
 		setTextField();
@@ -154,13 +143,14 @@ public class Spinner extends Composite {
 			 * we need to set a flag to prevent accepting any more input from the user.
 			 */ 
 			commandInProcess = true;
+			setEnabled(false);
 			notifyListeners(SWT.Modify, new Event());
 		} catch (NumberFormatException ex) {
 			setTextField();
 		}
 	}
 	public int getValue() {
-		return Integer.parseInt(text.getText());
+		return fValue;
 	}
 	protected void setTextField() {
 		// Added this  check to prevent Linux GTK stack overflow problem
@@ -175,6 +165,7 @@ public class Spinner extends Composite {
 	public void setMaximum(int maximum) {
 		checkWidget();
 		this.maximum = maximum;
+		verifier.setMax(maximum);
 		resize();
 	}
 	public int getMaximum() {
@@ -182,6 +173,7 @@ public class Spinner extends Composite {
 	}
 	public void setMinimum(int minimum) {
 		this.minimum = minimum;
+		verifier.setMin(minimum);
 	}
 	public int getMinimum() {
 		return minimum;
@@ -224,6 +216,7 @@ public class Spinner extends Composite {
 		// re-enable the notification process and allow user input if enabled
 		if (enabled) {
 			commandInProcess = false;
+			text.forceFocus();
 		} 
 	}
 }
