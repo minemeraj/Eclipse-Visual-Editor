@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.swt"
+   name="Visual Editor Swt Plug-in"
+   version="1.0.0"
+   provider-name=""
+   class="org.eclipse.ve.internal.swt.SwtPlugin">
+
+   <runtime>
+      <library name="ve_swt.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ve.java.core"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>      
+   </requires>
+   
+<!-- To enable a Java project to work with SWT there is a container -->
+   
+    <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            name="Standard Widget Toolkit (SWT)"
+            class="org.eclipse.ve.internal.swt.SWTContainerWizardPage"
+            id="org.eclipse.ve.internal.swt.swtcontainerwizardpage">
+      </classpathContainerPage>
+   </extension>  
+   
+<!-- There is also an initializer to resolve the wizard entry into an actual SWTContainer -->
+   
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.ve.internal.swt.SWTContainerInitializer"
+            id="SWT_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+
+  <extension point="org.eclipse.ve.java.core.registrations">
+  	<library
+  		container="SWT_CONTAINER"
+        palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
+    	contributor="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
+    </library>
+  </extension>
+  
+  <extension point="org.eclipse.jem.beaninfo.overrides">
+      <override
+            package="org.eclipse.swt.widgets"
+            path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/widgets">
+      </override>  
+	 <override
+            package="org.eclipse.swt.graphics"
+            path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/graphics">
+      </override>        
+  </extension>   
+   
+</plugin>

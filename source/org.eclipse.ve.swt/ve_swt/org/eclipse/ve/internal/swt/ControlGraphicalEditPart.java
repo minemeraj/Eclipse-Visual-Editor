@@ -1,0 +1,196 @@
+package org.eclipse.ve.internal.swt;
+
+import java.util.*;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.AbstractEditPart;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.jface.util.ListenerList;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.ve.internal.java.core.*;
+
+public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
+	
+	protected ImageFigureController imageFigureController;
+	protected ErrorFigure fErrorIndicator;
+	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
+	protected IPropertySource propertySource;	// This is the property source.
+	protected ControlVisualModelAdapter constraintHandler;	
+	protected boolean transparent;
+
+	public ControlGraphicalEditPart(Object model) {
+		setModel(model);
+	}
+	protected IFigure createFigure() {
+		ImageFigure fig = new ImageFigure();
+		//TODO always draw a border for now
+		if (true)
+			fig.setBorder(new OutlineBorder());
+		fig.setOpaque(!transparent);
+		if (!transparent) {
+			imageFigureController = new ImageFigureController();
+			imageFigureController.setImageFigure(fig);
+		}
+		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
+		fig.add(fErrorIndicator);
+				
+		return fig;
+	}
+	public void activate() {
+		super.activate();
+		
+		if (!transparent) {
+			imageFigureController.setImageNotifier(getVisualComponent());
+		}
+	
+		// Listen to the IBeanProxyHost so it tells us when errors occur
+		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
+			public void errorStatus(int severity){
+				setSeverity(severity);
+			}
+		};
+	
+		setSeverity(getControlProxy().getErrorStatus());	// Set the initial status
+		BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel()).addErrorListener(fBeanProxyErrorListener);
+	
+	}
+	public void setTransparent(boolean aBool){
+		transparent = aBool;
+	}
+	public Object getAdapter(Class type) {
+		if (type == IVisualComponent.class)
+			return getVisualComponent();
+		else if (type == IPropertySource.class)
+			return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
+		else if (type == IConstraintHandler.class) {
+			if (constraintHandler == null) {
+				constraintHandler = new ControlVisualModelAdapter(getModel());
+			}
+			return constraintHandler;
+		}
+		else if (type == IActionFilter.class)
+			return null; //TODO
+//			return getComponentActionFilter();
+		
+		Object result = super.getAdapter(type);
+		if ( result != null ) {
+			return result;
+		} else {
+			// See if any of the MOF adapters on our target can return a value for the request
+			Iterator mofAdapters = ((IJavaInstance)getModel()).eAdapters().iterator();
+			while(mofAdapters.hasNext()){
+				Object mofAdapter = mofAdapters.next();
+				if ( mofAdapter instanceof IAdaptable ) {
+					Object mofAdapterAdapter = ((IAdaptable)mofAdapter).getAdapter(type);
+					if ( mofAdapterAdapter != null ) {
+						return mofAdapterAdapter;
+					}
+				}
+			}
+		}
+		return null;
+	}		
+	protected void setSeverity(int severity) {
+		fErrorIndicator.sevSeverity(severity);
+		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
+	}
+	protected void createEditPolicies() {
+		// Default component role allows delete and basic behavior of a component within a parent edit part that contains it
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
+
+
+	}
+	protected IVisualComponent getVisualComponent() {
+		return (IVisualComponent) getControlProxy(); // For AWT, the component proxy is the visual component.
+	}
+	protected ControlProxyAdapter getControlProxy() {
+		IBeanProxyHost beanProxy = BeanProxyUtilities.getBeanProxyHost(getBean());
+		return (ControlProxyAdapter) beanProxy;
+	}
+	public IJavaInstance getBean() {
+		return (IJavaInstance) getModel();
+	}	
+	private class ControlVisualModelAdapter extends ControlModelAdapter {
+		
+		protected IJavaObjectInstance control;		
+
+		public ControlVisualModelAdapter(Object aControl) {
+			super(aControl);
+			control = (IJavaObjectInstance) aControl;
+		}   	
+
+		private ListenerList listeners;
+		private VisualComponentListener vListener;
+
+		private class VisualComponentListener implements IVisualComponentListener {
+			public void componentHidden() {
+			}
+			public void componentMoved(int x, int y) {
+				System.out.println("Component moved");
+			}
+			public void componentRefreshed() {
+				// For the initial resize get the bounds and treat this as a resize
+				// Don't do this with a synchronous call to getVisualComponent.getBounds()
+				// as this creates a deadlock, so we do an async exec so that the target VM is freed
+				// by this method returning
+				Display.getDefault().asyncExec(new Runnable(){
+					public void run(){
+						Rectangle bounds = getVisualComponent().getBounds();
+						componentResized(bounds.width,bounds.height);				
+					}
+				});
+			}
+			public void componentResized(int width, int height) {
+				Object[] listens = listeners.getListeners();
+				for (int i = 0; i < listens.length; i++) {
+					((IConstraintHandlerListener) listens[i]).sizeChanged(width, height);
+				}
+			}
+			public void componentShown() {
+			}
+		}
+		public void addConstraintHandlerListener(IConstraintHandlerListener listener) {
+			if (listeners == null)
+				listeners = new ListenerList(1);
+			if (vListener == null) {
+				// About to add first one, so also add visual component listener
+				IVisualComponent visualComponent = (IVisualComponent) BeanProxyUtilities.getBeanProxyHost(control);
+				vListener = new VisualComponentListener();
+				visualComponent.addComponentListener(vListener);
+			}
+			listeners.add(listener);
+		}
+		public void removeConstraintHandlerListener(IConstraintHandlerListener listener) {
+			if (listeners != null) {
+				listeners.remove(listener);
+				if (listeners.isEmpty() && vListener != null) {
+					// No more, so get rid of visual component listener
+					 ((IVisualComponent) BeanProxyUtilities.getBeanProxyHost(control)).removeComponentListener(vListener);
+					vListener = null;
+				}
+			}
+		}
+		public void contributeModelSize(org.eclipse.ve.internal.cdm.model.Rectangle modelConstraint) {
+			Rectangle bounds = getVisualComponent().getBounds();
+			modelConstraint.width = bounds.width;
+			modelConstraint.height = bounds.height;		
+		}
+	}
+	public List getEditPolicies() {
+		List result = new ArrayList();
+		AbstractEditPart.EditPolicyIterator i = super.getEditPolicyIterator();
+		while (i.hasNext()) {
+			result.add(i.next());
+		}
+		return result.isEmpty() ? Collections.EMPTY_LIST : result;
+	}	
+}  
