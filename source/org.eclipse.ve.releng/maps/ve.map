@@ -8,7 +8,7 @@ plugin@com.ibm.etools.emf.workbench=I20031031,:pserver:anonymous@dev.eclipse.org
 !*** The standard contributions
 
 plugin@org.eclipse.jem=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.beaninfo=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.beaninfo=I20031031a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo.ui=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.tests=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
