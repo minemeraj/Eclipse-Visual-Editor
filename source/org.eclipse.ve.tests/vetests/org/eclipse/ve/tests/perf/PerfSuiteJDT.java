@@ -21,7 +21,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.ICategoryActivityBinding;
@@ -31,8 +30,6 @@ import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 
 import org.eclipse.jem.tests.JavaProjectUtil;
-import org.eclipse.jem.util.PerformanceMonitorUtil;
-import org.eclipse.jem.util.PerformanceMonitorUtil.PerformanceEvent;
 
 import org.eclipse.ve.tests.VETestsPlugin;
 
@@ -41,31 +38,27 @@ import org.eclipse.ve.tests.VETestsPlugin;
  * 
  * @since 1.0.0
  */
-public class PerfSuite extends TestSetup {
+public class PerfSuiteJDT extends TestSetup {
 
 	private static final boolean RECREATE_TESTDATA_PROJECT = true;
-
 	private static final boolean DELETE_TESTDATA_PROJECT = true;
-
-	public static PerfSuite instance;
+	
+	public static PerfSuiteJDT instance;
 
 	// Test cases to be include in the suite
-	private static final Class testsList[] = { Scenario179.class};
+	private static final Class testsList[] = { Scenario179JDT.class};
 
 	public static final String TESTDATA_PROJECT = "PerformanceTest";
 
 	public static Test suite() {
-		return (instance = new PerfSuite());
+		return (instance = new PerfSuiteJDT());
 	}
 
 	public static IProject getTestProject() {
-		return instance.getProject(PerfSuite.TESTDATA_PROJECT);
+		return instance.getProject(PerfSuiteJDT.TESTDATA_PROJECT);
 	}
 
-	/**
-	 * Constructor for BeanInfoSuite.
-	 */
-	public PerfSuite(String name) {
+	public PerfSuiteJDT(String name) {
 		super(new TestSuite(name) {
 
 			{
@@ -73,12 +66,11 @@ public class PerfSuite extends TestSetup {
 					addTestSuite(testsList[i]);
 				}
 			}
-
 		});
 	}
 
-	public PerfSuite() {
-		this("Performance Test Suite");
+	public PerfSuiteJDT() {
+		this("Performance Test Suite - JDT only");
 		instance = this;
 	}
 
@@ -184,51 +176,6 @@ public class PerfSuite extends TestSetup {
 			fail("Unable to refresh project <" + projectName + ">");
 		}
 		return project;
-	}
-
-	static public void waitFor(long timeToWait) {
-		final long _timeToWait = timeToWait;
-		Display.getDefault().syncExec(new Runnable() {
-
-			public void run() {
-				long start = System.currentTimeMillis();
-				long progress = System.currentTimeMillis() + 10000;
-				Display display = Display.getDefault();
-				while (System.currentTimeMillis() - start < _timeToWait) {
-					if (System.currentTimeMillis() > progress) {
-						progress = System.currentTimeMillis() + 10000;
-					}
-					if (!display.readAndDispatch())
-						display.sleep();
-				}
-			}
-		});
-	}
-
-	static public void waitFor(int step, long timeout) {
-		PerformanceListener pl = new PerformanceListener(step);
-		PerformanceMonitorUtil.getMonitor().addPerformanceListener(pl);
-		long end = System.currentTimeMillis() + timeout;
-		while (!pl.done && timeout != 0 && end > System.currentTimeMillis()) {
-			waitFor(200);
-		}
-		PerformanceMonitorUtil.getMonitor().removePerformanceListener(pl);
-	}
-
-	static public class PerformanceListener implements PerformanceMonitorUtil.PerformanceListener {
-
-		public boolean done = false;
-
-		public int step = 0;
-
-		public PerformanceListener(int step) {
-			this.step = step;
-		}
-
-		public void snapshot(PerformanceEvent event) {
-			if (event.step == step)
-				done = true;
-		}
 	}
 
 }
