@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.14 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.15 $  $Date: 2004-05-20 13:17:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -45,16 +45,24 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class BDMMerger {
 	protected IBeanDeclModel mainModel = null ;
 	protected IBeanDeclModel newModel = null ;
-	protected boolean isNewModelCompleteCU = false;
-	protected Display display = null ;
+	protected List changedHandles = null;
 	
 	protected List needToRedecodeExpressions = new ArrayList();
 	
-	public BDMMerger(IBeanDeclModel mainModel, IBeanDeclModel newModel, boolean isNewModelCompleteCU, Display display){
+	/**
+	 * 
+	 * @param mainModel
+	 * @param newModel
+	 * @param changedHandles  the list of changed handles in the CU - the beans effected by these handles will be processed first.
+	 * @param isNewModelCompleteCU
+	 * @param display
+	 * 
+	 * @since 1.0.0
+	 */
+	public BDMMerger(IBeanDeclModel mainModel, IBeanDeclModel newModel, List changedHandles){
 		this.mainModel = mainModel;
 		this.newModel = newModel;
-		this.isNewModelCompleteCU = isNewModelCompleteCU;
-		this.display = display;
+		this.changedHandles = changedHandles;
 		needToRedecodeExpressions.clear();
 	}
 	
@@ -205,7 +213,7 @@ public class BDMMerger {
 				// Method is not to be found in the new model - hence remove it
 				// Could be removed because methods got merged
 				logFiner("Removing method "+m.getMethodHandle() + "since it is not found in update");
-				removed &= removeMethodRef(m);
+				removed = removed && removeMethodRef(m);
 			}
 		}
 		return removed ;
@@ -359,7 +367,7 @@ public class BDMMerger {
 					if ( !contentSame ) 
 						continue ; // Not the same expressions
 					equivalentExpFound = true;
-					processed = processed & processSameCallBackExpression(mainExp, updExp);
+					processed = processed && processSameCallBackExpression(mainExp, updExp);
 					mainCallBackExpressions.remove(mainCallBackExpressions.indexOf(mainExp)) ;
 					updatedCallBackExpressions.remove(updatedCallBackExpressions.indexOf(updExp)) ;
 					mainExpCount -- ;
@@ -379,7 +387,7 @@ public class BDMMerger {
 		// Now add the newly added expressions
 		for (int newExpCount = 0; newExpCount < updatedCallBackExpressions.size(); newExpCount++) {
 			CodeCallBackRef exp = (CodeCallBackRef) updatedCallBackExpressions.get(newExpCount);
-			processed = processed & addNewCallBackExpression(exp);
+			processed = processed && addNewCallBackExpression(exp);
 		}
 		return processed;
 	}
@@ -484,7 +492,7 @@ public class BDMMerger {
 					if ( equivalency < 0) 
 						continue ; // Not the same expressions
 					equivalentExpFound = true;
-					processed = processed & processEquivalentExpressions(mainExp, updExp, equivalency);
+					processed = processed && processEquivalentExpressions(mainExp, updExp, equivalency);
 					mainExpTobeProcessed.remove(mainExpTobeProcessed.indexOf(mainExp)) ;
 					updatedExpTobeProcessed.remove(updatedExpTobeProcessed.indexOf(updExp)) ;
 					mainExpCount -- ;
@@ -503,7 +511,7 @@ public class BDMMerger {
 		// Now add the newly added expressions
 		for (int newExpCount = 0; newExpCount < updatedExpTobeProcessed.size(); newExpCount++) {
 			CodeExpressionRef exp = (CodeExpressionRef) updatedExpTobeProcessed.get(newExpCount);
-			processed = processed & addNewExpression(exp);
+			processed = processed && addNewExpression(exp);
 		}
 		return processed;
 	}
@@ -619,7 +627,7 @@ public class BDMMerger {
 			CodeMethodRef mainMethod = mainModel.getMethod(updateExp.getMethod().getMethodHandle()) ;
 			if(mainMethod==null)	
 				return true;
-			CodeExpressionRef newExp = createNewExpression(updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
+			CodeExpressionRef newExp = createNewExpression(updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() && dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
 			if(newExp==null && updateExp instanceof CodeEventRef)
 				newExp = createNewEventExpression((CodeEventRef)updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
 		} catch (CodeGenException e) {
@@ -656,7 +664,7 @@ public class BDMMerger {
 	protected boolean mergeAllBeans(){
 		boolean merge = true ; 
 		List mainModelBeans = mainModel.getBeans() ;
-		
+		mainModelBeans = orderBeansToMerge(mainModelBeans);
 		// Update changed bean parts
 		Iterator mainModelBeansItr = mainModelBeans.iterator();
 		while (mainModelBeansItr.hasNext()) {
@@ -664,7 +672,7 @@ public class BDMMerger {
 			BeanPart mainBP = (BeanPart) mainModelBeansItr.next();
 			BeanPart updateBP ;
 			if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
-				merge = merge & updateBeanPart(mainBP, updateBP);
+				merge = merge && updateBeanPart(mainBP, updateBP);
 			}else{
 				JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING);
 			}
@@ -672,6 +680,35 @@ public class BDMMerger {
 		return merge;
 	}
 	
+	/**
+	 * The passed in beans are ordered so that beans which are effected by the 
+	 * changed JDT handles in the CU are processed first than other beans. 
+	 * 
+	 * @param mainModelBeans
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected List orderBeansToMerge(List mainModelBeans) {
+		List orderedBeans = new ArrayList();
+		if(mainModelBeans!=null && mainModelBeans.size()>0 && changedHandles!=null && changedHandles.size()>0){
+			for (Iterator mBeans = mainModelBeans.iterator(); mBeans.hasNext();) {
+				BeanPart mainBean = (BeanPart) mBeans.next();
+				if(mainBean!=null){
+					if(	changedHandles.contains(mainBean.getFieldDeclHandle()) ||
+						(mainBean.getInitMethod()!=null && changedHandles.contains(mainBean.getInitMethod().getMethodHandle())) ||
+						(mainBean.getReturnedMethod()!=null && changedHandles.contains(mainBean.getReturnedMethod().getMethodHandle()))){
+							orderedBeans.add(0, mainBean);
+					}else{
+						orderedBeans.add(mainBean);
+					}
+				}
+			}
+		}else
+			orderedBeans.addAll(mainModelBeans);
+		return orderedBeans;
+	}
+
 	protected ISourceRange createSourceRange(final int offset, final int len){
 		return new ISourceRange(){
 			public int getLength() {
@@ -851,9 +888,9 @@ public class BDMMerger {
 			if( mainModel.getABean(beanPart.getUniqueName()) == null &&
 				beanPart.getInitMethod()!=null){
 				if(beanPart.getSimpleName().equals(BeanPart.THIS_NAME))
-					add &= createThisBean(beanPart);
+					add = add && createThisBean(beanPart);
 				else
-					add &= addNewBean(beanPart) ;
+					add = add && addNewBean(beanPart) ;
 			}
 		}
 		return add ;
@@ -885,7 +922,7 @@ public class BDMMerger {
 			if(newModel.getABean(mainBean.getUniqueName())==null){
 				// Bean has been removed - hence remove
 				logFiner("Removing deleted bean "+ mainBean.getSimpleName());
-				removed &= removeDeletedBean( mainBean ); 
+				removed = removed && removeDeletedBean( mainBean ); 
 			}else{
 				// Remove bean if type has changed
 				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());
@@ -912,7 +949,7 @@ public class BDMMerger {
 						if(newBeanExtendsName==null){
 							// extends has been removed - just delete the this bean
 							logFiner("Removing THIS bean ");
-							removed &= removeDeletedBean( mainBean );
+							removed = removed && removeDeletedBean( mainBean );
 						}else{
 							// extends is present - do a RLFS
 							logFiner("This part's type has changed - will need to reload");
@@ -920,7 +957,7 @@ public class BDMMerger {
 						}
 					}else{
 						logFiner("Removing changed type bean "+ mainBean.getSimpleName());
-						removed &= removeDeletedBean( mainBean );
+						removed = removed && removeDeletedBean( mainBean );
 					}
 				}else{
 					CodeMethodRef mainMethod = mainBean.getInitMethod();
@@ -930,7 +967,7 @@ public class BDMMerger {
 						String newMethodHandle = newMethod.getMethodHandle();
 						if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
 							logFiner("Removing changed init method bean "+mainBean.getSimpleName());
-							removed &= removeDeletedBean( mainBean );
+							removed = removed && removeDeletedBean( mainBean );
 						}
 					}
 				}
