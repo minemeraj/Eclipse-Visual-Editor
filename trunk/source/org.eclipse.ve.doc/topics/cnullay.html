@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Null layout manager" />
+<meta name="DC.Relation" scheme="URI" content="ccontlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="calign.dita" />
+<meta name="DC.Relation" scheme="URI" content="cflowlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cbordlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cgridbag.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="cnullay" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Null layout manager</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="cnullay"><a name="cnullay"><!-- --></a>
+
+<h1 class="topictitle1">Null layout manager</h1><div><p>Rather than using a layout manager that controls the size and position
+of all components in a container, you can set the layout manager to  <b>null</b>.
+Each component then controls its own position and size using its bounds.</p>
+<p>If you right-click a container and set the  <b>Show Grid</b> option, you
+can drag, drop, and move components to a point on the grid, giving you the
+ability to align components to positions without using the alignment actions:
+ <br /><img src="../images/NullShowGrid.gif" alt="Show Grid in null layout" /><br /> 
+You can also start with a null layout manager and then change to a layout
+(like the GridBagLayout) to get the constraint setting calculated by the Visual
+Editor for Java. The advantage of having each component control its size and
+position is that you can specify the x,y, width and height and be sure that
+these will always be used at runtime. The disadvantage of having fixed size
+and height is that the GUI will not change these if it is resized by the user,
+or if the labels on components such as buttons or checkboxes change size based
+on the user's font or locale.</p>
+<p>To see this behavior in the Visual Editor for Java you can use the drop-down
+list of values in the Properties view for the layout property and select  <b>null</b>.</p>
+<p>When you change the layout manager for an existing container to null, the
+Design view does not change in appearance. The reason is that the Visual Editor
+for Java calculates the current bounds of each component and explicitly sets
+them for you. For example, suppose you have a container that uses the flow
+layout manager and contains a JLabel bean. Before you change to the null layout
+manager, the code to initialize the JLabel bean has just its label property
+set, as shown here:</p>
+<pre>private javax.swing.JLabel getIvjJLabel(){
+    if(ivjJLabel == null) {
+       ivjJLabel = new javax.swing.JLabel();
+       ivjJLabel.setText("JLabel");
+    }
+    return ivjJLabel;
+}</pre>
+<p>If you then use the Properties view to change the layout manager to null,
+the code would look something like this:  </p>
+<pre>private javax.swing.JLabel getIvjJLabel(){
+    if(ivjJLabel == null) {
+       ivjJLabel = new javax.swing.JLabel();
+       ivjJLabel.setBounds(59, 10, 38, 15);
+       ivjJLabel.setText("JLabel");
+    }
+    return ivjJLabel;
+}</pre>
+<p>In the same example, as soon as you set the layout manager to null, the
+Properties view for each component displays values for bounds, size, and location.
+These values do not appear when the parent container uses any other layout
+manager other than null, because component properties do not change when the
+layout manager controls positioning and sizing.</p>
+<p>When you set the null layout manager for a container, the handles for each
+component in the Design view allow resizing. You can also size a bean using
+the null layout manager as you add it from the palette. Simply hold down the
+left mouse button when you drop the bean in the Design view, and drag the
+mouse pointer until the bean is the desired size. A target feedback rectangle
+shows you the initial size. In any other layout manager you are only allowed
+to move components.</p>
+</div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="ccontlay.html" title="">Containers and layout managers</a><br /><a href="calign.html" title="">Aligning components</a><br /><a href="cflowlay.html" title="">Flow layout manager</a><br /><a href="cbordlay.html" title="">Border layout manager</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

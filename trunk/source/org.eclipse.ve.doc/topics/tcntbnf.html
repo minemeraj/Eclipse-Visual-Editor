@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Controlling BeanInfo information for plug-in developers" />
+<meta name="DC.Relation" scheme="URI" content="cbeaninf.dita" />
+<meta name="DC.Relation" scheme="URI" content="tspcloc.dita" />
+<meta name="DC.Relation" scheme="URI" content="rspcJRE.dita" />
+<meta name="DC.Relation" scheme="URI" content="rwrtbnf.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tcntbnf" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Controlling BeanInfo information for plug-in developers</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="tcntbnf"><a name="tcntbnf"><!-- --></a>
+
+<h1 class="topictitle1">Controlling BeanInfo information for plug-in developers</h1><div><div class="p"><p>If you wish to exercise control over how the BeanInfo classes
+are associated with a class path variable, you can do this with an entry in
+a plug-in manifest file. This is only intended for advanced users who are
+either supplying their own Java beans or for users who wish to create a new
+runtime environment other than JRE_LIB.</p>
+<p>The extension point to use is
+ <tt>com.ibm.etools.beaninfo.registrations</tt>, which
+lets you specify the variable with the location of its BeanInfo classes.</p>
+<pre> &lt;extension point="com.ibm.etools.beaninfo.registrations"&gt;
+  &lt;variable path="MY_JAVABEANS"&gt;
+     &lt;beaninfos&gt;
+    &lt;beaninfo kind="plugin"
+path="/com.mycompany/myjavabeans.jar"&gt;
+       &lt;searchpath package="com.mycompany.beaninfopackage"/&gt;
+     &lt;/beaninfo&gt;
+      &lt;/beaninfos&gt;
+   &lt;/variable&gt;
+  &lt;/extension&gt;</pre>
+<p>The above example shows that the class path variable MY_JAVABEANS
+has its BeanInfo classes contained in the JAR file myjavabeans.jar. This JAR
+is part of the plug-in that the manifest is defined in, and the classes are
+included in the package com.mycompany.beaninfopackage. Whenever a project
+has the class path variable MY_JAVABEANS in its Java build path, then myjavabeans.jar
+will be included in the classpath of the JVM created for the introspector.
+Also, the package com.mycompany.beaninfopackage will be included in its search
+path.</p>
+</div></div><div><p><b>Related concepts</b><br /><a href="cbeaninf.html" title="">BeanInfo classes and introspection</a><br /><a href="tspcloc.html" title="">Specifying the location of BeanInfo classes</a><br /><a href="rspcJRE.html" title="">BeanInfo classes for JRE classes</a><br /><a href="rwrtbnf.html" title="">BeanInfo classes for the Visual Editor
+for Java</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

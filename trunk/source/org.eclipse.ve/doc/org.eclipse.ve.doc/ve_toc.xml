@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toc label="Visual Editor for Java">
+   <!-- topic label="Visual Editor for Java"-->
+      <topic label="Visually editing Java applications">
+         <topic label="Aligning components" href="topics/calign.html"/>
+         <topic label="Null layout manager" href="topics/cnullay.html"/>
+         <topic label="Containers and layout managers" href="topics/ccontlay.html"/>
+         <topic label="Flow layout manager" href="topics/cflowlay.html"/>
+         <topic label="Border layout manager" href="topics/cbordlay.html"/>
+      </topic>
+      <topic label="Launching the Visual Editor for Java" href="topics/tjvelaunch.html">
+         <topic label="Visual Editor's Java beans" href="topics/tjvelivebeans.html"/>
+         <topic label="The Java bean launcher" href="topics/ttstjava.html"/>
+         <topic label="Visual Editor for Java" href="topics/coverview.html"/>
+         <topic label="Changing the default Java editor" href="topics/tjvechgdefault.html"/>
+         <topic label="Customizing the appearance of the Visual Editor" href="topics/tjvecustom.html"/>
+      </topic>
+      <topic label="Composing classes visually" href="topics/tjveovrvw.html">
+         <topic label="Writing a customizer" href="topics/tjvecustomizer.html"/>
+         <topic label="Adding a visual bean" href="topics/tjveaddbean.html"/>
+         <topic label="Editing a visual bean" href="topics/tjveedit.html"/>
+         <topic label="Deleting a visual bean" href="topics/tjvedelete.html"/>
+      </topic>
+      <topic label="Specifying the location of BeanInfo classes" href="topics/tspcloc.html">
+         <topic label="Keeping beans and BeanInfo classes in different projects" href="topics/tsprj.html"/>
+         <topic label="Keeping beans and BeanInfo classes in the same package" href="topics/tsmpsmp.html"/>
+         <topic label="Keeping beans and BeanInfo classes in different packages in the same project" href="topics/tsmpdfp.html"/>
+         <topic label="Keeping BeanInfo classes in a JAR file" href="topics/tinjar.html"/>
+      </topic>
+      <topic label="Other parent-child relationships">
+         <topic label="Swing look and feel" href="topics/clookandfeel.html"/>
+         <topic label="JTable and its columns" href="topics/cjtable.html"/>
+         <topic label="JSplitPane and its components" href="topics/cjspltpane.html"/>
+         <topic label="JTabbedPane and its pages" href="topics/cjtabpane.html"/>
+         <topic label="Swing windows with a content pane" href="topics/cswing.html"/>
+      </topic>
+      <topic label="Properties view" href="topics/cpropvw.html">
+         <topic label="Property editors" href="topics/cpropdialog.html"/>
+         <topic label="Enumerated lists" href="topics/cpropenum.html"/>
+      </topic>
+      <topic label="Viewing all beans in a class" href="topics/tjvejbview.html">
+         <topic label="Reordering Java beans" href="topics/tjvejborder.html"/>
+         <topic label="Viewing and changing bean properties" href="topics/tjveviewprop.html"/>
+      </topic>
+      <topic label="Code generation" href="topics/ccodegen.html">
+         <topic label="Code synchronization" href="topics/ccodesync.html"/>
+         <topic label="Style of generated source" href="topics/cstylegendsrc.html"/>
+         <topic label="Source code patterns" href="topics/csrcpat.html"/>
+         <topic label="Event handling" href="topics/csrcevent.html"/>
+         <topic label="Externalized strings" href="topics/cextstring.html"/>
+         <topic label="Metadata and migrating from VisualAge for Java" href="topics/cmetamig.html"/>
+      </topic>
+      <topic label="Testing and debugging visual beans">
+         <topic label="Identifying Java bean exceptions" href="topics/tjbeaninved.html"/>
+         <topic label="Debugging Java beans" href="topics/tjbeandebug.html"/>
+         <topic label="Testing applets" href="topics/tjveapplet.html"/>
+         <topic label="Testing a Java bean" href="topics/ttstdbg.html"/>
+      </topic>
+      <topic label="BeanInfo classes and introspection" href="topics/cbeaninf.html">
+         <topic label="BeanInfo classes for JRE classes" href="topics/rspcJRE.html"/>
+         <topic label="BeanInfo classes for the Visual Editor for Java" href="topics/rwrtbnf.html"/>
+         <topic label="Controlling BeanInfo information for plug-in developers" href="topics/tcntbnf.html"/>
+         <topic label="Explicitly defining the location of BeanInfo classes" href="topics/tdfnkey.html"/>
+      </topic>
+      <topic label="Reference">
+         <topic label="Dragging and Dropping without using the mouse" href="topics/rdraganddrop.html"/>
+      </topic>
+   <!--/topic -->
+</toc>

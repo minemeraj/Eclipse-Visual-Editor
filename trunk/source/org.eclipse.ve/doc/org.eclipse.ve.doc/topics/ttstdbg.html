@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Testing a Java bean" />
+<meta name="DC.Relation" scheme="URI" content="ttstjava.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjveapplet.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="ttstdbg" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Testing a Java bean</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="ttstdbg"><a name="ttstdbg"><!-- --></a>
+
+<h1 class="topictitle1">Testing a Java bean</h1><div><div class="p"><p>Once you have written a class using the Visual Editor for Java
+you may wish to run it to test the runtime behavior. If the class has a  <tt>public
+static void main(String[])</tt> method you can use the menu option
+ <b>Run &gt; Java Application.</b> When you write a Java bean using the Visual
+Editor for Java however it will not typically have a main method. Rather than
+having to add a main method, to allow you to test Java beans classes there
+is an additional option available from the  <b>Run</b> menu called  <b>Java
+bean</b> that invokes a Java bean launcher.</p>
+<p>To test a class select it
+and use the menu option  <b>Run As &gt; Java bean</b>. This will create a launch
+configuration that is then used to start a virtual machine that instantiates
+the class and lets it be tested. Before creating a launch configuration the
+existing configuration are search, and if one is already there for the Java
+bean class then it will be re-used. The Java process created can be seen by
+switching to the debug perspective. If you wish to debug you Java bean while
+you are testing it you can use the menu option  <b>Debug As &gt; Java bean</b> that
+allows you to use breakpoints and step through the code.</p>
+</div></div><div><p><b class="reltaskshd">Related tasks</b><br /><a href="ttstjava.html" title="">The Java bean launcher</a><br /><a href="tjveapplet.html" title="">Testing applets</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>
