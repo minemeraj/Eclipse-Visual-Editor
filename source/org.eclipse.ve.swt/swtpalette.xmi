@@ -5,11 +5,10 @@
   <palette:CategoryCmp xmi:id="swtCat">
     <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="SWT"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry1obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#Shell"/>
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/Shell.xmi#Shell_1">
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shell"/>
-      </cmpEntries>  
+      </cmpEntries>
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry3" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Composite"/>
