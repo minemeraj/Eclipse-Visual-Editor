@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-01 09:53:25 $ 
  */
 
 import java.util.*;
@@ -118,15 +118,42 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			selectedContributor = 0;
 		loadSelectionHistory();
 	}
-	
+	 	
+	private static IChooseBeanContributor[] pluginContributors;
 	public static IChooseBeanContributor[] determineContributors(){
+		if(pluginContributors != null) return pluginContributors;
 		List contributorList = new ArrayList();
 		IExtensionPoint exp = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint("choosebean"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
+		
 		if(extensions!=null && extensions.length>0){
+			
+			// Ensure that the org.eclipse.ve.java plugins are the first in the list
+			IExtension[] orderedExtensions = new IExtension[extensions.length];
+			int index = 0;
+			Plugin veBasePlugin = JavaVEPlugin.getPlugin();
+			for (int i = 0; i < extensions.length; i++) {
+				try {
+					if(extensions[i].getDeclaringPluginDescriptor().getPlugin() == veBasePlugin){
+						orderedExtensions[index] = extensions[i];
+						index++;
+						extensions[i] = null; // Remove the one we took out
+					}
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+			// Any remaining extensions go to the end
+			for (int i = 0; i < extensions.length; i++) {;
+				if(extensions[i] != null){
+					orderedExtensions[index] = extensions[i];
+					index++;
+				}
+			}						
+			
 			boolean contributorFound = false;
-			for(int ec=0;ec<extensions.length && !contributorFound;ec++){
-				IConfigurationElement[] configElms = extensions[ec].getConfigurationElements();
+			for(int ec=0;ec<orderedExtensions.length && !contributorFound;ec++){
+				IConfigurationElement[] configElms = orderedExtensions[ec].getConfigurationElements();
 				for(int cc=0;cc<configElms.length && !contributorFound;cc++){
 					IConfigurationElement celm = configElms[cc];
 					try {
@@ -140,9 +167,9 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				}
 			}
 		}
-		IChooseBeanContributor[] contributors = new IChooseBeanContributor[contributorList.size()];
-		contributorList.toArray(contributors);
-		return contributors;
+		pluginContributors = new IChooseBeanContributor[contributorList.size()];
+		contributorList.toArray(pluginContributors);
+		return pluginContributors;
 	}
 	
 	private void loadSelectionHistory(){
@@ -280,7 +307,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			gd.grabExcessHorizontalSpace= true;
 			gd.horizontalAlignment= GridData.FILL;
 			c.setLayoutData(gd);
-			GridLayout cLayout = new GridLayout(numEntries, true);
+			GridLayout cLayout = new GridLayout(Math.min(numEntries,4), true);
 			// got from super.super.createDialoagArea()
 			cLayout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 			cLayout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
