@@ -11,26 +11,29 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-27 19:00:00 $ 
  */
 
-import java.util.Collection;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.util.*;
+
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cdm.impl.DiagramDataImpl;
-import org.eclipse.ve.internal.jcm.BeanComposition;
-import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.ListenerType;
-import org.eclipse.ve.internal.jcm.MemberContainer;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.jcm.*;
+
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 
 /**
  * <!-- begin-user-doc -->
@@ -340,5 +343,51 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
+	
+	/**
+	 * 
+	 * @param classNameToCollect - The string of the class being searched for, e.g. "java.awt.Button" to find all buttons
+	 * @param objects - the objects are added to this list (will be the IJavaInstance)
+	 * @param labels - the labels that come from the label providers
+	 * @param beanComposition - bean composition 
+	 * @param editDomain - edit domain
+	 * 
+	 * @since 1.0.0
+	 */
+	public static void collectFreeFormParts(String classNameToCollect, List objects, List labels, BeanComposition beanComposition,EditDomain editDomain){
+		
+		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
+		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(classNameToCollect,beanComposition.eResource().getResourceSet());
+		
+		Iterator components = beanComposition.getMembers().iterator();
+		while(components.hasNext()){
+			Object component = components.next();
+			if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
+				// Test the class
+				IJavaInstance javaComponent = (IJavaObjectInstance) component;
+				JavaHelpers componentType= javaComponent.getJavaType();
+				if ( javaClass.isAssignableFrom(componentType)) {
+					objects.add(component);
+					String label = BeanUtilities.getLabel(javaComponent,editDomain);
+					labels.add(label);
+				}
+			}
+		}
+		// Now we know the children set the items
+		String[] items = new String[labels.size()];
+		System.arraycopy(labels.toArray(),0,items,0,items.length);
+
+		Arrays.sort(items);
+		ArrayList a = new ArrayList() ;
+		for (int i = 0; i < items.length; i++) {			
+			for (int j = 0; j < labels.size(); j++) {
+				if (items[i].equals(labels.get(j))) {
+					a.add(objects.get(j));
+					break;
+				}
+			}		
+		}
+	}
+	
 
 } //BeanCompositionImpl
