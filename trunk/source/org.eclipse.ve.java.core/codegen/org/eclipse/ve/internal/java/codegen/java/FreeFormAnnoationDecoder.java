@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-16 20:31:25 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IField;
@@ -185,10 +185,11 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
               len = end+1 ;                
           }
               
-
+          fBeanpart.getModel().aboutTochangeDoc();
           fBeanpart.getModel().getDocumentBuffer().replace(start,len,newSrc) ;
 		  // update offsets
 		  fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length()-len) ;
+		  fBeanpart.getModel().docChanged();
 		  JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
         }
         catch (Exception e) {
