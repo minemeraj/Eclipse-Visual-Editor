@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-02 17:39:05 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-02 19:36:03 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,7 +51,7 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 		addPage(fPage);
 		fPage.init(getSelection());
 		fPage.setSuperClass("javax.swing.JFrame",false); //$NON-NLS-1$
-		fPage.setTypeName(fExampleClassName,true);
+		fPage.setTypeName(fExampleClassName,false);
 		fPage.setPluginName(fPluginName) ;
 	}	
 
