@@ -5,8 +5,9 @@ plugin@com.ibm.etools.emf.ecore.utilities=@v@,:pserver:anonymous@dev.eclipse.org
 plugin@com.ibm.etools.emf.event=@v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
 plugin@com.ibm.etools.emf.workbench=@v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.workbench
 
-!*** Special one from eclipse.
+!*** Special ones from eclipse.
 plugin@org.eclipse.test=v20031031,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
+fragment@org.eclipse.ant.optional.junit=v20030401,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
 
 !*** The standard contributions
 

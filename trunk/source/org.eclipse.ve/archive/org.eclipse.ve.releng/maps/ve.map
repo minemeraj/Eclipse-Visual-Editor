@@ -27,7 +27,7 @@ plugin@org.eclipse.ve.jfc=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/to
 plugin@org.eclipse.ve.tests=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
 feature@org.eclipse.jem=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
-feature@org.eclipse.jem.tests=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
+feature@org.eclipse.jem.tests=I20031103b,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
 feature@org.eclipse.ve=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=I20031103a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
