@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-29 18:20:23 $ 
+ *  $Revision: 1.19 $  $Date: 2004-06-29 19:22:09 $ 
  */
 
 import java.util.*;
@@ -1091,11 +1091,13 @@ protected IBeanValidator getBeanValidator(){
 			fBeanValidator = new BeanValidator();
 		}
 		fBeanValidator.setJavaInstance(getJavaObject());
+		fBeanValidator.validateAll();		
 		fBeanValidator.addErrorListener(new IBeanValidator.ErrorListener(){
 			public void errorStatusChanged() {
 				fireErrorStatusChanged();
 			}
 		});
+
 	}
 	return fBeanValidator;
 }
