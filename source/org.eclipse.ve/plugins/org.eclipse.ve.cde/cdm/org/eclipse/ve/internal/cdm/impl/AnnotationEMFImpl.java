@@ -11,28 +11,21 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationEMFImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:26 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 23:18:44 $ 
  */
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.notify.impl.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.notify.impl.NotificationChainImpl;
-import org.eclipse.emf.common.notify.impl.NotifierImpl;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.cdm.*;
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Annotation EMF</b></em>'.
@@ -182,7 +175,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 			msgs = ((AnnotationEMFImpl)oldAnnotation).basicSetAnnotates(null, msgs);
 		
 		a.setParentAnnotation(this);
-		if (((BasicNotifierImpl) newAnnotates).eNotificationRequired()) {
+		if (((InternalEObject) newAnnotates).eNotificationRequired()) {
 			if (msgs == null) msgs = new NotificationChainImpl(4);
 			msgs.add(new ENotificationImpl((InternalEObject) newAnnotates, Notification.SET, CDMPackage.eINSTANCE.getEObject_ParentAnnotation(), oldAnnotation, this));
 		}		
