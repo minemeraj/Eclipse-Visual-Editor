@@ -189,9 +189,9 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             name="%configType.name Java Bean"
-            delegate="org.eclipse.vi.internal.java.vce.launcher.JavaBeanLaunchConfigurationDelegate"
+            delegate="org.eclipse.ve.internal.java.vce.launcher.JavaBeanLaunchConfigurationDelegate"
             modes="run, debug"
-            id="org.eclipse.vi.internal.java.vce.launcher.JavaBean">
+            id="org.eclipse.ve.java.core.launcher.JavaBean">
          <fileExtension
                default="false"
                extension="java">
@@ -206,8 +206,8 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             icon="icons/full/ctool16/java_bean_launcher.gif"
-            configTypeID="org.eclipse.vi.internal.java.vce.launcher.JavaBean"
-            id="org.eclipse.vi.internal.java.vce.launcher.JavaBean">
+            configTypeID="org.eclipse.ve.java.core.launcher.JavaBean"
+            id="org.eclipse.ve.internal.java.vce.launcher.JavaBean.images">
       </launchConfigurationTypeImage>
    </extension>
    <extension
@@ -216,7 +216,7 @@
             label="%shortcut.label Java Bean"
             icon="icons/full/ctool16/java_bean_launcher.gif"
             modes="run, debug"
-            class="org.eclipse.vi.internal.java.vce.launcher.JavaBeanShortcut"
+            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             id="org.eclipse.ve.internal.java.core.vce.localJavaShortcut">
          <perspective
                id="org.eclipse.jdt.ui.JavaPerspective">
@@ -235,9 +235,9 @@
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="org.eclipse.vi.internal.java.vce.launcher.JavaBean"
-            class="org.eclipse.vi.internal.java.vce.launcher.JavaBeanLauncherTabGroup"
-            id="org.eclipse.vi.internal.java.vce.JavaBeanLauncherConfigurationTabGroup">
+            type="org.eclipse.ve.java.core.launcher.JavaBean"
+            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanLauncherTabGroup"
+            id="org.eclipse.ve.internal.java.vce.JavaBeanLauncherConfigurationTabGroup">
       </launchConfigurationTabGroup>
    </extension>
 <!-- Define the default pattern style -->
