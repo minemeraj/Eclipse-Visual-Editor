@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.22 $  $Date: 2004-04-15 22:20:22 $ 
+ *  $Revision: 1.23 $  $Date: 2004-04-23 23:15:51 $ 
  */
 
 
@@ -40,7 +40,7 @@ protected   Object[]				fArguments		= null ;   // Some expression involve other 
 private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
 protected 	Object					fPriority		= null;      
-protected   CodeExpressionRef		fShadowExp		= null;
+protected   CodeExpressionRef		fMasterExpression = null;  // STATE_NO_SRC expressions may have a master expression
 
 
 /*********
@@ -69,7 +69,7 @@ public final static int                STATE_EXP_IN_LIMBO      	= 0x100 ;
    //   Expression is not persisted in source code.
 public final static int                STATE_EXP_NOT_PERSISTED 	= 0x200 ;
   // Typically set for a Delta BDM
-public final static int                STATE_SHADOW            	= 0x400 ;
+public final static int                STATE_MASTER            	= 0x400 ;
   // Typically set for an allocation statement that initialize the expression.
 public final static int                STATE_INIT_EXPR         	= 0x800 ;  
 
@@ -613,15 +613,7 @@ public void refreshAST() {
 public boolean isStateSet(int state){
 	return ((primGetState() & state) == state);
 }
-/**
- * @return true if this exprepression is a shadow expression of the argument.
- * Shadow expression is an expression that is cloned during plan B
- */
-public boolean isShadowExpOf(CodeExpressionRef shadow){
-	if(fShadowExp==null || shadow==null)
-		return false;
-	return fShadowExp.equals(shadow);
-}
+
 
 public boolean isAnyStateSet(){
 	return primGetState() != 0;
@@ -637,8 +629,7 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 	 
 	if(code instanceof CodeExpressionRef && code.getClass().isAssignableFrom(CodeExpressionRef.class)){        
 		CodeExpressionRef exp1 = (CodeExpressionRef)code;
-		if(isShadowExpOf(exp1) || exp1.isShadowExpOf(this))	
-			return 1;
+
         if (exp1.equals(this)) return 1 ;
         
 		if (getBean() == null && exp1.getBean() != null) return -1 ;
@@ -810,8 +801,8 @@ public String toString(){
 		states = states.concat("UPDATINGSRC#"); //$NON-NLS-1$
     if(isStateSet(STATE_EXP_NOT_PERSISTED))
         states = states.concat("NOTPERSISTED#"); //$NON-NLS-1$    
-    if(isStateSet(STATE_SHADOW))
-        states = states.concat("SHADOW#"); //$NON-NLS-1$
+    if(isStateSet(STATE_MASTER))
+        states = states.concat("MASTER#"); //$NON-NLS-1$
     if(isStateSet(STATE_DELETE))
     	states = states.concat("DELETE#"); //$NON-NLS-1$    
     if (isStateSet(STATE_NO_SRC))
@@ -819,7 +810,10 @@ public String toString(){
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
 	states = states.concat("}"+" Offset: "+Integer.toString(getOffset())); //$NON-NLS-1$ //$NON-NLS-2$
-	return super.toString() + states;
+	if (isStateSet(STATE_NO_SRC) && fMasterExpression != null)
+		return fMasterExpression.getContent() + states;
+	else
+	    return super.toString() + states;
 }
 
 public int primGetState() {
@@ -851,42 +845,13 @@ public void setSF(EStructuralFeature sf) {
     if (fDecoder !=null)	
 	   fDecoder.setSF(sf) ;
 }
-private void setShadowExp(CodeExpressionRef exp){
-	fShadowExp = exp;
-}
+
 public EStructuralFeature getSF() {
 	getExpDecoder() ;
 	if (fDecoder!=null)
 		return fDecoder.getSF() ;
     else
         return null ;
-}
-
-public CodeExpressionRef createShadow(CodeMethodRef mr, BeanPart bp) {
-   
-    CodeExpressionRef shadow = new CodeExpressionRef (mr,bp) ;
-    
-    
-    shadow.setStateFrom(this) ;
-    shadow.setState(STATE_SHADOW, true) ;
-    
-    shadow.setExprStmt(getExprStmt()) ;
-    
-    // Delay the creation of a decoder.
-    if (!bp.isProxy())
-       bp.setProxy(fBean);
-       
-    shadow.setContent(getContentParser()) ;
-    shadow.setProprity(fPriority) ;
-    shadow.primSetState(primGetState()) ;
-    shadow.setState(STATE_SHADOW, true) ;
-    
-    if (shadow.getExprStmt() == null)
-        shadow.setSF(getSF()) ;
-    
-    setShadowExp(shadow);
-    
-    return shadow ;    
 }
 
 protected IJVEDecoder primGetDecoder() {
@@ -900,15 +865,23 @@ public void setExprStmt(Statement statement) {
 	fexpStmt = statement;
 }
 
-public void setNoSrcExpression() {
-	setState(STATE_NO_SRC,true) ;
+public void setNoSrcExpression(boolean noSource) {
+	setState(STATE_NO_SRC,noSource) ;
 	if (fBean!=null) {
+	  if (noSource) {
 	   fBean.removeRefExpression(this);
 	   fBean.addNoSrcExpresion(this);
+	  }
+	  else {
+	  	fBean.removeNoSrcExpresion(this);
+	  	fBean.addRefExpression(this);
+	  }
 	}
 	if (getMethod()!=null) {
+	  if (noSource)
 	    getMethod().removeExpressionRef(this) ;
-	    fMethod=null;
+	  else
+	  	getMethod().addExpressionRef(this);
 	}
 }
 
@@ -918,5 +891,35 @@ public Object[] getAddedInstances() {
 	return null ;	
 }
 
+/**
+ * @return Returns the fMasterExpression.
+ * @todo Generated comment
+ */
+public CodeExpressionRef getMasterExpression() {
+	return fMasterExpression;
+}
+/**
+ * @param masterExpression The fMasterExpression to set.
+ * @todo Generated comment
+ */
+public void setMasterExpression(CodeExpressionRef masterExpression) {
+	fMasterExpression = masterExpression;
+	if (masterExpression==null)
+		setState(STATE_MASTER,false) ;
+	else
+		setState(STATE_MASTER,true);
+}
+	/** (non-Javadoc)
+	 * 
+	 */
+	public int getOffset() {
+		if (fMasterExpression != null && isStateSet(STATE_NO_SRC)) {
+			// use our master offset.  This is important for
+			// figuring out expression priorities, and z orders
+			return fMasterExpression.getOffset();
+		}
+		else 
+			return super.getOffset();
+	}
 }
 

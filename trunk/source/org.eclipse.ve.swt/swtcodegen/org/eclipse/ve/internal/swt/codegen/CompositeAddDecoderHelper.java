@@ -10,19 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:50 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-23 23:15:53 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.internal.compiler.ast.MessageSend;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
@@ -32,8 +30,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
@@ -347,6 +344,28 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		return (!cRef.equals(pRef));
 	}
 	
+	/**
+	 * In the case that noSRC expression is needed, the Constructor becomes the master
+	 * of this expression ... for z ordering
+	 * @return
+	 * @todo Generated comment
+	 */
+	protected CodeExpressionRef getMaster() {
+		Iterator itr = fAddedPart.getRefExpressions().iterator();
+		while (itr.hasNext()) {
+			CodeExpressionRef e = (CodeExpressionRef) itr.next();
+			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+				return e;
+		}
+		itr = fAddedPart.getNoSrcExpressions().iterator();
+		while (itr.hasNext()) {
+			CodeExpressionRef e = (CodeExpressionRef) itr.next();
+			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+				return e;
+		}
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#generateSrc()
 	 */
@@ -359,7 +378,20 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		}
 		else {
 			// This feature has no src.
-			fOwner.getExprRef().setNoSrcExpression();
+			fOwner.getExprRef().setNoSrcExpression(true);
+			CodeExpressionRef master = getMaster() ;
+			fOwner.getExprRef().setMasterExpression(master);
+			if (master.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+				// master was not generated yet, .. snooze it
+				master.setNoSrcExpression(false);
+				try {
+					master.generateSource(null);
+					master.getMethod().updateExpressionOrder();
+					master.insertContentToDocument();
+				} catch (CodeGenException e) {
+					JavaVEPlugin.log(e);
+				}
+			}
 			return null ;
 		}
 	}

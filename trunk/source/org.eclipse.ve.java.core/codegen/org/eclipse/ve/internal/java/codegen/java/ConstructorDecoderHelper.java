@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-20 20:49:16 $ 
+ *  $Revision: 1.14 $  $Date: 2004-04-23 23:15:51 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -114,8 +114,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 					if (bp!=null) {
 						PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 						IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
-						if (ref!=null)
-						   ref.add(o);
+						if (ref!=null && !ref.contains(o))
+						    ref.add(o);
 						ptref.setObject(o);
 						return ptref;
 					}

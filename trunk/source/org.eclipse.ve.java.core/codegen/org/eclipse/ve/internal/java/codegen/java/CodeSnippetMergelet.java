@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-23 23:15:51 $ 
  */
 
 import java.util.*;
@@ -192,8 +192,7 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
         		 oExp.setOffset(dExp.getOffset());
         		 // No need to refresh when a shadow expression 
         		 // We also do not care about event ordering
-        		 if(!dExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
-        		     !(dExp instanceof CodeEventRef))
+        		 if(!(dExp instanceof CodeEventRef))
         		 	// Will take care of reordering of expressions
         		 	oExp.refreshFromJOM(dExp); 
         	     break;

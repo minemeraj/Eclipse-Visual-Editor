@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-23 23:15:51 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -255,8 +255,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	public int isEquivalent(AbstractCodeRef code) throws CodeGenException {
 		if (code instanceof CodeEventRef) {
 			CodeEventRef exp1 = (CodeEventRef) code;
-			if (isShadowExpOf(exp1) || exp1.isShadowExpOf(this))
-				return 1;
+
 			if (exp1.equals(this))
 				return 1;
 				
