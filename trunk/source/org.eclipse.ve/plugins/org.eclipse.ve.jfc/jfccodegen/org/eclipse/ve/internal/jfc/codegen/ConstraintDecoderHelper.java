@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:37 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-20 13:01:30 $ 
  */
 
 
@@ -208,7 +208,7 @@ protected int[]   getCompositionConstraints() throws CodeGenException {
 
   IJavaObjectInstance curValue = (IJavaObjectInstance)fbeanPart.
                                  getEObject().eGet(fFmapper.getFeature(fExpr)) ;  
-  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel()));	
+  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));	
 } 
 /**
  *  Create initialization arguments
