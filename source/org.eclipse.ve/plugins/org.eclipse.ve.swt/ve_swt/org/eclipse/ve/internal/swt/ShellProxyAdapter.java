@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.6 $ $Date: 2004-05-19 23:04:11 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2004-07-28 15:04:15 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -47,10 +47,20 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 						// TODO this needs to be done properly so that the location can be set in the model and ignored
 						// likewise for the visibility
 						IIntegerBeanProxy intBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-5000);
-						IMethodProxy setlocationMethodProxy = shellProxy.getTypeProxy().getMethodProxy("setLocation", new String[] { "int", "int"});
+						IMethodProxy setlocationMethodProxy = shellProxy.getTypeProxy().getMethodProxy("setLocation", new String[] { "int", "int"});  //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
 						setlocationMethodProxy.invoke(shellProxy, new IBeanProxy[] { intBeanProxy, intBeanProxy});
+						
+						// Add a ShellListener that prevents the closing or minimization of the shell.
+						IBeanTypeProxy listenerType = displayProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener");  //$NON-NLS-1$
+						if (listenerType != null) {
+							IBeanProxy shellListenerBean = listenerType.newInstance();
+							IMethodProxy addShellListenerMethodProxy = shellProxy.getTypeProxy().getMethodProxy("addShellListener", new String[] { "org.eclipse.swt.events.ShellListener" } ); //$NON-NLS-1$  //$NON-NLS-2$
+							if (shellListenerBean != null && addShellListenerMethodProxy != null) {
+								addShellListenerMethodProxy.invoke(shellProxy, new IBeanProxy[] { shellListenerBean });
+							}
+						}
 
-						IMethodProxy openMethodProxy = shellProxy.getTypeProxy().getMethodProxy("open");
+						IMethodProxy openMethodProxy = shellProxy.getTypeProxy().getMethodProxy("open"); //$NON-NLS-1$
 						openMethodProxy.invoke(shellProxy);
 						return shellProxy;
 					} catch (AllocationException e) {
