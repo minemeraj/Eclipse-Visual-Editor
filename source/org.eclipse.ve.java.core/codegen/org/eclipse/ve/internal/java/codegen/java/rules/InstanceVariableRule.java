@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-19 20:49:51 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-29 19:55:17 $ 
  */
 
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		//
 		if (isModelled(field.getType(), resolver, di))
 			return false;
-		if (AnnotationDecoderAdapter.hasMetaInformation(field))
+		if (AnnotationDecoderAdapter.isDeclarationParseable(field))
 			return false;
 		//TODO: support multi declerations
 		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
@@ -53,7 +53,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		//
 		if (isModelled(stmt.getType(), resolver, di))
 			return false;
-		if (AnnotationDecoderAdapter.hasMetaInformation(stmt))
+		if (AnnotationDecoderAdapter.isDeclarationParseable(stmt))
 			return false;
 		//TODO: support multi declerations
 		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);

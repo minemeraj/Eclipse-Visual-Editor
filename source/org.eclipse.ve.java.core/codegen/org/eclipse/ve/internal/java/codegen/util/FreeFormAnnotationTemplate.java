@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.compiler.*;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-29 19:55:38 $ 
  */
 /**
  * @version 	1.0
@@ -32,7 +32,6 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     public final static String ANNOTATION_START = "//" ; //$NON-NLS-1$
     
     public final static String ANNOTATION_PREFIX = "  "+ANNOTATION_START ; //$NON-NLS-1$
-    final public static String VISUAL_PARSE = "parse"; //$NON-NLS-1$
     
     String positionString = "";
     String parseString = "";
@@ -56,13 +55,6 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     	else
     		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
                    "\""+Integer.toString(point.x)+","+Integer.toString(point.y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    
-    public void setParseable(boolean parse){
-    	if(parse)
-    		parseString = VISUAL_PARSE;
-    	else
-    		parseString = "";
     }
     
     protected static int getSigOnSameLine(int s, String src, String sig) {
@@ -151,10 +143,12 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
        start = src.indexOf(ANNOTATION_SIG,start) ;
        if (start<0) return -1 ;
        
-       int end = src.indexOf(VISUAL_INFO_TYPE,start) ;
-       if (end<0) return -1 ;
+       // consider the case where decl-index=x is removed, but the visual-constraint 
+       // is still present and valid (ex. JButton delcaration)
+//       int end = src.indexOf(VISUAL_INFO_TYPE,start) ;
+//       if (end<0) return -1 ;
        
-       end = src.indexOf(VISUAL_CONTENT_TYPE,end) ;
+       int end = src.indexOf(VISUAL_CONTENT_TYPE,start) ;
        if (end <0) return -1 ;
        
        end = src.indexOf('"',end) ;
