@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodVariableRule.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-14 19:54:05 $ 
  */
 
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -29,7 +29,12 @@ static String RULE_ID = "ruleMethodVariable" ;	 //$NON-NLS-1$
 
 
 /**
- * Give the parser a hint if a local variable is to be ignored.
+ * Give the parser a hint if a local variable is to be ignored. It is not ignored if any of the following are true 
+ * <li>The type of the declaration is 'modelled' in the overrides</li> 
+ * <li>The variable name is starting with the default prefix defined in Window>Preferences>Java>Visual Editor>Code Generation tab>Default prefix</li>
+ * <li>The field declaration has a Coegen Annotation comment at the end</li>
+ * Note: the passed in AST node field will find its codegen annotation comment from the source 
+ * present in its parent CU node's 'org.eclipse.ve.codegen.source' property.
  */
 public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver,IVEModelInstance di) ;
 	

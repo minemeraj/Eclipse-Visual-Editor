@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.25 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.26 $  $Date: 2004-05-14 19:55:38 $ 
  */
 
 import java.util.*;
@@ -566,8 +566,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
       	 ma = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(component.eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
       	 CodeMethodRef mref = ma.getMethodRef() ;
       	 bp.addInitMethod(mref) ;
-      	 bp.getFFDecoder();
-         generateLocalVariable(component,ma.getMethodRef(),varName, cu) ;
+      	 generateLocalVariable(component,ma.getMethodRef(),varName, cu) ;
       }
       fBeanModel.refreshMethods();
 }

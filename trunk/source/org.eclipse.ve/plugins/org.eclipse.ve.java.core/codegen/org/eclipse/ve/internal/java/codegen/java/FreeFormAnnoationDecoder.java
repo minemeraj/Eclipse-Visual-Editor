@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-15 19:42:20 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-14 19:55:38 $ 
  */
 import java.util.logging.Level;
 
@@ -24,6 +24,7 @@ import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 import org.eclipse.ve.internal.cdm.model.Rectangle;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -55,14 +56,19 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
         Rectangle constraint = (Rectangle) getAnnotationValue() ;
-        if (constraint == null) {
-            fContent = "" ;             //$NON-NLS-1$
-        }
-        else {
-          FreeFormAnnotationTemplate fft = getFFtemplate() ;
-          fft.setPosition(constraint.x,constraint.y) ;
-          fContent = fft.toString() ;
-        }
+        FreeFormAnnotationTemplate fft = getFFtemplate() ;
+        if (constraint != null) 
+        	fft.setPosition(constraint.x,constraint.y) ;
+        else
+        	fft.setPosition(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        if(	fBeanpart!=null && 
+        	fBeanpart.getEObject()!=null && 
+			fBeanpart.getEObject().eResource()!=null && 
+			fBeanpart.getEObject().eResource().getResourceSet()!=null){
+        	fft.setParseable(!InstanceVariableCreationRule.isModelled(fBeanpart.getEObject().eClass(), fBeanpart.getEObject().eResource().getResourceSet()));
+        }else
+        	fft.setParseable(true);
+        fContent = fft.toString() ;
         return fContent ;
     }
         
@@ -70,19 +76,24 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     protected boolean decode(String src) {
          if (src== null)  {
              // No Free Form Information
-         	 clearAnnotation();
+         	 noAnnotationInSource();
              return true ;
           }
     	  String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
           if (curAnnotation == null)  {
              // No Free Form Information
+          	 noAnnotationInSource();
              return true ;
           }
                     
           JavaVEPlugin.log(fBeanpart.getUniqueName()+" Decoding FF annotation", Level.FINE) ;    //$NON-NLS-1$
           
           int[] args = FreeFormAnnotationTemplate.getAnnotationArgs(src,0) ;
-          if (args == null) return false ;
+          if (args == null) {
+          	// No Free Form Information
+          	noAnnotationInSource();
+          	return false ;
+          }
           
 	      KeyedConstraintImpl c = (KeyedConstraintImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedConstraint());
 	      c.setValue(new Rectangle(args[0],args[1],-1,-1)) ;
@@ -147,44 +158,21 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
                 return ;
               }
               
-              
-              int commentStart = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
-              if (commentStart <0)
-                 len = 0 ;                    
-              else
-                 len = commentStart + FreeFormAnnotationTemplate.ANNOTATION_START.length() ;                 
-              
+              // Just append the comment at the end of the line
+              int end = FreeFormAnnotationTemplate.getEOL(src, 0);
+              int pSpaces = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, end);
+              start = start + pSpaces;
+              len = end - pSpaces;
               JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", Level.FINE) ;                          //$NON-NLS-1$
           }
           else {
               JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
+              s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
-              if(getAnnotationValue()==null){
-	              	int realEnd = src.indexOf('\n', end);
-	              	if(realEnd<0)
-	              		realEnd = src.indexOf('\r', end);
-	              	if(realEnd<0)
-	              		realEnd = src.length();
-	              	int realStart = src.indexOf(FreeFormAnnotationTemplate.ANNOTATION_SIG, s);
-	              	String nonAnnotationComment = new String();
-	              	if(realStart > -1 && realStart>s+FreeFormAnnotationTemplate.ANNOTATION_START.length())
-	              		nonAnnotationComment = nonAnnotationComment+src.substring(s+FreeFormAnnotationTemplate.ANNOTATION_START.length(), realStart);
-	              	if(realEnd > end)
-	              		nonAnnotationComment = nonAnnotationComment + src.substring(end+1, realEnd);
-	              	boolean anyThingInteresting = false;
-	              	for(int i=0;nonAnnotationComment!=null && i<nonAnnotationComment.length();i++)
-	              		if(!Character.isWhitespace(nonAnnotationComment.charAt(i)))
-	              			anyThingInteresting = true;
-	              	if(anyThingInteresting){
-	              		newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + nonAnnotationComment;
-	              	}else{
-	              		newSrc = new String();
-	              	}
-              }else{
-				newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
-              }
-              len = end+1 ;                
+              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
+              start = start + s;
+              len = end-s+1;
           }
               
           fBeanpart.getModel().getDocumentBuffer().replace(start,len,newSrc) ;

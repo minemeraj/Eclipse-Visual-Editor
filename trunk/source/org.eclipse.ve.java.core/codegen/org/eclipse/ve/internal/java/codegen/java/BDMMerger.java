@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-23 23:15:51 $ 
+ *  $Revision: 1.14 $  $Date: 2004-05-14 19:55:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -148,13 +148,8 @@ public class BDMMerger {
 //				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, previousUPDATINGJVEMODELState) ;
 //				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING, previousUPANDRUNNINGState) ;
 				
-				if(	bean.getSimpleName().equals(BeanPart.THIS_NAME) ||
-						bean.isInstanceVar()){
-					if(bean.getFFDecoder()!=null)
-						bean.getFFDecoder().decode();
-				}else{
-					bean.getFFDecoder();
-				}
+				if(bean.getFFDecoder()!=null)
+					bean.getFFDecoder().decode();
 			}
 		} catch (CodeGenException e) {
 			JavaVEPlugin.log(e, Level.WARNING) ;

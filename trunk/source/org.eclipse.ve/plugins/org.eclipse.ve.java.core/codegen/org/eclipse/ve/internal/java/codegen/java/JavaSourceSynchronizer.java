@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-07 22:48:31 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-14 19:55:38 $ 
  */
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 public class JavaSourceSynchronizer {
 
  public final static		int NO_OF_UPDATE_WORKERS = 2 ;
- public final static		int DEFAULT_SYNC_DELAY = 500 ;
+ public final static		int DEFAULT_SYNC_DELAY = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_SYNC_DELAY ;
  public       static		int L2R_DELAY_FACTOR = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_L2R_FACTOR  ;  // Extra Delay if only L2R deltas
  public final static 	String RELOAD_HANDLE = "Reload Request";
  
