@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.13 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.14 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.HashMap;
@@ -115,7 +115,8 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			modelledBeansCache.put(resolvedType, result ? Boolean.TRUE : Boolean.FALSE);
 			return result;
 		} catch (Exception e) {
-			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + resolvedType, Level.FINE); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + resolvedType, Level.FINE); //$NON-NLS-1$
 		}
 
 		modelledBeansCache.put(resolvedType, Boolean.FALSE);

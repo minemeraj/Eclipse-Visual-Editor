@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2004-11-11 00:03:33 $ 
+ *  $Revision: 1.14 $  $Date: 2004-12-16 18:36:42 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -123,7 +123,8 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// target's add feature
 		EStructuralFeature cf = fFmapper.getFeature(null);
 		java.util.List compList = (java.util.List) target.getEObject().eGet(cf);
-		JavaVEPlugin.log("JTabbedPaneAddDecoderHelper.add(" + toAdd + "," + target + "@" + i + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+			JavaVEPlugin.log("JTabbedPaneAddDecoderHelper.add(" + toAdd + "," + target + "@" + i + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (i < 0)
 			compList.add(root);
 		else
@@ -287,7 +288,8 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// TODO  Need to deal with identical 
 		int end = start < 0 ? -1 : expSig.lastIndexOf(args[args.length - 1]) + args[args.length - 1].length();
 		if (start < 0 || end < 0) {
-			JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.WARNING); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.WARNING); //$NON-NLS-1$
 			return expSig;
 		}
 

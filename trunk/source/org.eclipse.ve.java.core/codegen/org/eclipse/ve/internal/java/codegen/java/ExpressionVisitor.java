@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.17 $  $Date: 2004-12-08 23:23:38 $ 
+ *  $Revision: 1.18 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -79,7 +79,8 @@ BeanPart  processRefToMessageSend  (MethodInvocation stmt) {
 			b = fModel.getBeanReturned(selector);
 			if (b==null && fReTryLater!=null) { 
 				fReTryLater.add(this);
-			    JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
 			}
 		}
 		return b;
@@ -197,7 +198,8 @@ protected void processAMessageSend() {
   	  	    if (fReTryLater!=null) {
   	  	        // We may have not processed the target's create method 
 				fReTryLater.add(this);
-			    JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
 			    return;
 		    }
 		    else
@@ -221,8 +223,9 @@ protected void processAMessageSend() {
    	 		//          it hit a MessageSend.
    	 		// bean.getModel().addMethodInitializingABean(fMethod) ;
   	  }
-      else {  	     
-        JavaVEPlugin.log("\t[Expression] Visitor.processAMessageSend() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
+      else { 
+      	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+      		JavaVEPlugin.log("\t[Expression] Visitor.processAMessageSend() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
       }
 }
 
@@ -251,71 +254,69 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 /**
  *  Process a Send Message,
  */
-protected void processAssignmment() {
-	Assignment stmt = (Assignment) ((ExpressionStatement)fExpression.getExprStmt()).getExpression();
-	BeanPart bean ;
-	// TODO Need to deal with ArrayTypeReference etc.	
-	Expression lhs = stmt.getLeftHandSide();
-	if (lhs instanceof SimpleName || 
-	    (lhs instanceof FieldAccess && ((FieldAccess)lhs).getExpression() instanceof ThisExpression)) {
-		String name = lhs instanceof SimpleName ?((SimpleName)lhs).getIdentifier(): ((FieldAccess)lhs).getName().getIdentifier();
-		bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));//fMethod.getMethodHandle()+"^"+name);		
-		if(bean==null)
-			bean = fModel.getABean(name) ;
-		if (bean != null) {
-			fExpression.setBean(bean) ;
-			boolean initExpr = false ;
-			if (stmt.getRightHandSide() instanceof ClassInstanceCreation || 
-			   (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression)stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
-				// e.g. ivjTitledBorder = new Border()
-				// e.g. ivjTitledBorder = (TitledBorder) new Border()
-				initExpr = true ;
-			}
-			else if (stmt.getRightHandSide() instanceof MethodInvocation || 
-			         (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression)stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
-				// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-				// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-				// Assume the MessageSend is a static that can be resolved by the target VM...
-				// need more work here.
-				// At this point, make sure this is a static method.
-				MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide() : ((CastExpression)stmt.getRightHandSide()).getExpression());
-				if (m.getExpression() instanceof Name) {
-				TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name)m.getExpression());
-				String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null; 
-			   // TODO This should be in a rule: parse methodInvocation Initialization
-			   if (isStaticCall(resolvedReceiverName,m.getName().getIdentifier(), (m.arguments()==null?0:m.arguments().size()))) {
-			   	  initExpr = true ;
-			   }
+	protected void processAssignmment() {
+		Assignment stmt = (Assignment) ((ExpressionStatement) fExpression.getExprStmt()).getExpression();
+		BeanPart bean;
+		// TODO Need to deal with ArrayTypeReference etc.
+		Expression lhs = stmt.getLeftHandSide();
+		if (lhs instanceof SimpleName || (lhs instanceof FieldAccess && ((FieldAccess) lhs).getExpression() instanceof ThisExpression)) {
+			String name = lhs instanceof SimpleName ? ((SimpleName) lhs).getIdentifier() : ((FieldAccess) lhs).getName().getIdentifier();
+			bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));//fMethod.getMethodHandle()+"^"+name);
+			if (bean == null)
+				bean = fModel.getABean(name);
+			if (bean != null) {
+				fExpression.setBean(bean);
+				boolean initExpr = false;
+				if (stmt.getRightHandSide() instanceof ClassInstanceCreation
+						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
+					// e.g. ivjTitledBorder = new Border()
+					// e.g. ivjTitledBorder = (TitledBorder) new Border()
+					initExpr = true;
+				} else if (stmt.getRightHandSide() instanceof MethodInvocation
+						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
+					// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
+					// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
+					// Assume the MessageSend is a static that can be resolved by the target VM...
+					// need more work here.
+					// At this point, make sure this is a static method.
+					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
+							: ((CastExpression) stmt.getRightHandSide()).getExpression());
+					if (m.getExpression() instanceof Name) {
+						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
+						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
+						// TODO This should be in a rule: parse methodInvocation Initialization
+						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
+							initExpr = true;
+						}
+					}
+				}
+				if (initExpr) {
+					bean.addInitMethod(fMethod);
+					fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+					fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+				} else {
+					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+						JavaVEPlugin.log("\t[Expression] Visitor.processAssignmment() did not process: " + stmt, Level.FINE); //$NON-NLS-1$
 				}
 			}
-			if (initExpr) {
-			   bean.addInitMethod(fMethod) ;
-			   fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-			   fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+		} else if (stmt.getLeftHandSide() instanceof QualifiedName) {
+			// for field access (like gridbag constraints)
+
+			//char[][] tokens = ((QualifiedNameReference)stmt.lhs).tokens ;
+			String bName = ((QualifiedName) stmt.getLeftHandSide()).getQualifier().toString();
+			bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, bName));//fMethod.getMethodHandle()+"^"+bName);
+			if (bean == null)
+				bean = fModel.getABean(bName);
+			if (bean != null) {
+				fExpression.setBean(bean);
+				bean.addRefExpression(fExpression);
+				bean.getModel().addMethodInitializingABean(fMethod);
 			}
-			else {
-			  JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
-			}
-		}		
+		} else {
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("\t[Expression] Visitor.processAssignmment() did not process: " + stmt, Level.FINE); //$NON-NLS-1$
+		}
 	}
-	else if (stmt.getLeftHandSide() instanceof QualifiedName) {
-		// for field access (like gridbag constraints)
-		
-	    //char[][] tokens = ((QualifiedNameReference)stmt.lhs).tokens ;
-	    String bName =   ((QualifiedName)stmt.getLeftHandSide()).getQualifier().toString();    
-	    bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,bName));//fMethod.getMethodHandle()+"^"+bName);	    
-	    if(bean==null)
-	    	bean = fModel.getABean(bName) ;
-	    if (bean != null) {
-	      fExpression.setBean(bean) ;
-	      bean.addRefExpression(fExpression) ;
-	      bean.getModel().addMethodInitializingABean(fMethod) ;
-	    }
-	}	
-   else {   	 
-   	 JavaVEPlugin.log ("\t[Expression] Visitor.processAssignmment() did not process: "+stmt, Level.FINE) ; //$NON-NLS-1$
-   }	
-}
 
 /**
  * Process a Local Decleration (typically of utility beans like GridBagConstraints)
@@ -356,12 +357,12 @@ public void visit(){
 				processAMessageSend();
 			else if (exp instanceof Assignment)
 				processAssignmment();
-			else
-				JavaVEPlugin.log("\t[Expression] Visitor: *** did not process Expression:" + fVisitedNode, Level.FINE); //$NON-NLS-1$
+			else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\t[Expression] Visitor: *** did not process Expression:" + fVisitedNode, Level.FINE); //$NON-NLS-1$
 	} else 
 		if (fExpression.getExprStmt() instanceof VariableDeclarationStatement)
 			processLocalDeclarations();
-		else
+		else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 			JavaVEPlugin.log("\t[Expression] Visitor: *** did not process Expression:" + fVisitedNode, Level.FINE); //$NON-NLS-1$
 	   
 	   

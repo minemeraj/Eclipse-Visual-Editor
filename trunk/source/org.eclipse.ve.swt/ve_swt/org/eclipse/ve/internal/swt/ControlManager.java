@@ -168,7 +168,8 @@ public void calledBackStream(int msgID, java.io.InputStream is){
 			}
 			break;
 		default:
-			JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
 	}	
 }
 public ImageData getImageData(){

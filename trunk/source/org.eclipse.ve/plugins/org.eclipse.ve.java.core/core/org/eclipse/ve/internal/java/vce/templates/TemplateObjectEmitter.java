@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectEmitter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-16 18:36:15 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -156,7 +156,8 @@ public class TemplateObjectEmitter {
 	}
 	protected void parseTemplate(IProgressMonitor pm) throws JETException {
 		if (!parsed) {
-			JavaVEPlugin.log("TemplateObjectEmitter: parsing: "+fTemplate,Level.FINEST) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("TemplateObjectEmitter: parsing: "+fTemplate,Level.FINEST) ; //$NON-NLS-1$
 			// Make sure ClassPath Var. are initialized
 			org.eclipse.jdt.launching.JavaRuntime.getDefaultVMInstall() ;
 			tick(pm) ;
@@ -174,7 +175,8 @@ public class TemplateObjectEmitter {
 			ByteArrayOutputStream generatedTemplate = new ByteArrayOutputStream() ; ;
 			tick(pm) ;
 			getJetCompiler().generate(generatedTemplate) ;
-			JavaVEPlugin.log("TemplateObjectEmitter: generating"+fTemplate,Level.FINEST) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("TemplateObjectEmitter: generating"+fTemplate,Level.FINEST) ; //$NON-NLS-1$
 			
 			// convert the output String into a StringBuffer
 			InputStream contents = new ByteArrayInputStream(generatedTemplate.toByteArray());						

@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
 
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-27 15:35:10 $ 
+ *  $Revision: 1.11 $  $Date: 2004-12-16 18:36:46 $ 
  */
 
 import java.util.HashMap;
@@ -64,7 +64,8 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 			modelledBeansCache.put(resolveType(tp,resolver), new Boolean(result));
 			return result;
 		} catch (Exception e) {
-			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
 		}
 
 		modelledBeansCache.put(resolveType(tp,resolver), Boolean.FALSE);

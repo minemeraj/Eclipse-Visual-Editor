@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.16 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.17 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.Map;
@@ -215,6 +215,10 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		return logger;
 	}
 
+	public static boolean isLoggingLevel(Level level) {
+		return getPlugin().getLogger().isLoggingLevel(level);
+	}
+	
 	public static void log(Object obj) {
 		getPlugin().getLogger().log(obj);
 	}

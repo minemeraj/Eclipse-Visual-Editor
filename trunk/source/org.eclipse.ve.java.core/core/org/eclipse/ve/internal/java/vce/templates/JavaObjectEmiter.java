@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -252,7 +252,8 @@ public class JavaObjectEmiter {
 					return clazz ;				
 				}
 				else {
-					JavaVEPlugin.log("JavaObjectEmitter: Did not found found existing class: "+clazz.getName(),Level.FINEST) ; //$NON-NLS-1$
+					if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+						JavaVEPlugin.log("JavaObjectEmitter: Did not found found existing class: "+clazz.getName(),Level.FINEST) ; //$NON-NLS-1$
 				}
 				index++ ;
 			}
@@ -334,7 +335,8 @@ public class JavaObjectEmiter {
 	    if (index>0) refreshSourceClassname() ;	   	    
 		   
         // Compile it
-        JavaVEPlugin.log("JavaObjectEmitter: Compiling a new class: "+getClassName(),Level.FINEST) ; //$NON-NLS-1$
+	    if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+	    	JavaVEPlugin.log("JavaObjectEmitter: Compiling a new class: "+getClassName(),Level.FINEST) ; //$NON-NLS-1$
 		EmitterCompilationUnit[] cu = new EmitterCompilationUnit[] { new EmitterCompilationUnit()};
 		INameEnvironment env = new FileSystem(classPath, new String[0], fEncodeing);
 		tick(pm);

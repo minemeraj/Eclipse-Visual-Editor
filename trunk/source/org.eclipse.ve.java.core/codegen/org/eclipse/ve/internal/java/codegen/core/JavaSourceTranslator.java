@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.45 $  $Date: 2004-11-22 22:23:18 $ 
+ *  $Revision: 1.46 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -564,7 +564,8 @@ protected synchronized void refreshFreeFrom(Display disp) {
 		EObject c = (EObject) itr.next();
 		BeanPart bp = fBeanModel.getABean(c) ;
 		if (bp == null || bp.getContainer()!=null) {
-		   JavaVEPlugin.log("JavaSourceTranslator.refreshFreeFrom(): Removing: "+bp.getSimpleName()) ;  //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("JavaSourceTranslator.refreshFreeFrom(): Removing: "+bp.getSimpleName()) ;  //$NON-NLS-1$
 		   beansToRemove.add(c) ;		
 		}
 	}
@@ -701,7 +702,8 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
     	   if (!(obj instanceof IJavaObjectInstance)) {    	   	  
     	      obj = null ;
-    	      JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+    	      if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+    	      	JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
     	   }
        }
        else {  // a this part
@@ -714,7 +716,8 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        
        
 	   if (obj == null) {
-	    JavaVEPlugin.log("Could not create a JavaObjectInstance for: "+bean.getType()+": "+bean.getUniqueName(),Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	   	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+	   		JavaVEPlugin.log("Could not create a JavaObjectInstance for: "+bean.getType()+": "+bean.getUniqueName(),Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	    err.add(bean) ;
 	    // Children will not be connected to the VCE model
 	    Iterator bItr = bean.getChildren() ;
@@ -805,14 +808,17 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		      try {
 		      	expProgressMonitor.subTask("Decoding expression: "+codeRef.getCodeContent());
 			  if (!decodeExpression (codeRef)) {
-				 JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, Level.FINE) ;						 //$NON-NLS-1$
+			  	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+			  		JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, Level.FINE) ;						 //$NON-NLS-1$
 				 badExprssions.add(codeRef) ;			 
 			  }
 			  expProgressMonitor.worked(1);
 		      }
 		      catch (Exception e) {
-		        JavaVEPlugin.log("Skipping expression: "+codeRef,Level.WARNING) ; //$NON-NLS-1$
-		        JavaVEPlugin.log(e,Level.WARNING) ;
+		      	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+		      		JavaVEPlugin.log("Skipping expression: "+codeRef,Level.WARNING) ; //$NON-NLS-1$
+		      		JavaVEPlugin.log(e,Level.WARNING) ;
+		      	}
 		        badExprssions.add(codeRef) ;	
 		      }
 		    }
@@ -1169,7 +1175,8 @@ public void commit() {
 		fBeanModel.docChanged();
 	}
 	fSrcSync.getLockMgr().setGUIUpdating(false);
-    JavaVEPlugin.log("JavaSourceTranslator: commit",Level.FINEST) ;         //$NON-NLS-1$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+		JavaVEPlugin.log("JavaSourceTranslator: commit",Level.FINEST) ;         //$NON-NLS-1$
 }
 /**
  * This one provide an Async. registration for a notification on flush process

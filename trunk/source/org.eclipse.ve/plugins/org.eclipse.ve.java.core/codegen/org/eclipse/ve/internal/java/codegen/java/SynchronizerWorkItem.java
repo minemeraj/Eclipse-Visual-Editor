@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SynchronizerWorkItem.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-16 18:36:07 $ 
  */
 
 import java.util.*;
@@ -713,7 +713,7 @@ public class SynchronizerWorkItem {
 				buff.append(";\n}\n"); //$NON-NLS-1$
 			}catch(JavaModelException e){
 				JavaVEPlugin.log("SyncWI: Error when constructing skeleton",Level.WARNING); //$NON-NLS-1$
-				buff=new StringBuffer();
+				buff.setLength(0);
 			}
 			return buff.toString();
 		}
@@ -973,8 +973,8 @@ public class SynchronizerWorkItem {
 		}
 		
 		public void setSourceCode(String code){
-		    if (code == null)
-		      JavaVEPlugin.log("SynchronizerWorkItem: null code", Level.FINE) ; //$NON-NLS-1$
+		    if (code == null && JavaVEPlugin.isLoggingLevel(Level.FINE))
+		    		JavaVEPlugin.log("SynchronizerWorkItem: null code", Level.FINE) ; //$NON-NLS-1$
 			entireClassCode = code;
 		}
 		

@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:56 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
+
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,6 +27,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -56,7 +59,8 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 		try {
 			fwcContents = wcp.getSource();
 		} catch (JavaModelException e) {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("JavaBeanShadowModelBuilder - *error* getting source code"); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("JavaBeanShadowModelBuilder - *error* getting source code"); //$NON-NLS-1$
 		}
 		// Make sure fCU use is limited to fWCP
 		fCU = null;

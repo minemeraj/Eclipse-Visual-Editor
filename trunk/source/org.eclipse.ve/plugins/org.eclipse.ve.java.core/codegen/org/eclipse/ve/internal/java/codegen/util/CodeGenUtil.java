@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.27 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.28 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 
@@ -104,7 +104,8 @@ public  static IJavaInstance  createInstance (String instanceType,ResourceSet rs
 public static IJavaInstance createInstance(String instanceType, IVEModelInstance cm) throws CodeGenException {
 	if (cm.getModelResourceSet() == null)
 		throw new CodeGenException("MOF is not set up"); //$NON-NLS-1$
-	JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 
 	return createInstance(instanceType, cm.getModelResourceSet());
 }
@@ -807,12 +808,14 @@ public static boolean propertyCleanup(EObject target, EStructuralFeature sf) {
 }
 
 public static void logParsingError(String exp, String method, String msg, boolean event) {
-	String context ;
-	if (event)
-	   context = "as an event registration" ; //$NON-NLS-1$
-	else
-	   context = "as a property setting" ; //$NON-NLS-1$
-	JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE)) {
+		String context ;
+		if (event)
+		   context = "as an event registration" ; //$NON-NLS-1$
+		else
+		   context = "as a property setting" ; //$NON-NLS-1$
+		JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	}
 }
 
 /*public static String expressionToString (Expression exp) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.27 $  $Date: 2004-11-09 19:26:00 $ 
+ *  $Revision: 1.28 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -822,7 +822,8 @@ public boolean isEquivalent(BeanPart b) {
 						e.getMethod().removeExpressionRef(e);
 						e.getBean().removeRefExpression(e);
 						e.getBean().addBadExpresion(e);
-						JavaVEPlugin.log(
+						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+							JavaVEPlugin.log(
 								"BeanPart.resolveParentExpressions() : Did not Decoded: "
 										+ e, Level.FINE); //$NON-NLS-1$
 					}

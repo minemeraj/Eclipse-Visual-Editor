@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.7 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.Expression;
@@ -28,6 +29,7 @@ import org.eclipse.jem.java.Method;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeCallBackRef;
 import org.eclipse.ve.internal.java.codegen.util.IEventSrcGenerator;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -200,7 +202,8 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 		   d.deleteFromSrc() ;
 		}
 		else {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InnerClassStyleHelper.removeCallBack: No Callback decoder for"+mName) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("InnerClassStyleHelper.removeCallBack: No Callback decoder for"+mName) ; //$NON-NLS-1$
 		}
 		
 	}
@@ -223,7 +226,8 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 			return exp.getTargetSourceRange() ;
 		}
 		else {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InnerClassStyleHelper.removeCallBack: No Callback decoder for"+c.getMethod().getName()) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("InnerClassStyleHelper.removeCallBack: No Callback decoder for"+c.getMethod().getName()) ; //$NON-NLS-1$
 			return null ;
 		}
 	}

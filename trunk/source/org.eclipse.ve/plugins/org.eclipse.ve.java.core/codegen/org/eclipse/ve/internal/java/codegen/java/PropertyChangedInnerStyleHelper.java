@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedInnerStyleHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.7 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.*;
 
@@ -25,6 +26,7 @@ import org.eclipse.jem.java.Method;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeCallBackRef;
 import org.eclipse.ve.internal.java.codegen.util.IEventSrcGenerator;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -139,7 +141,8 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
              d.deleteFromSrc() ;
         }
         else {
-	       org.eclipse.ve.internal.java.core.JavaVEPlugin.log("PropertyChangedInnerStyleHelper.removePropertyEvent: No Property decoder for"+pName) ; //$NON-NLS-1$
+        	if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+        		JavaVEPlugin.log("PropertyChangedInnerStyleHelper.removePropertyEvent: No Property decoder for"+pName) ; //$NON-NLS-1$
         }
 		
 
@@ -289,7 +292,8 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 			return exp.getTargetSourceRange();
 		}
 		else {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("PropertyChangedInnerStyleHelper.getPropertyEventSourceRange: No Property decoder for" + pe.getPropertyName()); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("PropertyChangedInnerStyleHelper.getPropertyEventSourceRange: No Property decoder for" + pe.getPropertyName()); //$NON-NLS-1$
 			return null;
 		}
 	}

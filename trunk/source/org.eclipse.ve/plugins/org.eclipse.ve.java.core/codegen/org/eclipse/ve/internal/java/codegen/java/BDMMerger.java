@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.26 $  $Date: 2004-10-31 20:30:52 $ 
+ *  $Revision: 1.27 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -224,12 +224,14 @@ public class BDMMerger {
 			BeanPart retBP = mainModel.getBeanReturned(m.getMethodName());
 			for (Iterator iter = initBPs.iterator(); iter.hasNext();) {
 				BeanPart bp = (BeanPart) iter.next();
-				logFiner("Disposing init bean "+bp.getSimpleName()+" when disposing method "+m.getMethodHandle());
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Disposing init bean "+bp.getSimpleName()+" when disposing method "+m.getMethodHandle(), Level.FINER);
 				if(!BeanPart.THIS_NAME.equals(bp.getSimpleName())) // do not dispose THIS beanpart
 					bp.dispose() ;
 			}
 			if(retBP!=null && !initBPs.contains(retBP)){
-				logFiner("Disposing return bean "+retBP.getSimpleName()+" when disposing method "+m.getMethodHandle());
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Disposing return bean "+retBP.getSimpleName()+" when disposing method "+m.getMethodHandle(), Level.FINER);
 				if(!BeanPart.THIS_NAME.equals(retBP.getSimpleName())) // do not dispose THIS beanpart
 					retBP.dispose() ;
 			}
@@ -246,9 +248,8 @@ public class BDMMerger {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			CodeMethodRef m = (CodeMethodRef) methods.next();
 			if(newModel.getMethod(m.getMethodHandle())==null){
-				// Method is not to be found in the new model - hence remove it
-				// Could be removed because methods got merged
-				logFiner("Removing method "+m.getMethodHandle() + "since it is not found in update");
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Removing method "+m.getMethodHandle() + "since it is not found in update", Level.FINER);
 				removed = removed && removeMethodRef(m);
 			}
 		}
@@ -504,7 +505,8 @@ public class BDMMerger {
 			newExp.getBean().setProxy(mainExp.getBean());
 		switch(equivalencyLevel){
 			case 0:
-				logFiner("Updating changed expression "+newExp.getCodeContent());
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Updating changed expression "+newExp.getCodeContent(), Level.FINER);
 				if(!mainExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)){
 					if(mainExp.getOffset()!=newExp.getOffset())
 						mainExp.setOffset(newExp.getOffset());
@@ -527,8 +529,8 @@ public class BDMMerger {
 					// No need to refresh when a shadow expression 
 					// We also do not care about event ordering
 					if(((!(newExp instanceof CodeEventRef)) || needToRedecodeExpressions.contains(mainExp))) {
-					   // Will take care of reordering of expressions
-					   logFiner("Updating because of changed offset "+newExp.getCodeContent());
+						if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+							JavaVEPlugin.log("BDM Merger >> "+"Updating because of changed offset "+newExp.getCodeContent(), Level.FINER);
 					   mainExp.refreshFromJOM(newExp); 
 					}
 				}
@@ -540,7 +542,8 @@ public class BDMMerger {
 	}
 
 	protected void removeDeletedExpression(final CodeExpressionRef deletedExp){
-		logFiner("Remove deleted expression "+deletedExp.getCodeContent());
+		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+			JavaVEPlugin.log("BDM Merger >> "+"Remove deleted expression "+deletedExp.getCodeContent(), Level.FINER);
 		deletedExp.dispose() ;
 	}
 	
@@ -764,7 +767,8 @@ public class BDMMerger {
 	 */
 	private CodeExpressionRef createNewExpression(CodeExpressionRef e, CodeMethodRef m, boolean decode) throws CodeGenException{
 		if (getMainBDMExpression(e) != null) {
-			logFiner("Ignoring creation of duplicate Expression" + e.getCodeContent()) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+				JavaVEPlugin.log("BDM Merger >> "+"Ignoring creation of duplicate Expression" + e.getCodeContent(), Level.FINER);
 			return null;
 		}
 		BeanPart b = getMainBDMBean(e.getBean()) ;
@@ -783,7 +787,8 @@ public class BDMMerger {
 	}
 	
 	protected boolean addNewExpression(final CodeExpressionRef updateExp) {
-		logFiner("Adding new expression "+updateExp.getCodeContent());
+		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+			JavaVEPlugin.log("BDM Merger >> "+"Adding new expression "+updateExp.getCodeContent(), Level.FINER);
 		try {
 			// Potentially for now, we do not decode if this flag is set. The expression
 			// could still have a decoder though - for reasons like priority etc. 
@@ -982,7 +987,8 @@ public class BDMMerger {
 			if (!newBP.getSimpleName().equals(BeanPart.THIS_NAME)) {
 				if (!(obj instanceof IJavaObjectInstance)) {
 					obj = null;
-					JavaVEPlugin.log("Bad Object: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+					if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+						JavaVEPlugin.log("Bad Object: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else { // a this part
 				if (obj != null) {
@@ -993,7 +999,8 @@ public class BDMMerger {
 			}
 
 			if (obj == null) {
-				JavaVEPlugin.log("Could not create a JavaObjectInstance for: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("Could not create a JavaObjectInstance for: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				err.add(newBP);
 				// Children will not be connected to the VCE model
 				Iterator bItr = newBP.getChildren();
@@ -1022,7 +1029,8 @@ public class BDMMerger {
 				}
 			}
 		} catch (CodeGenException e) {
-			JavaVEPlugin.log("Exception when creating EObject for BeanPart "+newBP.getType()+" with message "+e.getMessage(), Level.WARNING) ;
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log("Exception when creating EObject for BeanPart "+newBP.getType()+" with message "+e.getMessage(), Level.WARNING) ;
 		}
 		return err;
 	}
@@ -1039,14 +1047,16 @@ public class BDMMerger {
 		newBP.setModel(mainModel) ;
 		newBP.setIsInJVEModel(false) ;
 		mainModel.addBean(newBP);
-		logFiner("Created new BP "+newBP.getSimpleName());
+		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+			JavaVEPlugin.log("BDM Merger >> "+"Created new BP "+newBP.getSimpleName(), Level.FINER);
 		
 		CodeMethodRef initMethod = null ;
 		if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
 			// Init method of the bean is not present in the main model - 
 			// add it to the main model, and hook the bean part up.
 			initMethod = createNewMainMethodRef(referenceBP.getInitMethod()) ;
-			logFiner("Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName());
+			if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+				JavaVEPlugin.log("BDM Merger >> "+"Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName(), Level.FINER);
 		}
 		newBP.addInitMethod(initMethod);
 		
@@ -1077,10 +1087,6 @@ public class BDMMerger {
 		return true;
 	}
 	
-	protected void logFiner(String message){
-		JavaVEPlugin.log("BDM Merger >> "+message, Level.FINER);
-	}
-	
 	protected boolean createThisBean(final BeanPart referenceBP){
 		mainModel.setTypeDecleration(referenceBP.getModel().getTypeDecleration());
 		IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(mainModel).getRule(IThisReferenceRule.RULE_ID) ;
@@ -1097,7 +1103,8 @@ public class BDMMerger {
 			BeanPartFactory bpg = new BeanPartFactory(mainModel,null) ;
 			// No Init method yet.
 			BeanPart thisBP = bpg.createThisBeanPartIfNeeded(null) ;
-			logFiner("Successfully created this bean part : "+ thisBP.getSimpleName());
+			if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+				JavaVEPlugin.log("BDM Merger >> "+"Successfully created this bean part : "+ thisBP.getSimpleName(), Level.FINER);
 
 			CodeMethodRef initMethod = null ;
 			if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
@@ -1111,7 +1118,8 @@ public class BDMMerger {
 						createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
 						updatedMethodRef.getContent()) ; 
 				initMethod.setModel(mainModel) ;
-				logFiner("Successfully created init method for this bean part "+initMethod.getMethodHandle());
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Successfully created init method for this bean part "+initMethod.getMethodHandle(), Level.FINER);
 			}
 			thisBP.addInitMethod(initMethod);
 			
@@ -1120,7 +1128,8 @@ public class BDMMerger {
 				// Error instantiaging the bean - error beans returned
 				for (Iterator iter = errorBeans.iterator(); iter.hasNext();) {
 					BeanPart errBP = (BeanPart) iter.next();
-					logFiner("Disposing bean part "+errBP.getSimpleName()+" when createing java instance for "+referenceBP.getSimpleName());
+					if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+						JavaVEPlugin.log("BDM Merger >> "+"Disposing bean part "+errBP.getSimpleName()+" when createing java instance for "+referenceBP.getSimpleName(), Level.FINER);
 					errBP.dispose() ;
 				}
 			}else{
@@ -1175,8 +1184,8 @@ public class BDMMerger {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
 			if(newModel.getABean(mainBean.getUniqueName())==null){
-				// Bean has been removed - hence remove
-				logFiner("Removing deleted bean "+ mainBean.getSimpleName());
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ mainBean.getSimpleName(), Level.FINER);
 				removed = removed && removeDeletedBean( mainBean ); 
 			}else{
 				// Remove bean if type has changed
@@ -1203,16 +1212,17 @@ public class BDMMerger {
 					// If extends there, then reload from scratch
 					if(isMainBeanThisPart){
 						if(newBeanExtendsName==null){
-							// extends has been removed - just delete the this bean
-							logFiner("Removing THIS bean ");
+							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+								JavaVEPlugin.log("BDM Merger >> "+"Removing THIS bean ", Level.FINER);
 							removed = removed && removeDeletedBean( mainBean );
 						}else{
-							// extends is present - do a RLFS
-							logFiner("This part's type has changed - will need to reload");
+							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+								JavaVEPlugin.log("BDM Merger >> "+"This part's type has changed - will need to reload", Level.FINER);
 							return false;
 						}
 					}else{
-						logFiner("Removing changed type bean "+ mainBean.getSimpleName());
+						if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+							JavaVEPlugin.log("BDM Merger >> "+"Removing changed type bean "+ mainBean.getSimpleName(), Level.FINER);
 						removed = removed && removeDeletedBean( mainBean );
 					}
 				}else{
@@ -1222,7 +1232,8 @@ public class BDMMerger {
 						String mainMethodHandle = mainMethod.getMethodHandle();
 						String newMethodHandle = newMethod.getMethodHandle();
 						if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
-							logFiner("Removing changed init method bean "+mainBean.getSimpleName());
+							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+								JavaVEPlugin.log("BDM Merger >> "+"Removing changed init method bean "+mainBean.getSimpleName(), Level.FINER);
 							removed = removed && removeDeletedBean( mainBean );
 						}
 					}
@@ -1273,7 +1284,8 @@ public class BDMMerger {
 					// If the method doesnt exist create it..
 					if(initMethod==null){
 						initMethod = createNewMainMethodRef(beanPart.getInitMethod()) ;
-						logFiner("Created new init method "+initMethod.getMethodHandle()+" for THIS part");
+						if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+							JavaVEPlugin.log("BDM Merger >> "+"Created new init method "+initMethod.getMethodHandle()+" for THIS part", Level.FINER);
 					}
 					mainBP.addInitMethod(initMethod);
 				}

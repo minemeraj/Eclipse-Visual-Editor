@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCObjectDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.6 $  $Date: 2004-12-16 18:36:42 $ 
  */
 
 
@@ -55,16 +55,16 @@ protected void initialFeatureMapper(EStructuralFeature sf) {
          fFeatureMapper.setFeature(sf) ;
 }
 
-protected void initialDecoderHelper() {
-	// Bind an Attribute Mapper
-	if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance)fbeanPart.getEObject(), false))  {
-		JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for "+fFeatureMapper.getFeature(null), //$NON-NLS-1$
-		Level.FINE) ;
-		fhelper = new JFCChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
+	protected void initialDecoderHelper() {
+		// Bind an Attribute Mapper
+		if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance) fbeanPart.getEObject(), false)) {
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for " + fFeatureMapper.getFeature(null), //$NON-NLS-1$
+						Level.FINE);
+			fhelper = new JFCChildRelationshipDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+		} else
+			super.initialDecoderHelper();
 	}
-	else
-		super.initialDecoderHelper() ;	
-}
 
 protected boolean isSimpleObject(IJavaObjectInstance obj) {
     if (super.isSimpleObject(obj)) return true ;

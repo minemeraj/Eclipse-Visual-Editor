@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: StrategyWorker.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.List;
@@ -99,41 +99,39 @@ public class StrategyWorker implements Runnable{
    * When the connection is done, the worker returns itself to the worker pool and goes back to wait
    * for a new connection.
    */
-public void run () {
-  	
-  workerThread = Thread.currentThread();	
-  mainloop: while (cont) {
+public void run() {
 
-    try {
-  	
-  	  waitForStrategy() ;
-	  /* save a reference to this thread */
-	
+	workerThread = Thread.currentThread();
+	mainloop: while (cont) {
 
-  	  JavaVEPlugin.log ("StrategyWorker running: "+fStrategy.getClass().getName(), Level.FINE) ; //$NON-NLS-1$
-  	  if (fMonitor == null || !fMonitor.isCanceled()) {
-  	  	fStrategy.run(fdisplay,fWorkingCopy, fLockManager, fAllEvents, fMonitor) ;  	     	  	   
-  	  }
-  	  
-    } 
-    catch (InterruptedException e) {}
-    catch (Throwable t) {
-    	try {
-    	 JavaVEPlugin.log(t, Level.WARNING) ;
-    	}
-    	catch (Throwable tt) {}
-    }
-    finally {
-    	fStrategy = null ;
-    	fWorkingCopy = null ;
-    	fAllEvents = null;
-    	fLockManager = null;  	
-    	if (fMonitor != null)
-    	   fMonitor.setCompleted() ;
-    	fMonitor = null ;
-    	fPool.returnWorker(this);	
-    }
-  }		
+		try {
+
+			waitForStrategy();
+			/* save a reference to this thread */
+
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("StrategyWorker running: " + fStrategy.getClass().getName(), Level.FINE); //$NON-NLS-1$
+			if (fMonitor == null || !fMonitor.isCanceled()) {
+				fStrategy.run(fdisplay, fWorkingCopy, fLockManager, fAllEvents, fMonitor);
+			}
+
+		} catch (InterruptedException e) {
+		} catch (Throwable t) {
+			try {
+				JavaVEPlugin.log(t, Level.WARNING);
+			} catch (Throwable tt) {
+			}
+		} finally {
+			fStrategy = null;
+			fWorkingCopy = null;
+			fAllEvents = null;
+			fLockManager = null;
+			if (fMonitor != null)
+				fMonitor.setCompleted();
+			fMonitor = null;
+			fPool.returnWorker(this);
+		}
+	}
 }  
   
   private synchronized void waitForStrategy() throws InterruptedException {

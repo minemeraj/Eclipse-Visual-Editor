@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
@@ -85,7 +86,8 @@ protected boolean isDuplicate() {
 		     return true ;
 		}
 		catch (CodeGenException exp) {
-			JavaVEPlugin.log("CodeExpressionRef.isDuplicate():  can not determine: "+this) ;	 //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("CodeExpressionRef.isDuplicate():  can not determine: "+this) ;	 //$NON-NLS-1$
 		}
 	}	
 	return result ;

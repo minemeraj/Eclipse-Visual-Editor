@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:58 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -116,7 +116,7 @@ public void visit(){
 	if (fExpression.getExprStmt() instanceof ExpressionStatement &&
 	    ((ExpressionStatement)fExpression.getExprStmt()).getExpression() instanceof MethodInvocation)
 	   processAMessageSend () ;
-    else
+    else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
        JavaVEPlugin.log ("\t[Event] ExpressionVisitor: *** did not process Expression:"+fExpression, Level.FINE) ; //$NON-NLS-1$
 
 }

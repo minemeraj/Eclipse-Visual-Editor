@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -258,8 +258,9 @@ protected void processMembers(Notification msg) {
 		      }		     
 		     break ;		     		    
 	      default:
+	      	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
-	           return ;
+	        return ;
 	}
 	
 }
@@ -283,7 +284,8 @@ public void notifyChanged(Notification msg){
 			// Do nothing
 			break;
 		default :
-			JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: " + msg.getFeature(), Level.FINE); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: " + msg.getFeature(), Level.FINE); //$NON-NLS-1$
 			return ;
 	}
       
@@ -342,7 +344,8 @@ public void notifyChanged(Notification msg){
              }
              break ;		     
 	}
-	JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
  }
  catch (Throwable t) {
      JavaVEPlugin.log(t, Level.WARNING) ;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.7 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -31,6 +31,8 @@ import org.eclipse.ve.internal.jcm.BeanDecorator;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import com.ibm.wtp.common.logger.proxy.Logger;
  
 /**
  * 
@@ -70,15 +72,25 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
 			CDEPlugin.setInitializationData(fact, layoutFactoryClassname, null);
 			return fact;
 		} catch (ClassNotFoundException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+				logger.log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (ClassCastException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+				logger.log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (InstantiationException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+				logger.log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (IllegalAccessException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+				logger.log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		} catch (CoreException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+				logger.log(new Status(IStatus.WARNING, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		}
 	}
 	return null;

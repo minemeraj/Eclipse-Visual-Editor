@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2004-10-15 22:46:02 $ 
+ *  $Revision: 1.16 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -590,8 +590,11 @@ public void notifyChanged(Notification msg){
 		     action = "REMOVING_ADAPTER" ;		      //$NON-NLS-1$
 		     break;
 	}
-	JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
-JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), Level.FINE) ;	 //$NON-NLS-1$
+	
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE)) {
+		JavaVEPlugin.log(this+" action= "+action, Level.FINE) ; //$NON-NLS-1$
+		JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), Level.FINE) ;	 //$NON-NLS-1$
+	}
 	
 	  // Note: this doesn't handle add_many/remove_many, but currently we don't do that.
       switch (msg.getEventType()) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.10 $  $Date: 2004-11-16 19:45:10 $ 
+ *  $Revision: 1.11 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -186,9 +186,10 @@ public class EventMethodVisitor extends MethodVisitor {
 				processMessageSend((MethodInvocation)es.getExpression()) ;
 			else
 //				new EventExpressionVisitor(fBean, fMethod,  stmt, fModel, fESigs, fastDom).visit();	
-				JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
 		}
-		else
+		else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 			JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
 	}
 	

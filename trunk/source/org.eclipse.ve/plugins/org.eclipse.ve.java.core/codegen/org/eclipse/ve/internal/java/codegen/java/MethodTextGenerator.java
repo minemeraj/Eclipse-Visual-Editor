@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.18 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.19 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -136,7 +136,8 @@ public void generateExpressionsContent() throws CodeGenException {
 			String src = newExpr.getContent();
 			if (src == null)
 				throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-			JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$	
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$	
 		}
 	}
 	
@@ -166,7 +167,8 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 			String src = newExpr.getContent();
 			if (src == null)
 				throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-			JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
 			if (!updateDoc)
 				newExpr.setOffset(buf.length());
 			buf.append(src);
@@ -209,7 +211,8 @@ protected void GenerateAChild(StringBuffer buf,BeanPart bean, BeanPart child,ESt
     CodeExpressionRef newExpr = GenerateAttribute(sf,bean,new Object[] { actualChild },false) ; ;
 	String src =  newExpr.getContent() ;
 	if (src == null) {
-		JavaVEPlugin.log ("No Source Generated for "+bean.getUniqueName()+"("+sf+")", Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+			JavaVEPlugin.log ("No Source Generated for "+bean.getUniqueName()+"("+sf+")", Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return ;
 	}	
     
