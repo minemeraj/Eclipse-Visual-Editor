@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-23 12:45:36 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-23 21:04:08 $ 
  */
 
 import java.util.*;
@@ -78,7 +78,7 @@ protected IInstanceVariableCreationRule getVarRule() {
  */
 protected void  generateInLineBean (IJavaObjectInstance component, CodeMethodRef mref, String varName,  List kids, ICompilationUnit cu) throws CodeGenException {
     
-    MethodTextGenerator mgen = new MethodTextGenerator(component,fBeanModel) ;
+    IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel);
     mgen.generateInLine(mref,varName,kids) ;
     
     
@@ -86,7 +86,7 @@ protected void  generateInLineBean (IJavaObjectInstance component, CodeMethodRef
 
  protected void  generateLocalVariable (IJavaObjectInstance component, CodeMethodRef mref, String varName,  ICompilationUnit cu) throws CodeGenException {
     
-    MethodTextGenerator mgen = new MethodTextGenerator(component,fBeanModel) ;
+    IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel) ;
     mgen.generateInLine(mref,varName,new ArrayList()) ;
     
     
@@ -137,69 +137,6 @@ private void fixOffsetsIfNeeded(IMethod imethod, CodeMethodRef mref) throws Code
 
    fixOffsetIfNeeded(src,mref) ;        
 }
-/**
- * @deprecated
- */
-
-protected void generateMethodAndVar(BeanPart bp, IJavaObjectInstance component, CodeMethodRef mref, String varName, String methodName, List kids, ICompilationUnit cu) throws CodeGenException {
-
-      IType cuType = CodeGenUtil.getMainType(cu) ;
-
-      MethodTextGenerator mgen = new MethodTextGenerator(component,fBeanModel) ;
-//	  if (((IJavaObjectInstance)component).isImplicit()) {// No need to generate a method/inst.Var    
-//	    IJavaObjectInstance p = CodeGenUtil.getParent((IJavaObjectInstance)component,fCompositionModel) ;
-//    	    if (p==null) throw new CodeGenException("Could not find parent of implicit: "+varName) ;    	
-//    	    // Parent was not processed yet (most likely)
-//    	    String pName = getVarRule().getInstanceVariableName(p,cuType,fCompositionModel) ;
-//    	    mgen.setComments(new String[] {"Implicit Defenition from "+pName}) ;
-//	  }
-	
-	  String newMSrc = mgen.generate(mref,methodName,varName,kids) ;
-		    
-      IMethod newMethod=null ;
-      // Create it as the last method 
-      try {           	                        		
-        newMethod = cuType.createMethod(newMSrc,getSiblingForNewMEthod(cuType, false, false),false,null) ;            
-        mref.setMethodHandle(newMethod.getHandleIdentifier()) ;       
-        // empty lines may shift to other methods
-        mref.setContent(newMethod.getSource()) ;
-//        if (newMSrc.length() != newMethod.getSource().length()) {
-//             System.out.println ("JavaSourceTranslator.processAComponent(): newMethodSource("+newMSrc.length()+") JDOM("+newMethod.getSource().length()+")") ;
-//        }
-        fBeanModel.addMethodInitializingABean(mref) ;          
-     }
-     catch (JavaModelException e) {
-    	 JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-    	 throw new CodeGenException(e) ;
-     }    
-    InstanceVariableTemplate ft = new InstanceVariableTemplate(varName,
-                                                              ((IJavaObjectInstance)component).getJavaType().getQualifiedName(),
-                                                              INSTANCE_VAR_DEFAULT_COMMENT) ;
-    // Create it as the last field
-    ft.setSeperator(fBeanModel.getLineSeperator()) ;
-    setFreeFormAnnotation(ft,bp) ;
-    IField field = null ; 
-    try {
-      field = cuType.createField(ft.toString(),null,false,null) ;            
-      if (field != null) {
-          bp.setFieldDeclHandle(field.getHandleIdentifier()) ;
-      }
-         
-    }
-    catch (JavaModelException e) {
-      throw new CodeGenException(e) ;
-    }     
-    JavaVEPlugin.log("Adding Instance Var: \n"+ft+"\n", MsgLogger.LOG_FINE) ;		                 //$NON-NLS-1$ //$NON-NLS-2$
-    JavaVEPlugin.log("Adding JCMMethod: \n"+newMSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$
-    //mref.setMethod(CodeGenUtil.refreshMethod(newMethod)) ;
-    mref.refreshIMethod();
-    
-    CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;  
-    // Workaround, as the create method may create a method which include other comments,etc.
-    fixOffsetsIfNeeded(newMethod,mref) ;
-    
-}
-
 protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor, boolean topMost){
 	IMethod sibling = null;
 	try {
@@ -230,7 +167,7 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 
       IType cuType = CodeGenUtil.getMainType(cu) ;
 
-      MethodTextGenerator mgen = new MethodTextGenerator(component,fBeanModel) ;
+      IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel) ;
 	  String newMSrc = mgen.generateMethod(mref,methodName, bp.getSimpleName()) ;
 		    
       IMethod newMethod=null ;

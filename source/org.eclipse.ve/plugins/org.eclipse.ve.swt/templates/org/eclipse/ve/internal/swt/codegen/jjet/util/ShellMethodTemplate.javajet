@@ -1,0 +1,26 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: ShellMethodTemplate.javajet,v $
+ *  $Revision: 1.1 $
+ */
+ 
+ // This Method is expected to generate a create method for a Shell object
+ // see AbstractMethodTextGenerator.MethodInfo for more information regarding the info structure
+  
+%><%@ jet skeleton="MethodSkelaton.java" 
+        package="org.eclipse.ve.internal.swt.codegen.jjet.util" 
+        class="ShellMethodTemplate"
+%>
+	/**
+<%// Generate method JavaDoc/Comments
+	for(int i=0; i<info.fComments.length; i++) { %>
+	 * <%=info.fComments[i]%>	
+<%}
+%>
+	 *
+	 */    
+	private void <%=info.fmethodName%> () {
+		<%=info.fbeanType%> <%=info.fbeanName%> = new <%=info.fbeanType%>();
+	}
+ 

@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-23 21:04:08 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -26,6 +27,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -171,6 +173,16 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		return name;
 	}
 
+	protected String addPrefix (EObject obj, String name, IDiagramModelInstance cm) {
+        JavaClassImpl c = null ;
+        c = (JavaClassImpl)CodeGenUtil.getMetaClass("org.eclipse.swt.widgets.Widget",cm) ;        
+		if (c!= null) {
+             EClassifier o = (EClassifier)obj.eClass() ;
+             if (c.isAssignableFrom(o))  
+                 return addPrefix(SWT_METHOD_PREFIX,name) ;
+        }        
+        return addPrefix(DEFAULT_METHOD_PREFIX,name) ;
+	}
 	/**
 	 *  
 	 *  
@@ -183,7 +195,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		String name = InstanceName;
 		//	int index = name.indexOf(DEFAULT_VAR_PREFIX)+DEFAULT_VAR_PREFIX.length() ;
 
-		String methodName = addPrefix(DEFAULT_METHOD_PREFIX, name);
+		String methodName = addPrefix(obj, name, cm);
 		String ori = methodName;
 
 		int Index = 2;
