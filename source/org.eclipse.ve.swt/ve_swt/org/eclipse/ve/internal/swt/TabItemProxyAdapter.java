@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-20 20:53:28 $ 
+ *  $Revision: 1.2 $  $Date: 2004-09-07 14:24:05 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  */
 public class TabItemProxyAdapter extends WidgetProxyAdapter {
 
-	private EStructuralFeature sf_text;
+	private EStructuralFeature sf_text,sf_image;
 
 	private EReference sf_items;
 
@@ -54,7 +54,7 @@ public class TabItemProxyAdapter extends WidgetProxyAdapter {
 		if (!isBeanProxyInstantiated())
 			return; // Nothing to apply to yet or could not construct.
 		super.applied(sf, newValue, position); // We letting the settings go through
-		if (sf == sf_text && getTabFolderProxyAdapter() != null)
+		if (((sf == sf_image)||(sf == sf_text)) && getTabFolderProxyAdapter() != null)
 			getTabFolderProxyAdapter().validateBeanProxy();
 	}
 
@@ -99,6 +99,7 @@ public class TabItemProxyAdapter extends WidgetProxyAdapter {
 		super.setTarget(newTarget);
 		if (newTarget != null) {
 			sf_text = ((IJavaObjectInstance) newTarget).eClass().getEStructuralFeature("text"); //$NON-NLS-1$
+			sf_image = ((IJavaObjectInstance) newTarget).eClass().getEStructuralFeature("image"); //$NON-NLS-1$
 			sf_items = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TABFOLDER_ITEMS);
 		}
 	}
