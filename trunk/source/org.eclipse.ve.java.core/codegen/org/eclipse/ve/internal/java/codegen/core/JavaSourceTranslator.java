@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.19 $  $Date: 2004-04-02 19:46:32 $ 
+ *  $Revision: 1.20 $  $Date: 2004-04-02 20:11:08 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1115,8 +1115,11 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	}
 	
 	protected void fireParseError(boolean error) {
-		fparseError=error;		
-		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
+		fparseError=error;	
+		if (error)
+		    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
+		else
+			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
 	    }
