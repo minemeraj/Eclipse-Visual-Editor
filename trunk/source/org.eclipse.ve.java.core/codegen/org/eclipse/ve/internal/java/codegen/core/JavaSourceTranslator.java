@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.16 $  $Date: 2004-04-01 00:51:21 $ 
+ *  $Revision: 1.17 $  $Date: 2004-04-02 00:11:10 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1283,7 +1283,6 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	}
 	
 	protected void fireParseError(boolean error) {
-		if (error==fparseError) return ;
 		fparseError=error;
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-02 00:11:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -114,10 +114,11 @@ public class ReloadAction extends Action {
 			setText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
 			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif"));
 			setChecked(true);
-			setEnabled(true);
 		} else {
 			setChecked(false);
 			setCorrectText();
+			setEnabled(false);
+			setEnabled(true);	// Kludge. The button is not redrawing correctly. without cycling through the enabled state, it shows the new icon superimposed over the old one.
 		}
 	}
 }
