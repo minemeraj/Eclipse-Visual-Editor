@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 
@@ -25,7 +25,6 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;

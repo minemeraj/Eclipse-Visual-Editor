@@ -11,16 +11,18 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:10 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.core.*;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -89,36 +91,30 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	public IBeanProxy instantiateBeanProxy() {
 		if (beanProxy == null) {
 			IJavaDataTypeInstance jTarget = (IJavaDataTypeInstance) target;
-			String qualifiedClassName = jTarget.getJavaType().getQualifiedName();	// I'm primitive, so I know I don't need to do for reflection get name.
-			IBeanTypeProxy targetClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(qualifiedClassName);
 
-			if (jTarget.isSetInitializationString()) {
-				String initializationString = jTarget.getInitializationString();
-				try {
-					beanProxy = targetClass.newInstance(initializationString);
-					ownsProxy = true;
-				} catch (ThrowableProxy exc) {
-					processInstantiationError(exc);					
-					JavaVEPlugin.log("Could not instantiate " //$NON-NLS-1$
-					+qualifiedClassName + " with initialization string=" //$NON-NLS-1$
-					+initializationString, MsgLogger.LOG_WARNING);
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-				} catch (InstantiationException exc) {
-					processInstantiationError(exc);					
-					JavaVEPlugin.log("Could not instantiate " //$NON-NLS-1$
-					+qualifiedClassName + " with initialization string=" //$NON-NLS-1$
-					+initializationString, MsgLogger.LOG_WARNING);
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-				}
-			} else {
-				try {
-					beanProxy = targetClass.newInstance();
-					ownsProxy = true;
-				} catch (ThrowableProxy exc) {
-					processInstantiationError(exc);					
-					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, MsgLogger.LOG_WARNING); //$NON-NLS-1$
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-				}
+			if (jTarget.isSetAllocation()) {
+				JavaAllocation allocation = jTarget.getAllocation();
+				IAllocationAdapter allocAdapter = (IAllocationAdapter) EcoreUtil.getRegisteredAdapter(allocation, IAllocationAdapter.class);
+				if (allocAdapter != null) {
+					try {
+						ownsProxy = true;
+						beanProxy = allocAdapter.allocate(allocation, domain);
+					} catch (IAllocationAdapter.AllocationException e) {
+						processInstantiationError(e);
+					}
+					return beanProxy;
+				};
+			}
+			
+			String qualifiedClassName = jTarget.getJavaType().getQualifiedNameForReflection();
+			IBeanTypeProxy targetClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(qualifiedClassName);
+			try {
+				beanProxy = targetClass.newInstance();
+				ownsProxy = true;
+			} catch (ThrowableProxy exc) {
+				processInstantiationError(exc);
+				JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, MsgLogger.LOG_WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
 			}
 		}
 

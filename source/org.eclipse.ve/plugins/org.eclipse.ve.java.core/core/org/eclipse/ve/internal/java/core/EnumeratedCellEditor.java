@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
@@ -78,10 +78,8 @@ protected Object doGetObject(int index){
 		bean = (IJavaObjectInstance)BeanProxyUtilities.wrapperBeanProxy(
 			fBeanProxies[index],
 			JavaEditDomainHelper.getResourceSet(fEditDomain),
+			fInitStrings[index],
 			true);	// Since we are getting a new value, we own it. (By definition, editors are supposed to return new instances).
-		if (bean != null) {
-			((IJavaObjectInstance)bean).setInitializationString(fInitStrings[index]);
-		}
 	}
 	return bean;	
 	

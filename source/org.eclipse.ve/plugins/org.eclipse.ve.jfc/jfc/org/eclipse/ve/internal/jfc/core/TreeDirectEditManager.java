@@ -11,61 +11,56 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TreeDirectEditManager.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartListener;
-import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
 public class TreeDirectEditManager {
-	
+
 	public static final String VIEWER_DATA_KEY = "TreeDirectEditManager"; //$NON-NLS-1$
-	
+
 	private EditPartViewer viewer;
 	private Tree parentTree;
 	private TreeEditor editor;
 
 	private Text textField = null;
 
-	private String oldText;	
+	private String oldText;
 	private ComponentTreeEditPart currentComponent = null;
 	private EStructuralFeature currentProperty = null;
-	
+
 	boolean inKeyEvent = false;
 	boolean inMouseEvent = false;
-	
+
 	private EditPartListener currentEditPartListener = null;
-	
+
 	public TreeDirectEditManager(EditPartViewer v) {
 		viewer = v;
-		if ( viewer.getControl() instanceof Tree ) {
-			parentTree = (Tree)viewer.getControl();
+		if (viewer.getControl() instanceof Tree) {
+			parentTree = (Tree) viewer.getControl();
 
 			parentTree.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e){
-					if (textField != null && !textField.isDisposed()){
+				public void widgetDisposed(DisposeEvent e) {
+					if (textField != null && !textField.isDisposed()) {
 						textField.dispose();
 					}
 				}
 			});
-			
+
 			currentEditPartListener = new EditPartListener.Stub() {
 				public void partDeactivated(EditPart editPart) {
 					hideDirectEdit();
@@ -73,12 +68,12 @@ public class TreeDirectEditManager {
 			};
 		}
 	}
-	
+
 	private Text getTextField() {
 		if (textField == null) {
 			textField = new Text(parentTree, SWT.NONE);
 			textField.setBackground(textField.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-			
+
 			textField.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent f) {
 					// Ignore focus lost events from when the editor is hidden by
@@ -96,7 +91,7 @@ public class TreeDirectEditManager {
 					if (k.character == SWT.ESC) {
 						// Cancel if the escape key is pressed
 						hideDirectEdit();
-					} else if (k.character == '\r' || k.character == '\n') { 
+					} else if (k.character == '\r' || k.character == '\n') {
 						// Accept the change if the enter key is pressed
 						saveChange();
 						hideDirectEdit();
@@ -105,9 +100,9 @@ public class TreeDirectEditManager {
 				}
 			});
 		}
-        return textField;		
+		return textField;
 	}
-	
+
 	private TreeEditor getEditor() {
 		if (editor == null) {
 			editor = new TreeEditor(parentTree);
@@ -117,7 +112,7 @@ public class TreeDirectEditManager {
 		}
 		return editor;
 	}
-	
+
 	/**
 	 * Show the direct edit field for the given tree component targeting the given text property.
 	 * 
@@ -136,13 +131,13 @@ public class TreeDirectEditManager {
 		showDirectEdit();
 	}
 
-    private void showDirectEdit() {
+	private void showDirectEdit() {
 		oldText = getDirectEditText();
 		getTextField().setText(oldText);
 		getTextField().selectAll();
-		
+
 		getEditor().setEditor(getTextField());
-		getEditor().setItem((TreeItem)currentComponent.getWidget());
+		getEditor().setItem((TreeItem) currentComponent.getWidget());
 		getTextField().setVisible(true);
 		getTextField().setFocus();
 	}
@@ -152,8 +147,8 @@ public class TreeDirectEditManager {
 		if (!newText.equals(oldText) && currentComponent != null && currentProperty != null) {
 			EditDomain domain = EditDomain.getEditDomain(currentComponent);
 			RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-			IJavaObjectInstance component =	(IJavaObjectInstance) currentComponent.getModel();
-			IJavaObjectInstance stringObject = BeanUtilities.createString(component.eResource().getResourceSet(),newText);
+			IJavaObjectInstance component = (IJavaObjectInstance) currentComponent.getModel();
+			IJavaObjectInstance stringObject = BeanUtilities.createString(component.eResource().getResourceSet(), newText);
 			cb.applyAttributeSetting(component, currentProperty, stringObject);
 			domain.getCommandStack().execute(cb.getCommand());
 		}
@@ -168,7 +163,7 @@ public class TreeDirectEditManager {
 		currentComponent = null;
 		currentProperty = null;
 	}
-	
+
 	/**
 	 * Get the Direct Edit property's current value
 	 * @return  the current property value
@@ -178,22 +173,16 @@ public class TreeDirectEditManager {
 
 		if (currentComponent != null && currentProperty != null) {
 			// retrieve the property's value from the model
-			IJavaObjectInstance component =	(IJavaObjectInstance) currentComponent.getModel();
+			IJavaObjectInstance component = (IJavaObjectInstance) currentComponent.getModel();
 			if (component.eIsSet(currentProperty)) {
 				IJavaObjectInstance textObj = (IJavaObjectInstance) component.eGet(currentProperty);
 				if (textObj != null) {
-					text = textObj.getInitializationString();
-					if (text.indexOf("getString") != -1) { //$NON-NLS-1$
-						// Get the value from the remote vm of the externalized string
-						try {
-							IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost(component);
-							IBeanProxy propProxy = host.getBeanPropertyProxyValue(currentProperty);
-							text = ((IStringBeanProxy) propProxy).stringValue();
-						} catch (Exception e) {
-						}
-					} else {
-						// strip off quotes from initialization string
-						text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"'));
+					// Get the value from the remote vm of the externalized string
+					try {
+						IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost(component);
+						IBeanProxy propProxy = host.getBeanPropertyProxyValue(currentProperty);
+						text = ((IStringBeanProxy) propProxy).stringValue();
+					} catch (Exception e) {
 					}
 				}
 			}

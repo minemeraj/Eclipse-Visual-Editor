@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 
@@ -24,6 +24,8 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.ve.internal.jcm.MemberContainer;
+
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -50,10 +52,10 @@ public ConstraintDecoderHelper(BeanPart bean, Statement exp,  IJavaFeatureMapper
 public static void addRactangleFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
   if (args.length != 4) throw new RuntimeException ("Invalid Args") ;  //$NON-NLS-1$
   
-  IJavaObjectInstance value = (IJavaObjectInstance) CodeGenUtil.createInstance(RECTANGLE_CLASS,cm) ;	 //$NON-NLS-1$
-  value.setInitializationString("new "+RECTANGLE_CLASS+"("+ //$NON-NLS-1$ //$NON-NLS-2$
+  IJavaInstance value = CodeGenUtil.createInstance(RECTANGLE_CLASS,cm) ;	 //$NON-NLS-1$
+  value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+RECTANGLE_CLASS+"("+ //$NON-NLS-1$ //$NON-NLS-2$
                                         Integer.toString(args[0]) +   "," + Integer.toString(args[1]) + "," + //$NON-NLS-1$ //$NON-NLS-2$
-                                        Integer.toString(args[2])+"," + Integer.toString(args[3])+")") ;                                 //$NON-NLS-1$ //$NON-NLS-2$
+                                        Integer.toString(args[2])+"," + Integer.toString(args[3])+")"));	//$NON-NLS-1$ //$NON-NLS-2$
   CodeGenUtil.propertyCleanup(target,sf) ;                                        
   // Set the scope                                
   pOwner.getProperties().add(value) ;
@@ -68,9 +70,9 @@ public static void addRactangleFeatureValue (MemberContainer pOwner, EObject tar
 public static void addDimensionFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
   if (args.length != 2) throw new RuntimeException ("Invalid args") ; //$NON-NLS-1$
   
-  IJavaObjectInstance value = (IJavaObjectInstance) CodeGenUtil.createInstance(DIMENSION_CLASS,cm) ;	 //$NON-NLS-1$
-  value.setInitializationString("new "+DIMENSION_CLASS+"("+Integer.toString(args[0])+ //$NON-NLS-1$ //$NON-NLS-2$
-                                ","+Integer.toString(args[1])+")") ;                                 //$NON-NLS-1$ //$NON-NLS-2$
+  IJavaInstance value = CodeGenUtil.createInstance(DIMENSION_CLASS,cm) ;	 //$NON-NLS-1$
+  value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+DIMENSION_CLASS+"("+Integer.toString(args[0])+ //$NON-NLS-1$ //$NON-NLS-2$
+                                ","+Integer.toString(args[1])+")"));	//$NON-NLS-1$ //$NON-NLS-2$
                                 
   CodeGenUtil.propertyCleanup(target,sf) ;
   // Set the scope                                
@@ -203,7 +205,7 @@ protected int[]   getCompositionConstraints() throws CodeGenException {
 
   IJavaObjectInstance curValue = (IJavaObjectInstance)fbeanPart.
                                  getEObject().eGet(fFmapper.getFeature(fExpr)) ;  
-  return parseArgs(curValue.getInitializationString()) ;	
+  return parseArgs(CodeGenUtil.getInitString(curValue));	
 } 
 /**
  *  Create initialization arguments

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LocationPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EReference;
@@ -22,6 +22,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
@@ -50,9 +51,9 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 				// and SET Size with it so we don't loose that.
 				IJavaInstance boundsObject = (IJavaInstance) comp.eGet(sfComponentBounds);
 				IRectangleBeanProxy bounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(boundsObject);
-				Object newSize = BeanUtilities.createJavaObject("java.awt.Dimension", //$NON-NLS-1$
+				Object newSize = BeanUtilities.createJavaObject(JFCConstants.DIMENSION_CLASS_NAME,
 					comp.eResource().getResourceSet(),
-					DimensionJavaClassCellEditor.getJavaInitializationString(bounds.getWidth(), bounds.getHeight()));
+					DimensionJavaClassCellEditor.getJavaInitializationString(bounds.getWidth(), bounds.getHeight(), JFCConstants.DIMENSION_CLASS_NAME));
 				cb.applyAttributeSetting(comp, sfComponentSize, newSize);
 			}
 		}

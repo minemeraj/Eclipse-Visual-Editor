@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -211,7 +213,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fIconInstance = null;
 		else if (arg instanceof AllocationExpression) {
 			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.ImageIcon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			fIconInstance.setInitializationString(((AllocationExpression) arg).toString());
+			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(arg.toString()));
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fIconInstance);
 		}
 	}
@@ -313,7 +315,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		String AddedArg;
 		if (fAddedPart == null)
-			AddedArg = ((IJavaObjectInstance) fAddedInstance).getInitializationString();
+			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance);
 		else if (fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
 		else
@@ -323,19 +325,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		// TODO  Need to deal with non String instances
 		if (fTitleInstance != null)
-			finalArgs.add(fTitleInstance.getInitializationString());
+			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		if (fIconInstance != null)
-			finalArgs.add(fIconInstance.getInitializationString());
+			finalArgs.add(CodeGenUtil.getInitString(fIconInstance));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		finalArgs.add(AddedArg);
 
 		if (fToolTipInstance != null)
-			finalArgs.add(fToolTipInstance.getInitializationString());
+			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 

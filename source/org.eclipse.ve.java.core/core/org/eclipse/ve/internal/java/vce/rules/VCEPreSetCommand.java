@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.*;
@@ -28,6 +28,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
@@ -280,16 +282,20 @@ public class VCEPreSetCommand extends CommandWrapper {
 							handleValue(cbld, m, (EObject) kid, ref.isContainment(), processed);
 					}
 				} else {
-					Object kid = value.eGet(ref);
-					if (!hadChildren) {
-						if (!containment) {
-							mBldr = new CommandBuilder();
-							m = getMethod(cbld, mBldr, value, m);
+					// Don't want to process the allocation feature. That would not have any java instances in it
+					// and we don't want to force promotion of this value just for it.					
+					if (!(value instanceof IJavaInstance) || !ref.equals(JavaInstantiation.getAllocationFeature((IJavaInstance) value))) {
+						Object kid = value.eGet(ref);
+						if (!hadChildren) {
+							if (!containment) {
+								mBldr = new CommandBuilder();
+								m = getMethod(cbld, mBldr, value, m);
+							}
+							hadChildren = true;
 						}
-						hadChildren = true;
+						if (kid != null && !processed.contains(kid))
+							handleValue(cbld, m, (EObject) kid, ref.isContainment(), processed);
 					}
-					if (kid != null && !processed.contains(kid))
-						handleValue(cbld, m, (EObject) kid, ref.isContainment(), processed);
 				}
 			}
 		}

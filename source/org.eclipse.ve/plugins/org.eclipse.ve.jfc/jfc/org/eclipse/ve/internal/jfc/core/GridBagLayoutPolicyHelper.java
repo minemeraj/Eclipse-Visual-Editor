@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import java.util.*;
@@ -26,19 +26,19 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.internal.proxy.awt.*;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.jcm.BeanDecorator;
-import org.eclipse.jem.internal.java.JavaHelpers;
-import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.awt.*;
+import org.eclipse.ve.internal.jcm.BeanDecorator;
 /**
  * GridBag layout policy helper.
  *
@@ -49,11 +49,17 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	static Integer ZERO_INTEGER = new Integer(0);
 	protected ResourceSet rset;
 	List fComponents = null;
-	ArrayList childrenXYBounds, columnDividerPositions, rowDividerPositions, sortedLeftEdges, sortedRightEdges, sortedTopEdges, sortedBottomEdges = null;
+	ArrayList childrenXYBounds,
+		columnDividerPositions,
+		rowDividerPositions,
+		sortedLeftEdges,
+		sortedRightEdges,
+		sortedTopEdges,
+		sortedBottomEdges = null;
 
 	private EStructuralFeature sfGridX, sfGridY, sfGridWidth, sfGridHeight, sfWeightX, sfWeightY, sfFill, sfInsets, sfIPadX, sfIPadY;
 
-	private JavaHelpers primInt, primDouble;
+	private JavaHelpers primInt, primDouble, gridBagConstraints;
 
 	private EObject layoutTable[][];
 
@@ -189,7 +195,11 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		ArrayList constraints = new ArrayList(components.size());
 		for (int i = 0; i < components.size(); i++) {
 			// Find the nearby Column and Row dividers
-			int nearestLeftColumnDivider = 0, nearestRightColumnDivider = 0, nearestAboveRowDivider = 0, nearestBelowRowDivider = 0, position = 0;
+			int nearestLeftColumnDivider = 0,
+				nearestRightColumnDivider = 0,
+				nearestAboveRowDivider = 0,
+				nearestBelowRowDivider = 0,
+				position = 0;
 			Rectangle childBounds = getBounds((IJavaObjectInstance) components.get(i));
 			// find the nearest left column divider
 			for (int j = 0; j < getColumnDividerPositions().size(); j++) {
@@ -227,7 +237,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 					childBounds.y - ((Integer) getRowDividerPositions().get(nearestAboveRowDivider)).intValue(),
 					childBounds.x - ((Integer) getColumnDividerPositions().get(nearestLeftColumnDivider)).intValue(),
 					((Integer) getRowDividerPositions().get(nearestBelowRowDivider)).intValue() - (childBounds.y + childBounds.height),
-					((Integer) getColumnDividerPositions().get(nearestRightColumnDivider)).intValue() - (childBounds.x + childBounds.width));
+					((Integer) getColumnDividerPositions().get(nearestRightColumnDivider)).intValue()
+						- (childBounds.x + childBounds.width));
 			// Calculate the padding.
 			Dimension dim = getPreferredSize((IJavaObjectInstance) components.get(i));
 			int ipadx = childBounds.width - dim.width;
@@ -283,7 +294,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 				IJavaObjectInstance comp = (IJavaObjectInstance) fComponents.get(i);
 				IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(comp);
 				IRectangleBeanProxy rectangleProxy = (IRectangleBeanProxy) BeanAwtUtilities.invoke_getBounds(compProxy);
-				Rectangle r = new Rectangle(rectangleProxy.getX(), rectangleProxy.getY(), rectangleProxy.getWidth(), rectangleProxy.getHeight());
+				Rectangle r =
+					new Rectangle(rectangleProxy.getX(), rectangleProxy.getY(), rectangleProxy.getWidth(), rectangleProxy.getHeight());
 				childrenXYBounds.add(i, r);
 			}
 		}
@@ -349,7 +361,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		if (aContainerBeanProxy != null) {
 			IMethodProxy getComponentCountMethodProxy = aContainerBeanProxy.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aContainerBeanProxy.getTypeProxy().getTypeName(), "getComponentCount", null); //$NON-NLS-1$
 			if (getComponentCountMethodProxy != null) {
-				IIntegerBeanProxy countProxy = (IIntegerBeanProxy) getComponentCountMethodProxy.invokeCatchThrowableExceptions(aContainerBeanProxy);
+				IIntegerBeanProxy countProxy =
+					(IIntegerBeanProxy) getComponentCountMethodProxy.invokeCatchThrowableExceptions(aContainerBeanProxy);
 				if (countProxy != null && countProxy.intValue() > 0)
 					return false;
 			}
@@ -405,7 +418,11 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	 */
 	protected int getGridBagConstraintsFillPreference(IJavaObjectInstance component) {
 
-		BeanDecorator bd = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature((EClassifier) component.getJavaType(), BeanDecorator.class, GRIDBAG_FILL_PREFERENCE_KEY);
+		BeanDecorator bd =
+			(BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
+				(EClassifier) component.getJavaType(),
+				BeanDecorator.class,
+				GRIDBAG_FILL_PREFERENCE_KEY);
 		if (bd != null) {
 			return ((EEnumLiteral) bd.getKeyedValues().get(GRIDBAG_FILL_PREFERENCE_KEY)).getValue();
 		}
@@ -486,7 +503,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 									int gridWidth = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
 									if (gridWidth > 1) {
 										for (int i = 1; i < gridWidth && (x + i) < layoutTable.length; i++) {
-											layoutTable[x+i][y] = gridbagComponent;
+											layoutTable[x + i][y] = gridbagComponent;
 										}
 									}
 								}
@@ -495,7 +512,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 									int gridHeight = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
 									if (gridHeight > 1) {
 										for (int i = 1; i < gridHeight && (y + i) < layoutTable[0].length; i++) {
-											layoutTable[x][y+i] = gridbagComponent;
+											layoutTable[x][y + i] = gridbagComponent;
 										}
 									}
 								}
@@ -529,18 +546,19 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 						 * cell location to its left or above, don't adjust because it's already
 						 * been processed and has gridx or gridy greater than 1 (i.e. spans more than 1 cell).
 						 */
-						if ( (i-1 >= 0 && gridbagConstraintComponent == table[i-1][j]) ||
-								(j-1 >= 0 && gridbagConstraintComponent == table[i][j-1]) )
+						if ((i - 1 >= 0 && gridbagConstraintComponent == table[i - 1][j])
+							|| (j - 1 >= 0 && gridbagConstraintComponent == table[i][j - 1]))
 							continue;
 						/*
 						 * If this component at this location is the actual component that is the target of this
 						 * request, do not adjust it since it's being moved and it's apply command is handled elsewhere.
-						 */ 
+						 */
 						IJavaObjectInstance gridbagcomponent = (IJavaObjectInstance) gridbagConstraintComponent.eGet(sfConstraintComponent);
 						if (gridbagcomponent != null && gridbagcomponent == child)
 							continue;
 						// If this component is affected based on it's position to the new column and/or row, increment it's gridx and/or gridy	
-						IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) gridbagConstraintComponent.eGet(sfConstraintConstraint);
+						IJavaObjectInstance gridbagconstraint =
+							(IJavaObjectInstance) gridbagConstraintComponent.eGet(sfConstraintConstraint);
 						if (gridbagconstraint != null) {
 							RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
 							boolean constraintChanged = false;
@@ -681,17 +699,17 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	public boolean isCellValidForMove(Point targetCellLocation, EObject constraintComponent) {
 		int x = targetCellLocation.x;
 		int y = targetCellLocation.y;
-		
+
 		Dimension dim = getComponentGridDimensions(constraintComponent);
 		if (dim != null) {
 			for (int i = 0; i < dim.width; i++) {
-				if (!isCellEmpty(x + i, y) &&  getCellOccupant(x + i, y) != constraintComponent)
-					return false; 
-		}
+				if (!isCellEmpty(x + i, y) && getCellOccupant(x + i, y) != constraintComponent)
+					return false;
+			}
 			for (int i = 0; i < dim.height; i++) {
-				if (!isCellEmpty(x, y + i) &&  getCellOccupant(x, y + i) != constraintComponent)
-		return false;
-	}
+				if (!isCellEmpty(x, y + i) && getCellOccupant(x, y + i) != constraintComponent)
+					return false;
+			}
 		}
 		return true;
 	}
@@ -733,13 +751,13 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 				return new Dimension(gridWidth, gridHeight);
 			}
 		}
-			
+
 		return null;
 	}
 	// Return the constraint component that occupies a specific cell location
 	protected EObject getCellOccupant(int x, int y) {
 		EObject[][] table = getLayoutTable();
-		if (table.length != 0 && table[0].length != 0 && x >=0 && x < table.length && y >= 0 && y < table[0].length)
+		if (table.length != 0 && table[0].length != 0 && x >= 0 && x < table.length && y >= 0 && y < table[0].length)
 			return table[x][y];
 		return null;
 	}
@@ -773,8 +791,9 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			sfIPadX = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADX);
 			sfIPadY = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADY);
 
-			primInt = (JavaHelpers) Utilities.getJavaClass("int", rset); //$NON-NLS-1$
-			primDouble = (JavaHelpers) Utilities.getJavaClass("double", rset); //$NON-NLS-1$
+			primInt = Utilities.getJavaClass("int", rset); //$NON-NLS-1$
+			primDouble = Utilities.getJavaClass("double", rset); //$NON-NLS-1$
+			gridBagConstraints = Utilities.getJavaClass("java.awt.GridBagConstraints", rset);
 		}
 		resetLists();
 	}
@@ -795,7 +814,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		EObject cc = InverseMaintenanceAdapter.getIntermediateReference(component, sfComponents, sfConstraintComponent, component);
 		if (cc != null) {
 			IJavaObjectInstance constraintObject = (IJavaObjectInstance) cc.eGet(sfConstraintConstraint);
-			if (constraintObject != null && constraintObject.getInitializationString().startsWith("new java.awt.GridBagConstraints")) { //$NON-NLS-1$
+			if (constraintObject != null && gridBagConstraints.isInstance(constraintObject)) {
 				// This is a GridBagConstraints object. Just change the gridx and gridy, then apply the constraint to the ConstraintComponent
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
 				Object intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridBagConstraint.gridx)); //$NON-NLS-1$
@@ -808,7 +827,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		}
 		// No commands created so the constraint didn't exist or wasn't a GridBagConstraint. Just create the default. 
 		if (cb.isEmpty())
-			constraintComponent.eSet(sfConstraintConstraint, gridBagConstraint != null ? convertConstraint(gridBagConstraint) : null); // Put the constraint into the constraint component.
+			constraintComponent.eSet(sfConstraintConstraint, gridBagConstraint != null ? convertConstraint(gridBagConstraint) : null);
+		// Put the constraint into the constraint component.
 
 		cb.append(policy.getAddCommand(componentConstraints, childrenComponents, position));
 		return cb.getCommand();
@@ -816,10 +836,15 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	public Command getSpanChildrenCommand(EditPart childEditPart, Point childCellLocation, Point endCellLocation, int spanDirection) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject constraintComponent =
-			InverseMaintenanceAdapter.getIntermediateReference((EObject) childEditPart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance) childEditPart.getModel());
+			InverseMaintenanceAdapter.getIntermediateReference(
+				(EObject) childEditPart.getParent().getModel(),
+				sfComponents,
+				sfConstraintComponent,
+				(IJavaObjectInstance) childEditPart.getModel());
 		if (constraintComponent != null) {
 			// First be sure the cell is unoccupied or is occupied by the same component
-			if (isCellEmpty(endCellLocation.x, endCellLocation.y) || constraintComponent == getCellOccupant(endCellLocation.x, endCellLocation.y)) {
+			if (isCellEmpty(endCellLocation.x, endCellLocation.y)
+				|| constraintComponent == getCellOccupant(endCellLocation.x, endCellLocation.y)) {
 				IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 				if (gridbagconstraint != null) {
 					RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
@@ -851,12 +876,12 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
 		if (target instanceof EditPart) {
-			EditDomain ed = EditDomain.getEditDomain((EditPart)target);
+			EditDomain ed = EditDomain.getEditDomain((EditPart) target);
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)target).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart) target).getModel());
 				if (ep != null && ep.getEditPolicy(EditPolicy.LAYOUT_ROLE) instanceof IActionFilter) {
-					return ((IActionFilter)ep.getEditPolicy(EditPolicy.LAYOUT_ROLE)).testAttribute(target, name, value);
+					return ((IActionFilter) ep.getEditPolicy(EditPolicy.LAYOUT_ROLE)).testAttribute(target, name, value);
 				}
 			}
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.Iterator;
@@ -22,14 +22,15 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.core.*;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.JavaDataType;
-import org.eclipse.jem.internal.java.impl.JavaFactoryImpl;
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.jem.internal.java.JavaClass;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 
@@ -211,7 +212,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
           EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
         
           IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved, fbeanPart.getModel().getCompositionModel()) ;
-          attr.setInitializationString(newInitString) ;
+          attr.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(newInitString));
           
           EObject target = fbeanPart.getEObject() ;
           CodeGenUtil.propertyCleanup(target,sf) ;
@@ -230,21 +231,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
     protected IJavaInstance createProperyInstance(String initString, EClassifier argType) throws CodeGenException {
     	IJavaInstance result ;
     	if (initString != null) {
-			// Since JavaDataType is also an EClass, need to test for JavaDataType first.
-			if (argType instanceof JavaDataType) {
-				JavaFactoryImpl fact = (JavaFactoryImpl) ((JavaDataType) argType).getEPackage().getEFactoryInstance();				
-				result =
-					(IJavaInstance) fact.createFromString((JavaDataType) argType, initString);
-			} else if (argType instanceof EClass) {
-				EFactory fact = ((EClass) argType).getEPackage().getEFactoryInstance();
-				result = (IJavaInstance) fact.create((EClass) argType);
-				((IJavaObjectInstance) result).setInitializationString(initString);
-			} else {
-				JavaVEPlugin.log(
-					"SimpleAttributeDecoderHelper.addFeature() : Not a Class or a DataType: " //$NON-NLS-1$
-						+ argType, MsgLogger.LOG_FINE);
-				throw new CodeGenException ("Not a class or datatype: "+argType) ; //$NON-NLS-1$
-			}
+			EFactory fact = argType.getEPackage().getEFactoryInstance();
+			result = (IJavaInstance) fact.create((EClass) argType);
+			result.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
 		} else
 			result = null;
 			
@@ -335,9 +324,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		fPropInstance = (IJavaInstance) currentVal;
 		if (currentVal != null) {
 			if (currentVal instanceof IJavaObjectInstance)
-				return boxLayoutOveride(((IJavaObjectInstance) currentVal).getInitializationString());
-			else if (currentVal instanceof JavaDataTypeInstance)
-				return ((JavaDataTypeInstance) currentVal).getInitializationString();
+				return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal));
+			else if (currentVal instanceof IJavaDataTypeInstance)
+				return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal);
 
 		} else { // Is it a null value ??
 			EObject eobj = fbeanPart.getEObject();			
@@ -474,12 +463,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	}
 
 	public boolean isImplicit(Object args[]) {
-		// refresh fPropInstanc
-		primGetInitString();
-		if (fPropInstance instanceof IJavaObjectInstance)
-			return ((IJavaObjectInstance) fPropInstance).isImplicit();
-		else
-			return false;
+		return false;
 	}
 	
 	public Object[] getArgsHandles(Statement expr) {

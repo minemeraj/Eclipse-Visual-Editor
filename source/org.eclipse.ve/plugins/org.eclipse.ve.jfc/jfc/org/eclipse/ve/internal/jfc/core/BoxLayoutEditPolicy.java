@@ -4,6 +4,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
@@ -17,15 +21,12 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	
-	private int 
-		HORIZONTAL = 0,
-		VERTICAL = 1,
-		orientation = HORIZONTAL;	// default
+	private boolean	orientation;	// true is HORIZONTAL
 
 	EStructuralFeature sfLayout = null;
 	
@@ -36,7 +37,7 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * @see org.eclipse.gef.editpolicies.FlowLayoutEditPolicy#isHorizontal()
 	 */
 	protected boolean isHorizontal() {
-		return orientation == HORIZONTAL;
+		return orientation;
 	}
 			
 	/**
@@ -44,31 +45,14 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * based on the box layout manager's initialzation string
 	 */
 	private void determineOrientation() {
+		orientation = true;	// Default.
 		Object layout = helper.getContainer().eGet(sfLayout);
 		if (layout != null && layout instanceof IJavaObjectInstance) {
-			// Get the layout's initialization string
-			String initString =
-				((IJavaObjectInstance) layout).getInitializationString();
-
-            // Search for the BoxLayout's axis constraint
-			int lastCommaIndex = initString.lastIndexOf(","); //$NON-NLS-1$
-			if (lastCommaIndex != -1) {
-				int lastParenthesisIndex = initString.lastIndexOf(")"); //$NON-NLS-1$
-				if (lastParenthesisIndex != -1) {
-					String axisString = initString.substring(
-								lastCommaIndex + 1,
-								lastParenthesisIndex).trim();
-					axisString.trim();
-					if (axisString.equals("0") //$NON-NLS-1$
-					|| axisString.equals("X_AXIS") //$NON-NLS-1$
-					|| axisString.equals("javax.swing.BoxLayout.X_AXIS")) //$NON-NLS-1$
-						orientation = HORIZONTAL;
-					else if (axisString.equals("1") //$NON-NLS-1$
-					|| axisString.equals("Y_AXIS") //$NON-NLS-1$
-					|| axisString.equals("javax.swing.BoxLayout.Y_AXIS")) //$NON-NLS-1$
-						orientation = VERTICAL;
-				}
-			}
+			// KLUDGE Get live object and delve into the privates to get the axis. This
+			// isn't exposed by BoxLayout.
+			IBeanProxyHost boxlayoutProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) layout);
+			IBeanProxy boxlayoutProxy = boxlayoutProxyHost.getBeanProxy();			
+			orientation = BeanAwtUtilities.getBoxLayoutAxis(boxlayoutProxy);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,13 +11,15 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagConstraintsAnchorLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.jem.internal.proxy.core.*;
 /**

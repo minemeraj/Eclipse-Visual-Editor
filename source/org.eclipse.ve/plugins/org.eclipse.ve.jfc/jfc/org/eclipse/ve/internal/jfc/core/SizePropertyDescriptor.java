@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: SizePropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,6 +21,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;

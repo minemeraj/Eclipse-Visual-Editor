@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -29,6 +29,7 @@ import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.awt.*;
@@ -176,8 +177,8 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// with -1, and then at this point in time it would reconstruct the setting.
 			Dimension size = new Dimension(dim.getWidth(), dim.getHeight());
 			if (NullLayoutEditPolicy.adjustForPreferredSize(getBeanProxy(), size)) {
-				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height);
-				final IJavaInstance dimensionBean = BeanUtilities.createJavaObject("java.awt.Dimension", ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
+				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height, JFCConstants.DIMENSION_CLASS_NAME);
+				final IJavaInstance dimensionBean = BeanUtilities.createJavaObject(JFCConstants.DIMENSION_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString);
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
 					 * @see java.lang.Runnable#run()
@@ -217,7 +218,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			Point location = new Point(pnt.getX(), pnt.getY());
 			if (NullLayoutEditPolicy.adjustForPreferredLocation(getBeanProxy(), location,5,5)) {
 				String initString = PointJavaClassCellEditor.getJavaInitializationString(location.x, location.y,JFCConstants.POINT_CLASS_NAME);
-				final IJavaInstance pointBean = BeanUtilities.createJavaObject("java.awt.Point", ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
+				final IJavaInstance pointBean = BeanUtilities.createJavaObject(JFCConstants.POINT_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
 					 * @see java.lang.Runnable#run()
@@ -265,7 +266,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 			if (NullLayoutEditPolicy.adjustForPreferredSizeAndPosition(getBeanProxy(), bounds, 5, 5)) {
 				String initString = RectangleJavaClassCellEditor.getJavaInitializationString(bounds,JFCConstants.RECTANGLE_CLASS_NAME);
-				final IJavaInstance rectBean = BeanUtilities.createJavaObject("java.awt.Rectangle", ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
+				final IJavaInstance rectBean = BeanUtilities.createJavaObject(JFCConstants.RECTANGLE_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
 					 * @see java.lang.Runnable#run()
@@ -301,14 +302,14 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			if (d != null)
 				d.releaseBeanProxy();
 			String initString = PointJavaClassCellEditor.getJavaInitializationString(rect.getX(), rect.getY(),JFCConstants.POINT_CLASS_NAME);
-			fDefaultLocation = BeanUtilities.createJavaObject("java.awt.Point", ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
+			fDefaultLocation = BeanUtilities.createJavaObject(JFCConstants.POINT_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
 
 			IPointBeanProxy pointProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(fLocationToUse);
 			initString =
 				RectangleJavaClassCellEditor.getJavaInitializationString(pointProxy.getX(), pointProxy.getY(), rect.getWidth(), rect.getHeight(),JFCConstants.RECTANGLE_CLASS_NAME);
 			super.applied(
 				sfComponentBounds,
-				BeanUtilities.createJavaObject("java.awt.Rectangle", ((EObject) target).eResource().getResourceSet(), initString),//$NON-NLS-1$
+				BeanUtilities.createJavaObject(JFCConstants.RECTANGLE_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString),//$NON-NLS-1$
 				position);
 			
 		}
@@ -335,6 +336,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				BeanProxyUtilities.wrapperBeanProxy(
 					domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(setToVisibility),
 					((EObject) target).eResource().getResourceSet(),
+					null,
 					true);
 
 			// If we have a proxy then set the visible to the specified setting.
@@ -382,7 +384,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// we need to restore default location to the original default since
 			// bounds had overridden it.
 			IBeanProxy loc = (IBeanProxy) getOriginalSettingsTable().get(sfComponentLocation);
-			fDefaultLocation = BeanProxyUtilities.wrapperBeanProxy(loc, ((EObject) target).eResource().getResourceSet(), false);
+			fDefaultLocation = BeanProxyUtilities.wrapperBeanProxy(loc, ((EObject) target).eResource().getResourceSet(), null, false);
 		}
 	}
 	/**
@@ -622,7 +624,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		if (isBeanProxyInstantiated()) {
 			// Query the current value and put into fDefaultLocation so that we know what it was at the beginning.
 			fDefaultLocation =
-				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentLocation), ((EObject) target).eResource().getResourceSet(), false);
+				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentLocation), ((EObject) target).eResource().getResourceSet(), null, false);
 			if (fLocationToUse != null) {
 				// We have a location setting that bypasses the setting in the mof object, apply it now so that it would off screen when made visible.
 				super.applied(sfComponentLocation, fLocationToUse, -1);
@@ -630,7 +632,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 
 			// Query the current value and put into fDefaultVisibility so that we know what it was at the beginning.
 			fDefaultVisibility =
-				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentVisible), ((EObject) target).eResource().getResourceSet(), false);
+				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentVisible), ((EObject) target).eResource().getResourceSet(), null, false);
 		}
 		super.applyAllSettings();
 		if (isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE) {
@@ -655,6 +657,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				initial = BeanProxyUtilities.wrapperBeanProxy(
 					getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(true),
 					((EObject) target).eResource().getResourceSet(),
+					null,
 					true);				
 			}
 			super.applied(sfComponentVisible, initial, -1);

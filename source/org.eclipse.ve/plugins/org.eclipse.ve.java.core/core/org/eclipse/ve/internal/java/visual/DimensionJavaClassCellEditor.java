@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,19 +11,25 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DimensionJavaClassCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 /**
  * Cell Editor for Dimension Beans.
  */
-public class DimensionJavaClassCellEditor extends DefaultJavaClassCellEditor {
+public class DimensionJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension {
+	
+	private String dimensionClassName;
 	
 public DimensionJavaClassCellEditor(Composite aComposite){
 	super(aComposite);
@@ -43,7 +49,9 @@ protected String getJavaInitializationString(String dimString) {
 	// want to make sure nicely formed (i.e. no extra spaces). This assumes the string is valid. This shouldn't be called if it isn't.
 	StringTokenizer st = new StringTokenizer(dimString, ","); //$NON-NLS-1$
 	StringBuffer sb = new StringBuffer(dimString.length());
-	sb.append("new java.awt.Dimension("); //$NON-NLS-1$
+	sb.append("new ");	//$NON-NLS-1$
+	sb.append(dimensionClassName);
+	sb.append('('); //$NON-NLS-1$
 	sb.append(st.nextToken().trim());
 	while (st.hasMoreTokens()) {
 		sb.append(',');
@@ -75,15 +83,17 @@ protected String isCorrectString(String text) {
 }
 public void setData(Object data) {
 	super.setData(data);
-	setJavaType(JavaClassImpl.reflect("java.awt.Dimension", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
+	setJavaType(JavaClassImpl.reflect(dimensionClassName, JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
 }
 
 /**
  * Helper to return a well formed Java Initialization string for an width and height
  */
-public static String getJavaInitializationString(int width, int height){
+public static String getJavaInitializationString(int width, int height, String aDimensionClassName){
 	StringBuffer buffer = new StringBuffer();
-	buffer.append("new java.awt.Dimension("); //$NON-NLS-1$
+	buffer.append("new "); //$NON-NLS-1$
+	buffer.append(aDimensionClassName);
+	buffer.append('(');
 	buffer.append(String.valueOf(width));
 	buffer.append(',');
 	buffer.append(String.valueOf(height));
@@ -91,4 +101,12 @@ public static String getJavaInitializationString(int width, int height){
 	return buffer.toString();
 }
 
+/**
+ * The dimension class name is a contained in the initialization data to allow this class to be configurable
+ */
+public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
+	if (initData instanceof String){
+		dimensionClassName = (String)initData;
+	}				
+}
 }

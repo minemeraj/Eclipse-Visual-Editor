@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import java.util.Iterator;
@@ -36,7 +36,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 		sfColumns = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_JTABLE_COLUMNS);
 		sfAutoCreateColumns = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL);		
 	}
-	/**
+	/*
 	 * Create the bean proxy. We override because we put a table model there
 	 * if not is not present so that preview data can be shown in the columns
 	 */

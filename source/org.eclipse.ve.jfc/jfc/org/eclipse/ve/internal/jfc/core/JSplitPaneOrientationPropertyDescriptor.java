@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneOrientationPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -19,11 +19,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.jem.internal.instantiation.base.*;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 /**
@@ -36,41 +36,36 @@ import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
  * and so the label provider will reflect the positions correctly.
  * 
  */
-public class JSplitPaneOrientationPropertyDescriptor
-	extends BeanPropertyDescriptorAdapter
-	implements ICommandPropertyDescriptor {
+public class JSplitPaneOrientationPropertyDescriptor extends BeanPropertyDescriptorAdapter implements ICommandPropertyDescriptor {
 
-	int VERTICAL_SPLIT = 0, HORIZONTAL_SPLIT = 1;
+	private static final int VERTICAL_SPLIT = 0, HORIZONTAL_SPLIT = 1;
 
 	public Command setValue(IPropertySource source, Object setValue) {
 		IJavaObjectInstance splitpane = (IJavaObjectInstance) source.getEditableValue();
 		IBeanProxyHost h = BeanProxyUtilities.getBeanProxyHost(splitpane);
 		RuledCommandBuilder cb = new RuledCommandBuilder(h.getBeanProxyDomain().getEditDomain());
-		
-		EStructuralFeature sfLeftComponent =
-			JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_LEFTCOMPONENT),
+
+		EStructuralFeature sfLeftComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_LEFTCOMPONENT),
 			sfRightComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_RIGHTCOMPONENT),
 			sfTopComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_TOPCOMPONENT),
 			sfBottomComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_BOTTOMCOMPONENT);
 		IJavaInstance value = (IJavaInstance) setValue;
-		
+
 		// First unset those that need to be unset, not under rule since they are not going away.
 		// Accumulate the set back to new setting in a separate command builder so that they can be
 		// applied AFTER the orientation is changed.
 		cb.setApplyRules(false);
 		CommandBuilder afterCB = new CommandBuilder();
-		
-		String initString = value.getInitializationString();
-		int orientation = HORIZONTAL_SPLIT; // default is HORIZONTAL_SPLIT
-		if (initString.equals("0") //$NON-NLS-1$
-			|| initString.equals("VERTICAL_SPLIT") //$NON-NLS-1$
-			|| initString.equals("javax.swing.JSplitPane.VERTICAL_SPLIT")) //$NON-NLS-1$
+
+		IBeanProxyHost orientH = BeanProxyUtilities.getBeanProxyHost(value, splitpane.eResource().getResourceSet());
+		orientH.instantiateBeanProxy(); // Because if a property setting it may not be instantiated yet.
+
+		int orientation = HORIZONTAL_SPLIT;
+		if (!orientH
+			.getBeanProxy()
+			.equals(BeanAwtUtilities.getJSplitPaneOrientationHorizontal(h.getBeanProxyDomain().getProxyFactoryRegistry())))
 			orientation = VERTICAL_SPLIT;
-		else if (
-			initString.equals("1") //$NON-NLS-1$
-				|| initString.equals("HORIZONTAL_SPLIT") //$NON-NLS-1$
-				|| initString.equals("javax.swing.JSplitPane.HORIZONTAL_SPLIT")) //$NON-NLS-1$
-			orientation = HORIZONTAL_SPLIT;
+
 		// Handle the case where the orientation is now vertical
 		if (orientation == VERTICAL_SPLIT) {
 			if (splitpane.eIsSet(sfLeftComponent)) {
@@ -111,15 +106,14 @@ public class JSplitPaneOrientationPropertyDescriptor
 		IJavaObjectInstance splitpane = (IJavaObjectInstance) source.getEditableValue();
 		IBeanProxyHost h = BeanProxyUtilities.getBeanProxyHost(splitpane);
 		RuledCommandBuilder cb = new RuledCommandBuilder(h.getBeanProxyDomain().getEditDomain());
-		
+
 		// First unset those that need to be unset, not under rule since they are not going away.
 		// Accumulate the set back to new setting in a separate command builder so that they can be
 		// applied AFTER the orientation is canceled.
 		cb.setApplyRules(false);
 		CommandBuilder afterCB = new CommandBuilder();
-				
-		EStructuralFeature sfLeftComponent =
-			JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_LEFTCOMPONENT),
+
+		EStructuralFeature sfLeftComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_LEFTCOMPONENT),
 			sfRightComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_RIGHTCOMPONENT),
 			sfTopComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_TOPCOMPONENT),
 			sfBottomComponent = JavaInstantiation.getSFeature(splitpane, JFCConstants.SF_JSPLITPANE_BOTTOMCOMPONENT);

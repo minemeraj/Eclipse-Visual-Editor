@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,13 +11,16 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.StringTokenizer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+
+import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 /**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.text.MessageFormat;
@@ -459,15 +459,11 @@ public class BeanFeatureEditor
 						fPropertyEditorWrapperProxy.getJavaInitializationString());
 			} else {
 				bean =
-					(IJavaObjectInstance) BeanProxyUtilities.wrapperBeanProxy(
+					BeanProxyUtilities.wrapperBeanProxy(
 						newProxy,
 						JavaEditDomainHelper.getResourceSet(fEditDomain),
+						fPropertyEditorWrapperProxy.getJavaInitializationString(),
 						true);
-				// Since we are getting a new value, we own it. (By definition, editors are supposed to return new instances).
-				if (bean != null) {
-					((IJavaObjectInstance) bean).setInitializationString(
-						fPropertyEditorWrapperProxy.getJavaInitializationString());
-				}
 			}
 			fValue = bean;
 			fLastKnownBeanProxy = newProxy;

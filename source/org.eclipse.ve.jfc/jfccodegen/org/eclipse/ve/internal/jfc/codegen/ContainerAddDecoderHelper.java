@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import java.util.*;
@@ -23,6 +23,7 @@ import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -329,7 +330,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		IJavaObjectInstance result = null;
 		try {
 			result = (IJavaObjectInstance) CodeGenUtil.createInstance(type, fbeanPart.getModel().getCompositionModel());
-			result.setInitializationString(initString);
+			result.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
 		} catch (CodeGenException e) {
 		}
 
@@ -606,7 +607,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		String AddedArg;
 		if (fAddedPart == null) {
 			// Simple property: add(new JLabel("Boo"),null)
-			AddedArg = fAddedInstance.getInitializationString();
+			AddedArg = CodeGenUtil.getInitString(fAddedInstance);
 		} else if (
 			fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
@@ -661,7 +662,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			// get the contstraints value
 			BeanPart cbp = fbeanPart.getModel().getABean(fAddedConstraintInstance);
 			if (cbp == null) // Vanilla constraint
-				fnonResolvedAddedConstraint = fAddedConstraint = fAddedConstraintInstance.getInitializationString();
+				fnonResolvedAddedConstraint = fAddedConstraint = CodeGenUtil.getInitString(fAddedConstraintInstance);
 			else
 				fnonResolvedAddedConstraint = fAddedConstraint = cbp.getSimpleName();
 		}
@@ -705,17 +706,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 	}
 
 	public boolean isImplicit(Object args[]) {
-		IJavaObjectInstance obj;
-		if (args == null) {
-			obj = (IJavaObjectInstance) fAddedPart.getEObject();
-		} else {
-			EObject CC = (EObject) args[0];
-			obj = CodeGenUtil.getCCcomponent(CC);
-		}
-		if (obj == null)
-			return false; // Added Part was deleted, process delete
-		else
-			return obj.isImplicit();
+		return false;
 	}
 
 	public Object[] getArgsHandles(Statement expr) {

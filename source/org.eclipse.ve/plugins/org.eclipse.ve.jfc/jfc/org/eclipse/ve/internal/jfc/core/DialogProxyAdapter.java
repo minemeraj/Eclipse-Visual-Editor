@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DialogProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -71,6 +71,7 @@ public class DialogProxyAdapter extends FrameConstructorProxyAdapter {
 			IJavaInstance modal = BeanProxyUtilities.wrapperBeanProxy(
 				domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(false),
 				((EObject)target).eResource().getResourceSet(),
+				null,
 				true);
 			super.applied(sfDialogModal, modal, 0);	// Force it not modal.
 		}

@@ -32,19 +32,10 @@
         upperBound="-1" containment="true"/>
   </event:Add>
   
-  <!-- Special ones. We need to add an annotation to an attribute that was previously added in another plugin.
+  <!-- Special one. We need to add an annotation to an attribute that was previously added in another plugin.
        These are the property decorators for the initstring stuff. Added separately because they
        aren't available at java.model level, but are available at this level. -->
-  <event:Add notifierURI="#/initializationString" featureName="eAnnotations">
+  <event:Add notifierURI="#/allocation" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
   </event:Add>
-  <event:Add notifierURI="#/implicit" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-  </event:Add>  
-  <event:Add notifierURI="#/instantiateUsing" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-  </event:Add>  
-  <event:Add notifierURI="#/serializeData" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-  </event:Add>    
 </xmi:XMI>

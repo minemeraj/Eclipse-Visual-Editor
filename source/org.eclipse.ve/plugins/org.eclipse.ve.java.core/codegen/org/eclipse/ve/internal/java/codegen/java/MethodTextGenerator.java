@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.*;
@@ -77,11 +77,10 @@ public void setComments (String[] comments) {
 public static boolean isNotToBeCodedAttribute(EStructuralFeature sf, EObject component) {		
 	// Container attributes are addressed seperatly
 	if (sf==null ||
-       ((sf instanceof EStructuralFeature) && ((EStructuralFeature)sf).isTransient()) ||
+        sf.isTransient() ||
 //	    sf.equals(CodeGenUtil.getParentContainerFeature(component)) ||
 	    sf.equals(CodeGenUtil.getComponentFeature(component)) ||
-	    sf.equals(CodeGenUtil.getImplicitFeature(component)) ||
-	    sf.equals(CodeGenUtil.getInitStringFeature(component))
+	    sf.equals(CodeGenUtil.getAllocationFeature(component))
 	    )
 	    return true ;	
 
@@ -214,24 +213,11 @@ protected void GenerateAChild(StringBuffer buf,BeanPart bean, BeanPart child,ESt
 	
 }
 
-protected void setConstractorString (BeanMethodTemplate tp, Object component) {
+protected void setConstructorString (BeanMethodTemplate tp, Object component) {
     if (component instanceof IJavaObjectInstance) {
      // use the init string rather than default template string
         IJavaObjectInstance obj = (IJavaObjectInstance) component ;
-        String st = obj.getInitializationString() ;  
-// With the new model, a parent is not eContainer() anymore
-// Also, this code path will not get executed, as we drop a layout
-// as a propert.  This hack is moved to the SimpleAttributeDecoderHelper        
-//        CDEHack.fixMe("Temp. until we have a constructor based init support") ; //$NON-NLS-1$
-//        int index =  st.indexOf("(,") ; //$NON-NLS-1$
-//        if (index>=0) {            
-//            EObject parent = (EObject) obj.eContainer() ;
-//            BeanPart pBP = fModel.getABean(parent) ;
-//            String toAdd = pBP.getSimpleName();
-//            StringBuffer s = new StringBuffer (st) ;            
-//            s.replace(index, index+2, "("+toAdd+", ") ; //$NON-NLS-1$ //$NON-NLS-2$
-//            st = s.toString() ;
-//        }
+        String st = CodeGenUtil.getInitString(obj) ;  
         tp.setBeanConstructorString(st) ;
     }
 }
@@ -248,7 +234,7 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
     if(bp==null)
     	bp = fModel.getABean(BeanDeclModel.constructUniqueName(method,fName));//method.getMethodHandle()+"^"+fName);
  	BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,"",fComments) ; //$NON-NLS-1$
-    setConstractorString (template, fComponent) ;
+    setConstructorString (template, fComponent) ;
  	template.setSeperator(fModel.getLineSeperator());
  	template.setInLineMethod(true) ;
     
@@ -300,7 +286,7 @@ public String generate(CodeMethodRef method,String methodName,String beanName, L
     BeanPart bp = fModel.getABean(fName) ;
  	
     BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,fMethodName,fComments) ;
-    setConstractorString (template, fComponent) ;
+    setConstructorString (template, fComponent) ;
     template.setSeperator(fModel.getLineSeperator()) ;
 //    if (((IJavaObjectInstance)fComponent).isImplicit()) {
 //    	template.setImplicit(true) ;
@@ -356,7 +342,7 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
     BeanPart bp = fModel.getABean(fName) ;
  	
     BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,fMethodName,fComments) ;
-    setConstractorString (template, fComponent) ;
+    setConstructorString (template, fComponent) ;
     template.setSeperator(fModel.getLineSeperator()) ;
 //    if (((IJavaObjectInstance)fComponent).isImplicit()) {
 //    	template.setImplicit(true) ;
