@@ -10,22 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceConfigurationContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-04 22:23:58 $ 
  */
 
 package org.eclipse.ve.internal.jface;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter;
-import org.eclipse.jem.internal.proxy.core.IConfigurationContributionController;
-import org.eclipse.ve.internal.swt.SwtPlugin;
+import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 
 public class JFaceConfigurationContributor extends ConfigurationContributorAdapter {
-	
-public void contributeClasspaths(final IConfigurationContributionController controller) throws CoreException {	
-	// Add the jar file with the supporting classes required for the JVE into the classpath
-	// In development model the file proxy.jars redirects this to the plugin development project
-	controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "jbcfjfacevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
-	
-}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
+	 */
+	public void contributeToRegistry(ProxyFactoryRegistry registry) {
+		JFaceColorProxyRegistration.initialize(registry); // Prime the JFace ColorRegistry in the remote VM
+	}
+
 }
