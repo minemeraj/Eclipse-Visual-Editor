@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-25 23:08:20 $ 
+ *  $Revision: 1.15 $  $Date: 2005-03-08 18:23:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -187,7 +187,7 @@ public String generateSource(AbstractEventInvocation ei) throws CodeGenException
 
 	String e = ExpressionTemplate.getExpression(result);
 	int offset = result.indexOf(e) ;
-	ExpressionParser p = createExpressionParser(result, offset, e.length());
+	ExpressionParser p = createExpressionParser(result, offset, e.length(), getEventDecoder().getBeanModel());
 	setContent(p);
 	setOffset(-1);
 	fEventInvocation = ei;
@@ -214,8 +214,8 @@ public void setFillerContent(String filler) throws CodeGenException {
 /* (non-Javadoc)
  * @see org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef#createExpressionParser(java.lang.String, int, int)
  */
-protected ExpressionParser createExpressionParser(String sourceSnippet, int expOffset, int expLen) {
-	return new EventExpressionParser(sourceSnippet, expOffset, expLen, fDecoder.getBeanModel());
+protected ExpressionParser createExpressionParser(String sourceSnippet, int expOffset, int expLen, IScannerFactory scannerFactory) {
+	return new EventExpressionParser(sourceSnippet, expOffset, expLen, scannerFactory);
 }
 
 public void refreshFromComposition() throws CodeGenException {
