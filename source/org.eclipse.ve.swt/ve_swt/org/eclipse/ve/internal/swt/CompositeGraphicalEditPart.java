@@ -40,7 +40,7 @@ public CompositeGraphicalEditPart(Object model) {
 	super(model);
 }
 
-protected ContainerPolicy getContainerPolicy() {
+protected VisualContainerPolicy getContainerPolicy() {
 	return new CompositeContainerPolicy(EditDomain.getEditDomain(this));	// SWT standard Composite/Container Edit Policy
 }
 
