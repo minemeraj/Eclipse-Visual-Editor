@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 15:11:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -68,7 +68,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		public ShowOverviewAction() {
 			super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
 			setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));
-			setImageDescriptor(getUIImageDescriptor("elcl16/showbasic_ps.gif"));	// Don't know what showbasic_ps is, but it looks good (looks like the show overview that GEF has in its logic example).
+			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/showbasic_ps.gif"));	// Don't know what showbasic_ps is, but it looks good (looks like the show overview that GEF has in its logic example).
 		}			
 
 		public void run() {
