@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-08 01:19:05 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-17 19:12:55 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -98,7 +98,12 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 		    return super.isPriorityCacheable();
 	}
 	protected void initialFeatureMapper() {
-		super.initialFeatureMapper() ;
+		// If setBounds() or setSize() on composite, reduce its priority as re-lays out its children
+		if(	isMethodNamePresent(ISWTFeatureMapper.COMPOSITE_BOUNDS_NAME) || 
+			isMethodNamePresent(ISWTFeatureMapper.COMPOSITE_SIZE_NAME)){
+			fFeatureMapper = new CompositePropertyFeatureMapper();
+		}else
+			super.initialFeatureMapper() ;
 		fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
 		if (fFeatureMapper.getFeature(fExpr) == null) {
 			// not a regular property, but given that it was parsed in... this could be
@@ -110,5 +115,19 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 				}
 			}			
 		}
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractExpressionDecoder#initialFeatureMapper(org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected void initialFeatureMapper(EStructuralFeature sf) {
+		// If setBounds() or setSize() on composite, reduce its priority as re-lays out its children
+		EStructuralFeature boundsSF = fbeanPart.getEObject().eClass().getEStructuralFeature(ISWTFeatureMapper.COMPOSITE_BOUNDS_FEATURE_NAME);
+		EStructuralFeature sizeSF = fbeanPart.getEObject().eClass().getEStructuralFeature(ISWTFeatureMapper.COMPOSITE_SIZE_FEATURE_NAME);
+		if(		(boundsSF!=null && boundsSF.equals(sf)) ||
+				(sizeSF!=null && sizeSF.equals(sf))){
+			fFeatureMapper = new CompositePropertyFeatureMapper();
+			fFeatureMapper.setFeature(sf);
+		}else
+			super.initialFeatureMapper(sf);
 	}
 }
