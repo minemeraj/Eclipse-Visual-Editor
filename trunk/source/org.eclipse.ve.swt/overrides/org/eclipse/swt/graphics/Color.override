@@ -9,7 +9,8 @@
     xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
     xmlns:event="event.xmi"
     featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"    
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+      labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ColorJavaClassLabelProvider"
       cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.JVEDialogCellEditor:org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ColorPropertyEditor">
   </addedEObjects>
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ResourceProxyAdapter"/>
