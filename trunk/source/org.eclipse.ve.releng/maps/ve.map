@@ -30,7 +30,7 @@ plugin@org.eclipse.ve.doc=I20031117,:pserver:anonymous@dev.eclipse.org:/home/too
 feature@org.eclipse.jem=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.tests=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
-feature@org.eclipse.ve=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
+feature@org.eclipse.ve=I20031117,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
 feature@org.eclipse.ve.sdk=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
