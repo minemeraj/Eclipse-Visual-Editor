@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.10 $  $Date: 2004-09-14 21:26:46 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -56,6 +56,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	private IJavaInstance fLocationToUse = null; // Location to use when live object created, this is the override value.
 
 	protected ImageDataCollector fImageDataCollector = null;
+	protected final Object imageAccessorSemaphore = new Object();	// [73930] Semaphore for access to image stuff, can't use (this) because that is also used for instantiation and deadlock can occur.
 	// Image collector, if one set for this component, may not have one if the image is collected by a parent.
 
 	protected List fComponentListeners = null; // Listeners for IComponentNotification.
@@ -414,9 +415,11 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 * Create the image collector.,
 	 */
 	protected void createImageCollector() {
-		if (fImageDataCollector == null) {
-			ProxyFactoryRegistry registry = getVisualComponentBeanProxy().getProxyFactoryRegistry();
-			fImageDataCollector = new ImageDataCollector(registry);
+		synchronized (imageAccessorSemaphore) {
+			if (fImageDataCollector == null) {
+				ProxyFactoryRegistry registry = getVisualComponentBeanProxy().getProxyFactoryRegistry();
+				fImageDataCollector = new ImageDataCollector(registry);
+			}
 		}
 	}
 
@@ -687,11 +690,13 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 * kick off a new capture. If an image is currently being collected,
 	 * do an abort so that it will terminate.
 	 */
-	public synchronized void invalidateImage() {
-		if (fImageDataCollector != null) {
-			if (fImageValid == INVALID_COLLECTING && fImageDataCollector.isCollectingData())
-				fImageDataCollector.abort(); // We're currently do a valid collection, so abort it.
-			fImageValid = INVALID; // Mark it as invalid.	
+	public void invalidateImage() {
+		synchronized (imageAccessorSemaphore) {
+			if (fImageDataCollector != null) {
+				if (fImageValid == INVALID_COLLECTING && fImageDataCollector.isCollectingData())
+					fImageDataCollector.abort(); // We're currently do a valid collection, so abort it.
+				fImageValid = INVALID; // Mark it as invalid.	
+			}
 		}
 	}
 	
@@ -706,7 +711,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		// waiting for completion because it would tie up "this" while DataCollectedRunnable would also
 		// try to synchronize on "this" and it couldn't because we had and are waiting in waitForCompletion.
 		boolean doRefresh = false;
-		synchronized (this) {
+		synchronized (imageAccessorSemaphore) {
 			doRefresh = fImageValid == INVALID && fImageDataCollector != null && hasImageListeners();
 			if (doRefresh)
 				fImageValid = INVALID_COLLECTING;
@@ -716,7 +721,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 					fImageDataCollector.waitForCompletion();
 					// Wait if running so that we don't start it while running. Must be outside of sync block because completion requires syncing on a separate thread. Would have a deadlock then.
 					// Sync back so that no one else can come in until the collection has been started
-					synchronized (this) {
+					synchronized (imageAccessorSemaphore) {
 						clearError(IMAGE_DATA_COLLECTION_ERROR_KEY);
 						fImageDataCollector.startComponent(getVisualComponentBeanProxy(), new ImageDataCollector.DataCollectedRunnable() {
 							private int startedStatus = ImageDataConstants.IMAGE_NOT_STARTED;							
