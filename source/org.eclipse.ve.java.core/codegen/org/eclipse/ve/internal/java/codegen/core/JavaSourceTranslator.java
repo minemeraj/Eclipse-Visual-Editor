@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.65 $  $Date: 2005-03-08 23:41:02 $ 
+ *  $Revision: 1.66 $  $Date: 2005-03-11 17:45:46 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -906,14 +906,18 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
     else {
 		try {					
 			reverseParse(pm);
-			// Create a cache in the background
-			Job job = new ReverseParserJob(sourceFile) {
-				protected IStatus doRun(IProgressMonitor monitor) {
-					doSave(monitor);
-					return Status.OK_STATUS;
-				}
-			};
-			job.schedule();
+			// Save the file and cache the model into the .xmi file iff the code hasn't been changed.
+			if (!JavaUI.getDocumentProvider().canSaveDocument(fWorkingCopy.getEditor())) {
+				// Create a cache in the background
+				Job job = new ReverseParserJob(sourceFile) {
+
+					protected IStatus doRun(IProgressMonitor monitor) {
+						doSave(monitor);
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();
+			}
 		} catch (Exception e) {
 			fSrcSync.resumeProcessing();
 			fireParseError(true);			
