@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEActionFilter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-26 18:23:27 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-27 14:46:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.IActionFilter;
@@ -33,6 +34,7 @@ import org.eclipse.ui.IActionFilter;
  *
  * The valid tests are: 
  *   (name)        - (value)
+ *   PROPERTY      - "nameOfFeature" tests if the given feature is an available property of the model of the editpart. (Model needs to be EMF, does not need to be JavaModel).
  *   EDITPOLICY#   - This means redirect the request to the Editpolicies. The portion of "name" after the "#" becomes that "name" and
  *                   value is left as is, and then request to filter is sent to each of the edit policies that can handle IActionFilter or adapt to it.
  *   PARENT#       - This means redirect the request to the parent editpart. The portion of "name" after the "#" becomes that "name" and
@@ -47,7 +49,8 @@ public class CDEActionFilter implements IActionFilter {
 	public final static String
 		EDITPOLICY_STRING = "EDITPOLICY#", //$NON-NLS-1$
 		PARENT_STRING = "PARENT#", //$NON-NLS-1$
-		ANCESTOR_STRING = "ANCESTOR#"; //$NON-NLS-1$
+		ANCESTOR_STRING = "ANCESTOR#", //$NON-NLS-1$
+		PROPERTY_STRING = "PROPERTY"; //$NON-NLS-1$
 	
 	/*
 	 * Protected so that only singleton INSTANCE, or a subclass can instantiate it.
@@ -59,7 +62,11 @@ public class CDEActionFilter implements IActionFilter {
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		if (name.startsWith(EDITPOLICY_STRING) && target instanceof ICDEContextMenuContributor) {
+		if (name.equals(PROPERTY_STRING)) {
+			// This allows an extension so that a popup action could be provided if a component
+			// had a specific property with its name equal to 'value'.			
+			return testAttributeForPropertyName(target, value);
+		} else if (name.startsWith(EDITPOLICY_STRING) && target instanceof ICDEContextMenuContributor) {
 			// Iterate through the edit policies and call the testAttribute method for 
 			// the edit policy that implements an action filter or returns implements IAdaptable
 			// with a type of IActionFilter. 
@@ -101,6 +108,19 @@ public class CDEActionFilter implements IActionFilter {
 			IActionFilter af = (IActionFilter)((IAdaptable)ep).getAdapter(IActionFilter.class);
 			if (af != null)
 				return af.testAttribute(target, arg, value);
+		}
+		return false;
+	}
+	
+	/**
+	 * Return true if this target bean has a structural feature name equal to 'value'
+	 */
+	public boolean testAttributeForPropertyName(Object target, String value) {
+		if (((EditPart) target).getModel() instanceof EObject) {
+			EClass modelType = ((EObject)((EditPart) target).getModel()).eClass();
+			EStructuralFeature textSF = modelType.getEStructuralFeature(value);
+			if (textSF != null)
+				return true;
 		}
 		return false;
 	}
