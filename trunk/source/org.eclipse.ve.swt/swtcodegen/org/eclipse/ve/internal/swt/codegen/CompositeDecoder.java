@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-23 12:45:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-23 21:04:11 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -24,10 +24,6 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 public class CompositeDecoder extends AbstractCompositeDecoder {
 
 	/**
-	 * @param expr
-	 * @param model
-	 * @param cm
-	 * @param part
 	 * 
 	 * @since 1.0.0
 	 */
@@ -37,8 +33,6 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @since 1.0.0
 	 */
 	public CompositeDecoder() {

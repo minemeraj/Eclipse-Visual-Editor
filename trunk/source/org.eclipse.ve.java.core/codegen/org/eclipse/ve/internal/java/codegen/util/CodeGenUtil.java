@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-23 21:04:08 $ 
  */
 
 
@@ -817,6 +817,11 @@ public static IEditorStyle getEditorStyle (org.eclipse.ve.internal.java.codegen.
 public static ExpressionDecoderFactory getDecoderFactory (org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel beanModel) {
   	EditDomain d = beanModel.getDomain() ;
   	return (ExpressionDecoderFactory) d.getData(ExpressionDecoderFactory.CodeGenDecoderFactory_KEY) ;
+}
+
+public static MethodGeneratorFactory getMethodTextFactory (org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel beanModel) {
+	EditDomain d = beanModel.getDomain() ;
+	return (MethodGeneratorFactory) d.getData(MethodGeneratorFactory.CodeGenMethodGeneratorFactory_KEY) ;
 }
 
 

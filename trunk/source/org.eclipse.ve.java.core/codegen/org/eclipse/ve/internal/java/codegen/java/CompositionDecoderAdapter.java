@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-23 21:04:08 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -98,7 +99,7 @@ protected void processSettings(Notification msg) {
                  }             
              break ;
 		case Notification.ADD :			  
-		      MethodTextGenerator mg = new MethodTextGenerator((EObject)msg.getNewValue(),fbeanModel) ;		      
+		      IMethodTextGenerator mg = CodeGenUtil.getMethodTextFactory(fbeanModel).getMethodGenerator((IJavaObjectInstance)msg.getNewValue(),fbeanModel) ;		      
 		      try {
 				mg.generateExpressionsContent() ;
 			  }

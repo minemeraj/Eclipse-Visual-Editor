@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-23 21:04:08 $ 
  */
 
 import java.util.*;
@@ -166,6 +166,7 @@ protected IBeanDeclModel createDefaultModel(EditDomain d){
 	m.setDomain(d) ;
 
     CodeGenUtil.getDecoderFactory(m).setResourceSet(fDiagram.getModelResourceSet()) ;
+    CodeGenUtil.getMethodTextFactory(m).setResourceSet(fDiagram.getModelResourceSet()) ;
 	return m ;
 }
 

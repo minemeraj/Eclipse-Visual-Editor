@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-21 21:13:41 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-23 21:04:08 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -1814,6 +1814,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// and the viewer with the data.
 			editDomain.setRuleRegistry(JVEStyleRegistry.getJVEStyleRegistry().getStyle(VCEPreferences.getStyleID()));
 			editDomain.setData(ExpressionDecoderFactory.CodeGenDecoderFactory_KEY, new ExpressionDecoderFactory());
+			editDomain.setData(MethodGeneratorFactory.CodeGenMethodGeneratorFactory_KEY, new MethodGeneratorFactory());
 
 			editDomain.setAnnotationLinkagePolicy(new EMFAnnotationLinkagePolicy());
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);

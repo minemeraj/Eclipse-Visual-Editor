@@ -7,5 +7,6 @@
       eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/expDecoder" name="expDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventDecoder" name="eventDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/methodGenerator" name="methodGenerator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
