@@ -1,0 +1,43 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: SWTApplicationSourceTemplate.javajet,v $
+ *  $Revision: 1.1 $ $Date: 2004-11-27 08:46:07 $
+ */
+%>
+<%@ jet 
+	skeleton="VisualClassSourceWizardSkeleton.java" 
+	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
+	class="SWTApplicationSourceGenerator" %>
+	
+public class <%=typeName%> {
+
+	private org.eclipse.swt.widgets.Shell sShell = null;
+	
+	/**
+	 * This method initializes sShell
+	 */
+	private void createSShell() {
+		sShell = new org.eclipse.swt.widgets.Shell();		   
+		sShell.setText("Application");
+		sShell.setSize(new org.eclipse.swt.graphics.Point(300,200));
+	}
+
+	public static void main(String[] args) {
+		/* Before this is run, be sure to set up the following in the launch configuration 
+		 * (Arguments->VM Arguments) for the correct SWT library path. 
+		 * The following is a windows example:
+		 * -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.0\os\win32\x86"
+		 */
+		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();		
+		<%=typeName%> thisClass = new <%=typeName%>();
+		thisClass.createSShell() ;
+		thisClass.sShell.open();
+		
+		while (!thisClass.sShell.isDisposed()) {
+			if (!display.readAndDispatch()) display.sleep ();
+		}
+		display.dispose();		
+	}
+}
+	

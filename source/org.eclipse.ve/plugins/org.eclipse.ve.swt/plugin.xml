@@ -213,8 +213,17 @@
 	    	     type="java.lang.Object"
 	        	 icon="icons/full/clcl16/shell_obj.gif"
 		         category="org.eclipse.ve.swt.cat"
-	    	     contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
+	    	     contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.SWTApplicationSourceContributor"
 	        	 name="%NewStyleComponent.Application">
+			</visualElement>
+			<visualElement
+				 pluginId="org.eclipse.swt"
+		         container="SWT_CONTAINER"
+	    	     type="java.lang.Object"
+	        	 icon="icons/full/clcl16/shell_obj.gif"
+		         category="org.eclipse.ve.swt.cat"
+	    	     contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
+	        	 name="%NewStyleComponent.Shell">
 			</visualElement>
 			<visualElement
 				 pluginId="org.eclipse.swt"
