@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.9 $  $Date: 2004-01-28 21:54:07 $ 
+ *  $Revision: 1.10 $  $Date: 2004-01-28 22:39:44 $ 
  */
 
 import java.util.*;
@@ -466,7 +466,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
          JCMMethod m = getInitializingMethod(component) ;
          String methodName = m.getName() ;
          if (methodName == null) {
-            methodName = getVarRule().getInstanceVariableMethodName(component,bp.getSimpleName(), cuType,fCompositionModel) ;
+            methodName = getVarRule().getInstanceVariableMethodName(component,bp.getSimpleName(), cuType,fBeanModel) ;
             m.setName(methodName) ;
          }
          ma = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(m,ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;

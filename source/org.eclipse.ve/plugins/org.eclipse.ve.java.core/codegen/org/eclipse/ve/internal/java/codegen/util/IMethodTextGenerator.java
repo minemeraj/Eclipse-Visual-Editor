@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-28 22:39:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -80,5 +80,13 @@ public interface IMethodTextGenerator {
 	 * @param fmethodArguments The fmethodArguments to set.
 	 */
 	public void setMethodArguments(String[] fmethodArguments) ;
+	
+	/**
+	 * 
+	 * @return a method Prefix, e.g., "get"  for a getter, or "create" for others
+	 * 
+	 * @since 1.0.0
+	 */
+	public String getMethodPrefix() ;
 
 }
