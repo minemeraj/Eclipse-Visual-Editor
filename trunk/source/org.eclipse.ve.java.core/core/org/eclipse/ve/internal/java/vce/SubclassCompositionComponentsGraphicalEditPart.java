@@ -9,14 +9,13 @@ package org.eclipse.ve.internal.java.vce;
  ******************************************************************************/
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2004-08-18 00:13:56 $
+ * 1.1 $ $Date: 2004-08-18 15:38:26 $
  */
 import java.util.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.gef.LayerConstants;
 
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
