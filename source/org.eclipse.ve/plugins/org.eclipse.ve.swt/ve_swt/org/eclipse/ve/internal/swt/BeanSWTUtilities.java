@@ -2,6 +2,7 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.ecore.EClassifier;
 
+import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
@@ -15,7 +16,9 @@ import org.eclipse.ve.internal.java.visual.VisualUtilities;
 public class BeanSWTUtilities {
 
     // JCMMethod proxies are cached in a registry constants.
-    public IMethodProxy getLayoutMethodProxy;
+    public IMethodProxy getLayoutMethodProxy,
+		setBoundsMethodProxy,
+		getBoundsMethodProxy;
 
     public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
 
@@ -84,5 +87,45 @@ public class BeanSWTUtilities {
     }
     private static ILayoutPolicyFactory getDefaultLayoutPolicyFactory(){
    		return new UnknownLayoutPolicyFactory();
+    }
+    
+    public static void invoke_setBounds(IBeanProxy aBeanProxy, final IBeanProxy aRectangleBeanProxy){
+    	BeanSWTUtilities constants = getConstants(aBeanProxy);
+
+    	if (constants.setBoundsMethodProxy == null) {
+    		constants.setBoundsMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy( //$NON-NLS-1$
+    			"setBounds", //$NON-NLS-1$
+    			"org.eclipse.swt.graphics.Rectangle" //$NON-NLS-1$
+    		);
+    	}
+        if (constants.setBoundsMethodProxy != null) {
+        	final IMethodProxy setBoundsMethodProxy = constants.setBoundsMethodProxy;
+            JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aRectangleBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return setBoundsMethodProxy.invoke(aRectangleBeanProxy);
+                        }
+                    });
+        }
+    }
+
+    public static IRectangleBeanProxy invoke_getBounds(final IBeanProxy aBeanProxy){
+    	BeanSWTUtilities constants = getConstants(aBeanProxy);
+    	
+    	if (constants.getBoundsMethodProxy == null) {
+    		constants.getBoundsMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("getBounds"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.getBoundsMethodProxy != null) {
+        	final IMethodProxy getBoundsMethodProxy = constants.getBoundsMethodProxy;
+            return (IRectangleBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return getBoundsMethodProxy.invoke(aBeanProxy);
+                        }
+                    });
+        }
+    	return null;
     }
 }
