@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-07 14:57:10 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -31,23 +31,24 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		"SWEET_STYLEBITS",
 	    new Object[] [] {			
-			{ "noBackground" ,  new Object[] {
+			{ "noBackground" , "noBackground" , Boolean.TRUE , new Object[] {
 			    "NO_BACKGROUND" , "org.eclipse.swt.SWT.NO_BACKGROUND" , new Integer(SWT.NO_BACKGROUND)				
 			} } ,
-			{ "noFocus" ,  new Object[] {
+			{ "noFocus" , "noFocus" , Boolean.TRUE ,  new Object[] {
 				"NO_FOCUS" , "org.eclipse.swt.SWT.NO_FOCUS" , new Integer(SWT.NO_FOCUS)				
 			} } ,
-			{ "noMergePaints" ,  new Object[] {
+			{ "noMergePaints" , "noMergePaints", Boolean.TRUE , new Object[] {
 				"NO_MERGE_PAINTS" , "org.eclipse.swt.SWT.NO_MERGE_PAINTS" , new Integer(SWT.NO_MERGE_PAINTS)				
 			} } ,
-			{ "noRedrawResize" ,  new Object[] {
+			{ "noRedrawResize" , "noRedrawResize" , Boolean.TRUE , new Object[] {
 				"NO_REDRAW_RESIZE" , "org.eclipse.swt.SWT.NO_REDRAW_RESIZE" , new Integer(SWT.NO_REDRAW_RESIZE)				
 			} } ,
-			{ "noRadioGroup" ,  new Object[] {
+			{ "noRadioGroup" , "noRadioGroup" , Boolean.TRUE , new Object[] {
 				"NO_RADIO_GROUP" , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				
 			} } 			
 		}
 	);
+	SweetHelper.mergeStyleBits(descriptor,new Class[] {Control.class});
 	return descriptor;
 }
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-07 14:57:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -31,19 +31,19 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		"SWEET_STYLEBITS",
 	    new Object[] [] {
-			{ "style" ,  new Object[] {
+			{ "style" , "style" , Boolean.FALSE ,  new Object[] {
 			    "PUSH" , "org.eclipse.swt.SWT.PUSH" , new Integer(SWT.PUSH) ,
 				"CHECK" , "org.eclipse.swt.SWT.CHECK" ,  new Integer(SWT.CHECK), 				
 				"RADIO" , "org.eclipse.swt.SWT.RADIO" , new Integer(SWT.RADIO) ,
 				"ARROW" , "org.eclipse.swt.SWT.ARROW" , new Integer(SWT.ARROW) ,
 				"TOGGLE" , "org.eclipse.swt.SWT.TOGGLE" , new Integer(SWT.TOGGLE)				
 			} } ,
-			{ "alignment" , new Object[] {
+			{ "alignment" , "alignment", Boolean.FALSE , new Object[] {
 				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					
 				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) ,
 				"CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				
 			} },
-			{ "arrowStyle" , new Object[] {
+			{ "arrowStyle" , "arrowStyle", Boolean.FALSE , new Object[] {
 				"UP" , "org.eclipse.swt.SWT.UP" , new Integer(SWT.UP) ,					
 				"DOWN" , "org.eclipse.swt.SWT.DOWN" , new Integer(SWT.DOWN) ,
 				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,
@@ -51,6 +51,7 @@ public BeanDescriptor getBeanDescriptor() {
 			} }
 		}
 	);
+	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-07 14:57:10 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -31,21 +31,22 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		"SWEET_STYLEBITS",
 	    new Object[] [] {				
-			{ "style" ,  new Object[] {
+			{ "style" , "style" , Boolean.FALSE , new Object[] {
 			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
 			} } ,
-			{ "selection" , new Object[] {
+			{ "selection" , "selection" , Boolean.FALSE , new Object[] {
 				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
 				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
 			} },
-			{ "fullSelection" , new Object[] {
+			{ "fullSelection" , "fullSelection" , Boolean.FALSE , new Object[] {
 				"FULL_SELECTION" , "org.eclipse.swt.FULL_SELECTION" , new Integer(SWT.FULL_SELECTION) 					
 			} } ,
-			{ "hideSelection" , new Object[] {
+			{ "hideSelection" , "hideSelection" , Boolean.FALSE , new Object[] {
 				"HIDE_SELECTION" , "org.eclipse.swt.HIDE_SELECTION" , new Integer(SWT.HIDE_SELECTION) 					
 			} }			
 		}
 	);
+	SweetHelper.mergeStyleBits(descriptor, new Class[] {Control.class});
 	return descriptor;
 }
 	

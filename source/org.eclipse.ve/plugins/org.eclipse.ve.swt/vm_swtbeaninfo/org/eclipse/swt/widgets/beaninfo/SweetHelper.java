@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SweetHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-08 14:50:01 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -28,19 +28,19 @@ public class SweetHelper {
  * Combine all of the style bits from the descriptor's classes superclass into the descriptor
  * This is used in most cases of Control
  */	
-public static void mergeAllSuperclassStyleBits(BeanDescriptor descriptor){
+public static void mergeSuperclassStyleBits(BeanDescriptor descriptor){
 	
 	Map styleBitsMap = getStyleBitsMap(descriptor);
 	// Get the style bits from the superclass
 	Class superclass = descriptor.getBeanClass().getSuperclass();
-	while(superclass != java.lang.Object.class){
-		try {
-			BeanInfo superclassBeanInfo = Introspector.getBeanInfo(superclass,superclass.getSuperclass());
-			mergeStyleBits(styleBitsMap,superclassBeanInfo);
-		} catch (IntrospectionException e) {
-			e.printStackTrace();
+	try {
+		BeanInfo superclassBeanInfo = Introspector.getBeanInfo(superclass,superclass.getSuperclass());
+		while(superclassBeanInfo.getBeanDescriptor().getValue(SWEET_STYLEBITS) == null){
+			superclassBeanInfo = Introspector.getBeanInfo(superclass.getSuperclass(),superclass.getSuperclass().getSuperclass()); 			 
 		}
-		superclass = superclass.getSuperclass();		
+		mergeStyleBits(styleBitsMap,superclassBeanInfo);
+	} catch (IntrospectionException e) {
+		e.printStackTrace();
 	}	
 	setStyleBits(descriptor,styleBitsMap);
 	
@@ -48,13 +48,14 @@ public static void mergeAllSuperclassStyleBits(BeanDescriptor descriptor){
 
 private static void setStyleBits(BeanDescriptor descriptor, Map styleBitsMap) {
 	// Turn the style bits back into an array
-	Object[][] newStyleBits = new Object[styleBitsMap.size()][2];
+	Object[][] newStyleBits = new Object[styleBitsMap.size()][4];
 	Iterator iter = styleBitsMap.keySet().iterator();
 	int index = 0;
 	while (iter.hasNext()) {
 		Object styleName = iter.next();
 		newStyleBits[index][0] = styleName;
-		newStyleBits[index][1] = styleBitsMap.get(styleName);
+		Object[] nameInitStringValues = (Object[])styleBitsMap.get(styleName);
+ 		System.arraycopy(nameInitStringValues,0,newStyleBits[index],1,3);
 		index++;
 	}
 	descriptor.setValue(SWEET_STYLEBITS,newStyleBits);	
@@ -68,17 +69,15 @@ private static void mergeStyleBits(Map styleBitsMap, BeanInfo superclassBeanInfo
 	}	
 	for (int i = 0; i < superclassStyleBits.length; i++) {
 		String canonnicalName = (String)superclassStyleBits[i][0];
-		Object[] styleBits = (Object[])superclassStyleBits[i][1];
+		String displayName = (String)superclassStyleBits[i][1];
+		Boolean expert = (Boolean) superclassStyleBits[i][2];
+		Object[] values = (Object[]) superclassStyleBits[i][3];
 		// If the cannonical name doesn't exist then add this to the map
 		if(styleBitsMap.get(canonnicalName ) == null){
-			styleBitsMap.put(canonnicalName,styleBits);
+			styleBitsMap.put(canonnicalName,new Object[] {displayName,expert,values});
 		} else {
 			// Merge into the existing set of style bits
-			Object[] existingBits = (Object[])styleBitsMap.get(canonnicalName);
-			Object[] newBits = new Object[existingBits.length + styleBits.length];
-			System.arraycopy(existingBits,0,newBits,0,existingBits.length);
-			System.arraycopy(styleBits,0,newBits,existingBits.length + 1,styleBits.length);
-			styleBitsMap.put(canonnicalName,newBits);
+			// TODO
 		}
 	}
 }
@@ -87,7 +86,7 @@ private static Map getStyleBitsMap(BeanDescriptor descriptor) {
 	Object[] [] currentStyleBits = (Object[][])descriptor.getValue(SWEET_STYLEBITS);
 	Map styleBitsMap = new HashMap(currentStyleBits.length + 5);
 	for (int i = 0; i < currentStyleBits.length; i++) {
-		styleBitsMap.put(currentStyleBits[i][0],currentStyleBits[i][1]);
+		styleBitsMap.put(currentStyleBits[i][0], new Object[] { currentStyleBits[i][1] , currentStyleBits[i][2] , currentStyleBits [i][3]});
 	}
 	return styleBitsMap;
 }
@@ -95,7 +94,7 @@ private static Map getStyleBitsMap(BeanDescriptor descriptor) {
  * Combine all of the style bits from the names classes into the descriptor
  * This is used for scenarios such as Table which inherits from Composite but does not want to inherit its style bits 
  */	
-public static void mergeNamedSuperclassStyleBits(BeanDescriptor descriptor, Class[] namedClasses){
+public static void mergeStyleBits(BeanDescriptor descriptor, Class[] namedClasses){
 	
 	Map styleBitsMap = getStyleBitsMap(descriptor);
 	for (int i = 0; i < namedClasses.length; i++) {
@@ -109,7 +108,7 @@ public static void mergeNamedSuperclassStyleBits(BeanDescriptor descriptor, Clas
 	setStyleBits(descriptor,styleBitsMap);	
 }
 
-public static void mergeNamedSuperclassStyleBits(BeanDescriptor descriptor, Class namedClass, String[] styleBits){
+public static void mergeNamedStyleBits(BeanDescriptor descriptor, Class namedClass, String[] styleBits){
 	
 }
 	
@@ -117,7 +116,7 @@ public static void main(String[] args) {
 	
 	// Test
 	Introspector.setBeanInfoSearchPath(new String[] {"org.eclipse.swt.widgets.beaninfo"});
-	mergeAllSuperclassStyleBits(new ButtonBeanInfo().getBeanDescriptor());
+	mergeSuperclassStyleBits(new TableBeanInfo().getBeanDescriptor());
 	
 }
 
