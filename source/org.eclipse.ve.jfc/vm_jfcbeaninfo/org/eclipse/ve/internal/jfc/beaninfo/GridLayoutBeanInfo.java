@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-03-09 00:08:12 $ 
  */
 
 import java.awt.GridLayout;
@@ -301,10 +301,9 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
 			// columns
-			super.createFieldPropertyDescriptor("columns", GridLayout.class.getField("columns"), new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"columns", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, GridLayoutMessages.getString("GridLayout.PropDesc.columns.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, GridLayoutMessages.getString("GridLayout.PropDesc.columns.Desc"), //$NON-NLS-1$
-				FIELDPROPERTY, new Object[] {"columns",GridLayout.class.getField("columns"),EMPTY_ARGS},				
 				BOUND, Boolean.FALSE,
 				EXPERT, Boolean.FALSE,
 				HIDDEN, Boolean.FALSE,
@@ -320,7 +319,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			}
 			),
 			// rows
-			super.createFieldPropertyDescriptor("rows", GridLayout.class.getField("rows"), new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"rows", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, GridLayoutMessages.getString("GridLayout.PropDesc.rows.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, GridLayoutMessages.getString("GridLayout.PropDesc.rows.Desc"), //$NON-NLS-1$
 				BOUND, Boolean.FALSE,
