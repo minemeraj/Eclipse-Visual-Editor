@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-01 00:51:21 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-02 19:40:26 $ 
  */
 
 import java.util.*;
@@ -538,6 +538,12 @@ protected static Comparator getDefaultBeanOrderComparator(){
 				return Integer.MAX_VALUE;
 			else if (isReferenced(main, subMain)) // if main ref. subMain, subMain must come first
 				return Integer.MIN_VALUE;
+			int mV = main.isInstanceVar()? 1 : 0;
+			int sV = subMain.isInstanceVar() ? 1 : 0 ;
+			if (mV>sV)  
+				return Integer.MIN_VALUE;
+			else if (mV<sV)
+				return Integer.MAX_VALUE;
 			int parentCount = getParentCount(main);
 			int hasChildren = getConstraintCount(main);
 			return - hasChildren - parentCount;
