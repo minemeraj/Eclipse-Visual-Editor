@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-12 18:49:52 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-12 19:06:36 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -35,6 +35,9 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import org.eclipse.ve.internal.java.choosebean.ChooseBeanDialog;
+
 import org.eclipse.ve.internal.propertysheet.*;
  
 /**
@@ -58,9 +61,13 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	
 	protected Object openDialogBox(Control cellEditorWindow) {
 		// TODO Auto-generated method stub
-		MessageBox messageBox = new MessageBox(cellEditorWindow.getShell());
-		messageBox.setMessage("Let the user drop a new instance here");
-		messageBox.open();
+		ChooseBeanDialog chooseBean = new ChooseBeanDialog(
+				cellEditorWindow.getShell(),
+				editDomain,
+				ChooseBeanDialog.determineContributors(),
+				-1,
+				false);				
+		chooseBean.open();
 		return null;
 	}
 	protected Control createContents(Composite cell) {
