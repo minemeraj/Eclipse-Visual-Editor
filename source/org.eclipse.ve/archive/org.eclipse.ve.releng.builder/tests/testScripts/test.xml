@@ -65,7 +65,7 @@
 
 	<target name="all">
 		<antcall target="jem" />
-		<antcall target="gef" />
+		<antcall target="ve" />
 		<antcall target="genHtml" />
 	</target>
 	
