@@ -478,6 +478,7 @@
             id="org.eclipse.ve.java.core.examples">
       </category>
       <wizard
+            javatype="true"
             name="%visualclass"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
             category="org.eclipse.jdt.ui.java"
