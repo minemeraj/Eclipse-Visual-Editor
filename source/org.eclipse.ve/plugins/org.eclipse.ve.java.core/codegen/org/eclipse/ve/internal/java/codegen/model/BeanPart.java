@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.25 $  $Date: 2004-10-15 22:46:02 $ 
+ *  $Revision: 1.26 $  $Date: 2004-11-05 20:08:16 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -779,10 +779,13 @@ public boolean isEquivalent(BeanPart b) {
 	}
 	
 	/**
-	 * During parsing, it is possible that a parent was not resolved
-	 * yet, so its expression (e.g., createFoo()) is tucked here.
-	 * Once the constructor resolves the parent, creatFoo() will be moved to it.
-	 * @param exp
+	 * During parsing, it is possible that a parent can not resolve a child
+	 * relationship associated with an expression.
+	 * A potential child will hold on to this expression... assuming that it would be able to resolve
+	 * its parent (e.g., SWT constructor will resolve a parent,,, and a call to
+	 * a creatChild() for the parent to be resolve to the proper child) with a proper decoder.
+	 * 
+	 * @param exp un resolved expression
 	 */
 	public void addParentExpression (CodeExpressionRef exp) {
 		if (!fparentExpressions.contains(exp)) 
@@ -791,6 +794,14 @@ public boolean isEquivalent(BeanPart b) {
 	public List getParentExpressons () {
 		return fparentExpressions;
 	}
+	/*
+	 * During parse time, parent/child expressions with no child indications were 
+	 * found by a parent... it is up for each child to determine it is the child.
+	 * e.g. createTable() vs. container.addTable()
+	 * Only specialize decoders could descide whome the createTable is related to.
+	 * During the decode phase, decoders will call this method to try
+	 * and resolve this relationship...
+	 */
 	public void resolveParentExpressions(BeanPart parent) {
 		if (parent != null) {
 			for (int i = 0; i < fparentExpressions.size(); i++) {

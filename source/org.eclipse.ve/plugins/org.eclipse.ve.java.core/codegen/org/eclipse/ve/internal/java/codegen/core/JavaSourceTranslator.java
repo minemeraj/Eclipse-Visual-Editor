@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.41 $  $Date: 2004-08-27 15:34:11 $ 
+ *  $Revision: 1.42 $  $Date: 2004-11-05 20:08:16 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -820,6 +820,7 @@ void	buildCompositionModel() throws CodeGenException {
 		  while (itr.hasNext()) {
 		  			 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
+	         bean.getBadExpressions().clear();
 	       
 		   // if a bean was added to a container, the decoder will reflect this in the BeamModel
 		   

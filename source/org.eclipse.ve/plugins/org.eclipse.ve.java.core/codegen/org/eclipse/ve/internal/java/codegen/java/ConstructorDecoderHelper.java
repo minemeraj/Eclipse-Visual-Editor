@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2004-10-13 18:49:45 $ 
+ *  $Revision: 1.27 $  $Date: 2004-11-05 20:08:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.*;
@@ -270,7 +271,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#decode()
 	 */
 	public boolean decode() throws CodeGenException {
-		// TODO This is a temporary until we move to the new AST and use the converter
+		// Set the EMF object with a proper PT allocation
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
@@ -319,7 +320,12 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#removeFromModel()
 	 */
 	public void removeFromModel() {
-		fbeanPart.getEObject().eUnset(fFmapper.getFeature(null)) ;
+		EStructuralFeature f = fFmapper.getFeature(null);
+		// We do not want to remove the allocation... as if the EObject is 
+		// still contained int he model (membership)... bean proxy will try
+		// to uset this... casuing instantiations warning
+		if (!f.getName().equals(AllocationFeatureMapper.ALLOCATION_FEATURE))		
+		   fbeanPart.getEObject().eUnset(f) ;
 	}
 
 	/* (non-Javadoc)
