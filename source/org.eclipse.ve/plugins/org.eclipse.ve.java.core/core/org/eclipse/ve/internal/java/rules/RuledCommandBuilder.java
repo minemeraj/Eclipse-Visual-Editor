@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-26 11:11:36 $ 
  */
 
 import java.util.*;
@@ -196,6 +196,12 @@ public class RuledCommandBuilder extends CommandBuilder {
 		}		
 	}
 
+	public void applyAttributeSetting(EObject target, String featureName, Object value){
+		
+		applyAttributeSetting(target,target.eClass().getEStructuralFeature(featureName),value);
+		
+	}
+	
 	/**
 	 * Add value before specified value.
 	 * 
