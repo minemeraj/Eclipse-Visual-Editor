@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.34 $  $Date: 2004-05-10 17:54:17 $ 
+ *  $Revision: 1.35 $  $Date: 2004-05-12 20:01:41 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -511,6 +511,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		rebuildPalette = false;
 		PaletteRoot paletteRoot = editDomain.getPaletteRoot();
 		ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);
+		List newChildren = null; // New list of children. We will build entire list and then set into palette root to speed it up.
+		// What happens is first time through we will build the palette up before applying into the palette viewer,
+		// that way it gets it all at once. For later times, since palette root can't be replaced, we will instead
+		// get the old children list, copy just the control group over to a new child list, build the rest into
+		// the new list and apply the new list back all at once into the palette root.
 		
 		// TODO This whole area needs to be rethinked for customization and for caching and other things.
 
@@ -519,34 +524,33 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// Get the default base palette. (Basically only the control group).				
 				Palette ref = (Palette) rset.getEObject(basePaletteRoot, true);
 				paletteRoot = (PaletteRoot) ref.getEntry();
-				editDomain.setPaletteRoot(paletteRoot);
 				// Get the two standard tools. Since we only load this part of the palette once, it can never change.
 				// TODO Need a better way of doing this that isn't so hardcoded.				
-				List c = paletteRoot.getChildren();
-				if (c.size() >= 1 && c.get(0) instanceof PaletteContainer) {
-					PaletteContainer controlGroup = (PaletteContainer) c.get(0);
-					c = controlGroup.getChildren();
-					if (c.size() >= 3) {
+				newChildren = paletteRoot.getChildren();
+				if (newChildren.size() >= 1 && newChildren.get(0) instanceof PaletteContainer) {
+					PaletteContainer controlGroup = (PaletteContainer) newChildren.get(0);
+					newChildren = controlGroup.getChildren();
+					if (newChildren.size() >= 3) {
 						final PaletteToolEntryAction ptSel = (PaletteToolEntryAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID);
-						ptSel.setToolEntry((ToolEntry) c.get(0));
+						ptSel.setToolEntry((ToolEntry) newChildren.get(0));
 						ptSel.setId(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID);	// Because setToolEntry resets it
 						ptSel.setChecked(true);	// Selection always initially checked. (i.e. selected).
 						final PaletteToolEntryAction ptMarq = (PaletteToolEntryAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID);
-						ptMarq.setToolEntry((ToolEntry) c.get(1));
+						ptMarq.setToolEntry((ToolEntry) newChildren.get(1));
 						ptMarq.setChecked(false);
 						ptMarq.setId(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID);	// Because setToolEntry resets it
 						final PaletteToolbarDropDownAction ptDropDown = (PaletteToolbarDropDownAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);
-						ptDropDown.setToolEntry((ToolEntry) c.get(2));
+						ptDropDown.setToolEntry((ToolEntry) newChildren.get(2));
 						ptDropDown.setChecked(false);
 						ptDropDown.setPaletteRoot(paletteRoot);
 						ptDropDown.setId(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);	// Because setToolEntry resets it						
 						
 						// Add palette viewer listener so that we can set the correct selection state and msg.
-						final List lc = c; 
+						final PaletteRoot froot = paletteRoot; 
 						editDomain.getPaletteViewer().addPaletteListener(new PaletteListener() {
 							public void activeToolChanged(PaletteViewer palette, ToolEntry tool) {
-								ptSel.setChecked(tool == lc.get(0));
-								ptMarq.setChecked(tool == lc.get(1));
+								ptSel.setChecked(tool == froot.getChildren().get(0));
+								ptMarq.setChecked(tool == froot.getChildren().get(1));
 							
 								String msg = ""; //$NON-NLS-1$
 								if (tool.createTool() instanceof CreationTool ){
@@ -555,7 +559,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								setStatusMsg(getEditorSite().getActionBars(),msg,null);																
 							}
 						});
-					}
+					}				
 				}
 			} catch (RuntimeException e) {
 				JavaVEPlugin.log(e);
@@ -566,12 +570,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			PaletteToolbarDropDownAction ptDropDown = (PaletteToolbarDropDownAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);
 			ptDropDown.setPaletteRoot(paletteRoot);
 			
-			// Can't just plop new one in (GEF restriction). Need to remove
-			// all of the drawers first. (This leaves the control group still there).
-			PaletteEntry[] c = (PaletteEntry[]) paletteRoot.getChildren().toArray(new PaletteEntry[paletteRoot.getChildren().size()]);
-			for (int i = 0; i < c.length; i++) {
-				if (c[i] instanceof PaletteDrawer)
-				paletteRoot.remove(c[i]);
+			// Can't just plop new one in (GEF restriction). So we will copy over the control group to the
+			// newChildren.
+			List c = paletteRoot.getChildren();
+			newChildren = new ArrayList(c.size());
+			for (int i = 0; i < c.size(); i++) {
+				if (!(c.get(i) instanceof PaletteDrawer))
+					newChildren.add(c.get(i));
 			}			
 		}
 	
@@ -586,9 +591,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
 					firstCat = false;
 				}
-				paletteRoot.add(drawer);
+				newChildren.add(drawer);
 			}
 		}
+		
+		// Now set the new children back into the root. We also set the root back into the palette, but
+		// this is ok if not the first time. If not the first time it will simply ignore it since same root.
+		// But for the first time it will wait until now to actually build the entire palette visuals.
+		paletteRoot.setChildren(newChildren);
+		editDomain.setPaletteRoot(paletteRoot);			
 	}
 	
 
