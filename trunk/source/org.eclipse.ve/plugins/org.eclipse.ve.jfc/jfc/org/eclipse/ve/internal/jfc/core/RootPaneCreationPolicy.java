@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: RootPaneCreationPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-20 18:42:45 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -85,10 +85,10 @@ public class RootPaneCreationPolicy implements EMFCreationTool.CreationPolicy {
 				
 			ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
 			final IJavaObjectInstance contentPane = (IJavaObjectInstance) BeanUtilities.createJavaObject("javax.swing.JPanel", //$NON-NLS-1$
-				rset, "new javax.swing.JPanel()"); //$NON-NLS-1$
+				rset, (String)null); //$NON-NLS-1$
 				
 			IJavaInstance layoutBean = BeanUtilities.createJavaObject("java.awt.BorderLayout", //$NON-NLS-1$
-				rset, "new java.awt.BorderLayout()"); //$NON-NLS-1$
+				rset, (String)null); //$NON-NLS-1$
 			if (layoutBean != null) {
 				EStructuralFeature sf_containerLayout = JavaInstantiation.getSFeature(rset, JFCConstants.SF_CONTAINER_LAYOUT);
 				contentPane.eSet(sf_containerLayout, layoutBean);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.27 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.28 $  $Date: 2004-05-20 18:45:38 $ 
  */
 
 
@@ -585,11 +585,11 @@ protected void updateDocument(int docOff, int len, String newContent) {
  */
 public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel model, List imports) {
 	if (imports != null && imports.size()>0) {		
-		try {
-			int preLen = cu.getSource().length();
-//			cu.reconcile(false,false,null,null);
-			IImportDeclaration[] cuImports = cu.getImports();
+		try {			
 			for (int i = 0; i < imports.size(); i++) {
+//				cu.reconcile(false,false,null,null);
+			   int preLen = cu.getSource().length();
+			   IImportDeclaration[] cuImports = cu.getImports();
 			   boolean found=false;
 			   String reqName = (String)imports.get(i);
 			   for (int j = 0; j < cuImports.length; j++) {
@@ -610,7 +610,7 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 						      break;
 						}
 			   }
-			   if (!found && false) {
+			   if (!found) {
 			   	  int offset = cu.createImport(reqName, null, null).getSourceRange().getOffset();
 			   	  int delta = cu.getSource().length()-preLen;
 			   	  if (model != null)
