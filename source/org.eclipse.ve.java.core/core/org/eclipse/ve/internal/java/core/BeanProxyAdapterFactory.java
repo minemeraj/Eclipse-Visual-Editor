@@ -12,11 +12,8 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-18 22:02:38 $ 
  */
-import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -27,7 +24,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
@@ -97,7 +93,6 @@ public class BeanProxyAdapterFactory
 	protected Adapter createAdapter(Notifier adaptable) {
 		if (!(adaptable instanceof IJavaInstance))
 			return null; // Only Beans can be adapted to a beanProxyAdaptor.
-		Adapter adapter = null;
 
 		IJavaInstance bean = (IJavaInstance) adaptable;
 		// The class of adapter to use comes from the BeanDecorator.  Get the one that has the property set

@@ -11,14 +11,13 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-02-18 22:02:40 $
  */
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
