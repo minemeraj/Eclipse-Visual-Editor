@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-04-20 09:13:12 $
+ * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-05-24 17:56:08 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -79,12 +79,12 @@ public class JScrollPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(){			
-			protected void constrain(Dimension size, IFigure parentFigure) {
+			protected void constrain(Rectangle bounds, IFigure parentFigure) {
 				//TODO Condition this occuring for JTable children only
 				// If the bounds height is 0 or larger than us (we are the parent) then
 				// make the height of the child be us
-				if(size.height == 0 || size.height > parentFigure.getSize().height){
-					size.height = parentFigure.getSize().height - 1; //Reduce by -1 to make the bottom edge align better
+				if(bounds.height == 0 || bounds.height + bounds.y > parentFigure.getSize().height){
+					bounds.height = parentFigure.getSize().height - 1 - bounds.y; //Reduce by -1 to make the bottom edge align better
 				}
 			}
 		}); 
