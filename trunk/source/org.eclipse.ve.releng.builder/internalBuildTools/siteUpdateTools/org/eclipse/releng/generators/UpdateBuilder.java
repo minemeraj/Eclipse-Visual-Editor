@@ -78,6 +78,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * 			to include the buildid/tag-from-directory.txt, if the 4th part is not already set.  
  * 
  * 
+ * 	-size
+ *  	Optional: If specified then the plugin download and installed sizes will be updated into the feature.xml.
  */
 public class UpdateBuilder extends AbstractApplication {
 
@@ -88,6 +90,8 @@ protected static final String DEFAULT_CATNAME = "...";
 	protected String categoriesLocation;
 	
 	protected boolean add4thPart;
+	
+	protected boolean setSizes;
 
 	protected String rootLocation;
 
@@ -111,7 +115,14 @@ protected static final String DEFAULT_CATNAME = "...";
 	protected List features;
 
 	protected Manifest man;
+	private byte[] defaultManifestBytes = "Manifest-Version: 1.0\n".getBytes("UTF8");
 
+	class PluginData {
+		String tag;
+		long downloadSize;
+		long installedSize;
+	}
+	
 	class FeatureData {
 
 		FeatureData(String id, String version, String os, String ws, String arch, String jar) {
@@ -141,8 +152,10 @@ protected static final String DEFAULT_CATNAME = "...";
 		plugins = new HashMap();
 		features = new ArrayList();
 		// create common jar manifest
+		
+		
 
-		ByteArrayInputStream mis = new ByteArrayInputStream("Manifest-Version: 1.0\n".getBytes("UTF8"));
+		ByteArrayInputStream mis = new ByteArrayInputStream(defaultManifestBytes);
 
 		man = new Manifest(mis);
 	}
@@ -336,8 +349,8 @@ protected static final String DEFAULT_CATNAME = "...";
 			start = scan(xml, start, "\"");
 			end = scan(xml, start + 1, "\"");
 			String id = xml.substring(start + 1, end);
-			String tag = (String) plugins.get(id);
-			if (tag != null) {
+			PluginData pdata = (PluginData) plugins.get(id);
+			if (pdata != null) {
 				start = scan(xml, end, "version");
 
 				/*
@@ -352,14 +365,28 @@ protected static final String DEFAULT_CATNAME = "...";
 				end = scan(xml, start + 1, "\"");
 				version = xml.substring(start + 1, end);
 
-				if (this.add4thPart) {
+				if (this.add4thPart && pdata.tag != null) {
 					va = versionToArray(version);
 					if (va[3].equals("")) {
-						va[3] = tag;
+						va[3] = pdata.tag;
 						version = arrayToVersion(va);
 						xml = xml.replace(start + 1, end, version);
 						changedFile = true;
 					}
+				}
+				
+				if (setSizes) {
+					// Set the sizes too.
+					start = scan(xml, pluginStart, "download-size");
+					start = scan(xml, start, "\"");
+					end = scan(xml, start + 1, "\"");
+					xml = xml.replace(start + 1, end, String.valueOf((pdata.downloadSize+512)/1024));
+					
+					start = scan(xml, pluginStart, "install-size");
+					start = scan(xml, start, "\"");
+					end = scan(xml, start + 1, "\"");
+					xml = xml.replace(start + 1, end, String.valueOf((pdata.installedSize+512)/1024));
+					changedFile = true;
 				}
 
 			}
@@ -420,16 +447,24 @@ protected static final String DEFAULT_CATNAME = "...";
 			tag = buildNumber;
 
 		tag = verifyQualifier(tag);
+		PluginData pdata = (PluginData) plugins.get(id);
+		if (pdata == null) {
+			plugins.put(id, pdata = new PluginData());
+		}
+		
 		if (type.equals("bundle")) {
-			if (fixBundle(descriptor, id, tag, type, pluginandbundle))
-				plugins.put(id, tag);	// It was changed.
+			if (fixBundle(descriptor, id, tag, type, pluginandbundle, pdata))
+				pdata.tag = tag;
 		} else {
-			if (fixPluginXml(descriptor, id, tag, type, pluginandbundle))
-				plugins.put(id, tag);	// It was changed.
+			if (fixPluginXml(descriptor, id, tag, type, pluginandbundle, pdata))
+				pdata.tag = tag;
 		}
 	}
 
-	private boolean fixPluginXml(File descriptor, String id, String qualifier, String type, boolean pluginandbundle) throws Exception {
+	private final static int INSTALLED_SIZE_INDEX = 0;
+	private final static int DOWNLOAD_SIZE_INDEX = 1;
+	
+	private boolean fixPluginXml(File descriptor, String id, String qualifier, String type, boolean pluginandbundle, PluginData pdata) throws Exception {
 
 		// load plugin.xml or fragment.xml
 		StringBuffer xml = readFile(descriptor);
@@ -487,9 +522,12 @@ protected static final String DEFAULT_CATNAME = "...";
 							}
 							System.out.println("Updated " + type + ".xml for " + descriptor.getAbsolutePath());
 							if (!(pluginandbundle)) {
-								if (changedFile)
+								if (changedFile) {
 									pluginFolder = renameFolder(pluginFolder, id, version);
-								writeJAR(pluginFolder, "plugins");
+								}
+								long[] sizes = writeJAR(pluginFolder, "plugins");
+								pdata.installedSize = sizes[DOWNLOAD_SIZE_INDEX];
+								pdata.downloadSize = sizes[INSTALLED_SIZE_INDEX];
 								return changedFile;
 							}
 						}
@@ -500,7 +538,7 @@ protected static final String DEFAULT_CATNAME = "...";
 		return false;
 	}
 
-	private boolean fixBundle(File descriptor, String id, String qualifier, String type, boolean pluginandbundle) throws Exception {
+	private boolean fixBundle(File descriptor, String id, String qualifier, String type, boolean pluginandbundle, PluginData pdata) throws Exception {
 
 		// load plugin.xml or fragment.xml or MANIFEST.MF
 		StringBuffer xml = readFile(descriptor);
@@ -554,17 +592,28 @@ protected static final String DEFAULT_CATNAME = "...";
 			}
 		}
 		System.out.println("Updated " + type + ".xml for " + descriptor.getAbsolutePath());
-		if (changedFile)
+		if (changedFile) {
 			bundleFolder = renameFolder(bundleFolder, id, version);
+		}
 		writeJAR(bundleFolder, "plugins");
+		long[] sizes = writeJAR(bundleFolder, "plugins");
+		pdata.installedSize = sizes[DOWNLOAD_SIZE_INDEX];
+		pdata.downloadSize = sizes[INSTALLED_SIZE_INDEX];
 		return changedFile;
 	}
 
-	private void writeJAR(File pluginFolder, String rootFolder) throws Exception {
+
+	private final static long[] EMPTY_JAR = new long[] {0,0};
+	
+	/*
+	 * Write a jar file from the given folder. Return the original, unzipped size and the final file size.
+	 * of the folder, including subdirectories.
+	 */
+	private long[] writeJAR(File pluginFolder, String rootFolder) throws Exception {
 		String[] list = pluginFolder.list();
 		if (list == null) {
 			System.out.println("No files found in: " + pluginFolder.getAbsolutePath());
-			return;
+			return EMPTY_JAR;
 		}
 		File destination = new File(siteLocation, rootFolder);
 		destination.mkdirs();
@@ -572,14 +621,17 @@ protected static final String DEFAULT_CATNAME = "...";
 		String jarName = pluginFolder.getName() + ".jar";
 		JarOutputStream jos = null;
 
+		long[] size = new long[] {0, 0};
+		File jarFile = null;
 		try {
-			File jarFile = new File(destination, jarName);
+			jarFile = new File(destination, jarName);
 			System.out.println("Writing " + jarFile.getAbsolutePath());
 
 			String testManifest = pluginFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator + "MANIFEST.MF";
 			File ManifestFile = new File(testManifest);
 
 			if (!ManifestFile.exists()) {
+				size[INSTALLED_SIZE_INDEX]+=defaultManifestBytes.length;
 				jos = new JarOutputStream(new FileOutputStream(jarFile), man);
 			} else {
 				//InputStream isManifest = new FileInputStream(testManifest);
@@ -587,14 +639,16 @@ protected static final String DEFAULT_CATNAME = "...";
 				jos = new JarOutputStream(new FileOutputStream(jarFile));
 
 			}
-			writeJAREntries(jos, pluginFolder, 0);
+			size[INSTALLED_SIZE_INDEX] += writeJAREntries(jos, pluginFolder, 0);
 		} finally {
 			if (jos != null)
 				try {
 					jos.close();
+					size[DOWNLOAD_SIZE_INDEX] = jarFile.length(); 
 				} catch (IOException e) {
 				}
 		}
+		return size;
 	}
 
 	protected void writeSiteXML() throws Exception {
@@ -763,12 +817,17 @@ protected static final String DEFAULT_CATNAME = "...";
 		return catXMLText;
 	}
 	
-	protected void writeJAREntries(JarOutputStream jos, File folder, int rootMembers) throws Exception {
+	/*
+	 * write the folder to the jar, and return the accumlated size of the folder.
+	 */
+	protected long writeJAREntries(JarOutputStream jos, File folder, int rootMembers) throws Exception {
 		File[] list = folder.listFiles();
 		if (list == null) {
 			System.out.println("No files found in: " + folder.getAbsolutePath());
-			return;
+			return 0;
 		}
+		
+		long size = 0;
 		String prefix = "";
 		File temp = folder;
 		for (int i = 0; i < rootMembers; i++) {
@@ -778,9 +837,10 @@ protected static final String DEFAULT_CATNAME = "...";
 		rootMembers++;
 		for (int i = 0; i < list.length; i++) {
 			if (list[i].isDirectory()) {
-				writeJAREntries(jos, list[i], rootMembers);
+				size += writeJAREntries(jos, list[i], rootMembers);
 				continue;
 			}
+			size+=list[i].length();
 			FileInputStream is = new FileInputStream(list[i]);
 			try {
 				writeJarEntry(prefix + list[i].getName(), is, jos);
@@ -793,6 +853,8 @@ protected static final String DEFAULT_CATNAME = "...";
 				is = null;
 			}
 		}
+		
+		return size;
 	}
 
 	private void writeJarEntry(String entryName, InputStream is, JarOutputStream jos) throws Exception {
@@ -914,6 +976,9 @@ protected static final String DEFAULT_CATNAME = "...";
 		// Include if you want to generate 4 part version numbers.
 		// Leave off if you want to generate 3 part persion numbers.
 		this.add4thPart = commands.contains("-add4thPart");
+		
+		// Include if you want the download/installed sizes set.
+		this.setSizes = commands.contains("-size");
 
 	}
 

@@ -248,7 +248,7 @@
 		<!-- Now run the update process -->
 		<property value="-cats ${updateLocalDirectory}/cats.properties" name="devtype"/>
 	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
-	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} ${devtype}" /> 
+	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" /> 
 	         <classpath>
 	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar" />
 	         </classpath>
