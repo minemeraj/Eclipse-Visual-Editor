@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
 
@@ -109,7 +109,7 @@ public void activate() {
 		}
 	}
 	
-	AlignmentWindowAction.addAlignmentTab(getHost().getViewer(), AlignmentXYTabPage.class);	
+	CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), AlignmentXYComponentPage.class);	
 }
 /*
  * Get grid state data from the edit domain to determine whether to turn on/off the grid.
@@ -600,6 +600,8 @@ public boolean testAttribute(Object target, String name, String value) {
 	else if (name.startsWith("showgrid") && //$NON-NLS-1$
 			value.equals("true") && //$NON-NLS-1$
 			gridController.isGridShowing() )
+		return true;
+	else if (name.startsWith("LAYOUTPOLICY") && value.equals("XYLayout")) //$NON-NLS-1$ //$NON-NLS-2$
 		return true;
 		
 	return false;

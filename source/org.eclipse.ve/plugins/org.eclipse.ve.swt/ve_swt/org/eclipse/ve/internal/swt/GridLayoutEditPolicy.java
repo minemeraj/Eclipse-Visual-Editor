@@ -9,7 +9,7 @@ package org.eclipse.ve.internal.swt;
  **************************************************************************************************/
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.1 $ $Date: 2004-05-07 12:46:42 $
+ * $Revision: 1.2 $ $Date: 2004-05-10 18:37:30 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.AlignmentWindowAction;
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
@@ -84,7 +84,6 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	public GridLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
 		helper.setContainerPolicy(containerPolicy);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void activate(){
@@ -100,7 +99,8 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			initializeGrid();
 		}
 		super.activate();
-		AlignmentWindowAction.addAlignmentTab(getHost().getViewer(), GridDataTabPage.class);
+		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
+		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridLayoutComponentPage.class);
 	}
 	
 	/*
@@ -200,7 +200,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			return true;
 		else if (name.startsWith("customizelayout") && value.equals("true")) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
-		else if (name.startsWith("LAYOUTPOLICY") && value.equals("GridLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if (name.startsWith("LAYOUTPOLICY") && value.equals("org.eclipse.swt.layout.GridLayout")) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 
 		return false;

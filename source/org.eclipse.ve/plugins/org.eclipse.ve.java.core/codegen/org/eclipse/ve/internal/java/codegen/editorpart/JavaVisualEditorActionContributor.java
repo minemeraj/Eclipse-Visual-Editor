@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-29 20:32:39 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-10 18:37:27 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -47,7 +47,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 	private RetargetAction deleteAction, undoAction, redoAction, palSelectAction, palMarqueeAction, reloadAction, customizeAction, alignmentWindowRetargetAction;
 	private MenuCreatorRetargetAction palDropdownAction;
 	
-	private AlignmentWindowAction alignmentWindowAction;
+	private CustomizeLayoutWindowAction alignmentWindowAction;
 
 	public final static String STATUS_FIELD_CATEGORY = "JVE_STATUS_FIELD";
 	private StatusLineContributionItem statusField = new StatusLineContributionItem(STATUS_FIELD_CATEGORY);
@@ -103,7 +103,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		customizeAction.setEnabled(false);
 		markAsPartListener(customizeAction);
 		
-		alignmentWindowRetargetAction = new LabelRetargetAction(AlignmentWindowAction.ACTION_ID, ""); //$NON-NLS-1$
+		alignmentWindowRetargetAction = new LabelRetargetAction(CustomizeLayoutWindowAction.ACTION_ID, ""); //$NON-NLS-1$
 		alignmentWindowRetargetAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/aligndialog_obj.gif")); //$NON-NLS-1$
 		alignmentWindowRetargetAction.setChecked(false);
 		markAsPartListener(alignmentWindowRetargetAction);		
@@ -113,8 +113,8 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		super.contributeToToolBar(tbm);	
 		if (alignmentWindowAction == null) {
 			// Didn't have a page until now.
-			alignmentWindowAction = new AlignmentWindowAction(getPage().getWorkbenchWindow(), this);
-			getActionBars().setGlobalActionHandler(AlignmentWindowAction.ACTION_ID, alignmentWindowAction);
+			alignmentWindowAction = new CustomizeLayoutWindowAction(getPage().getWorkbenchWindow(), this);
+			getActionBars().setGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID, alignmentWindowAction);
 		}
 		tbm.add(deleteAction);
 		tbm.add(undoAction);

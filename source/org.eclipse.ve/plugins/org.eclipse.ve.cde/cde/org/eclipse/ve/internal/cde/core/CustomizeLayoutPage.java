@@ -10,22 +10,19 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: AlignmentTabPage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $RCSfile: CustomizeLayoutPage.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * This is the base class for any AlignmentTab page that can go on the AlignmentWindow.
+ * This is the base class for any CustomizeLayout page that can go on the CustomizeLayoutWindow.
  */
-public abstract class AlignmentTabPage {
+public abstract class CustomizeLayoutPage {
 
 	/*
 	 * Set the selection provider. This will only be called once, right after
@@ -34,7 +31,7 @@ public abstract class AlignmentTabPage {
 	 * for pages that are using GEF SelectionActions, which don't allow for
 	 * setting specific selections. 
 	 *
-	 * <package-protected> so that only AlignmentWindow can call it.
+	 * <package-protected> so that only CustomizeLayoutWindow can call it.
 	 *  
 	 * @param selectionProvider
 	 */
@@ -43,7 +40,7 @@ public abstract class AlignmentTabPage {
 		handleSelectionProviderInitialization(selectionProvider);
 	}
 		
-	/**
+	/*
 	 * During initialization this will be called with the selection provider.
 	 * It will only be called once. If new SelectionActions are created that need
 	 * it afterwards, it can use the getSelectionProvider() to get it.
@@ -51,25 +48,7 @@ public abstract class AlignmentTabPage {
 	 * @param selectionProvider
 	 */
 	protected abstract void handleSelectionProviderInitialization(ISelectionProvider selectionProvider);
-	
-	/**
-	 * Return the label that goes on the tab.
-	 * @return text
-	 */
-	public abstract String getText();
-	
-	/**
-	 * Return the tooltip text for the tab.
-	 * @return tooltip text (null if none)
-	 */
-	public abstract String getToolTipText();
-	
-	/**
-	 * Return the image for the tab.
-	 * @return image (null if none);
-	 */
-	public abstract Image getImage();
-	
+		
 	/**
 	 * Return the control for this page, parent on the given parent (which will be a TabFolder).
 	 * 
@@ -91,21 +70,24 @@ public abstract class AlignmentTabPage {
 	 * 
 	 * Note: When first created, it is guarenteed that setEditorPart and setSelection
 	 * will be called immediately in that order. However, editorpart may be null at that time.
+	 * This method may also be called before the getControl() is invoked.
 	 * 
 	 * @param selection
+	 * @return whether this page is relevant to the current selection
 	 */
-	public final void update(ISelection selection) {
+	public final boolean update(ISelection selection) {
 		ISelection oldSelection = this.selection;
 		this.selection = selection;
-		handleSelectionChanged(oldSelection);
+		return handleSelectionChanged(oldSelection);
 	}
 	
 	/*
 	 * Called whenever selection has changed.
+	 * This may be called before getControl() is invoked.
 	 * 
 	 * @param oldSelection The previous selection.
 	 */
-	protected abstract void handleSelectionChanged(ISelection oldSelection); 
+	protected abstract boolean handleSelectionChanged(ISelection oldSelection); 
 	
 	private ISelectionProvider selectionProvider;
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-26 16:35:58 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-10 18:37:39 $ 
  */
 
 import java.util.Collections;
@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.core.AlignmentWindowAction;
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
 import org.eclipse.ve.internal.cde.core.CDERequest;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -131,7 +131,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (beanProxy != null)
 			beanProxy.addImageListener(getGrigBagImageListener());
 		getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
-		AlignmentWindowAction.addAlignmentTab(getHost().getViewer(), GridBagConstraintsTabPage.class);	
+		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridBagComponentPage.class);	
 	}
 	
 	/*
@@ -604,7 +604,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			return true;
 		else if (name.startsWith("showgrid") && value.equals("true") && fShowgrid) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
-		else if (name.startsWith("LAYOUTPOLICY") && value.equals("GridBagLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+		else if (name.startsWith("LAYOUTPOLICY") && value.equals("java.awt.GridBagLayout")) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 
 		return false;

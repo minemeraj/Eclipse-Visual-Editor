@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
 import org.eclipse.jface.action.Action;
@@ -25,7 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * An action that does nothing and cannot be selected. It can be used as a spacer in a toolbar for
- * a grid type toolbar (such as used in AlignmentXYTabPage).
+ * a grid type toolbar (such as used in AlignmentXYComponentPage).
  */
 public class NullAction extends Action {
 	public NullAction() {

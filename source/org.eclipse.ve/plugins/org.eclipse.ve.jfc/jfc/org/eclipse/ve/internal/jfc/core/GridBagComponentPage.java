@@ -10,8 +10,8 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: GridBagConstraintsTabPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-07 12:43:18 $ 
+ *  $RCSfile: GridBagComponentPage.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:39 $ 
  */
 
 import java.util.Collections;
@@ -50,11 +50,11 @@ import org.eclipse.ve.internal.jfc.core.JFCConstants;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
- * This Tab page resides on the Alignment window notebook along with the X/Y tab page (and whatever else gets added later)
+ * This layout page resides on the Customize Layout window's Components tab
  * It shows and allows selection of the "anchor" and "fill" properties of an AWT GridBagConstraints object which is
  * the constraint on a component that is a child of a container that uses a GridBagLayout as it's layout manager. 
  */
-public class GridBagConstraintsTabPage extends AlignmentTabPage {
+public class GridBagComponentPage extends CustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
 	private final static String[] resAnchorPrefix = { "AnchorAction.northwest.", //$NON-NLS-1$
 		"AnchorAction.north.", //$NON-NLS-1$
@@ -415,18 +415,18 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(3, false));
-		Group anchorGroup = createGroup(mainComposite, JFCMessages.getString("GridBagConstraintsTabPage.Anchor"), 3, 0, 0); //$NON-NLS-1$
+		Group anchorGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Anchor"), 3, 0, 0); //$NON-NLS-1$
 
 		for (int i = 0; i < anchorActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(anchorActions[i]);
 			ac.fill(anchorGroup);
 		}
-		Group fillGroup = createGroup(mainComposite, JFCMessages.getString("GridBagConstraintsTabPage.Fill"), 1, 0, 0); //$NON-NLS-1$
+		Group fillGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Fill"), 1, 0, 0); //$NON-NLS-1$
 		for (int i = 0; i < fillActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
-		Group insetsGroup = createGroup(mainComposite, JFCMessages.getString("GridBagConstraintsTabPage.Insets"), 2, 5, 4); //$NON-NLS-1$
+		Group insetsGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Insets"), 2, 5, 4); //$NON-NLS-1$
 		createInsetsControl(insetsGroup);
 
 		return mainComposite;
@@ -435,7 +435,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	protected void createInsetsControl(Group insetsGroup) {
 		Label lbl;
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Top")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Top")); //$NON-NLS-1$
 		int top =0, left = 0, bottom = 0, right = 0;
 		if (componentInsets != null) {
 			top = componentInsets.top;
@@ -459,7 +459,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Left")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Left")); //$NON-NLS-1$
 		leftSpinner = new Spinner(insetsGroup, SWT.NONE, left);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
 		leftSpinner.addModifyListener(new Listener() {
@@ -476,7 +476,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Bottom")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Bottom")); //$NON-NLS-1$
 		bottomSpinner = new Spinner(insetsGroup, SWT.NONE, bottom);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
 		bottomSpinner.addModifyListener(new Listener() {
@@ -493,7 +493,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Right")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Right")); //$NON-NLS-1$
 		rightSpinner = new Spinner(insetsGroup, SWT.NONE, right);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
 		rightSpinner.addModifyListener(new Listener() {
@@ -564,28 +564,28 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getImage()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getImage()
 	 */
 	public Image getImage() {
 		return null;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getText()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getText()
 	 */
 	public String getText() {
-		return JFCMessages.getString("GridBagConstraintsTabPage.Gridbag"); //$NON-NLS-1$
+		return JFCMessages.getString("GridBagComponentPage.Gridbag"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getToolTipText()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return JFCMessages.getString("GridBagConstraintsTabPage.ToolTipText"); //$NON-NLS-1$
+		return JFCMessages.getString("GridBagComponentPage.ToolTipText"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
 	 * 
 	 * The editorpart changed. Pass this on to the AnchorActions and fillActions 
 	 * and reset the resource set and structural features.
@@ -602,13 +602,13 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
 	 * 
 	 * The selection list has changed, enable/disable and check/uncheck the AnchorActions based on whether the
 	 * components selected have the same parent, the parent's layout is a GridBagLayout, and whether the anchor
 	 * property values are equal.
 	 */
-	protected void handleSelectionChanged(ISelection oldSelection) {
+	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
@@ -646,7 +646,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 						handleSelectionChangedForAnchorActions(editparts);
 						handleSelectionChangedForFillActions(editparts);
 						handleSelectionChangedForInsets(editparts);
-						return;
+						return true;
 					}
 				}
 			}
@@ -655,7 +655,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 		enableAnchorActions(false);
 		enableFillActions(false);
 		enableInsets(false);
-		return;
+		return false;
 	}
 	
 	/*
@@ -873,7 +873,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "GridBagLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "java.awt.GridBagLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		}
 		return false;
