@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.56 $  $Date: 2005-02-16 21:59:23 $ 
+ *  $Revision: 1.57 $  $Date: 2005-02-16 22:04:15 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -69,7 +69,7 @@ boolean					fparseError=false;
 ArrayList				fListeners = new ArrayList();
 
 
-public static String    fPauseSig = CodegenMessages.getString("JVE_STATUS_MSG_PAUSED") ;  //$NON-NLS-1$
+public static String    fPauseSig = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSED") ;  //$NON-NLS-1$
 public static int       fCommitAndFlushNestGuard = 0 ;
 
 
@@ -1247,13 +1247,13 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	public void fireSnippetProcessing(boolean flag) {
 	    String msg;
 	    if (fparseError)
-	    	msg = CodegenMessages.getString("JVE_STATUS_MSG_ERROR"); //$NON-NLS-1$
+	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"); //$NON-NLS-1$
 	    else
 	      if (flag) {
-	    	msg = CodegenMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
+	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
 	      }
 	      else {
-	        msg = CodegenMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
+	        msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
 	    }
 	    fireStatusChanged(msg);
 	}
@@ -1261,9 +1261,9 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	protected void fireParseError(boolean error) {
 		fparseError=error;	
 		if (error)
-		    fireStatusChanged(CodegenMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
+		    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
 		else
-			fireStatusChanged(CodegenMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
+			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
 	    }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.55 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.56 $  $Date: 2005-02-16 21:59:23 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -858,7 +858,7 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 	}
 	fmodelLoaded = true;
 	fireProcessingPause(fdisconnected);
-	fireStatusChanged(CodegenMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
+	fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
 	TimerTests.basicTest.stopStep("Reverse Parsing"); //$NON-NLS-1$
 }
 
