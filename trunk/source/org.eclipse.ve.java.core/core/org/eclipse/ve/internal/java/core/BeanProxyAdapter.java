@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-22 20:13:47 $ 
  */
 
 import java.util.*;
@@ -38,6 +38,8 @@ import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
+
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
@@ -812,7 +814,7 @@ protected void primInstantiateBeanProxy() {
 				JavaAllocation allocation = getJavaObject().getAllocation();
 				fOwnsProxy = true;
 				try {
-					setupBeanProxy(getBeanProxyDomain().getAllocationProcesser().allocate(allocation));
+					beanProxyAllocation(getBeanProxyDomain(),allocation);
 				} catch (IAllocationProcesser.AllocationException e) {
 					processInstantiationError(e.getWrapperedException());
 				}
@@ -846,12 +848,33 @@ protected void primInstantiateBeanProxy() {
 
 			try {
 				fOwnsProxy = true; // Since we created it, obviously we own it				
-				setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null, targetClass));
+				basicInitializationStringAllocation(null,targetClass);
 			} catch (IAllocationProcesser.AllocationException exc) {
 				processInstantiationError(exc.getWrapperedException());
 			}
 		}
 	}
+}
+/**
+ * @param domain2
+ * @param allocation
+ * Temporary method here just to allow SWT proxies to refactor the basic initialization to run it on the display thread 
+ * 
+ * @since 1.0.0
+ */
+protected void beanProxyAllocation(IBeanProxyDomain beanProxyDomain, JavaAllocation allocation) throws AllocationException {
+	setupBeanProxy(beanProxyDomain.getAllocationProcesser().allocate(allocation)); 
+}
+/**
+ * @param aString
+ * @param targetClass
+ * Temporary method here just to allow SWT proxies to refactor the basic initialization to run it on the display thread * 
+ * 
+ * @since 1.0.0
+ */
+protected void basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException{
+	// TODO Get rid of this hack as soon as we can
+	setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null, targetClass));
 }
 protected IBeanTypeProxy getTargetTypeProxy() {
 	String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
