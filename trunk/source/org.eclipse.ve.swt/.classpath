@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="ve_swt"/>
 	<classpathentry kind="src" path="vm_swt"/>
 	<classpathentry kind="src" path="swtcodegen/"/>
+	<classpathentry kind="src" path="vm_swtbeaninfo"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="vm_swtbeaninfo"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

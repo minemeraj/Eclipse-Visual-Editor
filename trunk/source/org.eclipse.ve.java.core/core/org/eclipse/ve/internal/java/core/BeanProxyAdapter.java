@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.*;
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormComponentsHostAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
  */
 
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.draw2d.geometry.Point;

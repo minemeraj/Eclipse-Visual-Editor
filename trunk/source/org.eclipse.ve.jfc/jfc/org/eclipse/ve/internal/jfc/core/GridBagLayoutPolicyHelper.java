@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:21 $ 
  */
 
 import java.util.*;
@@ -25,7 +25,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.ui.IActionFilter;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.proxy.awt.*;

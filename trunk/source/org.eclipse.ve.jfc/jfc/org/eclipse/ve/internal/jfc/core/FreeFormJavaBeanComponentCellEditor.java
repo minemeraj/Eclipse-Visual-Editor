@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormJavaBeanComponentCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
  */
 
 import java.util.*;
@@ -24,7 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.jem.java.JavaClass;

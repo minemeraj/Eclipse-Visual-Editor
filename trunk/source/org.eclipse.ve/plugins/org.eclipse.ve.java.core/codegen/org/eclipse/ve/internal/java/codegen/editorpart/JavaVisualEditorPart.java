@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.14 $  $Date: 2004-03-18 16:22:47 $ 
+ *  $Revision: 1.15 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -42,12 +41,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.*;
+import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
-import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.PaletteViewer;
@@ -84,7 +83,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 import org.eclipse.ui.views.properties.*;
 
-import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
+import org.eclipse.jem.internal.beaninfo.core.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -96,6 +95,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
+import org.eclipse.ve.internal.cde.palette.Category;
+import org.eclipse.ve.internal.cde.palette.Palette;
 import org.eclipse.ve.internal.cde.properties.*;
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
@@ -123,6 +124,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public final static String MARKER_PropertyChange 	= "propertySheetValueChange" ; //$NON-NLS-1$
 	public final static String MARKER_JVESelection	  	= "VCE Selection" ; //$NON-NLS-1$
 	
+	public final static String PI_CLASS = "class";
+	public final static String PI_PALETTE = "palette";
+	public final static String PI_CONTRIBUTOR = "contributor";
+	public final static String PI_LOC = "loc";
+	public final static String PI_CATEGORIES = "categories";
+	public final static String PI_LAST = "last";
+	
 	protected boolean initialized = false;
 	protected EditDomain editDomain;
 
@@ -140,7 +148,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected ProxyFactoryRegistry proxyFactoryRegistry;
 	protected JavaModelSynchronizer modelSynchronizer;
 	protected BeanProxyAdapterFactory beanProxyAdapterFactory;
-	protected List paletteCats;
 	protected boolean rebuildPalette = true;
 	
 	protected EToolsPropertySheetPage propertySheetPage;
@@ -420,6 +427,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		editDomain.setPaletteViewer(paletteViewer);
 	}
 	
+	private List paletteCategories = new ArrayList(5);
 	/*
 	 * Rebuild the palette.
 	 * NOTE: This must be run in the display thread.
@@ -428,6 +436,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		rebuildPalette = false;
 		PaletteRoot paletteRoot = editDomain.getPaletteRoot();
 		ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);
+		
+		// TODO This whole area needs to be rethinked for customization and for caching and other things.
+
 		if (paletteRoot == null) {
 			try {
 				// Get the default base palette. (Basically only the control group).				
@@ -491,35 +502,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 		// TODO This is a huge kludge for this release. We're not handling sharing of palette or modifications. We aren't cleaning up.
 		// Now get the extension palette cats and add them.
-		if (paletteCats != null && !paletteCats.isEmpty()) {
+		if (!paletteCategories.isEmpty()) {
 			boolean firstCat = true;
-			Set loadedCats = new HashSet(paletteCats.size());	// So that we don't get duplicate cats.
-			EClassifier metaCats = PalettePackage.eINSTANCE.getCategory();
-			for (Iterator iter = paletteCats.iterator(); iter.hasNext();) {
-				String catxmi = (String) iter.next();
-				if (loadedCats.contains(catxmi))
-					continue;
-				loadedCats.add(catxmi);
-				Resource catres = null;
-				try {
-					catres = rset.createResource(URI.createURI(catxmi));
-					catres.load(Collections.EMPTY_MAP);
-					Collection newCats = EcoreUtil.getObjectsByType(catres.getContents(), metaCats);
-					Iterator itr = newCats.iterator();
-					while (itr.hasNext()) {
-						Category element = (Category) itr.next();
-						PaletteDrawer drawer = (PaletteDrawer) element.getEntry();
-						if (firstCat) {
-							drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
-							firstCat = false;
-						}
-						paletteRoot.add(drawer);
-					}
-				} catch (IOException e) {		
-					JavaVEPlugin.log(e, Level.WARNING);								
-				} catch (RuntimeException e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-				}	
+			for (Iterator iter = paletteCategories.iterator(); iter.hasNext();) {
+				Category element = (Category) iter.next();
+				PaletteDrawer drawer = (PaletteDrawer) element.getEntry();
+				if (firstCat) {
+					drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
+					firstCat = false;
+				}
+				paletteRoot.add(drawer);
 			}
 		}
 	}
@@ -652,7 +644,55 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private static final URI basePaletteRoot = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi#java_palette"); //$NON-NLS-1$
-	
+
+	/*
+	 * A default contributor that works with the palette extension point format. This here so that 
+	 * the default registration contributor can do the same thing with its palette contribution.
+	 * 
+	 * @since 1.0.0
+	 */
+	static class DefaultVEContributor implements IVEContributor {
+		/**
+		 * Configuration element to use for contribution. Set this before usage. That way an instance of this
+		 * can be reused.
+		 */
+		public IConfigurationElement paletteContribution;
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor#contributePalleteCats(java.util.List, org.eclipse.emf.ecore.resource.ResourceSet)
+		 */
+		public boolean contributePalleteCats(List currentCategories, ResourceSet rset) {
+			String cat = paletteContribution.getAttributeAsIs(PI_CATEGORIES);
+			if (cat == null || cat.length() == 0)
+				return false;
+			IPluginDescriptor plugin = null;
+			if (cat.charAt(0) != '/')
+				plugin = paletteContribution.getDeclaringExtension().getDeclaringPluginDescriptor();
+			else {
+				if (cat.length() > 4) {
+					int pend = cat.indexOf('/', 1);
+					if (pend == -1 || pend >= cat.length()-1)
+						return false;	// invalid
+					plugin = Platform.getPluginRegistry().getPluginDescriptor(cat.substring(1, pend));
+					cat = cat.substring(pend+1);
+				} else
+					return false;	// invalid
+			}
+			URI catsURI = URI.createURI(plugin.getInstallURL().toString()+cat);
+			Resource res = rset.getResource(catsURI, true);
+			List cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
+			if (cats.isEmpty())
+				return false;
+			// Check to see if the first cat is already in the list of categories. This means we already processed this once.
+			if (currentCategories.contains(cats.get(0)))
+				return false;
+			if (!PI_LAST.equals(paletteContribution.getAttributeAsIs(PI_LOC)))
+				currentCategories.addAll(0, cats);
+			else
+				currentCategories.addAll(cats);
+			return true;
+		}	
+	}
 	/*
 	 * This will create the proxy factory registry.
 	 */
@@ -665,19 +705,129 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			proxyFactoryRegistry.terminateRegistry();			
 		}
 
-		JavaConfigurationContributor jcmCont = new JavaConfigurationContributor(aFile.getProject());
+		ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
+			IConfigurationContributionInfo info;
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
+			 */
+			public void initialize(IConfigurationContributionInfo info) {
+				this.info = info;
+			}
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
+			 */
+			public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
+				// Add in the remote vm jar and any nls jars that is required for JBCF itself.
+				controller.contributeClasspath(JavaVEPlugin.getPlugin().getDescriptor(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
+			}
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
+			 */
+			public void contributeToRegistry(ProxyFactoryRegistry registry) {
+				// Call the setup method in the target VM to initialize statics
+				// and other environment variables.
+				IBeanTypeProxy aSetupBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.java.remotevm.Setup"); //$NON-NLS-1$
+				IMethodProxy setupMethodProxy = aSetupBeanTypeProxy.getMethodProxy("setup"); //$NON-NLS-1$
+				setupMethodProxy.invokeCatchThrowableExceptions(aSetupBeanTypeProxy);
+				
+				// Everything is all set up. Now let's see if we need to rebuild the palette.
+				// First run though all visible containers that implement the IVEContributor interface.
+				final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
+				for (Iterator iter = info.getContainers().entrySet().iterator(); iter.hasNext();) {
+					final Map.Entry entry = (Map.Entry) iter.next();
+					if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
+						Platform.run(new ISafeRunnable() {
+							public void handleException(Throwable exception) {
+								// Default logs fro us.
+							}
+							public void run() throws Exception {
+								rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+							}
+						});
+					}
+				}
+				
+				// Now run though visible containers ids.
+				final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
+				if (!info.getContainerIds().isEmpty()) {
+					for (Iterator iter = info.getContainerIds().entrySet().iterator(); iter.hasNext();) {
+						Map.Entry entry = (Map.Entry) iter.next();
+						if (((Boolean) entry.getValue()).booleanValue()) {
+							final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
+							if (contributors != null) {
+								for (int i = 0; i < contributors.length; i++) {
+									final int ii = i;
+									Platform.run(new ISafeRunnable() {
+										public void handleException(Throwable exception) {
+											// Default logs exception for us.
+										}
+										public void run() throws Exception {
+											if (contributors[ii].getName().equals(PI_PALETTE)) {
+												if (defaultVE[0] == null)
+													defaultVE[0] = new DefaultVEContributor();
+												defaultVE[0].paletteContribution = contributors[ii];
+												rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+											} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+												Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+												if (contributor instanceof IVEContributor)
+													rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+											}
+										}
+									});
+								}
+							}
+						}
+					}
+				}
+				
+				// Now run though visible plugin ids.
+				if (!info.getPluginIds().isEmpty()) {
+					for (Iterator iter = info.getPluginIds().entrySet().iterator(); iter.hasNext();) {
+						Map.Entry entry = (Map.Entry) iter.next();
+						if (((Boolean) entry.getValue()).booleanValue()) {
+							final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
+							if (contributors != null) {
+								for (int i = 0; i < contributors.length; i++) {
+									final int ii = i;
+									Platform.run(new ISafeRunnable() {
+										public void handleException(Throwable exception) {
+											// Default logs exception for us.
+										}
+										public void run() throws Exception {
+											if (contributors[ii].getName().equals(PI_PALETTE)) {
+												if (defaultVE[0] == null)
+													defaultVE[0] = new DefaultVEContributor();
+												defaultVE[0].paletteContribution = contributors[ii];
+												rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+											} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+												try {
+													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+													if (contributor instanceof IVEContributor)
+														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+												} catch (CoreException e) {
+													JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+												}
+											}
+										}
+									});
+								}
+							}
+						}
+					}
+				}
+				
+			}
+		};
+		
 		IConfigurationContributor[] contribs =
 			new IConfigurationContributor[] { BeaninfoNature.getRuntime(aFile.getProject()).getConfigurationContributor(), jcmCont };
 
-			ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
+		ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
 				contribs, new NullProgressMonitor());
-			registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
-		if (paletteCats != null) {
-			if (!paletteCats.equals(jcmCont.paletteCats))
-				rebuildPalette = true;
-		} else if (jcmCont.paletteCats != null)
-			rebuildPalette = true;
-		paletteCats = jcmCont.paletteCats;
+		registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
 		
 		synchronized (this) {
 			if (isDisposed()) {

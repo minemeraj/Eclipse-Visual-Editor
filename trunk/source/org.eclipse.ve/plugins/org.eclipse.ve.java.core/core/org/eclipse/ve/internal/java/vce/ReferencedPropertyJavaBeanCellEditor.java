@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: ReferencedPropertyJavaBeanCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.ArrayList;
@@ -26,7 +26,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;

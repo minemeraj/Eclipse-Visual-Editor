@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-19 12:20:47 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-22 23:49:37 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.jem.internal.beaninfo.*;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.java.JavaClass;
@@ -158,8 +158,11 @@ public CellEditor createPropertyEditor(Composite parent){
 	if ( editorClass != null ) {
 		return createCellEditorInstance(editorClass,parent, editorClassNameAndData, null);
 	} else {
-		// TODO - should we always do this, or just for interfaces ?
-		return new TypeReferenceCellEditor(parent,((JavaClass)propertyDecorator.getPropertyType()).getQualifiedName());
+		if (propertyDecorator != null) {
+			// TODO - should we always do this, or just for interfaces ?
+			return new TypeReferenceCellEditor((JavaHelpers) propertyDecorator.getPropertyType(), parent);
+		} else
+			return null;
 	}
 }
 	

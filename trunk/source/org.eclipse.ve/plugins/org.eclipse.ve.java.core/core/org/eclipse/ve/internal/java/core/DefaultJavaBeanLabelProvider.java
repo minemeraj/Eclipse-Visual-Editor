@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultJavaBeanLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.net.URL;
@@ -20,7 +20,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.properties.DefaultLabelProviderWithName;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;

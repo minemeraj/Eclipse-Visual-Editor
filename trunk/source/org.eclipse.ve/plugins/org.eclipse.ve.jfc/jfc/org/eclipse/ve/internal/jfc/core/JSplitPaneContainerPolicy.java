@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
  */
 
 import java.util.*;
@@ -21,7 +21,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;

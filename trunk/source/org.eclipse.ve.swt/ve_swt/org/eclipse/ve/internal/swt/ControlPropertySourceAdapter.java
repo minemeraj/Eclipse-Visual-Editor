@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-15 22:31:11 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-22 23:48:52 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;

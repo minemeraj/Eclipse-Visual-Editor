@@ -42,96 +42,6 @@
    </requires>
 
 
-   <extension
-         point="org.eclipse.jem.beaninfo.registrations">
-      <variable path="JRE_LIB">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
-               <searchpath
-                     package="org.eclipse.ve.internal.jfc.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </variable>
-   </extension>
-<!-- The followin will allow the visuals to come up in web/ejb projects -->
-   <extension
-         point="org.eclipse.jem.beaninfo.registrations">
-      <variable
-            path="SERVERJDK_PLUGINDIR/jre/lib/rt.jar">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
-               <searchpath
-                     package="org.eclipse.ve.internal.jfc.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </variable>
-   </extension>
-   <extension
-         point="org.eclipse.jem.beaninfo.registrations">
-      <variable
-            path="SERVERJDK_50_PLUGINDIR/jre/lib/rt.jar">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.jfc/vm/jfcbeaninfo.jar">
-               <searchpath
-                     package="org.eclipse.ve.internal.jfc.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </variable>
-   </extension>
-   <extension
-         point="org.eclipse.jem.beaninfo.overrides">
-<!-- Doing java.awt and javax.swing specifically because there are too many matches that
-         we don't care about if we did just java and javax. -->
-      <override
-            package="java.awt"
-            path="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt">
-      </override>
-      <override
-            package="javax.swing"
-            path="platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing">
-      </override>
-      <override
-            package="java.applet"
-            path="platform:/plugin/org.eclipse.ve.jfc/overrides/java/applet">
-      </override>
-   </extension>
-   <extension
-         point="org.eclipse.ve.java.core.registrations">
-      <variable
-            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
-            path="JRE_LIB"
-            paletteloc="last"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
-      </variable>
-   </extension>
-<!-- The followin will allow the visuals to come up in web/ejb projects -->
-   <extension
-         point="org.eclipse.ve.java.core.registrations">
-      <variable
-            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
-            path="SERVERJDK_PLUGINDIR/jre/lib/rt.jar"
-            paletteloc="last"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
-      </variable>
-   </extension>
-   <extension
-         point="org.eclipse.ve.java.core.registrations">
-      <variable
-            contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
-            path="SERVERJDK_50_PLUGINDIR/jre/lib/rt.jar"
-            paletteloc="last"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
-      </variable>
-   </extension>
 <!-- ======================================================================== -->
 <!-- Extend the popup menu on Edit parts                                      -->
 <!-- ======================================================================== -->
@@ -419,6 +329,47 @@
             %example.label
          </description>
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.jem.proxy.contributors">
+      <contributor
+            container="org.eclipse.jdt.launching.JRE_CONTAINER"
+            class="org.eclipse.ve.internal.jfc.core.JFCVisualContributor">
+      </contributor>
+   </extension>
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <registration
+            container="org.eclipse.jdt.launching.JRE_CONTAINER">
+         <beaninfo
+               path="vm/jfcbeaninfo.jar">
+            <searchpath
+                  package="org.eclipse.ve.internal.jfc.beaninfo">
+            </searchpath>
+         </beaninfo>
+<!-- Doing java.awt and javax.swing specifically because there are too many matches that
+           we don't care about if we did just java and javax. -->
+         <override
+               package="java.awt"
+               path="overrides/java/awt">
+         </override>
+         <override
+               package="javax.swing"
+               path="overrides/javax/swing">
+         </override>
+         <override
+               package="java.applet"
+               path="overrides/java/applet">
+         </override>
+      </registration>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            container="org.eclipse.jdt.launching.JRE_CONTAINER"
+            categories="palette/javavisualbeanscats.xmi"
+            loc="last">
+      </palette>
    </extension>
 <!-- ======================================================================== -->
 <!-- Contributors for the Visual class sources                                       -->

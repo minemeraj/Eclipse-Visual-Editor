@@ -11,14 +11,13 @@ package org.eclipse.ve.examples.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaExampleContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-04 16:14:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:17 $ 
  */
 
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter;
+import org.eclipse.jem.internal.proxy.core.IConfigurationContributionController;
 
-import org.eclipse.jem.internal.proxy.core.*;
-
-public class JavaExampleContributor implements IConfigurationContributor {
+public class JavaExampleContributor extends ConfigurationContributorAdapter {
 
 	/**
 	 * To demonstrate the JSR-57 persistence of beans we use this as the mechanism to add
@@ -29,17 +28,7 @@ public class JavaExampleContributor implements IConfigurationContributor {
 	 * 1.4 includes this in the JDK.
 	 */
 	public void contributeClasspaths(IConfigurationContributionController controller) {
-		controller.contributeClasspath(JavaExamplePlugin.getPlugin(), "archiver.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);
-		controller.contributeClasspath(JavaExamplePlugin.getPlugin(), "crimson.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);		
-	}
-	
-	public void contributeToConfiguration(ILaunchConfigurationWorkingCopy aConfig) {
-	}
-	
-	/*
-	 * @see IConfigurationContributor#contributeToRegistry(ProxyFactoryRegistry)
-	 */
-	public void contributeToRegistry(ProxyFactoryRegistry aRegistry) {
-	}
-
+		controller.contributeClasspath(JavaExamplePlugin.getPlugin().getDescriptor(), "archiver.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);
+		controller.contributeClasspath(JavaExamplePlugin.getPlugin().getDescriptor(), "crimson.jar", IConfigurationContributionController.PREPEND_BOOT_CLASSPATH, false);		
+	}	
 }

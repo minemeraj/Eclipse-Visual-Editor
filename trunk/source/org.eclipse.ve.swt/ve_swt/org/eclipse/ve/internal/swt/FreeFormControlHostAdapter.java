@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.*;
 
 import org.eclipse.jem.internal.beaninfo.adapters.*;
+import org.eclipse.jem.internal.beaninfo.core.*;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.jem.internal.instantiation.base.*;

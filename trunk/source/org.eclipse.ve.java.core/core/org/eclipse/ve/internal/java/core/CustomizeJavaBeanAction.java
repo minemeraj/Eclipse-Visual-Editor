@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;

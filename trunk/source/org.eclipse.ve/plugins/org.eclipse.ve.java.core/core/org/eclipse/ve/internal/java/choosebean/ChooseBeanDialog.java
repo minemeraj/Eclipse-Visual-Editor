@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-22 17:25:48 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-22 23:49:37 $ 
  */
 
 import java.util.*;
@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.FilteredList;
 import org.eclipse.ui.part.FileEditorInput;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.CDMFactory;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AnonymousEventSrcGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -123,7 +123,7 @@ public String generateEvent() {
 	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractEventSrcGenerator#getListenerMethod()
 	 */
 	protected String getAddListenerMethod() {
-		EventSetDecorator ed = org.eclipse.jem.internal.beaninfo.adapters.Utilities.getEventSetDecorator(((EventInvocation)fEE).getEvent()) ;    
+		EventSetDecorator ed = org.eclipse.jem.internal.beaninfo.core.Utilities.getEventSetDecorator(((EventInvocation)fEE).getEvent()) ;    
         return ed.getAddListenerMethod().getName() ;
 
 	}

@@ -56,51 +56,45 @@
       </classpathContainerInitializer>
    </extension>
    <extension
-         point="org.eclipse.ve.java.core.registrations">
-      <library
-            container="SWT_CONTAINER"
-            palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi">
-      </library>
-   </extension>
-   <extension
-         point="org.eclipse.jem.beaninfo.overrides">
-      <override
-            package="org.eclipse.swt.widgets"
-            path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/widgets">
-      </override>
-      <override
-            package="org.eclipse.swt.graphics"
-            path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/graphics">
-      </override>
-      <override
-            package="org.eclipse.swt.layout"
-            path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/layout">
-      </override>
-   </extension>
-
-  <extension
-         point="org.eclipse.jem.proxy.contributor">
+         point="org.eclipse.jem.proxy.contributors">
       <contributor
             plugin="org.eclipse.swt"
             class="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
       </contributor>
    </extension>
-   
-<!-- Register the jar containing the beaninfo classes for SWT -->
-   
-  <extension point="org.eclipse.jem.beaninfo.registrations">
-      <container path="SWT_CONTAINER">
-         <beaninfos>
-            <beaninfo
-                  kind="plugin"
-                  path="/org.eclipse.ve.swt/vm/swtbeaninfo.jar">
-               <searchpath
-                     package="org.eclipse.swt.widgets.beaninfo">
-               </searchpath>
-            </beaninfo>
-         </beaninfos>
-      </container>
-   </extension>      
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <registration
+            container="SWT_CONTAINER"
+            plugin="org.eclipse.swt">
+         <beaninfo
+               path="vm/swtbeaninfo.jar">
+            <searchpath
+                  package="org.eclipse.swt.widgets.beaninfo">
+            </searchpath>
+         </beaninfo>
+         <override
+               package="org.eclipse.swt.widgets"
+               path="overrides/org/eclipse/swt/widgets">
+         </override>
+         <override
+               package="org.eclipse.swt.graphics"
+               path="overrides/org/eclipse/swt/graphics">
+         </override>
+         <override
+               package="org.eclipse.swt.layout"
+               path="overrides/org/eclipse/swt/layout">
+         </override>
+      </registration>
+   </extension>
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            container="SWT_CONTAINER"
+            categories="swtpalette.xmi"
+            plugin="org.eclipse.swt">
+      </palette>
+   </extension>
 
 <!-- Contribute to the ChooseBean dialog to allow dropping of SWT widgets -->
    
