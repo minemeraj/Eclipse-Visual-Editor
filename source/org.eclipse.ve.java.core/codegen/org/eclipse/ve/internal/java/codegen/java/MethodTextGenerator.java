@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.11 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.12 $  $Date: 2004-02-07 00:02:04 $ 
  */
 
 import java.util.*;
@@ -230,6 +230,16 @@ protected void setConstructorString (BeanMethodTemplate tp, Object component) {
     }
 }
 
+/**
+ *  Create a NOop expression reference for the initializationn expression..
+ * 
+ * @deprecate untill we deal with internal bean creation.
+ */
+CodeExpressionRef createInitExpression(BeanMethodTemplate mt,BeanPart bean) {
+	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
+	return eg.createInitExpression(mt) ;
+}
+
 public String generateInLine(CodeMethodRef method,String beanName, List kids) throws CodeGenException {
     
     fMethodRef = method ;    
@@ -248,7 +258,7 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
     
    StringBuffer sb = new StringBuffer () ;
     
-   CodeExpressionRef initExp = createInitExpression(bp) ;
+   CodeExpressionRef initExp = createInitExpression(template,bp) ;
    // Allow the expression sorted to find a nice spot for this one
    initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
    initExp.setOffset(-1) ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-07 00:02:04 $ 
  */
 
 import java.util.Iterator;
@@ -57,6 +57,33 @@ public void insertContentToDocument() throws CodeGenException {
        fExpr.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED, true) ;
        
 }   
+
+
+/**
+ * @deprecated temporary untill we deal with internal bean creation
+ * @param mt
+ * @return
+ * 
+ * @since 1.0.0
+ */
+public CodeExpressionRef createInitExpression(BeanMethodTemplate mt) {
+	CodeMethodRef mr = fBeanPart.getInitMethod() ;   	
+	CodeExpressionRef exp = new CodeExpressionRef(mr,fBeanPart) ;
+	//exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
+	exp.clearState();
+	exp.setState(CodeExpressionRef.STATE_EXIST, true);
+	exp.setState(CodeExpressionRef.STATE_NO_MODEL, true);
+	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
+	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
+	ExpressionParser p = new ExpressionParser (mt.getPrefix(),mt.getInitExpressionOffset(),
+			mt.getInitExpression().length()) ;
+	
+	exp.setContent(p) ;
+	exp.setOffset(p.getExpressionOff()) ;   	
+	fExpr = exp ;
+	return fExpr ;
+}
 
 /**
  *  Create a CodeExpressionRef from the VCE model
