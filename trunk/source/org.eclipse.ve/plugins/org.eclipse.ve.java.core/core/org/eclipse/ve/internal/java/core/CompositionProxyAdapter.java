@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-10 18:27:35 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-10 17:52:23 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -24,13 +24,11 @@ import org.eclipse.emf.common.notify.impl.NotifierImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.MemberContainer;
-
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 /**
  * This is a special adaptor for BeanCompositions.
@@ -114,10 +112,11 @@ public void initBeanProxy() {
 	if (getTarget() instanceof BeanSubclassComposition) {
 		initSetting(((BeanSubclassComposition) getTarget()).getThisPart());
 	}
+
 	// Next run the components.
 	List components = ((BeanComposition) getTarget()).getComponents();
 	for (int i = 0; i < components.size(); i++) {
-		initSetting(components.get(i));
+		initSetting(components.get(i));		
 	}
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-07-12 21:54:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-10 17:52:17 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
 
 /**
  * This is used to maintain anonymous shared inverse relationships. For instance,
@@ -363,7 +363,6 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		return ADAPTER_KEY == type;
 	}
 
-	protected static final EClass ANNOTATIONCLASS = CDMPackage.eINSTANCE.getAnnotationEMF();
 	
 	/**
 	 * @see org.eclipse.emf.common.notify.Adapter#notifyChanged(Notification)
@@ -375,63 +374,61 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 			setPropagated(false);
 			return;
 		}
-		// Don't bother if not propagated, or not a stnd event type, feature not an EReference, or feature type is not set or is an Annotation.
+		// Don't bother if not propagated, or not a stnd event type, feature not an EReference, or feature type is not set or is an AnnotationEMF.
 		if (!isPropagated() || notification.getEventType() < 0 || notification.getEventType() > Notification.EVENT_TYPE_COUNT ||
-			!(notification.getFeature() instanceof EReference) || ((EReference) notification.getFeature()).getEReferenceType() == null || ((EReference) notification.getFeature()).getEReferenceType().isSuperTypeOf(ANNOTATIONCLASS))
+			!(notification.getFeature() instanceof EReference) || ((EReference) notification.getFeature()).getEReferenceType() == null)
 			return;
 		switch (notification.getEventType()) {
 			case Notification.SET:
 				if (!notification.isTouch()) {
-					handleRemoveRef(notification.getFeature(), notification.getOldValue());
+					handleRemoveRef((EReference) notification.getFeature(), (EObject) notification.getOldValue());
 					if (!notification.isReset() || ((EReference) notification.getFeature()).isUnsettable())
-						handleAddRef(notification.getFeature(), notification.getNewValue());
+						handleAddRef((EReference) notification.getFeature(), (EObject) notification.getNewValue());
 				}
 				break;
 			case Notification.UNSET:
-				handleRemoveRef(notification.getFeature(), notification.getOldValue());			
+				handleRemoveRef((EReference) notification.getFeature(), (EObject) notification.getOldValue());			
 				break;
 			case Notification.ADD:
-				handleAddRef(notification.getFeature(), notification.getNewValue());			
+				handleAddRef((EReference) notification.getFeature(), (EObject) notification.getNewValue());			
 				break;
 			case Notification.ADD_MANY:
 				Object feature = notification.getFeature();
 				Iterator itr = ((List) notification.getNewValue()).iterator();
 				while (itr.hasNext())
-					handleAddRef(feature, itr.next());
+					handleAddRef((EReference) feature, (EObject) itr.next());
 				break;
 			case Notification.REMOVE:
-				handleRemoveRef(notification.getFeature(), notification.getOldValue());			
+				handleRemoveRef((EReference) notification.getFeature(), (EObject) notification.getOldValue());			
 				break;			
 			case Notification.REMOVE_MANY:
 				feature = notification.getFeature();
 				itr = ((List) notification.getOldValue()).iterator();
 				while (itr.hasNext())
-					handleRemoveRef(feature, itr.next());
+					handleRemoveRef((EReference) feature, (EObject) itr.next());
 				break;			
 			case Notification.RESOLVE:
 				// Special case, we had a proxy and it is no longer a proxy, so should we add it.
-				handleAddRef(notification.getFeature(), notification.getNewValue());
+				handleAddRef((EReference) notification.getFeature(), (EObject) notification.getNewValue());
 				break;
 		}
 	}
 	
-	protected void handleAddRef(Object feature, Object newValue) {
-		// EAttributes don't need this because they do not reference EObjects.
-		if (newValue instanceof Notifier) {
+	protected void handleAddRef(EReference feature, EObject newValue) {
+		if (newValue != null && !(newValue instanceof AnnotationEMF)) {
+			// Do not do anything with values of AnnotationEMF
 			EReference ref = (EReference) feature;
-			Notifier target = (Notifier) newValue;
-			// Any references to annotation should be ignored.
-			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(target, ADAPTER_KEY);											
+			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(newValue, ADAPTER_KEY);											
 			if (ref.isContainment()) {
-				if (inverseAdapter == null && shouldPropagate(ref, target)) {
-					inverseAdapter = addAdapter(target);	// add new adapter.
+				if (inverseAdapter == null && shouldPropagate(ref, newValue)) {
+					inverseAdapter = addAdapter(newValue);	// add new adapter.
 					if (inverseAdapter != null)	// It got added.
 						inverseAdapter.primPropagate();	// Propagate (prim because we know it is not propagated and is in same resource).
 				} else if (inverseAdapter != null && !inverseAdapter.isPropagated())
 					inverseAdapter.primPropagate();	// Propagate (prim because we know it is not propagated and is in same resource). 
 			} else if (shouldReference(ref, newValue)) {
 				if (inverseAdapter == null)
-					inverseAdapter = addAdapter(target);
+					inverseAdapter = addAdapter(newValue);
 				if (inverseAdapter != null)
 					inverseAdapter.addBackRef(ref, getTarget());	// Could be propagated or already existed.
 			}
@@ -441,10 +438,11 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	/*
 	 * shouldPropagate: See if this feature and value requires us to propagate the
 	 * adapter onto it if this is a containment relationship. Default is
-	 * to allow propagation for all but annotations and proxies. Subclasses should override subShouldPropagate.
+	 * to allow propagation for all but annotationEMFs (but this is prevented back in handleAddRef)
+	 * and proxies. Subclasses should override subShouldPropagate.
 	 */
-	protected final boolean shouldPropagate(EReference ref, Object newValue) {
-		return (!(newValue instanceof EObject) || !((EObject) newValue).eIsProxy()) && subShouldPropagate(ref, newValue);
+	protected final boolean shouldPropagate(EReference ref, EObject newValue) {
+		return !newValue.eIsProxy() && subShouldPropagate(ref, newValue);
 	}
 	
 	protected boolean subShouldPropagate(EReference ref, Object newValue) {
@@ -454,13 +452,13 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	/*
 	 * Add to new value.
 	 */
-	protected final InverseMaintenanceAdapter addAdapter(Notifier newValue) {
-		if (!allowCrossDoc && newValue instanceof EObject) {
+	protected final InverseMaintenanceAdapter addAdapter(EObject newValue) {
+		if (!allowCrossDoc) {
 			// If new value is in a resource, then if they are different resources don't do the propagate.
 			// However if new value side is not in a resource, we can't tell, so we will allow in that case.
 			// We know we (target) is in a resource because this method only called when propagated (and propagated
 			// is only done when in a resource).
-			Resource newRes = ((EObject) newValue).eResource();
+			Resource newRes = newValue.eResource();
 			if (newRes != null && ((EObject) getTarget()).eResource() != newRes)
 				return null;	// Don't allow it to cross.
 		}
@@ -479,20 +477,22 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	
 	/*
 	 * Should this reference be set in the the inverse adapter. Default is to allow
-	 * setting inverse for all but annotations and proxies, or references where the
+	 * setting inverse for all but annotationEMFs (but this is handled in handleAddRef),
+	 * and proxies, or references where the
 	 * opposite end is a containment. Subclasses should override subShouldReference.
 	 */
-	protected final boolean shouldReference(EReference ref, Object newValue) {
-		return (ref.getEOpposite() == null || !ref.getEOpposite().isContainment()) && (!(newValue instanceof EObject) || !((EObject) newValue).eIsProxy()) && subShouldReference(ref, newValue);		
+	protected final boolean shouldReference(EReference ref, EObject newValue) {
+		return (ref.getEOpposite() == null || !ref.getEOpposite().isContainment()) && !newValue.eIsProxy() && subShouldReference(ref, newValue);		
 	}
 	
 	protected boolean subShouldReference(EReference ref, Object newValue) {	
 		return true;
 	}
 	
-	protected void handleRemoveRef(Object feature, Object oldValue) {
-		if (oldValue instanceof Notifier) {
-			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter((Notifier) oldValue, ADAPTER_KEY);
+	protected void handleRemoveRef(EReference feature, EObject oldValue) {
+		if (oldValue != null && !(oldValue instanceof AnnotationEMF)) {
+			// No need to even look if is an AnnotationEMF.
+			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(oldValue, ADAPTER_KEY);
 			if (inverseAdapter != null)
 				inverseAdapter.removeBackRef((EReference) feature, getTarget());
 		}
@@ -574,21 +574,21 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		
 		// Need to setup all of the backpointers.
 		EObject obj = (EObject) getTarget();
-		List allRefs = obj.eClass().getEAllReferences();
-		Iterator itr = allRefs.iterator();
+		List allSFs = obj.eClass().getEAllStructuralFeatures();
+		Iterator itr = allSFs.iterator();
 		while (itr.hasNext()) {
-			EReference ref = (EReference) itr.next();
-			if (ref.getEReferenceType().isSuperTypeOf(ANNOTATIONCLASS))
-				continue;
-			if (obj.eIsSet(ref)) {
-				if (ref.isMany()) {
-					Iterator bitr =
-						((InternalEList) obj.eGet(ref)).basicIterator();
-					while (bitr.hasNext()) {
-						handleAddRef(ref, bitr.next());
-					}
-				} else
-					handleAddRef(ref, obj.eGet(ref, false));
+			EStructuralFeature sf = (EStructuralFeature) itr.next();
+			if (sf instanceof EReference) {
+				EReference ref = (EReference) sf;
+				if (obj.eIsSet(ref)) {
+					if (ref.isMany()) {
+						Iterator bitr = ((InternalEList) obj.eGet(ref)).basicIterator();
+						while (bitr.hasNext()) {
+							handleAddRef(ref, (EObject) bitr.next());
+						}
+					} else
+						handleAddRef(ref, (EObject) obj.eGet(ref, false));
+				}
 			}
 		}		
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-14 22:04:51 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-10 17:52:23 $ 
  */
 
 import java.util.List;
@@ -198,9 +198,8 @@ public class BeanProxyUtilities {
 
 		Method method = aPropertyDecorator.getWriteMethod();
 		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
-		// Find the set method on the same VM as the source
-		IMethodProxy setMethodProxy = getMethodProxy(method, registry);
-		setMethodProxy.invoke(aSource, aValue);
+		IInvokable setFeatureInvokable = getInvokable(method, registry);
+		setFeatureInvokable.invoke(aSource, aValue);
 
 	}
 	/** 
@@ -248,9 +247,9 @@ public class BeanProxyUtilities {
 		if (method == null)
 			return null;
 		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
-		// Now get the method proxy on the same VM as the source
-		IMethodProxy getMethodProxy = getMethodProxy(method, registry);
-		return getMethodProxy.invoke(aSource);
+		// Now get the invokable and invoke it.
+		IInvokable getFeatureInvokable = getInvokable(method, registry);
+		return getFeatureInvokable.invoke(aSource);
 	}
 	/**
 	 *	Return the method proxy from the method in the same registry as the source
@@ -271,6 +270,23 @@ public class BeanProxyUtilities {
 		return aRegistry.getMethodProxyFactory().getMethodProxy(className, methodName, methodParms);
 
 	}
+	
+	public static IInvokable getInvokable(Method aMethod, ProxyFactoryRegistry aRegistry) {
+
+		// Get the name of the method and the arguments
+		String methodName = aMethod.getName();
+		List inputMethods = aMethod.getParameters();
+		String[] methodParms = new String[inputMethods.size()];
+		for (int i = 0; i < inputMethods.size(); i++) {
+			JavaParameter parm = (JavaParameter) inputMethods.get(i);
+			JavaHelpers jh = parm.getJavaType();
+			methodParms[i] = jh.getQualifiedNameForReflection();
+		}
+		String className = aMethod.getContainingJavaClass().getQualifiedNameForReflection();
+		// Now get the method proxy on the same VM as the source
+		return aRegistry.getMethodProxyFactory().getInvokable(className, methodName, methodParms);
+
+	}	
 
 	/**
 	 * Static helper to get the bean proxy from a bean.  This method instantiates the bean as well to ensure
