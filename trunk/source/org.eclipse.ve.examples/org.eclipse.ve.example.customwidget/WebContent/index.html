@@ -1,209 +1,650 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-
-<title>Visual Editor Tutorial 1</title>
-<link rel="stylesheet" type="text/css" href="default_style.css">
+<html>
+<head>
+  <title>Visual Editor Tutorial 1</title>
+  <link rel="stylesheet" type="text/css" href="default_style.css">
 </head>
-
-
 <body>
-
-<div align="right">
-  &nbsp;<table border="0" cellpadding="2" cellspacing="0" width="100%">
-    <tbody>
-      <tr>
-        <td colspan="2" align="left" bgcolor="#0080c0" valign="top"><b><font face="Arial,Helvetica"><font color="#ffffff">Eclipse
-          Article</font></font></b></td>
-      </tr>
-    </tbody>
-  </table>
+<div align="right"> &nbsp;
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td colspan="2" align="left" bgcolor="#0080c0" valign="top"><b><font
+ face="Arial,Helvetica"><font color="#ffffff">Eclipse Article</font></font></b></td>
+    </tr>
+  </tbody>
+</table>
 </div>
 <div align="left">
-  <h1 title="RCP Tutorial"><img src="images/Idea.jpg" align="middle" height="86" width="120"></h1>
+<h1 title="RCP Tutorial"><img src="images/Idea.jpg" align="middle"
+ height="86" width="120"></h1>
 </div>
-<h1 align="center"><font color="#0000FF">Extending The </font> <a href="http://www.eclipse.org/vep">Visual Editor</a><font color="#0000FF"><br>
-Tutorial&nbsp; 1</font></h1>
-<p class="summary">The Visual Editor project also provides a framework that can 
-be extended.&nbsp; This is a first of a series of tutorial that we plan to write 
-in order to provide developers quick map to the way VE can be extended.</p>
+<h1 align="center"><font color="#0000ff">Extending The </font> <a
+ href="http://www.eclipse.org/vep">Visual Editor</a><font
+ color="#0000ff"><br>
+Tutorial&nbsp; 1 - Enabling support for a custom widget<br>
+</font></h1>
+<h2>Background</h2>
+<p class="summary">The Visual Editor project provides reference
+implementations of a graphical user interface builder for the JFC and
+SWT widget toolkits built around an extensible framework.&nbsp; The
+motivation for this came from exerience with previous GUI builders that
+while they provided high function end points for particular toolkits
+were unable to be adapted to support custom behavior for areas of
+functionality such as custom widgets, custom layout managers, user
+specific code generation patterns, etc...&nbsp; A design goal of the
+visual editor is that is none of its own custom behavior for any JFC or
+SWT classes is done through any hard coding in the base, so any
+specific logic that the VE employs to enable say a tab pane, dropping a
+control on a composite, or showing feedback for a particular layout
+manager is soft coded through extension points and can be leveraged by
+anyone wishing to employ similar techniques.<br>
+</p>
+<p class="summary">This tutorial covers an example where a user has a
+custom widget that they wish to extend the visual editor to have
+specific builder behavior for. <br>
+</p>
 <p><b>Gili Mendel, IBM<br>
 Joe Winchester, IBM<br>
 Dave Orme, db4objects</b></p>
 <p><font size="1">
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March 16, 2005<!--webbot bot="Timestamp" endspan i-checksum="17411" --></font></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March
+16, 2005<!--webbot bot="Timestamp" endspan i-checksum="17411" --></font></p>
 <hr width="100%">
-<h2>Introduction</h2>
-<p>The Visual editor project provides GUI building support for Swing and SWT.&nbsp; 
-Supporting these widgets are a reference implementation on top of the core VE 
-framework.&nbsp; In this 
-tutorial we are going to create a 3.1 based Eclipse plugin&nbsp; <b><i>
-org.eclipse.ve.example.customwidget</i> </b>that will provide the following:</p>
+<h2><a name="Introduction"></a>Introduction</h2>
+<p>In this tutorial a 3.1 based Eclipse plugin&nbsp; <i>
+org.eclipse.ve.example.customwidget</i><b> </b>will be created that
+illustrates some of the basic touch points of the visual editor.&nbsp;
+To do this an SWT custom widget will be built that combines a Label,
+Text and Button in a single widget called <span
+ style="font-style: italic;">org.eclipse.ve.examples.customwidget.MyCustomPrompter</span>.&nbsp;
+<br>
+</p>
+<p><img style="width: 243px; height: 34px;" alt="CustomWidget"
+ src="images/CustomWidget.JPG"><br>
+</p>
+<p>MyCustomPrompter has two properties: <span
+ style="font-style: italic;">type </span>and <span
+ style="font-style: italic;">text</span>.&nbsp; These each have get and
+set methods and can be used to configure the behavior of the button and
+the label's text.&nbsp; There is also a <span
+ style="font-style: italic;">ButtonSelectionEvent </span>event that is
+raised when the prompter's button is pressed, and listeners can
+register for this callback using <span style="font-style: italic;">addButtonSelectionListener(ButtonSelectionListener
+aListener); </span><br>
+</p>
+<p>In the
+absence of the plugin that this tutorial builds for the class <span
+ style="font-style: italic;">MyCustomPrompter </span>it can be used by
+a user
+who drops it onto an SWT composite by adding a JAR (or folder)
+containing the class to their Java project's build path and using
+ChooseBean from the palette to select MyCustomPrompter and drop it onto
+a composite and begin working with it.&nbsp; Through inheritance (<span
+ style="font-style: italic;">MyCustomPrompter </span>extends <span
+ style="font-style: italic;">org.eclipse.swt.widgets.Composite</span>)
+the custom control will be rendered correctly, its properties will be
+determined using JavaBeans<sup>TM</sup> reflection and available to
+modify using the PropertiesViewer.&nbsp; The event will also be
+determined automatically through introspection by the Visual Editor and
+available to the user to add listeners to through the Add Event
+dialog.&nbsp; This tutorial shows how the
+developer of the plugin can enable specific visual editor behavior over
+and above the default that is determined through inherited behavior and
+provide a high level edit experience for users of the <span
+ style="font-style: italic;">MyCustomPrompter </span>class.&nbsp; The
+examples given are purely for illustrative purposes only and to
+highlight some of the available ways to extend the behavior of the
+Visual Editor, and it is expected that the reader of this tutorial will
+use it to learn the extension mechanism and then apply this to their
+own custom widget or Java class.&nbsp;<span
+ style="color: rgb(204, 0, 0);"> &lt;&lt; Disclaimer here about fitness
+of the sample code required &gt;&gt;</span><br>
+</p>
 <ul>
-	<li>Provide a custom SWT widget that could then be by GUI developers</li>
-	<li>Extend the Visual editor to provide:<ul>
-		<li>Special edit part to deal with this custom widget</li>
-		<li>Special Decoder to generate special code for one of the properties of 
-		the widget</li>
-		<li>Special property editors for some of the properties of the 
-		widget</li>
-		<li>Specific classpath container so that a user can add the widget's 
-		jar into the a build path of a project with ease</li>
-		<li>Denote that the event exposed by the widget is a preferred event.</li>
-	</ul>
-	</li>
+  <li>
+    <h3>Palette</h3>
+  </li>
+  <ul>
+    <li>The visual editor provides a palette of classes from which the
+user can choose commonly used classes.&nbsp; The tutorial shows how to
+create a new palette category containing the CustomWidget to allow it
+to be brought to the user's selection and easily selected and dropped
+without having to use <span style="font-style: italic;">ChooseBean </span>and
+enter the class name</li>
+  </ul>
 </ul>
-<h2>&nbsp;</h2>
-<h2>Table of Content</h2>
+<table style="text-align: left; width: 50%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before<br>
+      </td>
+      <td style="vertical-align: top;">With plugin showing <span
+ style="font-style: italic;">Custom </span>category with the <span
+ style="font-style: italic;">MyCustomPrompter </span>class<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><img
+ style="width: 147px; height: 226px;" alt="OrignalPalette"
+ src="images/OrignalPalette.JPG"><br>
+      </td>
+      <td style="vertical-align: top;"><img
+ style="width: 148px; height: 241px;" alt="NewPalette"
+ src="images/NetPalette.JPG"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ul>
+  <li>
+    <h3>Property sheet</h3>
+  </li>
+  <ul>
+    <li>There is an <span style="font-style: italic;">int </span>property
+called <span style="font-style: italic;">type </span>that affects the
+text shown on the CustomPrompter's button.&nbsp; This has a set of
+restricted values corresponding to static constrants.&nbsp; For
+example, 0 is the constant CustomPrompter.DOTS, 1 is
+CustomPrompter.MORE and 2 is CustomPrompter.OPEN. Rather than have the
+user have to remember this the
+property sheet will be extended so that there is a drop down list of
+available values, and the existing value is shown as its meaningful
+name rather than its internal <span style="font-style: italic;">int </span>value.</li>
+  </ul>
+</ul>
+<br>
+<table style="text-align: left; width: 75%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before<br>
+      </td>
+      <td style="vertical-align: top;">With plugin<br>
+      </td>
+      <td style="vertical-align: top;">With plugin<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">type
+      </span>property displayed with default <span
+ style="font-style: italic;">int </span>editor<br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">type
+      </span>property displayed as static constant name</td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">type
+      </span>property edited with drop down list of enumerated
+allowable values<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 236px; height: 37px;"
+ alt="OriginalType"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/OriginalTypeProperty.JPG"></td>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 234px; height: 37px;"
+ alt="TypePropertyLabelProvider"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/TypePropertyLabelProvider.JPG"></td>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 228px; height: 70px;"
+ alt="TypePropertyCellEditor"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/TypePropertyCellEditor.JPG"></td>
+    </tr>
+  </tbody>
+</table>
+<ul>
+  <ul>
+    <li><span style="font-style: italic;">MyCustomPrompter </span>has
+a <span style="font-style: italic;">String </span>property
+called <span style="font-style: italic;">text </span>that reflects
+the
+value shown on the CustomPrompter's text widget.&nbsp; The default
+property
+sheet editor for a String property is a Text field that allows the
+value to be changed, however the tutorial illustrates how to have a
+custom property editor that launches a separate dialog through which
+the value can be changed</li>
+  </ul>
+</ul>
+<br>
+<table style="text-align: left; width: 50%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before with default String
+editor behavior for <span style="font-style: italic;">text </span>property<br>
+      </td>
+      <td style="vertical-align: top;">With plugin showing custom
+editor for <span style="font-style: italic;">text </span>property<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 232px; height: 37px;"
+ alt="OriginalTextProperty" src="images/OriginalTextProperty.JPG"><br>
+      </td>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 233px; height: 37px;"
+ alt="TextPropertyCellEditor" src="images/TextPropertyCellEditor.JPG"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<ul>
+  <li>
+    <h3>Graphical behavior</h3>
+  </li>
+  <ul>
+    <li>The visual editor uses the graphical editor framework or GEF to
+render the visual classes to the user.&nbsp; GEF is a powerful
+framework which uses EditPart classes as mediators between the
+underlying model and the draw2d view layer.&nbsp; This is similar to
+the controller in an MVC pattern and described in overview at <a
+ href="http://www-128.ibm.com/developerworks/opensource/library/os-gef/index.html">Create
+an
+Eclipse based application using GEF.</a> The default behavior for a
+visual class is a WYSIWYG rendering where a preview of the live runtime
+widget is drawn.&nbsp; There are times when you may wish to override
+this for a specific component such as to visually annotate the feedback
+for the figure such as drawing grid lines, additional handles or other
+features provided by GEF.&nbsp; As an example of how to alter the edit
+part used by the visual editor the tutorial shows how to have <span
+ style="font-style: italic;">MyCustomPrompter&nbsp; </span>rendered
+with an ico.&nbsp; n&nbsp;<img style="width: 16px; height: 16px;"
+ alt="Custom"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/custom.gif">
+and the text <span style="color: rgb(255, 0, 0);">VE Rules</span><span
+ style="font-style: italic;"> </span>over the image of the live visual
+control.&nbsp; In addition the default behavior of a Composite
+graphical edit part is to draw a border around it in the editor so that
+it can be located by the user irrespective of whether it has child
+controls or not.&nbsp; <span style="font-style: italic;">MyCustomPrompter
+      </span>is an aggregate of three child controls into a custom
+widget so the graphical edit part will remove the artificial border.<br>
+    </li>
+  </ul>
+</ul>
+&nbsp;&nbsp;&nbsp; <br>
+<table style="text-align: left; width: 100%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before with default behavior
+showing the image of the live visual control with a border<br>
+      </td>
+      <td style="vertical-align: top;">With plugin showing custom edit
+part with an icon and label and no boder<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 365px; height: 180px;"
+ alt="originalGEF" src="images/OriginalGraphicalEditPart.JPG"><br>
+      </td>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 356px; height: 180px;"
+ alt="GraphicalEditPart" src="images/GraphicalEditPart.JPG"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<ul>
+  <li>
+    <h3>Code generation</h3>
+  </li>
+  <ul>
+    <li>Code generation uses decoder classes to mediate between the
+visual editor's model and the Java source model.&nbsp; This tutorial
+shows how to create a custom code generation rule for the <span
+ style="font-style: italic;">text </span>property of <span
+ style="font-style: italic;">MyCustomPrompter </span>so that it has an
+additional comment placed on the line with the set method.&nbsp; This
+is the string <span style="color: rgb(0, 102, 0);">// Prompter Text
+Property</span><br>
+    </li>
+  </ul>
+</ul>
+<br>
+<table style="text-align: left; width: 100%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before with default code
+generation behavior<br>
+      </td>
+      <td style="vertical-align: top;">With plugin showing the extra
+comment line code generated for the setText(String) method<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);"> private void </span>createMyCustomPrompter()
+{<br>
+&nbsp; myCustomPrompter = <span style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
+SWT.NONE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <br>
+&nbsp; myCustomPrompter.setText(<span style="color: rgb(51, 51, 255);">"Text
+Value"</span>);<br>
+}</td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;"><span style="color: rgb(153, 0, 0);">private
+void</span> createMyCustomPrompter() {</span><br
+ style="font-family: monospace;">
+      <span style="font-family: monospace;">&nbsp; myCustomPrompter = <span
+ style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
+SWT.NONE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br
+ style="font-family: monospace;">
+      <span style="font-family: monospace;"></span><span
+ style="font-family: monospace;">&nbsp; myCustomPrompter.setText(<span
+ style="color: rgb(51, 51, 255);">"Text value"</span>); <span
+ style="color: rgb(0, 153, 0);">// Prompter Text Property </span></span><br
+ style="font-family: monospace;">
+      <span style="font-family: monospace;">}</span><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<ul>
+  <li>
+    <h3>Preferred Event</h3>
+  </li>
+</ul>
+<ul>
+  <ul>
+    <li><span style="font-style: italic;">MyCustomPrompter </span>signals
+an event when its button is pressed.&nbsp;&nbsp; Listeners can register
+interest in this with the method <span style="font-style: italic;">addButtonSelectionListener(ButtonSelectionListener
+aListener)</span> and remove interest with the method <span
+ style="font-style: italic;">removeButtonSelectionListener(ButtonSelectionListener
+aListener).&nbsp; </span>The Visual Editor will automatically detect
+this event because the naming convention of the methods and the
+listener class follows the JavaBeans specification.&nbsp; The event
+will be available from the list of all available events for the custom
+control, however it is included in the list that has everything from
+mouse through keyboard and paint events.&nbsp; This tutorial shows how
+to promote the event to the list of <span style="font-style: italic;">preferred
+      </span>events whereupon it will be shown on the <span
+ style="font-style: italic;">Add Events </span>menu for the class.</li>
+  </ul>
+</ul>
+<br>
+<table style="text-align: left; width: 100%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Before where the Events menu has
+no preferred events<br>
+      </td>
+      <td style="vertical-align: top;">With plugin the Events menu has <span
+ style="font-style: italic;">buttonSelected </span>as a preferred event<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 500px; height: 320px;"
+ alt="OriginalEventsMenu" src="images/OrignalEventsMenu.JPG"><br>
+      </td>
+      <td style="vertical-align: top;"><img
+ style="border: 1px solid ; width: 500px; height: 320px;"
+ alt="EventsMenuAfter" src="images/EventsMenuAfter.JPG"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h1>Table of Contents</h1>
 <p><a href="#Getting_started">Getting Started</a><br>
-<a href="#Creating_the_Plugin">Creating the Plugin</a><br>
+<a href="#%0A_the_Plugin">Creating the Plugin</a><br>
 <a href="#The_Custom_Widget">The Custom Widget</a><br>
 <a href="#Creating_a_Classpath_Container">Creating a Classpath Container</a><br>
-<a href="#Adding_a_palette_category_for_our_widget">Adding a palette category 
-for our widget</a><br>
+<a href="#Adding_a_palette_category_for_our_widget">Adding a palette
+category for our widget</a><br>
 <a href="#Using_an_ENUM_cell_editor">Using an ENUM cell editor</a><br>
 <a href="#Creating_A_SWT_cell_editor">Creating a SWT cell editor</a><br>
 <a href="#Overriding_a_GEF_edit_part">Overriding a GEF edit part</a><br>
-<a href="#Overriding_an_Expression_Decoder">Overriding an Expression Decoder</a><br>
+<a href="#Overriding_an_Expression_Decoder">Overriding an Expression
+Decoder</a><br>
 <a href="#Preferred_Event">Preferred Event</a></p>
 <p>&nbsp;</p>
-
 <p>&nbsp;</p>
-<p></p>
 <h2><a name="Getting_started">Getting started</a></h2>
-<p>&nbsp;</p>
-<p>The tutorial is going to go through the steps to build a plugin, <b><i>
-org.eclipse.ve.example.customwidget</i></b>. However, you can checkout the 
-complete plugin from Eclipse tool's CVS (where this tutorial is based in). This 
-plugin is stored as a directory under the <i>org.eclipse.ve.examples</i>:</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.51.jpg"></p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.52.jpg"></p>
-<p>&nbsp;</p>
-<p>Or, you can also download the zipped plugin from 
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/customwidget.zip?cvsroot=Tools_Project">here</a>.</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">&nbsp;&nbsp;&nbsp; 
-Make sure that you are pointing to a 3.1 target 
-(<i>Windows-&gt;Preference-&gt;PDE-&gt;Target Platform</i>) which has the 3.1 
-stream for <a href="http://download.eclipse.org/tools/ve/downloads/index.php">VE</a>, GEF, and EMF on top of it.</p>
-<p>&nbsp;</p>
+<p>This tutorial goes go through the steps required to build a plugin
+called<b><i> </i></b><i>org.eclipse.ve.example.customwidget</i><span
+ style="font-style: italic;"><span style="font-weight: bold;">.&nbsp;&nbsp;&nbsp;
+</span></span>The pre-requisites are an Eclipse 3.1 target environment
+which has a 3.1 codebase for the Visual Editor, GEF and EMF
+installed.&nbsp; These can be obtained from the <a
+ href="http://download.eclipse.org/tools/ve/downloads/index.php">Visual
+Editor's download page</a>.<br>
+</p>
+<p><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62">&nbsp;&nbsp;&nbsp;
+Although the plugin is designed to target 3.1 it can be developed in an
+earlier environment such as 3.0.1.&nbsp; The target environment is the
+one that is run when the <span style="font-weight: bold;">Run ...
+Eclipse Environment </span>is used to launch a runtime
+workbench.&nbsp; You can use <span style="font-weight: bold;">Windows-&gt;Preference-&gt;PDE-&gt;Target
+Platform</span> to view and change the target environment and <span
+ style="font-weight: bold;">Help About </span>to see the version of
+Eclipse.<br>
+</p>
+<p>The completed plugin can be obtained separately as described in the
+section <a href="#A_complete_example">A complete example</a><br>
+</p>
+<p></p>
 <h2><a name="Creating_the_Plugin">Creating the Plugin</a></h2>
-<p>&nbsp;</p>
-<p>In order to build this&nbsp; plugin from scratch we will use the <i>PDE</i> to 
-create a plugin Project.</p>
-<p class="PictureParagraph"><img border="0" src="images/index.3.jpg" class="PictureStyle" style="border: 1px inset #C0C0C0; background-color: #C0C0C0"></p>
-<p>Name it <i>org.eclipse.ve.example.customwidget</i>, and use the 3.1 target version 
-and OSGi bundle manifest</p>
-<p class="PictureParagraph"><img border="0" src="images/index.4.jpg"></p>
-<p>Give it a provider and plugin names, and click Finish.</p>
-<p class="PictureParagraph"><img border="0" src="images/index.5.jpg"></p>
-<p>&nbsp;</p>
-<p>Next we are going to add the following plugins as dependencies with the 
-manifest editor (add all of 
-them up front so 
-that we do not have to do so later on, one at the time, as we extend VE functionality):</p>
+<p>This section describes how to build the plugin <span
+ style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
+</span>This will be used to package the CustomWidget itself as well as
+the include the extensions required to overide its default
+behavior.&nbsp; The end result for users is that they will install this
+plugin onto their Eclipse environment and then configure their Java
+projects to use it <span style="color: rgb(255, 0, 0);">&lt;&lt; see
+section &gt;&gt;.</span><br>
+</p>
+<p>To create the plugin select open the New Project wizard using the
+menu options <span style="font-weight: bold;">File &gt; New &gt;
+Project </span>and choose Plug-in Project. as shown in Figure 1.<br>
+</p>
+<p><img style="width: 207px; height: 65px;" alt="PluginProjectWizard"
+ src="images/PluginProjectWizard.JPG"><br>
+</p>
+<p><br>
+On the first page of the creation wizard name the plugin <i>org.eclipse.ve.example.customwidget</i>,
+select 3.1
+as the target version and select the check box <span
+ style="font-style: italic;">Create an OSGi bundle
+manifest.&nbsp;&nbsp; </span>Press <span style="font-style: italic;">Next
+</span>to bring up the <span style="font-style: italic;">Plug-in-Content
+</span>page and enter a plugin name such as <span
+ style="font-style: italic;">Customwidget VE Example Plug-in </span>in
+the <span style="font-style: italic;">Plugin-In Name </span>text
+field.&nbsp; Press <span style="font-style: italic;">Finish </span>to
+have the PDE generate the stub plugin.&nbsp; The workbench might then
+ask you to switch to the PDE perspective which you can answer <span
+ style="font-style: italic;">Yes </span>to.&nbsp; The plugin manifest
+editor will then be opened by default.&nbsp; This is an editor that
+allows you to view and edit the contents of the files called <span
+ style="font-style: italic;">plugin.xml and manifest.mf </span>that
+reside within the plugin.&nbsp; These are both important files as they
+describe the extension points used and also the list of pre-requisite
+plugins.<span style="text-decoration: underline;"><span
+ style="text-decoration: underline;"><span
+ style="text-decoration: underline;"><span
+ style="text-decoration: underline;"><span
+ style="text-decoration: underline;"></span></span></span></span></span><br>
+</p>
+<p>A plugin represents a component that can be installed onto an
+Eclipse environment and contributes code.&nbsp; Every plugin has a set
+of dependent plugins which is those it requires to function.&nbsp; This
+list would typically include pre-requisite plugins with classes or
+interfaces extended or any extension points that have been used.&nbsp;
+The list of pre-requisite plugins for a plugin extending the visual
+editor is:<br>
+</p>
+<ul>
+  <li>org.eclipse.ui</li>
+  <li>org.eclipse.core.runtime</li>
+  <li>org.eclipse.ve.java.core</li>
+  <li>org.eclipse.jdt.core</li>
+  <li>org.eclipse.jem</li>
+  <li>org.eclipse.jem.proxy</li>
+  <li>org.eclipse.ve.cde</li>
+  <li>org.eclipse.ve.swt</li>
+  <li>org.eclipse.ve.propertysheet</li>
+  <li>org.eclipse.gef</li>
+  <li>org.eclipse.emf.ecore<br>
+  </li>
+</ul>
+<p><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The pre-requisite plugin
+org.eclipse.ve.swt is not necessarily required by everyone extending
+the visual editor.&nbsp; It contains the code that enables the visual
+editor to work with the SWT and because <span
+ style="font-style: italic;">MyCustomPrompter </span>is an SWT custom
+widget the plugin will be extending SWT base behavior.&nbsp; If your
+plugin was for a JFC toolkit such as AWT or Swing you would not
+necessarily inlude <span style="font-style: italic;">org.eclipse.ve.swt
+</span>in your list of dependencies but instead would use <span
+ style="font-style: italic;">org.eclipse.ve.jfc.&nbsp; </span>If your
+plugin was for an entirely new widget toolkit you might include neither.<br>
+</p>
+<p>To set up the list of required plugins select the <span
+ style="font-style: italic;">Dependencies </span>tab on the plugin
+editor, select the <span style="font-style: italic;">Add ... </span>button
+beside the list of Required Plug-ins and enter the list of plugins
+listed above.<br>
+</p>
+<p><img style="width: 302px; height: 179px;" alt="PreReqPlugins"
+ src="images/PreReqPlugins.JPG"><br>
+</p>
 <blockquote class="PictureParagraph">
-	<blockquote>
-		<p>org.eclipse.ui,<br>org.eclipse.core.runtime,<br>org.eclipse.ve.java.core,<br>org.eclipse.jdt.core,<br>org.eclipse.jem,<br>org.eclipse.jem.proxy,<br>org.eclipse.ve.cde,<br>org.eclipse.ve.swt,<br>org.eclipse.ve.propertysheet,<br>org.eclipse.gef,<br>org.eclipse.emf.ecore</p>
-	</blockquote>
+  <blockquote> </blockquote>
 </blockquote>
-<p class="PictureParagraph">
-<img border="0" src="images/index.6.jpg" class="PictureStyle"></p>
-<p>&nbsp;</p>
+Having create the plugin there are two major steps remaining.&nbsp; The
+first is to create the actual custom widget class itself and test it,
+and the second is to extend the visual editor to have the customized
+behavior described in the <a href="#Introduction">intrduction</a>.<br>
+<br>
 <h2><a name="The_Custom_Widget">The Custom Widget</a></h2>
-<p>The Custom Widget in this tutorial is a SWT composite that has 3 controls on it: A label, a text 
-field, and a button.&nbsp; You can build it with VE or just get the one we built from CVS:</p>
-<p>
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java?cvsroot=Tools_Project">
-MyCustomPrompter.java</a>, (and
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java?cvsroot=Tools_Project">
-ButtonSelectionListener.java</a> as we added a special event to our widget) and place them in the <i><b>
-org.eclipse.ve.example.customwidget.prompter</b></i> package</p>
-<p>&nbsp;</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.7.jpg" class="PictureStyle"></p>
-<p>&nbsp;</p>
-<p>In order to make the <i>MyCustomPrompter</i> widget available for use, we are going to export 
-our <i>org.eclipse.ve.example.customwidget.prompter</i> package into a jar and add it to our plugin 
-(right click on the package, and Export it to a JAR file)</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.8.jpg" class="PictureStyle"></p>
-<p>Make sure to call the jar <i><b>customwidgets.jar</b></i>.<i><b> </b></i>In the example 
-below, the target path is the plugin project, so the .jar is added to the 
-project directly.</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.9.jpg" class="PictureStyle"></p>
-<p class="PictureParagraph">&nbsp;</p>
-<p class="PictureParagraph">&nbsp;</p>
-<h2><a name="Creating_a_Classpath_Container">Creating a Classpath Container</a></h2>
+<p>The custom widget used in this tutorial extends SWT composite and
+has three child controls on it; a label, a text field, and a
+button.&nbsp; For this tutorial we used the Visual Editor to build the
+custom widget which, although a good exercise in using the Visual
+Editor is outside the scope of what this tutorial is designed to cover,
+so you download it directly from CVS.&nbsp; You should download the two
+classes <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java?cvsroot=Tools_Project">MyCustomPrompter.java</a>,
+and
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java?cvsroot=Tools_Project">ButtonSelectionListener.java</a>
+and place them into the plugin prohject in a package <span
+ style="font-style: italic;">org.eclipse.ve.customwidget.prompter.&nbsp;
+</span>This is illustrated below together with the Visual Editor opened
+against the <span style="font-style: italic;">MyCustomPrompter </span>class
+to show the three child controls.&nbsp; The package <span
+ style="font-style: italic;">org.eclipse.ve.example.customwidget </span>is
+where the visual editor classes&nbsp; (such as the specialized
+graphical edit part or code generation decoder) will reside, and the
+package <span style="font-style: italic;">org.eclipse.ve.customwidget.prompter
+</span>is where the classes reside that the user will use to build
+their runtime GUIs with.<br>
+</p>
+<p><img style="border: 1px solid ; width: 714px; height: 376px;"
+ alt="RuntimeClasses" src="images/index.7.jpg"><br>
+</p>
+<p>For deployment the classes <span style="font-style: italic;">MyCustomPrompter
+</span>and <span style="font-style: italic;">ButtonSelectionListener </span>will
+be packaged in a JAR.&nbsp; To do this select the runtime package and
+use the pop up menu option <span style="font-weight: bold;">Export</span>
+to bring up the Export wizard.&nbsp; Select JAR file as and name the
+JAR file <span style="font-style: italic;">customwidgets.jar.&nbsp; </span>This
+JAR file will be placed inside the plugin itself and there are two ways
+to do this.&nbsp; The first is to either export the JAR to a temporary
+location on your computer and then import it into the project.&nbsp; If
+you do this you should import the <span style="font-style: italic;">customwidgets.jar
+</span>not as a JAR file as it contains no code of any interest to the
+plugin itself, but instead as a raw <span style="font-style: italic;">File</span>.&nbsp;&nbsp;
+The reason for this is that the inclusion of the runtime code in the
+plugin is not for the benefit of Eclipse and it will never be loaded by
+the Visual Editor into the Eclipse JVM.&nbsp; The user of the plugin
+will configure their Java project to use the custom prompter <span
+ style="color: rgb(204, 0, 0);">&lt;&lt;need description of this&gt;&gt;</span>
+and the visual editor will insert the JAR into the -classpath of the VM
+that it uses to host the Java classes that make up the user's classes.<br>
+The second way to ensure that the <span style="font-style: italic;">customwidgets.jar</span>
+is included in the plugin that avoids having to export to the file
+system and then re-import as a file, is to export straight to the
+directory used by the plugin itself.&nbsp; To see the location of the
+plugin you can open its properties and select Info.&nbsp; The figure
+below shows an example of this where the workbench location is
+D:\temp\tutorial and the JAR wizard creates customwidgets.jar into the
+directory used by the <span style="font-style: italic;">org.eclipse.ve.example.customwidget</span>
+plugin.<br>
+</p>
+<img style="border: 1px solid ; width: 465px; height: 502px;"
+ alt="JarExport" src="images/index.9.jpg"><br>
+<br>
+<br>
+<br>
+<p class="PictureParagraph"><br>
+</p>
+<h2><a name="Creating_a_Classpath_Container">Creating a Classpath
+Container</a></h2>
 <p>
 &nbsp;</p>
 <p>
-In order to make the <i><b>customwidgets.jar </b></i> available for users  
-on the target IDE, we are going to define a Classpath container that points to our 
-jar.&nbsp; Users would then be able add this specific container to their classpath and 
-make the <i>MyCustomPrompter</i> 
+In order to make the <i><b>customwidgets.jar </b></i> available for
+users on the target IDE, we are going to define a Classpath container
+that points to our jar.&nbsp; Users would then be able add this
+specific container to their classpath and make the <i>MyCustomPrompter</i>
 widget available for use.</p>
 <p>
-To do so, we will add the following to the 
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a> of our plugin:</p>
-
+To do so, we will add the following to the <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
+of our plugin:</p>
 <blockquote>
-			<pre>&lt;plugin&gt;
-   &lt;extension
-         point=&quot;org.eclipse.jdt.ui.classpathContainerPage&quot;&gt;
-      &lt;classpathContainerPage
-            <font color="#0000FF">name</font>=&quot;<font color="#0000FF">Custom Prompter</font>&quot;
-            class=&quot;org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage&quot;
-            <font color="#0000FF">id</font>=&quot;<font color="#0000FF">org.eclipse.ve.example.PrompterContainer</font>&quot;&gt;
-      &lt;/classpathContainerPage&gt;
-   &lt;/extension&gt;  
-   
-   &lt;extension
-         point=&quot;org.eclipse.jdt.core.classpathContainerInitializer&quot;&gt;
-      &lt;classpathContainerInitializer
-            class=&quot;org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer&quot;
-            id=&quot;org.eclipse.ve.example.PrompterContainer&quot;&gt;
-      &lt;/classpathContainerInitializer&gt;
-   &lt;/extension&gt;   
-   
-  &lt;extension
-         point=&quot;org.eclipse.ve.java.core.registrations&quot;&gt;
-      &lt;registration
-            <font color="#0000FF">container</font>=&quot;org.eclipse.ve.example.PrompterContainer&quot;
-            <font color="#0000FF">description</font>=&quot;<font color="#0000FF">Custom Prompter</font>&quot;&gt;
-         &lt;library runtime=&quot;<font color="#0000FF">customwidgets.jar</font>&quot;/&gt;
-      &lt;/registration&gt;
-   &lt;/extension&gt; 
-&lt;/plugin&gt;</pre>
+  <pre>&lt;plugin&gt;<br>   &lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br>            <font
+ color="#0000ff">name</font>="<font color="#0000ff">Custom Prompter</font>"<br>            class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"<br>            <font
+ color="#0000ff">id</font>="<font color="#0000ff">org.eclipse.ve.example.PrompterContainer</font>"&gt;<br>      &lt;/classpathContainerPage&gt;<br>   &lt;/extension&gt;  <br>   <br>   &lt;extension<br>         point="org.eclipse.jdt.core.classpathContainerInitializer"&gt;<br>      &lt;classpathContainerInitializer<br>            class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"<br>            id="org.eclipse.ve.example.PrompterContainer"&gt;<br>      &lt;/classpathContainerInitializer&gt;<br>   &lt;/extension&gt;   <br>   <br>  &lt;extension<br>         point="org.eclipse.ve.java.core.registrations"&gt;<br>      &lt;registration<br>            <font
+ color="#0000ff">container</font>="org.eclipse.ve.example.PrompterContainer"<br>            <font
+ color="#0000ff">description</font>="<font color="#0000ff">Custom Prompter</font>"&gt;<br>         &lt;library runtime="<font
+ color="#0000ff">customwidgets.jar</font>"/&gt;<br>      &lt;/registration&gt;<br>   &lt;/extension&gt; <br>&lt;/plugin&gt;</pre>
 </blockquote>
 <ul>
-	<li>The first is a JDT extension that registers the VE <i>RegisteredClasspathContainerWizardPage</i> as a container wizard page.</li>
-	<li>The second (a JDT) extension registers a VE <i>RegisteredClasspathContainerInitializer</i> and binds it to the wizard page 
-	above.</li>
-	<li>The third extension is a VE extension, and binds the container id, to 
-	the <i>customwidgets.jar </i>that we have generated.</li>
+  <li>The first is a JDT extension that registers the VE <i>RegisteredClasspathContainerWizardPage</i>
+as a container wizard page.</li>
+  <li>The second (a JDT) extension registers a VE <i>RegisteredClasspathContainerInitializer</i>
+and binds it to the wizard page above.</li>
+  <li>The third extension is a VE extension, and binds the container
+id, to the <i>customwidgets.jar </i>that we have generated.</li>
 </ul>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-The jar name registered here must be the same name/path we gave it when we 
+<img src="images/note.gif" alt="Note: " height="13" width="62">The jar
+name registered here must be the same name/path we gave it when we
 exported the .jar.</p>
-<p>If you launch the workspace you will be able to see/use this container :</p>
+<p>If you launch the workspace you will be able to see/use this
+container :</p>
 <blockquote>
-	<p>Launch the workspace with an Eclipse Application configuration</p>
-	<blockquote>
-		<blockquote>
-			<p><img border="0" src="images/index.11.jpg"></p>
-		</blockquote>
-	</blockquote>
+  <p>Launch the workspace with an Eclipse Application configuration</p>
+  <blockquote>
+    <blockquote>
+      <p><img border="0" src="images/index.11.jpg"></p>
+    </blockquote>
+  </blockquote>
 </blockquote>
 <p>
 &nbsp;</p>
 <p>
-Create a new Java Project, and go to the the Build Path's Libraries 
-configuration page. The Custom 
-Prompter container should be available.</p>
+Create a new Java Project, and go to the the Build Path's Libraries
+configuration page. The Custom Prompter container should be available.</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.12.jpg" class="PictureStyle"></p>
 <p>
@@ -211,601 +652,489 @@ Prompter container should be available.</p>
 <p>
 If you click Next, you should see that it is configured as following</p>
 <blockquote>
-	<blockquote>
-		<blockquote>
-			<blockquote>
-				<p><img border="0" src="images/index.13.jpg"></p>
-			</blockquote>
-		</blockquote>
-	</blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p><img border="0" src="images/index.13.jpg"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
 </blockquote>
 <p>
 Click Finish and OK to add the widget jar to your project.</p>
 <blockquote>
-	<blockquote>
-		<blockquote>
-			<blockquote>
-				<p><img border="0" src="images/index.14.jpg"></p>
-				<p>&nbsp;</p>
-				<p>&nbsp;</p>
-			</blockquote>
-		</blockquote>
-	</blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p><img border="0" src="images/index.14.jpg"></p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
 </blockquote>
-
-<h2><a name="Adding_a_palette_category_for_our_widget">Adding a palette category for our widget</a></h2>
-The VE palette is defined with <a href="http://www.omg.org/technology/documents/formal/xmi.htm">XMI</a>.  We are going to create a <a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi?cvsroot=Tools_Project">customprompter.xmi</a> file and place it at the root of our plugin
-
+<h2><a name="Adding_a_palette_category_for_our_widget">Adding a palette
+category for our widget</a></h2>
+The VE palette is defined with <a
+ href="http://www.omg.org/technology/documents/formal/xmi.htm">XMI</a>.
+We are going to create a <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi?cvsroot=Tools_Project">customprompter.xmi</a>
+file and place it at the root of our plugin
 <blockquote>
-			<pre>&lt;xmi:XMI xmi:version="2.0" 
-  xmlns:xmi="http://www.omg.org/XMI" 
-  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
-  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
-  &lt;palette:CategoryCmp xmi:id="swtCat0"&gt;
-    &lt;<font color="#0000FF">categoryLabel</font> xsi:type="utility:ConstantString" <b><font color="#FF0000">string="Custom"</font></b>/&gt;
-    &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;
-    
-      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" <font color="#0000FF">icon16Name</font>="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;
-        &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          <font color="#0000FF">creationClassURI</font><b><font color="#FF0000">=</font></b><font color="#FF0000">"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"</font>/&gt;
-        &lt;<font color="#0000FF">entryLabel</font> xsi:type="utility:ConstantString" <b><font color="#FF0000">string="Prompter"</font></b>/&gt;
-      &lt;/cmpEntries&gt; 
-      
-    &lt;/cmpGroups&gt;
-  &lt;/palette:CategoryCmp&gt;
-&lt;/xmi:XMI&gt;
-</pre>
+  <pre>&lt;xmi:XMI xmi:version="2.0" <br>  xmlns:xmi="http://www.omg.org/XMI" <br>  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;  <br>  &lt;palette:CategoryCmp xmi:id="swtCat0"&gt;<br>    &lt;<font
+ color="#0000ff">categoryLabel</font> xsi:type="utility:ConstantString" <b><font
+ color="#ff0000">string="Custom"</font></b>/&gt;<br>    &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br>    <br>      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" <font
+ color="#0000ff">icon16Name</font>="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>        &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br>          <font
+ color="#0000ff">creationClassURI</font><b><font color="#ff0000">=</font></b><font
+ color="#ff0000">"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"</font>/&gt;<br>        &lt;<font
+ color="#0000ff">entryLabel</font> xsi:type="utility:ConstantString" <b><font
+ color="#ff0000">string="Prompter"</font></b>/&gt;<br>      &lt;/cmpEntries&gt; <br>      <br>    &lt;/cmpGroups&gt;<br>  &lt;/palette:CategoryCmp&gt;<br>&lt;/xmi:XMI&gt;<br></pre>
 </blockquote>
-<p>What this xmi file says is that we are creating a new category (a GEF palette 
-drawer), with a &quot;<font color="#FF0000">Custom</font>&quot; label.&nbsp; This category will have a single entry 
-with an icon, a label (&quot;<font color="#FF0000">Prompter</font>&quot;), and a class URI for our <i>MyCustomPrompter</i> 
-class.</p>
+<p>What this xmi file says is that we are creating a new category (a
+GEF palette drawer), with a "<font color="#ff0000">Custom</font>"
+label.&nbsp; This category will have a single entry with an icon, a
+label ("<font color="#ff0000">Prompter</font>"), and a class URI for
+our <i>MyCustomPrompter</i> class.</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">You will have&nbsp; to add 
-the palette's icon to your project at the path designated above
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project">
-icons/custom.gif</a></p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">You will
+have&nbsp; to add the palette's icon to your project at the path
+designated above
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project">icons/custom.gif</a></p>
 <blockquote>
-	<blockquote>
-		<p><img border="0" src="images/index.15.jpg"></p>
-	</blockquote>
+  <blockquote>
+    <p><img border="0" src="images/index.15.jpg"></p>
+  </blockquote>
 </blockquote>
 <p>
-<img src="images/tip.gif" alt="Tip: " height="13" width="62">
-XMI files are quite verbose and easy to make syntax mistakes in. The best way to 
-use them, is to take one that works, and change the areas the satisfy your 
-needs.</p>
-<p>Now that we have our palette xmi file available, we need to contribute it to the 
-Visual Editor.&nbsp; We do so by adding to the following extension in the 
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a> manifest:</p>
-
+<img src="images/tip.gif" alt="Tip: " height="13" width="62">XMI files
+are quite verbose and easy to make syntax mistakes in. The best way to
+use them, is to take one that works, and change the areas the satisfy
+your needs.</p>
+<p>Now that we have our palette xmi file available, we need to
+contribute it to the Visual Editor.&nbsp; We do so by adding to the
+following extension in the <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
+manifest:</p>
 <blockquote>
-<pre>
-   &lt;extension
-         point="org.eclipse.ve.java.core.contributors"&gt;
-      &lt;palette
-            <font color="#0000FF">container</font>=&quot;org.eclipse.ve.example.PrompterContainer"
-            categories="<font color="#0000FF"><b>customprompter.xmi</b></font>"/&gt;
-   &lt;/extension&gt;  			
- </pre>
+  <pre>   &lt;extension<br>         point="org.eclipse.ve.java.core.contributors"&gt;<br>      &lt;palette<br>            <font
+ color="#0000ff">container</font>="org.eclipse.ve.example.PrompterContainer"<br>            categories="<font
+ color="#0000ff"><b>customprompter.xmi</b></font>"/&gt;<br>   &lt;/extension&gt;  			<br> </pre>
 </blockquote>
-<p>This extension say to the Visual Editor that when the PrompterContainer is on 
-the classpath of the project, contribute the palette noted on the xmi file.</p>
+<p>This extension say to the Visual Editor that when the
+PrompterContainer is on the classpath of the project, contribute the
+palette noted on the xmi file.</p>
 <hr>
-<p>Launch again the IDE, and create a Visual SWT Class (e.g., Shell) and look at 
-the palette... MyCustomPrompter now be available (as you can see in the 
-following figure):</p>
+<p>Launch again the IDE, and create a Visual SWT Class (e.g., Shell)
+and look at the palette... MyCustomPrompter now be available (as you
+can see in the following figure):</p>
 <blockquote>
-	<p class="PictureParagraph">
-	<a name="Figure">
-	<img border="0" src="images/index.1.jpg" class="PictureStyle"></a></p>
-	<p>&nbsp;</p>
+  <p class="PictureParagraph"> <a name="Figure"> <img border="0"
+ src="images/index.1.jpg" class="PictureStyle"></a></p>
+  <p>&nbsp;</p>
 </blockquote>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-Make sure to launch the workspace with the -clean option, as we have changed the manifest file.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">Make
+sure to launch the workspace with the -clean option, as we have changed
+the manifest file.</p>
 <p>
 &nbsp;</p>
-<pre>
-</pre>
-<pre>
-</pre>
-<pre>
-</pre>
-<pre>
-</pre>
-
 <h2><a name="Using_an_ENUM_cell_editor">Using an ENUM cell editor</a></h2>
 <p>&nbsp;</p>
-<p>The MyCustomPrompter class has an <i>int</i> property named <i><b>type</b></i> 
-with a <i>getType</i>() and <i>setType</i>() (see the <i>setType</i> method 
-below).&nbsp; The <i>setType</i> method will 
-only accept three integer values, 0, 1, and 2.<br>
-If you look at the previous <a href="#Figure">figure</a>,&nbsp; the Visual Editor will use 
-(by default) 
-an <i>int</i> cell editor for the type property.&nbsp; We would like in this 
-tutorial to make the Visual Editor use an enum cell editor that will have a pull down with 
-three options: Dots, More, and Open.</p>
+<p>The MyCustomPrompter class has an <i>int</i> property named <i><b>type</b></i>
+with a <i>getType</i>() and <i>setType</i>() (see the <i>setType</i>
+method below).&nbsp; The <i>setType</i> method will only accept three
+integer values, 0, 1, and 2.<br>
+If you look at the previous <a href="#Figure">figure</a>,&nbsp; the
+Visual Editor will use (by default) an <i>int</i> cell editor for the
+type property.&nbsp; We would like in this tutorial to make the Visual
+Editor use an enum cell editor that will have a pull down with three
+options: Dots, More, and Open.</p>
 <p>
-<pre>
-
-	public final static int DOTS = 0;
-	public final static int MORE = 1;
-	public final static int OPEN = 2;
-	
-		:
-		:
-    public void setType (int type) {
-    	switch (type) {
-    	   case DOTS: button.setText("...");
-    	   	break;
-    	   case MORE: button.setText("More");
-    	   	break;
-    	   case OPEN: button.setText("Open");
-    	   	break;
-    	   default:
-    	    throw new IllegalArgumentException("Value " + type + " must be one of 0, 1 or 2");
-    	}
-    }
-</pre>
 </p>
+<pre>	public final static int DOTS = 0;<br>	public final static int MORE = 1;<br>	public final static int OPEN = 2;<br>	<br>		:<br>		:<br>    public void setType (int type) {<br>    	switch (type) {<br>    	   case DOTS: button.setText("...");<br>    	   	break;<br>    	   case MORE: button.setText("More");<br>    	   	break;<br>    	   case OPEN: button.setText("Open");<br>    	   	break;<br>    	   default:<br>    	    throw new IllegalArgumentException("Value " + type + " must be one of 0, 1 or 2");<br>    	}<br>    }<br></pre>
 <p>&nbsp;</p>
 <p>To do so we will create a
-<a href="http://java.sun.com/products/javabeans/docs/spec.html">BeanInfo</a> 
-class.&nbsp; BeanInfo provides a generic manner to describe a JavaBean in Java.&nbsp; 
-<br>
-To denote that the type property is an enum, we used the following code in
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">
-MyCustomPrompterBeanInfo.java</a></p>
-<pre>
-	public PropertyDescriptor[] getPropertyDescriptors() {
-		
-		try {		
-			PropertyDescriptor[] result = new PropertyDescriptor[2]; 
-		
-			result[0] = new PropertyDescriptor("text",MyCustomPrompter.class);
-			result[1] = new PropertyDescriptor("<b><font color="#0000FF">type</font></b>",MyCustomPrompter.class);
-		
-			result[1].setValue("<font color="#0000FF">enumerationValues</font>", new Object[] {
-					"<font color="#0000FF">Dots</font>", new Integer(<font color="#0000FF">MyCustomPrompter.DOTS</font>), "<font color="#0000FF">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</font>",
-					"<font color="#0000FF">More</font>", new Integer(<font color="#0000FF">MyCustomPrompter.MORE</font>), "<font color="#0000FF">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.MORE</font>",
-					"<font color="#0000FF">Open</font>", new Integer(<font color="#0000FF">MyCustomPrompter.OPEN</font>), "<font color="#0000FF">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.OPEN</font>"							      			
-			});
-			
-			return result;
-		} catch (IntrospectionException e) {			
-			e.printStackTrace();
-			return null;
-		}
-	}
-</pre>
-<p>The BeanInfo class above overrids the <i>getPropertyDescriptors</i> method.&nbsp; It exposes 
-two properties, <b><i>text</i></b>, and <b><i>type</i></b>.&nbsp; for the <i><b>type</b></i> 
-property the method uses a key/value pair denoting VE enumeration values.&nbsp; An 
-enumeration value is a 3-topple: label (text), value, and the code to generate 
-for that enum.&nbsp; For example, the &quot;<font color="#0000FF">Dots</font>&quot; label, 
+<a href="http://java.sun.com/products/javabeans/docs/spec.html">BeanInfo</a>
+class.&nbsp; BeanInfo provides a generic manner to describe a JavaBean
+in Java.&nbsp; <br>
+To denote that the type property is an enum, we used the following code
+in
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">MyCustomPrompterBeanInfo.java</a></p>
+<pre>	public PropertyDescriptor[] getPropertyDescriptors() {<br>		<br>		try {		<br>			PropertyDescriptor[] result = new PropertyDescriptor[2]; <br>		<br>			result[0] = new PropertyDescriptor("text",MyCustomPrompter.class);<br>			result[1] = new PropertyDescriptor("<b><font
+ color="#0000ff">type</font></b>",MyCustomPrompter.class);<br>		<br>			result[1].setValue("<font
+ color="#0000ff">enumerationValues</font>", new Object[] {<br>					"<font
+ color="#0000ff">Dots</font>", new Integer(<font color="#0000ff">MyCustomPrompter.DOTS</font>), "<font
+ color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</font>",<br>					"<font
+ color="#0000ff">More</font>", new Integer(<font color="#0000ff">MyCustomPrompter.MORE</font>), "<font
+ color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.MORE</font>",<br>					"<font
+ color="#0000ff">Open</font>", new Integer(<font color="#0000ff">MyCustomPrompter.OPEN</font>), "<font
+ color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.OPEN</font>"							      			<br>			});<br>			<br>			return result;<br>		} catch (IntrospectionException e) {			<br>			e.printStackTrace();<br>			return null;<br>		}<br>	}<br></pre>
+<p>The BeanInfo class above overrids the <i>getPropertyDescriptors</i>
+method.&nbsp; It exposes two properties, <b><i>text</i></b>, and <b><i>type</i></b>.&nbsp;
+for the <i><b>type</b></i> property the method uses a key/value pair
+denoting VE enumeration values.&nbsp; An enumeration value is a
+3-topple: label (text), value, and the code to generate for that
+enum.&nbsp; For example, the "<font color="#0000ff">Dots</font>" label,
 will use the value of the public fields DOTS, and will generate the
-<font face="Arial"><i>org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</i> 
+<font face="Arial"><i>org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</i>
 when the Dots is selected.</font></p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-Overriding the <i>getPropertyDescriptors</i> method by itself will export only 
-the <i><b>text</b></i> and <i><b>type</b></i> properties.&nbsp; We typically 
-need to make some of the super classes properties visible as well (for such thing as the 
-<i>size</i>, <i>bound</i>, <i>focus</i>, <i>font</i> etc.).&nbsp; To re-export 
-the same properties,&nbsp; MyCustomPrompterBeanInfo&nbsp; also overrides the <i>
+<img src="images/note.gif" alt="Note: " height="13" width="62">Overriding
+the <i>getPropertyDescriptors</i> method by itself will export only
+the <i><b>text</b></i> and <i><b>type</b></i> properties.&nbsp; We
+typically need to make some of the super classes properties visible as
+well (for such thing as the <i>size</i>, <i>bound</i>, <i>focus</i>,
+<i>font</i> etc.).&nbsp; To re-export the same properties,&nbsp;
+MyCustomPrompterBeanInfo&nbsp; also overrides the <i>
 getAdditionalBeanInfo</i> method as following</p>
 <blockquote>
-	<pre>	public BeanInfo[] getAdditionalBeanInfo() {
-		try{
-			return new BeanInfo[]{Introspector.getBeanInfo(Control.class)}; 
-		} catch (IntrospectionException e){
-			return new BeanInfo[0];
-		}
-	}
-</pre>
+  <pre>	public BeanInfo[] getAdditionalBeanInfo() {<br>		try{<br>			return new BeanInfo[]{Introspector.getBeanInfo(Control.class)}; <br>		} catch (IntrospectionException e){<br>			return new BeanInfo[0];<br>		}<br>	}<br></pre>
 </blockquote>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-Before you re-launch your application after placing the BeanInfo in the plugin you need to re-export the <b> <i>customwidgets.jar</i></b> 
-(see <a href="#The_Custom_Widget">The Custom Widget</a>) so that it includes the 
-new BeanInfo class.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">Before
+you re-launch your application after placing the BeanInfo in the plugin
+you need to re-export the <b> <i>customwidgets.jar</i></b> (see <a
+ href="#The_Custom_Widget">The Custom Widget</a>) so that it includes
+the new BeanInfo class.</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-If you are reading this before a VE1.1 release build, you may have to do a 
-Project-&gt;clean, close, and reopen the java project that you are using the <i>
-MyCustomPrompter</i> class so that the introspector clear its beaninfo cache.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">If you
+are reading this before a VE1.1 release build, you may have to do a
+Project-&gt;clean, close, and reopen the java project that you are
+using the <i>
+MyCustomPrompter</i> class so that the introspector clear its beaninfo
+cache.</p>
 <p>
 &nbsp;</p>
 <p>
-Notice the way the property sheet renders the <b><i>type</i></b> property with 
-the BeanInfo comparing to the previous <a href="#Figure">figure</a>.</p>
+Notice the way the property sheet renders the <b><i>type</i></b>
+property with the BeanInfo comparing to the previous <a href="#Figure">figure</a>.</p>
 <p class="PictureParagraph"><img border="0" src="images/index.53.jpg"></p>
 <p>&nbsp;</p>
 <h2><a name="Creating_A_SWT_cell_editor">Creating A SWT cell editor</a></h2>
 <p>&nbsp;</p>
-<p>The <i>MyCustomPrompter</i> class has a String property named <b><i>text</i></b>.&nbsp; 
-By default the Visual Editor will use a generic String cell editor for it (see
-<a href="#Figure">Figure</a>).&nbsp; But let assume that we want to develop a 
-specialized cell editor for this property.&nbsp; First we are going to use the 
-Visual Editor itself to develop the content of the cell editor (<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java?cvsroot=Tools_Project">LabelDialogContent.java</a>). 
-We will then contribute it to VE so that it uses it as the <b><i>text</i></b> 
-cell editor for a <i>MyCustomPrompter</i> class.&nbsp; The main interface fwith 
-the <i>
-LabelDialogContent</i> class will be a simple setter/getter: <i>getString</i> and <i>setString</i> methods.&nbsp; 
-The idea is that when you click on the <i><b>text</b></i> property on the property sheet, VE 
-will bring up an instance of this class, call <i>setString</i> with the current 
-value, and at the end call <i>getString</i> to get the final, edited value.</p>
+<p>The <i>MyCustomPrompter</i> class has a String property named <b><i>text</i></b>.&nbsp;
+By default the Visual Editor will use a generic String cell editor for
+it (see
+<a href="#Figure">Figure</a>).&nbsp; But let assume that we want to
+develop a specialized cell editor for this property.&nbsp; First we are
+going to use the Visual Editor itself to develop the content of the
+cell editor (<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java?cvsroot=Tools_Project">LabelDialogContent.java</a>).
+We will then contribute it to VE so that it uses it as the <b><i>text</i></b>
+cell editor for a <i>MyCustomPrompter</i> class.&nbsp; The main
+interface fwith the <i>
+LabelDialogContent</i> class will be a simple setter/getter: <i>getString</i>
+and <i>setString</i> methods.&nbsp; The idea is that when you click on
+the <i><b>text</b></i> property on the property sheet, VE will bring
+up an instance of this class, call <i>setString</i> with the current
+value, and at the end call <i>getString</i> to get the final, edited
+value.</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.2.jpg" class="PictureStyle"></p>
 <p>
 VE will require a special Cell Editor based class (we will create a
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomLabelEditor.java?cvsroot=Tools_Project">
-CustomLabelEditor.java</a> class).&nbsp; This class will wrap our GUI content 
-class as following:</p>
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomLabelEditor.java?cvsroot=Tools_Project">CustomLabelEditor.java</a>
+class).&nbsp; This class will wrap our GUI content class as following:</p>
 <p>
-<pre>
-	protected Object openDialogBox(Control cellEditorWindow) {
-		Display display = cellEditorWindow.getDisplay();
-		TitleAreaDialog dialog = new TitleAreaDialog(display.getActiveShell()) {
-			<font color="#0000FF">LabelDialogContent content</font>;
-			protected Control createContents(Composite parent) {
-				Control result = super.createContents(parent);
-				setTitleImage(CustomwidgetPlugin.getCustomImage());
-				setTitle("Prompter's text property editor");
-				setMessage("Enter the text property, or select a default one by checking the Hello or GoodBye",IMessageProvider.INFORMATION);												
-				return result;
-			}
-			protected Control createDialogArea(Composite parent) {
-				<font color="#0000FF">content = new LabelDialogContent(parent, SWT.NONE);
-				content.setString(stringValue);
-				return content;</font>
-			}
-			
-			public String toString() {
-				return content.getString();
-			}
-		};	
-		
-	
-		if (dialog.open() != Window.CANCEL) 
-			<font color="#0000FF">return createStringJavaObject(dialog.toString());</font>
-		else
-			return getValue();
-	}
-</pre>
 </p>
+<pre>	protected Object openDialogBox(Control cellEditorWindow) {<br>		Display display = cellEditorWindow.getDisplay();<br>		TitleAreaDialog dialog = new TitleAreaDialog(display.getActiveShell()) {<br>			<font
+ color="#0000ff">LabelDialogContent content</font>;<br>			protected Control createContents(Composite parent) {<br>				Control result = super.createContents(parent);<br>				setTitleImage(CustomwidgetPlugin.getCustomImage());<br>				setTitle("Prompter's text property editor");<br>				setMessage("Enter the text property, or select a default one by checking the Hello or GoodBye",IMessageProvider.INFORMATION);												<br>				return result;<br>			}<br>			protected Control createDialogArea(Composite parent) {<br>				<font
+ color="#0000ff">content = new LabelDialogContent(parent, SWT.NONE);<br>				content.setString(stringValue);<br>				return content;</font><br>			}<br>			<br>			public String toString() {<br>				return content.getString();<br>			}<br>		};	<br>		<br>	<br>		if (dialog.open() != Window.CANCEL) <br>			<font
+ color="#0000ff">return createStringJavaObject(dialog.toString());</font><br>		else<br>			return getValue();<br>	}<br></pre>
 <p>
-The <i>openDialogBox</i> will be called when the text property is selected in 
-the property sheet.&nbsp; It in turn will open a&nbsp; JFace dialog with our <i>
-LabelDialogContent</i> as the <i>createDialogArea</i>'s content. The 
-<i>openDialogBox</i> needs to return the new value.&nbsp; <b>This value is not a String</b>.&nbsp; 
-This value is the VE (EMF) model element representing the string value.&nbsp; The
-<i>createStringJavaObject</i> call will convert the string to an EMF representation of 
-it.</p>
+The <i>openDialogBox</i> will be called when the text property is
+selected in the property sheet.&nbsp; It in turn will open a&nbsp;
+JFace dialog with our <i>
+LabelDialogContent</i> as the <i>createDialogArea</i>'s content. The <i>openDialogBox</i>
+needs to return the new value.&nbsp; <b>This value is not a String</b>.&nbsp;
+This value is the VE (EMF) model element representing the string
+value.&nbsp; The
+<i>createStringJavaObject</i> call will convert the string to an EMF
+representation of it.</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-When we prime the dialog with a <i>stringValue</i>, we need to figure out what is the 
-actual value that is represented by the (EMF) model element.&nbsp; The value of 
-the <i><b>text</b></i> property of a <i>MyCustomPrompter</i> instance may not be the same value 
-as was set to it in the model.&nbsp; In fact, it may be the case that the text 
-setting was never set, but it has some default value; but what is it?&nbsp; To 
-figure this out we will have 
-to go to the live instance of this String on the target VM and extract its 
-value.&nbsp; This logic is done with the <i>doSetValue</i> method. <i>doSetValue</i> 
-is called from the property sheet to prime the cell editor with the model value.&nbsp; 
-This method uses <i>BeanProxy</i> APIs to refer to the actual object (on the 
-target VM) that is referred to by the model's value.&nbsp; IStringBeanProxy is 
-the link between the EMF String object, and the Target VM String instance.</p>
-<pre>
-	protected void doSetValue(Object value) {
-		if (value != null){
-			IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);
-			stringValue = stringBeanProxy.stringValue();
-		}
-		super.doSetValue(value);
-	}
-</pre>
+<img src="images/note.gif" alt="Note: " height="13" width="62">When we
+prime the dialog with a <i>stringValue</i>, we need to figure out what
+is the actual value that is represented by the (EMF) model
+element.&nbsp; The value of the <i><b>text</b></i> property of a <i>MyCustomPrompter</i>
+instance may not be the same value as was set to it in the model.&nbsp;
+In fact, it may be the case that the text setting was never set, but it
+has some default value; but what is it?&nbsp; To figure this out we
+will have to go to the live instance of this String on the target VM
+and extract its value.&nbsp; This logic is done with the <i>doSetValue</i>
+method. <i>doSetValue</i> is called from the property sheet to prime
+the cell editor with the model value.&nbsp; This method uses <i>BeanProxy</i>
+APIs to refer to the actual object (on the target VM) that is referred
+to by the model's value.&nbsp; IStringBeanProxy is the link between the
+EMF String object, and the Target VM String instance.</p>
+<pre>	protected void doSetValue(Object value) {<br>		if (value != null){<br>			IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);<br>			stringValue = stringBeanProxy.stringValue();<br>		}<br>		super.doSetValue(value);<br>	}<br></pre>
 <p>&nbsp;</p>
-<p>Now that we have the cell editor all coded up, we need to tell VE when to use 
-it.&nbsp; VE uses xmi <i><b>overrides</b></i> files to do so.&nbsp; These 
-override files (like the palette contribution) are quite verbose.&nbsp; Here is 
-a portion of the
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">
-MyCustomPrompter.override</a> that relates to the cell editor.&nbsp; We will 
-need to add this file to our plugin.</p>
+<p>Now that we have the cell editor all coded up, we need to tell VE
+when to use it.&nbsp; VE uses xmi <i><b>overrides</b></i> files to do
+so.&nbsp; These override files (like the palette contribution) are
+quite verbose.&nbsp; Here is a portion of the
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">MyCustomPrompter.override</a>
+that relates to the cell editor.&nbsp; We will need to add this file to
+our plugin.</p>
 <p>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-	:
-	: 
-  &lt;event:Add  featureName="eStructuralFeatures"&gt;
-    &lt;addedEObjects xsi:type="ecore:EReference" name="<font color="#0000FF">text</font>" unsettable="true"&gt;
-      &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:<font color="#FF0000">BasePropertyDecorator</font>"          
-          <font color="#0000FF">cellEditorClassname</font>="<font color="#FF0000">org.eclipse.ve.example.customwidget</font><font color="#0000FF">/org.eclipse.ve.example.customwidget.CustomLabelEditor</font>"/&gt;
-    &lt;/addedEObjects&gt;
-   &lt;/event:Add&gt;    
-  
-&lt;/xmi:XMI&gt;
-</pre>
-
-<p>We are telling the introspector to annotate the <i><b>text</b></i> feature 
-with a BasePropertyDecorator EMF class.&nbsp; One of the properties of this 
-class is a <i>cellEditorClassname</i>.&nbsp; The value format is as following: &lt;plugin_name&gt;/&lt;class_name&gt;.&nbsp; 
-The Property Sheet will use this information to determine which cell editor to 
-use.&nbsp; If one is not set, it will use the annotation of a super class.</p>
-<p>Now that we have an override file will need to contribute it to VE.&nbsp; We 
-will do so by adding the following extension to the
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a> of our plugin project:</p>
+</p>
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>	:<br>	: <br>  &lt;event:Add  featureName="eStructuralFeatures"&gt;<br>    &lt;addedEObjects xsi:type="ecore:EReference" name="<font
+ color="#0000ff">text</font>" unsettable="true"&gt;<br>      &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:<font
+ color="#ff0000">BasePropertyDecorator</font>"          <br>          <font
+ color="#0000ff">cellEditorClassname</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font><font
+ color="#0000ff">/org.eclipse.ve.example.customwidget.CustomLabelEditor</font>"/&gt;<br>    &lt;/addedEObjects&gt;<br>   &lt;/event:Add&gt;    <br>  <br>&lt;/xmi:XMI&gt;<br></pre>
+<p>We are telling the introspector to annotate the <i><b>text</b></i>
+feature with a BasePropertyDecorator EMF class.&nbsp; One of the
+properties of this class is a <i>cellEditorClassname</i>.&nbsp; The
+value format is as following:
+&lt;plugin_name&gt;/&lt;class_name&gt;.&nbsp; The Property Sheet will
+use this information to determine which cell editor to use.&nbsp; If
+one is not set, it will use the annotation of a super class.</p>
+<p>Now that we have an override file will need to contribute it to
+VE.&nbsp; We will do so by adding the following extension to the
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
+of our plugin project:</p>
 <p>
-<pre>
-    &lt;extension
-         point="org.eclipse.jem.beaninfo.registrations"&gt;
-      &lt;registration
-            container=&quot;org.eclipse.ve.example.PrompterContainer"&gt;
-         &lt;override
-               <font color="#0000FF">package</font>="org.eclipse.ve.example.customwidget.prompter"
-               <font color="#0000FF">path</font>="<font color="#FF0000">overrides/org/eclipse/ve/example/customwidget/prompter</font>"&gt;
-         &lt;/override&gt;
-      &lt;/registration&gt;     
-    &lt;/extension&gt;
-</pre>
-<p>This extension tell the introspector that if the PrompterContainer is on the 
-class path, for every class that is on the <i>org.eclipse.ve.example.customwidget.prompter</i> 
+</p>
+<pre>    &lt;extension<br>         point="org.eclipse.jem.beaninfo.registrations"&gt;<br>      &lt;registration<br>            container="org.eclipse.ve.example.PrompterContainer"&gt;<br>         &lt;override<br>               <font
+ color="#0000ff">package</font>="org.eclipse.ve.example.customwidget.prompter"<br>               <font
+ color="#0000ff">path</font>="<font color="#ff0000">overrides/org/eclipse/ve/example/customwidget/prompter</font>"&gt;<br>         &lt;/override&gt;<br>      &lt;/registration&gt;     <br>    &lt;/extension&gt;<br></pre>
+<p>This extension tell the introspector that if the PrompterContainer
+is on the class path, for every class that is on the <i>org.eclipse.ve.example.customwidget.prompter</i>
 java package, use the override file that is in the <font face="Arial"><i>overrides/org/eclipse/ve/example/customwidget/prompter
-</i>directory (relative to this plugin).&nbsp; For a any <i>Foo.class </i>in 
-this package, the introspector will look for a <i>Foo.override</i> xmi file in 
-that directory and apply it if it 
-exists.</font></p>
-<p><font face="Arial">The following is the directory structure after adding the 
-new cell editor classes, and override file:</font></p>
+</i>directory (relative to this plugin).&nbsp; For a any <i>Foo.class </i>in
+this package, the introspector will look for a <i>Foo.override</i> xmi
+file in that directory and apply it if it exists.</font></p>
+<p><font face="Arial">The following is the directory structure after
+adding the new cell editor classes, and override file:</font></p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.23.jpg" class="PictureStyle"></p>
 <p class="PictureParagraph">&nbsp;</p>
 <blockquote>
-	<p>&nbsp;</p>
+  <p>&nbsp;</p>
 </blockquote>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-Make sure to launch the workspace with the -clean option, as we have changed the manifest file.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">Make
+sure to launch the workspace with the -clean option, as we have changed
+the manifest file.</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-If you are reading this before a VE1.1 release build, you may have to do a 
-Project-&gt;clean, close, and reopen the java project that you are using the <i>
-MyCustomPrompter</i> class so that the introspector clear its beaninfo cache.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">If you
+are reading this before a VE1.1 release build, you may have to do a
+Project-&gt;clean, close, and reopen the java project that you are
+using the <i>
+MyCustomPrompter</i> class so that the introspector clear its beaninfo
+cache.</p>
 <p>&nbsp;</p>
-<p>The following is the an image of the cell editor that will now come up when a 
-user press on the ... button of the text property of a MyCustomPrompter.</p>
+<p>The following is the an image of the cell editor that will now come
+up when a user press on the ... button of the text property of a
+MyCustomPrompter.</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.24.jpg" class="PictureStyle"></p>
 <p>&nbsp;</p>
 <h2><a name="Overriding_a_GEF_edit_part">Overriding a GEF edit part</a></h2>
 <p>&nbsp;</p>
-<p>Since the MyCustomPrompter is a SWT Composite, VE will use the default 
-Composite GEF edit part.&nbsp; In this tutorial we are going to override the 
-edit part that VE will use for the prompter.&nbsp; This edit part will not do 
-much, but add to the prompter's image an <font color="#0000FF">icon</font>, and some 
-<font color="#0000FF">text</font> on top of the screen scrape image 
-of the prompter.&nbsp; The new class
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java?cvsroot=Tools_Project">
-CustomWidgetGraphicalEditPart.java</a> adds this logic as following:</p>
-<pre>
-public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
-
-	protected IFigure createFigure() {
-
-		<font color="#0000FF">ImageFigure figure = (ImageFigure) super.createFigure();</font>
-		<font color="#0000FF">Label customFigure </font>= <font color="#0000FF">new Label("VE Rules",CustomwidgetPlugin.getCustomImage());</font>
-		customFigure.setForegroundColor(ColorConstants.red);
-		customFigure.setTextPlacement(PositionConstants.SOUTH);
-		// ImageFigure has no layout, so we will have to explicitly set the size().
-		// To get a prefered size (before we hoop up to the hierarchy), Label will need a Font
-		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());
-		customFigure.setSize(customFigure.getPreferredSize());
-
-		<font color="#0000FF">figure.add(customFigure);</font>
-
-		return figure;
-	}
-
-}
-</pre>
-<p>The edit part extends the default Control editpart.&nbsp; The reason we did 
-not extend the default composite one, is that we do not want to allow one to 
-&quot;drop&quot; anything into our prompter (this widget is still a Composite).&nbsp; All we do here, is add a Label figure 
-to the main (screen scraped) figure.</p>
-<p>Now that we have a custom edit part we will tell VE to use it by updating the
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">
-MyCustomPrompter.override</a> file as following;</p>
-
-
-
-<pre>
-    
-  &lt;event:AddMany featureName="eAnnotations"&gt;
-	  &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-	    <font color="#0000FF">graphViewClassname</font>="<font color="#FF0000">org.eclipse.ve.example.customwidget</font>/<font color="#0000FF">org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart</font>"&gt;
-	  &lt;/addedEObjects&gt; 
-	  
-	  <font color="#C0C0C0">&lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-           expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   </font>              
-  &lt;/event:AddMany&gt;   
- 
-</pre>
-
-<p>We are annotating the class itself with a <i>ClassDescriptorDecorator</i>.&nbsp; 
-A <i>ClassDescriptorDecorator</i> has a <i>graphViewClassname</i> property.&nbsp; 
-It uses the &lt;plugin_name&gt;/&lt;class_name&gt; format.</p>
+<p>Since the MyCustomPrompter is a SWT Composite, VE will use the
+default Composite GEF edit part.&nbsp; In this tutorial we are going to
+override the edit part that VE will use for the prompter.&nbsp; This
+edit part will not do much, but add to the prompter's image an <font
+ color="#0000ff">icon</font>, and some <font color="#0000ff">text</font>
+on top of the screen scrape image of the prompter.&nbsp; The new class
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java?cvsroot=Tools_Project">CustomWidgetGraphicalEditPart.java</a>
+adds this logic as following:</p>
+<pre>public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {<br><br>	protected IFigure createFigure() {<br><br>		<font
+ color="#0000ff">ImageFigure figure = (ImageFigure) super.createFigure();</font><br>		<font
+ color="#0000ff">Label customFigure </font>= <font color="#0000ff">new Label("VE Rules",CustomwidgetPlugin.getCustomImage());</font><br>		customFigure.setForegroundColor(ColorConstants.red);<br>		customFigure.setTextPlacement(PositionConstants.SOUTH);<br>		// ImageFigure has no layout, so we will have to explicitly set the size().<br>		// To get a prefered size (before we hoop up to the hierarchy), Label will need a Font<br>		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());<br>		customFigure.setSize(customFigure.getPreferredSize());<br><br>		<font
+ color="#0000ff">figure.add(customFigure);</font><br><br>		return figure;<br>	}<br><br>}<br></pre>
+<p>The edit part extends the default Control editpart.&nbsp; The reason
+we did not extend the default composite one, is that we do not want to
+allow one to "drop" anything into our prompter (this widget is still a
+Composite).&nbsp; All we do here, is add a Label figure to the main
+(screen scraped) figure.</p>
+<p>Now that we have a custom edit part we will tell VE to use it by
+updating the
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">MyCustomPrompter.override</a>
+file as following;</p>
+<pre>    <br>  &lt;event:AddMany featureName="eAnnotations"&gt;<br>	  &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br>	    <font
+ color="#0000ff">graphViewClassname</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font>/<font
+ color="#0000ff">org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart</font>"&gt;<br>	  &lt;/addedEObjects&gt; <br>	  <br>	  <font
+ color="#c0c0c0">&lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"<br>           expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   </font>              <br>  &lt;/event:AddMany&gt;   <br> <br></pre>
+<p>We are annotating the class itself with a <i>ClassDescriptorDecorator</i>.&nbsp;
+A <i>ClassDescriptorDecorator</i> has a <i>graphViewClassname</i>
+property.&nbsp; It uses the &lt;plugin_name&gt;/&lt;class_name&gt;
+format.</p>
 <p>
 &nbsp;</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-If you are reading this before a VE1.1 release build, you may have to do a 
-Project-&gt;clean, close, and reopen the java project that you are using the <i>
-MyCustomPrompter</i> class so that the introspector clear its beaninfo cache.</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">If you
+are reading this before a VE1.1 release build, you may have to do a
+Project-&gt;clean, close, and reopen the java project that you are
+using the <i>
+MyCustomPrompter</i> class so that the introspector clear its beaninfo
+cache.</p>
 <p>&nbsp;</p>
-<p>The new edit part will render the Prompter figure with the new Label figure 
-(text and icon) as following:</p>
+<p>The new edit part will render the Prompter figure with the new Label
+figure (text and icon) as following:</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.25.jpg" class="PictureStyle"></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<h2><a name="Overriding_an_Expression_Decoder">Overriding an Expression Decoder</a></h2>
+<h2><a name="Overriding_an_Expression_Decoder">Overriding an Expression
+Decoder</a></h2>
 <p>&nbsp;</p>
-<p>Since the <i>MyCustomPrompter</i> is a SWT Composite, VE will use the default 
-Composite Decoder to handle the reverse parse, and code generation needs for the MyCustomPrompter class.&nbsp; For every source code (AST) expression that is 
-modeled,&nbsp; VE will use an instance of an expression Decoder.&nbsp; The Decoder 
-uses two helpers: a <i>feature</i> mapper, and a <i>decoder</i> helper.&nbsp; 
-The <i>feature</i> mapper is the guy that maps a source code expression to a VE 
-(EMF) model feature and vice versa.&nbsp; The decoder helper is a specific 
-helper that knows how to reverse parse (AST) expressions into the VE model, as 
-well as generate source code from the VE model.&nbsp; The role if the Decoder 
-itself is to figure out which mapper and helper to use for a given expression.</p>
+<p>Since the <i>MyCustomPrompter</i> is a SWT Composite, VE will use
+the default Composite Decoder to handle the reverse parse, and code
+generation needs for the MyCustomPrompter class.&nbsp; For every source
+code (AST) expression that is modeled,&nbsp; VE will use an instance of
+an expression Decoder.&nbsp; The Decoder uses two helpers: a <i>feature</i>
+mapper, and a <i>decoder</i> helper.&nbsp; The <i>feature</i> mapper
+is the guy that maps a source code expression to a VE (EMF) model
+feature and vice versa.&nbsp; The decoder helper is a specific helper
+that knows how to reverse parse (AST) expressions into the VE model, as
+well as generate source code from the VE model.&nbsp; The role if the
+Decoder itself is to figure out which mapper and helper to use for a
+given expression.</p>
 <p>&nbsp;</p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">
-Decoders to not generate AST trees because in many cases the source code is 
-generated from a JavaJet (JSP like) templates.&nbsp; These templates can 
-potentially be modified by users and picked up by VE on the fly.</p>
-<p>In this tutorial we will use a simple Decoder. It will add a comment when 
-generating a <i>setText</i> expression (as a result of changing the <i><b>text</b></i> property is changed 
-for a MyCustomPrompter instance).&nbsp; We will first create 
-the
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java?cvsroot=Tools_Project">
-CustomPrompterDecoderHelper.java</a> helper.&nbsp; </p>
-<pre>
-public class CustomPrompterDecoderHelper extends SimpleAttributeDecoderHelper {
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])
-	 */
-	public String generate(Object[] noArgs) throws CodeGenException {		
-		<font color="#0000FF">String result = super.generate(noArgs);</font>
-		// Add a comment at the end of the expression 
-		int idx = result.lastIndexOf(';') + 1;
-		return result.substring(0, idx)<font color="#0000FF"> + " </font><font color="#FF0000">// Prompter Text Property</font><font color="#0000FF"> " + </font>result.substring(idx, result.length());
-	}
-}
-</pre>
-<p>The helper is responsible to reverse parse and generate specific source code.&nbsp; This helper overrides the <i>generate</i> method 
-for the default 
-helper, and adds the&nbsp; <font color="#FF0000">// Prompter Text Property
-</font><font face="Arial">comment at the end of the expression that is generated 
-by the <i>SimpleAttributeDecoderHelper</i>.</font></p>
+<img src="images/note.gif" alt="Note: " height="13" width="62">Decoders
+to not generate AST trees because in many cases the source code is
+generated from a JavaJet (JSP like) templates.&nbsp; These templates
+can potentially be modified by users and picked up by VE on the fly.</p>
+<p>In this tutorial we will use a simple Decoder. It will add a comment
+when generating a <i>setText</i> expression (as a result of changing
+the <i><b>text</b></i> property is changed for a MyCustomPrompter
+instance).&nbsp; We will first create the
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java?cvsroot=Tools_Project">CustomPrompterDecoderHelper.java</a>
+helper.&nbsp; </p>
+<pre>public class CustomPrompterDecoderHelper extends SimpleAttributeDecoderHelper {<br>	<br>	/* (non-Javadoc)<br>	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])<br>	 */<br>	public String generate(Object[] noArgs) throws CodeGenException {		<br>		<font
+ color="#0000ff">String result = super.generate(noArgs);</font><br>		// Add a comment at the end of the expression <br>		int idx = result.lastIndexOf(';') + 1;<br>		return result.substring(0, idx)<font
+ color="#0000ff"> + " </font><font color="#ff0000">// Prompter Text Property</font><font
+ color="#0000ff"> " + </font>result.substring(idx, result.length());<br>	}<br>}<br></pre>
+<p>The helper is responsible to reverse parse and generate specific
+source code.&nbsp; This helper overrides the <i>generate</i> method
+for the default helper, and adds the&nbsp; <font color="#ff0000">//
+Prompter Text Property
+</font><font face="Arial">comment at the end of the expression that is
+generated by the <i>SimpleAttributeDecoderHelper</i>.</font></p>
 <p><font face="Arial">We will now create a special Decoder,
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java?cvsroot=Tools_Project">
-CustomPrompterDecoder.java</a>. This Decoder will use the helper above when the 
-text property is the one that the Decoder instance is responsible for:</font></p>
-<pre>
-public class CustomPrompterDecoder extends SWTControlDecoder {
-
-	protected void initialDecoderHelper() {
-		// if it is the text property that this decoder is decoding, use 
-		// our special helper
-		if (<font color="#0000FF">fFeatureMapper.getFeature(null).getName().equals("text")</font>)
-			fhelper = new <font color="#0000FF">CustomPrompterDecoderHelper</font>(fbeanPart, fExpr, fFeatureMapper, this);
-		else
-			super.initialDecoderHelper();
-	}
-}
-</pre>
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java?cvsroot=Tools_Project">CustomPrompterDecoder.java</a>.
+This Decoder will use the helper above when the text property is the
+one that the Decoder instance is responsible for:</font></p>
+<pre>public class CustomPrompterDecoder extends SWTControlDecoder {<br><br>	protected void initialDecoderHelper() {<br>		// if it is the text property that this decoder is decoding, use <br>		// our special helper<br>		if (<font
+ color="#0000ff">fFeatureMapper.getFeature(null).getName().equals("text")</font>)<br>			fhelper = new <font
+ color="#0000ff">CustomPrompterDecoderHelper</font>(fbeanPart, fExpr, fFeatureMapper, this);<br>		else<br>			super.initialDecoderHelper();<br>	}<br>}<br></pre>
 <p>&nbsp;</p>
 <p>The last thing that remains to do, is to use the same
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">
-MyCustomPrompter.override</a> again and add to it the following:</p>
-
-
-
-<pre>
-    
-  &lt;event:AddMany featureName="eAnnotations"&gt;
-	  <font color="#C0C0C0">&lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-	    graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;
-	  &lt;/addedEObjects&gt; </font>
-	  
-	  &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="<font color="#0000FF">codegen.CodeGenHelperClass</font>"
-           <font color="#0000FF">expDecoder</font>="<font color="#FF0000">org.eclipse.ve.example.customwidget</font>/<font color="#0000FF">org.eclipse.ve.example.customwidget.CustomPrompterDecoder</font>"/&gt;  <font color="#C0C0C0"> </font>              
-  &lt;/event:AddMany&gt;   
- 
-</pre>
-
-<p>We are annotating the MyCustomPrompter class with a CodeGenHelperClass (this 
-helper is
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore?cvsroot=Tools_Project">
-dynamically</a> created by EMF at this point, and hence the different syntax on 
-it). This annotation tells VE that for a <i>MyCustomPrompter</i>, use the <i>
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override?cvsroot=Tools_Project">MyCustomPrompter.override</a>
+again and add to it the following:</p>
+<pre>    <br>  &lt;event:AddMany featureName="eAnnotations"&gt;<br>	  <font
+ color="#c0c0c0">&lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br>	    graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>	  &lt;/addedEObjects&gt; </font><br>	  <br>	  &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="<font
+ color="#0000ff">codegen.CodeGenHelperClass</font>"<br>           <font
+ color="#0000ff">expDecoder</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font>/<font
+ color="#0000ff">org.eclipse.ve.example.customwidget.CustomPrompterDecoder</font>"/&gt;  <font
+ color="#c0c0c0"> </font>              <br>  &lt;/event:AddMany&gt;   <br> <br></pre>
+<p>We are annotating the MyCustomPrompter class with a
+CodeGenHelperClass (this helper is
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore?cvsroot=Tools_Project">dynamically</a>
+created by EMF at this point, and hence the different syntax on it).
+This annotation tells VE that for a <i>MyCustomPrompter</i>, use the <i>
 CustomPrompterDecoder</i> class.</p>
 <h2><a name="Preferred_Event">Preferred Event</a></h2>
 <p>&nbsp;</p>
-<p>The <i>MyCustomPrompter</i> class introduces a <i>buttonSelection</i> event.&nbsp; VE will figure this out from the 
-class file because the event follows the JavaBean specification.</p>
+<p>The <i>MyCustomPrompter</i> class introduces a <i>buttonSelection</i>
+event.&nbsp; VE will figure this out from the class file because the
+event follows the JavaBean specification.</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.67.gif" class="PictureStyle"></p>
 <p>&nbsp;</p>
 <p>As such, if you use the Visual Editor to <b>Add Events...</b>, the <i>
-buttonSelection</i> event will be there<i>.&nbsp; </i>In this section we will use 
-the BeanInfo class to denote that this event is preferred.&nbsp; As such, this 
-event will be available on the Events context menu:</p>
+buttonSelection</i> event will be there<i>.&nbsp; </i>In this section
+we will use the BeanInfo class to denote that this event is
+preferred.&nbsp; As such, this event will be available on the Events
+context menu:</p>
 <p class="PictureParagraph">
 <img border="0" src="images/index.68.jpg" class="PictureStyle"></p>
 <p>&nbsp;</p>
 <p>The
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">
-MyCustomPrompterBeanInfo.java</a> also overrides the <i>getEventSetDescriptors</i> 
-method, and set the preferred flag to true.</p>
-<pre>
-	public EventSetDescriptor[] getEventSetDescriptors() {
-		
-		try{
-			MethodDescriptor addButtonSelectionMD = new MethodDescriptor(
-				ButtonSelectionListener.class.getMethod("buttonSelected",
-				new Class[]{SelectionEvent.class})
-				);
-			<font color="#0000FF">addButtonSelectionMD.setPreferred(true)</font>;
-			addButtonSelectionMD.setValue("preferred",Boolean.TRUE);
-			
-			EventSetDescriptor addButtonSelectionED = new EventSetDescriptor(
-					"buttonSelection",
-					ButtonSelectionListener.class,
-					new MethodDescriptor[] {addButtonSelectionMD},
-					MyCustomPrompter.class.getMethod("addButtonSelectionListener",new Class[]{ButtonSelectionListener.class}),
-					MyCustomPrompter.class.getMethod("removeButtonSelectionListener",new Class[]{ButtonSelectionListener.class})
-					);
-
-			addButtonSelectionED.setPreferred(true);
-			
-			return new EventSetDescriptor[] {addButtonSelectionED};
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		}				
-		
-		return null;
-	}
-</pre>
+<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">MyCustomPrompterBeanInfo.java</a>
+also overrides the <i>getEventSetDescriptors</i> method, and set the
+preferred flag to true.</p>
+<pre>	public EventSetDescriptor[] getEventSetDescriptors() {<br>		<br>		try{<br>			MethodDescriptor addButtonSelectionMD = new MethodDescriptor(<br>				ButtonSelectionListener.class.getMethod("buttonSelected",<br>				new Class[]{SelectionEvent.class})<br>				);<br>			<font
+ color="#0000ff">addButtonSelectionMD.setPreferred(true)</font>;<br>			addButtonSelectionMD.setValue("preferred",Boolean.TRUE);<br>			<br>			EventSetDescriptor addButtonSelectionED = new EventSetDescriptor(<br>					"buttonSelection",<br>					ButtonSelectionListener.class,<br>					new MethodDescriptor[] {addButtonSelectionMD},<br>					MyCustomPrompter.class.getMethod("addButtonSelectionListener",new Class[]{ButtonSelectionListener.class}),<br>					MyCustomPrompter.class.getMethod("removeButtonSelectionListener",new Class[]{ButtonSelectionListener.class})<br>					);<br><br>			addButtonSelectionED.setPreferred(true);<br>			<br>			return new EventSetDescriptor[] {addButtonSelectionED};<br>			<br>		} catch (Exception e){<br>			e.printStackTrace();<br>		}				<br>		<br>		return null;<br>	}<br></pre>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<h1><a name="A_complete_example"></a>A complete example<br>
+</h1>
+This tutorial has gone through the steps required to create the
+plugin.&nbsp; The completed plugin is also available to download from <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/customwidget.zip?cvsroot=Tools_Project">here</a>
+or can be obtained directly from CVS.<br>
+<br>
+<span style="font-style: italic;"></span>To install the plugin from CVS
+into an Eclipse development environment attach to the host<span
+ style="font-style: italic;"> dev.eclipse.org</span> and repository
+path <span style="font-style: italic;">/home/tools</span> using a user
+id of <span style="font-style: italic;">anonymous </span>with
+no password required.&nbsp; Figure 1 illustrates the CVS perspective in
+Eclipse with the CVS Repositories view showing the repository correctly
+attached to.&nbsp; To create the new repository use mouse button 2 on
+the
+CVS Repositories view and select the option <span
+ style="font-style: italic; font-weight: bold;">New &gt; Repository
+Location.<br>
+<br>
+</span>
+<span style="font-weight: bold;"><img
+ style="width: 428px; height: 260px;" alt="CVSRepositoriesView"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/index.51.jpg"><br>
+<br>
+Figure 1 </span>The CVS Repositories view showing the correct
+repository for the tutorial's finished pugin<br>
+<br>
+Having attached to the repository expand the <span
+ style="font-style: italic;">Head </span>tree item and search for the
+plugin <span style="font-style: italic;">org.eclipse.ve.examples.&nbsp;
+</span>Expand this and select <span style="font-style: italic;">org.eclipse.ve.example.customwidget.</span>&nbsp;
+This is the complete plugin and to install it onto your workbench use
+the pop-up menu option <span style="font-weight: bold;">Check Out</span>
+as shown in Figure 2<br>
+<p class="PictureParagraph">
+<img border="0"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/index.52.jpg"></p>
+<p><span style="font-weight: bold;">Figure 2 </span>Check Out <span
+ style="font-style: italic;">org.eclipse.ve.example.customwidget </span>to
+install the completed example into your Eclipse workbench<br>
+&nbsp;</p>
 <h2><a name="Conclusion">Conclusion</a></h2>
-<p>In part 1 of this tutorial, we looked at a high level where to start and 
-extend the Visual Editor and use specialized property cell editors, BeanInfo, 
-GEF edit parts, palette, and CodeGen decoders.&nbsp;&nbsp;
+<p>In part 1 of this tutorial, we looked at a high level where to start
+and extend the Visual Editor and use specialized property cell editors,
+BeanInfo, GEF edit parts, palette, and CodeGen decoders.&nbsp;&nbsp;
 </p>
-
 <p>&nbsp;</p>
-
 <p><br>
-
 </p>
-
-<p><small>IBM is trademark of International Business Machines Corporation in the
+<p><small>IBM is trademark of International Business Machines
+Corporation in the
 United States, other countries, or both.</small></p>
-<p><small>Java and all Java-based trademarks and logos are trademarks or
-registered trademarks of Sun Microsystems, Inc. in the United States, other
+<p><small>Java and all Java-based trademarks and logos are trademarks
+or
+registered trademarks of Sun Microsystems, Inc. in the United States,
+other
 countries, or both.</small></p>
-<p><small>Microsoft and Windows are trademarks of Microsoft Corporation in the
+<p><small>Microsoft and Windows are trademarks of Microsoft Corporation
+in the
 United States, other countries, or both.</small></p>
-<p><small>Other company, product, and service names may be trademarks or service
+<p><small>Other company, product, and service names may be trademarks
+or service
 marks of others.</small></p>
-
-</body></html>
+</body>
+</html>
