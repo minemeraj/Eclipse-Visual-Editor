@@ -11,13 +11,16 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.21 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.22 $  $Date: 2004-09-10 21:03:24 $ 
  */
 
+import org.eclipse.emf.common.util.BasicEMap;
+import org.eclipse.emf.common.util.BasicEMap.Entry;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
@@ -31,9 +34,11 @@ import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.properties.AbstractAnnotationPropertyDescriptor;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 public class BeanUtilities {
@@ -139,6 +144,28 @@ public class BeanUtilities {
 		}
 	}
 	
+	protected static BasicEMap.Entry getMapEntry(Annotation annotation, Object key) {
+		int keyPos = annotation.getKeyedValues().indexOfKey(key);
+		return keyPos != -1 ? (Entry) annotation.getKeyedValues().get(keyPos) : null;
+	}
+	
+	public static Command getSetBeanNameCommand (IJavaInstance newJavaBean, String name, EditDomain domain) {
+		// check first that if the "name" is already the current name... no point on driving
+		// a rename if not needed
+		Annotation annotation = domain.getAnnotationLinkagePolicy().getAnnotation(newJavaBean);		
+		if (annotation != null) {
+			Entry oldkv = getMapEntry(annotation, NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			if (oldkv!=null)
+				if (name.equals(oldkv.getValue())) return null;
+		}
+		
+		EStringToStringMapEntryImpl sentry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+		sentry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+		sentry.setValue(name);
+						
+		return AnnotationPolicy.applyAnnotationSetting(newJavaBean, (BasicEMap.Entry)sentry, domain);
+	}
+	
 	/** 
 	 * This method will clear the Visual Constraint annotation.  It can remove it all together,
 	 * in which case the object will NOT be on the FF, or create an empty one, in which case the 
@@ -192,6 +219,18 @@ public class BeanUtilities {
 	    vi.getKeyedValues().add(key) ;
         an.getVisualInfos().add(vi) ;
 
+	}
+	
+	public static Command getSetEmptyVisualContraintsCommand (IJavaInstance newJavaBean, boolean hideFF, EditDomain domain) {
+		
+		KeyedBooleanImpl key = (KeyedBooleanImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedBoolean());
+		key.setKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
+        if (hideFF)
+            key.setValue(Boolean.TRUE);
+        else
+        	key.setValue(Boolean.FALSE);
+								
+		return AnnotationPolicy.applyAnnotationSetting(newJavaBean, (BasicEMap.Entry)key, domain);
 	}
 
 	/**

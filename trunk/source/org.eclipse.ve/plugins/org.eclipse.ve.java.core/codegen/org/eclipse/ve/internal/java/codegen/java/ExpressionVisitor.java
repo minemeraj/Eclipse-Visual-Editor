@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.13 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.14 $  $Date: 2004-09-10 21:03:24 $ 
  */
 
 import java.util.*;
@@ -185,6 +185,7 @@ protected void processAMessageSend() {
   	  	        // We may have not processed the target's create method 
 				fReTryLater.add(this);
 			    JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+			    return;
 		    }
 		    else
 		       bean = processRefToThis(stmt);
