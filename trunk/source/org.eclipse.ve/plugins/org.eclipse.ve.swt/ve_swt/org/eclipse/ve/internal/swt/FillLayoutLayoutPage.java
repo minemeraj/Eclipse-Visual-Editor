@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutLayoutPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-01 21:07:54 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,8 +22,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -33,12 +31,17 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  
 
@@ -46,7 +49,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  * 
  * @since 1.0.0
  */
-public class FillLayoutLayoutPage extends CustomizeLayoutPage {
+public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
 	EditPart fEditPart = null;
 	
@@ -235,8 +238,7 @@ public class FillLayoutLayoutPage extends CustomizeLayoutPage {
 		return false;
 	}
 	
-	protected boolean selectionIsContainer(ISelection oldSelection) {
-		ISelection newSelection = getSelection();
+	protected boolean selectionIsContainer(ISelection newSelection) {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;

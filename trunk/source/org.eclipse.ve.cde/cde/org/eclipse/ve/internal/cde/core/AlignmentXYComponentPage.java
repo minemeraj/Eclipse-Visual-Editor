@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-26 18:23:27 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:10 $ 
  */
 
 import java.util.List;
@@ -177,5 +177,17 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 		fDistributeHorizontalAction.setWorkbenchPart(newEditorPart);
 		fDistributeVerticalAction.setWorkbenchPart(newEditorPart);
 		fShowDistributeBoxAction.setWorkbenchPart(newEditorPart);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getLabelForSelection(org.eclipse.jface.viewers.ISelection)
+	 */
+	protected String getLabelForSelection(ISelection newSelection) {
+		if (newSelection instanceof IStructuredSelection) {
+			if (((IStructuredSelection)newSelection).size() > 1) {
+				return CDEMessages.getString("AlignmentXYComponentPage.multipleSelection"); //$NON-NLS-1$
+			}
+		}
+		return null;
 	}
 }
