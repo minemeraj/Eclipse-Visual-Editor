@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Customwidget VE Example Plug-in
+Bundle-SymbolicName: org.eclipse.ve.example.customwidget
+Bundle-Version: 1.0.0
+Bundle-ClassPath: customwidget.jar
+Bundle-Activator: org.eclipse.ve.example.customwidget.CustomwidgetPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ve.java.core,
+ org.eclipse.jdt.core,
+ org.eclipse.jem,
+ org.eclipse.jem.proxy,
+ org.eclipse.ve.cde,
+ org.eclipse.ve.swt,
+ org.eclipse.ve.propertysheet,
+ org.eclipse.gef,
+ org.eclipse.emf.ecore
+Eclipse-AutoStart: true

@@ -2,8 +2,9 @@ package org.eclipse.ve.example.customwidget;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.*;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.osgi.framework.BundleContext;
 import java.util.*;
 
 /**
@@ -14,19 +15,31 @@ public class CustomwidgetPlugin extends AbstractUIPlugin {
 	private static CustomwidgetPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
-	private static Image smileyFace;
+	
+	public final static String SmileyImageKey = "custom_smiley_image";
 	
 	/**
 	 * The constructor.
 	 */
-	public CustomwidgetPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public CustomwidgetPlugin() {
+		super();
 		plugin = this;
-		try {
-			resourceBundle   = ResourceBundle.getBundle("org.eclipse.ve.example.customwidget.CustomwidgetPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
+	}
+
+	/**
+	 * This method is called upon plug-in activation
+	 */
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+	}
+
+	/**
+	 * This method is called when the plug-in is stopped
+	 */
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		plugin = null;
+		resourceBundle = null;
 	}
 
 	/**
@@ -53,13 +66,33 @@ public class CustomwidgetPlugin extends AbstractUIPlugin {
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.ve.example.customwidget.CustomwidgetPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
 		return resourceBundle;
 	}
 
-	public static Image getSmileyFace() {
-		if(smileyFace == null){
-			smileyFace = CDEPlugin.getImageFromBundle(getDefault().getBundle(), "icons/custom.gif");			
-		}
-		return smileyFace;
+	/**
+	 * Returns an image descriptor for the image file at the given
+	 * plug-in relative path.
+	 *
+	 * @param path the path
+	 * @return the image descriptor
+	 */
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ve.example.customwidget", path);
+	}
+
+	public static Image getCustomImage() {
+		return getDefault().getImageRegistry().get(SmileyImageKey);
+	}
+
+	protected ImageRegistry createImageRegistry() {		
+		ImageRegistry reg = super.createImageRegistry();
+		reg.put(SmileyImageKey,  getImageDescriptor("icon/custom.gif"));
+		return reg;
 	}
 }

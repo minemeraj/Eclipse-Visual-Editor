@@ -1,31 +1,20 @@
-/*
- * Created on 28-Feb-2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 package org.eclipse.ve.example.customwidget.prompter;
 
-import java.beans.BeanInfo;
-import java.beans.EventSetDescriptor;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.MethodDescriptor;
-import java.beans.PropertyDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.beans.*;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
 public class MyCustomPrompterBeanInfo extends SimpleBeanInfo {
 	
-	public BeanInfo[] getAdditionalBeanInfo() {
-		try{
-			return new BeanInfo[]{Introspector.getBeanInfo(Composite.class)}; 
-		} catch (IntrospectionException e){
-			return new BeanInfo[0];
-		}
-	}
+//	public BeanInfo[] getAdditionalBeanInfo() {
+//		try{
+//			return new BeanInfo[]{Introspector.getBeanInfo(Composite.class)}; 
+//		} catch (IntrospectionException e){
+//			return new BeanInfo[0];
+//		}
+//	}
 	
 	public PropertyDescriptor[] getPropertyDescriptors() {
 		
@@ -42,8 +31,7 @@ public class MyCustomPrompterBeanInfo extends SimpleBeanInfo {
 			});
 			
 			return result;
-		} catch (IntrospectionException e) {
-			// TODO Auto-generated catch block
+		} catch (IntrospectionException e) {			
 			e.printStackTrace();
 			return null;
 		}

@@ -33,6 +33,7 @@ public class MyCustomPrompter extends Composite {
 		initialize();
 	}
 	private void initialize() {
+		GridData gridData21 = new org.eclipse.swt.layout.GridData();
 		GridData gridData3 = new GridData();
 		GridData gridData2 = new GridData();
 		GridLayout gridLayout1 = new GridLayout();
@@ -51,6 +52,9 @@ public class MyCustomPrompter extends Composite {
 		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		text.setLayoutData(gridData3);
 		label.setText("Label");
+		label.setLayoutData(gridData21);
+		gridData21.horizontalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		gridData21.verticalAlignment = org.eclipse.swt.layout.GridData.END;
 		setSize(new org.eclipse.swt.graphics.Point(300,69));
 	}
 	

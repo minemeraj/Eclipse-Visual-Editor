@@ -22,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -58,9 +57,9 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 			LabelDialogContent content;
 			protected Control createContents(Composite parent) {
 				Control result = super.createContents(parent);
+				setTitleImage(CustomwidgetPlugin.getCustomImage());
 				setTitle("Prompter's text property editor");
-				setMessage("Enter the text property, or select a default one by checking the Hello or GoodBye",IMessageProvider.INFORMATION);
-//				setTitleImage(CustomwidgetPlugin.getSmileyFace());								
+				setMessage("Enter the text property, or select a default one by checking the Hello or GoodBye",IMessageProvider.INFORMATION);												
 				return result;
 			}
 			protected Control createDialogArea(Composite parent) {
