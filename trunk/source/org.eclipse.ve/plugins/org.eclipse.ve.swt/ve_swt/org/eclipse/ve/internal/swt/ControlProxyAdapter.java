@@ -197,7 +197,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	}
 	protected void initializeControlManager() {
 		if (isBeanProxyInstantiated()) {
-			// Create an instance of com.ibm.etools.jbcf.visual.vm.ComponentManager on the target VM
+			// Create an instance of ComponentManager on the target VM
 			if (fControlManager == null) {
 				fControlManager = new ControlManager();
 				// Having created the ComponentManager in the IDE transfer all existing people listening to us
