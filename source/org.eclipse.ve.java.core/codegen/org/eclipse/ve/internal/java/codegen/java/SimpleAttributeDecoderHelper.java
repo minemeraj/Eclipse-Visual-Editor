@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2004-06-07 20:46:36 $ 
+ *  $Revision: 1.21 $  $Date: 2004-06-07 21:11:27 $ 
  */
 
 import java.util.Iterator;
@@ -219,9 +219,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
           EObject target = fbeanPart.getEObject() ;
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
-		Object currentValue = target.eGet(sf);
 		boolean currentValueSet = target.eIsSet(sf);
 		if(currentValueSet){
+			Object currentValue = target.eGet(sf);
 			if(currentValue==null && attr==null)
 				return true;
 			if(currentValue!=null && attr!=null){
@@ -308,18 +308,18 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
-		Object currentValue = target.eGet(sf);
 		boolean currentValueSet = target.eIsSet(sf);
 		if(currentValueSet){
-				if(currentValue==null && newPropInstance==null)
-					return true;
-				if(currentValue!=null && newPropInstance!=null){
-					IJavaInstance currentInstance = (IJavaInstance) currentValue;
-					String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
-					String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
-					if(newInitString1.equals(currentInitString))
-						return true; 
-				}
+			Object currentValue = target.eGet(sf);
+			if(currentValue==null && newPropInstance==null)
+				return true;
+			if(currentValue!=null && newPropInstance!=null){
+				IJavaInstance currentInstance = (IJavaInstance) currentValue;
+				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
+				String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
+				if(newInitString1.equals(currentInitString))
+					return true; 
+			}
 		}
 		
 		fPropInstance = newPropInstance;
