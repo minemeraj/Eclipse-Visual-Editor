@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -10,19 +20,9 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
-/*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
  */
 
 public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {

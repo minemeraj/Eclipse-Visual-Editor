@@ -1,13 +1,6 @@
-/*
- * Created on May 5, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -16,8 +9,15 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
+ * Created on May 5, 2003
+ *
+ * To change the template for this generated file go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+package org.eclipse.ve.internal.jfc.core;
+/*
  *  $RCSfile: DialogProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-05 23:11:10 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;

@@ -1,7 +1,6 @@
-package org.eclipse.ve.internal.java.codegen.model;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,9 +8,10 @@ package org.eclipse.ve.internal.java.codegen.model;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.29 $  $Date: 2004-06-09 14:32:30 $ 
+ *  $Revision: 1.30 $  $Date: 2004-08-27 15:34:10 $ 
  */
 
 

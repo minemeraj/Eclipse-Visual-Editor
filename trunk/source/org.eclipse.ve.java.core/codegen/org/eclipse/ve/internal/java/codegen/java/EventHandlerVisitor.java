@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
