@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.8 $  $Date: 2004-01-30 23:19:37 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-06 21:43:09 $ 
  */
 
 
@@ -779,6 +779,10 @@ public static IWorkingCopyProvider getRefWorkingCopyProvider(ICompilationUnit re
 						return unresolved;
 					}
 				}
+				public String resolveType(String unresolved) {
+					if (resolver == null) return null ;
+					return unresolved != null ? resolver.resolveTypeComplex(unresolved,true) : null;
+				}				
 				public String resolveThis(){
 					return getMainType(cu).getTypeQualifiedName();
 				}

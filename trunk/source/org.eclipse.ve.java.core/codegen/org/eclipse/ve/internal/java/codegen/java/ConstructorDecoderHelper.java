@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-06 21:43:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -74,11 +74,24 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		class Resolver extends ParseTreeCreationFromAST.Resolver{
 			public PTExpression resolveName(Name name) {
 				String n=null;
-				if (name instanceof QualifiedName)
+				if (name instanceof QualifiedName) {
 					n = ((QualifiedName)name).toString();
-				else if (name instanceof SimpleName)
+					// This could be a type, or a field access
+					// TODO:  this is a temporary fix, and will not deal with
+					//        factories call etc.
+					String r = fbeanPart.getModel().resolveType(n);
+					if (!r.equals(n)) {
+						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
+						ptname.setName(r) ;
+						PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess() ;
+						fa.setReceiver(ptname) ;
+						fa.setField(n.substring(r.length()+1)) ;
+						return fa;
+					}
+				}
+				else if (name instanceof SimpleName) {
+					// possibly a ref. to an instance variable
 					n = ((SimpleName)name).getIdentifier();
-				if (n!=null) {
 					BeanPart bp = fbeanPart.getModel().getABean(n);
 					if (bp!=null) {
 						PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
@@ -87,11 +100,11 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						ptref.setObject(o);
 						return ptref;
 					}
-					else {
-						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
-						ptname.setName(n);
-						return ptname;
-					}
+				}
+				if (n!=null) {
+					PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
+					ptname.setName(n);
+					return ptname;				
 				}				
 				return null ;
 			}
