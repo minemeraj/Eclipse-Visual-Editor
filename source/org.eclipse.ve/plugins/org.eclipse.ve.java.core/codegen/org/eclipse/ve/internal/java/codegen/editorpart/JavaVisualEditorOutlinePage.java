@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-10 22:40:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-13 21:43:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -47,6 +47,7 @@ import org.eclipse.ui.texteditor.StatusLineContributionItem;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
@@ -188,6 +189,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID, jve.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID));
 		actionBars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, jve.getAction(CustomizeJavaBeanAction.ACTION_ID));
 		actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, jve.getAction(ReloadAction.RELOAD_ACTION_ID));
+		actionBars.setGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID, jve.getEditorSite().getActionBars().getGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID));
 
 		IToolBarManager tbm = actionBars.getToolBarManager();
 		collapseAllAction = new CollapseAllAction();
