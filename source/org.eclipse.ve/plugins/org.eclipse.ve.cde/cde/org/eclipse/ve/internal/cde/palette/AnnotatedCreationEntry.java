@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotatedCreationEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -21,6 +21,10 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Annotated Creation Entry</b></em>'.
  * This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,8 +22,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
-import org.eclipse.jem.internal.java.*;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.*;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventProcessingRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;

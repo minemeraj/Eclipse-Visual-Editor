@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 package org.eclipse.ve.internal.cde.utility;
 
@@ -25,6 +25,7 @@ import org.eclipse.draw2d.*;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+
 
 /**
  * @author gmendel

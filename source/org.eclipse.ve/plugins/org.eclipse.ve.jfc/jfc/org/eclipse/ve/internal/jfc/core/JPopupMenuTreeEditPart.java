@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JPopupMenuTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
  */
 
 import java.util.List;
@@ -25,7 +25,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 
 /**
  * @author pwalker

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.ve.internal.jcm.*;
@@ -193,10 +193,10 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @deprecated
 	 * @generated
 	 */
 	public static JCMPackage getPackage() {
 		return JCMPackage.eINSTANCE;
 	}
-
 } //JCMFactoryImpl

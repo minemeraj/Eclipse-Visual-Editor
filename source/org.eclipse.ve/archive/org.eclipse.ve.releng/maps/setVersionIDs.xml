@@ -5,35 +5,79 @@
 	<fail message="No id passed in."/>
 </target>
 
-<target name="setids" depends="init" description="Set maps ids. (Define property id for id)" >
+<target name="initids">
+	<!-- Initialize the ids properties. If version had already executed, then they would already be set. -->
+	<property name="org.eclipse.jem-v" value="${id}"/>
+	<property name="org.eclipse.jem.beaninfo-v" value="${id}"/>
+	<property name="org.eclipse.jem.beaninfo.ui-v" value="${id}"/>	
+	<property name="org.eclipse.jem.proxy-v" value="${id}"/>
+	<property name="org.eclipse.jem.tests-v" value="${id}"/>
+	<property name="org.eclipse.jem.tests-feature-v" value="${id}"/>
+	<property name="org.eclipse.jem.workbench-v" value="${id}"/>
+	<property name="org.eclipse.jem-feature-v" value="${id}"/>
+	<property name="org.eclipse.ve-v" value="${id}"/>
+	<property name="org.eclipse.ve.cde-v" value="${id}"/>
+	<property name="org.eclipse.ve.examples-v" value="${id}"/>
+	<property name="org.eclipse.ve.examples-feature-v" value="${id}"/>
+	<property name="org.eclipse.ve.java.core-v" value="${id}"/>
+	<property name="org.eclipse.ve.jfc-v" value="${id}"/>
+	<property name="org.eclipse.ve.propertysheet-v" value="${id}"/>
+	<property name="org.eclipse.ve.doc-v" value="${id}"/>
+	<property name="org.eclipse.ve.tests-v" value="${id}"/>
+	<property name="org.eclipse.ve.tests-feature-v" value="${id}"/>
+	<property name="org.eclipse.ve-feature-v" value="${id}"/>
+</target>
+
+<target name="setids" depends="init,initids" description="Set maps ids. (Define property id for id)" >
+	<property name="execedsetids" value="true"/>
 	<copy file="ve.map.template" tofile="ve.map" overwrite="true">
-		<filterset >
-			<filter token="v" value="${id}"/>
+		<filterset endtoken="-v@">
+			<filter token="org.eclipse.jem" value="${org.eclipse.jem-v}"/>
+			<filter token="org.eclipse.jem.beaninfo" value="${org.eclipse.jem.beaninfo-v}"/>
+			<filter token="org.eclipse.jem.beaninfo.ui" value="${org.eclipse.jem.beaninfo.ui-v}"/>
+			<filter token="org.eclipse.jem.proxy" value="${org.eclipse.jem.proxy-v}"/>
+			<filter token="org.eclipse.jem.tests" value="${org.eclipse.jem.tests-v}"/>
+			<filter token="org.eclipse.jem.tests-feature" value="${org.eclipse.jem.tests-feature-v}"/>
+			<filter token="org.eclipse.jem.workbench" value="${org.eclipse.jem.workbench-v}"/>
+			<filter token="org.eclipse.jem-feature" value="${org.eclipse.jem-feature-v}"/>
+			<filter token="org.eclipse.ve" value="${org.eclipse.ve-v}"/>
+			<filter token="org.eclipse.ve.cde" value="${org.eclipse.ve.cde-v}"/>
+			<filter token="org.eclipse.ve.examples" value="${org.eclipse.ve.examples-v}"/>
+			<filter token="org.eclipse.ve.examples-feature" value="${org.eclipse.ve.examples-feature-v}"/>
+			<filter token="org.eclipse.ve.java.core" value="${org.eclipse.ve.java.core-v}"/>
+			<filter token="org.eclipse.ve.jfc" value="${org.eclipse.ve.jfc-v}"/>
+			<filter token="org.eclipse.ve.propertysheet" value="${org.eclipse.ve.propertysheet-v}"/>
+			<filter token="org.eclipse.ve.doc" value="${org.eclipse.ve.doc-v}"/>
+			<filter token="org.eclipse.ve.tests" value="${org.eclipse.ve.tests-v}"/>
+			<filter token="org.eclipse.ve.tests-feature" value="${org.eclipse.ve.tests-feature-v}"/>
+			<filter token="org.eclipse.ve-feature" value="${org.eclipse.ve-feature-v}"/>
 		</filterset>
 	</copy>
 	<eclipse.convertPath fileSystemPath="${basedir}" property="mypath"/>
 	<eclipse.refreshLocal resource="${mypath}" depth="infinite"/>
-</target>
+</target> 
 
-<target name="version" depends="init" description="Use this target to version the projects (Define property id for version id)" >
-	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo.ui" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.proxy" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.tests" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.tests-feature" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem.workbench" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.jem-feature" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.cde" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.examples" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.examples-feature" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.java.core" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.jfc" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.propertysheet" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.doc" versionName="${id}"/>	
-	<versionProjectFromWorkspace project="org.eclipse.ve.tests" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.tests-feature" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve-feature" versionName="${id}"/>		
+<target name="version" depends="init" description="(Must be first in order of execution) Use this target to version the projects (Define property id for version id)" >
+	<fail if="execedsetids" message="setids target executed before version target. This is an invalid sequence. version must be before setids."/>
+	
+	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}" property="org.eclipse.jem-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}" property="org.eclipse.jem.beaninfo-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo.ui" versionName="${id}" property="org.eclipse.jem.beaninfo.ui-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.proxy" versionName="${id}" property="org.eclipse.jem.proxy-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.tests" versionName="${id}" property="org.eclipse.jem.tests-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.tests-feature" versionName="${id}" property="org.eclipse.jem.tests-feature-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.workbench" versionName="${id}" property="org.eclipse.jem.workbench-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem-feature" versionName="${id}" property="org.eclipse.jem-feature-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve" versionName="${id}" property="org.eclipse.ve-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.cde" versionName="${id}" property="org.eclipse.ve.cde-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.examples" versionName="${id}" property="org.eclipse.ve.examples-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.examples-feature" versionName="${id}" property="org.eclipse.ve.examples-feature-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.java.core" versionName="${id}" property="org.eclipse.ve.java.core-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.jfc" versionName="${id}" property="org.eclipse.ve.jfc-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.propertysheet" versionName="${id}" property="org.eclipse.ve.propertysheet-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.doc" versionName="${id}" property="org.eclipse.ve.doc-v"/>	
+	<versionProjectFromWorkspace project="org.eclipse.ve.tests" versionName="${id}" property="org.eclipse.ve.tests-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.tests-feature" versionName="${id}" property="org.eclipse.ve.tests-feature-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve-feature" versionName="${id}" property="org.eclipse.ve-feature-v"/>		
 </target>
 </project>

@@ -2,16 +2,12 @@
 <feature
       id="org.eclipse.ve.tests"
       label="%featureName"
-      version="0.5.0"
+      version="1.0.0"
       provider-name="%featureProvider"
       image="eclipse_update_120.jpg">
 
-   <description>
-      %description
-   </description>
-
    <license url="%licenseURL">
-      %license
+      
    </license>
 
    <url>
@@ -20,26 +16,29 @@
 
    <includes
          id="org.eclipse.jem.tests"
-         version="0.5.0"
+         version="1.0.0"
          name="%featureName"/>
 
    <requires>
-      <import feature="org.eclipse.ve" version="0.5.0"/>
+      <import feature="org.eclipse.ve" version="1.0.0"/>
    </requires>
 
    <plugin
          id="org.eclipse.ve.tests"
          download-size="0"
          install-size="0"
-         version="0.5.0"/>
-         
+         version="1.0.0"/>
+
    <plugin
-         id="org.eclipse.test" version="0.0.0"/>         
+         id="org.eclipse.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.ve.tests.source"
          download-size="0"
          install-size="0"
-         version="0.5.0"/>
+         version="1.0.0"/>
 
 </feature>

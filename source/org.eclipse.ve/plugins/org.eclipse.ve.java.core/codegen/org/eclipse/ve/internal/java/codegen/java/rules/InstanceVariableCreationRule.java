@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.jem.internal.java.JavaHelpers;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 

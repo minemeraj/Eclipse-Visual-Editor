@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFPrototypeToolEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import java.lang.String;
@@ -21,6 +21,10 @@ import java.lang.String;
  * A representation of the model object '<em><b>EMF Prototype Tool Entry</b></em>'.
  * This is like an EMFCreationToolEntry, but instead of creating a new instance based upon a classtype, a copy of the supplied prototype is returned instead.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is like an EMFCreationToolEntry, but instead of creating a new instance based upon a classtype, a copy of the supplied prototype is returned instead.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -33,7 +37,7 @@ import java.lang.String;
  * @model 
  * @generated
  */
-public interface EMFPrototypeToolEntry extends CreationToolEntry {
+public interface EMFPrototypeToolEntry extends CreationToolEntry{
 	/**
 	 * Returns the value of the '<em><b>Prototype URI</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -42,6 +46,9 @@ public interface EMFPrototypeToolEntry extends CreationToolEntry {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is the string containing the prototype URI for the prototype. 
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Prototype URI</em>' attribute.
 	 * @see #setPrototypeURI(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getEMFPrototypeToolEntry_PrototypeURI()

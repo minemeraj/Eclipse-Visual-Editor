@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: UtilityFactoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.ve.internal.cde.utility.*;
 
@@ -145,10 +145,10 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @deprecated
 	 * @generated
 	 */
 	public static UtilityPackage getPackage() {
 		return UtilityPackage.eINSTANCE;
 	}
-
 }

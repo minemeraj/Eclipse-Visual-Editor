@@ -11,7 +11,7 @@ package org.eclipse.ve.tests.codegen.java.templates;
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactoryTest.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:40 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:17:58 $ 
  */
 import java.io.File;
 import java.io.FileWriter;
@@ -100,17 +100,23 @@ public class TemplateObjectFactoryTest extends TestCase {
 		 }
 		 if (newInstance.getClass() != instance.getClass()) 
 		    fail ("Should be the same class") ;
-		    
-		 long preTime = tf.lastModified() ;
+
 		 // Recreate the template, incrementing its time stamp ... will force 
 		 // a recompile.
+		 long preTime = tf.lastModified() ;
+		 try {
+			 Thread.sleep(1000) ;	// This is so that there will be at least one second between last modified and the next modified.
+		} catch (InterruptedException e1) {}
 		 try {
 			FileWriter out = new FileWriter(tf);
 			 out.write(template);
 			 out.flush() ;			 
 			 out.close();
 			 File f ;
+			 long startTime = System.currentTimeMillis();
 			 do {
+			 	if (System.currentTimeMillis()-startTime > 1000)
+			 		fail("File system timestamp error");
 			 	f = new java.io.File(tf.getAbsolutePath()) ;
 			 } while (f.lastModified() <= preTime) ;
 			 

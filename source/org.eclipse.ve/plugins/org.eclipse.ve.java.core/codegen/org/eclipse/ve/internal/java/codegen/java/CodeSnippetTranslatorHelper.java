@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslatorHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.*;
@@ -643,7 +643,7 @@ public static List parseSyntacticallyCodeSnippet(final String classCode){
 							DefaultErrorHandlingPolicies.exitAfterAllProblems(),
 							new CompilerOptions(),
 							new DefaultProblemFactory(Locale.getDefault()));
-		Parser parser = new Parser(reporter, true, false);
+		Parser parser = new Parser(reporter, true);
 		
 		CompilationUnitDeclaration decl = parser.parse(cu, result);
 		IProblem[] problems = result.getProblems();

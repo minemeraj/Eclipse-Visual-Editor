@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Iterator;
@@ -28,8 +28,8 @@ import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 
@@ -92,7 +92,7 @@ public class ThisReferenceRule implements IThisReferenceRule {
 	 */
 	public boolean useInheritance(String superClass, ResourceSet rs) {
 
-		JavaHelpers clazz = org.eclipse.jem.internal.java.impl.JavaClassImpl.reflect(superClass, rs);
+		JavaHelpers clazz = org.eclipse.jem.java.impl.JavaClassImpl.reflect(superClass, rs);
 		if (clazz instanceof EClass) {
 			EList feature = ((JavaClass) clazz).getAllProperties();
 			for (Iterator iterator = feature.iterator(); iterator.hasNext();) {

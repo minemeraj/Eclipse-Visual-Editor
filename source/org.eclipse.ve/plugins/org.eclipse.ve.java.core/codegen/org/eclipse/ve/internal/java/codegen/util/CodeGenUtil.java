@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 
@@ -50,8 +50,8 @@ import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
-import org.eclipse.jem.internal.java.JavaHelpers;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -848,6 +848,11 @@ public static void logParsingError(String exp, String method, String msg, boolea
 	JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 }
 
+public static String expressionToString (Expression exp) {
+	StringBuffer sb = new StringBuffer() ;
+	exp.printExpression(4,sb) ;
+	return sb.toString();	
+}
 
 }
 

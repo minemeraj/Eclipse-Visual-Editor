@@ -1,6 +1,6 @@
 <html><head>
 <link rel="stylesheet" href="http://dev.eclipse.org/default_style.css">
-<title>Eclipse Project Downloads</title></head>
+<title>Eclipse Visual Editor Project Downloads</title></head>
 <body>
 <?php
 

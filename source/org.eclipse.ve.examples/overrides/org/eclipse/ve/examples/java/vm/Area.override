@@ -8,7 +8,7 @@
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.examples.java/icons/canvas16.gif"/>
     </addedEObjects>
   </event:Add>
-  <event:Add  featureName="eReferences">
+  <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="month" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           labelProviderClassname="org.eclipse.ve.examples.java/org.eclipse.ve.examples.java.MonthLabelProvider"

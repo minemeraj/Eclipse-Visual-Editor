@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PalettePackageImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -259,18 +259,18 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		EcorePackageImpl.init();
 
 		// Obtain or create and register interdependencies
-		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) : DecoratorsPackageImpl.eINSTANCE);
 		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)(EPackage.Registry.INSTANCE.get(UtilityPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(UtilityPackage.eNS_URI) : UtilityPackageImpl.eINSTANCE);
+		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) : DecoratorsPackageImpl.eINSTANCE);
 
 		// Step 1: create meta-model objects
 		thePalettePackage.createPackageContents();
-		theDecoratorsPackage.createPackageContents();
 		theUtilityPackage.createPackageContents();
+		theDecoratorsPackage.createPackageContents();
 
 		// Step 2: complete initialization
 		thePalettePackage.initializePackageContents();
-		theDecoratorsPackage.initializePackageContents();
 		theUtilityPackage.initializePackageContents();
+		theDecoratorsPackage.initializePackageContents();
 
 		return thePalettePackage;
 	}
@@ -290,7 +290,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getPalette_PaletteLabel() {
-		return (EReference)paletteEClass.getEReferences().get(0);
+		return (EReference)paletteEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getCategory_CategoryLabel() {
-		return (EReference)categoryEClass.getEReferences().get(0);
+		return (EReference)categoryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getGroup_GroupLabel() {
-		return (EReference)groupEClass.getEReferences().get(0);
+		return (EReference)groupEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getEntry_Icon16Name() {
-		return (EAttribute)entryEClass.getEAttributes().get(0);
+		return (EAttribute)entryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -353,7 +353,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getEntry_Icon32Name() {
-		return (EAttribute)entryEClass.getEAttributes().get(1);
+		return (EAttribute)entryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -362,7 +362,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getEntry_DefaultEntry() {
-		return (EAttribute)entryEClass.getEAttributes().get(2);
+		return (EAttribute)entryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getEntry_EntryLabel() {
-		return (EReference)entryEClass.getEReferences().get(0);
+		return (EReference)entryEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getEntry_EntryShortDescription() {
-		return (EReference)entryEClass.getEReferences().get(1);
+		return (EReference)entryEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getToolEntry_ToolClassName() {
-		return (EAttribute)toolEntryEClass.getEAttributes().get(0);
+		return (EAttribute)toolEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -434,7 +434,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getPaletteRef_RefControlGroup() {
-		return (EReference)paletteRefEClass.getEReferences().get(0);
+		return (EReference)paletteRefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -443,7 +443,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getPaletteRef_RefCategories() {
-		return (EReference)paletteRefEClass.getEReferences().get(1);
+		return (EReference)paletteRefEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -461,7 +461,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getPaletteCmp_CmpCategories() {
-		return (EReference)paletteCmpEClass.getEReferences().get(0);
+		return (EReference)paletteCmpEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -470,7 +470,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getPaletteCmp_CmpControlGroup() {
-		return (EReference)paletteCmpEClass.getEReferences().get(1);
+		return (EReference)paletteCmpEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -488,7 +488,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getCategoryRef_RefGroups() {
-		return (EReference)categoryRefEClass.getEReferences().get(0);
+		return (EReference)categoryRefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getCategoryCmp_CmpGroups() {
-		return (EReference)categoryCmpEClass.getEReferences().get(0);
+		return (EReference)categoryCmpEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getGroupCmp_CmpEntries() {
-		return (EReference)groupCmpEClass.getEReferences().get(0);
+		return (EReference)groupCmpEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -542,7 +542,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getGroupRef_RefEntries() {
-		return (EReference)groupRefEClass.getEReferences().get(0);
+		return (EReference)groupRefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -569,7 +569,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getEMFCreationToolEntry_CreationClassURI() {
-		return (EAttribute)emfCreationToolEntryEClass.getEAttributes().get(0);
+		return (EAttribute)emfCreationToolEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -587,7 +587,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getEMFPrototypeToolEntry_PrototypeURI() {
-		return (EAttribute)emfPrototypeToolEntryEClass.getEAttributes().get(0);
+		return (EAttribute)emfPrototypeToolEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -605,7 +605,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getAnnotatedCreationEntry_Values() {
-		return (EReference)annotatedCreationEntryEClass.getEReferences().get(1);
+		return (EReference)annotatedCreationEntryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -614,7 +614,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EReference getAnnotatedCreationEntry_ObjectCreationEntry() {
-		return (EReference)annotatedCreationEntryEClass.getEReferences().get(0);
+		return (EReference)annotatedCreationEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -632,7 +632,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	public EAttribute getSelectionCreationToolEntry_SelectorClassName() {
-		return (EAttribute)selectionCreationToolEntryEClass.getEAttributes().get(0);
+		return (EAttribute)selectionCreationToolEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -796,23 +796,23 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(paletteEClass, Palette.class, "Palette", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getPalette_PaletteLabel(), theUtilityPackage.getAbstractString(), null, "paletteLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getPalette_PaletteLabel(), theUtilityPackage.getAbstractString(), null, "paletteLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(categoryEClass, Category.class, "Category", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getCategory_CategoryLabel(), theUtilityPackage.getAbstractString(), null, "categoryLabel", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getCategory_CategoryLabel(), theUtilityPackage.getAbstractString(), null, "categoryLabel", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(groupEClass, Group.class, "Group", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getGroup_GroupLabel(), theUtilityPackage.getAbstractString(), null, "groupLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getGroup_GroupLabel(), theUtilityPackage.getAbstractString(), null, "groupLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(entryEClass, Entry.class, "Entry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getEntry_Icon16Name(), ecorePackage.getEString(), "icon16Name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getEntry_Icon32Name(), ecorePackage.getEString(), "icon32Name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEAttribute(getEntry_DefaultEntry(), ecorePackage.getEBoolean(), "defaultEntry", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
-		initEReference(getEntry_EntryLabel(), theUtilityPackage.getAbstractString(), null, "entryLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getEntry_EntryShortDescription(), theUtilityPackage.getAbstractString(), null, "entryShortDescription", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEAttribute(getEntry_Icon16Name(), ecorePackage.getEString(), "icon16Name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getEntry_Icon32Name(), ecorePackage.getEString(), "icon32Name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getEntry_DefaultEntry(), ecorePackage.getEBoolean(), "defaultEntry", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getEntry_EntryLabel(), theUtilityPackage.getAbstractString(), null, "entryLabel", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getEntry_EntryShortDescription(), theUtilityPackage.getAbstractString(), null, "entryShortDescription", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(toolEntryEClass, ToolEntry.class, "ToolEntry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getToolEntry_ToolClassName(), ecorePackage.getEString(), "toolClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getToolEntry_ToolClassName(), ecorePackage.getEString(), "toolClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(creationToolEntryEClass, CreationToolEntry.class, "CreationToolEntry", IS_ABSTRACT, !IS_INTERFACE);
 
@@ -824,39 +824,39 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		initEClass(abstractToolEntryEClass, AbstractToolEntry.class, "AbstractToolEntry", IS_ABSTRACT, !IS_INTERFACE);
 
 		initEClass(paletteRefEClass, PaletteRef.class, "PaletteRef", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getPaletteRef_RefControlGroup(), this.getGroup(), null, "refControlGroup", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getPaletteRef_RefCategories(), this.getCategory(), null, "refCategories", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getPaletteRef_RefControlGroup(), this.getGroup(), null, "refControlGroup", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getPaletteRef_RefCategories(), this.getCategory(), null, "refCategories", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(paletteCmpEClass, PaletteCmp.class, "PaletteCmp", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getPaletteCmp_CmpCategories(), this.getCategory(), null, "cmpCategories", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getPaletteCmp_CmpControlGroup(), this.getGroup(), null, "cmpControlGroup", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getPaletteCmp_CmpCategories(), this.getCategory(), null, "cmpCategories", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getPaletteCmp_CmpControlGroup(), this.getGroup(), null, "cmpControlGroup", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(categoryRefEClass, CategoryRef.class, "CategoryRef", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getCategoryRef_RefGroups(), this.getGroup(), null, "refGroups", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getCategoryRef_RefGroups(), this.getGroup(), null, "refGroups", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(categoryCmpEClass, CategoryCmp.class, "CategoryCmp", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getCategoryCmp_CmpGroups(), this.getGroup(), null, "cmpGroups", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getCategoryCmp_CmpGroups(), this.getGroup(), null, "cmpGroups", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(groupCmpEClass, GroupCmp.class, "GroupCmp", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getGroupCmp_CmpEntries(), this.getEntry(), null, "cmpEntries", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getGroupCmp_CmpEntries(), this.getEntry(), null, "cmpEntries", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(groupRefEClass, GroupRef.class, "GroupRef", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getGroupRef_RefEntries(), this.getEntry(), null, "refEntries", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getGroupRef_RefEntries(), this.getEntry(), null, "refEntries", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(containerEClass, Container.class, "Container", IS_ABSTRACT, !IS_INTERFACE);
 
 		initEClass(emfCreationToolEntryEClass, EMFCreationToolEntry.class, "EMFCreationToolEntry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getEMFCreationToolEntry_CreationClassURI(), ecorePackage.getEString(), "creationClassURI", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getEMFCreationToolEntry_CreationClassURI(), ecorePackage.getEString(), "creationClassURI", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(emfPrototypeToolEntryEClass, EMFPrototypeToolEntry.class, "EMFPrototypeToolEntry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getEMFPrototypeToolEntry_PrototypeURI(), ecorePackage.getEString(), "prototypeURI", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getEMFPrototypeToolEntry_PrototypeURI(), ecorePackage.getEString(), "prototypeURI", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(annotatedCreationEntryEClass, AnnotatedCreationEntry.class, "AnnotatedCreationEntry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAnnotatedCreationEntry_ObjectCreationEntry(), this.getCreationToolEntry(), null, "objectCreationEntry", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
-		initEReference(getAnnotatedCreationEntry_Values(), theEcorePackage.getEObject(), null, "values", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE);
+		initEReference(getAnnotatedCreationEntry_ObjectCreationEntry(), this.getCreationToolEntry(), null, "objectCreationEntry", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getAnnotatedCreationEntry_Values(), theEcorePackage.getEObject(), null, "values", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(selectionCreationToolEntryEClass, SelectionCreationToolEntry.class, "SelectionCreationToolEntry", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getSelectionCreationToolEntry_SelectorClassName(), ecorePackage.getEString(), "selectorClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE);
+		initEAttribute(getSelectionCreationToolEntry_SelectorClassName(), ecorePackage.getEString(), "selectorClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(icdePaletteEntryEClass, ICDEPaletteEntry.class, "ICDEPaletteEntry", IS_ABSTRACT, IS_INTERFACE);
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-24 21:30:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.*;
@@ -29,7 +29,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jdt.core.IJavaElement;
 
-import org.eclipse.jem.internal.java.*;
+import org.eclipse.jem.java.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 /**
  * This represents a listener together with the event invocations that are used by it for a JavaBean

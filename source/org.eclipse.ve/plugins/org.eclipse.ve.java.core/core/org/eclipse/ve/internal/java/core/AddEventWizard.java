@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.text.Collator;
@@ -42,8 +42,8 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.Method;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.Method;
 
 public class AddEventWizard extends Wizard {
 	

@@ -23,7 +23,7 @@ if [ ! -x runtests ] ; then
 	chmod ugo+x runtests
 fi
 
-runtests -os linux -ws gtk -arch x86 -Dplatform=linux.gtk -vm ../jre/bin/java > $1
+runtests -os linux -ws gtk -arch x86 -Dplatform=linux.gtk -vm $1 > $2
 
 kill `cat /tmp/.X43-lock`
 kill `cat /tmp/.X42-lock`

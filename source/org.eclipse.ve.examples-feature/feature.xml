@@ -2,16 +2,12 @@
 <feature
       id="org.eclipse.ve.examples"
       label="%featureName"
-      version="0.5.0"
+      version="1.0.0"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
-      
-   <description>
-      %description
-   </description>
 
    <license url="%licenseURL">
-      %license
+      
    </license>
 
    <url>
@@ -19,19 +15,19 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.ve" version="0.5.0"/>
+      <import feature="org.eclipse.ve" version="1.0.0"/>
    </requires>
 
    <plugin
          id="org.eclipse.ve.examples"
          download-size="0"
          install-size="0"
-         version="0.5.0"/>
-         
+         version="1.0.0"/>
+
    <plugin
          id="org.eclipse.ve.examples.source"
          download-size="0"
          install-size="0"
-         version="0.5.0"/>         
+         version="1.0.0"/>
 
 </feature>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.List;
@@ -27,8 +27,8 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.java.*;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.*;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;

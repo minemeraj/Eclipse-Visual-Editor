@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteRefImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cde.palette.Category;
 import org.eclipse.ve.internal.cde.palette.Group;
@@ -116,7 +115,7 @@ public class PaletteRefImpl extends PaletteImpl implements PaletteRef {
 	public Group getRefControlGroup() {
 		if (refControlGroup != null && refControlGroup.eIsProxy()) {
 			Group oldRefControlGroup = refControlGroup;
-			refControlGroup = (Group)EcoreUtil.resolve(refControlGroup, this);
+			refControlGroup = (Group)eResolveProxy((InternalEObject)refControlGroup);
 			if (refControlGroup != oldRefControlGroup) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, PalettePackage.PALETTE_REF__REF_CONTROL_GROUP, oldRefControlGroup, refControlGroup));

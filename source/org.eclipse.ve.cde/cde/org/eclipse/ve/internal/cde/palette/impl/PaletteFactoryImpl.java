@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteFactoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.ve.internal.cde.palette.*;
 
@@ -242,10 +242,10 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @deprecated
 	 * @generated
 	 */
 	public static PalettePackage getPackage() {
 		return PalettePackage.eINSTANCE;
 	}
-
 } //PaletteFactoryImpl

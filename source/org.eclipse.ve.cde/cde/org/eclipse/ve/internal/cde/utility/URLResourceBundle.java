@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility;
  *******************************************************************************/
 /*
  *  $RCSfile: URLResourceBundle.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -33,6 +33,22 @@ import org.eclipse.emf.common.util.EList;
  * 
  * There can be more than one if they are to be searched in order.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * A bundle url is of the form:
+ * 
+ * ...directory...
+ * 
+ * For example:
+ * 
+ * platform:/plugin/pluginname/nls/
+ * 
+ * This will look in the plugin directory "nls/" in the plugin "pluginname".
+ * 
+ * NOTE: If this is a directory then the URL MUST end with '/' or it won't work, it will think "nls" is a file and not a directory.
+ * 
+ * There can be more than one if they are to be searched in order.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -84,6 +100,9 @@ public interface URLResourceBundle extends ResourceBundle{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The URL's to use to search for the bundle. If there is more, then they will be searched in order for the bundle (or bundles if this is locale specific override type bundle).
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Bundle UR Ls</em>' attribute list.
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getURLResourceBundle_BundleURLs()
 	 * @model type="java.lang.String"

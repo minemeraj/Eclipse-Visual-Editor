@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerTypeImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Collection;
@@ -33,13 +33,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.Listener;
 import org.eclipse.ve.internal.jcm.ListenerType;
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -208,7 +207,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	public JavaClass getExtends() {
 		if (extends_ != null && extends_.eIsProxy()) {
 			JavaClass oldExtends = extends_;
-			extends_ = (JavaClass)EcoreUtil.resolve(extends_, this);
+			extends_ = (JavaClass)eResolveProxy((InternalEObject)extends_);
 			if (extends_ != oldExtends) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.LISTENER_TYPE__EXTENDS, oldExtends, extends_));
@@ -258,7 +257,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	public JavaClass getIs() {
 		if (is != null && is.eIsProxy()) {
 			JavaClass oldIs = is;
-			is = (JavaClass)EcoreUtil.resolve(is, this);
+			is = (JavaClass)eResolveProxy((InternalEObject)is);
 			if (is != oldIs) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.LISTENER_TYPE__IS, oldIs, is));

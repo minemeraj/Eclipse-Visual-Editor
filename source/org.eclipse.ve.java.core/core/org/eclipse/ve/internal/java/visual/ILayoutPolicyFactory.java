@@ -11,14 +11,14 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-02 20:48:57 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
-import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 /**

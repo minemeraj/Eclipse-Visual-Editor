@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: SelectionCreationToolEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -24,6 +24,10 @@ import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
  *  creation tool entry where the actual object created is determined by the selectionCreation class. This allows the actual object created to be determined at selection time rather than statically defined in the palette entry itself.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A creation tool entry where the actual object created is determined by the selectionCreation class. This allows the actual object created to be determined at selection time rather than statically defined in the palette entry itself.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -35,7 +39,7 @@ import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
  * @model 
  * @generated
  */
-public interface SelectionCreationToolEntry extends CreationToolEntry {
+public interface SelectionCreationToolEntry extends CreationToolEntry{
 
 
 	/**
@@ -80,6 +84,9 @@ public interface SelectionCreationToolEntry extends CreationToolEntry {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is the classname of the selector class. It must implement the ISelector interface.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Selector Class Name</em>' attribute.
 	 * @see #setSelectorClassName(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getSelectionCreationToolEntry_SelectorClassName()

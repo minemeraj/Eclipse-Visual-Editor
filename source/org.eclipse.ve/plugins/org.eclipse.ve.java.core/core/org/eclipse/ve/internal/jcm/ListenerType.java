@@ -18,10 +18,10 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerType.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -55,6 +55,9 @@ public interface ListenerType extends EObject{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The name of the inner class when it is a non-anonymous class.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Name()
@@ -81,6 +84,9 @@ public interface ListenerType extends EObject{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Whether the listener is the this part. This is for VAJ style 1 where the this object itself implements all of the necessary listener interfaces.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>This Part</em>' attribute.
 	 * @see #setThisPart(boolean)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_ThisPart()
@@ -127,7 +133,7 @@ public interface ListenerType extends EObject{
 
 	/**
 	 * Returns the value of the '<em><b>Implements</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.jem.internal.java.JavaClass}.
+	 * The list contents are of type {@link org.eclipse.jem.java.JavaClass}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Implements</em>' reference list isn't clear,
@@ -136,7 +142,7 @@ public interface ListenerType extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implements</em>' reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Implements()
-	 * @model type="org.eclipse.jem.internal.java.JavaClass"
+	 * @model type="org.eclipse.jem.java.JavaClass"
 	 * @generated
 	 */
 	EList getImplements();

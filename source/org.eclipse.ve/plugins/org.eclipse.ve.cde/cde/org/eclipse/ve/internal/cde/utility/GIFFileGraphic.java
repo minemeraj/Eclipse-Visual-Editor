@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility;
  *******************************************************************************/
 /*
  *  $RCSfile: GIFFileGraphic.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import java.lang.String;
@@ -20,6 +20,10 @@ import java.lang.String;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>GIF File Graphic</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This class caches the Image from a resource name of a gif file.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -32,7 +36,7 @@ import java.lang.String;
  * @model 
  * @generated
  */
-public interface GIFFileGraphic extends Graphic {
+public interface GIFFileGraphic extends Graphic{
 
 
 	/**
@@ -43,6 +47,9 @@ public interface GIFFileGraphic extends Graphic {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is the resource name of the gif file. It is of the form of a URL. This means that to access GIF's within a plugin, use the format of "platform:/plugin/PLUGINID/GIFILENAME".
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Resource Name</em>' attribute.
 	 * @see #setResourceName(String)
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getGIFFileGraphic_ResourceName()

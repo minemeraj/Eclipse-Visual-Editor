@@ -2,19 +2,34 @@
 <plugin
    id="org.eclipse.ve.examples"
    name="%pluginName"
-   version="0.5.0"
+   version="1.0.0"
    provider-name="%providerName">
 
    <runtime>
       <library name="dept.jar">
          <export name="*"/>
+         <packages prefixes="org.eclipse.ve.examples.cdm"/>
       </library>
       <library name="javaexamples.jar">
          <export name="*"/>
+         <packages prefixes="org.eclipse.ve.examples.java"/>
       </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.ve.java.core"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jem"/>
+      <import plugin="org.eclipse.jem.proxy"/>
+      <import plugin="org.eclipse.ve.cde"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.ve.propertysheet"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.jem.beaninfo"/>
    </requires>
 
 
@@ -105,7 +120,6 @@
             path="platform:/plugin/org.eclipse.ve.examples/overrides/org/eclipse/ve/examples/java/vm">
       </override>
    </extension>
-
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <variable

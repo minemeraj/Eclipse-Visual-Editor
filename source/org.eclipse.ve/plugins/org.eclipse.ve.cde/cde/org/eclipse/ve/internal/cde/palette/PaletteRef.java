@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -21,6 +21,10 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Ref</b></em>'.
  * This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:

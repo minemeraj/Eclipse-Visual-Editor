@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: Category.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -28,6 +28,14 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This is the abstract base category. There are two standard implementations of it:
+ * 
+ * CategoryCmp: This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp).
+ * 
+ * CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -39,7 +47,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * @model abstract="true"
  * @generated
  */
-public interface Category extends Container {
+public interface Category extends Container{
 
 
 	/**

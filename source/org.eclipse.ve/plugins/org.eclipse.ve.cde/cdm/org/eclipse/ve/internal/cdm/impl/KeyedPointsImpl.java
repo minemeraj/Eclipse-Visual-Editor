@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: KeyedPointsImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
  
 import java.util.Collection;
@@ -222,8 +222,8 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public int getHash() {
 		if (hash == -1) {
-		  Object theKey = getKey();
-		  hash = (theKey == null ? 0 : theKey.hashCode());
+			Object theKey = getKey();
+			hash = (theKey == null ? 0 : theKey.hashCode());
 		}
 		return hash;
 	}
@@ -272,7 +272,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	public Object setValue(Object value) {
 		Object oldValue = getValue();
 		getTypedValue().clear();
-		getTypedValue().addAll((EList)value);
+		getTypedValue().addAll((Collection)value);
 		return oldValue;
 	}
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,8 +25,8 @@ import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.Method;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.Method;
 
 /**
  * @author Gili Mendel
@@ -212,7 +212,7 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 			int idx = lName.lastIndexOf('.');
 			if (idx>0)
 			   lName = lName.substring(0,idx) + "$" + lName.substring(idx+1,lName.length()) ; //$NON-NLS-1$
-			JavaClass clazz = (JavaClass) org.eclipse.jem.internal.java.impl.JavaClassImpl.reflect(lName,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;			
+			JavaClass clazz = (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect(lName,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;			
 			try {
 				IType iType = getInnerType(clazz) ;
 				if (iType != null) {

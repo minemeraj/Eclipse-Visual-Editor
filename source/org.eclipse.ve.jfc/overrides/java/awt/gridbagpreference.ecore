@@ -19,7 +19,7 @@
   <!-- Preference is used to set the GridBag preference for layout. E.G. Horizontal or Vertical -->
   <eClassifiers xsi:type="ecore:EClass" xmi:id="Preference" name="Preference"
       eSuperTypes="ecore:EClass http:///org/eclipse/ve/internal/cdm.ecore#//KeyedDynamic">
-    <eAttributes name="keyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="org.eclipse.ve.internal.jfc.core.gridbagfilepreferencekey"/>
-    <eAttributes name="typedValue" eType="FillKind" defaultValueLiteral="none"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="org.eclipse.ve.internal.jfc.core.gridbagfilepreferencekey"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="typedValue" eType="FillKind" defaultValueLiteral="none"/>
   </eClassifiers>
 </ecore:EPackage>

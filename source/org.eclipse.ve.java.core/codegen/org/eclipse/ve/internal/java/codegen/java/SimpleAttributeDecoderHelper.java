@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -153,7 +153,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 				initConstruction.append(resolvedType);
 				initConstruction.append("("); //$NON-NLS-1$
 				for(int i=0;arg.arguments!=null && i<arg.arguments.length;i++){
-					initConstruction.append(arg.arguments[i].toStringExpression());
+					initConstruction.append(CodeGenUtil.expressionToString(arg.arguments[i]));
 					if(i!=arg.arguments.length-1)
 						initConstruction.append(", "); //$NON-NLS-1$
 				}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanSearchEngine.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -68,13 +68,11 @@ public class JavaBeanSearchEngine {
 
 	private static class JavaBeanCollector implements IJavaSearchResultCollector {
 		private List fResult;
-		private int fStyle;
 		private IProgressMonitor fProgressMonitor;
 
 		public JavaBeanCollector(List result, int style, IProgressMonitor progressMonitor) {
 			Assert.isNotNull(result);
 			fResult = result;
-			fStyle = style;
 			fProgressMonitor = progressMonitor;
 		}
 

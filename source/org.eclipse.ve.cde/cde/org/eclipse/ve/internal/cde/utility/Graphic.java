@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility;
  *******************************************************************************/
 /*
  *  $RCSfile: Graphic.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -24,14 +24,16 @@ import org.eclipse.ve.internal.cde.emf.IGraphic;
  * A Graphic. This is an Abstract class. Subclasses of it will return an IImage.
  * <!-- end-user-doc -->
  *
- * <p>
- * </p>
+ * <!-- begin-model-doc -->
+ * A Graphic. This is an Abstract class. Subclasses of it will return an IImage.
+ * <!-- end-model-doc -->
+ *
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getGraphic()
  * @model abstract="true"
  * @generated
  */
-public interface Graphic extends EObject, IGraphic {
+public interface Graphic extends EObject, IGraphic{
 
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility;
  *******************************************************************************/
 /*
  *  $RCSfile: ResourceBundle.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -21,14 +21,12 @@ import org.eclipse.emf.ecore.EObject;
  * A representation of the model object '<em><b>Resource Bundle</b></em>'.
  * <!-- end-user-doc -->
  *
- * <p>
- * </p>
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getResourceBundle()
  * @model abstract="true"
  * @generated
  */
-public interface ResourceBundle extends EObject {
+public interface ResourceBundle extends EObject{
 
 
 	public java.util.ResourceBundle getBundle();	// Return the Resource bundle

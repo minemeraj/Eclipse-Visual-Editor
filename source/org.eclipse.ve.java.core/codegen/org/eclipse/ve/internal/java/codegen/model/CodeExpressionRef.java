@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 
@@ -28,6 +28,7 @@ import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.BasicCompilationUnit;
+import org.eclipse.jdt.internal.core.Util;
 import org.eclipse.jface.text.BadLocationException;
 
 import org.eclipse.jem.internal.core.MsgLogger;
@@ -770,7 +771,7 @@ private boolean areMethodsSame(AbstractMethodDeclaration m1, AbstractMethodDecla
 		if(args1.length==args2.length){
 			boolean allEqual = true;
 			for(int i=0;i<args1.length;i++){
-				if(!args1[i].name().equals(args2[i].name()))
+				if(Util.compare(args1[i].name, args2[i].name) != 0)
 					allEqual = false;
 			}
 			return allEqual;
@@ -783,7 +784,7 @@ private CompilationUnitDeclaration getModelFromParser(
 	ProblemReporter reporter,
 	CompilationResult result,
 	BasicCompilationUnit cu){
-	Parser aParser = new Parser(reporter,true,true);
+	Parser aParser = new Parser(reporter,true);
 	return aParser.parse(cu,result);	
 }
 

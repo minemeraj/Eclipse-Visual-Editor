@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -139,7 +139,7 @@ protected boolean parseAndAddArguments(Expression[] args) throws CodeGenExceptio
 	if (fAddedPart!= null || fAddedInstance != null) {
           int index = -1 ;
           if (args.length == 2 && args[1] instanceof IntLiteral) {
-                fAddedIndex = ((IntLiteral)args[1]).toStringExpression() ;
+                fAddedIndex = CodeGenUtil.expressionToString(args[1]);
                 index = Integer.parseInt(fAddedIndex) ;
           }          
           if (fAddedPart!=null)

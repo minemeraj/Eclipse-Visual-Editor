@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.Iterator;
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -152,10 +152,10 @@ protected void processAMessageSend() {
 protected boolean isStaticCall (String resolvedReciever, String selector, int argc)  {
 		EClassifier rClass = CodeGenUtil.getMetaClass(resolvedReciever,fModel.getCompositionModel()) ;
 		if (rClass != null  && rClass instanceof JavaClassImpl) {
-			org.eclipse.jem.internal.java.impl.JavaClassImpl Clazz = (JavaClassImpl) rClass ;
+			org.eclipse.jem.java.impl.JavaClassImpl Clazz = (JavaClassImpl) rClass ;
 			Iterator itr = Clazz.getPublicMethods().iterator() ;
 			while (itr.hasNext()) {
-				org.eclipse.jem.internal.java.Method element = (org.eclipse.jem.internal.java.Method) itr.next();
+				org.eclipse.jem.java.Method element = (org.eclipse.jem.java.Method) itr.next();
 				if (element.getName().equals(selector)) 
 				  if (element.isStatic()) 
 					if (element.getReturnType()==null) return false ; // must have a return 

@@ -11,14 +11,14 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 /**
  * Cell Editor for Insets Beans.

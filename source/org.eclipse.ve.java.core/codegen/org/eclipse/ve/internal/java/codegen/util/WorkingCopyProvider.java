@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import java.lang.reflect.Method;
@@ -25,6 +25,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jface.text.*;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -90,7 +91,8 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
  	   return fLocalCU ;
  	}
  	try { 	  
-	  fLocalCU = getLocalDocumentProvider().getWCU(editor) ;
+      
+	  fLocalCU = getLocalDocumentProvider().getWorkingCopy(editor) ;
  	  // TODO  Need to listen for changes first
  	  getLocalDocumentProvider().getDocument(getEditor()).set(primGetSharedWorkingCopy().getSource()) ;
  	  primReconcileCU(fLocalCU) ;
@@ -238,7 +240,7 @@ public Object getLocalDocLock() {
  	  fEditorIn = null ;
 // 	  fLocalCUProvider.shutdown() ;
  	  // Workaround for a JDT continue
- 	  JavaModelManager.getJavaModelManager().sharedWorkingCopies.remove(fLocalCUProvider.getBufferFactory());
+// 	  JavaModelManager.getJavaModelManager().sharedWorkingCopies.remove(fLocalCUProvider.getBufferFactory());
  	  fLocalCUProvider=null ;
  	}
  } 
@@ -285,7 +287,7 @@ public Object getLocalDocLock() {
        
           
      // Same workaround
-     JavaModelManager.getJavaModelManager().sharedWorkingCopies.remove(fLocalCUProvider.getBufferFactory());
+ //    JavaModelManager.getJavaModelManager().sharedWorkingCopies.remove(fLocalCUProvider.getBufferFactory());
      fLocalCUProvider=null ;     
           
      fEditorIn = fLocalEditorIn = null ;
@@ -603,8 +605,7 @@ public void ReplaceWithLocalContent(String handle, IProgressMonitor pm) throws C
  
  public void selectSharedRegion(int offset, int len) {
  	
-   org.eclipse.ui.IWorkbenchWindow[] windows =	org.eclipse.ui.internal.WorkbenchPlugin.getDefault().
-                                                getWorkbench().getWorkbenchWindows() ;
+   org.eclipse.ui.IWorkbenchWindow[] windows =	PlatformUI.getWorkbench().getWorkbenchWindows() ;
    if (windows != null && windows.length > 0) {
    	for (int i=0; i<windows.length; i++) {
    		org.eclipse.ui.IEditorPart ep = windows[i].getActivePage().getActiveEditor() ;

@@ -24,7 +24,7 @@
         eventDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectEventDecoder"/>
         
   </event:AddMany>
-  <event:Add  featureName="eReferences">
+  <event:Add  featureName="eStructuralFeatures">
     <!-- Events are modeled as instances of AbstractEventInvocation on any Root class
          Two subclasses of this exist, EventInvocation which is for events whose source is an EventSetDescriptor, e.g. Button>actionPeformed
          and the other subclass is PropertyChangeEventInvocation for events who source is a PropertyDescriptor, e.g. Button>font -->  

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: DecoratorsFactoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.ve.internal.cde.decorators.*;
 
@@ -118,10 +118,10 @@ public class DecoratorsFactoryImpl extends EFactoryImpl implements DecoratorsFac
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @deprecated
 	 * @generated
 	 */
 	public static DecoratorsPackage getPackage() {
 		return DecoratorsPackage.eINSTANCE;
 	}
-
 }

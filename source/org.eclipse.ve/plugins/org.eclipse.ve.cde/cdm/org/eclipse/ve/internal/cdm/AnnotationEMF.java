@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationEMF.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -21,6 +21,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Annotation EMF</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * Annotation that can annotate an EMF object (RefObject).
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -33,7 +37,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model 
  * @generated
  */
-public interface AnnotationEMF extends Annotation {
+public interface AnnotationEMF extends Annotation{
 
 
 	/**

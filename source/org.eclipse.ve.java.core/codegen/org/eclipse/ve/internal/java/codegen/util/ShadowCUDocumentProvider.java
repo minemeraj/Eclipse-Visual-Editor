@@ -17,33 +17,135 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ShadowCUDocumentProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.internal.filebuffers.TextFileBufferManager;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitDocumentProvider;
-import org.eclipse.jdt.internal.ui.javaeditor.DocumentAdapter;
-import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jdt.core.IProblemRequestor;
+import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.*;
+import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.CompilationUnitDocumentProvider2;
+import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.DocumentAdapter2;
 import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+
 
 /**
  * @author gmendel
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * TODO: This class is temporary, untill we get rid of the Local shadow WC VE uses
  */
-public class ShadowCUDocumentProvider extends CompilationUnitDocumentProvider {
+public class ShadowCUDocumentProvider extends CompilationUnitDocumentProvider2 {
+	
+	static DefaultWorkingCopyOwner fWCowner = new DefaultWorkingCopyOwner(){
+	    public IBuffer createBuffer(ICompilationUnit workingCopy) {
+		   if (this.factory == null) return super.createBuffer(workingCopy);
+		   return this.factory.createBuffer(workingCopy);
+	   }
+	};
+	
+	// Use a buffer factory to pint to DocumentAdapter3
+	static CustomBufferFactory2 fBuffFactory = new CustomBufferFactory2() {
+		public IBuffer createBuffer(IOpenable owner) {
+			if (owner instanceof ICompilationUnit) {
+				ICompilationUnit unit = (ICompilationUnit) owner;
+				ICompilationUnit original = (ICompilationUnit) unit.getOriginalElement();
+				IResource resource = original.getResource();
+				if (resource instanceof IFile) {
+					return new DocumentAdapter3(unit, (IFile) resource);
+				}
 
+			}
+			return DocumentAdapter2.NULL;
+		}
+	};	
+	
+	// overide DocumentAdapter2 to point to our shadow IDocument (using our buff. mgr)
+	public static class DocumentAdapter3 extends DocumentAdapter2 {
+		public DocumentAdapter3(IOpenable owner, IFile file) {
+			super(owner, file);
+			try {
+				Field f = DocumentAdapter2.class.getDeclaredField("fOwner");
+				f.setAccessible(true);
+				f.set(this, owner);
+
+				f = DocumentAdapter2.class.getDeclaredField("fFile");
+				f.setAccessible(true);
+				f.set(this, file);
+
+				//					fOwner= owner;
+				//					fFile= file;		
+				initialize();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		private void initialize() {
+			try {
+				ITextFileBufferManager manager = fBuffMgr;
+				Field f = DocumentAdapter2.class.getDeclaredField("fFile");
+				f.setAccessible(true);
+				IPath location = ((IFile) f.get(this)).getFullPath();
+				//			IPath location= fFile.getFullPath();
+				try {
+					getDocument().removePrenotifiedDocumentListener(this);
+
+					manager.connect(location, new NullProgressMonitor());
+					f = DocumentAdapter2.class.getDeclaredField("fTextFileBuffer");
+					f.setAccessible(true);
+					f.set(this, manager.getTextFileBuffer(location));
+					//				fTextFileBuffer= manager.getTextFileBuffer(location);
+					f = DocumentAdapter2.class.getDeclaredField("fDocument");
+					f.setAccessible(true);
+					f.set(this, manager.getTextFileBuffer(location).getDocument());
+					//				fDocument= fTextFileBuffer.getDocument();
+				} catch (CoreException x) {
+					//				fStatus= x.getStatus();
+					//				fDocument= manager.createEmptyDocument(location);
+				}
+				getDocument().addPrenotifiedDocumentListener(this);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+
+    
+
+	 
+	static TextFileBufferManager	fBuffMgr = new TextFileBufferManager() ; // private buffer mgr. will not colide with JDT
+		
 	static ShadowCUDocumentProvider fInstance = new ShadowCUDocumentProvider() ;
 	
+	public ShadowCUDocumentProvider() {
+		fWCowner.factory= fBuffFactory ;
+	}
 	static IAnnotationModel   fAModel = new IAnnotationModel() {
 		public void addAnnotationModelListener(org.eclipse.jface.text.source.IAnnotationModelListener listener) {
 		}
@@ -96,27 +198,6 @@ public class ShadowCUDocumentProvider extends CompilationUnitDocumentProvider {
 		return null;
 	}
 
-	/**
-	 * Returns the working copy this document provider maintains for the given
-	 * element.
-	 * 
-	 * @param element the given element
-	 * @return the working copy for the given element
-	 */
-	public ICompilationUnit getWCU(IEditorInput element) {
-		ICompilationUnit cu = null ;
-		// This method is package protected... use reflection until we get this opened up.
-		try {
-			// TODO If we can get to the IWorkingCopyManager, there is an API getWorkingCopy(IEditorInput) that is available and not internal.
-			CompilationUnitDocumentProvider dp = this ;
-			Method getWK = CompilationUnitDocumentProvider.class.getDeclaredMethod("getWorkingCopy", new Class[] { IEditorInput.class } );  //$NON-NLS-1$
-			getWK.setAccessible(true) ;
-			cu = (ICompilationUnit) getWK.invoke(dp, new Object[] { element });
-		} catch (Exception e) {
-			org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;
-		}
-		return cu ;
-	}
 
 
 	/* (non-Javadoc)
@@ -126,45 +207,47 @@ public class ShadowCUDocumentProvider extends CompilationUnitDocumentProvider {
 		return false ;
 	}
 	
-	/*
-	 * @see AbstractDocumentProvider#createElementInfo(Object)
+	/* 
+	 * This method will foce the creation of an independant WorkingCopy and will not use the automatic
+	 * creation of Workingcopy in M3
 	 */
-	protected ElementInfo createElementInfo(Object element) throws CoreException {
-		
-		if ( !(element instanceof IFileEditorInput))
-			return super.createElementInfo(element);
+	protected FileInfo createFileInfo(Object element) throws CoreException {
+		if (!(element instanceof IFileEditorInput))
+			return null;
 			
 		IFileEditorInput input= (IFileEditorInput) element;
 		ICompilationUnit original= createCompilationUnit(input.getFile());
-		if (original != null) {
-				
-			try {
-												
-				IAnnotationModel m = createCompilationUnitAnnotationModel(input);
-				ICompilationUnit c = (ICompilationUnit) original.getSharedWorkingCopy(getProgressMonitor(), getBufferFactory(), null);
-				
-				DocumentAdapter a= null;
-				try {
-					a= (DocumentAdapter) c.getBuffer();
-				} catch (ClassCastException x) {
-					IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.TEMPLATE_IO_EXCEPTION, "Shared working copy has wrong buffer", x); //$NON-NLS-1$
-					throw new CoreException(status);
-				}
-				
-				
-				CompilationUnitInfo info= new CompilationUnitInfo(a.getDocument(), m, null, c);
-				info.setModificationStamp(computeModificationStamp(input.getFile()));
-				info.fStatus= a.getStatus();
-				info.fEncoding= getPersistedEncoding(input);
-				
-				return info;
-				
-			} catch (JavaModelException x) {
-				throw new CoreException(x.getStatus());
-			}
-		} else {		
-			return super.createElementInfo(element);
+		if (original == null)
+			return null;
+		
+        // from super.super to create the IDocument
+        IPath location=((IFileEditorInput)element).getFile().getFullPath() ;  
+        
+		
+		CompilationUnitInfo cuInfo = null ;
+		if (location != null) {			
+				fBuffMgr.connect(location, getProgressMonitor());
+				fBuffMgr.requestSynchronizationContext(location);
+				ITextFileBuffer fileBuffer= fBuffMgr.getTextFileBuffer(location);
+			
+				cuInfo= (CompilationUnitInfo)createEmptyFileInfo();
+			    cuInfo.fTextFileBuffer= fileBuffer;
+			    cuInfo.fCachedReadOnlyState= isSystemFileReadOnly(cuInfo);			
 		}
-	}
+		if (cuInfo==null) return null ;
+								
+		IProblemRequestor requestor= cuInfo.fModel instanceof IProblemRequestor ? (IProblemRequestor) cuInfo.fModel : null;
 
+//		if (JavaPlugin.USE_WORKING_COPY_OWNERS)  {
+//			original.becomeWorkingCopy(requestor, getProgressMonitor());
+//			cuInfo.fCopy= original;
+//		} else  {
+//			cuInfo.fCopy= (ICompilationUnit) original.getSharedWorkingCopy(getProgressMonitor(), JavaPlugin.getDefault().getBufferFactory(), requestor);
+//		}
+
+        // Create an off the side WC
+		cuInfo.fCopy= (ICompilationUnit) original.getWorkingCopy(fWCowner,requestor,null) ;
+		
+		return cuInfo;			
+	}
 }

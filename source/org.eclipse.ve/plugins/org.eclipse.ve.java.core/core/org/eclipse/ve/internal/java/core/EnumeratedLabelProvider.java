@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -19,8 +19,8 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.core.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.JavaHelpers;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProvider implements INeedData {
 	

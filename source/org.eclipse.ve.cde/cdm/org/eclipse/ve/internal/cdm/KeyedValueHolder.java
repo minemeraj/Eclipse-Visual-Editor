@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: KeyedValueHolder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 import org.eclipse.emf.common.util.EMap;
@@ -21,6 +21,14 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Keyed Value Holder</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * This class holds KeyedValues. It is used by mixing it in with multiple inheritance into where it is needed.
+ * 
+ * The operations allow treating the KeyedValues as properties. They should be used instead of the generic keyedValues relationship. It allows easier usage of the keyed values.
+ * 
+ * Note: KeyedValues should be treated as dataTypes, in other words, individual KeyedValues shouldn't be updated, they should be replaced instead. This is because typically users area listening for new keyed values, not subvalues within individual keyed values being changed. If the users understands this and still listens on individual KeyedValues, that is OK as long thier model handles unlistening when the keyedvalue is removed.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:

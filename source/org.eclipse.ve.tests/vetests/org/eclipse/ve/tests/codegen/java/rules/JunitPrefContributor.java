@@ -11,7 +11,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: JunitPrefContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:58 $ 
  */
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
@@ -28,6 +28,7 @@ public class JunitPrefContributor extends AbstractStyleContributor {
 
 	private Image image;
 	/**
+	 * TODO Figure out a way the style contributor can have the ui stuff separated out. Tests shouldn't need ui just to run.
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.AbstractStyleContributor#buildUI(Composite)
 	 */
 	public Control buildUI(Composite parent) {

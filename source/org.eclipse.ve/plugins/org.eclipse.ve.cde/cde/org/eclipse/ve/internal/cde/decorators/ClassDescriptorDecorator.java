@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 import org.eclipse.ve.internal.cde.utility.Graphic;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -20,6 +20,10 @@ import org.eclipse.ve.internal.cdm.KeyedValueHolder;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Class Descriptor Decorator</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * The descriptor decorator for a class. Currently it adds nothing over FeatureDescriptorDecortor.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -38,7 +42,7 @@ import org.eclipse.ve.internal.cdm.KeyedValueHolder;
  * @model 
  * @generated
  */
-public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, KeyedValueHolder {
+public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, KeyedValueHolder{
 	/**
 	 * Returns the value of the '<em><b>Customizer Classname</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -47,6 +51,11 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Classname string of the Customizer class.
+	 * 
+	 * The format of the string is "classname:initdata" or "plugin/classname:initdata"
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Customizer Classname</em>' attribute.
 	 * @see #setCustomizerClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_CustomizerClassname()
@@ -73,6 +82,11 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Classname of the TreeView EditPart.
+	 * 
+	 * The format of the string is "classname:initdata" or "plugin/classname:initdata"
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Tree View Classname</em>' attribute.
 	 * @see #setTreeViewClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_TreeViewClassname()
@@ -99,6 +113,11 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Classname of the GraphView EditPart.
+	 * 
+	 * The format of the string is "classname:initdata" or "plugin/classname:initdata"
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Graph View Classname</em>' attribute.
 	 * @see #setGraphViewClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_GraphViewClassname()
@@ -125,6 +144,11 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Classname of the Model Adapter. This is the class that either implements all of the interfaces required by the model adapter, or it should be an IAdaptable that will return such adapters. See IModelAdapterFactory.
+	 * 
+	 * The format of the string is "classname:initdata" or "plugin/classname:initdata"
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Model Adapter Classname</em>' attribute.
 	 * @see #setModelAdapterClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_ModelAdapterClassname()
@@ -151,6 +175,9 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The default palette to use for this class if not specified by other means. It is in the form a MOF reference, i.e. "filename#id of palette".
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Default Palette</em>' attribute.
 	 * @see #setDefaultPalette(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_DefaultPalette()
@@ -177,6 +204,11 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The classname for the label provider to be used for objects of the class that this decorator decorates. This label provider will be used in cases other than property sheet. In that case the labelProvider from the BasePropertyDecorator on this class will be used. (Though the default if there is no BasePropertyDecorator will be to use the string from this label provider, but not the image).
+	 * 
+	 * The format of the string is "classname:initdata" or "plugin/classname:initdata"
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Label Provider Classname</em>' attribute.
 	 * @see #setLabelProviderClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_LabelProviderClassname()

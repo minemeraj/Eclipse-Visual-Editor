@@ -18,19 +18,20 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.jcm.Callback;
 import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.jem.internal.java.Method;
+import org.eclipse.jem.java.Method;
 
 /**
  * <!-- begin-user-doc -->
@@ -124,7 +125,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	public Method getMethod() {
 		if (method != null && method.eIsProxy()) {
 			Method oldMethod = method;
-			method = (Method)EcoreUtil.resolve(method, this);
+			method = (Method)eResolveProxy((InternalEObject)method);
 			if (method != oldMethod) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.CALLBACK__METHOD, oldMethod, method));

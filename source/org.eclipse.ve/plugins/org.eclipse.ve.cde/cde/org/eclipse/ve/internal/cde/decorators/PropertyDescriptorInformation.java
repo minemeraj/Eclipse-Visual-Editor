@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyDescriptorInformation.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -28,6 +28,16 @@ import org.eclipse.emf.ecore.EAnnotation;
  * If the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a EObject and a EStructuralFeature or one that takes just a EObject. The EObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This is the information required to establish a PropertyDescriptorAdapter or a PropertyDescriptor.
+ * 
+ * This will be decorating a RefStructuralFeature to indicate what  PropertyDescriptorAdapter or PropertyDescscriptor  to use for this feature.
+ * 
+ * It depends upon whether the type flag is Adapter is true. If the flag is true, then an adapter will be created once for the feature.
+ * 
+ * If the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a RefObject and a RefStructuralFeature or one that takes just a RefObject. The RefObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -40,7 +50,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * @model 
  * @generated
  */
-public interface PropertyDescriptorInformation extends EAnnotation {
+public interface PropertyDescriptorInformation extends EAnnotation{
 
 
 	/**

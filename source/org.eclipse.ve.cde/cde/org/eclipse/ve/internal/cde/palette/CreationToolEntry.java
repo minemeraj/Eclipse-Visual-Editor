@@ -14,7 +14,7 @@ import org.eclipse.gef.requests.CreationFactory;
  *******************************************************************************/
 /*
  *  $RCSfile: CreationToolEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -36,6 +36,9 @@ public interface CreationToolEntry extends AbstractToolEntry{
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Return the creation factory that will be used by this entry.
+	 * <!-- end-model-doc -->
 	 * @model dataType="org.eclipse.ve.internal.cde.palette.CreationFactory" 
 	 * @generated
 	 */
@@ -44,6 +47,9 @@ public interface CreationToolEntry extends AbstractToolEntry{
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Set the factory that will be used by this entry in the creation tool. This allows wrappering the factory returned by createFactory() with another one (such as the AnnotationCreationFactory).
+	 * <!-- end-model-doc -->
 	 * @model parameters="org.eclipse.ve.internal.cde.palette.CreationFactory"
 	 * @generated
 	 */

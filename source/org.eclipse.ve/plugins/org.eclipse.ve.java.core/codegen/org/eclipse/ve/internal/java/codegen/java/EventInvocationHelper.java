@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -28,9 +28,9 @@ import org.eclipse.jem.internal.beaninfo.MethodProxy;
 
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.jem.internal.java.Method;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.JavaParameter;
+import org.eclipse.jem.java.Method;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaParameter;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule;

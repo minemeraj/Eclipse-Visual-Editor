@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertySourceAdapterInformation.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
  */
 
 
@@ -24,6 +24,12 @@ import org.eclipse.emf.ecore.EAnnotation;
  * This will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This is the information required to establish a PropertySourceAdapter.
+ * 
+ * This will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -35,7 +41,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * @model 
  * @generated
  */
-public interface PropertySourceAdapterInformation extends EAnnotation {
+public interface PropertySourceAdapterInformation extends EAnnotation{
 
 
 	/**
@@ -46,6 +52,9 @@ public interface PropertySourceAdapterInformation extends EAnnotation {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Adapter classname. If explicitly set to null (versus not set, which is a default of null, isSet will return true, but value will be null), then this means there is no PropertySourceAdapter for this class, ever.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Property Source Adapter Classname</em>' attribute.
 	 * @see #isSetPropertySourceAdapterClassname()
 	 * @see #unsetPropertySourceAdapterClassname()

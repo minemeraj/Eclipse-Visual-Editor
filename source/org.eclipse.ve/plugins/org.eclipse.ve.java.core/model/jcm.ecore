@@ -1,70 +1,107 @@
 <?xml version="1.0" encoding="ASCII"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
+<ecore:EPackage xmi:version="2.0"
+  xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
     nsURI="http:///org/eclipse/ve/internal/jcm.ecore" nsPrefix="org.eclipse.ve.internal.jcm">
   <eClassifiers xsi:type="ecore:EClass" name="BeanDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
-    <eAttributes name="beanProxyClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Decorates the bean for bean specific inforamation, for example the BeanProxyAdapter class."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanProxyClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the class for the BeanProxyAdapter."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BeanFeatureDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
-    <eAttributes name="beanProxyMediatorName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="childFeature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Decorate a bean feature.  For example the mediator for handling bean feature application/canceling in the proxy adapter."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanProxyMediatorName"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Mediator to handle apply/cancel of bean properties."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="childFeature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true, then this is a child feature. This means that if the parent is deleted, then the child should be deleted except if the child is referenced by another feature that is a child feature."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BeanComposition" eSuperTypes="../../org.eclipse.ve.cde/model/cdm.ecore#//DiagramData #//MemberContainer">
-    <eReferences name="components" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
-        upperBound="-1"/>
-    <eReferences name="listenerTypes" eType="#//ListenerType" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listenerTypes" upperBound="-1"
+        eType="#//ListenerType" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractEventInvocation" abstract="true">
-    <eReferences name="callbacks" eType="#//Callback" upperBound="-1" containment="true"/>
-    <eReferences name="listener" eType="#//Listener" eOpposite="#//Listener/listenedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="callbacks" upperBound="-1"
+        eType="#//Callback" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listener" eType="#//Listener"
+        eOpposite="#//Listener/listenedBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ListenerType">
-    <eReferences name="extends" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"/>
-    <eReferences name="implements" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"
-        upperBound="-1"/>
-    <eReferences name="is" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"/>
-    <eReferences name="listeners" eType="#//Listener" upperBound="-1" containment="true"
-        eOpposite="#//Listener/listenerType"/>
-    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="thisPart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the inner class when it is a non-anonymous class."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="thisPart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Whether the listener is the this part. This is for VAJ style 1 where the this object itself implements all of the necessary listener interfaces."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extends" eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//JavaClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="implements" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//JavaClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="is" eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//JavaClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listeners" upperBound="-1"
+        eType="#//Listener" containment="true" eOpposite="#//Listener/listenerType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberContainer">
-    <eReferences name="properties" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
-        upperBound="-1" containment="true"/>
-    <eReferences name="members" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
-        upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Listener">
-    <eReferences name="listenedBy" eType="#//AbstractEventInvocation" upperBound="-1"
-        eOpposite="#//AbstractEventInvocation/listener"/>
-    <eReferences name="listenerType" eType="#//ListenerType" transient="true" eOpposite="#//ListenerType/listeners"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listenedBy" upperBound="-1"
+        eType="#//AbstractEventInvocation" eOpposite="#//AbstractEventInvocation/listener"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listenerType" eType="#//ListenerType"
+        transient="true" eOpposite="#//ListenerType/listeners"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Callback">
-    <eReferences name="method" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//Method"
-        lowerBound="1"/>
-    <eAttributes name="sharedScope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sharedScope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//Method"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventInvocation" eSuperTypes="#//AbstractEventInvocation">
-    <eReferences name="event" eType="ecore:EClass ../../org.eclipse.jem.beaninfo/model/beaninfo.ecore#//BeanEvent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="ecore:EClass ../../org.eclipse.jem.beaninfo/model/beaninfo.ecore#//BeanEvent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyChangeEventInvocation" eSuperTypes="#//AbstractEventInvocation">
-    <eReferences name="addMethod" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//Method"
-        lowerBound="1"/>
-    <eReferences name="properties" eType="#//PropertyEvent" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="addMethod" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//Method"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
+        eType="#//PropertyEvent" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyEvent">
-    <eAttributes name="propertyName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eAttributes name="useIfExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="propertyName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="useIfExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BeanSubclassComposition" eSuperTypes="#//BeanComposition">
-    <eReferences name="thisPart" eType="ecore:EClass ../../org.eclipse.jem/model/instance.ecore#//IJavaObjectInstance"
-        lowerBound="1" containment="true"/>
-    <eReferences name="methods" eType="#//JCMMethod" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="thisPart" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.jem/model/instance.ecore#//IJavaObjectInstance"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" upperBound="-1"
+        eType="#//JCMMethod" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JCMMethod" eSuperTypes="#//MemberContainer">
-    <eReferences name="initializes" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
-        upperBound="-1"/>
-    <eReferences name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
-    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="initializes" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
 </ecore:EPackage>
