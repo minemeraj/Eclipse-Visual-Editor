@@ -11,9 +11,8 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionFreeFormComponentsEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-10 17:42:43 $ 
+ *  $Revision: 1.3 $  $Date: 2003-11-12 18:57:07 $ 
  */
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.ui.IWorkbenchPage;
