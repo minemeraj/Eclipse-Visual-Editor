@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-05 23:11:10 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-01 19:07:46 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -54,10 +54,13 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 
 		// Having done this the frame on the target VM will now possibly be visible
 		// We should attempt to restore focus to the IDE
-		if (Display.getCurrent().getActiveShell() != null)
-			Display.getCurrent().getActiveShell().setFocus();
-			// Force the focus back to the editor part so that knows it has re-gained focus
-			getBeanProxyDomain().getEditDomain().getEditorPart().setFocus();
+		// Update:	Following lines were commented out becuase this code could be executed 
+		// 			in the background thread, which would cause a NPE
+		// TODO: Check to see if a window really causes a loss of focus in other systems (Ex:linux)
+//		if (Display.getCurrent().getActiveShell() != null)
+//			Display.getCurrent().getActiveShell().setFocus();
+//			// Force the focus back to the editor part so that knows it has re-gained focus
+//			getBeanProxyDomain().getEditDomain().getEditorPart().setFocus();
 
 		return getBeanProxy();
 
