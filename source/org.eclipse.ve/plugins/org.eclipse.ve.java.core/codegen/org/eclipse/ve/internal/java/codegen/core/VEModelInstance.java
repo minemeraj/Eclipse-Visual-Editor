@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.4 $  $Date: 2005-01-14 15:44:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-17 20:56:21 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -96,8 +96,8 @@ public class VEModelInstance implements IVEModelInstance {
 			if (cr != null)
 				rs.getResources().remove(cr);
 
-			if (!ignoreCache && VEModelCacheUtility.isValidCache(getFile())) {
-				fResource = VEModelCacheUtility.doLoadFromCache(this, null);
+			if (!ignoreCache && 
+					(fResource=VEModelCacheUtility.doLoadFromCache(this, null))!=null){				
 				fRoot = (BeanSubclassComposition) fResource.getEObject("/");
 				fUri = fResource.getURI().toString();
 				JavaVEPlugin.log("Loading EMF model from cache",Level.FINE);
