@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-01 21:35:49 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -130,7 +130,7 @@ public CellEditor createPropertyEditor(Composite parent){
 				}
 				
 				if (enums != null) {		
-					return new EnumeratedCellEditor(
+					return new BeanPropertyEnumeratedCellEditor(
 						parent,
 						enums,
 						(JavaHelpers) ((EStructuralFeature)target).getEType());

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorModelChangeController.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:35:08 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -37,6 +37,7 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 	// won't collide with changes from the UI thread.
 	private int compoundChangeCount = 0;
 	private int holdState = READY_STATE;
+	private String holdMsg = null;	
 
 	public JavaVisualEditorModelChangeController(JavaVisualEditorPart part, IDiagramModelBuilder modelBuilder) {
 		this.modelBuilder = modelBuilder;
@@ -127,13 +128,30 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 	 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
 	 */
 	public String getHoldMsg() {
-		return "";
+		if (holdMsg != null)
+			return holdMsg;
+		
+		switch (getHoldState()) {
+			case BUSY_STATE:
+				return "Editor is busy at this time and cannot be changed.";
+			case NO_UPDATE_STATE:
+				return "Editor cannot be changed at this time.";
+		}
+		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#setHoldState(int)
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#setHoldState(int, java.lang.String)
 	 */
-	public void setHoldState(int stateFlag) {
+	public void setHoldState(int stateFlag, String msg) {
 		holdState = stateFlag;
+		if (holdState != READY_STATE)
+			if (msg != null)
+				holdMsg = msg;
+			else
+				holdMsg = "Editor cannot be changed at this time.";
+		else
+			holdMsg = null;
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.18 $  $Date: 2004-03-30 14:42:55 $ 
+ *  $Revision: 1.19 $  $Date: 2004-04-01 21:35:08 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -286,7 +286,7 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 		// Create the pause/reload action.
 		graphicalActionRegistry.registerAction(new ReloadAction(new ReloadAction.IReloadCallback() {
 			public void pause() {
-				modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE);	// So no updates while paused.
+				modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
 				modelBuilder.pause();
 			}
 			public void reload() {
@@ -311,13 +311,13 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
 		rla.setEnabled(false);	// While reloading, don't want button to be pushed.
 		
-		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE);	// Don't allow updates..
+		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// Don't allow updates..
 		
 		setRootModel(null); // Clear it out so we don't see all of the changes that are about to happen.
 		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
-			setupJob = new Setup("Setup JavaVisualEditorPart");
+			setupJob = new Setup("Setup Java Visual Editor");
 			setupJob.setPriority(Job.SHORT); // Make it slightly slower so that ui thread still active
 		}
 		// TODO Not quite happy with this. Need way to cancel and join any previous to be on safe side.
@@ -671,7 +671,7 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 			}
 			ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
 			rla.setEnabled(true);
-			modelChangeController.setHoldState(IModelChangeController.READY_STATE);	// Restore to allow updates.
+			modelChangeController.setHoldState(IModelChangeController.READY_STATE, null);	// Restore to allow updates.
 		}
 	}
 

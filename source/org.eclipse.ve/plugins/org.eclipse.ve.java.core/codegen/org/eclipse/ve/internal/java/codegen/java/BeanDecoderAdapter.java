@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-25 23:44:11 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-01 21:35:38 $ 
  */
 
 import java.util.*;
@@ -685,7 +685,7 @@ public ICodeGenSourceRange getHighlightSourceRange()
 	  return null ;
 }
 public Object getAdapter(Class aClass){
-	if ( aClass == IJavaElement.class ) { 
+	if ( aClass == IJavaElement.class && !fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) { 
 		// Return the IField for this bean.
 		IJavaElement e = (IField) JavaCore.create(fBean.getFieldDeclHandle());
 		ICompilationUnit cu = fBean.getModel().getCompilationUnit() ;
@@ -743,7 +743,7 @@ public String getInstanceName() {
 public Label getReturnMethodDisplayInformation() {
 	Label l = new Label() ;
 		
-	if (fBean.getReturnedMethod() != null) {
+	if (!fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN) && fBean.getReturnedMethod() != null) {
 		ImageDescriptor d = null;
 		if (fBean.getReturnedMethod().getMethodHandle() != null) {
 			IJavaElement je = JavaCore.create(fBean.getInitMethod().getMethodHandle());
