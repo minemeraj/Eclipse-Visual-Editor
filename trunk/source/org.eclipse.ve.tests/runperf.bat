@@ -1,0 +1,1 @@
+eclipse.exe -consolelog -data workspace -application org.eclipse.test.uitestapplication -testpluginname  org.eclipse.ve.tests -classname org.eclipse.ve.tests.perf.PerfSuite -vmargs -Xmx512m -Detools_perf_ctrl="driverinfo=\jve-driverInfo.properties"
