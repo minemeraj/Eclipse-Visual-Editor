@@ -44,8 +44,9 @@
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jem.workbench"/>
-      <!-- temporary hack, to get M5 working.  Should be removed before GA -->
-          <import plugin="org.eclipse.core.filebuffers"/>
+<!-- temporary hack, to get M5 working.  Should be removed before GA -->
+      <import plugin="org.eclipse.core.filebuffers"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
    </requires>
 
 
@@ -231,8 +232,8 @@
       <shortcut
             label="%shortcut.label Java Bean"
             icon="icons/full/ctool16/java_bean_launcher.gif"
-            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             modes="run, debug"
+            class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             id="org.eclipse.ve.internal.java.core.vce.localJavaShortcut">
          <perspective
                id="org.eclipse.jdt.ui.JavaPerspective">
@@ -325,12 +326,12 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            default="false"
             name="%jveeditor Visual Editor"
-            extensions="java"
+            default="false"
             icon="icons/full/obj16/javavisualeditor_obj.gif"
-            class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
+            extensions="java"
             contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
+            class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
             id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
       </editor>
    </extension>
@@ -424,14 +425,14 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ResourceNavigator"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="bottom">
+               relationship="bottom"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
                relative="org.eclipse.ui.views.ContentOutline"
                visible="false"
-               id="org.eclipse.ui.views.PropertySheet"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ui.views.PropertySheet">
          </view>
       </perspectiveExtension>
    </extension>
@@ -452,15 +453,15 @@
          <view
                relative="org.eclipse.jdt.ui.MembersView"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
                ratio="0.75"
                relative="org.eclipse.ui.editorss"
                visible="false"
-               id="org.eclipse.ui.views.PropertySheet"
-               relationship="right">
+               relationship="right"
+               id="org.eclipse.ui.views.PropertySheet">
          </view>
       </perspectiveExtension>
    </extension>
@@ -474,8 +475,8 @@
          <view
                relative="org.eclipse.ui.views.ContentOutline"
                visible="false"
-               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
-               relationship="stack">
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
       </perspectiveExtension>
    </extension>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-11 16:03:22 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -20,6 +20,8 @@ import java.util.*;
 import org.eclipse.core.boot.BootLoader;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.*;
+import org.eclipse.osgi.service.environment.Constants;
+
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 /**
@@ -35,18 +37,7 @@ public class TemplateUtil {
     private static List fPlatformJRE = null ;
 	
 	static public boolean isDevMode(IPluginDescriptor desc) {
-		
-		// For now, just check that the bin directory is not empty
-		File d = new File (getCorrectPath(ProxyPlugin.getPlugin().localizeFromPluginDescriptor(desc, "bin"))) ; //$NON-NLS-1$
-		if (d.canRead() && d.isDirectory())
-		    if (d.list().length > 0)  return true ;
-		return false ;		
-		
-//		if (fDevMode==null) 
-//		    fDevMode = new Boolean ("true".equalsIgnoreCase( //$NON-NLS-1$
-//					   Platform.getDebugOption (ProxyPlugin.getPlugin().
-//			           getDescriptor().getUniqueIdentifier() + "/dev")));
-//        return fDevMode.booleanValue() ;			           
+		return BootLoader.inDevelopmentMode();
 	}
 	
 	/**
@@ -170,16 +161,16 @@ public class TemplateUtil {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < path.length(); i++) {
 			char c = path.charAt(i);
-			if (BootLoader.getOS().equals("win32")) { //$NON-NLS-1$
-				if (i == 0 && c == '/')
-					continue;
-			}
+			if (i == 0 && c == '/' && BootLoader.getOS().equals(Constants.OS_WIN32))
+				continue;
+
 			// Some VMs may return %20 instead of a space
 			if (c == '%' && i + 2 < path.length()) {
 				char c1 = path.charAt(i + 1);
 				char c2 = path.charAt(i + 2);
 				if (c1 == '2' && c2 == '0') {
 					i += 2;
+					buf.append(' ');
 					continue;
 				}
 			}

@@ -11,31 +11,19 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:28 $ 
  */
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.MissingResourceException;
+import java.net.*;
+import java.util.*;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.PluginVersionIdentifier;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.model.PluginDescriptorModel;
-import org.eclipse.core.runtime.model.PluginFragmentModel;
+import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.utility.URLResourceBundle;
@@ -121,6 +109,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 						urls.add(new URL(urlString));
 						if (urlString.startsWith("platform:/plugin/")) { //$NON-NLS-1$
 							// Special, need to get the fragments too.
+							// TODO Need to change this to use OSGi API when it is stable.
 							int begPluginName = "platform:/plugin/".length(); //$NON-NLS-1$
 							int endPluginName = urlString.indexOf('/', begPluginName);
 							String pluginName = urlString.substring(begPluginName, endPluginName);
@@ -130,12 +119,24 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 							IPluginRegistry registry = Platform.getPluginRegistry();
 							IPluginDescriptor desc = (vid == null || vid.equals("")) ? registry.getPluginDescriptor(pid) : registry.getPluginDescriptor(pid, new PluginVersionIdentifier(vid)); //$NON-NLS-1$
 							if (desc != null) {
-								PluginFragmentModel[] fragments = ((PluginDescriptorModel) desc).getFragments();
-								// See if there are any fragments
-								if (fragments != null)
-									for (int j = 0; j < fragments.length; j++) {
-										urls.add(new URL("platform:/fragment/" + fragments[j].toString() + rest)); //$NON-NLS-1$
-									}
+								// The plugin descriptor can't get the fragments directly. We will go to the 
+								// plugin, from there get the bundle, and ask it. (This will only work with legacy plugins. OSGi plugins do not show in list).
+								try {
+									Bundle[] fragments = desc.getPlugin().getBundle().getFragments();
+									// See if there are any fragments
+									if (fragments != null)
+										for (int j = 0; j < fragments.length; j++) {
+											try {
+												URL u = fragments[j].getEntry(rest);
+												if (u != null)
+													urls.add(u); //$NON-NLS-1$
+											} catch (Exception e) {
+												// Had problems with the file. Just skip it.
+											}
+										}
+								} catch (CoreException e) {
+									// Do nothing. Probably won't occur.
+								}
 							}
 						}
 					} catch (MalformedURLException e) {

@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
@@ -171,7 +172,7 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 			IBuffer buf= cu.getBuffer();
 			String originalContent= buf.getText(range.getOffset(), range.getLength());
 			// TODO Temporary
-			String formattedContent= CodeFormatterUtil.format(CodeFormatter.K_COMPILATION_UNIT, originalContent, indent, null, lineDelimiter, null); 
+			String formattedContent= CodeFormatterUtil.format(CodeFormatter.K_COMPILATION_UNIT, originalContent, indent, (int[]) null, lineDelimiter, (Map)null); 
 			                                                                        
 			buf.replace(range.getOffset(), range.getLength(), formattedContent);
 			

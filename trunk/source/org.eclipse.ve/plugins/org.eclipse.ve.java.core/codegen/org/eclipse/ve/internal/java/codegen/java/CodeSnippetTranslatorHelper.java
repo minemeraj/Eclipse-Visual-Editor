@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslatorHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
  */
 
 import java.util.*;
@@ -407,7 +407,7 @@ private static String getAMDHandle(AbstractMethodDeclaration method, String enti
  * Return the complete source of the passed in node, 
  * including the ';' which seperates expressions.
  */
-public static String getCompleteSource(String content, AstNode node){
+public static String getCompleteSource(String content, ASTNode node){
 	if(node instanceof FieldDeclaration){
 		FieldDeclaration field = (FieldDeclaration) node;
 		return content.substring(field.declarationSourceStart, field.declarationSourceEnd+1);

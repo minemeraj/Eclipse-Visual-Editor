@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventCallBackExpressionVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import org.eclipse.jdt.internal.compiler.ast.AstNode;
+import org.eclipse.jdt.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -31,7 +31,7 @@ CodeCallBackRef				fExpression  ;
 BeanPart					fBean ;
 
 public EventCallBackExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model) {
-	super((AstNode)stmt,model,null) ;	
+	super((ASTNode)stmt,model,null) ;	
 	fMethod = mref ;
 	fBean = b ;
 	fExpression = new CodeCallBackRef (stmt,fMethod) ;
