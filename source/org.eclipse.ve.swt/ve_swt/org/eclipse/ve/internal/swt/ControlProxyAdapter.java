@@ -10,12 +10,14 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -23,9 +25,9 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.RectangleJavaClassCellEditor;
 
 public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
 	
@@ -35,9 +37,10 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public IMethodProxy environmentFreeFormHostMethodProxy;
 	protected CompositeProxyAdapter parentProxyAdapter;
 	protected EReference sf_layoutData;
-
+	protected EStructuralFeature  sfComponentBounds;
+	
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
-		super(domain);				
+		super(domain);	
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sf_layoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
@@ -318,6 +321,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			}
 			
 		}
+		if (newTarget != null) {
+			sfComponentBounds = JavaInstantiation.getSFeature((IJavaObjectInstance) newTarget, SWTConstants.SF_CONTROL_BOUNDS);
+		}
 	}
 
 	public void setParentProxyHost(CompositeProxyAdapter adapter) {
@@ -338,4 +344,55 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			super.canceled(sf, oldValue, position);
 		}
 	}
+	
+	protected void applied(EStructuralFeature as, Object newValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return; // Nothing to apply to yet or could not construct.
+		if (as == sfComponentBounds)
+			appliedBounds(as, newValue, position); // Handle bounds
+		else 
+			super.applied(as, newValue, position); // We letting the settings go through
+	}
+	protected void appliedBounds(final EStructuralFeature as, Object newValue, int position) {
+		IRectangleBeanProxy rect = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) newValue);
+		if (rect != null
+			&& (rect.getWidth() == -1 || rect.getHeight() == -1 || (rect.getX() == Integer.MIN_VALUE && rect.getY() == Integer.MIN_VALUE))) {
+				Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+				
+				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
+				JavaHelpers primInt = Utilities.getJavaClass("int", rset);
+				IJavaInstance inst = (IJavaInstance)  BeanUtilities.createJavaObject("int",rset,String.valueOf(-1));
+				IIntegerBeanProxy defval =  (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(inst);
+				
+				IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
+				IJavaObjectInstance composite = getParentComposite(control);
+				if (NullLayoutEditPolicy.adjustForPreferredSizeAndPosition(getBeanProxy(), composite, bounds, 15, 5, defval, defval)) {
+				String initString = RectangleJavaClassCellEditor.getJavaInitializationString(bounds,SWTConstants.RECTANGLE_CLASS_NAME);
+				final IJavaInstance rectBean = BeanUtilities.createJavaObject(SWTConstants.RECTANGLE_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString);//$NON-NLS-1$
+				Display.getDefault().asyncExec(new Runnable() {
+					/**
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run() {
+						// We may not be within the context of a change control, so we need to get a controller to handle the change.
+						IModelChangeController controller =
+							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+						controller.run(new Runnable() {
+							public void run() {
+								// Set the constraints on the component bean.  This will change the size of the component
+								// Because we will be called back with notify and apply the constraints rectangle to the live bean
+								//
+								// Note: Need to use RuledCommandBuilder.
+								RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
+								cbld.applyAttributeSetting((EObject) target, as, rectBean);
+								cbld.getCommand().execute();
+							}
+						}, true);
+					}
+				});
+				return; // Let the notify back from the set here do the actual apply. 
+			}
+		}
+		super.applied(as, newValue, position);
+		}
 }
