@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 import java.util.Iterator;
@@ -228,7 +228,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
     }
     
     
-    protected IJavaInstance createProperyInstance(String initString, EClassifier argType) throws CodeGenException {
+    protected IJavaInstance createPropertyInstance(String initString, EClassifier argType) throws CodeGenException {
     	IJavaInstance result ;
     	if (initString != null) {
 			EFactory fact = argType.getEPackage().getEFactoryInstance();
@@ -276,7 +276,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
         }
 
 		try {
-			fPropInstance = createProperyInstance(fInitString, argType) ;
+			fPropInstance = createPropertyInstance(fInitString, argType) ;
 			if (fInitString == null)
 			   fInitString = NULL_STRING ;
 		}

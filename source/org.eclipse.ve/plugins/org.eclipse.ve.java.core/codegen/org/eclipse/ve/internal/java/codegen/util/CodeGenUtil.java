@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 
@@ -27,32 +27,34 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.internal.compiler.ast.Expression;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cdm.*;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.*;
+
+import org.eclipse.ve.internal.jcm.MemberContainer;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
-import org.eclipse.ve.internal.jcm.MemberContainer;
-
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 /**
@@ -541,9 +543,11 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 
 public static String getInitString(IJavaInstance javaInstance) {
 	JavaAllocation alloc = javaInstance.getAllocation();
-	if (alloc != null)
-		return alloc.getAllocString();
-	else {
+	if (alloc instanceof InitStringAllocation)
+		return ((InitStringAllocation) alloc).getInitString();
+	else if (alloc instanceof ParseTreeAllocation) {
+		return ((ParseTreeAllocation) alloc).getExpression().toString();	// TODO For now the Expression.toString() will give us an init string.
+	} else {
 		// There is none, so let's create the default ctor (only valid for classes)
 		// Return construct with default ctor when not explicitly set.
 		JavaHelpers jc = javaInstance.getJavaType();

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyDomain.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
@@ -25,11 +25,27 @@ public interface IBeanProxyDomain {
 	
 	/**
 	 * Return the proxy factory registry to be used for this domain.
+	 * 
+	 * @return Proxy factory registry.
+	 * 
+	 * @since 1.0.0
 	 */
 	public ProxyFactoryRegistry getProxyFactoryRegistry();
 	
 	/**
 	 * Return the CDE EditDomain for this proxy domain.
+	 * 
+	 * @return The edit domain.
+	 * 
+	 * @since 1.0.0
 	 */
 	public EditDomain getEditDomain();
+	
+	/**
+	 * The allocation processor for this domain.
+	 * @return The allocation processor.
+	 * 
+	 * @since 1.0.0
+	 */
+	public IAllocationProcesser getAllocationProcesser();
 }

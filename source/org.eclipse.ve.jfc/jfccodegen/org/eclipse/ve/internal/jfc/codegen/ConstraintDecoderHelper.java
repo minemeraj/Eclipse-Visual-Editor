@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-19 22:50:31 $ 
  */
 
 
@@ -49,7 +49,7 @@ public ConstraintDecoderHelper(BeanPart bean, Statement exp,  IJavaFeatureMapper
  * Add a Rectangle constraint on a target object - for none free formed objects
  * Constraints should hold x, y, width, and height, in that order.
  */
-public static void addRactangleFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
+public static void addRectangleFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
   if (args.length != 4) throw new RuntimeException ("Invalid Args") ;  //$NON-NLS-1$
   
   IJavaInstance value = CodeGenUtil.createInstance(RECTANGLE_CLASS,cm) ;	 //$NON-NLS-1$
@@ -95,7 +95,7 @@ protected boolean	addConstraintFeature() throws CodeGenException {
    		   fConstraints = new int[4] ;
    		   for (int i=0; i<4; i++) 
    		     fConstraints[i] = Integer.parseInt(((MessageSend)fExpr).arguments[i].toString()) ;
-               addRactangleFeatureValue(fbeanPart.getInitMethod().getCompMethod(),
+               addRectangleFeatureValue(fbeanPart.getInitMethod().getCompMethod(),
    		                       fbeanPart.getEObject(),
    		                       fConstraints,
    		                       fFmapper.getFeature(null),   		                       

@@ -11,19 +11,36 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
 public class BeanUtilities {
+	
+	/**
+	 * Create the object for the qualified class name.  The resourceSet is used only for reflection to look
+	 * for the class, and the object returned is not added to any resource set - the caller must do that if required
+	 * The class can be qualified class, e.g. java.lang.String
+	 * The java object has not been added to a resource set, however the calls of this method
+	 * may want to create a BeanProxyHost adaptor for it.  This is done as part of this method
+	 * because if not then it cannot occur because no adaptor factory can be found
+	 */
+	public static IJavaInstance createJavaObject(
+			String qualifiedClassName,
+			ResourceSet aResourceSet,
+			String initString) {
+		return createJavaObject(JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, aResourceSet), aResourceSet, initString != null ? InstantiationFactory.eINSTANCE.createInitStringAllocation(initString) : null);
+	}
+	
 	/**
 	 * Create the object for the qualified class name.  The resourceSet is used only for reflection to look
 	 * for the class, and the object returned is not added to any resource set - the caller must do that if required
@@ -35,8 +52,8 @@ public class BeanUtilities {
 	public static IJavaInstance createJavaObject(
 		String qualifiedClassName,
 		ResourceSet aResourceSet,
-		String javaInitializationString) {
-		return createJavaObject(JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, aResourceSet), aResourceSet, javaInitializationString);
+		JavaAllocation allocation) {
+		return createJavaObject(JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, aResourceSet), aResourceSet, allocation);
 	}
 
 	/**
@@ -45,14 +62,24 @@ public class BeanUtilities {
 	 * any resource, then the resource set must be supplied.
 	 */
 	public static IJavaInstance createJavaObject(
+			JavaHelpers javaHelpers,
+			ResourceSet aResourceSet,
+			String initString) {
+		return createJavaObject(javaHelpers, aResourceSet, initString != null ? InstantiationFactory.eINSTANCE.createInitStringAllocation(initString) : null);
+	}
+	
+	/**
+	 * Create a java object given the class. If the resourceset is null, then it won't have
+	 * the beanproxyhost created. However, if a beanproxy host is needed before this gets set into
+	 * any resource, then the resource set must be supplied.
+	 */
+	public static IJavaInstance createJavaObject(
 		JavaHelpers javaHelpers,
 		ResourceSet aResourceSet,
-		String javaInitializationString) {
+		JavaAllocation allocation) {
 		IJavaInstance result = null;
 		result = (IJavaInstance) javaHelpers.getEPackage().getEFactoryInstance().create(javaHelpers);
-		if (javaInitializationString != null) {
-			result.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(javaInitializationString));
-		}
+		result.setAllocation(allocation);
 
 		if (aResourceSet != null) {
 			// This method call on BeanProxyUtilities creates an adaptor in the argument resource set
