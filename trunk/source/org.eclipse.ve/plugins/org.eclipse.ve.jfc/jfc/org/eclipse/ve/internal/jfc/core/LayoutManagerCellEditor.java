@@ -11,23 +11,22 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.java.JavaClass;
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.IJavaCellEditor;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
-import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 /**

@@ -21,7 +21,6 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.core.GridBagConstraint;
 
 public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	public static final String copyright = "(c) Copyright IBM Corporation 2002."; //$NON-NLS-1$

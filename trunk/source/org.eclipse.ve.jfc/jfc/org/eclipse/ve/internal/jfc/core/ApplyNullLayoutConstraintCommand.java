@@ -11,16 +11,15 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyNullLayoutConstraintCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:18:02 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.DimensionJavaClassCellEditor;
-import org.eclipse.ve.internal.java.visual.NullLayoutConstraintCommand;
+import org.eclipse.ve.internal.java.visual.*;
  
 /**
  * Command to apply the Null Layout constraint(s) for AWT components
@@ -38,9 +37,9 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 	 */
 	protected IJavaInstance createLocationInstance(int x, int y) {
 		return BeanUtilities.createJavaObject(
-			"java.awt.Point", //$NON-NLS-1$
+			JFCConstants.POINT_CLASS_NAME,
 			rset,
-			PointJavaClassCellEditor.getJavaInitializationString(x, y, "java.awt.Point"));
+			PointJavaClassCellEditor.getJavaInitializationString(x, y, JFCConstants.POINT_CLASS_NAME));
 	}	
 	/**
 	 * Return the size for java.awt.Dimension
@@ -49,7 +48,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			JFCConstants.DIMENSION_CLASS_NAME,
 			rset,
-			DimensionJavaClassCellEditor.getJavaInitializationString(width, height));						
+			DimensionJavaClassCellEditor.getJavaInitializationString(width, height, JFCConstants.DIMENSION_CLASS_NAME));						
 	}
 	/**
 	 * Return the bounds for java.awt.Rectangle

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -27,17 +27,6 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 	public FrameConstructorProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
-	
-	/*
-	 * The initString for Dialog and Window can be "new java.awt.Dialog(new java.awt.Frame());
-	 * and it can also be "new java.awt.Dialog(this)" if the composition is a Frame subclass
-	 * Whatever the string is right now just use the default constructor
-	 * In theory the InitStringParser should be able to cope with "new java.awt.Dialog(new java.awt.Frame())"
-	 * but it can't
-	 */
-	protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String initString) throws ThrowableProxy {
-		return defaultInstantiate(targetClass);
-	}	
 
 	protected IBeanProxy defaultInstantiate(IBeanTypeProxy typeClass) throws ThrowableProxy {
 		// See whether or not there is a null constuctor - this is in case of subclassing

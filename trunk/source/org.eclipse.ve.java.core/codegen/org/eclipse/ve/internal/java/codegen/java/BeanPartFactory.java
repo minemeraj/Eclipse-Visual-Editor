@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.*;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
@@ -845,12 +846,8 @@ public static void updateInstanceInitString(BeanPart bp) {
     CodeExpressionRef exp = getInstanceInitializationExpr(bp) ;
     if (exp != null) {
         Statement e = exp.getExpression() ;
-        if (e instanceof Assignment) {
-            obj.setInitializationString(CodeGenUtil.getResolvedInitString(e, bp.getModel())) ;
-        }
-        else if (e instanceof LocalDeclaration) {
-            obj.setInitializationString (CodeGenUtil.getResolvedInitString(e, bp.getModel())) ;
-        }            
+        if (e instanceof Assignment || e instanceof LocalDeclaration)
+            obj.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(CodeGenUtil.getResolvedInitString(e, bp.getModel())));
     }
 }
 

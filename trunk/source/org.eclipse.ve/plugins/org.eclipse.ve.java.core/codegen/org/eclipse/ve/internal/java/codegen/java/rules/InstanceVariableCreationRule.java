@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -140,23 +140,6 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		Annotation a = CodeGenUtil.getAnnotation(obj);
 		if (a != null) {
 			nameEntry = name = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-		}
-
-		if (name == null) {
-			try {
-				// Try to get the name attribute, first
-				// Do not lowCase first letter !!!
-				EStructuralFeature sf = obj.eClass().getEStructuralFeature("name"); //$NON-NLS-1$
-				if (sf != null) {
-					Object o = obj.eGet(sf);
-					if (o instanceof String)
-						name = (String) o;
-					else if (o instanceof IJavaObjectInstance)
-						name = ((IJavaObjectInstance) o).getInitializationString();
-				}
-			} catch (Throwable e) {
-				//  JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-			}
 		}
 
 		if (name == null) {

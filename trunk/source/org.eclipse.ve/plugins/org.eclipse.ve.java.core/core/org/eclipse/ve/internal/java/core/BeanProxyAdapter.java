@@ -11,32 +11,36 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
-import java.text.MessageFormat;
 import java.util.*;
 
+import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.*;
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.internal.java.TypeKind;
+import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.java.core.IAllocationAdapter.AllocationException;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.jem.internal.java.TypeKind;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.*;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
@@ -94,17 +98,11 @@ public BeanProxyAdapter(IBeanProxyDomain domain) {
 	this.domain = domain;
 }
 
-private final static List instantiationFeatures =
-	Arrays.asList(
-		new Object[] {
-			JavaInstantiation.INITSTRING,
-			JavaInstantiation.INSTANTIATEUSING,
-			JavaInstantiation.SERIALIZEDATA });
 /*
  * Is this an instantiation feature.
  */
 protected boolean isInstantiationFeature(EStructuralFeature sf) {
-	return instantiationFeatures.contains(sf.getName());
+	return JavaInstantiation.ALLOCATION.equals(sf.getName());
 }
 /**
  * applied: A setting has been applied to the mof object,
@@ -183,6 +181,34 @@ protected void appliedList(EStructuralFeature sf, List newValues, int position, 
 	}
 }
 
+/*
+ * Get the registered Adapter, but different in that if eo not in a resource, then
+ * use registered factories from the resource that this BeanProxyAdapter is in. 
+ * 
+ * @param eo Object to adapt
+ * @param adapterType Type to adapt too
+ * @return The adapter, or <code>null</code> if not found.
+ * 
+ * @since 1.0.0
+ */
+protected Adapter getRegisteredAdapter(EObject eo, Object adapterType) {
+	Adapter a = EcoreUtil.getExistingAdapter(eo, adapterType);
+	if (a == null) {
+		Resource res = eo.eResource();
+		ResourceSet rset = res != null ? res.getResourceSet() : null;
+		if (rset == null) {
+			res = getEObject().eResource();
+			rset = res != null ? res.getResourceSet() : null;	// Try the guy we are in, if one.
+			if (rset == null)
+				rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
+		}
+		AdapterFactory f = EcoreUtil.getAdapterFactory(rset.getAdapterFactories(), adapterType);
+		if (f != null)
+			a = f.adaptNew(eo, adapterType);
+	}
+	return a;
+}
+
 protected void applied(EStructuralFeature sf , Object newValue , int position){
 	if (isBeanProxyInstantiated()) {
 		if (!inInstantiation() && isInstantiationFeature(sf)) {
@@ -208,17 +234,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 				IJavaInstance javaValue = (IJavaInstance)newValue;
 				IBeanProxyHost settingBean = null;
 				if (javaValue != null) {
-					if (javaValue.isPrimitive()) {
-						settingBean = (IBeanProxyHost) EcoreUtil.getExistingAdapter(javaValue, IBeanProxyHost.BEAN_PROXY_TYPE);
-						if ( settingBean == null) {
-							// Primitive beans that are created through initializationStrings, e.g. <awt:Frame visible="true"/>
-							// are not in a resource set and don't have an adapter factory so use a helper that tries
-							// to adapt the java instance using the resource set of our target							
-							settingBean = BeanProxyUtilities.getBeanProxyHost(javaValue,getEObject().eResource().getResourceSet());
-						}
-					} else {
-						settingBean = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter((EObject) javaValue, IBeanProxyHost.BEAN_PROXY_TYPE);
-					}
+					settingBean = (IBeanProxyHost) getRegisteredAdapter(javaValue, IBeanProxyHost.BEAN_PROXY_TYPE);
 				}
 				// Let the attribute apply the setting. We have to make sure the setting
 				// is instantiated since we are applying to an instantiated object			
@@ -232,19 +248,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 						getOriginalSettingsTable().put(sf, origValue);
 					}
 					if (settingBean != null) {
-						if (javaValue.isPrimitive() || !((IJavaObjectInstance) javaValue).isImplicit()) {
-							// Either a primitive or bean is not an implicit one, so we need to instantiate and apply it.
-							settingBean.instantiateBeanProxy();
-						} else {
-							// Bean is an implicit one, so all we do is instantiate, if needed, we the get current queried
-							// value.
-							if (!settingBean.isBeanProxyInstantiated()) {
-								// Get the bean proxy by querying the current value from the java bean using the read method
-								// and then set it into the settingBean
-								IBeanProxy valueFromGetMethod = getBeanProxyValue(sf, propertyDecorator, featureDecor);
-								settingBean.instantiateBeanProxy(valueFromGetMethod);
-							}
-						}
+						settingBean.instantiateBeanProxy();
 					}					
 					// Apply the value by firing a set method
 					if (settingBean != null && settingBean.getErrorStatus() == ERROR_SEVERE)
@@ -645,21 +649,13 @@ protected void finalize() throws Throwable {
 }
 /**
  * Get the attribute value from the bean.
- *
- * NOTE: Any implementers of this method must
- * set the implicit property to true on any IBean that
- * it returns. This is a required function for the VCE
- * to work correctly.
  */
 public IJavaInstance getBeanPropertyValue(EStructuralFeature aBeanPropertyAttribute) {
 	// Only ask if we have a live proxy.
 	// Don't query if this is a local attribute and we are the this part.	
 	if (isBeanProxyInstantiated() && (!isThisPart() || !isAttributeLocal(aBeanPropertyAttribute))) {
 		IBeanProxy valueProxy = getInternalBeanPropertyProxyValue(aBeanPropertyAttribute);
-		IJavaInstance bean = BeanProxyUtilities.wrapperBeanProxy( valueProxy , JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain()), false );
-		if (bean != null && !bean.isPrimitive()) {
-			((IJavaObjectInstance) bean).setImplicit(true);
-		}
+		IJavaInstance bean = BeanProxyUtilities.wrapperBeanProxy( valueProxy , JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain()), false , InstantiationFactory.eINSTANCE.createImplicitAllocation(getEObject(), aBeanPropertyAttribute));
 		return bean;
 	}
 	return null;
@@ -806,140 +802,67 @@ public final synchronized IBeanProxy instantiateBeanProxy(IBeanProxy aBeanProxy)
 		}	
 	return fBeanProxy;
 }
+
 /* Perform primitive instantiation of the bean without applying any settings
  */
-protected void primInstantiateBeanProxy(){
+protected void primInstantiateBeanProxy() {
 	// First create the bean
-	IBeanTypeProxy targetClass = null;
-	fIsThis = null;	// So we re-query to find out.
-	String initializationString = null;
-	String instantiateUsing = null;
-	String serializeData = null;
+	fIsThis = null; // So we re-query to find out.
 	fInstantiationError = null; // Clear the field that holds any instantiation errors before we create it
 	if (domain.getProxyFactoryRegistry().isValid()) {
 		if (!isThisPart()) {
-			String qualifiedClassName = ((JavaClass) ((IJavaInstance)target).getJavaType()).getQualifiedNameForReflection();
-			targetClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(qualifiedClassName);
-			if (targetClass == null || targetClass.getInitializationError() != null) {
-				// The target class is invalid.
-				Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {qualifiedClassName})); //$NON-NLS-1$
-				processInstantiationError(exc);
-				JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " with initialization string=" + initializationString, MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);			
-				return;
-			}
-			// Create the bean using it's initialization string if it has one.
-			if ( ((IJavaInstance)target).isSetInitializationString() ) {
-				initializationString = ((IJavaInstance)target).getInitializationString();
-				try { 
-					fOwnsProxy = true;	// Since we created it, obviously we own it.					
-					setupBeanProxy(instantiateWithString(targetClass, initializationString));
-				} catch ( ThrowableProxy exc ) {
-					processInstantiationError(exc);
-					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " with initialization string=" + initializationString, MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-				} catch (InstantiationException exc) {
-					processInstantiationError(exc); // This error is a string we couldn't parse so it is treated as an information message
-					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " with initialization string=" + initializationString, MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-				} catch (ClassCastException exc){
-					processInstantiationError(exc);				
-					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " with initialization string=" + initializationString, MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$				
-					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);				
-				}
-			} else {
-				// Otherwise try creating the bean using Beans.instantiate(...)
-				if (  target instanceof IJavaObjectInstance && 
-					  ((IJavaObjectInstance)target).isSetInstantiateUsing() ) {
-					instantiateUsing = ((IJavaObjectInstance)target).getInstantiateUsing();
-					IStandardBeanTypeProxyFactory fact = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory();
-					IBeanTypeProxy type = fact.getBeanTypeProxy("java.beans.Beans"); //$NON-NLS-1$
-					IMethodProxy method = type.getMethodProxy("instantiate", new String [] {"java.lang.ClassLoader", "java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (getJavaObject().isSetAllocation()) {
+				JavaAllocation allocation = getJavaObject().getAllocation();
+				IAllocationAdapter allocAdapter = (IAllocationAdapter) getRegisteredAdapter(allocation, IAllocationAdapter.class);
+				if (allocAdapter != null) {
+					fOwnsProxy = true;
 					try {
-						fOwnsProxy = true;	// Since we created it, obviously we own it.						
-						setupBeanProxy(method.invoke(type, new IBeanProxy[] {null, domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(instantiateUsing)}));				
-					} catch ( ThrowableProxy exc ) {
-						processInstantiationError(exc);
-						JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " using " + instantiateUsing, MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-						JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
+						setupBeanProxy(allocAdapter.allocate(allocation, domain));
+					} catch (AllocationException e) {
+						processInstantiationError(e.getWrapperedException());
 					}
-				} else {
-					// Otherwise try creating using the XMLDecoder in archiver.jar, by calling our XMLHelper.
-					if( target instanceof IJavaObjectInstance &&
-						((IJavaObjectInstance)target).isSetSerializeData()){
-							serializeData = ((IJavaObjectInstance)target).getSerializeData();
-						IStandardBeanTypeProxyFactory fact = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory();
-						IBeanTypeProxy remoteDecoder = fact.getBeanTypeProxy("org.eclipse.ve.internal.java.remotevm.XMLHelper"); //$NON-NLS-1$
-						IBeanProxy stringProxy = domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(serializeData);
-						IMethodProxy getObjectMethod = remoteDecoder.getMethodProxy("getDecodedObject", new String[]{"java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$
-						try{
-							fOwnsProxy = true;							
-							setupBeanProxy(getObjectMethod.invoke(remoteDecoder, new IBeanProxy[]{stringProxy}));
-						}catch(Exception e){
-							processInstantiationError(e);
-							JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-							}
-					}else{
-						// otherwise just create it using the default ctor.
-						try {
-							fOwnsProxy = true;	// Since we created it, obviously we own it.							
-							setupBeanProxy(defaultInstantiate(targetClass));				
-						} catch ( ThrowableProxy exc ) {
-							processInstantiationError(exc);
-							JavaVEPlugin.log("Could not instantiate " + qualifiedClassName + " with default ctor", MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-							JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-						}
-					}
-				}
-			}	
+					return;
+				};
+			}
+			
+			// otherwise just create it using the default ctor.
+			IBeanTypeProxy targetClass = getTargetTypeProxy();
+			try {
+				fOwnsProxy = true; // Since we created it, obviously we own it.
+				setupBeanProxy(InitStringAllocationAdapter.instantiateWithString(null,targetClass));
+			} catch (AllocationException exc) {
+				processInstantiationError(exc.getWrapperedException());
+			}			
 		} else {
 			// We are a "this" part, so instantiate the super class (go up until we reach one that is not abstract) instead.
 			// Also, since the initialization string applies only to the target class, we
 			// can't have one when instantiating the superclass.
 			notInstantiatedClasses = new ArrayList(2);
-			JavaClass thisClass = (JavaClass) ((IJavaInstance)target).getJavaType();
+			JavaClass thisClass = (JavaClass) ((IJavaInstance) target).getJavaType();
 			notInstantiatedClasses.add(thisClass);
 			JavaClass superclass = thisClass.getSupertype();
 			while (superclass != null && superclass.isAbstract()) {
 				notInstantiatedClasses.add(superclass);
 				superclass = superclass.getSupertype();
 			}
+			IBeanTypeProxy targetClass = null;
 			if (superclass != null)
-				targetClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(superclass.getQualifiedNameForReflection());
-			if (targetClass == null || targetClass.getInitializationError() != null) {
-				// The target class is invalid.
-				Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {thisClass.getQualifiedName()})); //$NON-NLS-1$
-				processInstantiationError(exc);
-				JavaVEPlugin.log("Could not instantiate " + (superclass != null ? superclass.getJavaName() : thisClass.getQualifiedName()) + " with default ctor", MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);			
-				return;
-			}		
+				targetClass =
+					domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(superclass.getQualifiedNameForReflection());
+
 			try {
-				fOwnsProxy = true;	// Since we created it, obviously we own it				
-				setupBeanProxy(defaultInstantiate(targetClass));
-			} catch ( ThrowableProxy exc ) {
-				processInstantiationError(exc);
-				JavaVEPlugin.log("Could not instantiate " + superclass.getJavaName() + " with default ctor", MsgLogger.LOG_WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);
-		
+				fOwnsProxy = true; // Since we created it, obviously we own it				
+				setupBeanProxy(InitStringAllocationAdapter.instantiateWithString(null, targetClass));
+			} catch (AllocationException exc) {
+				processInstantiationError(exc.getWrapperedException());
 			}
 		}
 	}
 }
-
-/*
- * default instantiate.
- * Instantiate in the default, i.e. no initialization string, no instantiateUsing or serialized data.
- */
-protected IBeanProxy defaultInstantiate(IBeanTypeProxy targetClass) throws ThrowableProxy {
-	return targetClass.newInstance();
-}
-
-/*
- * instantiate with init string
- */
-protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String initString) throws ThrowableProxy, InstantiationException {
-	return targetClass.newInstance(initString);
+protected IBeanTypeProxy getTargetTypeProxy() {
+	String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
+	IBeanTypeProxy targetClass = domain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(qualifiedClassName);					
+	return targetClass;
 }
 
 /**
@@ -1089,9 +1012,13 @@ public List getErrors(){
 public void setOwnsProxy(boolean ownsProxy) {
 	fOwnsProxy = ownsProxy;
 }
-protected EObject getEObject(){
+protected final EObject getEObject(){
 	return (EObject)target;
 }
+
+protected final IJavaObjectInstance getJavaObject() {
+	return (IJavaObjectInstance) target;
+} 
 
 public final IBeanProxyDomain getBeanProxyDomain() {
 	return domain;

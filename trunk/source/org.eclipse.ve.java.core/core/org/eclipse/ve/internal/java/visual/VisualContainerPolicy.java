@@ -11,12 +11,10 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-02 20:48:57 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 

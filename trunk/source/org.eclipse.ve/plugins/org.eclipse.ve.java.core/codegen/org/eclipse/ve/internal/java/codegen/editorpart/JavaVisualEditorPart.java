@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-12 23:22:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -1802,6 +1802,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// Make sure that there is an AdaptorFactory for BeanProxies installed
 			beanProxyAdapterFactory = new BeanProxyAdapterFactory(proxyFactoryRegistry, editDomain);
 			rs.getAdapterFactories().add(beanProxyAdapterFactory);
+			
+			// Make sure there is an AdapterFactor for allocations. TODO See if there is a better way than this for doing allocations.
+			AllocationAdapterFactory fact = new AllocationAdapterFactory();
+			BasicAllocationAdapterFactory.registerWithFactory(fact);
+			rs.getAdapterFactories().add(fact);
 			
 			if (modelSynchronizer != null)
 				modelSynchronizer.setProject(JavaCore.create(proj));

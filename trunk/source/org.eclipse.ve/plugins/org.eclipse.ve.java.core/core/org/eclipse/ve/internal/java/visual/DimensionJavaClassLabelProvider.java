@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,13 +11,15 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DimensionJavaClassLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 /**
  * Render a dimension in a usable form, e.g. 100,100
  */

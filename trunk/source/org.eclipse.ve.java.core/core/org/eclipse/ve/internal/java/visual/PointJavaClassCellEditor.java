@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PointJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2003-12-03 10:17:52 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 
@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 /**
  * Cell Editor for Point instances
  * The actual point class itself is provided as an initialization string so the same class can be used for 

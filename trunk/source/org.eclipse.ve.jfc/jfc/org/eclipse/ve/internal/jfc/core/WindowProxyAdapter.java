@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -23,6 +23,8 @@ import org.eclipse.ve.internal.cde.core.IModelChangeController;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
+
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 /**
@@ -106,8 +108,8 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 			// with -1, and then at this point in time it would reconstruct the setting.
 			Dimension size = new Dimension(dim.getWidth(), dim.getHeight());
 			if (NullLayoutEditPolicy.adjustForPreferredSize(getBeanProxy(), size)) {
-				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height);
-				final IJavaInstance dimensionBean = BeanUtilities.createJavaObject("java.awt.Dimension", ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
+				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height, JFCConstants.DIMENSION_CLASS_NAME);
+				final IJavaInstance dimensionBean = BeanUtilities.createJavaObject(JFCConstants.DIMENSION_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString);
 				Display.getDefault().asyncExec(new Runnable() {
 					/**
 					 * @see java.lang.Runnable#run()

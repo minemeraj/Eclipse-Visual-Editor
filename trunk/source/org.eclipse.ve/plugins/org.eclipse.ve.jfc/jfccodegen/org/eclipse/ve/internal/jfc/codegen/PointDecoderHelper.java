@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 
@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.ast.MessageSend;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -54,9 +55,9 @@ protected boolean	addPointArg() throws CodeGenException {
 			for (int i = 0; i < 2; i++)
 				fpointArgs[i] = Integer.parseInt(((MessageSend) fExpr).arguments[i].toString());
 
-            IJavaObjectInstance value = (IJavaObjectInstance) CodeGenUtil.createInstance(POINT_CLASS,fOwner.getCompositionModel()) ;	 //$NON-NLS-1$
-            value.setInitializationString("new "+POINT_CLASS+"("+Integer.toString(fpointArgs[0])+    //$NON-NLS-1$ //$NON-NLS-2$
-                                                            ","+Integer.toString(fpointArgs[1])+")") ;                                 //$NON-NLS-1$ //$NON-NLS-2$
+            IJavaInstance value = CodeGenUtil.createInstance(POINT_CLASS,fOwner.getCompositionModel()) ;	 //$NON-NLS-1$
+            value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+POINT_CLASS+"("+Integer.toString(fpointArgs[0])+    //$NON-NLS-1$ //$NON-NLS-2$
+                                                            ","+Integer.toString(fpointArgs[1])+")")) ;                                 //$NON-NLS-1$ //$NON-NLS-2$
             EObject target = fbeanPart.getEObject() ;
             EStructuralFeature sf = fFmapper.getFeature(null) ;
             
@@ -134,7 +135,7 @@ protected int[]   getCompositionArgs() throws CodeGenException {
 
   IJavaObjectInstance curValue = (IJavaObjectInstance)fbeanPart.
                                  getEObject().eGet(fFmapper.getFeature(fExpr)) ;  
-  return parseArgs(curValue.getInitializationString()) ;	
+  return parseArgs(CodeGenUtil.getInitString(curValue)) ;	
 } 
 /**
  *  Create initialization arguments

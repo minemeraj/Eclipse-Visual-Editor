@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -356,7 +357,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	 * Prefix/PostFix quoates.
 	 */
 	protected void setInitString(IJavaObjectInstance obj, String val) {
-		obj.setInitializationString(BeanUtilities.createStringInitString(val));
+		obj.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(BeanUtilities.createStringInitString(val)));
 	}
 	//
 	///**

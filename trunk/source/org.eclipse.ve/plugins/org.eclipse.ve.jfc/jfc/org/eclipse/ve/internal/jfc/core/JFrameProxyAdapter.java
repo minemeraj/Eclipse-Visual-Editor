@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFrameProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +23,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
+
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 
@@ -42,7 +44,7 @@ public class JFrameProxyAdapter extends WindowProxyAdapter {
 		super(domain);
 	}
 
-	/**
+	/*
 	 * Create the bean proxy. We override because we want to set the default close operation 
 	 * such that it can't be closed from the task bar.
 	 */
@@ -82,7 +84,7 @@ public class JFrameProxyAdapter extends WindowProxyAdapter {
 			// with -1, and then at this point in time it would reconstruct the setting.
 			Dimension size = new Dimension(dim.getWidth(), dim.getHeight());
 			if (NullLayoutEditPolicy.adjustForPreferredSize(getBeanProxy(), size)) {
-				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height);
+				String initString = DimensionJavaClassCellEditor.getJavaInitializationString(size.width, size.height, JFCConstants.DIMENSION_CLASS_NAME);
 				final IJavaInstance dimensionBean = BeanUtilities.createJavaObject("java.awt.Dimension", ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
 				Display.getDefault().asyncExec(new Runnable() {
 					/**

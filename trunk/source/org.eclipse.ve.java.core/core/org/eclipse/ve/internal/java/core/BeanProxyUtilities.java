@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:10 $ 
  */
 
 import java.util.List;
@@ -23,15 +23,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.core.*;
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.java.*;
+import org.eclipse.jem.internal.java.impl.JavaClassImpl;
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.java.*;
-import org.eclipse.jem.internal.java.impl.JavaClassImpl;
-import org.eclipse.jem.internal.java.impl.JavaFactoryImpl;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.proxy.core.*;
 
 public class BeanProxyUtilities {
 
@@ -79,42 +80,42 @@ public class BeanProxyUtilities {
 	
 	/**
 	 * Return the MOF JavaClass that wrappers the argument.  Set if this host owns the proxy.
+	 * NOTE: This doesn't set the JavaAllocation. This needs to be done by caller since only caller
+	 * knows the correct allocation.
+	 * 
 	 * This requires 4 steps
 	 * 1 - Find the MOF class for the bean proxy
 	 * 2 - Instantiate the MOF class
 	 * 3 - Get the bean proxy adaptor for the instance
 	 * 4 - Give the bean proxy adaptor the bean proxy
 	 */
-	public static IJavaInstance wrapperBeanProxy(IBeanProxy aBeanProxy, ResourceSet aResourceSet, boolean ownsProxy) {
+	public static IJavaInstance wrapperBeanProxy(IBeanProxy aBeanProxy, ResourceSet aResourceSet, String initString, boolean ownsProxy) {
 
+		return wrapperBeanProxy(aBeanProxy, aResourceSet, ownsProxy, initString != null ? InstantiationFactory.eINSTANCE.createInitStringAllocation(initString) : null);
+	}
+
+	public static IJavaInstance wrapperBeanProxy(IBeanProxy aBeanProxy, ResourceSet aResourceSet, boolean ownsProxy, JavaAllocation alloc) {
 		if (aBeanProxy == null)
 			return null;
-
+		
 		// 1 - Get the mof class for this type of bean proxy.
 		JavaHelpers javaType = getJavaType(aBeanProxy, aResourceSet);
 		// The object could be a class or a primitive type
 		if (!javaType.isPrimitive()) {
 			JavaClass javaClass = (JavaClass) javaType;
-			// TODO For now, if the class can't be found, then there is nothing we can do, so we will return null. This may change when we have our error handling for unfound types."); //$NON-NLS-1$
-			//$NON-NLS-1$
+			// TODO For now, if the class can't be found, then there is nothing we can do, so we will return null. This may change when we have our error handling for unfound types."); 
 			if (javaClass.getKind() == TypeKind.UNDEFINED_LITERAL)
 				return null;
-			// 2 - The factory creates the class.
-			IJavaInstance javaInstance = (IJavaInstance) javaClass.getEPackage().getEFactoryInstance().create(javaClass);
-			// 3 - The adaptor factory should be installed so just asking for the adaptor will create it
-			IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
-			// 4 - Pass the bean proxy that we got in the argument to the proxy host
-			beanProxyHost.setBeanProxy(aBeanProxy);
-			beanProxyHost.setOwnsProxy(ownsProxy);
-			return javaInstance;
-		} else {
-			JavaDataType javaPrimType = (JavaDataType) javaType;
-			IJavaInstance javaInstance = (IJavaInstance) ((JavaFactoryImpl) javaPrimType.getEPackage().getEFactoryInstance()).createFromString(javaPrimType, null);
-			IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
-			beanProxyHost.setBeanProxy(aBeanProxy);
-			beanProxyHost.setOwnsProxy(ownsProxy);
-			return javaInstance;
 		}
+		// 2 - The factory creates the class.
+		IJavaInstance javaInstance = (IJavaInstance) javaType.getEPackage().getEFactoryInstance().create(javaType);
+		javaInstance.setAllocation(alloc);
+		// 3 - The adaptor factory should be installed so just asking for the adaptor will create it
+		IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
+		// 4 - Pass the bean proxy that we got in the argument to the proxy host
+		beanProxyHost.setBeanProxy(aBeanProxy);
+		beanProxyHost.setOwnsProxy(ownsProxy);
+		return javaInstance;
 	}
 	
 	/**
@@ -129,13 +130,23 @@ public class BeanProxyUtilities {
 	/**
 	 * In cases the bean proxy is an Object and we want to wrapper it as a primitive type,
 	 * e.g. the java.beans.PropertyEditor returns an Integer but we want an int
+	 * 
+	 * Note: This will set the allocation because the init string was passed in.
 	 */
 	public static IJavaInstance wrapperBeanProxyAsPrimitiveType(
 		IBeanProxy aBeanProxy,
 		JavaDataType aType,
 		ResourceSet aResourceSet,
 		String anInitializationString) {
+			
+		return wrapperBeanProxyAsPrimitive(aBeanProxy, aType, aResourceSet, anInitializationString != null ? InstantiationFactory.eINSTANCE.createInitStringAllocation(anInitializationString) : null);
+	}
 
+	public static IJavaInstance wrapperBeanProxyAsPrimitive(
+		IBeanProxy aBeanProxy,
+		JavaDataType aType,
+		ResourceSet aResourceSet,
+		JavaAllocation alloc) {
 		if (aBeanProxy == null)
 			return null;
 		// Integer
@@ -159,12 +170,14 @@ public class BeanProxyUtilities {
 		} else if (typeName.equals("byte")) { //$NON-NLS-1$
 			primitiveProxy = proxyFactory.createBeanProxyWith(((INumberBeanProxy) aBeanProxy).byteValue());
 		}
-		IJavaInstance javaInstance = (IJavaInstance) ((JavaFactoryImpl) aType.getEPackage().getEFactoryInstance()).createFromString(aType, anInitializationString);
+		IJavaInstance javaInstance = (IJavaInstance) aType.getEPackage().getEFactoryInstance().create(aType);
+		javaInstance.setAllocation(alloc);
 		IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
 		beanProxyHost.setBeanProxy(primitiveProxy);
 		beanProxyHost.setOwnsProxy(true);
 		return javaInstance;
 	}
+	
 	/**
 	 * This method relies on the fact that there is a bean proxy adapter factory
 	 * that we can get the proxy factory registry from

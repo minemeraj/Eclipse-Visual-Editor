@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -341,10 +341,10 @@ private String getSourceCodeArg()  {
    
    if (fAddedPart == null) {
    	  Object currentVal = fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr)) ;
-      if (currentVal == null && !(currentVal instanceof IJavaInstance))
+      if (!(currentVal instanceof IJavaInstance))
              return NULL_STRING ;
       else         
-             return boxLayoutOveride(((IJavaInstance)currentVal).getInitializationString()) ;
+             return boxLayoutOveride(CodeGenUtil.getInitString((IJavaInstance)currentVal)) ;
    }
       
    StringBuffer st = new StringBuffer() ;
@@ -415,12 +415,7 @@ public String generate(Object[] args) throws CodeGenException {
 
  
 public boolean isImplicit(Object args[]) {
-	BeanPart obj = (BeanPart) getCurrentAddedPart(args==null?null:args[0]) ;
-	
-	if (obj != null)	
-	   return ((IJavaObjectInstance)obj.getEObject()).isImplicit() ;
-	else
-	   return false ;
+return false;
 }
 
 public Object[] getArgsHandles(Statement expr) {

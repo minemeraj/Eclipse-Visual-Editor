@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -19,13 +19,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.java.JavaHelpers;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.GridBagConstraintsJavaClassLabelProvider;
 import org.eclipse.ve.internal.java.visual.*;
 
 public class GridBagLayoutPolicyFactory implements ILayoutPolicyFactory {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
  */
 
 
@@ -32,6 +32,9 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
@@ -47,6 +50,7 @@ import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
+import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -57,11 +61,6 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodeGenUtil {
 		
-
-
-private static org.eclipse.jem.internal.java.JavaHelpers _CompositionInstance=null ;
-
-
 
 /**
  *  Extract the end resulted write method or public field access.
@@ -127,21 +126,22 @@ static public String tokensToString(char tokens[][]) {
 /**
  * Create and Java Object Instance for a given type
  */
-public  static EObject  createInstance (String instanceType,ResourceSet rs) throws CodeGenException {
+public  static IJavaInstance  createInstance (String instanceType,ResourceSet rs) throws CodeGenException {
   
-  EClass iClass =  (EClass) JavaClassImpl.reflect(instanceType, rs);
-  EObject inst = (EObject) iClass.getEPackage().getEFactoryInstance().create(iClass) ;
+  JavaHelpers iClass =  JavaClassImpl.reflect(instanceType, rs);
+  IJavaInstance inst = (IJavaInstance) iClass.getEPackage().getEFactoryInstance().create(iClass) ;
   return inst ;  
 }
 
 /**
  * Create and Java Object Instance for a given type
  */
-public  static EObject  createInstance (String instanceType,IDiagramModelInstance cm) throws CodeGenException {
-  if (cm.getModelResourceSet() == null) throw new CodeGenException ("MOF is not set up") ; //$NON-NLS-1$
-JavaVEPlugin.log("CodeGenUtil.createInstance("+instanceType+")", MsgLogger.LOG_FINE) ;    //$NON-NLS-1$ //$NON-NLS-2$
+public static IJavaInstance createInstance(String instanceType, IDiagramModelInstance cm) throws CodeGenException {
+	if (cm.getModelResourceSet() == null)
+		throw new CodeGenException("MOF is not set up"); //$NON-NLS-1$
+	JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
 
-  return createInstance(instanceType,cm.getModelResourceSet()) ;  
+	return createInstance(instanceType, cm.getModelResourceSet());
 }
 
 public static EClassifier getMetaClass (String qualifiedName, IDiagramModelInstance cm) {
@@ -174,16 +174,22 @@ public static EStructuralFeature getConstraintFeature(EObject componentConstrain
 /**
  * Add a generic constraint to a target object 
  */
-public static void addConstraintString(MemberContainer pOwner, EObject target,String initVal, EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
-  
-  IJavaObjectInstance value = null ;
-  CodeGenUtil.propertyCleanup(target,sf) ;
-  if (initVal != null) {
-     value = (IJavaObjectInstance) createInstance("java.lang.String",cm) ;	 //$NON-NLS-1$
-     value.setInitializationString(initVal) ;                                
-     pOwner.getProperties().add(value) ;
-  }
-  target.eSet(sf,value);  	
+public static void addConstraintString(
+	MemberContainer pOwner,
+	EObject target,
+	String initVal,
+	EStructuralFeature sf,
+	IDiagramModelInstance cm)
+	throws Exception {
+
+	IJavaInstance value = null;
+	CodeGenUtil.propertyCleanup(target, sf);
+	if (initVal != null) {
+		value = createInstance("java.lang.String", cm); //$NON-NLS-1$
+		value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initVal));
+		pOwner.getProperties().add(value);
+	}
+	target.eSet(sf, value);
 }
 /**
  * Add a generic constraint to a target object 
@@ -502,29 +508,12 @@ public static IJavaObjectInstance getCCconstraint(EObject constraintComponent) {
 	return null;
 }
 
-/**
- *  Get an instance of a Composition class
- */
-public static org.eclipse.jem.internal.java.JavaHelpers getCompositionInstance(EObject component) {
-	// TODO  Multiple projects
-	if (_CompositionInstance != null)
-	   return _CompositionInstance ;
-	_CompositionInstance = (org.eclipse.jem.internal.java.JavaHelpers)JavaClassImpl.reflect ("com.ibm.etools.ocm.Composition",component) ;	 //$NON-NLS-1$
-	return _CompositionInstance ;
-}
-
-/**
- * Get the implicit feature
- */
-public static EStructuralFeature getImplicitFeature(EObject target) {
-   return  target.eClass().getEStructuralFeature("implicit") ;       //$NON-NLS-1$
-}
 
 /**
  * Get the initialization String Feature
  */
-public static EStructuralFeature getInitStringFeature(EObject target) {
-   return  target.eClass().getEStructuralFeature("initializationString") ;       //$NON-NLS-1$
+public static EStructuralFeature getAllocationFeature(EObject target) {
+   return  target.eClass().getEStructuralFeature("allocation") ;       //$NON-NLS-1$
 }
 
 /**
@@ -550,6 +539,21 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 	return -1;
 }
 
+public static String getInitString(IJavaInstance javaInstance) {
+	JavaAllocation alloc = javaInstance.getAllocation();
+	if (alloc != null)
+		return alloc.getAllocString();
+	else {
+		// There is none, so let's create the default ctor (only valid for classes)
+		// Return construct with default ctor when not explicitly set.
+		JavaHelpers jc = javaInstance.getJavaType();
+		if (!jc.isPrimitive()) { 
+			String qn = jc.getQualifiedName();
+			return "new " + qn + "()";
+		} else
+			return "";	// Shouldn't get here for prims. They should have an allocation.
+	}
+}
 public static String getResolvedInitString(Statement stmt, ITypeResolver resolver){
 	String resolved = null;
 	if (stmt instanceof TypeReference && resolved==null) {

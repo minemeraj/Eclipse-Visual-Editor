@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
  */
 
 import java.util.List;
@@ -25,20 +25,18 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.core.*;
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.java.JavaClass;
+import org.eclipse.jem.internal.proxy.awt.*;
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.java.vce.*;
-import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
-import org.eclipse.jem.internal.java.JavaClass;
-import org.eclipse.ve.internal.java.core.*;
-
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.awt.*;
 /** 
  * Helper class with useful methods for working with awt bean proxies
  */
@@ -108,6 +106,9 @@ public static Point getOffScreenLocation(){
 		toolbarManagerRemoveItemAction,
 		windowPackProxy;
 		
+		private IFieldProxy getBoxLayoutAxisFieldProxy;
+		private IBeanProxy boxLayoutAxis_XAXIS, jsplitpaneOrientation_HORIZONTAL;
+		
 	public static final String REGISTRY_KEY = "org.eclipse.ve.internal.jfc.core.BeanAwtUtilities"; //$NON-NLS-1$
 	
 public static BeanAwtUtilities getConstants(ProxyFactoryRegistry registry) {
@@ -119,6 +120,20 @@ public static BeanAwtUtilities getConstants(ProxyFactoryRegistry registry) {
 
 protected static BeanAwtUtilities getConstants(IBeanProxy proxy) {
 	return getConstants(proxy.getProxyFactoryRegistry());
+}
+
+public static IBeanProxy getJSplitPaneOrientationHorizontal(ProxyFactoryRegistry registry) {
+	BeanAwtUtilities constants = getConstants(registry);
+	
+	if (constants.jsplitpaneOrientation_HORIZONTAL == null) {
+		try {
+			constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane").getFieldProxy("HORIZONTAL_SPLIT").get(null);
+		} catch (ThrowableProxy e) {
+			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+		}
+	}
+	
+	return constants.jsplitpaneOrientation_HORIZONTAL;
 }
 		
 public static void invoke_invalidate(IBeanProxy aBeanProxy){
@@ -436,6 +451,35 @@ public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClass
 		return new UnknownLayout2PolicyFactory();
 	else
 		return new UnknownLayoutPolicyFactory();
+}
+
+/**
+ * Get the Axis orientation for the BoxLayout.
+ * 
+ * @param boxlayoutProxy Proxy for the BoxLayout.
+ * @return The orientation. <code>true</code> if X_AXIS.
+ * 
+ * @since 1.0.0
+ */
+public static boolean getBoxLayoutAxis(IBeanProxy boxlayoutProxy) {
+	BeanAwtUtilities constants = getConstants(boxlayoutProxy);
+	
+	if (constants.getBoxLayoutAxisFieldProxy == null) {
+		IBeanTypeProxy boxlayoutType = boxlayoutProxy.getTypeProxy();
+		constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getFieldProxy("axis");
+		try {
+			constants.getBoxLayoutAxisFieldProxy.setAccessible(true);
+			constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null);
+		} catch (Exception e) {
+			JavaVEPlugin.getPlugin().getMsgLogger().log(e);
+		}
+	}
+	try {
+		return constants.getBoxLayoutAxisFieldProxy.get(boxlayoutProxy).equals(constants.boxLayoutAxis_XAXIS);
+	} catch (ThrowableProxy e) {
+		JavaVEPlugin.getPlugin().getMsgLogger().log(e);		
+		return true;
+	}
 }
 
 /**
