@@ -472,6 +472,11 @@
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
+      <category
+            name="%Examples.category"
+            parentCategory="org.eclipse.ui.Examples"
+            id="org.eclipse.ve.java.core.examples">
+      </category>
       <wizard
             javatype="true"
             name="%visualclass"
