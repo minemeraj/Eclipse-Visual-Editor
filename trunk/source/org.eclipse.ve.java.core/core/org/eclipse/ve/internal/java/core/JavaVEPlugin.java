@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.13 $  $Date: 2004-07-09 19:26:13 $ 
+ *  $Revision: 1.14 $  $Date: 2004-08-16 17:55:23 $ 
  */
 
 import java.util.*;
@@ -30,6 +30,7 @@ import com.ibm.wtp.logger.proxyrender.EclipseLogger;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
+import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorVMController;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
@@ -269,6 +270,32 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		super.start(bc);
 		getPluginPreferences().setDefault(SHOW_EVENTS, EVENTS_BASIC);
 		VCEPreferences.initializeDefaultPluginPreferences(getPluginPreferences());
+	}
+	
+	
+	/**
+	 * Called by JavaVmController. It is public only because this class is in another package.
+	 * It is not meant to be called by any other classes, either internal or customers.
+	 * 
+	 * @param active whether java vm controller is active or not.
+	 * @since 1.0.0
+	 */
+	public void setJavaVMControllerActive(boolean active) {
+		javaVMControllerActive = active;
+	}
+	
+	/*
+	 * Is the javaVMController ever started. If so we need to shut it down when going down.
+	 */
+	private boolean javaVMControllerActive;
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(BundleContext context) throws Exception {
+		if (javaVMControllerActive)
+			JavaVisualEditorVMController.dispose();
+		super.stop(context);
 	}
 	
 	/*

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.56 $  $Date: 2004-08-10 21:04:31 $ 
+ *  $Revision: 1.57 $  $Date: 2004-08-16 17:55:23 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -79,7 +79,7 @@ import org.eclipse.ui.views.properties.*;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
@@ -107,6 +107,7 @@ import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
 import com.ibm.wtp.common.util.PerformanceMonitorUtil;
+import com.ibm.wtp.common.util.TimerTests;
 import com.ibm.wtp.emf.workbench.plugin.EMFWorkbenchPlugin;
 
 
@@ -176,8 +177,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected Object loadCompleteSync = new Object();
 	protected volatile boolean isLoadPending = true;
 	
+	private static final String JVE_STEP = "JVE"; 
+	public static final String SETUP_STEP = "Setup JVE";
+	public final static boolean DO_TIMER_TESTS = false;
+	
 	public JavaVisualEditorPart() {
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
+		if (DO_TIMER_TESTS) {
+			System.out.println("");
+			TimerTests.basicTest.testState(true);
+			TimerTests.basicTest.startStep(JVE_STEP, null);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -713,7 +723,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
  		
 		SubclassCompositionComponentsGraphicalEditPart viewerContents = new SubclassCompositionComponentsGraphicalEditPart(null);				
 		primaryViewer.setContents(viewerContents);
-		((ConnectionLayer)viewerContents.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ManhattanConnectionRouter());		
 		getSelectionSynchronizer().addViewer(primaryViewer);
 
 		openActionGroup = new OpenActionGroup(this);
@@ -780,9 +789,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				loadingFigureController.showLoadingFigure(false);
 				setReloadEnablement(true);
 				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
+				
+				if (doTimerStep)
+					TimerTests.basicTest.stopStep(JVE_STEP);
+				TimerTests.basicTest.stopStep(SETUP_STEP);
+				TimerTests.basicTest.printIt();
+				TimerTests.basicTest.clearTests();
+				TimerTests.basicTest.testState(false);
 				if (doTimerStep) {
 					doTimerStep = false;	// Done with first load, don't do it again.
-					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.
+					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.					
 				}
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
@@ -962,6 +978,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	public void dispose() {
 		try {
+			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
+			
 			boolean queuedJobDispose = setupJob != null && setupJob.getState() != Job.NONE;
 			if (queuedJobDispose) {
 				// We can't actually wait for it because we could get into a deadlock since it may
@@ -1213,134 +1231,99 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 					proxyFactoryRegistry.terminateRegistry();			
 				}
+				
+				try {
 
-				ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
-					IConfigurationContributionInfo info;
+					JavaVisualEditorVMController.RegistryResult regResult = JavaVisualEditorVMController.getRegistry(file);
 					
-					/* (non-Javadoc)
-					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
-					 */
-					public void initialize(IConfigurationContributionInfo info) {
-						this.info = info;
+					// Everything is all set up. Now let's see if we need to rebuild the palette.
+					// First run though all visible containers that implement the IVEContributor interface.
+					final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
+					for (Iterator iter = regResult.configInfo.getContainers().entrySet().iterator(); iter.hasNext();) {
+						final Map.Entry entry = (Map.Entry) iter.next();
+						if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
+							Platform.run(new ISafeRunnable() {
+								public void handleException(Throwable exception) {
+									// Default logs fro us.
+								}
+								public void run() throws Exception {
+									rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+								}
+							});
+						}
 					}
 					
-					/* (non-Javadoc)
-					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
-					 */
-					public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
-						// Add in the remote vm jar and any nls jars that is required for JBCF itself.
-						controller.contributeClasspath(JavaVEPlugin.getPlugin().getBundle(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
-					}
-					
-					/* (non-Javadoc)
-					 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
-					 */
-					public void contributeToRegistry(ProxyFactoryRegistry registry) {
-						// Call the setup method in the target VM to initialize statics
-						// and other environment variables.
-						IBeanTypeProxy aSetupBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.java.remotevm.Setup"); //$NON-NLS-1$
-						IMethodProxy setupMethodProxy = aSetupBeanTypeProxy.getMethodProxy("setup"); //$NON-NLS-1$
-						setupMethodProxy.invokeCatchThrowableExceptions(aSetupBeanTypeProxy);
-						
-						// Everything is all set up. Now let's see if we need to rebuild the palette.
-						// First run though all visible containers that implement the IVEContributor interface.
-						final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
-						for (Iterator iter = info.getContainers().entrySet().iterator(); iter.hasNext();) {
-							final Map.Entry entry = (Map.Entry) iter.next();
-							if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
-								Platform.run(new ISafeRunnable() {
-									public void handleException(Throwable exception) {
-										// Default logs fro us.
+					// Now run though visible containers ids.
+					final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
+					if (!regResult.configInfo.getContainerIds().isEmpty()) {
+						for (Iterator iter = regResult.configInfo.getContainerIds().entrySet().iterator(); iter.hasNext();) {
+							Map.Entry entry = (Map.Entry) iter.next();
+							if (((Boolean) entry.getValue()).booleanValue()) {
+								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
+								if (contributors != null) {
+									for (int i = 0; i < contributors.length; i++) {
+										final int ii = i;
+										Platform.run(new ISafeRunnable() {
+											public void handleException(Throwable exception) {
+												// Default logs exception for us.
+											}
+											public void run() throws Exception {
+												if (contributors[ii].getName().equals(PI_PALETTE)) {
+													if (defaultVE[0] == null)
+														defaultVE[0] = new DefaultVEContributor();
+													defaultVE[0].paletteContribution = contributors[ii];
+													rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+													if (contributor instanceof IVEContributor)
+														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+												}
+											}
+										});
 									}
-									public void run() throws Exception {
-										rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-									}
-								});
+								}
 							}
 						}
-						
-						// Now run though visible containers ids.
-						final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
-						if (!info.getContainerIds().isEmpty()) {
-							for (Iterator iter = info.getContainerIds().entrySet().iterator(); iter.hasNext();) {
-								Map.Entry entry = (Map.Entry) iter.next();
-								if (((Boolean) entry.getValue()).booleanValue()) {
-									final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
-									if (contributors != null) {
-										for (int i = 0; i < contributors.length; i++) {
-											final int ii = i;
-											Platform.run(new ISafeRunnable() {
-												public void handleException(Throwable exception) {
-													// Default logs exception for us.
-												}
-												public void run() throws Exception {
-													if (contributors[ii].getName().equals(PI_PALETTE)) {
-														if (defaultVE[0] == null)
-															defaultVE[0] = new DefaultVEContributor();
-														defaultVE[0].paletteContribution = contributors[ii];
-														rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-													} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+					}
+					
+					// Now run though visible plugin ids.
+					if (!regResult.configInfo.getPluginIds().isEmpty()) {
+						for (Iterator iter = regResult.configInfo.getPluginIds().entrySet().iterator(); iter.hasNext();) {
+							Map.Entry entry = (Map.Entry) iter.next();
+							if (((Boolean) entry.getValue()).booleanValue()) {
+								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
+								if (contributors != null) {
+									for (int i = 0; i < contributors.length; i++) {
+										final int ii = i;
+										Platform.run(new ISafeRunnable() {
+											public void handleException(Throwable exception) {
+												// Default logs exception for us.
+											}
+											public void run() throws Exception {
+												if (contributors[ii].getName().equals(PI_PALETTE)) {
+													if (defaultVE[0] == null)
+														defaultVE[0] = new DefaultVEContributor();
+													defaultVE[0].paletteContribution = contributors[ii];
+													rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+													try {
 														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 														if (contributor instanceof IVEContributor)
 															rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													} catch (CoreException e) {
+														JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
 													}
 												}
-											});
-										}
+											}
+										});
 									}
 								}
 							}
 						}
-						
-						// Now run though visible plugin ids.
-						if (!info.getPluginIds().isEmpty()) {
-							for (Iterator iter = info.getPluginIds().entrySet().iterator(); iter.hasNext();) {
-								Map.Entry entry = (Map.Entry) iter.next();
-								if (((Boolean) entry.getValue()).booleanValue()) {
-									final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
-									if (contributors != null) {
-										for (int i = 0; i < contributors.length; i++) {
-											final int ii = i;
-											Platform.run(new ISafeRunnable() {
-												public void handleException(Throwable exception) {
-													// Default logs exception for us.
-												}
-												public void run() throws Exception {
-													if (contributors[ii].getName().equals(PI_PALETTE)) {
-														if (defaultVE[0] == null)
-															defaultVE[0] = new DefaultVEContributor();
-														defaultVE[0].paletteContribution = contributors[ii];
-														rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-													} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
-														try {
-															Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
-															if (contributor instanceof IVEContributor)
-																rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-														} catch (CoreException e) {
-															JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
-														}
-													}
-												}
-											});
-										}
-									}
-								}
-							}
-						}
-						
 					}
-				};
-				
-				try {
-					IConfigurationContributor[] contribs = new IConfigurationContributor[] {
-							BeaninfoNature.getRuntime(file.getProject()).getConfigurationContributor(), jcmCont};
-
-					ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(file.getProject(), "VM for " + file.getName(), //$NON-NLS-1$
-							contribs, monitor);
-					registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true); // Want to maintain list of not found types so we know when those types have been added.
-
+					
 					synchronized (JavaVisualEditorPart.this) {
-						proxyFactoryRegistry = registry;
+						proxyFactoryRegistry = regResult.registry;
 						proxyFactoryRegistry.addRegistryListener(registryListener);
 						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
 					}
@@ -1365,11 +1348,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 */
 		private void startCreateProxyFactoryRegistry(IFile file) {
 			registryCreateJob = new CreateRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file); //$NON-NLS-1$
-			registryCreateJob.schedule(1L);	// Give us a moment to actually continue working before starting this.
+			registryCreateJob.schedule();
 		}
+		
 		
 		protected IStatus run(IProgressMonitor monitor) {			
 			try {
+				if (DO_TIMER_TESTS)
+					TimerTests.basicTest.testState(true);
+				TimerTests.basicTest.startStep(SETUP_STEP, TimerTests.CURRENT_PARENT_ID);
+				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 300);
 				if (!initialized) {
@@ -1416,11 +1404,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						setRootInProgressLock.release();
 					}
 				}
+			
+				TimerTests.basicTest.startStep("Load Model", TimerTests.CURRENT_PARENT_ID);				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
+				
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
+				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
+				TimerTests.basicTest.stopStep("Load Model");
 				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
@@ -1428,7 +1421,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					setLoadIsPending(false);
 					return canceled();
 				}
-				
 				dd = modelBuilder.getModelRoot();
 				if (dd != null) {
 					editDomain.setDiagramData(dd);
@@ -1446,7 +1438,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
+					TimerTests.basicTest.startStep("Join with remote vm", TimerTests.CURRENT_PARENT_ID);
 					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
+					TimerTests.basicTest.stopStep("Join with remote vm");
+					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
 					if (EcoreUtil.getExistingAdapter(
@@ -1456,7 +1451,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						CompositionProxyAdapter a =
 							new CompositionProxyAdapter();
 						dd.eAdapters().add(a);
+						
+						TimerTests.basicTest.startStep("Initiate Beans", TimerTests.CURRENT_PARENT_ID);					
 						a.initBeanProxy();
+						TimerTests.basicTest.stopStep("Initiate Beans");						
 					}
 					
 					if (!monitor.isCanceled())
