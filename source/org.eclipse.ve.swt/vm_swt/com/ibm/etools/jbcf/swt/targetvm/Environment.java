@@ -20,7 +20,12 @@ public static void initialize(){
 		public void run(){
 			display = new Display();
 			while(true){
-				display.readAndDispatch();
+				try {
+					display.readAndDispatch();
+				} catch (RuntimeException e) {
+					e.printStackTrace();
+					// We don't want this to end because of some user error. It will stay running until vm is killed.
+				}
 			}			
 		}
 	};
