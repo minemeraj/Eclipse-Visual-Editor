@@ -2,23 +2,9 @@
   xmlns:xmi="http://www.omg.org/XMI" 
   xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
   xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
-  <palette:CategoryCmp xmi:id="swtCat">
-    <categoryLabel xsi:type="utility:TranslatableString" xmi:id="string0" key="Palette.Category.SWTComponents" bundle="bundle"/>
+  <palette:CategoryCmp xmi:id="swtCat0">
+    <categoryLabel xsi:type="utility:TranslatableString" xmi:id="string0" key="Palette.Category.SWTControls" bundle="bundle"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif"
-          prototypeURI="platform:/plugin/org.eclipse.ve.swt/Shell.xmi#Shell_1">
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shell"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry3" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#Composite"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="Composite"/>
-      </cmpEntries>  
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#Group"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string8" string="Group"/>
-      </cmpEntries>  
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Button"/>
@@ -83,17 +69,41 @@
           creationClassURI="java:/org.eclipse.swt.widgets#Tree"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Tree"/>
       </cmpEntries>                                 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry12" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tabfolder_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry12obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#TabFolder"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TabFolder"/>
-      </cmpEntries>    
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry13" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/browser_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry13obj"
           creationClassURI="java:/org.eclipse.swt.browser#Browser"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Browser"/>
       </cmpEntries>                                      
     </cmpGroups>    
+  </palette:CategoryCmp>
+  <palette:CategoryCmp xmi:id="swtCat1">
+    <categoryLabel xsi:type="utility:TranslatableString" xmi:id="string0" key="Palette.Category.SWTContainers" bundle="bundle"/>
+    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/Shell.xmi#Shell_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shell"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry3" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Composite"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="Composite"/>
+      </cmpEntries>  
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Group"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string8" string="Group"/>
+      </cmpEntries>  
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry101" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/sashform_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry101obj"
+          creationClassURI="java:/org.eclipse.swt.custom#SashForm"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="SashForm"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry12" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tabfolder_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry12obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#TabFolder"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TabFolder"/>
+      </cmpEntries>    
+    </cmpGroups> 
   </palette:CategoryCmp>
   <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
     <bundleURLs>platform:/plugin/org.eclipse.ve.swt/</bundleURLs>
