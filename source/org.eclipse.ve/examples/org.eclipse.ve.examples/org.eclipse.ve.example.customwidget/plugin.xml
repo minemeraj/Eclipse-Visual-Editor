@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.eclipse.ve.example.customwidget"
-   name="Customwidget Plug-in"
+   name="Customwidget VE Example Plug-in"
    version="1.0.0"
-   provider-name=""
+   provider-name="Eclipse.org"
    class="org.eclipse.ve.example.customwidget.CustomwidgetPlugin">
 
    <runtime>
@@ -33,7 +33,6 @@
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="com.ibm.wtp.common.util"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ve.swt"/>
