@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.22 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.23 $  $Date: 2004-09-14 21:16:01 $ 
  */
 
 import java.util.*;
@@ -163,7 +163,7 @@ protected void removingAdapter() {
 /*
  * Are we in the process of instantiating the bean.
  */
-protected synchronized final boolean inInstantiation() {
+protected final boolean inInstantiation() {
 	return inInstantiation;
 }
 
