@@ -832,7 +832,7 @@ build path.&nbsp; This is done using the pop-up menu option to open the
 selecting <span style="font-weight: bold;">Java Build path ...</span>.&nbsp;
 On the build path select the <span style="font-style: italic;">Libraries
 </span>tab and <span style="font-style: italic;">Add External Jar ...</span>.&nbsp;
-Point to the location of the JAR in the plugin itself - for the example
+Point to the location of the jar in the plugin itself - for the example
 figure above this would be <span style="font-style: italic;">D:\temp\tutorial\org.eclipse.ve.example.customwidget.customwidgets.jar.</span>&nbsp;
 Having added the JAR containing the <span style="font-style: italic;">MyCustomPrompter
 </span>class you can now use it within a visual editor class.&nbsp;
@@ -1491,7 +1491,8 @@ The preferred technique for picking up inherited properties is with the
 statement <span style="font-family: monospace;"><span
  style="color: rgb(153, 0, 0);">return new</span>
 BeanInfo[]{Introspector.<span style="font-style: italic;">getBeanInfo</span>(Composite.<span
- style="color: rgb(153, 0, 0);">class</span>)</span> where the argument
+ style="color: rgb(153, 0, 0);">class</span>)}</span> where the
+argument
 to the <span style="font-style: italic; font-family: monospace;">getBeanInfo</span><span
  style="font-family: monospace;">(Class aClass) </span>method is the
 current bean's superclass.&nbsp; Rather than using <span
@@ -1499,9 +1500,11 @@ current bean's superclass.&nbsp; Rather than using <span
 point for merging inherited properties which is the immediate
 superclass of <span style="font-family: monospace;">MyCustomPrompter</span>,
 <img style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">&nbsp;
-<span style="font-family: monospace;">w</span>is used instead.&nbsp;
+<span style="font-family: monospace;">Control </span>is used
+instead.&nbsp;
 The reason for this is that while <span style="font-family: monospace;">MyCustomPrompter
-</span>extends Composite it does this more for physical reasons so it
+</span>extends <span style="font-family: monospace;">Composite </span>it
+does this more for physical reasons so it
 can have its three child controls (the <span
  style="font-family: monospace;">Label</span>, <span
  style="font-family: monospace;">Text </span>and <span
@@ -1509,7 +1512,7 @@ can have its three child controls (the <span
 custom class it itself doesn't want to inherit the behavior of <span
  style="font-family: monospace;">Composite </span>such as the ability
 to have its layout changed.&nbsp; For this reason it is logically a
-subclass of <span style="font-family: monospace;">Control</span>.<br>
+subclass of <span style="font-family: monospace;">Control.</span><br>
 <h3><a name="Testing_the_enumerated_values_for_type"></a>Testing the
 enumerated values for <span style="font-style: italic;">type</span></h3>
 <p>Having updated <span style="font-family: monospace;">MyCustomPrompterBeanInfo.java</span>
