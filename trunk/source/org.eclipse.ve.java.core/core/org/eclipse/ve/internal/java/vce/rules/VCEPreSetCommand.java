@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-23 22:03:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-29 23:44:51 $ 
  */
 
 import java.util.*;
@@ -56,9 +56,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 	
 	protected static final int 
 		PROPERTY = 0,
-		LOCAL = 1,
-		GLOBAL = 2;
-		
+		LOCAL = 1,				// Local definition
+		GLOBAL_GLOBAL = 2,		// Global definition, global initialization
+		GLOBAL_PARENT = 3;		// Global definition, initialized as part of the parent initialization
 
 	protected EditDomain domain;
 	protected EObject target;
@@ -131,21 +131,25 @@ public class VCEPreSetCommand extends CommandWrapper {
 	}
 
 	protected JCMMethod getMethod(CommandBuilder cbld, CommandBuilder memberBldr, EObject value, JCMMethod m) {
+		int settingType = settingType(value);
 		if (value.eContainer() == null) {
 			// We are not contained, we need to be in a method.
 			// Need to promote this appropriately. If we don't have a method
 			// to go into, then we need to go to global.
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.			
-			handleAnnotation(value, memberBldr);	// Need to handle annotation first.			
-			if (m == null || settingType(value) == GLOBAL)
+			handleAnnotation(value, memberBldr);	// Need to handle annotation first.
+			if (m == null || settingType == GLOBAL_GLOBAL) {
 				m = promoteGlobal(cbld, memberBldr, value);
-			else
+			} else if(settingType == GLOBAL_PARENT){
+				promoteGlobalParent(cbld,memberBldr,value,m);
+			} else {
 				m = promoteLocal(cbld, memberBldr, value, m);
+			}	
 		} else if (value.eContainmentFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
 			// We are contained by a properties, we need to be in a method.
 			// Need to promote this appropriately
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.
-			if (settingType(value) == GLOBAL)
+			if (settingType(value) == GLOBAL_GLOBAL)
 				m = promoteGlobal(cbld, memberBldr, value);
 			else
 				m = promoteLocal(cbld, memberBldr, value, (JCMMethod) value.eContainer());
@@ -153,27 +157,38 @@ public class VCEPreSetCommand extends CommandWrapper {
 			// Find the method that eventually initializes top value (i.e. Keep going until we find one that does an initializes).
 			// Walk up containment until we find a method, or we get to the top, but don't go beyond <members> containment. The
 			// one that is at <members> should have an initialize method. Where we stop we need to create an initializes.
-			EStructuralFeature members = JCMPackage.eINSTANCE.getMemberContainer_Members();				
-			EObject v = value;
-			EObject oldV = null;
-			for (; v != null; oldV = v, v = v.eContainer()) {
-				m = (JCMMethod) InverseMaintenanceAdapter.getFirstReferencedBy(v, JCMPackage.eINSTANCE.getJCMMethod_Initializes());					
-				if (m != null)
-					return m;
-				EStructuralFeature cFeature = v.eContainmentFeature();
-				if (cFeature == members || v.eContainer() instanceof BeanSubclassComposition) {
-					// This guy should of had an initialize, but didn't so we create one.
-					m = createInitMethod(cbld, v);
-					return m;
-				}  
-			}
-			
+			m = findInitializesMethod(value,cbld);
+			if(m != null) return m;
 			// We reached BeanSubclassComposition, so the top guy should of had an init method.
-			m = createInitMethod(cbld, oldV);
+//			if(settingType == GLOBAL_GLOBAL){
+//				m = createInitMethod(cbld, oldV);	// Create a method to initialize the JavaBean
 		}
 		
 		return m;
 	}
+
+	protected JCMMethod findInitializesMethod(EObject value, CommandBuilder cbld){
+		// Find the method that eventually initializes the value (i.e. Keep going until we find one that does an initializes).
+		// Walk up containment until we find a method, or we get to the top, but don't go beyond <members> containment. The
+		// one that is at <members> should have an initialize method. Where we stop we need to create an initializes.
+		EStructuralFeature members = JCMPackage.eINSTANCE.getMemberContainer_Members();				
+		EObject v = value;
+		EObject oldV = null;
+		JCMMethod initMethod = null;
+		for (; v != null; oldV = v, v = v.eContainer()) {
+			initMethod = (JCMMethod) InverseMaintenanceAdapter.getFirstReferencedBy(v, JCMPackage.eINSTANCE.getJCMMethod_Initializes());					
+			if (initMethod != null)
+				return initMethod;
+			EStructuralFeature cFeature = v.eContainmentFeature();
+			if (cFeature == members || v.eContainer() instanceof BeanSubclassComposition) {
+				// This guy should of had an initialize, but didn't so we create one.
+				initMethod = createInitMethod(cbld, v);
+				return initMethod;
+			}  
+		}
+		return initMethod;
+	}
+
 	
 	/*
 	 * Promote to global, assumption is that not already contained by a non-<properties> relationship AND not already
@@ -192,6 +207,18 @@ public class VCEPreSetCommand extends CommandWrapper {
 	protected JCMMethod promoteLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		memberBldr.applyAttributeSetting(method, JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
+		return method;
+	}
+
+	/*
+	 * Promote to local, assumption is that not already contained by a non-<properties> relationship AND not already
+	 * have initializes and return set for it.
+	 */	
+	protected JCMMethod promoteGlobalParent(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+		// The initializes method is from the argument
+		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
+		// The member is added to the composition
+		memberBldr.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
 		return method;
 	}
 
@@ -235,14 +262,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Answer setting type, PROERTY/LOCAL/GLOBAL
 	 */
 	protected int settingType(EObject property) {
-		// For now hard-coded. Non-awt components are to be properties.
-//		if (classJLabel.isInstance(property))
-//			return LOCAL;
-//		else 
 		if (classAWTComponent.isInstance(property))
-			return GLOBAL;
+			return GLOBAL_GLOBAL;				// Hard code AWT components to be global and globally initialized (in their own getJavaBean() method)
 		else if (classSWTControl != null && classSWTControl.isInstance(property))
-			return GLOBAL;
+			return GLOBAL_PARENT;				// Hard code SWT controls to be globally declared and initialized in their parent method
 		else
 			return PROPERTY;
 	}
@@ -309,11 +332,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 		}
 		
 		if (!hadChildren && !containment && value.eContainer() == null) {
-			int promoteType = m != null ? settingType(value) : GLOBAL;	// no current JCMMethod, then can only be global. 
+			int promoteType = m != null ? settingType(value) : GLOBAL_GLOBAL;	// no current JCMMethod, then can only be global. 
 			// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
 			handleAnnotation(value, cbld);	// Need to handle annotation first.			
 			switch (promoteType) {
-				case GLOBAL:
+				case GLOBAL_GLOBAL:
 					promoteGlobal(cbld, cbld, value);
 					break;
 				case LOCAL:
