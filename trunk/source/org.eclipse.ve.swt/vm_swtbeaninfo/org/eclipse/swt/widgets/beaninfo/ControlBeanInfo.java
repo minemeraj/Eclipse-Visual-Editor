@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-07 14:57:10 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -31,7 +31,7 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		"SWEET_STYLEBITS",
 	    new Object[] [] {
-			{ "border" ,  new Object[] {
+			{ "border" , "border" , Boolean.FALSE , new Object[] {
 			    "BORDER" , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				
 			} } 
 		}

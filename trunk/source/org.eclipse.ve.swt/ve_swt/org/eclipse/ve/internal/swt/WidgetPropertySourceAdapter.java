@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-07 16:45:58 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-09 00:07:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -24,8 +24,11 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySheetEntry;
+
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
+import org.eclipse.jem.internal.beaninfo.impl.BeanDecoratorImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringEvaluationException;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
@@ -42,6 +45,8 @@ import com.ibm.wtp.logger.proxyrender.EclipseLogger;
  */
 public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	
+	private static String[] EXPERT_FILTER_FLAGS = new String[] {IPropertySheetEntry.FILTER_ID_EXPERT};	
+	
 	class StyleBitPropertyID{
 		String propertyName;
 		public Integer[] bitValues;
@@ -53,14 +58,18 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	
 	public class StyleBitPropertyDescriptor extends EToolsPropertyDescriptor{
 		String fPropertyName;
+		String fDisplayName;
 		String[] fNames;
 		String[] fInitStrings;
 		Integer[] fValues;
+		boolean fIsExpert;
 		private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always		
-		public StyleBitPropertyDescriptor(String propertyName, String[] names, String[] initStrings, Integer[] values){
+		public StyleBitPropertyDescriptor(String propertyName, String displayName , boolean isExpert ,  String[] names, String[] initStrings, Integer[] values){
 			super(new StyleBitPropertyID(propertyName,values),propertyName);
 			fPropertyName = propertyName;
 			fNames = names;
+			fDisplayName = displayName;
+			fIsExpert = isExpert;
 			fInitStrings = initStrings;
 			fValues = values; 
 		}
@@ -73,6 +82,12 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			}
 			return labelProvider;
 		}
+		public String[] getFilterFlags() {
+			return fIsExpert ? EXPERT_FILTER_FLAGS : null;
+		}
+		public String getDisplayName() {
+			return fDisplayName;
+		}
 	};
 	
 public IPropertyDescriptor[] getPropertyDescriptors() {
@@ -82,30 +97,15 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	for (int i = 0; i < propertyDescriptors.length; i++) {
 		descriptorsList.add(propertyDescriptors[i]);
 	}
-	mergeAllStyleBits(descriptorsList);
+	mergeStyleBits(descriptorsList,((EObject)getTarget()).eClass());
 	IPropertyDescriptor[] resultArray = new IPropertyDescriptor[descriptorsList.size()];
 	descriptorsList.toArray(resultArray);
 	return resultArray;
 	
 }
+
 /**
- * Collects style bits including inheritance
- * @param propertyDescriptors list into which the property descriptors are added for the constructor style bits
- * 
- * @since 1.0.0
- */
-protected void mergeAllStyleBits(List propertyDescriptors){
-	
-	JavaClass eClass = (JavaClass) ((EObject)getTarget()).eClass();
-	// Iterate around the class and its superclasses until we get to java.lang.Object (which has no style bits)
-	while(!(eClass != null && eClass.getQualifiedName().equals("java.lang.Object"))){
-		mergeStyleBits(propertyDescriptors,eClass);		
-		eClass = eClass.getSupertype();
-	}
-	
-}
-/**
- * Collects the local style bits 
+ * Collects the style bits, creates property descriptors for them, and adds them to the argument 
  * @param propertyDescriptors list into which new property descriptors are added for the constructor style bits
  * 
  * @since 1.0.0
@@ -114,27 +114,32 @@ protected void mergeStyleBits(List propertyDescriptors, EClass eClass){
 
 	BeanDecorator beanDecor = Utilities.getBeanDecorator(eClass);
 	Map styleDetails = beanDecor.getStyleDetails();
+	while(styleDetails.size() == 0){
+		eClass = ((JavaClass)eClass).getSupertype();
+		if(eClass == null) return;
+		beanDecor = Utilities.getBeanDecorator(eClass);
+		styleDetails = beanDecor.getStyleDetails();		
+	}
+	
 	Iterator sweetProperties = styleDetails.keySet().iterator();
 	while(sweetProperties.hasNext()){
-		// The properties are an array with three elements.  The first is a String[] of names, the second is a String[] of iitializationStrings
+		// The properties are instances of BeanDecoratorImpl.Sweet
 		// and the third is an Integer[] of actual values
 		String propertyName = (String)sweetProperties.next();
-		Object[] sweetValues = (Object[]) styleDetails.get(propertyName);
-		String[] names = (String[])sweetValues[0];
-		String[] initStrings = (String[])sweetValues[1];	
-		Integer[] values = (Integer[])sweetValues[2];
+		BeanDecoratorImpl.SweetStyleBits styleBits = (BeanDecoratorImpl.SweetStyleBits) styleDetails.get(propertyName);
+		String[] names = styleBits.fNames;
+		String[] initStrings = styleBits.fInitStrings;	
+		Integer[] values = styleBits.fValues;
 		
 		// If there is just one value then change this to be ON and add another one with OFF
 		// The propertyName is also changed to be the first name
-		// This is for style bits like SWT.BORDER that become called "BORDER" with "ON" and "OFF";
+		// This is for style bits like SWT.BORDER that become called "border" with "BORDER" and "UNSET";
 		if(names.length == 1){
-			propertyName = names[0];
-			names = new String[] { "true" , "false" };
+			names = new String[] { names[0] , "UNSET" };
 			initStrings = new String[] { initStrings[0] , "" };
 			values = new Integer[] { values[0] , new Integer(-1) };
 		}
-		 
-		IPropertyDescriptor property = new StyleBitPropertyDescriptor(propertyName,names,initStrings,values);
+		IPropertyDescriptor property = new StyleBitPropertyDescriptor(propertyName,styleBits.fDisplayName,styleBits.fIsExpert,names,initStrings,values);
 		propertyDescriptors.add(property);		
 	}
 
@@ -180,7 +185,11 @@ public void setPropertyValue(Object feature, Object val) {
 	if(feature instanceof EStructuralFeature) {
 		super.setPropertyValue(feature,val);
 	} else {
-		// TODO - Figure out how to change the JavaAllocation and do style bit magic
+		// The tree for creating the example is
+		// PTClassInstanceCreation
+		// 2 arguments>
+		// 		First is PTInstanceReference to the parent container
+		// 		Second is PTNumberLiteral with the token of the style bits
 	}
 }
 }
