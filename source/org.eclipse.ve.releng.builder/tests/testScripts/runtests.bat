@@ -35,7 +35,7 @@ REM Install Eclipse and org.eclipse.test plugin
 REM
 REM ****************************************************************
 
-unzip -qq -o eclipse-SDK-*.zip
+unzip -qq -o eclipse-SDK*.zip
 unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test*
 
 
