@@ -64,28 +64,34 @@
 		<antcall target="publish" />
 	</target>
 
-	<target name="buildAll" depends="init,buildSDK,buildRuntime,buildSDKJEM,buildRuntimeJEM,buildExamples,buildTests">
+	<target name="buildAll" depends="init,buildPerfCore,buildSDK,buildRuntime,buildSDKJEM,buildRuntimeJEM,buildExamples,buildTests">
 	</target>
 	
-	<target name="buildSDK" depends="init">
+	<target name="buildPerfCore" depends="init">
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="perfcore" />
+		</ant>	
+	</target>
+	
+	<target name="buildSDK" depends="init,buildPerfCore">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
 		</ant>	
 	</target>
 
-	<target name="buildRuntime" depends="init">
+	<target name="buildRuntime" depends="init,buildPerfCore">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="runtime" />
 		</ant>	
 	</target>
 	
-	<target name="buildSDKJEM" depends="init">
+	<target name="buildSDKJEM" depends="init,buildPerfCore">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdkJEM" />
 		</ant>	
 	</target>
 
-	<target name="buildRuntimeJEM" depends="init">
+	<target name="buildRuntimeJEM" depends="init,buildPerfCore">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="runtimeJEM" />
 		</ant>	
