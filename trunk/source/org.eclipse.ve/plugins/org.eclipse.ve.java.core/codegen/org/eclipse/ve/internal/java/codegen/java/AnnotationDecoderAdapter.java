@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-05 03:38:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-06 21:50:40 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -271,6 +271,13 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 						if(	methodName.startsWith("get") &&
 								methodName.indexOf(varNameLower)==3 &&
 								methodName.length()==varNameLower.length()+3){
+									
+									try {
+										cu.reconcile(); // force JDT to refresh, since with incorrect source ranges, refactoring will misplace code 
+									} catch (JavaModelException e1) {
+										JavaVEPlugin.log(e1, Level.FINE);
+									}
+									
 									boolean previousRefactoringSaveEditors = RefactoringPreferences.getSaveAllEditors();
 									RefactoringPreferences.setSaveAllEditors(true);
 									try {
