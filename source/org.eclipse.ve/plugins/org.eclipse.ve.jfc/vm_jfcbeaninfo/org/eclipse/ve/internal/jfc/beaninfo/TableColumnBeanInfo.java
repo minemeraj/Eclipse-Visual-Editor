@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:33 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-24 20:11:25 $ 
  */
 
 import java.beans.*;
@@ -385,8 +385,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"headerValue", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, TableColumnMessages.getString("headerValue.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("headerValue.Desc"), //$NON-NLS-1$
-	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	BOUND, Boolean.TRUE	      	
 	    		}
 	    	),	    	
 	    	// identifier
