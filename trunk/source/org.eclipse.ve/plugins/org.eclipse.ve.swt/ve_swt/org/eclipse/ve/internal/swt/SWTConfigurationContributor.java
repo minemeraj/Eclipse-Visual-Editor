@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-03-11 22:40:15 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-01 19:48:03 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.net.URL;
@@ -43,6 +43,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	
 	
 	protected IJavaProject javaProject;
+	protected IConfigurationContributionInfo fConfigContributionInfo;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
@@ -50,6 +51,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public void initialize(IConfigurationContributionInfo info) {
 		super.initialize(info);
 		this.javaProject = info.getJavaProject();
+		this.fConfigContributionInfo = info;
 	}
 	
 	/*
@@ -182,6 +184,8 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
 		// TODO the problem with this here is that it is hard-coded REM stuff. Need a better way to do this.
 		SWTREMProxyRegistration.initialize(registry);	// Set the registry up with SWT REM stuff.
+		// TODO add check here to only call this if this project has the correct JFace jars in its classpath
+		JFaceColorProxyRegistration.initialize(registry); // Prime the JFace ColorRegistry in remote VM
 		
 		// [70275] Need a marker if VM is less than 1.4.2 because of a bug with beaninfo.
 		if (javaProject != null) {
