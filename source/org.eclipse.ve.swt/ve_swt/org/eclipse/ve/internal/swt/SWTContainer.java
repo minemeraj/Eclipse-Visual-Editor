@@ -43,20 +43,30 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				fClasspathEntries = new IClasspathEntry[swtLibraries.length];
 			}
 			
-			int i;
-			for (i = 0; i < swtLibraries.length; i++) {
+			int ci = 0;
+			for (int i = 0; i < swtLibraries.length; i++) {
 				Path path = new Path(swtLibraries[i][1]);
-				URL location = Platform.find(Platform.getBundle(swtLibraries[i][0]), path);
-				path = new Path(Platform.resolve(location).getFile());
-				fClasspathEntries[i] = JavaCore.newLibraryEntry(path, null, null);	
+				URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(swtLibraries[i][0]), path);
+				if (locSrc[0] == null)
+					continue;
+				path = new Path(Platform.resolve(locSrc[0]).getFile());
+				Path srcPath = null;
+				if (locSrc[1] != null)
+					srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
+				fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);	
 			}
 			
 			if (isJFace) {
 				for (int j = 0; j < jfaceLibraries.length; j++) {
 					Path path = new Path(jfaceLibraries[j][1]);
-					URL location = Platform.find(Platform.getBundle(jfaceLibraries[j][0]), path);
-					path = new Path(Platform.resolve(location).getFile());
-					fClasspathEntries[j + i] = JavaCore.newLibraryEntry(path, null, null);
+					URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(jfaceLibraries[j][0]), path);
+					if (locSrc[0] == null)
+						continue;
+					path = new Path(Platform.resolve(locSrc[0]).getFile());
+					Path srcPath = null;
+					if (locSrc[1] != null)
+						srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
+					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
 				}
 			}
 		} catch (IOException e) {
