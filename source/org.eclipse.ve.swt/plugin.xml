@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.eclipse.ve.swt"
-   name="Visual Editor Swt Plug-in"
+   name="%pluginName"
    version="1.0.0"
-   provider-name=""
+   provider-name="%providerName"
    class="org.eclipse.ve.internal.swt.SwtPlugin">
 
    <runtime>
@@ -41,7 +41,7 @@
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
-            name="Standard Widget Toolkit (SWT)"
+            name="%classContainerPageName"
             class="org.eclipse.ve.internal.swt.SWTContainerWizardPage"
             id="org.eclipse.ve.internal.swt.swtcontainerwizardpage">
       </classpathContainerPage>
