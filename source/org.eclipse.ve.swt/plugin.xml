@@ -238,5 +238,11 @@
          </description>
       </wizard>
    </extension>
+  <extension
+        id="buildpath"
+        name="%buildpath"
+        point="org.eclipse.core.resources.markers">
+     <super type="org.eclipse.core.resources.problemmarker"/>
+  </extension>
 
 </plugin>
