@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.31 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.32 $  $Date: 2004-05-11 20:50:54 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -193,7 +193,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		fieldEnds = new int[fields.length] ;
 		if(pureSourceFields.size()>0){
 			int count = 0 ;
-			for (Iterator iter = pureSourceFields.iterator(); iter.hasNext();) {
+			for (Iterator iter = pureSourceFields.iterator(); iter.hasNext(); count++) {
 				IField field = (IField) iter.next();
 				fieldHandles[count] = field.getHandleIdentifier() ;
 				ISourceRange sr = field.getSourceRange() ;
