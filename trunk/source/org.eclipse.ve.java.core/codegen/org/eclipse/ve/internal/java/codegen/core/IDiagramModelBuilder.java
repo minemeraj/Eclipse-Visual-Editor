@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-17 13:46:40 $ 
  */
 
 
@@ -116,6 +116,11 @@ public interface IDiagramModelBuilder  {
     }    
     public void addIBuilderListener(IBuilderListener l);
     public void removeIBuilderListener(IBuilderListener l);
+    
+    /**
+     * @deprecated
+     */
+    public void pauseRoundTripping(boolean flag);
     
     
     
