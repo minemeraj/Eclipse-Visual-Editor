@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-23 20:26:41 $ 
  */
 
 import java.util.*;
@@ -292,7 +292,26 @@ public class AnnotationPolicy
 				setupModelListener((GenericAnnotationLinkagePolicy) domain.getAnnotationLinkagePolicy());
 		}
 
+		/**
+		 * Annotation has been changed for the model being listened to.
+		 * 
+		 * @param eventType
+		 * @param oldAnnotation
+		 * @param newAnnotation
+		 * 
+		 * @since 1.0.0
+		 */
 		public abstract void notifyAnnotation(int eventType, Annotation oldAnnotation, Annotation newAnnotation);
+		
+		/**
+		 * An annotation setting has been changed. If the notification is for a KeyedValues, then it will be broken up
+		 * into individual notifications, one for each keyedvalue (if there were more than one) so that it can be treated
+		 * as each being an individual notification.
+		 * 
+		 * @param msg
+		 * 
+		 * @since 1.0.0
+		 */
 		public abstract void notifyAnnotationChanges(Notification msg);
 
 		/**
@@ -363,12 +382,24 @@ public class AnnotationPolicy
 						if (msg.getEventType() == Notification.REMOVING_ADAPTER)
 							removeAnnotationAdapter(); // My adapter is being removed from the annotation, so remove listening
 						else {
-							notifyAnnotationChanges(msg); // Pass the changes on
+							processAnnotationChanges(msg); // Pass the changes on
 						}
 					}
 				};
 				annotation.eAdapters().add(annotationAdapter);
 			}
+		}
+		
+		private void processAnnotationChanges(Notification msg) {
+			Notification[] keyedMsgs = KeyedValueNotificationHelper.notifyChanged(msg);
+			if (keyedMsgs == null)
+				notifyAnnotationChanges(msg);	// Not a keyed value.
+			else {
+				for (int i = 0; i < keyedMsgs.length; i++) {
+					notifyAnnotationChanges(keyedMsgs[i]);
+				}
+			}
+				
 		}
 
 		private void removeAnnotationAdapter() {

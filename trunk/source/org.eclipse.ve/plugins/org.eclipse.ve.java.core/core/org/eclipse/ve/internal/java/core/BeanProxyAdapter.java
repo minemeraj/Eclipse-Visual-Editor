@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-01 21:35:50 $ 
+ *  $Revision: 1.14 $  $Date: 2004-04-23 20:26:43 $ 
  */
 
 import java.util.*;
@@ -472,7 +472,7 @@ protected void clearError(EStructuralFeature sf, Object object) {
 }
 		
 protected boolean isValidFeature(EStructuralFeature aSF){
-	return keyedErrors.get(aSF) == null;
+	return !keyedErrors.containsKey(aSF);
 }
 
 protected boolean isValidFeature(EStructuralFeature sf, Object object) {

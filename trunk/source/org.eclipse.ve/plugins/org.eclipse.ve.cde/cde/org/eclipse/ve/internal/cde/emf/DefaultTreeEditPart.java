@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-23 20:26:41 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -45,7 +45,13 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 				EditDomain.getEditDomain(this),
 				new DefaultLabelProviderNotifier.IDefaultLabelProviderListener() {
 			public void refreshLabel(ILabelProvider provider) {
-				DefaultTreeEditPart.this.refreshVisuals();
+				CDEUtilities.displayExec(DefaultTreeEditPart.this, new Runnable() {
+
+					public void run() {
+						if (isActive())
+							DefaultTreeEditPart.this.refreshVisuals();
+					}
+				});
 			}
 		}, provider);
 		refreshVisuals(); // Because refreshVisuals is usually called BEFORE activation.
