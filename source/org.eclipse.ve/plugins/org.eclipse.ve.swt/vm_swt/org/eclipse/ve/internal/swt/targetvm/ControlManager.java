@@ -31,6 +31,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 		IMAGE_COLOR_MASKS = 6;
 	
 	protected Control fControl;
+	protected Composite fParentComposite;	
 	protected IVMServer fServer;
 	protected int fCallbackID;	
 
@@ -41,6 +42,18 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	
 	protected boolean isValidControl(Control control) {
 		return control != null && !control.isDisposed();
+	}
+	
+	public void setParentComposite(final Composite aComposite){
+		final boolean[] queue = new boolean[1];
+		Environment.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				fParentComposite = aComposite;
+				queue[0] = true;	
+			}
+		});
+		if (queue[0])
+			queueRefresh();
 	}
 	
 	public void setControl(final Control aControl) {
@@ -130,10 +143,18 @@ public abstract class ControlManager implements ICallback , ControlListener {
 				public void run() {
 					if (isValidControl(fControl)) {
 						bounds[0] = fControl.getBounds();
-						if (fControl.getParent() != null) {
-							Point parentClientOrigin = getClientOrigin(fControl.getParent());
+						for(Composite parent = fControl.getParent(); parent!=null; parent = parent.getParent()){
+							Point parentClientOrigin = getClientOrigin(parent);
 							bounds[0].x += parentClientOrigin.x;
 							bounds[0].y += parentClientOrigin.y;
+							if(!isValidControl(fParentComposite) || parent.equals(fParentComposite))
+								break;
+							else{ 
+								// If there are multiple parents in between we need to add their offsets
+								Point parentLoc = parent.getLocation();
+								bounds[0].x += parentLoc==null?0:parentLoc.x;
+								bounds[0].y += parentLoc==null?0:parentLoc.y;
+							}
 						}
 					}
 				}

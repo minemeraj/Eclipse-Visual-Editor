@@ -47,6 +47,7 @@ public class ControlManager implements ICallback {
 	protected VisualComponentSupport vcSupport = new VisualComponentSupport();
 	protected IBeanProxy fControlManagerProxy;
 	protected IBeanProxy fControlBeanProxy;
+	protected IBeanProxy fControlParentBeanProxy;
 	protected int fWidth, fHeight, fX, fY;	
 	
 	class DataCollector{
@@ -133,9 +134,43 @@ public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
 	}
 }
 
+public void setControlParentBeanProxy(IBeanProxy aParentBeanProxy){
+
+	// Deregister any listening from the previous non null control bean proxy
+	if ( fControlParentBeanProxy != null ) {
+		invoke_setParentControlManager(fControlManagerProxy, null);			
+	}
+		
+	fControlParentBeanProxy = aParentBeanProxy;
+	
+	if ( fControlParentBeanProxy != null ) {
+ 		try {
+			if (fControlManagerProxy == null) {
+				// Get a new instance of a control manager proxy on the target VM				
+				IBeanTypeProxy componentManagerType = null;
+				if(Platform.OS_WIN32.equals(Platform.getOS()))
+					componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.win32.Win32ControlManager"); //$NON-NLS-1$
+				else if(Platform.WS_GTK.equals(Platform.getWS()))
+					componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.GTKControlManager"); //$NON-NLS-1$
+				fControlManagerProxy = componentManagerType.newInstance();
+				// Register a callback link between the target VM and us so that we get called back by it
+				// when the control moves or is resized
+				aParentBeanProxy.getProxyFactoryRegistry().getCallbackRegistry().registerCallback(fControlManagerProxy,this);
+			}
+			invoke_setParentControlManager(fControlManagerProxy, fControlParentBeanProxy);	
+		} catch (ThrowableProxy e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
+	}
+}
+
 private void invoke_setControlManager(IBeanProxy controlManagerProxy, IBeanProxy controlBeanProxy) {
 	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setControl","org.eclipse.swt.widgets.Control");
 	setControlMethodProxy.invokeCatchThrowableExceptions(controlManagerProxy, controlBeanProxy);
+}
+private void invoke_setParentControlManager(IBeanProxy controlManagerProxy, IBeanProxy controlParentBeanProxy) {
+	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setParentComposite","org.eclipse.swt.widgets.Composite");
+	setControlMethodProxy.invokeCatchThrowableExceptions(controlManagerProxy, controlParentBeanProxy);
 }
 
 public Object calledBack(int msgID, IBeanProxy parm){
