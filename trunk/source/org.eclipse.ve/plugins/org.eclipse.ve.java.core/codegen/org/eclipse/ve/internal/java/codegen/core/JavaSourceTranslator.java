@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.28 $  $Date: 2004-04-12 13:35:38 $ 
+ *  $Revision: 1.29 $  $Date: 2004-04-15 19:42:12 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1020,9 +1020,6 @@ public synchronized void dispose() {
 		fSrcSync = null ;
 		// The following is a hack until CodeGen uses the EditDomain.		
 		CodeGenUtil.clearCache()  ;
-		PropertyFeatureMapper.clearCache() ;
-		InstanceVariableCreationRule.clearCache() ;
-		InstanceVariableRule.clearCache() ;
 	}
     
     disconnect(true) ;
@@ -1192,6 +1189,9 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
  * @return Returns the fbusy.
  */
 public synchronized boolean isBusy() {
-	return fSrcSync.getLockMgr().isGUIReadonly();
+	if (fSrcSync!=null)
+	    return fSrcSync.getLockMgr().isGUIReadonly();
+	else
+		return true;
 }
 }

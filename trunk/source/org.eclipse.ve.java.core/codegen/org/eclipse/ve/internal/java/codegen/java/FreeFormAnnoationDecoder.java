@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-02 19:46:32 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-15 19:42:20 $ 
  */
 import java.util.logging.Level;
 
@@ -65,10 +65,12 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
         }
         return fContent ;
     }
+        
     
     protected boolean decode(String src) {
          if (src== null)  {
              // No Free Form Information
+         	 clearAnnotation();
              return true ;
           }
     	  String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
