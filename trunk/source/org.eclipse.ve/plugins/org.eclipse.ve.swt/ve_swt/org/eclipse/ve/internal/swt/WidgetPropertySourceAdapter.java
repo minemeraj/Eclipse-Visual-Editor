@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.20 $ $Date: 2005-02-15 23:51:48 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.21 $ $Date: 2005-02-17 12:39:12 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -320,7 +320,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 					for (int j = 0, index = 0; j < triplicateArray.length; j+=3, ++index) {
 						names[index] = (String) triplicateArray[j];
 						initStrings[index] = (String) triplicateArray[j+1];
-						values[index] = (Integer) triplicateArray[j+2];
+						values[index] =  new Integer( ((Number)triplicateArray[j+2]).intValue());
 					}
 					styleDetails[i] = new SweetStyleBits(propertyName, displayName, expert, names, initStrings, values);
 				}
