@@ -9,22 +9,20 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.editorpart;
+
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.7 $  $Date: 2004-10-12 22:28:41 $ 
  */
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -40,46 +38,55 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
 import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import org.eclipse.ve.internal.propertysheet.ISourcedPropertyDescriptor;
+import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 /**
  * ObjectActionDelegate for the RenameJavaAction.
  */
 public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate {
+
 	/**
 	 * The Rename prompt dialog.
 	 */
 	private static class RenameDialog extends TitleAreaDialog {
-		
+
 		protected String initialName;
+
 		protected EObject field;
+
 		protected IInstanceVariableCreationRule rule;
+
 		protected IType type;
+
 		protected IBeanDeclModel bdm;
+
 		protected String finalName;
 
 		public RenameDialog(Shell parentShell, String initialName, EditPart ep) {
 			super(parentShell);
 			this.initialName = initialName;
-			
-		field = (EObject) ep.getModel();
-		BeanDecoderAdapter beanDecoderAdapter =
-			(BeanDecoderAdapter) EcoreUtil.getExistingAdapter(
-				field,
-				ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-		bdm = beanDecoderAdapter.getBeanPart().getModel();
-		type = CodeGenUtil.getMainType(bdm.getWorkingCopyProvider().getWorkingCopy(true));
-		EditDomain domain = EditDomain.getEditDomain(ep);
-		rule = (IInstanceVariableCreationRule) domain.getRuleRegistry().getRule(IInstanceVariableCreationRule.RULE_ID);
-			
+
+			field = (EObject) ep.getModel();
+			BeanDecoderAdapter beanDecoderAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(field,
+					ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+			bdm = beanDecoderAdapter.getBeanPart().getModel();
+			type = CodeGenUtil.getMainType(bdm.getWorkingCopyProvider().getWorkingCopy(true));
+			EditDomain domain = EditDomain.getEditDomain(ep);
+			rule = (IInstanceVariableCreationRule) domain.getRuleRegistry().getRule(IInstanceVariableCreationRule.RULE_ID);
+
 		}
 
 		/**
@@ -104,11 +111,14 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 		}
 
 		protected Image titleImage;
+
 		protected Text input;
+
 		/**
 		 * Creates and configures this dialog's main composite.
 		 * 
-		 * @param parentComposite parent's composite
+		 * @param parentComposite
+		 *            parent's composite
 		 * @return this dialog's main composite
 		 */
 		private Composite createComposite(Composite parentComposite) {
@@ -123,35 +133,36 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 			contents.setLayout(layout);
 			contents.setFont(parentComposite.getFont());
 			contents.setLayoutData(new GridData(GridData.FILL_BOTH));
-			
+
 			input = new Text(contents, SWT.LEFT | SWT.BORDER);
 			input.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			input.setText(initialName);
-			
+
 			final Label label = new Label(contents, SWT.LEFT);
 			final MessageFormat format = new MessageFormat(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.FieldNaming.Desc")); //$NON-NLS-1$
-			label.setText(format.format(new Object[] {initialName}));
+			label.setText(format.format(new Object[] { initialName}));
 			label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			
+
 			input.addModifyListener(new ModifyListener() {
+
 				/**
 				 * @see org.eclipse.swt.events.ModifyListener#modifyText(ModifyEvent)
 				 */
 				public void modifyText(ModifyEvent e) {
 					String text = input.getText();
-					setErrorMessage(null);					
+					setErrorMessage(null);
 					if (text.equals(initialName)) {
-						label.setText(format.format(new Object[] {initialName}));						
+						label.setText(format.format(new Object[] { initialName}));
 						getButton(IDialogConstants.OK_ID).setEnabled(false);
 					} else {
 						IStatus validation = JavaConventions.validateFieldName(text);
 						if (validation.isOK()) {
 							finalName = rule.getValidInstanceVariableName(field, text, type, bdm);
-							label.setText(format.format(new Object[] {finalName}));
+							label.setText(format.format(new Object[] { finalName}));
 							getButton(IDialogConstants.OK_ID).setEnabled(true);
 						} else {
 							setErrorMessage(validation.getMessage());
-							getButton(IDialogConstants.OK_ID).setEnabled(false);							
+							getButton(IDialogConstants.OK_ID).setEnabled(false);
 						}
 					}
 				}
@@ -161,15 +172,14 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 			titleImage = JavaPluginImages.DESC_WIZBAN_REFACTOR_FIELD.createImage(parentComposite.getDisplay());
 			setTitleImage(titleImage);
 			setMessage(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.Message")); //$NON-NLS-1$
-			
+
 			input.setFocus();
 			return contents;
 		}
-		
+
 		public String getFinalName() {
 			return finalName;
 		}
-		
 
 		/**
 		 * @see org.eclipse.jface.window.Window#close()
@@ -177,7 +187,7 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 		public boolean close() {
 			if (titleImage != null)
 				titleImage.dispose();
-				
+
 			return super.close();
 		}
 
@@ -190,8 +200,9 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 		}
 
 	}
-	
+
 	IWorkbenchPart targetPart;
+
 	/**
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
@@ -203,39 +214,31 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		EObject model = (EObject) selectedEP.getModel();
-		BeanDecoderAdapter bda  =
-			(BeanDecoderAdapter) EcoreUtil.getExistingAdapter(model, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);		
-		IJavaElement field = (IJavaElement) bda.getAdapter(IJavaElement.class);
-		if (field == null)
-			return;	// It has disappeared between popup and selection. Slight possibility of a race condition can cause this.
-		RenameDialog dialog = new RenameDialog(targetPart.getSite().getShell(), field.getElementName(), selectedEP);
-		if (dialog.open() == Window.OK) {
-			try {
-				RenameSupport rename =
-					RenameSupport.create(
-						(IField) field,
-						dialog.getFinalName(),
-						RenameSupport.UPDATE_GETTER_METHOD
-							| RenameSupport.UPDATE_REFERENCES
-							| RenameSupport.UPDATE_SETTER_METHOD
-							| RenameSupport.UPDATE_TEXTUAL_MATCHES);
-				rename.perform(
-					targetPart.getSite().getShell(),
-					targetPart.getSite().getWorkbenchWindow());
-				
-			} catch (CoreException e) {
-				JavaVEPlugin.log(e);
-			} catch (InterruptedException e) {
-			} catch (InvocationTargetException e) {
-				JavaVEPlugin.log(e.getTargetException());
+		IPropertySource modelPS = (IPropertySource) selectedEP.getAdapter(IPropertySource.class);
+		if (modelPS == null)
+			return; // Not valid for some reason.
+		EditDomain editDomain = EditDomain.getEditDomain(selectedEP);
+		IPropertyDescriptor[] descrs = modelPS.getPropertyDescriptors();
+		IPropertyDescriptor nameDesc = null;
+		for (int i = 0; i < descrs.length; i++) {
+			if (descrs[i].getId() == NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY) {
+				nameDesc = descrs[i];
+				break;
 			}
 		}
+		if (!(nameDesc instanceof ICommandPropertyDescriptor && nameDesc instanceof ISourcedPropertyDescriptor))
+			return; // Not a valid descriptor, or no descriptor, so no name.
 
-		
+		RenameDialog dialog = new RenameDialog(targetPart.getSite().getShell(), (String) ((ISourcedPropertyDescriptor) nameDesc).getValue(modelPS),
+				selectedEP);
+		if (dialog.open() == Window.OK) {
+			// Now need to apply it.
+			editDomain.getCommandStack().execute(((ICommandPropertyDescriptor) nameDesc).setValue(modelPS, dialog.getFinalName()));
+		}
 	}
-	
+
 	protected EditPart selectedEP;
+
 	private static final Object STILL_FLUSHING_KEY = new Object();
 
 	/**
@@ -246,7 +249,7 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 		// Test to see if action is enabled, if it is, that means we've already passed the enablesFor test.
 		if (!action.isEnabled())
 			return;
-			
+
 		selectedEP = null;
 		if (!(selection instanceof IStructuredSelection))
 			action.setEnabled(false);
@@ -254,10 +257,9 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 			IStructuredSelection ss = (IStructuredSelection) selection;
 			selectedEP = (EditPart) ss.getFirstElement();
 			EObject model = (EObject) selectedEP.getModel();
-			BeanDecoderAdapter bda  =
-				(BeanDecoderAdapter) EcoreUtil.getExistingAdapter(model, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+			BeanDecoderAdapter bda = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(model, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 			action.setEnabled(bda != null && bda.getAdapter(IJavaElement.class) != null);
-			
+
 			// TODO KLUDGE,KLUDGE!! We can't allow another rename to occur until the previous one has flushed
 			// through the system and reload has been done. To prevent that we need to get a flag out of the
 			// edit domain and see if it is still there. If it is, then we can't be enabled because the reload
