@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.util.*;
@@ -30,7 +30,7 @@ import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -44,7 +44,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	String fInitMethod = null;
 	boolean fInitMethodSet = false;
 
-	protected List getUtilityClasses(IDiagramModelInstance di) {
+	protected List getUtilityClasses(IVEModelInstance di) {
 		if (utilityRS != null && utilityRS.equals(di.getModelResourceSet()))
 			return utilityClasses;
 
@@ -62,7 +62,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		}
 		return utilityClasses;	
 	}
-	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
 		if (isUtilityVariable(field.getType(), resolver, di))
@@ -71,7 +71,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
 	}
 	
-	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IDiagramModelInstance di) {
+	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
 		if (isUtilityVariable(stmt.getType(), resolver, di))
@@ -81,7 +81,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	}
 	
 	
-	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
 
 		
 		try {
@@ -135,7 +135,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isUtilityVariable(Type tp, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean isUtilityVariable(Type tp, ITypeResolver resolver, IVEModelInstance di) {
 
 		// This will also clear the internalsCache
 		List utilClasses = getUtilityClasses(di);

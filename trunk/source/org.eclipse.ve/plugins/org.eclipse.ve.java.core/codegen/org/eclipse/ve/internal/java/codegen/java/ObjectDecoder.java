@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 
@@ -25,7 +25,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -37,7 +37,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class ObjectDecoder extends AbstractExpressionDecoder {
      
 
-public ObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+public ObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:30 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-16 20:55:59 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -143,7 +143,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	 *  
 	 *  
 	 */
-	public String getInstanceVariableName(EObject obj, IType currentType, IDiagramModelInstance cm, IBeanDeclModel bdm) {
+	public String getInstanceVariableName(EObject obj, IType currentType, IVEModelInstance cm, IBeanDeclModel bdm) {
 
 		String name = null;
 		String nameEntry = null;
@@ -218,7 +218,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	 * Should an instance Variable be declared, or a local one ?
 	 * @return true if local declaration, false if instance variable
 	 */
-	public boolean isLocalDecleration(EObject obj, IType currentType, IDiagramModelInstance cm) {
+	public boolean isLocalDecleration(EObject obj, IType currentType, IVEModelInstance cm) {
 		if (isInternalType(obj, obj.eResource().getResourceSet()))
 			return true;
 		else
@@ -228,7 +228,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	/**
 	 * Is a uniqe method required to initialize this bean
 	 */
-	public boolean isGenerateAMethod(EObject obj, IType currentType, IDiagramModelInstance cm) {
+	public boolean isGenerateAMethod(EObject obj, IType currentType, IVEModelInstance cm) {
 		if (isLocalDecleration(obj, currentType, cm))
 			return false;
 		// At this time default is always to generate a method

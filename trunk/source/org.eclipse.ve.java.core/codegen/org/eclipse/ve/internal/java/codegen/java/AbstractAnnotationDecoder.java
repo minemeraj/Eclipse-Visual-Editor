@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cdm.*;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -32,7 +32,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     
     IBeanDeclModel fModel = null ;
-    IDiagramModelInstance fCompositionModel = null ;
+    IVEModelInstance fCompositionModel = null ;
     BeanPart       fBeanpart = null ;
     
     String         fAnnotationKey = null ;
@@ -76,14 +76,14 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     /*
      * @see IAnnotationDecoder#setCompositionModel(IDiagramModelInstance)
      */
-    public void setCompositionModel(IDiagramModelInstance cm) {
+    public void setCompositionModel(IVEModelInstance cm) {
         fCompositionModel = cm ;
     }
 
     /*
      * @see IAnnotationDecoder#getCompositionModel()
      */
-    public IDiagramModelInstance getCompositionModel() {
+    public IVEModelInstance getCompositionModel() {
         return fCompositionModel ;
     }
 

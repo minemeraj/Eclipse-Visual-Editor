@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.AbstractFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
@@ -35,7 +35,7 @@ public class ComponentDecoder extends JFCObjectDecoder {
  *  A JComponent (may be changing to Component) Decoder will also deal with constraints ...
  *  May need to augment it with other features in the future
  */
-public ComponentDecoder (CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+public ComponentDecoder (CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IInstanceVariableRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 
@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.ve.internal.cde.rules.IRule;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 
 
@@ -31,7 +31,7 @@ static String RULE_ID = "ruleInstanceVariable" ;	 //$NON-NLS-1$
 /**
  * Give the parser a hint if an instance variable is to be ignored.
  */
-public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) ;
+public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) ;
 /**
  * Forces the parser to consider the returned method as the initialization method.
  * 

@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-05 19:36:51 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-16 20:56:10 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.java.* ;
  
@@ -34,7 +34,7 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	protected final static String[] writeMethodPrefix = { ADD_METHOD_PREFIX, AllocationFeatureMapper.NEW };
 	public final static String[] structuralFeatures = { ADD_METHOD_SF_NAME, AllocationFeatureMapper.ALLOCATION_FEATURE }; //$NON-NLS-1$
 	
-	public CompositeDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+	public CompositeDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 		super(expr, model, cm, part, structuralFeatures, writeMethodPrefix);
 	}
 

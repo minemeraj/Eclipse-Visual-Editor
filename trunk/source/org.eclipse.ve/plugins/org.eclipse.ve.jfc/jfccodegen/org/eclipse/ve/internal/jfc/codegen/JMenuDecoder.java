@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
@@ -40,7 +40,7 @@ public class JMenuDecoder extends AbstractCompositionalDecoder {
 	 *  May need to augment it with other features in the future
 	 */
 
-	public JMenuDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+	public JMenuDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 		super(expr, model, cm, part, structuralFeatures, writeMethods);
 	}
 

@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.PropertyEvent;
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 public class PropertyEventDecoder implements IPropertyEventDecoder {
 	
 	List    				fListeners = new ArrayList() ;
-	IDiagramModelInstance 	fDiagramModel = null ;
+	IVEModelInstance 	fDiagramModel = null ;
 	CodeCallBackRef			fExpr = null ;
 	IBeanDeclModel			fModel = null ;
 	BeanPart				fbeanPart = null ;
@@ -76,14 +76,14 @@ public class PropertyEventDecoder implements IPropertyEventDecoder {
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.ICallbackDecoder#setCompositionModel(IDiagramModelInstance)
 	 */
-	public void setCompositionModel(IDiagramModelInstance cm) {
+	public void setCompositionModel(IVEModelInstance cm) {
 		fDiagramModel = cm ;
 	}
 
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.ICallbackDecoder#getCompositionModel()
 	 */
-	public IDiagramModelInstance getCompositionModel() {
+	public IVEModelInstance getCompositionModel() {
 		return fDiagramModel;
 	}
 

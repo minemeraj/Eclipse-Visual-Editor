@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IJVEDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import org.eclipse.jdt.core.dom.Statement;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -43,8 +43,8 @@ public interface IJVEDecoder {
 
 	public void setBeanModel(IBeanDeclModel model);
 	public IBeanDeclModel getBeanModel();
-	public void setCompositionModel(IDiagramModelInstance cm);
-	public IDiagramModelInstance getCompositionModel();
+	public void setCompositionModel(IVEModelInstance cm);
+	public IVEModelInstance getCompositionModel();
 	public void setBeanPart(BeanPart part);
 	public BeanPart getBeanPart();
 

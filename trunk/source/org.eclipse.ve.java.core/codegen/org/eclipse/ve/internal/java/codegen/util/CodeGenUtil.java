@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.14 $  $Date: 2004-03-11 14:05:54 $ 
+ *  $Revision: 1.15 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 
@@ -45,7 +45,7 @@ import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescripto
 
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -103,7 +103,7 @@ public  static IJavaInstance  createInstance (String instanceType,ResourceSet rs
 /**
  * Create and Java Object Instance for a given type
  */
-public static IJavaInstance createInstance(String instanceType, IDiagramModelInstance cm) throws CodeGenException {
+public static IJavaInstance createInstance(String instanceType, IVEModelInstance cm) throws CodeGenException {
 	if (cm.getModelResourceSet() == null)
 		throw new CodeGenException("MOF is not set up"); //$NON-NLS-1$
 	JavaVEPlugin.log("CodeGenUtil.createInstance(" + instanceType + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
@@ -111,7 +111,7 @@ public static IJavaInstance createInstance(String instanceType, IDiagramModelIns
 	return createInstance(instanceType, cm.getModelResourceSet());
 }
 
-public static EClassifier getMetaClass (String qualifiedName, IDiagramModelInstance cm) {
+public static EClassifier getMetaClass (String qualifiedName, IVEModelInstance cm) {
      if (cm.getModelResourceSet() == null || qualifiedName == null) return null ;
      return  JavaRefFactory.eINSTANCE.reflectType(qualifiedName, cm.getModelResourceSet());
 }
@@ -146,7 +146,7 @@ public static void addConstraintString(
 	EObject target,
 	String initVal,
 	EStructuralFeature sf,
-	IDiagramModelInstance cm)
+	IVEModelInstance cm)
 	throws Exception {
 
 	IJavaInstance value = null;
@@ -371,7 +371,7 @@ private static boolean isComponentContained (IBeanDeclModel m,EObject component,
 /**
  *  Update methods source offset
  */ 
-public static boolean isComponentInComposition (IBeanDeclModel m, EObject component, IDiagramModelInstance model) throws CodeGenException {
+public static boolean isComponentInComposition (IBeanDeclModel m, EObject component, IVEModelInstance model) throws CodeGenException {
 	Iterator itr = model.getModelRoot().getComponents().iterator() ;
 	while (itr.hasNext()) {
 		if (isComponentContained(m, component,(EObject)itr.next())) 
@@ -403,7 +403,7 @@ private static IJavaObjectInstance getParent (IBeanDeclModel model, IJavaObjectI
 /**
  *  Get parent (implicit or not implicit) of this component
  */
-public static IJavaObjectInstance getParent (IBeanDeclModel bmodel, IJavaObjectInstance child, IDiagramModelInstance model) throws CodeGenException {
+public static IJavaObjectInstance getParent (IBeanDeclModel bmodel, IJavaObjectInstance child, IVEModelInstance model) throws CodeGenException {
 	Iterator itr = model.getModelRoot().getComponents().iterator() ;
 	while (itr.hasNext()) {
 		IJavaObjectInstance p = getParent (bmodel, child,(IJavaObjectInstance)itr.next()) ;

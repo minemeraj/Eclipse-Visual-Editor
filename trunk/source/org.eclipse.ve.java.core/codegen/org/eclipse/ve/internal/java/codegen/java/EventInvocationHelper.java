@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,7 +34,7 @@ import org.eclipse.jem.java.Method;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaParameter;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -184,7 +184,7 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	/**
 	 * 
 	 */
-	public static EventInvocation  getNewEventInvocation (IDiagramModelInstance cm) {
+	public static EventInvocation  getNewEventInvocation (IVEModelInstance cm) {
 		EventInvocation ee =  JCMFactory.eINSTANCE.createEventInvocation() ;
 		return ee ;
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 import java.util.*;
@@ -28,7 +28,7 @@ import org.eclipse.jem.internal.instantiation.PTExpression;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -111,7 +111,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		add(null, toAdd, target, -1);
 	}
 
-	public static EObject getNewCC(IDiagramModelInstance cm) {
+	public static EObject getNewCC(IVEModelInstance cm) {
 		EClass ccClass = (EClass) cm.getModelResourceSet().getEObject(ConstraintComponentURI, true);
 		return (EObject) ccClass.getEPackage().getEFactoryInstance().create(ccClass);
 	}
@@ -124,7 +124,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		EObject componentToAdd,
 		EObject targetContainer,
 		int index,
-		IDiagramModelInstance cm) {
+		IVEModelInstance cm) {
 		// Create a ConstraintComponet object   
 		EObject CC = (cc == null) ? getNewCC(cm) : cc;
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-16 20:55:59 $ 
  */
 import java.util.logging.Level;
 
@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -33,11 +33,11 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	protected IExpressionDecoderHelper fhelper = null;
 
 	protected IBeanDeclModel fBeanModel = null;
-	protected IDiagramModelInstance fCompositonModel = null;
+	protected IVEModelInstance fCompositonModel = null;
 	protected BeanPart fbeanPart = null;
 	protected Object fPriority = null;
 
-	public AbstractExpressionDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance bldr, BeanPart part) {
+	public AbstractExpressionDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance bldr, BeanPart part) {
 		fExpr =  expr.getExprStmt();
 		fExprRef = expr;
 		fExprRef.setDecoder(this);
@@ -217,11 +217,11 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		return fBeanModel;
 	}
 
-	public void setCompositionModel(IDiagramModelInstance cm) {
+	public void setCompositionModel(IVEModelInstance cm) {
 		fCompositonModel = cm;
 	}
 
-	public IDiagramModelInstance getCompositionModel() {
+	public IVEModelInstance getCompositionModel() {
 		return fCompositonModel;
 	}
 

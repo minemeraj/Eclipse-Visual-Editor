@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCObjectDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.ObjectDecoder;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -36,7 +36,7 @@ public class JFCObjectDecoder extends ObjectDecoder  {
 
     
 
-public JFCObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+public JFCObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
 }
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-16 20:55:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.BeanMethodTemplate;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -35,7 +35,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	IEventDecoderHelper fhelper = null;
 
 	IBeanDeclModel fBeanModel = null;
-	IDiagramModelInstance fCompositonModel = null;
+	IVEModelInstance fCompositonModel = null;
 	String   fFiller = BeanMethodTemplate.getInitExprFiller() ;
 	BeanPart fbeanPart = null;
 	String fdebugString = null;
@@ -144,14 +144,14 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#setCompositionModel(IDiagramModelInstance)
 	 */
-	public void setCompositionModel(IDiagramModelInstance cm) {
+	public void setCompositionModel(IVEModelInstance cm) {
 		fCompositonModel = cm ;
 	}
 
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#getCompositionModel()
 	 */
-	public IDiagramModelInstance getCompositionModel() {
+	public IVEModelInstance getCompositionModel() {
 		return fCompositonModel;
 	}
 
