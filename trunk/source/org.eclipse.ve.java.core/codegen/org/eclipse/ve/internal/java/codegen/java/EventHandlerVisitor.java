@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventHandlerRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -31,8 +32,8 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class EventHandlerVisitor extends TypeVisitor {
 
-public EventHandlerVisitor (TypeDeclaration node, IBeanDeclModel model, boolean forceJDOMUsage) {
-	super(new CodeEventHandlerRef(node,model), node,model,new ArrayList(), forceJDOMUsage) ;	
+public void initialize(TypeDeclaration node, IBeanDeclModel model, boolean forceJDOMUsage, IVisitorFactoryRule visitorFactory) {
+	super.initialize(new CodeEventHandlerRef(node,model), node,model,new ArrayList(), forceJDOMUsage, visitorFactory) ;	
 	fModel.getEventHandlers().add(fType) ;
 }
 
@@ -61,9 +62,10 @@ public void visit()  {
 					// the declaration Source starts, and the declaration source ends are 
 					// being modified. This is due to inconsistency between JDOM and JDT.
 //					
-					EventMethodCallBackVisitor v = new EventMethodCallBackVisitor( methods[i], fModel, fType, thisMethodHandle, // null,
+					EventMethodCallBackVisitor v = visitorFactory.getEventMethodCallBackVisitor();
+					v.initialize( methods[i], fModel, fType, thisMethodHandle, // null,
 								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()),
-						         String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()));
+						         String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()), visitorFactory);
 					v.setProgressMonitor(getProgressMonitor());  
 					v.visit();								 
 				}
@@ -83,9 +85,11 @@ public void visit()  {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					 methods[i] instanceof MethodDeclaration) {
-					EventMethodCallBackVisitor v = new EventMethodCallBackVisitor(methods[i],fModel,fType,cuMethods[i].getHandle(),
+					EventMethodCallBackVisitor v = visitorFactory.getEventMethodCallBackVisitor();
+					v.initialize(methods[i],fModel,fType,cuMethods[i].getHandle(),
 								cuMethods[i].getSourceRange(),
-								cuMethods[i].getContent());
+								cuMethods[i].getContent(), 
+								visitorFactory);
 					v.setProgressMonitor(getProgressMonitor());
 					v.visit();
 				}

@@ -8,6 +8,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/expDecoder" name="expDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventDecoder" name="eventDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/methodGenerator" name="methodGenerator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/modelled" name="modelled" unsettable="true" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/typeVisitor" name="typeVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/methodVisitor" name="methodVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventMethodCallBackVisitor" name="eventMethodCallBackVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventMethodVisitor" name="eventMethodVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventHandlerVisitor" name="eventHandlerVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/returnStmtVisitor" name="returnStmtVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/expressionVisitor" name="expressionVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventExpressionVisitor" name="eventExpressionVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventCallBackExpressionVisitor" name="eventCallBackExpressionVisitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.List;
@@ -35,7 +35,23 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 public class MethodVisitor extends SourceVisitor {
 	
 	CodeMethodRef fMethod = null ;
+	IVisitorFactoryRule visitorFactory = null;
 	
+	/**
+	 *
+	 */		
+	public void initialize (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content, IVisitorFactoryRule visitorFactory) {
+		super.initialize(node,model,reTryList) ;	
+		fMethod = new CodeMethodRef (node,typeRef,methodHandle,range,content) ;
+		this.visitorFactory = visitorFactory;
+	}
+
+	public void initialize (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeMethodRef m, IVisitorFactoryRule visitorFactory) {
+		super.initialize(node,model,reTryList) ;	
+		fMethod = m ;
+		this.visitorFactory = visitorFactory;
+	}
+
 
 /**
  *  A bean is declared locally in this method.
@@ -58,7 +74,8 @@ protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	    init instanceof CastExpression || 
 	    init instanceof MethodInvocation) {
 	    // Decleration and initialization
-		ExpressionVisitor v = new ExpressionVisitor(fMethod,stmt,fModel,fReTryLater);
+		ExpressionVisitor v = visitorFactory.getExpressionVisitor();
+		v.initialize(fMethod,stmt,fModel,fReTryLater);
 		v.setProgressMonitor(getProgressMonitor());
 		v.visit();
 	}		
@@ -158,33 +175,21 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
       else if (stmt instanceof SynchronizedStatement) 
           processSynchStatement ((SynchronizedStatement)stmt) ;
       else if (stmt instanceof ReturnStatement){
-      	ReturnStmtVisitor visitor = new ReturnStmtVisitor(fMethod,(ReturnStatement)stmt,fModel,fReTryLater);
+      	ReturnStmtVisitor visitor = visitorFactory.getReturnStmtVisitor();
+		visitor.initialize(fMethod,(ReturnStatement)stmt,fModel,fReTryLater);
       	visitor.setProgressMonitor(getProgressMonitor());
       	visitor.visit();
       }
 
       // Handle an Expression          
       else if (stmt instanceof ExpressionStatement) {
-      	ExpressionVisitor v = new ExpressionVisitor(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater);
+      	ExpressionVisitor v = visitorFactory.getExpressionVisitor();
+		v.initialize(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater);
       	v.setProgressMonitor(getProgressMonitor());
       	v.visit();
       }else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
          JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, Level.FINE) ; //$NON-NLS-1$
 }	
-	
-/**
- *
- */		
-public MethodVisitor (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
-	super(node,model,reTryList) ;	
-	fMethod = new CodeMethodRef (node,typeRef,methodHandle,range,content) ;
-}
-
-public MethodVisitor (MethodDeclaration node, IBeanDeclModel model,List reTryList,CodeMethodRef m) {
-	super(node,model,reTryList) ;	
-	fMethod = m ;
-}
-
 /**
  * Go for it
  */

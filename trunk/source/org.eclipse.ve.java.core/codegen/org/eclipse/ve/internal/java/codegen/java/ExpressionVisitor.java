@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.20 $  $Date: 2005-02-15 23:35:53 $ 
+ *  $Revision: 1.21 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.*;
@@ -35,8 +35,8 @@ CodeMethodRef		fMethod = null ;
 CodeExpressionRef	fExpression = null ;
 	
 
-ExpressionVisitor(CodeMethodRef method, Statement stmt,IBeanDeclModel model,List reTryList) {
-	super((ASTNode)stmt,model,reTryList) ;	
+public void initialize(CodeMethodRef method, Statement stmt,IBeanDeclModel model,List reTryList) {
+	super.initialize((ASTNode)stmt,model,reTryList) ;	
 	fMethod = method ;
 	try {
 	fExpression = new CodeExpressionRef (stmt,fMethod) ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.logging.Level;
@@ -42,21 +42,21 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class ExpressionParser {
 	
-	String fSource ;
+	protected String fSource ;
 	
-	int    fSourceOff ;   // not including a filler, or comments
-	int    fSourceLen ;
+	protected int    fSourceOff ;   // not including a filler, or comments
+	protected int    fSourceLen ;
 	
-	int    fExpOff = -1 ; // The works
-	int    fExpLen = -1 ;
+	protected int    fExpOff = -1 ; // The works
+	protected int    fExpLen = -1 ;
 	
-	int    fCommentsOff = -1 ; 
-	int    fCommentsLen = -1 ;
+	protected int    fCommentsOff = -1 ; 
+	protected int    fCommentsLen = -1 ;
 	
-	int    fFillerOff = -1 ; // Prefixed  white space
-	int    fFillerLen = -1 ;
+	protected int    fFillerOff = -1 ; // Prefixed  white space
+	protected int    fFillerLen = -1 ;
 	
-	IScannerFactory fScannerFactory = null; // Factory to provide scanner
+	protected IScannerFactory fScannerFactory = null; // Factory to provide scanner
 	
 /**
  *  @param sourceSnippet the source code body where the expression is part off

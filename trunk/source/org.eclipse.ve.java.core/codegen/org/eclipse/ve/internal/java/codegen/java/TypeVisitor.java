@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.13 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.*;
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -38,23 +39,26 @@ public class TypeVisitor extends SourceVisitor {
 	char[]	content = null;  // is set when JDOM is not set
 	Map  fInstanceDeclaredBeans = new HashMap() ;
 	JavaElementInfo[]	JDTMethods = null;
+	protected IVisitorFactoryRule visitorFactory = null;
 	
-public TypeVisitor (TypeDeclaration node, IBeanDeclModel model, char [] content, String[] methodHandles, List reTryList, boolean forceJDOMUsage) {
-	this(node,model,reTryList,forceJDOMUsage) ;		
+public void initialize(TypeDeclaration node, IBeanDeclModel model, char [] content, String[] methodHandles, List reTryList, boolean forceJDOMUsage, IVisitorFactoryRule visitorFactory) {
+	initialize(node,model,reTryList,forceJDOMUsage,visitorFactory) ;		
 	this.methodHandles = methodHandles;
 	this.content = content;
 }
 
-public TypeVisitor (TypeDeclaration node, IBeanDeclModel model,List reTryList, boolean forceJDOMUsage) {
-	super(node,model,reTryList) ;	
+public void initialize(TypeDeclaration node, IBeanDeclModel model,List reTryList, boolean forceJDOMUsage, IVisitorFactoryRule visitorFactory) {
+	super.initialize(node,model,reTryList) ;	
 	this.forceJDOMUsage = forceJDOMUsage;
+	this.visitorFactory = visitorFactory;
 	fType = new CodeTypeRef (node,model) ;
 	model.setTypeRef(fType) ;
 }
 
-public TypeVisitor (CodeTypeRef tr, TypeDeclaration node, IBeanDeclModel model,List reTryList, boolean forceJDOMUsage) {
-	super(node,model,reTryList) ;	
+public void initialize(CodeTypeRef tr, TypeDeclaration node, IBeanDeclModel model,List reTryList, boolean forceJDOMUsage, IVisitorFactoryRule visitorFactory) {
+	super.initialize(node,model,reTryList) ;	
 	this.forceJDOMUsage = forceJDOMUsage;
+	this.visitorFactory = visitorFactory;
 	fType = tr ;
 }
 
@@ -131,7 +135,8 @@ public void addFieldToMap(BeanPart bp, String method) {
 
 protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
 	String mName = method.getName().getIdentifier();
-	MethodVisitor v = new MethodVisitor(method,model,reTryList,typeRef,methodHandle,	range,content) ;
+	MethodVisitor v = visitorFactory.getMethodVisitor();
+	v.initialize(method,model,reTryList,typeRef,methodHandle,	range,content, visitorFactory) ;
 	v.setProgressMonitor(getProgressMonitor());
 	// Check to see if the rule gave us an init method up front
 	if (fInstanceDeclaredBeans.get(mName) != null) {
