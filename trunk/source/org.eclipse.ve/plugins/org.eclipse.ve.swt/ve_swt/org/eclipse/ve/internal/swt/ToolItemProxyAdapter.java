@@ -5,19 +5,29 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.1 $ $Date: 2004-08-22 22:42:51 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.2 $ $Date: 2004-08-25 15:46:05 $
  */
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.*;
+
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class ToolItemProxyAdapter extends WidgetProxyAdapter {
+	private EStructuralFeature sf_text;
+	private EReference sf_items;
+	protected BeanProxyAdapter toolBarProxyAdapter;
 
 	private IMethodProxy boundsMethodProxy;
 
@@ -50,6 +60,31 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 		}
 	}
 
+	/*
+	 * Return the proxy adapter associated with this TabFolder.
+	 */
+	protected BeanProxyAdapter getToolBarProxyAdapter() {
+		if (toolBarProxyAdapter == null) {
+			EObject parent = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(), sf_items);
+			IBeanProxyHost toolBarProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) parent);
+			toolBarProxyAdapter = (BeanProxyAdapter) toolBarProxyHost;
+		}
+		return toolBarProxyAdapter;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void applied(EStructuralFeature sf, Object newValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return; // Nothing to apply to yet or could not construct.
+		super.applied(sf, newValue, position); // We letting the settings go through
+		if (sf == sf_text && getToolBarProxyAdapter() != null)
+			getToolBarProxyAdapter().revalidateBeanProxy();
+	}
+
 	public IRectangleBeanProxy getBounds() {
 		return (IRectangleBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 
@@ -73,6 +108,14 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	 */
 	protected IBeanProxy beanProxyAdapterBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
 		return super.beanProxyAllocation(allocation);
+	}
+
+	public void setTarget(Notifier newTarget) {
+		super.setTarget(newTarget);
+		if (newTarget != null) {
+			sf_text = ((IJavaObjectInstance) newTarget).eClass().getEStructuralFeature("text"); //$NON-NLS-1$
+			sf_items = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TOOLBAR_ITEMS);
+		}
 	}
 
 }

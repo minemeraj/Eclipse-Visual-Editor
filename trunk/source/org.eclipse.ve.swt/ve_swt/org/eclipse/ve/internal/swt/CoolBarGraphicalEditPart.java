@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-20 22:39:14 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-25 15:46:05 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -26,10 +26,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * 
@@ -38,6 +41,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 
 	private EReference sf_items, sf_coolItemControl;
+
+	protected BeanProxyAdapter coolBarProxyAdapter;
 
 	public CoolBarGraphicalEditPart(Object model) {
 		super(model);
@@ -65,6 +70,7 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 					if (ep instanceof ControlGraphicalEditPart)
 						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
 				}
+				getCoolBarProxyAdapter().revalidateBeanProxy();
 			}
 		}
 
@@ -123,6 +129,17 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_COOLBAR_ITEMS);
 		sf_coolItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_COOLITEM_CONTROL);
+	}
+
+	/*
+	 * Return the proxy adapter associated with this CoolBar.
+	 */
+	protected BeanProxyAdapter getCoolBarProxyAdapter() {
+		if (coolBarProxyAdapter == null) {
+			IBeanProxyHost coolBarProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
+			coolBarProxyAdapter = (BeanProxyAdapter) coolBarProxyHost;
+		}
+		return coolBarProxyAdapter;
 	}
 
 }
