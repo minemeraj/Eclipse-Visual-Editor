@@ -11,17 +11,20 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanCellRenderer.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-19 12:20:47 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -64,10 +67,18 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 	
 		calculateJavaBeanPropertyEditor();
 		
-		if (fPropertyEditorProxyWrapper == null) {
-			// The property editor class not given, or could not instantiate, so just do bean string.
+		if (fPropertyEditorProxyWrapper == null) {			
+			// The property editor class not given, or could not be instantiate
+			// Look for a label provider on the class of object itself
+			if ( element instanceof IJavaObjectInstance && editDomain != null) {
+				IJavaObjectInstance javaComponent = (IJavaObjectInstance)element;
+				ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(javaComponent.getJavaType());
+				if ( labelProvider != null ) {
+					return labelProvider.getText(javaComponent);
+				}
+			} 
 			return elementProxy.toBeanString();
-		}
+		} 
 		// The PropertyEditorBeanProxyWrapper wraps the java.beans.PropertyEditor on the remote VM
 		// Use its setValue(Object) and getAsText() API to get a string		
 		fPropertyEditorProxyWrapper.setValue(elementProxy);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-19 12:20:47 $ 
  */
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -24,6 +24,10 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
+ * Render the object with the same label that is used in the JavaBeans tree viewer
+ * If the object has a specific label provider defined for it - use this
+ * otherwise use the nameInComposition
+ * if none exists then use the toString of the live instance itself
  */
 public class JavaBeanLabelProvider extends LabelProvider implements INeedData {
 	
