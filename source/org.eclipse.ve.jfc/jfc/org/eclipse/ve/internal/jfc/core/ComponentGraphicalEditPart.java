@@ -7,7 +7,7 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-05-26 08:44:24 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-06-07 20:34:58 $
  */
 import java.util.*;
 
@@ -47,7 +47,7 @@ import org.eclipse.ve.internal.java.core.*;
  * The initialization data is used to configure whether this edit part should show borders on the figure or not. The default is false. The
  * initialization data can be "true" or "false", case-insensitive. This init data can be placed in the xmi to determine what it should be.
  */
-public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
+public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor, IDirectEditableEditPart {
 
 	protected boolean transparent = false; // Whether there should be an image or not.
 	protected ImageFigureController imageFigureController;
@@ -333,7 +333,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	/**
 	 * Return the ComponentProxy. Creation date: (3/15/00 12:33:41 PM)
 	 * 
-	 * @return com.ibm.vce.figures.IVisualComponent
 	 */
 	protected ComponentProxyAdapter getComponentProxy() {
 		IBeanProxyHost beanProxy = BeanProxyUtilities.getBeanProxyHost(getBean());
@@ -355,7 +354,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	/**
 	 * Return the visual component. Creation date: (3/15/00 12:33:41 PM)
 	 * 
-	 * @return com.ibm.vce.figures.IVisualComponent
 	 */
 	protected IVisualComponent getVisualComponent() {
 		return (IVisualComponent) getComponentProxy(); // For AWT, the

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-11 16:14:07 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-07 20:34:58 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -82,7 +82,8 @@ public class JFCConstants {
 		SF_JTABLE_MODEL,
 		SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL,
 		SF_TABLECOLUMN_MODELINDEX,
-		SF_TABLECOLUMN_HEADERVALUE,		
+		SF_TABLECOLUMN_HEADERVALUE,
+		SF_TABLECOLUMN_PREFERREDWIDTH,
 		
 		SF_JMENUBAR_MENUS,
 		SF_JMENU_ITEMS,
@@ -159,7 +160,8 @@ public class JFCConstants {
 		SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL = URI.createURI("java:/javax.swing#JTable/autoCreateColumnsFromModel");	//$NON-NLS-1$
 		
 		SF_TABLECOLUMN_MODELINDEX = URI.createURI("java:/javax.swing.table#TableColumn/modelIndex");	//$NON-NLS-1$		
-		SF_TABLECOLUMN_HEADERVALUE = URI.createURI("java:/javax.swing.table#TableColumn/headerValue");	//$NON-NLS-1$				
+		SF_TABLECOLUMN_HEADERVALUE = URI.createURI("java:/javax.swing.table#TableColumn/headerValue");	//$NON-NLS-1$
+		SF_TABLECOLUMN_PREFERREDWIDTH = URI.createURI("java:/javax.swing.table#TableColumn/preferredWidth");	//$NON-NLS-1$
 
 
 		SF_JMENUBAR_MENUS = URI.createURI("java:/javax.swing#JMenuBar/menus"); //$NON-NLS-1$
