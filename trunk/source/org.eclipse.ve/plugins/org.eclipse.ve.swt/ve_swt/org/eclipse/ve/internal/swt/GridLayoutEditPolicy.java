@@ -9,7 +9,7 @@ package org.eclipse.ve.internal.swt;
  **************************************************************************************************/
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.3 $ $Date: 2004-05-11 18:36:25 $
+ * $Revision: 1.4 $ $Date: 2004-06-14 22:04:53 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +21,6 @@ import org.eclipse.draw2d.geometry.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.swt.graphics.ImageData;
@@ -402,7 +401,6 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 
 	/**
 	 * Shows an insertion line if there is one or more current children.
-	 * @see LayoutEditPolicy#showLayoutTargetFeedback(Request)
 	 */	
 	protected void showLayoutTargetFeedback(Request request) {
 		if (getHost().getChildren().size() == 0)

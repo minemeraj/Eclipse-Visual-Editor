@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-14 21:45:43 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-14 22:04:53 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.compiler.ast.MessageSend;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
@@ -89,9 +88,6 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		return (IJavaObjectInstance) root ;
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAddedPart(MessageSend)
-	 */
 	protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 		// TODO  Need to deal with multiple arguments, and nesting
 		
