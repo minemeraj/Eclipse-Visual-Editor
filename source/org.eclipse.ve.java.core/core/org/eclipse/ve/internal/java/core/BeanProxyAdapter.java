@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.20 $  $Date: 2004-08-03 20:06:32 $ 
+ *  $Revision: 1.21 $  $Date: 2004-08-04 21:33:30 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.*;
@@ -36,14 +35,11 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
-import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
