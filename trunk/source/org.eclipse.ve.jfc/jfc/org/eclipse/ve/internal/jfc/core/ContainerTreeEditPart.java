@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 14:21:09 $ 
  */
 
 import java.util.*;
@@ -131,7 +131,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE){
 				IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)getModel());
 				if (containerProxy != null) {
-					ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
+					ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, EditDomain.getEditDomain(this));
 					lpHelper = lpFactory.getLayoutPolicyHelper(null);
 				}
 			}
