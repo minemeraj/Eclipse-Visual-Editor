@@ -22,6 +22,7 @@
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ve.cde"/>
       <import plugin="org.eclipse.gef"/>
       <import plugin="org.eclipse.ui"/>
