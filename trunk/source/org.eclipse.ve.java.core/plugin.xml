@@ -373,6 +373,7 @@
 <!-- ========================================================================================= -->
 <!-- Extend the Java perspective so the Java Beans viewer appears beneath the resources viewer -->
 <!-- and the Properties appears stacked on the outline view                                    -->
+<!-- and the Palette to the left of the editor part											   -->
 <!-- ========================================================================================= -->
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -397,10 +398,21 @@
                relationship="stack"
                id="org.eclipse.ui.views.PropertySheet">
          </view>
+         <view
+               ratio="0.16"
+               relative="org.eclipse.ui.editorss"
+               visible="false"
+               relationship="left"
+               id="org.eclipse.gef.ui.palette_view">
+         </view>
+         
       </perspectiveExtension>
+      
+      
 <!-- ====================================================================================================== -->
 <!-- Extend the JavaBrowsing perspective so the JavaBeans and Properties appears on top of the members list -->
 <!-- and the properties viewer to the right of the editor part                                              -->
+<!-- and the palette to the left of the editor part															-->
 <!-- ====================================================================================================== -->
       <perspectiveExtension
             targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
@@ -423,6 +435,13 @@
                relationship="right"
                id="org.eclipse.ui.views.PropertySheet">
          </view>
+         <view
+               ratio="0.16"
+               relative="org.eclipse.ui.editorss"
+               visible="false"
+               relationship="left"
+               id="org.eclipse.gef.ui.palette_view">
+         </view>         
       </perspectiveExtension>
 <!-- ======================================================+==================== -->
 <!-- Extend the Debug perspective so the JavaBeans appears on top of the outline -->
