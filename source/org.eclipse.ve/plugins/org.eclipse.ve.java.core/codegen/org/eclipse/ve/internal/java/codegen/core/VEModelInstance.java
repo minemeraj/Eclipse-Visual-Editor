@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-05 18:41:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
@@ -32,6 +33,8 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMFactory;
 
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.VEModelCacheUtility;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
  * @author Gili Mendel
@@ -44,7 +47,7 @@ public class VEModelInstance implements IVEModelInstance {
 	String		fUri;  // Src File URI
 	EditDomain	fEDomain;
 	IFile		fInputFile;
-	
+	boolean		isFromCache = false;
 	
 	
 	
@@ -52,7 +55,7 @@ public class VEModelInstance implements IVEModelInstance {
 	public VEModelInstance (IFile file, EditDomain domain) {
 		super();
 		fInputFile=file;
-		fUri = file.getFullPath().toString();
+		fUri = VEModelCacheUtility.getCacheURI(file).toString();		
 		fEDomain=domain;
 	}
 	public BeanSubclassComposition getModelRoot() {
@@ -83,7 +86,7 @@ public class VEModelInstance implements IVEModelInstance {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.core.IVEModelInstance#createEmptyComposition()
 	 */
-	public EObject createEmptyComposition() throws CodeGenException {
+	public EObject createComposition() throws CodeGenException {
 
 			if (fUri == null)
 				throw new CodeGenException("Model URI is not set"); //$NON-NLS-1$
@@ -93,12 +96,22 @@ public class VEModelInstance implements IVEModelInstance {
 			if (cr != null)
 				rs.getResources().remove(cr);
 
-			fResource = rs.createResource(URI.createURI(fUri));
-			fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
-			Diagram d = CDMFactory.eINSTANCE.createDiagram();
-			d.setId(Diagram.PRIMARY_DIAGRAM_ID);
-			fRoot.getDiagrams().add(d);
-			fResource.getContents().add(fRoot);
+			if (VEModelCacheUtility.isValidCache(getFile())) {
+				fResource = VEModelCacheUtility.doLoadFromCache(this, null);
+				fRoot = (BeanSubclassComposition) fResource.getEObject("/");
+				fUri = fResource.getURI().toString();
+				JavaVEPlugin.log("Loading EMF model from cache",Level.FINE);
+				isFromCache=true;
+			}
+			else {
+				fResource = rs.createResource(URI.createURI(fUri));
+				fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
+				Diagram d = CDMFactory.eINSTANCE.createDiagram();
+				d.setId(Diagram.PRIMARY_DIAGRAM_ID);
+				fRoot.getDiagrams().add(d);
+				fResource.getContents().add(fRoot);			
+				isFromCache=false;
+			}
 			return fRoot;
 	}
 	/* (non-Javadoc)
@@ -123,4 +136,7 @@ public class VEModelInstance implements IVEModelInstance {
 		return fInputFile;
 	}
 	
+	public boolean isFromCache() {
+		return isFromCache;
+	}
 }

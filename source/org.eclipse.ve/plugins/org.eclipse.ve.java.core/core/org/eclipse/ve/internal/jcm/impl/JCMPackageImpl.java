@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import java.util.Map;
@@ -44,6 +44,7 @@ import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 import org.eclipse.ve.internal.jcm.JCMPackage;
+import org.eclipse.ve.internal.jcm.JavaCacheData;
 import org.eclipse.ve.internal.jcm.LinkType;
 import org.eclipse.ve.internal.jcm.Listener;
 import org.eclipse.ve.internal.jcm.ListenerType;
@@ -131,6 +132,20 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * @generated
 	 */
 	private EClass keyedInstanceLocationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass javaCacheDataEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass namesToBeansEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -232,10 +247,10 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 
 		// Initialize simple dependencies
 		CDMPackageImpl.init();
-		EcorePackageImpl.init();
 		JavaRefPackageImpl.init();
-		InstantiationPackageImpl.init();
 		BeaninfoPackageImpl.init();
+		InstantiationPackageImpl.init();
+		EcorePackageImpl.init();
 
 		// Create package meta-data objects
 		theJCMPackage.createPackageContents();
@@ -542,6 +557,51 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getJavaCacheData() {
+		return javaCacheDataEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaCacheData_NamesToBeans() {
+		return (EReference)javaCacheDataEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNamesToBeans() {
+		return namesToBeansEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNamesToBeans_Key() {
+		return (EAttribute)namesToBeansEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNamesToBeans_Value() {
+		return (EReference)namesToBeansEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getInstanceLocation() {
 		return instanceLocationEEnum;
 	}
@@ -799,6 +859,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		createEAttribute(keyedInstanceLocationEClass, KEYED_INSTANCE_LOCATION__KEY);
 		createEAttribute(keyedInstanceLocationEClass, KEYED_INSTANCE_LOCATION__VALUE);
 
+		javaCacheDataEClass = createEClass(JAVA_CACHE_DATA);
+		createEReference(javaCacheDataEClass, JAVA_CACHE_DATA__NAMES_TO_BEANS);
+
+		namesToBeansEClass = createEClass(NAMES_TO_BEANS);
+		createEAttribute(namesToBeansEClass, NAMES_TO_BEANS__KEY);
+		createEReference(namesToBeansEClass, NAMES_TO_BEANS__VALUE);
+
 		// Create enums
 		instanceLocationEEnum = createEEnum(INSTANCE_LOCATION);
 		linkTypeEEnum = createEEnum(LINK_TYPE);
@@ -923,6 +990,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		initEClass(keyedInstanceLocationEClass, Map.Entry.class, "KeyedInstanceLocation", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getKeyedInstanceLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKeyedInstanceLocation_Value(), this.getInstanceLocation(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(javaCacheDataEClass, JavaCacheData.class, "JavaCacheData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJavaCacheData_NamesToBeans(), this.getNamesToBeans(), null, "NamesToBeans", null, 0, -1, JavaCacheData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(namesToBeansEClass, Map.Entry.class, "NamesToBeans", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNamesToBeans_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamesToBeans_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(instanceLocationEEnum, InstanceLocation.class, "InstanceLocation");

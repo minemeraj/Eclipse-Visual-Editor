@@ -182,4 +182,22 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaCacheData">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is used to cache info for quick caching of the model. It is not part of the model itself."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NamesToBeans" upperBound="-1"
+        eType="#//NamesToBeans" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamesToBeans" instanceClassName="java.util.Map$Entry">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is a map entry from a unique name (string) to a bean instance in the model."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Key for the map. It should be a unique name in the model."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
 </ecore:EPackage>

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IVEModelInstance.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-27 15:34:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -43,13 +43,16 @@ public interface IVEModelInstance {
 	public void		clearModel () ;
 	
 	// Create an empty composition Model
-	public EObject	createEmptyComposition() 	throws CodeGenException ;	 
+	public EObject	createComposition() 	throws CodeGenException ;	 
 	
 	public Diagram getDiagram() ;
 	
 	public String getURI() ;
 	
 	public IFile getFile() ;
+	
+	// Was this model loaded initially from a cache
+	public boolean isFromCache();
 	
 	
 

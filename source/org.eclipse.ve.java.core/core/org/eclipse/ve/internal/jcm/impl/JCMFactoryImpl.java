@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import java.util.Map;
@@ -60,6 +60,8 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION: return createBeanSubclassComposition();
 			case JCMPackage.JCM_METHOD: return createJCMMethod();
 			case JCMPackage.KEYED_INSTANCE_LOCATION: return (EObject)createKeyedInstanceLocation();
+			case JCMPackage.JAVA_CACHE_DATA: return createJavaCacheData();
+			case JCMPackage.NAMES_TO_BEANS: return (EObject)createNamesToBeans();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -191,6 +193,26 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public Map.Entry createKeyedInstanceLocation() {
 		KeyedInstanceLocationImpl keyedInstanceLocation = new KeyedInstanceLocationImpl();
 		return keyedInstanceLocation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JavaCacheData createJavaCacheData() {
+		JavaCacheDataImpl javaCacheData = new JavaCacheDataImpl();
+		return javaCacheData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry createNamesToBeans() {
+		NamesToBeansImpl namesToBeans = new NamesToBeansImpl();
+		return namesToBeans;
 	}
 
 	/**
