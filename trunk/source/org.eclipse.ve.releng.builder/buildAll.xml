@@ -267,7 +267,7 @@
 		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**"/>				
 		
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}" />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site/ versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}" />
 		</exec>
 
 	</target>
