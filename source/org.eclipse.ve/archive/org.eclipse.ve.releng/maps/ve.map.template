@@ -8,7 +8,7 @@ feature@com.ibm.wtp.emf.integration.core=@org.eclipse.jem-feature-v@,:pserver:an
 feature@com.ibm.wtp.common.utilities=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.utilities-feature
 
 !*** Special ones from eclipse.
-plugin@org.eclipse.test=v20031125,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
+plugin@org.eclipse.test=v20030401,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
 fragment@org.eclipse.ant.optional.junit=v20030401,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
 
 !*** The standard contributions
