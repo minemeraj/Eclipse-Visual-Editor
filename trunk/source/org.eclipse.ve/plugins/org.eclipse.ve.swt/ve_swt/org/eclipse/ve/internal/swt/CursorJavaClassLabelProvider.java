@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CursorJavaClassLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,12 +32,12 @@ public class CursorJavaClassLabelProvider extends LabelProvider {
 		if (element instanceof IJavaInstance) {
 			return getText((IJavaInstance) element);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
 	public static String getText(IJavaInstance element) {
-		String initStr = "";
+		String initStr = ""; //$NON-NLS-1$
 		if (element.getAllocation() instanceof ParseTreeAllocation) {
 			PTExpression exp = ((ParseTreeAllocation) ((IJavaInstance) element).getAllocation()).getExpression();
 			if (exp instanceof PTClassInstanceCreation) {
@@ -48,9 +48,9 @@ public class CursorJavaClassLabelProvider extends LabelProvider {
 		} else if (element.getAllocation() instanceof InitStringAllocation) {
 			initStr = ((InitStringAllocation) ((IJavaInstance) element).getAllocation()).getInitString();
 		}
-		int begin_cursor = initStr.indexOf("SWT.CURSOR_");
+		int begin_cursor = initStr.indexOf("SWT.CURSOR_"); //$NON-NLS-1$
 		if (begin_cursor != -1) {
-			int after_cursor = initStr.indexOf(")", begin_cursor);
+			int after_cursor = initStr.indexOf(")", begin_cursor); //$NON-NLS-1$
 			if (after_cursor != -1) {
 				String cursorStr = initStr.substring(begin_cursor + 11, after_cursor);
 				String[] cursors = CursorPropertyEditor.cursorConstants;

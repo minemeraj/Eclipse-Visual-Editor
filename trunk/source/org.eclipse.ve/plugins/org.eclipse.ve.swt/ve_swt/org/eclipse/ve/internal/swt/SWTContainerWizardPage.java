@@ -59,7 +59,7 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 	protected void initializeFromSelection() {
 		if (getControl() != null) {
 			if (fClassPathEntry != null) {
-				includeJFaceButton.setSelection("JFACE".equals(fClassPathEntry.getPath().segment(1)));
+				includeJFaceButton.setSelection("JFACE".equals(fClassPathEntry.getPath().segment(1))); //$NON-NLS-1$
 			}
 		}
 			

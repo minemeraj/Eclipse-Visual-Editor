@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.18 $ $Date: 2005-03-22 22:11:00 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.19 $ $Date: 2005-04-05 20:11:45 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -110,7 +110,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
 					IBeanProxy widgetBeanProxy = getBeanProxy();
-					IMethodProxy disposeWidgetMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("dispose");
+					IMethodProxy disposeWidgetMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("dispose"); //$NON-NLS-1$
 					disposeWidgetMethodProxy.invoke(widgetBeanProxy);
 					return null;
 				}
@@ -132,7 +132,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
 					IBeanProxy widgetBeanProxy = getBeanProxy();
-					IMethodProxy getStyleMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("getStyle");
+					IMethodProxy getStyleMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("getStyle"); //$NON-NLS-1$
 					IIntegerBeanProxy styleBeanProxy = (IIntegerBeanProxy) getStyleMethodProxy.invoke(widgetBeanProxy);
 					style = styleBeanProxy.intValue();
 					return null;

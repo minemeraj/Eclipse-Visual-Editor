@@ -18,7 +18,7 @@ public class SWTContainerInitializer extends ClasspathContainerInitializer{
 	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {		
 			int size = containerPath.segmentCount();
 			if (size > 0) {
-				if (containerPath.segment(0).equals("SWT_CONTAINER")) {
+				if (containerPath.segment(0).equals("SWT_CONTAINER")) { //$NON-NLS-1$
 					SWTContainer container = new SWTContainer(containerPath);
 					JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 				}

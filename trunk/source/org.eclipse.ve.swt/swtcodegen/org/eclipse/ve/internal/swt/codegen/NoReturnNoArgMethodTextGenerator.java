@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -36,7 +36,7 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
 	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
 	
-	public final static  String METHOD_PREFIX = "create";
+	public final static  String METHOD_PREFIX = "create"; //$NON-NLS-1$
 	
 	public final static  String[] ignoredFeatures = {JavaInstantiation.ALLOCATION };
 	
@@ -94,8 +94,8 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	public String generateMain(String className) {
 		if (fMethodTemplate==null) 
 			return null ;  // regular method was not generated yet.
-		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell") &&
-			!getInfo().finitBeanType.equals("Shell"))
+		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell") && //$NON-NLS-1$
+			!getInfo().finitBeanType.equals("Shell")) //$NON-NLS-1$
 			return null ;
 		
 		fMethodTemplate=null;

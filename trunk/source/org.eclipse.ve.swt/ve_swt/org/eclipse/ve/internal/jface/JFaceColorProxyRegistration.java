@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorProxyRegistration.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-04 22:25:51 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -42,7 +42,7 @@ public class JFaceColorProxyRegistration {
 		
 		IBeanTypeProxy hashMapBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.HashMap"); //$NON-NLS-1$
 		IBeanTypeProxy objectBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.lang.Object"); //$NON-NLS-1$
-		IMethodProxy initMethodProxy = jfaceColorInitBeanTypeProxy.getMethodProxy("init", new IBeanTypeProxy[] { registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.Map")}); //$NON-NLS-1$
+		IMethodProxy initMethodProxy = jfaceColorInitBeanTypeProxy.getMethodProxy("init", new IBeanTypeProxy[] { registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.Map")}); //$NON-NLS-1$ //$NON-NLS-2$
 		IMethodProxy putMethodProxy = hashMapBeanTypeProxy.getMethodProxy("put", new IBeanTypeProxy[] { objectBeanTypeProxy, objectBeanTypeProxy}); //$NON-NLS-1$
 		IBeanProxy hashMapBeanProxy;
 		try {

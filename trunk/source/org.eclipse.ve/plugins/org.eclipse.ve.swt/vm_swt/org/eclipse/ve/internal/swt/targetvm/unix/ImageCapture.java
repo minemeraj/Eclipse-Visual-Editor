@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -34,13 +34,13 @@ public class ImageCapture implements IImageCapture{
 
 	static{
 		try{
-			System.loadLibrary("swt-gtk-print");
+			System.loadLibrary("swt-gtk-print"); //$NON-NLS-1$
 		} catch (UnsatisfiedLinkError error){
 			error.printStackTrace();
 		}
 	}
 	static final int OBSCURED = 1<<6; // Must be the same value as Widget.OBSCURED
-	static final String FIELD_STATE_NAME = "state"; 
+	static final String FIELD_STATE_NAME = "state";  //$NON-NLS-1$
 	
 	private native int[] getPixels(int handle, int includeChildren, int arg2, int arg3, int arg4);
 	
@@ -51,8 +51,8 @@ public class ImageCapture implements IImageCapture{
 		if(decorations.getMenuBar()!=null){
 			Menu menu = decorations.getMenuBar();
 			try{
-				Class osClass = getClass().getClassLoader().loadClass("org.eclipse.swt.internal.gtk.OS");
-				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{int.class});
+				Class osClass = getClass().getClassLoader().loadClass("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
+				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{int.class}); //$NON-NLS-1$
 				Object ret = method.invoke(menu, new Object[]{new Integer(menu.handle)});
 				if(ret!=null){
 					int menuBarHeight = ((Integer)ret).intValue();
@@ -67,7 +67,7 @@ public class ImageCapture implements IImageCapture{
 		Image image = null;
 		if (control instanceof Shell) {
 			Shell shell = (Shell) control;
-			int handle = readIntFieldValue(shell.getClass(), shell, "shellHandle");
+			int handle = readIntFieldValue(shell.getClass(), shell, "shellHandle"); //$NON-NLS-1$
 			if(handle>0){
 				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren);
 			}
@@ -134,7 +134,7 @@ public class ImageCapture implements IImageCapture{
 				//System.err.println("### returning image");
 				return tcImage;
 			}else{
-				System.err.println("JNI Returned unknown image type");
+				System.err.println("JNI Returned unknown image type"); //$NON-NLS-1$
 			}
 		}
 		return null;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -29,7 +29,7 @@ public class RCPViewClassCreationSourceContributor implements IVisualClassCreati
 	}
 
 	public URL getTemplateLocation() {
-		return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/RCPViewTemplate.javajet"));
+		return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/RCPViewTemplate.javajet")); //$NON-NLS-1$
 	}
 
 }

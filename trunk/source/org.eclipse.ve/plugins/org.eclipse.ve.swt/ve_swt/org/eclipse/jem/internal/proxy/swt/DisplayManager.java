@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -214,66 +214,66 @@ public class DisplayManager {
 		protected static int NUMBER_FREE_DISPLAYEXEC = 2;	// MAx number of free display execs to keep open.		
 		
 		protected Constants(ProxyFactoryRegistry registry) {
-			displayType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Display");
+			displayType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Display"); //$NON-NLS-1$
 		}
 		
 		public IMethodProxy getDefault() {
 			if (getDefaultProxy == null)
-				getDefaultProxy = displayType.getMethodProxy("getDefault");
+				getDefaultProxy = displayType.getMethodProxy("getDefault"); //$NON-NLS-1$
 			return getDefaultProxy;
 		}
 		
 		public IMethodProxy getFindDisplay() {
 			if (findDisplayProxy == null)
-				findDisplayProxy = displayType.getMethodProxy("findDisplay", "java.lang.Thread");
+				findDisplayProxy = displayType.getMethodProxy("findDisplay", "java.lang.Thread"); //$NON-NLS-1$ //$NON-NLS-2$
 			return findDisplayProxy;
 		}	
 
 		public IMethodProxy getBeep() {
 			if (beepProxy == null)
-				beepProxy = displayType.getMethodProxy("beep");
+				beepProxy = displayType.getMethodProxy("beep"); //$NON-NLS-1$
 			return beepProxy;
 		}
 		
 		public IMethodProxy getActiveShell() {
 			if (activeShellProxy == null)
-				activeShellProxy = displayType.getMethodProxy("activeShell");
+				activeShellProxy = displayType.getMethodProxy("activeShell"); //$NON-NLS-1$
 			return activeShellProxy;
 		}	
 		
 		public IMethodProxy getBounds() {
 			if (getBoundsProxy == null)
-				getBoundsProxy = displayType.getMethodProxy("getBounds");
+				getBoundsProxy = displayType.getMethodProxy("getBounds"); //$NON-NLS-1$
 			return getBoundsProxy;
 		}
 		
 		public IMethodProxy getClientArea() {
 			if (getClientAreaProxy == null)
-				getClientAreaProxy = displayType.getMethodProxy("getClientArea");
+				getClientAreaProxy = displayType.getMethodProxy("getClientArea"); //$NON-NLS-1$
 			return getClientAreaProxy;
 		}
 		
 		public IMethodProxy getUpdate() {
 			if (updateProxy == null)
-				updateProxy = displayType.getMethodProxy("update");
+				updateProxy = displayType.getMethodProxy("update"); //$NON-NLS-1$
 			return updateProxy;
 		}		
 		
 		private IBeanTypeProxy getDisplayExecType() {
 			if (displayExecType == null)
-				displayExecType = displayType.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.DisplayExec");
+				displayExecType = displayType.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.DisplayExec"); //$NON-NLS-1$
 			return displayExecType;
 		}
 
 		public IMethodProxy getDisplayExecAsyncExec() {
 			if (displayExecAsyncExec == null)
-				displayExecAsyncExec = getDisplayExecType().getMethodProxy("asyncExec", "org.eclipse.swt.widgets.Display");
+				displayExecAsyncExec = getDisplayExecType().getMethodProxy("asyncExec", "org.eclipse.swt.widgets.Display"); //$NON-NLS-1$ //$NON-NLS-2$
 			return displayExecAsyncExec;
 		}
 		
 		public IMethodProxy getDisplayExecSyncExec() {
 			if (displayExecSyncExec == null)
-				displayExecSyncExec = getDisplayExecType().getMethodProxy("syncExec", "org.eclipse.swt.widgets.Display");
+				displayExecSyncExec = getDisplayExecType().getMethodProxy("syncExec", "org.eclipse.swt.widgets.Display"); //$NON-NLS-1$ //$NON-NLS-2$
 			return displayExecSyncExec;
 		}
 		

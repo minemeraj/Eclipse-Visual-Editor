@@ -165,11 +165,11 @@ public void setControlParentBeanProxy(IBeanProxy aParentBeanProxy){
 }
 
 private void invoke_setControlManager(IBeanProxy controlManagerProxy, IBeanProxy controlBeanProxy) {
-	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setControl","org.eclipse.swt.widgets.Control");
+	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setControl","org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
 	setControlMethodProxy.invokeCatchThrowableExceptions(controlManagerProxy, controlBeanProxy);
 }
 private void invoke_setParentControlManager(IBeanProxy controlManagerProxy, IBeanProxy controlParentBeanProxy) {
-	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setParentComposite","org.eclipse.swt.widgets.Composite");
+	IMethodProxy setControlMethodProxy = controlManagerProxy.getTypeProxy().getMethodProxy("setParentComposite","org.eclipse.swt.widgets.Composite"); //$NON-NLS-1$ //$NON-NLS-2$
 	setControlMethodProxy.invokeCatchThrowableExceptions(controlManagerProxy, controlParentBeanProxy);
 }
 
@@ -301,7 +301,7 @@ public void dispose(){
 //}
 private IMethodProxy getControlManagerBoundsMethodProxy(){
 	if(fControlManagerBoundsMethodProxy == null){
-		fControlManagerBoundsMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getBounds");
+		fControlManagerBoundsMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
 	}
 	return fControlManagerBoundsMethodProxy;	
 }
@@ -312,7 +312,7 @@ private IMethodProxy getControlManagerBoundsMethodProxy(){
 public Rectangle getClientBox() {
 	if (fControlManagerProxy != null && fControlBeanProxy != null) {
 		if (fClientBoxMethodProxy == null) {
-			fClientBoxMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getClientBox");
+			fClientBoxMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getClientBox"); //$NON-NLS-1$
 		}
 		IRectangleBeanProxy fClientBoxBeanProxy = (IRectangleBeanProxy) fClientBoxMethodProxy.invokeCatchThrowableExceptions(fControlManagerProxy);
 		return fClientBoxBeanProxy != null ? new Rectangle(fClientBoxBeanProxy.getX(), fClientBoxBeanProxy.getY(), fClientBoxBeanProxy.getWidth(), fClientBoxBeanProxy
@@ -322,7 +322,7 @@ public Rectangle getClientBox() {
 }
 public void captureImage(){
 	if (fControlManagerProxy != null && fControlBeanProxy != null) {
-		IMethodProxy collectImageMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("captureImage");
+		IMethodProxy collectImageMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("captureImage"); //$NON-NLS-1$
 		collectImageMethodProxy.invokeCatchThrowableExceptions(fControlManagerProxy);
 	}
 }

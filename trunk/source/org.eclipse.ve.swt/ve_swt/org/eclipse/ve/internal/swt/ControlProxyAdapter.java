@@ -94,10 +94,10 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 						// First get the arg types.
 						IBeanTypeProxy compositeBeanTypeProxy =
 							getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-								"org.eclipse.swt.widgets.Composite");
+								"org.eclipse.swt.widgets.Composite"); //$NON-NLS-1$
 						
 						IBeanTypeProxy intBeanTypeProxy =
-							getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");
+							getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int"); //$NON-NLS-1$
 						
 						// Now we have the target type and the argument types, get the constructor
 						IConstructorProxy createControlProxy =
@@ -153,7 +153,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	private IMethodProxy getEnvironmentFreeFormHostMethodProxy(){
 		if(environmentFreeFormHostMethodProxy == null){
-			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost", new String[] {"int", "int"});
+			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost", new String[] {"int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return environmentFreeFormHostMethodProxy;
 	}
@@ -382,7 +382,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				
 				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-				IJavaInstance inst = (IJavaInstance)  BeanUtilities.createJavaObject("int",rset,String.valueOf(-1));
+				IJavaInstance inst = (IJavaInstance)  BeanUtilities.createJavaObject("int",rset,String.valueOf(-1)); //$NON-NLS-1$
 				IIntegerBeanProxy defval =  (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(inst);
 				
 				IJavaObjectInstance control = (IJavaObjectInstance) getTarget();

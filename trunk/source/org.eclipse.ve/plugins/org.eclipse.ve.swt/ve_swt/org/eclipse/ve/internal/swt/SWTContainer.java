@@ -34,8 +34,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	};
 	
 	private final static String[][] swtGTKLibraries = new String[][]{
-			{"org.eclipse.swt.gtk", "$ws$/swt-pi.jar"}, 
-			{"org.eclipse.swt.gtk", "$ws$/swt-mozilla.jar"}
+			{"org.eclipse.swt.gtk", "$ws$/swt-pi.jar"},  //$NON-NLS-1$ //$NON-NLS-2$
+			{"org.eclipse.swt.gtk", "$ws$/swt-mozilla.jar"} //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
 	private final static String[][] jfaceLibraries = new String[][] {
@@ -113,7 +113,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 	private boolean isJFace(IPath containerPath) {
 		// The first segment is the SWT_CONTAINER name
-		return "JFACE".equals(containerPath.segment(1));
+		return "JFACE".equals(containerPath.segment(1)); //$NON-NLS-1$
 	}
 
 	public IClasspathEntry[] getClasspathEntries() {

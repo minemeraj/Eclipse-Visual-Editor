@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.10 $$  $$Date: 2005-03-28 22:09:51 $$ 
+ *  $$Revision: 1.11 $$  $$Date: 2005-04-05 20:11:45 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -70,7 +70,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 						PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
 						if(classInstanceCreation.getArguments().size() == 2){
 							Object firstArgument = classInstanceCreation.getArguments().get(0);
-							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
+							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){ //$NON-NLS-1$
 								PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 								parentRef.setObject(correctParent);
 								classInstanceCreation.getArguments().remove(0);
@@ -134,8 +134,8 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
 		ir.setObject((IJavaObjectInstance)getContainer()) ;	
 		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
-		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT") ;
-		fa.setField("NONE");
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT") ; //$NON-NLS-1$
+		fa.setField("NONE"); //$NON-NLS-1$
 		fa.setReceiver(name) ;
 		
 		
@@ -145,7 +145,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 		ApplyAttributeSettingCommand applyCmd = new ApplyAttributeSettingCommand();
 		applyCmd.setTarget(child);
-		applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation"));
+		applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation")); //$NON-NLS-1$
 		applyCmd.setAttributeSettingValue(alloc);	
 		
 		return applyCmd;		

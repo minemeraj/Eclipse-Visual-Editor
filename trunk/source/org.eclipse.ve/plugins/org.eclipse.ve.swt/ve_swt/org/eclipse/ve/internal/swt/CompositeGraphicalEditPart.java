@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-03-30 12:33:40 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-04-05 20:11:45 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -74,7 +74,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	
 	protected void createImplicitEditPolicy(){
 		EditPolicy implicitEditPolicy = new ImplicitEditPolicy(EditDomain.getEditDomain(this),getBean());
-		installEditPolicy("IMPLICIT_CONTROL",implicitEditPolicy);
+		installEditPolicy("IMPLICIT_CONTROL",implicitEditPolicy); //$NON-NLS-1$
 	}
 
 	protected EditPart createChild(Object model) {

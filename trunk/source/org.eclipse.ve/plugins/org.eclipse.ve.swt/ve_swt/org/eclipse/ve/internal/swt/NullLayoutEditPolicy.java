@@ -188,7 +188,7 @@ protected boolean isChildResizeable(EditPart aChild) {
 	return true;
 }
 private int getX(IBeanProxy anSWTRectangleBeanProxy){
-	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("x");
+	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("x"); //$NON-NLS-1$
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
@@ -198,7 +198,7 @@ private int getX(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getY(IBeanProxy anSWTRectangleBeanProxy){
-	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("y");
+	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("y"); //$NON-NLS-1$
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
@@ -208,7 +208,7 @@ private int getY(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getWidth(IBeanProxy anSWTRectangleBeanProxy){
-	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("width");
+	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("width"); //$NON-NLS-1$
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
@@ -218,7 +218,7 @@ private int getWidth(IBeanProxy anSWTRectangleBeanProxy){
 	}
 }
 private int getHeight(IBeanProxy anSWTRectangleBeanProxy){
-	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("height");
+	IFieldProxy xFieldProxy = anSWTRectangleBeanProxy.getTypeProxy().getFieldProxy("height"); //$NON-NLS-1$
 	try{
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
@@ -237,7 +237,7 @@ protected final IBeanTypeProxy getEnvironmentBeanTypeProxy(ProxyFactoryRegistry 
 }
 protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyFactoryRegistry){
 	if(getFieldMethodProxy == null){	
-		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		
+		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return getFieldMethodProxy;
 }

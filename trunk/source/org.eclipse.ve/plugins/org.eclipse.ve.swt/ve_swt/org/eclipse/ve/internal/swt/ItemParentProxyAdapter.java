@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemParentProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-07 21:28:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter {
     protected void applied(EStructuralFeature as, Object newValue, int position) {
         // To create the item just instantiate it.  It will detect us as its parent because that is part
         // of its parse tree allocation statement
-        if (as.getName().equals("items")) {
+        if (as.getName().equals("items")) { //$NON-NLS-1$
             IBeanProxyHost valueProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)newValue);
             valueProxyHost.instantiateBeanProxy();
 		} else {
