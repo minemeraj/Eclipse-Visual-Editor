@@ -124,7 +124,7 @@ public IBeanProxy getDisplayProxy() {
  * 
  * @param registry the proxy registry to identify the vm to talk to.
  * @param runnable the runnable to execute
- * @return the result, an <code>IBeanProxy</code>, <code>null</code>, or a String, Boolean, or Number.
+ * @return the result, it will be either a IBeanProxy, IBeanProxy[], or <code>null</code>.
  * @throws ThrowableProxy if a remote vm error occurred.
  * @throws RunnableException if either a RuntimeException, or another specifically caught exception had occurred on this side.
  * 
