@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:39 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-11 18:36:28 $ 
  */
 
 import java.util.Collections;
@@ -873,7 +873,7 @@ public class GridBagComponentPage extends CustomizeLayoutPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "java.awt.GridBagLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", GridBagLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$
 			return true;
 		}
 		return false;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-11 18:36:23 $ 
  */
 
 
@@ -39,6 +39,9 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
  * This handles the Alignment/Distribute commands.
  */
 public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XYLayoutEditPolicy implements IZoomListener, IGridListener, IActionFilter {
+	
+	public final static String LAYOUT_ID = "org.eclipse.ve.internal.cde.core.XYLayout"; //$NON-NLS-1$
+	
 	private ZoomController zoomController;
 	private GridController gridController;
 	private GridFigure gridFigure;
@@ -601,7 +604,7 @@ public boolean testAttribute(Object target, String name, String value) {
 			value.equals("true") && //$NON-NLS-1$
 			gridController.isGridShowing() )
 		return true;
-	else if (name.startsWith("LAYOUTPOLICY") && value.equals("XYLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+	else if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$
 		return true;
 		
 	return false;
