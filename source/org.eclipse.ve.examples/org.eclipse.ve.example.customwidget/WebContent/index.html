@@ -24,33 +24,42 @@
  color="#0000ff"><br>
 Tutorial&nbsp; 1 - Enabling support for a custom widget<br>
 </font></h1>
+<h2><span style="color: rgb(255, 0, 0);">&lt;&lt;All tutorial classes
+need copyright statements and formatting- JRW&gt;&gt;<br>
+</span></h2>
 <h2>Background</h2>
 <p class="summary">The Visual Editor project provides reference
 implementations of a graphical user interface builder for the JFC and
 SWT widget toolkits built around an extensible framework.&nbsp; The
-motivation for this came from experience with previous GUI builders that
+motivation for this came from experience with previous GUI builders
+that
 while they provided high function end points for particular toolkits
 were unable to be adapted to support custom behavior for areas of
-functionality such as custom widgets, custom layout managers, user
-specific code generation patterns, etc...&nbsp; A design goal of the
+functionality such as user defined widgets, new layout managers, or
+flexible code generation patterns. A design goal of the
 visual editor is that is none of its own custom behavior for any JFC or
-SWT classes is done through any hard coding in the base, so any
-specific logic that the VE employs to enable say a tab pane, dropping a
+SWT classes is done through with hard coding and the core code at the
+base with all logic that the VE employs to enable specific bespoke
+function such dropping a
 control on a composite, or showing feedback for a particular layout
 manager is soft coded through extension points and can be leveraged by
-anyone wishing to employ similar techniques.<br>
+anyone wishing to employ similar techniques.&nbsp; <br>
 </p>
 <p class="summary">This tutorial covers an example where a user has a
 custom widget that they wish to extend the visual editor to have
 specific builder behavior for.&nbsp; It covers topics such as extending
 the Visual Editor's palette, building a BeanInfo class and working with
-EMF .override files to introduce custom editor behavior.<br>
+EMF .override files to introduce custom editor behavior.&nbsp; The
+reader of this tutorial is intended to be someone who wishes to
+customize the Visual Editor for a particular widget and understand the
+a number of touch points that can be used to provide bespoke behavior.<br>
 </p>
 <p><b>Gili Mendel, IBM<br>
 Joe Winchester, IBM<br>
 Dave Orme, db4objects</b></p>
 <p><font size="1">
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March 18, 2005<!--webbot bot="Timestamp" endspan i-checksum="17667" --></font></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March
+18, 2005<!--webbot bot="Timestamp" endspan i-checksum="17667" --></font></p>
 <hr width="100%">
 <h2><a name="Introduction"></a>Introduction</h2>
 <p>In this tutorial a 3.1 based Eclipse plugin&nbsp; <i>
@@ -70,29 +79,32 @@ Text and Button in a single widget called <span
 set methods and can be used to configure the behavior of the button and
 the label's text.&nbsp; There is also a <span
  style="font-style: italic;">ButtonSelectionEvent </span>event that is
-raised when the prompter's button is pressed, and listeners can
+raised when the prompter's button is pressed and listeners can
 register for this callback using <span style="font-style: italic;">addButtonSelectionListener(ButtonSelectionListener
 aListener); </span><br>
 </p>
 <p>In the
 absence of the plugin that this tutorial builds for the class <span
- style="font-style: italic;">MyCustomPrompter </span>it can be used by
+ style="font-family: monospace;">MyCustomPrompter </span>it can be
+used by
 a user
 who drops it onto an SWT composite by adding a JAR (or folder)
-containing the class to their Java project's build path and using
-ChooseBean from the palette to select MyCustomPrompter and drop it onto
+containing the class to their Java project's build path and selecting
+<span style="font-style: italic;">ChooseBean </span>from the palette
+to drop <span style="font-family: monospace;">MyCustomPrompter </span>onto
 a composite and begin working with it.&nbsp; Through inheritance (<span
  style="font-style: italic;">MyCustomPrompter </span>extends <span
  style="font-style: italic;">org.eclipse.swt.widgets.Composite</span>)
 the custom control will be rendered correctly, its properties will be
-determined using JavaBeans<sup>TM</sup> reflection and available to
-modify using the PropertiesViewer.&nbsp; The event will also be
+determined using JavaBeans<sup>TM</sup> reflection allowing it to be
+modified using the PropertiesViewer.&nbsp; The new event will also be
 determined automatically through introspection by the Visual Editor and
-available to the user to add listeners to through the Add Event
-dialog.&nbsp; This tutorial shows how the
-developer of the plugin can enable specific visual editor behavior over
-and above the default that is determined through inherited behavior and
-provide a high level edit experience for users of the <span
+available to the user to add callback logic to through the <span
+ style="font-style: italic;">Add Event</span>
+dialog.&nbsp; This tutorial shows how a plugin can be created that
+enables specific Visual Editor behavior over
+and above the default that is determined through inheritance.&nbsp;
+This results in a higher level edit experience for end users of the <span
  style="font-style: italic;">MyCustomPrompter </span>class.&nbsp; The
 examples given are purely for illustrative purposes only and to
 highlight some of the available ways to extend the behavior of the
@@ -100,8 +112,8 @@ Visual Editor, and it is expected that the reader of this tutorial will
 use it to learn the extension mechanism and then apply this to their
 own custom widget or Java class.&nbsp;<span
  style="color: rgb(204, 0, 0);"> &lt;&lt; Disclaimer here about fitness
-of the sample code required &gt;&gt;</span><br>
-</p>
+of the sample code required &gt;&gt;.&nbsp; <br>
+</span></p>
 <ul>
   <li>
     <h3>Palette</h3>
@@ -143,7 +155,8 @@ enter the class name</li>
     <h3>Property sheet</h3>
   </li>
   <ul>
-    <li>There is an <span style="font-style: italic;">int </span>property
+    <li><span style="font-family: monospace;">MyCustomPrompter </span>has
+an <span style="font-style: italic;">int </span>property
 called <span style="font-style: italic;">type </span>that affects the
 text shown on the CustomPrompter's button.&nbsp; This has a set of
 restricted values corresponding to static constrants.&nbsp; For
@@ -399,20 +412,10 @@ no preferred events<br>
 </table>
 <br>
 <h1>Table of Contents</h1>
-<p><a href="#Getting_started">Getting Started</a><br>
-<a href="#%0A_the_Plugin">Creating the Plugin</a><br>
-<a href="#The_Custom_Widget">The Custom Widget</a><br>
-<a href="#Creating_a_Classpath_Container">Creating a Classpath Container</a><br>
-<a href="#Adding_a_palette_category_for_our_widget">Adding a palette
-category for our widget</a><br>
-<a href="#Using_an_ENUM_cell_editor">Using an ENUM cell editor</a><br>
-<a href="#Creating_A_SWT_cell_editor">Creating a SWT cell editor</a><br>
-<a href="#Overriding_a_GEF_edit_part">Overriding a GEF edit part</a><br>
-<a href="#Overriding_an_Expression_Decoder">Overriding an Expression
-Decoder</a><br>
-<a href="#Preferred_Event">Preferred Event</a></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p><span style="color: rgb(255, 0, 0);">Create this list as links to
+the main headings and subheading swith descriptions<br>
+<br>
+</span></p>
 <h2><a name="Getting_started">Getting started</a></h2>
 <p>This tutorial goes go through the steps required to build a plugin
 called<b><i> </i></b><i>org.eclipse.ve.example.customwidget</i><span
@@ -423,9 +426,7 @@ installed.&nbsp; These can be obtained from the <a
  href="http://download.eclipse.org/tools/ve/downloads/index.php">Visual
 Editor's download page</a>.<br>
 </p>
-<p><img
- src="images/note.gif"
- alt="Note: " height="13" width="62">&nbsp;&nbsp;&nbsp;
+<p><img src="images/note.gif" alt="Note: " height="13" width="62">&nbsp;&nbsp;&nbsp;
 Although the plugin is designed to target 3.1 it can be developed in an
 earlier environment such as 3.0.1.&nbsp; The target environment is the
 one that is run when the <span style="font-weight: bold;">Run ...
@@ -470,7 +471,7 @@ field.&nbsp; Press <span style="font-style: italic;">Finish </span>to
 have the PDE generate the stub plugin.&nbsp; The workbench might then
 ask you to switch to the PDE perspective which you can answer <span
  style="font-style: italic;">Yes </span>to.&nbsp; The plugin manifest
-editor will then be opened by default.&nbsp; This is an editor that
+editor should be opened by default.&nbsp; This is an editor that
 allows you to view and edit the contents of the files called <span
  style="font-style: italic;">plugin.xml and manifest.mf </span>that
 reside within the plugin.&nbsp; These are both important files as they
@@ -503,9 +504,8 @@ editor is:<br>
   <li>org.eclipse.emf.ecore<br>
   </li>
 </ul>
-<p><img
- src="images/note.gif"
- alt="Note: " height="13" width="62"> The pre-requisite plugin
+<p><img src="images/note.gif" alt="Note: " height="13" width="62"> The
+pre-requisite plugin
 org.eclipse.ve.swt is not necessarily required by everyone extending
 the visual editor.&nbsp; It contains the code that enables the visual
 editor to work with the SWT and because <span
@@ -523,8 +523,8 @@ editor, select the <span style="font-style: italic;">Add ... </span>button
 beside the list of Required Plug-ins and enter the list of plugins
 listed above.<br>
 </p>
-<p><img style="width: 302px; height: 179px;" alt="PreReqPlugins"
- src="images/PreReqPlugins.JPG"><br>
+<p><img style="border: 1px solid ; width: 302px; height: 179px;"
+ alt="PreReqPlugins" src="images/PreReqPlugins.JPG"><br>
 </p>
 <blockquote class="PictureParagraph">
   <blockquote> </blockquote>
@@ -534,17 +534,142 @@ first is to create the actual custom widget class itself and test it,
 and the second is to extend the visual editor to have the customized
 behavior described in the <a href="#Introduction">intrduction</a>.<br>
 <br>
+<h2>Different jars and packages for workbench and widget code<br>
+</h2>
+There are two jar files being created as part of this tutorial.&nbsp;
+The reason for this is based on the architecture of the Visual Editor
+and how it uses a separate JVM for the editor than is used for the
+workbench itself.<br>
+<br>
+The Visual Editor can be considered as an extension to the Java
+Development Tooling (JDT) that lets you preview any visual controls
+that are part of the Java class being edited.&nbsp; The raw Java editor
+on its own lets you view and modoify the source code for a <span
+ style="font-style: italic;">.java</span> file and edit it using
+features like Code assist and the outline viewer.&nbsp; When you use
+code assist the list of available classes is scoped to be only those
+that are valid for the current compilation unit, namely those present
+in the Java build path of the project.&nbsp; The Java build path is
+specified through the project's properties and can be through of as the
+list of <span style="font-style: italic;">-classpath</span> entries
+that make up the <span style="font-style: italic;">javac </span>command.&nbsp;
+If you try to use a class that isn't on the build path you will be a
+compile error.&nbsp; If you try to call a method that doesn't exist on
+a valid class you will get a compile error, although if you were to
+change the build path so that it now contained a version of the class
+that had the method it would compile.&nbsp; The build path's entries
+determine the environment in which the class you're editing is being
+created for and the editor responds accordingly.<br>
+<br>
+When the Visual Editor is open it uses the JDT's Java editor (as the
+bottom half of the screen or a separate tab depending on the workbench
+preferences) and parses the code to recognize visual classes and how
+they are constructed and associated with each other and their
+properties.&nbsp; To create a preview of the visuals these classes must
+be actually instantiated following the constructor pattern detected
+from the source and set methods invoked for the properties and
+relationships.&nbsp; To do this a JVM environment must exist that
+contains the list of <span style="font-style: italic;">-classpath</span>
+entries that match those in the Java build path so that the JVM can
+load and use the actual instances the user is editing their project
+with.&nbsp; This can't be the Eclipse's JVM as this is started with the
+.jar files required for it to behave as an editor, so a separate JVM is
+created each time the Visual Editor is opened on a class.&nbsp; This is
+sometimes referred to as the <span style="font-style: italic;">target
+VM </span>and its purpose is to host prototype Java instances that the
+Visual Editor instantiates and uses based on the source statements in
+the <span style="font-style: italic;">.java </span>file being
+edited.&nbsp;&nbsp; A good analogy to this process is the one used by
+the <span style="font-style: italic;">Run As&gt;Java Application </span>option
+in the JDT.&nbsp; If you write a Java class with a public void
+main(String[] args) method the JDT lets you edit it inside the Eclipse
+JVM, however to test it a separate JVM is launched by the <span
+ style="font-style: italic;">Java Application </span>launcher.&nbsp;
+The JDT launcher's separate JVM can be viewed from the <span
+ style="font-style: italic;">Debug </span>viewer allowing you to set
+breakpoints and step through code, while the Visual Editor's <span
+ style="font-style: italic;">target VM</span>is deliberately hidden
+from the <span style="font-style: italic;">Debug </span>viewer to
+stop users from accidently teminating it.&nbsp; It is possible to debug
+the <span style="font-style: italic;">target VM </span>however and
+instructions for this are contained in a section at the end of this
+tutorial. <span style="color: rgb(204, 0, 0);">&lt;&lt;add this
+section + a link to it&gt;&gt;</span><span style="font-style: italic;"><span
+ style="font-style: italic;"><span style="font-style: italic;"><span
+ style="font-style: italic;"></span></span></span></span><br>
+<br>
+When writing the plugin for this tutorial there are two jar files that
+will finally be created.&nbsp; The first of these is the<a
+ href="#Plugin_Jar"> plugin jar</a> and contains the Eclipse workbench
+code that is used within the IDE's VM and contains code such as a JFace
+property sheet editor, a GEF graphical edit part and a custom source
+decoder.&nbsp; The second is the <a href="#Runtime_jar">runtime jar</a>
+that contains the actual MyCustomPrompter class itself and doesn't run
+inside the IDE but instead is placed in the Java build path of the
+user's project and runs in the target VM.&nbsp; The runtime jar also
+contains the BeanInfo class for MyCustomPrompter that contains the
+extensions that conform to the JavaBeans component model which is
+covered more in the sections on the <a
+ href="#Using_an_ENUM_cell_editor"><span style="font-style: italic;">type
+</span>property editor </a>and creating the preferred event.<br>
+<br>
+<span style="color: rgb(204, 0, 0);">&lt;&lt;Have a graphic showing the
+different VMs and the jar files&gt;&gt;</span><br>
+<h3><a name="Plugin_Jar"></a>Plugin jar</h3>
+The plugin code for this tutorial is placed in <span
+ style="font-style: italic;">customwidget.jar</span> that is defined as
+the runtime
+jar for the plugin itself.&nbsp; This contains the Eclipse code that
+will run inside the workbench and is defined in on the <span
+ style="font-style: italic;">Runtime </span>tab of the manifest editor
+for the plugin's plugin.xml file.&nbsp; <br>
+<br>
+<img style="border: 1px solid ; width: 373px; height: 105px;" alt=""
+ src="images/RuntimeLibrary.JPG"><br>
+<br>
+<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The name of the plugin code's jar
+is either held in a <span style="font-family: monospace;">&lt;runtime&gt;&lt;library
+name="customwidget.jar"&gt;&lt;/runtime&gt;</span> tag in the the <span
+ style="font-style: italic;">plugin.xml</span> file for a pre 3.1
+plugin, or else for an OSGI 3.1compatible only plugin the jar file name
+is held in the <span style="font-style: italic;">MANIFEST.MF</span>
+file in the line <span style="font-family: monospace;">Bundle-ClassPath:
+customwidget.jar</span>.&nbsp; <br>
+<br>
+The package <span style="font-family: monospace;">org.eclipse.ve.example.customwidget</span>
+contains the Java code that is used to create the contents of the <span
+ style="font-style: italic;">customwidget.jar</span>.<br>
+<h3><a name="Runtime_jar"></a>Runtime jar</h3>
+<span style="color: rgb(204, 0, 0);">&lt;&lt;I think we should rename
+the package to be more different.&nbsp; Either a put a "vm" in the
+prompter's package or else put "plugin" in the other package and jar -
+they are too close and it's a concept that users might trip up
+on&gt;&gt;</span><br>
+<br>
+The code for the <span style="font-family: monospace;">MyCustomPrompter
+</span>and its BeanInfo class are placed in the package
+org.eclipse.ve.example.customwidget.prompter.&nbsp; When the plugin is
+packaged these classes are placed into <br>
+<br>
+<span style="color: rgb(204, 0, 0);">&lt;&lt;Names way too similar -
+must fix - JRW&gt;&gt;</span><br>
+<br>
 <h2><a name="The_Custom_Widget">The Custom Widget</a></h2>
 <p>The custom widget used in this tutorial extends SWT composite and
 has three child controls on it; a label, a text field, and a
 button.&nbsp; For this tutorial we used the Visual Editor to build the
 custom widget which, although a good exercise in using the Visual
-Editor is outside the scope of what this tutorial is designed to cover,
-so you can download it directly from CVS.&nbsp; You should download the two
+Editor, is outside the scope of what this tutorial is designed to cover
+- you can download it directly from CVS to begin working.&nbsp; You
+should download the two
 classes
-<a href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java">MyCustomPrompter.java</a>,
+<a
+ href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java">MyCustomPrompter.java</a>,
 and
-<a href="../src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java">ButtonSelectionListener.java</a>
+<a
+ href="../src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java">ButtonSelectionListener.java</a>
 and place them into the plugin project in a package <span
  style="font-style: italic;">org.eclipse.ve.customwidget.prompter.&nbsp;
 </span>This is illustrated below together with the Visual Editor opened
@@ -555,7 +680,7 @@ where the visual editor classes&nbsp; (such as the specialized
 graphical edit part or code generation decoder) will reside, and the
 package <span style="font-style: italic;">org.eclipse.ve.customwidget.prompter
 </span>is where the classes reside that the user will use to build
-their runtime GUIs with.<br>
+their runtime GUIs with.&nbsp; <br>
 </p>
 <p><img style="border: 1px solid ; width: 714px; height: 376px;"
  alt="RuntimeClasses" src="images/index.7.jpg"><br>
@@ -564,7 +689,8 @@ their runtime GUIs with.<br>
 </span>and <span style="font-style: italic;">ButtonSelectionListener </span>will
 be packaged in a JAR.&nbsp; To do this select the runtime package and
 use the pop up menu option <span style="font-weight: bold;">Export</span>
-to bring up the Export wizard.&nbsp; Select the JAR file option and name the
+to bring up the Export wizard.&nbsp; Select the JAR file option and
+name the
 JAR file <span style="font-style: italic;">customwidgets.jar.&nbsp; </span>This
 JAR file will be placed inside the plugin itself and there are two ways
 to do this.&nbsp; The first is to either export the JAR to a temporary
@@ -603,7 +729,8 @@ list of available launch configurations, selecting <span
 This will launch a second Eclipse workbench - the first being your one
 that you are using to develop the plugin and the second being the one
 you are going to use to deploy the plugin into.&nbsp; In the deployed
-workbench create a Java project and add <i>customwidgets.jar</i> to the Java
+workbench create a Java project and add <i>customwidgets.jar</i> to
+the Java
 build path.&nbsp; This is done using the pop-up menu option to open the
 <span style="font-weight: bold;">Properties </span>of the project and
 selecting <span style="font-weight: bold;">Java Build path ...</span>.&nbsp;
@@ -909,14 +1036,10 @@ downloaded directly from <a
 to avoid re-entry.<br>
 <br>
 <pre>  &lt;xmi:XMI xmi:version="2.0" <br>    xmlns:xmi="http://www.omg.org/XMI" <br>    xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>    xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;  <br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag1.gif">  &lt;palette:CategoryCmp&gt;<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_2.gif">  &lt;categoryLabel xsi:type="utility:ConstantString" string="Custom"/&gt;<br>      &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br>    <br><img
- style="width: 23px; height: 13px;" alt=""
- src="images/tag_3.gif">      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>          &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_4.gif">         creationClassURI<b>=</b>"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">  &lt;palette:CategoryCmp&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">  &lt;categoryLabel xsi:type="utility:ConstantString" string="Custom"/&gt;<br>      &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br>    <br><img
+ style="width: 23px; height: 13px;" alt="" src="images/tag_3.gif">      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>          &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">         creationClassURI<b>=</b>"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/&gt;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">       &lt;entryLabel xsi:type="utility:ConstantString" string="Prompter"/&gt;<br>        &lt;/cmpEntries&gt; <br>      <br>      &lt;/cmpGroups&gt;<br>    &lt;/palette:CategoryCmp&gt;<br>  &lt;/xmi:XMI&gt;</pre>
 The&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag1.gif"> &lt;palette:categoryCmp&gt; tag describes a
@@ -924,9 +1047,8 @@ palette category that has a label and groups, each group containing a
 number of entries.&nbsp; In the example for the tutorial the label is
 hard coded to the literal&nbsp;<img style="width: 24px; height: 13px;"
  alt="" src="images/tag_2.gif"> <span style="font-style: italic;">"Custom".&nbsp;
-</span><img
- src="images/note.gif"
- alt="Note: " height="13" width="62"> For a plugin that needed to
+</span><img src="images/note.gif" alt="Note: " height="13" width="62">
+For a plugin that needed to
 support different language locales there is an EMF class
 utility:TranslatableString and examples of its usage can be found in
 the palette files for the plugin org.eclipse.ve.jfc.<br>
@@ -944,7 +1066,8 @@ the entry points to a file <span style="font-style: italic;">custom.gif
 </span>in the <span style="font-style: italic;">icons </span>directory
 of the plugin called <span style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
 </span>The graphic used&nbsp;<img style="width: 16px; height: 16px;"
- alt="" src="images/custom.gif"> is available in <a href="../icons/custom.gif">CVS</a>
+ alt="" src="images/custom.gif"> is available in <a
+ href="../icons/custom.gif">CVS</a>
 and you will need to create a folder called <span
  style="font-style: italic;">icons </span>in the plugin and copy it
 there.<br>
@@ -994,7 +1117,9 @@ path entries and for any that are containers it looks to see whether
 there are any palette files.&nbsp; These are combined together to
 create the overall palette.<br>
 </p>
-<p>Advanced &gt;&gt; As well as describing palette entries directly it
+<p><img style="width: 63px; height: 13px;"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: "> As well as describing palette entries directly it
 is possible to configure the Visual Editor to have an
 IConfigurationContribution that has the ability to manipulate both the
 -classpath of the Visual Editor's VM and the palette with more fine
@@ -1004,14 +1129,23 @@ a plugin that might wish to remove some of the existing palette
 entriies (such as the JFC ones) for projects configured with their
 container present.<br>
 </p>
-<p>Advanced&gt;&gt; As well as defining containers to be the trigger
+<p><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tip.gif"
+ alt="Tip: " height="13" width="62"> As well as defining containers to
+be the trigger
 point for Visual Editor custom behavior you can also use plugins by
-direct name.&nbsp; An example of where you might do this is if you were
+direct name <span style="color: rgb(255, 0, 0);">&lt;&lt; Show how to
+do this &gt;&gt;</span> An example of where you might do this is if you
+were
 extending the Visual Editor to work with a set of classes that were
 contained in a specific plugin, so the user experience to enable a
 Java project would be to add a dependent plugin rather than a classpath
 container.&nbsp; An example of this might be something like a PDE type
 development environment for the actual end user.<br>
+</p>
+<p><span style="color: rgb(255, 0, 0);">&lt;&lt;Above two points are
+quite advanced - we should make a cute Advanced&gt; Symbol for them
+like the Tip&gt; one &gt;&gt;</span><br>
 </p>
 <h3>Testing the custom palette</h3>
 Having modified the manifest of the example plugin to include the
@@ -1029,10 +1163,11 @@ palette entry has been selected and dragged out onto the Shell.&nbsp; <br>
 <img style="width: 503px; height: 439px;" alt=""
  src="images/CustomPalette.JPG"><br>
 <br>
-<img style="width: 63px; height: 13px;"
- src="images/note.gif"
+<img style="width: 63px; height: 13px;" src="images/note.gif"
  alt="Note: "> When you llaunch the Eclipse Application workspace use
-the -clean option, as each time the plugin.xml manifest file has
+the <span style="font-style: italic;">-clean</span> option, as each
+time the <span style="font-style: italic;">plugin.xml </span>manifest
+file has
 changed we need to be sure the runtinme Eclipse environment clears its
 cache'd manifest details<br>
 <br>
@@ -1142,7 +1277,8 @@ will be created that extends the abstract superclass <span
 </p>
 The full source code for the BeanInfo can be downloaded from<span
  style="text-decoration: underline;"> </span>
-<a href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">CVS.</a>&nbsp;
+<a
+ href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">CVS.</a>&nbsp;
 A BeanInfo class is responsible for describing the list of properties
 used by a tool such as the Visual Editor, and also their edit time
 behavior.&nbsp; This is done by specializing the method<span
@@ -1183,18 +1319,15 @@ the class <span style="font-family: monospace;">MyCustomPrompterBeanInfo</span>.
  style="color: rgb(51, 51, 255);">"text"</span>,MyCustomPrompter.class);<br>      result[1] = <span
  style="color: rgb(153, 0, 0);">new </span>PropertyDescriptor<span
  style="font-weight: bold;">(<span style="color: rgb(51, 51, 255);">"type"</span></span>,MyCustomPrompter.class);<br>		<br>      result[1].setValue(<img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag1.gif"><span
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"><span
  style="color: rgb(51, 51, 255);">"enumerationValues"</span>, <span
  style="color: rgb(153, 0, 0);">new </span>Object[] {<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_2.gif">    <span
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">    <span
  style="color: rgb(51, 51, 255);">"Dots"</span>, <span
  style="color: rgb(153, 0, 0);">new </span>Integer(MyCustomPrompter.<span
  style="color: rgb(51, 51, 255); font-style: italic;">DOTS</span>), <span
  style="color: rgb(51, 51, 255);">"org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS"</span>,<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_3.gif">    <span
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">    <span
  style="color: rgb(51, 51, 255);">"More"</span>, <span
  style="color: rgb(153, 0, 0);">new </span>Integer(MyCustomPrompter.<span
  style="color: rgb(51, 51, 255); font-style: italic;">MORE</span>), <span
@@ -1252,9 +1385,8 @@ create the complete list.<br>
  style="color: rgb(153, 0, 0);">class</span>)}; <br>    } <span
  style="color: rgb(153, 0, 0);">catch </span>(IntrospectionException e){<br>    <span
  style="color: rgb(153, 0, 0);">return new</span> BeanInfo[0];<br>  }<br></pre>
-<img
- src="images/note.gif"
- alt="Note: " height="13" width="62">To create the array of BeanInfo
+<img src="images/note.gif" alt="Note: " height="13" width="62">To
+create the array of BeanInfo
 classes representing the set of descriptors to merge one technique
 might be to write the code <span style="font-family: monospace;"><span
  style="color: rgb(153, 0, 0);">return new</span> BeanInfo[]
@@ -1429,119 +1561,786 @@ location of the override folder is up to the creator of the plugin and
 is any arbitrary folder, however there is a convention that the Visual
 Editor uses where override files are held in a top level folder called <span
  style="font-style: italic;">overrides </span>and then sub folders
-created for the package path. &nbsp; <br>
+created for the package path. &nbsp; The Figure below shows the
+directory structure of the <span style="font-style: italic;">org.eclipse.ve.example.customwidget
+</span>plugin with the folder structure of <span
+ style="font-style: italic;">/overrides/org/ecliose/ve/example/customwidget/prompter
+</span>(whichmatches that defined in the registration path=<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
+extension point).&nbsp; <br>
 </p>
 <p><img style="border: 1px solid ; width: 365px; height: 226px;" alt=""
  src="images/OverrideFileStructure.JPG"><br>
-<br>
 </p>
+<p>The Figure also shows a file MyCustomPrompter.override present in
+the override directory for the package.&nbsp; When the Visual Editor
+builds up the EMF JavaClass instance representing the shape of the
+MyCustomPrompter class this file will be read and merged into the
+definition.&nbsp; The syntax of this file can become complex due to the
+number of different ways in which diferent JavaClasses needed to be
+leveraged to implement custom functionality.&nbsp;&nbsp; The remainder
+of the three examples in this tutorial are each achieved through
+settings in the .override file.&nbsp; These are:</p>
+<ul>
+  <li>Custom cell editing for the text property</li>
+  <li>Overriding a GEF edit part <br>
+  </li>
+  <li>Overriding an expression decoder<br>
+  </li>
+</ul>
+<p>Each of these three is done through adding decorator classes.&nbsp;
+Decorator classes are added to ECore elements in the EMF model
+representing a class, either the JavaClass itself or an EReference
+representing one of its structural features&nbsp;&nbsp; Decorators are
+added through the &lt;annotations&gt; property of an ECore object.<br>
+</p>
+<p>The type <span style="font-family: monospace;">org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator
+</span>is responsible for specifying property sheet information such as
+the name of the classes for the JFace label provider or cell editor, or
+whether the entry in the property sheet should override the default
+behavior for whether it is expandable, whether null values are allowed,
+etc...</p>
+<p>The type <span style="font-family: monospace;">org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator
+</span>is responsible for specifying custom GEF behavior such as custom
+edit parts for the graphical editor or the Java Beans tree view.<br>
+</p>
+<p>The type&nbsp; <span style="color: rgb(255, 0, 0);">&lt;&lt;Talk to
+Gili about how expression decoders work - they are defined differently
+and we should justify why and also possibly change it to have them
+defined in rose and code generated&gt;&gt;<br>
+<br>
+</span></p>
+<p></p>
 <h2><a name="Creating_A_SWT_cell_editor">Custom cell editing for the <span
  style="font-style: italic;">text </span>property</a></h2>
-<p>&nbsp;</p>
-<p>The <i>MyCustomPrompter</i> class has a String property named <b><i>text</i></b>.&nbsp;
-By default the Visual Editor will use a generic String cell editor for
-it (see
-<a href="#Figure">Figure</a>).&nbsp; But let assume that we want to
-develop a specialized cell editor for this property.&nbsp; First we are
-going to use the Visual Editor itself to develop the content of the
-cell editor (<a href="../src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>).
-We will then contribute it to VE so that it uses it as the <b><i>text</i></b>
-cell editor for a <i>MyCustomPrompter</i> class.&nbsp; The main
-interface with the <i>
-LabelDialogContent</i> class will be a simple setter/getter: <i>getString</i>
-and <i>setString</i> methods.&nbsp; The idea is that when you click on
-the <i><b>text</b></i> property on the property sheet, VE will bring
-up an instance of this class, call <i>setString</i> with the current
-value, and at the end call <i>getString</i> to get the final, edited
-value.</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.2.jpg" class="PictureStyle"></p>
-<p>
-VE will require a special Cell Editor based class (we will create a
-<a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomLabelEditor.java?cvsroot=Tools_Project">CustomLabelEditor.java</a>
-class).&nbsp; This class will wrap our GUI content class as following:</p>
-<p>
+<p>Because <span style="font-family: monospace;">MyCustomPrompterBeanInfo
+</span>returns a <span style="font-style: italic;">text <span
+ style="font-family: monospace;">PropertyDescriptor</span></span><span
+ style="font-family: monospace;"> <span
+ style="font-family: arial,helvetica,geneva;">in </span></span>list of
+properties from the method <span style="font-family: monospace;">getPropertyDescriptors()[]</span>
+it will be included as an entry in the Properties view.&nbsp; Even
+without the explicit BeanInfo the class's signature includes the two
+methods <span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">public </span>String getText()</span>
+and <span style="font-family: monospace; color: rgb(153, 0, 0);">public
+</span><span style="font-family: monospace;">void setText(String aText)
+</span>which, because they follow
+the JavaBeans specification naming convention for a property's get and
+set methods, would be automatically detected by the Visual Editor
+through Introspection.</p>
+<p>The rules for the Properties view is that for a given property a
+BasePropertyDecorator is first looked for on the EReference
+representing the property in the EMF model.&nbsp; If one is found and
+it has an explicit labelProviderClassName or cellEditorClassName then
+this is used as appropiate.&nbsp; This is the mechanism that will be
+used for the <span style="font-style: italic;">text </span>property.&nbsp;
+If no decorator exists in the property defining an editor then if the
+EReference came originally through introspection the
+java.beans.PropertyDescriptor is queried to look for a
+propertyEditorClass or key of <span style="font-style: italic;">enumerationValues.&nbsp;
+</span>Failing both of these a default editor is used for the type of
+the property.<br>
 </p>
-<pre>	protected Object openDialogBox(Control cellEditorWindow) {<br>		Display display = cellEditorWindow.getDisplay();<br>		TitleAreaDialog dialog = new TitleAreaDialog(display.getActiveShell()) {<br>			<font
- color="#0000ff">LabelDialogContent content</font>;<br>			protected Control createContents(Composite parent) {<br>				Control result = super.createContents(parent);<br>				setTitleImage(CustomwidgetPlugin.getCustomImage());<br>				setTitle("Prompter's text property editor");<br>				setMessage("Enter the text property, or select a default one by checking the Hello or GoodBye",IMessageProvider.INFORMATION);												<br>				return result;<br>			}<br>			protected Control createDialogArea(Composite parent) {<br>				<font
- color="#0000ff">content = new LabelDialogContent(parent, SWT.NONE);<br>				content.setString(stringValue);<br>				return content;</font><br>			}<br>			<br>			public String toString() {<br>				return content.getString();<br>			}<br>		};	<br>		<br>	<br>		if (dialog.open() != Window.CANCEL) <br>			<font
- color="#0000ff">return createStringJavaObject(dialog.toString());</font><br>		else<br>			return getValue();<br>	}<br></pre>
-<p>
-The <i>openDialogBox</i> will be called when the text property is
-selected in the property sheet.&nbsp; It in turn will open a&nbsp;
-JFace dialog with our <i>
-LabelDialogContent</i> as the <i>createDialogArea</i>'s content. The <i>openDialogBox</i>
-needs to return the new value.&nbsp; <b>This value is not a String</b>.&nbsp;
-This value is the VE (EMF) model element representing the string
-value.&nbsp; The
-<i>createStringJavaObject</i> call will convert the string to an EMF
-representation of it.</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">When we
-prime the dialog with a <i>stringValue</i>, we need to figure out what
-is the actual value that is represented by the (EMF) model
-element.&nbsp; The value of the <i><b>text</b></i> property of a <i>MyCustomPrompter</i>
-instance may not be the same value as was set to it in the model.&nbsp;
-In fact, it may be the case that the text setting was never set, but it
-has some default value; but what is it?&nbsp; To figure this out we
-will have to go to the live instance of this String on the target VM
-and extract its value.&nbsp; This logic is done with the <i>doSetValue</i>
-method. <i>doSetValue</i> is called from the property sheet to prime
-the cell editor with the model value.&nbsp; This method uses <i>BeanProxy</i>
-APIs to refer to the actual object (on the target VM) that is referred
-to by the model's value.&nbsp; IStringBeanProxy is the link between the
-EMF String object, and the Target VM String instance.</p>
-<pre>	protected void doSetValue(Object value) {<br>		if (value != null){<br>			IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);<br>			stringValue = stringBeanProxy.stringValue();<br>		}<br>		super.doSetValue(value);<br>	}<br></pre>
-<p>&nbsp;</p>
-<p>Now that we have the cell editor all coded up, we need to tell VE
-when to use it.&nbsp; VE uses xmi <i><b>overrides</b></i> files to do
-so.&nbsp; These override files (like the palette contribution) are
-quite verbose.&nbsp; Here is a portion of the
-<a href="../overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override">MyCustomPrompter.override</a>
-that relates to the cell editor.&nbsp; We will need to add this file to
-our plugin.</p>
-<p>
+<p><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> To determine the default editor
+for a property based on its type a <span
+ style="font-family: monospace;">BasePropertyDecorator </span>on the
+JavaClass EMF definition is used.&nbsp; For example, the <span
+ style="font-style: italic;">text </span>property is typed to <span
+ style="font-family: monospace;">java.lang.String </span>and the
+plugin <span style="font-style: italic;">org.eclipse.ve.java.core</span>
+provides a <span style="font-style: italic;">String.override</span>
+file that annotates the <span style="font-family: monospace;">JavaClass
+</span>with a a <span style="font-family: monospace;">BasePropertyDecorator
+</span>defining the label provider as <span
+ style="font-family: monospace;">org.eclipse.ve.internal.java.core.StringJavaLabelProvider
+</span>and the cell editor as <span style="font-family: monospace;">org.eclipse.ve.internal.java.core.StringJavaCellEditor.</span>&nbsp;
+This is an example of where the Visual Editor's implementations of the
+JFC and SWT are done thoroughly using its own API.<br>
 </p>
-<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>	:<br>	: <br>  &lt;event:Add  featureName="eStructuralFeatures"&gt;<br>    &lt;addedEObjects xsi:type="ecore:EReference" name="<font
- color="#0000ff">text</font>" unsettable="true"&gt;<br>      &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:<font
- color="#ff0000">BasePropertyDecorator</font>"          <br>          <font
- color="#0000ff">cellEditorClassname</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font><font
- color="#0000ff">/org.eclipse.ve.example.customwidget.CustomLabelEditor</font>"/&gt;<br>    &lt;/addedEObjects&gt;<br>   &lt;/event:Add&gt;    <br>  <br>&lt;/xmi:XMI&gt;<br></pre>
-<p>We are telling the introspector to annotate the <i><b>text</b></i>
-feature with a BasePropertyDecorator EMF class.&nbsp; One of the
-properties of this class is a <i>cellEditorClassname</i>.&nbsp; The
-value format is as following:
-&lt;plugin_name&gt;/&lt;class_name&gt;.&nbsp; The Property Sheet will
-use this information to determine which cell editor to use.&nbsp; If
-one is not set, it will use the annotation of a super class.</p>
+<p>The cell editor that will be written for the <span
+ style="font-style: italic;">text </span>property will be placed in
+the package <span style="font-family: monospace;">org.eclipse.ve.example.customwidget</span>.&nbsp;
+This package will form part of the contents of the plugin jar that
+makes up the code that runs in the workbench and extends the Visual
+Editor with new Eclipse workbench behavior.&nbsp; The class created is <span
+ style="font-family: monospace;">org.eclipse.ve.example.customwidget.CustomLabelEditor</span>
+and extends the abstract superclass <span
+ style="font-family: monospace;">org.eclipse.jface.viewers.DialogCellEditor</span>.&nbsp;
 <br>
-<p><font face="Arial">The following is the directory structure after
-adding the new cell editor classes, and override file:</font></p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.23.jpg" class="PictureStyle"></p>
-<p class="PictureParagraph">&nbsp;</p>
-<blockquote>
-  <p>&nbsp;</p>
-</blockquote>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">Make
-sure to launch the workspace with the -clean option, as we have changed
-the manifest file.</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">If you
-are reading this before a VE1.1 release build, you may have to do a
-Project-&gt;clean, close, and reopen the java project that you are
-using the <i>
-MyCustomPrompter</i> class so that the introspector clear its BeanInfo
-cache.</p>
-<p>&nbsp;</p>
-<p>The following is the an image of the cell editor that will now come
-up when a user press on the ... button of the text property of a
-MyCustomPrompter.</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.24.jpg" class="PictureStyle"></p>
-<p>&nbsp;</p>
+</p>
+<p>IDE specific extensions are defined by annotating the EMF JavaClass
+meta object that the Visual Editor uses.&nbsp; This is done with a
+.override file, and the contents of <span style="font-style: italic;">MyCustomPrompter.override
+</span>should be written as follows:<br>
+<br>
+</p>
+<pre>    &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif">   &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br>        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;<br>    <br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">  &lt;event:Add featureName="eStructuralFeatures"&gt;<br>       &lt;addedEObjects xsi:type="ecore:EReference" <img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif">name="text" unsettable="true"&gt;<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">      &lt;eAnnotations<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif"> xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          <br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">        cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;<br>       &lt;/addedEObjects&gt;<br>     &lt;/event:Add&gt;   <br><br>   &lt;/xmi:XMI&gt;<br></pre>
+<p>The header of a .override file declares the namespaces of the EMF
+packages used.&nbsp; Two packages are required to define the objects
+required for the CustomLabelEditor, the&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">
+decorators.ecore package and the event model's package.<br>
+</p>
+<p>The purpose of the file is to create a BasePropertyDecorator that
+defines the cell editor and annotate the structural feature for the <span
+ style="font-style: italic;">text </span>property.&nbsp; This is done
+by&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> adding a structural feature whose name is <span
+ style="font-style: italic;"><img style="height: 13px; width: 24px;"
+ alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif"></span>
+<span style="font-style: italic;">text.&nbsp; </span>Even through the
+object used is an <span style="font-style: italic;">Add </span>from
+the event model, the Visual Editor will pick up the fact that there is
+a <span style="font-style: italic;">text </span>property defined from
+introspection (the one explicitly specified in the
+MyCustomPrompterBeanInfo or in its absence the one determined through
+get and set method pair matching) and merge in with this
+property.&nbsp; This way information that has come from introspection
+such as the get and set method names are combined with the EReference
+defined in the .override file.<br>
+</p>
+<p>The&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_4.gif"> eAnnocations property defines the annotations
+for the EReference and the class we're creating is an instance of <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator.&nbsp; <img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The xsi:type structure does not
+point to the Java package directly.&nbsp; The first portion of
+org.eclipse.ve.internal.cde.decorators points to the name of a
+namespace defined in the&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag1.gif"> xmi:XMI opening tag.&nbsp; This
+namespace relates to the URL of decorators.ecore EMF package that
+itself is declared in the plugin org.eclipse.ve.cde with its own use of
+the extension point <span style="font-style: italic;">org.eclipse.emf.ecore.generated_package
+</span>to be the EMF package class
+org.eclipse.ve.internal.cde.decorators.DecoratorsPackage.<br>
+</p>
+<p>The class
+org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator has an EMF
+feature&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_6.gif"> cellEditorClassname.&nbsp; This will be used
+by the Visual Editor in the Properties view when the property is edited
+and points to our custom editor.<br>
+</p>
+<p>Having defined the .override file that extends the <span
+ style="font-family: monospace;">MyCustomPrompter</span>'s <span
+ style="font-style: italic;">text </span>feature to have a custom IDE
+cell editor the next step is to write the code for the custom editor
+itself.&nbsp; <span style="font-family: monospace;">CustomLabelEditor </span>extends
+DialogCellEditor that provides the framework support for displaying a
+button to open the actual dialog.&nbsp; <br>
+</p>
+<p><img style="border: 1px solid ; width: 233px; height: 37px;" alt=""
+ src="images/TextPropertyCellEditor.JPG"><br>
+</p>
+<p>The next step is to write the dialog that allows the user to edit
+the <span style="font-style: italic;">text </span>property and ensure
+that this is launched from CustomLabelEditor. <br>
+</p>
+<p>The dialog is created by extending the JFace helper class <span
+ style="font-family: monospace;">org.eclipse.jface.dialogs.TitleAreaDialog</span>
+that provides support for the title area and buttons.&nbsp; The content
+or client area of this will be built using the Visual Editor itself as
+a visual component class <span style="font-family: monospace;">org.eclipse.ve.example.customwidget.LabelDialogContentArea.</span><span
+ style="font-style: italic;"></span></p>
+<p><img style="width: 800px; height: 248px;" alt=""
+ src="images/CustomTextEditorDialog.JPG"><br>
+</p>
+<p><span style="color: rgb(255, 0, 0);">&lt;&lt;This would benefit
+hugely from a diagram of the three classes and how they relate
+together&gt;&gt; </span></p>
+<p>To logic for what occurs when the dialog is requested to be open is
+done by specializing the method <span style="font-family: monospace;">openDialogBox(Control
+cellEditorWindow) </span>in <span style="font-family: monospace;">CustomLabelEditor<span
+ style="font-family: arial,helvetica,geneva;">.</span></span> The
+contents for this method are shown below and perform two important
+steps.&nbsp; The first of these is to open an actual dialog that lets
+the user specify their text property, and the second is to get the
+result of this and create a new <span style="font-family: monospace;">IJavaInstance
+</span>that represents the next String for the Visual Editor's EMF
+instance model.&nbsp; The code below shows how to do this for <span
+ style="font-family: monospace;">CustomLabelEditor</span>.<br>
+</p>
+<pre><span style="color: rgb(153, 0, 0);">  protected </span>Object openDialogBox(Control cellEditorWindow) {<br>    Display display = cellEditorWindow.getDisplay();<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">   TitleAreaDialog dialog = <span
+ style="color: rgb(153, 0, 0);">new </span>TitleAreaDialog(display.getActiveShell()) {<br>      LabelDialogContent content;<br>      <span
+ style="color: rgb(153, 0, 0);">protected </span>Control createContents(Composite parent) {<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">     Control result = super.createContents(parent);<br>        setTitleImage(CustomwidgetPlugin.getCustomImage());<br>        setTitle(<span
+ style="color: rgb(51, 51, 255);">"Prompter's text property editor"</span>);<br>        setMessage(<span
+ style="color: rgb(51, 51, 255);">"Enter the text property, or select a default one by checking the Hello or GoodBye"</span>,IMessageProvider.<span
+ style="font-style: italic;">INFORMATION</span>);												<br>        <span
+ style="color: rgb(153, 0, 0);">return </span>result;<br>      }	<br>      <span
+ style="color: rgb(153, 0, 0);">protected </span>Control createDialogArea(Composite parent) {<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">     content = <span
+ style="color: rgb(153, 0, 0);">new </span>LabelDialogContent(parent, SWT.<span
+ style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">     content.setString(stringValue);<br>        <span
+ style="color: rgb(153, 0, 0);">return </span>content;<br>      }		<br>      <span
+ style="color: rgb(153, 0, 0);">public </span>String toString() {<br><img
+ style="height: 13px; width: 24px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif">     <span
+ style="color: rgb(153, 0, 0);">return </span>content.getString();<br>      }<br>    };				<br>    <span
+ style="color: rgb(153, 0, 0);">if </span>(dialog.open() != Window.<span
+ style="font-style: italic; color: rgb(51, 51, 255);">CANCEL</span>) {<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">   <span
+ style="color: rgb(153, 0, 0);">return </span>createStringJavaObject(dialog.toString());<br>    } <span
+ style="color: rgb(153, 0, 0);">else </span>{<span
+ style="color: rgb(153, 0, 0);"><br>      return </span>getValue();<br>    }<br>  }<span
+ style="color: rgb(153, 0, 0);"><br></span></pre>
+<p>The dialog editor used is an&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> inner
+class that extends the jface abstract class
+org.eclipse.jface.dialogs.TitleAreaDialog.&nbsp; Three methods are
+specialized:<br>
+</p>
+<p>The createContents(Composite parent) method is used to build the
+actual SWT content area of the dialog.&nbsp; The TitleAreaDialog
+supeclass provides a default structure that is invoked through
+calling&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> <span style="font-family: monospace;">super.createContents(parent)</span>,
+although details such as the image and title are overridden. The
+content area of the dialog is the area we're interested in putting out
+custom editing experience into, and this is done by creating an
+instance of&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_3.gif"> <span style="font-family: monospace;">LabelDialogContent
+</span>(that is built below). <br>
+</p>
+<p>The content area for the TitleAreaDialog created by the
+LabelCellEditor is the class
+org.eclipse.ve.examples.customwidget.LabelDialogContent.&nbsp; This is
+available in CVS <a
+ href="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
+and extends <span style="font-family: monospace;">org.eclipse.swt.Composite</span>
+and was built using the Visual Editor.&nbsp; This has the methods
+public setString(String aString) to set the current value of the
+Strring, and public String getString() to return it.&nbsp; These are
+both called by the CustomLabelEditor when it&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">
+initializes the content area and&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+returns the value.&nbsp; <br>
+</p>
+<p>If the TitleAreaDialog isn't cancelled then the JFace cell editor
+needs to return the value of the newly created object representing the
+value of the <span style="font-style: italic;">text </span>property.&nbsp;
+The LabelDialogContent returns a java.lang.String and this requires
+conversion into an IJavaInstance representing the EMF JavaClass
+instance for the Visual Editor's model.&nbsp; This is done with the
+helper method&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_6.gif"> <span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">public </span>IJavaInstance
+createStringJavaObject(String aString);<br>
+</span></p>
+<p>To create an IJavaInstance requires two steps.&nbsp; First the EMF
+JavaClass needs to be located and then it an instance of IJavaInstance
+is created from this with rules as to how the actual instantion of the
+actual Java object should occur.</p>
+<p>To locate a JavaClass involves looking up for the object on the
+current resource set.&nbsp; A resource set is a physical grouping of
+EMF documents and to locate the one being used by the Visual Editor it
+is held on the editorPart's GEF editDomain.&nbsp; The Visual Editor
+uses a subclass of default GEF edit domain called <span
+ style="font-family: monospace;">org.eclipse.ve.internal.cde.core.EditDomain</span>.&nbsp;
+The editDomain provides a way of passing common objects (such as the
+target VM helper classes, the set of viewers, and the EMF resource set)
+around between different Visual Editor subsystems.&nbsp; For a cell
+editor to be given a reference to the edit domain it should implement
+the interface org.eclipse.ve.internal.propertysheet.INeedData that has
+a single method public void setData(Object data);&nbsp; The argument to
+this will be set by the Visual Editor to the editDomin object and the
+cell editor stores this in an instance variable. <br>
+</p>
+<pre><span style="color: rgb(153, 0, 0);"></span><span
+ style="font-family: monospace;"><span style="color: rgb(153, 0, 0);">  public class</span> CustomLabelEditor <span
+ style="color: rgb(153, 0, 0);">extends </span>DialogCellEditor <span
+ style="color: rgb(153, 0, 0);">implements </span>INeedData {</span><br
+ style="font-family: monospace;"><span style="font-family: monospace;">    <span
+ style="color: rgb(153, 0, 0);">private </span>EditDomain fEditDomain;	<br><span
+ style="color: rgb(51, 204, 0);"> <span style="color: rgb(0, 153, 0);">   // Remainder of class definition ...</span></span><br></span></pre>
+<p>and<br>
+</p>
+<pre> <span style="color: rgb(153, 0, 0);"> public void </span>setData(Object data) {<br>    fEditDomain = (EditDomain) data;<br>  }<br></pre>
+<p>To lookup the resource set from an EditDomain can be done using the
+static helper method<span style="font-family: monospace;">
+JavaEditDomainHelper.getResourceSet(EditDomain anEditDomain);</span><br>
+</p>
+<p>Now that the CustomLabelEditor has a handle to the Visual Editor's
+model's resource set it can look up JavaClass objects using the API
+org.eclipse.jem.internal.beaninfo.core.Utilities.getJavaClass(String
+className, ResourceSet resourceSet);&nbsp;&nbsp;&nbsp; In EMF to
+instantiate actual objects the package's factory should be used, so
+having obtained the <span style="font-family: monospace;">JavaClass </span>to
+get the <span style="font-family: monospace;">IJavaInstance </span>requires
+the method call <span style="font-family: monospace;">javaClass.getEPackage().getEFactoryInstance().create(javaClass);</span>&nbsp;
+Rather than having to do both steps however there is a helper API
+method <span style="font-family: monospace;">org.eclipse.ve.internal.java.core.BeanUtilities.createJavaObject(String
+qualifiedClassName, ResourceSet aResourceSet, String initString)</span>;&nbsp;
+Examples of its usage are shown below:<br>
+</p>
+<pre><span style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
+ style="color: rgb(51, 51, 255);">"java.lang.Boolean"</span>, aResourceSet, <span
+ style="color: rgb(51, 51, 255);">"Boolean.TRUE"</span>);  // Create a Boolean.TRUE instance<br><span
+ style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
+ style="color: rgb(51, 51, 255);">"java.awt.Color"</span>, aResourceSet , <span
+ style="color: rgb(51, 51, 255);">"java.awt.Color.red"</span>);  // Create an instance of the AWT color red<br><span
+ style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
+ style="color: rgb(51, 51, 255);">"boolean"</span>, aResourceSet, <span
+ style="color: rgb(51, 51, 255);">"true"</span>);  // Create an instance of the primitive boolean true<br>BeanUtilities.createJavaObject(<span
+ style="color: rgb(51, 51, 255);">"java.lang.String"</span>, aResourceSet, <span
+ style="color: rgb(51, 51, 255);">"\\"Hello World\\""</span>); // Create an instance of the String "Hello World"<br></pre>
+<p><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The third argument to the method
+represents the code fragment that will be used to instantiate the
+actual live Java instance.&nbsp; This is the actual argument that is
+used by the Visual Editor when it generates the <span
+ style="font-family: monospace;">setProperty(Object propertyValue) </span>method.&nbsp;
+For the last example that was itself a String for the quotation marks
+to be present in the String when the code is generated they must be
+present in the literal itself which requires escaping them with a <span
+ style="color: rgb(51, 51, 255);">\\.</span><br>
+</p>
+<p>The protected helper method on <span style="font-family: monospace;">CustomLabelEditor
+</span>and called by <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_6.gif"> <span style="font-family: monospace;">openDialogBox(Control
+cellEditorWindow)</span> can now be written as follows.</p>
+<pre>  <span style="color: rgb(153, 0, 0);">private </span>IJavaInstance createStringJavaObject(String aString) {<br>    <span
+ style="color: rgb(153, 0, 0);">return </span>BeanUtilities.createJavaObject(<br>      <span
+ style="color: rgb(51, 51, 255);">"java.lang.String"</span>,<br>      JavaEditDomainHelper.getResourceSet(fEditDomain),<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">   BeanUtilities.createStringInitString(aString)<br>    );<br>  }</pre>
+<p><span style="font-family: monospace;"></span></p>
+<p>Rather than just writing <span style="color: rgb(51, 51, 255);">"\\"</span>
++ aString + <span style="color: rgb(51, 51, 255);">"\\"</span> a
+helper method on&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> <span style="font-family: monospace;">BeanUtilities
+</span>is used to quote the user's string.&nbsp; The helper handles
+cases such as the string containing bona-fide escape characters the
+user put there that themselves need quoting.<br>
+<span style="font-family: monospace;"></span></p>
+<h3>Rendering the <span style="font-style: italic;">text value&nbsp; </span>in
+the Properties view<span style="font-family: monospace;"></span><br>
+</h3>
+<p>When the <span style="font-style: italic;">text </span>property is
+displayed in the Properties view we wish the user to
+be able to see the current value.&nbsp; This occurs with nothing extra
+to be done, because the <span style="font-style: italic;">text </span>property
+is typed to<span style="font-family: monospace;"> java.lang.String </span>and
+there is a default label provider class for this provided by the <span
+ style="font-style: italic;">org.eclipse.ve.java.core </span>plugin as
+part of its <span style="font-style: italic;">String.override</span>.&nbsp;
+For this reason file the Visual Editor already knows how to render
+String properties as
+shown below.<br>
+</p>
+<p><span style="font-family: monospace;"><img
+ style="border: 1px solid ; width: 238px; height: 37px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/TextPropertyDisplayed.JPG"></span><br>
+</p>
+<p>With the CustomLabelEditor however specific code isi required to
+ensure that it displays the current value of the <span
+ style="font-style: italic;">text </span>property<span
+ style="font-family: monospace;"><br>
+</span></p>
+<p></p>
+<p><img style="border: 1px solid ; width: 239px; height: 37px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/TextCurrentValue.JPG"><br>
+</p>
+<p>This is done by specializing the method doSetValue(Object
+value);&nbsp; This method is given an argument of an IJavaInstance
+which represent the current value of the String object in the Visual
+Editor's EMF model.&nbsp; To convert from this to this to a<span
+ style="font-family: monospace;"> java.lang.String </span>object can
+be done by accessing the target VM to query the value of the live
+String object.<br>
+</p>
+<p>To write the code for the doSetValue(Object value) method requires
+an understanding of the API to work with the Visual Editor target VM
+objects<br>
+</p>
+<h4>Target VM and its APIs<br>
+</h4>
+<p>Live objects used by the Visual Editor exist only on the target VM
+and are never loaded by the Visual Editor inside the actual Eclipse
+workbench's JVM.&nbsp; For every object created on the target VM there
+is a proxy to it held by the Visual Editor inside the Eclipse
+JVM.&nbsp;&nbsp;&nbsp; This proxy is an instance of <span
+ style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.IBeanProxy</span>
+and is able to perform tasks such as remote method&nbsp; invocation on
+the actual target VM instance. <br>
+The API for this is modelled on the the java.lang.reflect API however,
+unlike the reflection API which performs dynamic invocation within a
+single JVM, the bean proxy mechanism works between the Eclipse
+workbench's JVM where the proxies are, and Visual Editor's target JVM
+where the live instances exist.<br>
+</p>
+<table style="text-align: left; width: 75%;" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">java.lang and java.lang.reflect
+API<br>
+      </td>
+      <td style="vertical-align: top;">org.eclipse.jem.internal.proxy.core
+API<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Object</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBeanProxy</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Class</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBeanTypeProxy</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">object.getClass()</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBeanProxy.getTypeProxy()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Method</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IMethodProxy</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Class.getMethod(String methodName)</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBeanTypeProxy.getMethodProxy(String
+methodName)</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Constructor</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IConstructorProxy</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Class.getConstructor(Class[] types)</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBeanTypeProxy.getConstructorProxy(IBeanTypeProxy[]
+types)</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">Constructor.newInstance(Object[]
+initArgs)</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IConstructorProxy.newInstance(IBeanProxy[]
+initArgs)</span><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>To locate instances of <span style="font-family: monospace;">IBeanProxy
+</span>(from which method and constructor proxies can be retrieved)
+uses a factory that is held on a proxy factory registry.&nbsp; The
+registry is used to create and cache instances of <span
+ style="font-family: monospace;">IBeanTypeProxy</span>, and can be
+located through a helper method which retrieves it from the GEF edit
+domain.&nbsp; The <span style="font-family: monospace;">IProxyFactoryRegistry
+</span>can return factories for retrieving instances of IBeanTypeProxy
+through the method getBeanTypeProxy(String typeName) as well as
+factories for creating new instances of <span
+ style="font-family: monospace;">IBeanProxy </span>through the
+overloaded method <span style="font-family: monospace;">getBeanProxy(Object
+anObject)</span> with arguments representing the nine Java primitives,
+their <span style="font-family: monospace;">java.lang</span> peers as
+well as<span style="font-family: monospace;"> java.lang.String</span>.<br>
+</p>
+<p>The follwoing code samples show how to create an instance of a
+<span style="font-family: monospace;">java.io.File</span> for the file
+name <span style="font-style: italic;">"C:\temp\foo.txt"</span> (i.e.
+the result of evaluating <span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">new </span>java.io.File(<span
+ style="color: rgb(51, 51, 255);">"C:\temp\foo.txt"</span>) </span>on
+the target VM.<br>
+</p>
+<pre>IProxyFactoryRegistry aProxyFactoryRegistry = JavaEditDomainHelper.getBeanProxyDomain(anEditDomain).getProxyFactoryRegistry();<br>IBeanTypeProxy javaIOFileBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxy(<span
+ style="color: rgb(51, 51, 255);">"java.io.File"</span>);<br></pre>
+<p>Having obtained the <span style="font-family: monospace;">IBeanTypeProxy
+<span style="font-family: arial,helvetica,geneva;">the instance of </span></span>an
+<span style="font-family: monospace;">IBeanProxy </span>for the
+java.io.File can be created by locating the the correct <span
+ style="font-family: monospace;">IConstructorProxy </span>and calling
+newInstance(IBeanProxy[]) with the correct arguments. <br>
+</p>
+<pre>IBeanTypeProxy stringBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxy(<span
+ style="color: rgb(51, 51, 255);">"java.lang.String"</span>);<br>IBeanProxy fooStringBeanProxy = aProxyFactoryRegistry.getBeanProxyFactory().createBeanProxyWith(<span
+ style="color: rgb(51, 51, 255);">"C:\temp\foo.txt"</span>);<br>IConstructorProxy fileConstructorProxy = javaIOFileBeanTypeProxy.getConstructorProxy(<span
+ style="color: rgb(51, 51, 255);">"java.lang.String"</span>);<br>IBeanProxy fileProxy = fileConstructorProxy.newInstance(fooStringBeanProxy);<br></pre>
+<p>In addition to locating the IConstructorProxy and invoking as shown
+above there is a shorthand way of creating a bean proxy with a specific
+Java initialization string.&nbsp; This is with the method
+newInstance(String javaInitializationString) on IBeanTypeProxy.&nbsp;
+Using this the above code can be shortened to <br>
+</p>
+<pre>IBeanProxy fileProxy = javaIOFileBeanTypeProxy.newInstance(<span
+ style="color: rgb(51, 51, 255);">"C:\temp\foo.txt"</span>);<br></pre>
+<p>The Visual Editor's model for the Java class being visually is an
+EMF graph of IJavaInstance objects. The API method <span
+ style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.BeanProxyUtilities.getBeanProxy(IJavaInstance
+aJavaInstance)</span> exists to obtain the bean proxy fom a Visual
+Editor EMF object.&nbsp; These are some more examples of the API for
+working with bean proxies.<br>
+</p>
+<pre><span style="color: rgb(0, 153, 0);">// Retrieve a proxy to the result of calling the method getType() on a target VM for an IJavaInstance of MyCustomPrompter</span><br>IBeanProxy prompterProxy = BeanProxyUtilities.getBeanProxy(prompterJavaInstance);  <span
+ style="color: rgb(0, 153, 0);">// Obtain an IBeanProxy from an IJavaInstance</span><br>IMethodProxy getTypeMethodProxy = prompterProxy.getTypeProxy().getMethodProxy(<span
+ style="color: rgb(51, 51, 255);">"getType"</span>);<br>IBeanProxy proxyToGetTypeResult = getTypeMethodProxy.invoke(prompterProxy);<br><br><span
+ style="color: rgb(0, 153, 0);">// Set the value of setType(String) method to the value "Frog"<br></span>IBeanProxy frogProxy = prompterProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(<span
+ style="color: rgb(51, 51, 255);">"Frog"</span>);<br>IMethodProxy setTypeMethodProxy = prompterProxy.getTypeProxy().getMethodProxy(<span
+ style="color: rgb(51, 51, 255);">"setType"</span>,<span
+ style="color: rgb(51, 51, 255);">"java.lang.String"</span>);<br>setTypeMethodProxy.invoke(prompterProxy,frogProxy);<span
+ style="color: rgb(0, 153, 0);"></span></pre>
+Working with remote proxies from the Eclipse workbench's JVM that point
+to instances of real live objects in the Visual Editor's target JVM
+provides a way of ensuring that the two are totally insultated and no
+class within the user's build path of a Java project needs to be loaded
+by the class loader or instantantiated within Eclipse.&nbsp; This
+provides a true editing sandbox which allows multiple instances of
+classes to exist across different editors working with different build
+paths and is the design principle that allows the Visual Editor to be
+extended to support new target environment and topologies other than
+just pure Java.&nbsp; However at some point the Visual Editor does need
+to transport objects back from the target JVM to Eclipse.&nbsp; An
+example of this is that having got an IBeanProxy for a rectangle result
+to the getBounds() method this must be converted in its four
+constituient int values so that a draw2D rectangle can be created for
+the GEF figure.&nbsp; Likewise the Properties view shows the user the
+values of the target VM objects.&nbsp; The point at which an object on
+the target VM can be retrieved within the Eclipse workbench is when it
+is a primitive object or a java.lang peer of a primitive or a String
+instance.&nbsp; This is done by having four subinterfaces of IBeanProxy
+in the package org.eclipse.jem.internal.proxy.core.<br>
+<br>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 50%;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">java.lang Object lookup<br>
+      </td>
+      <td style="vertical-align: top;">primitive lookup<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IStringBeanProxy</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">java.lang.String stringValue()</span><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">IBooleanBeanProxy</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">java.lang.Boolean getBooleanValue()</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">boolean booleanValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">ICharacterBeanProxy</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">java.lang.Character characterValue()</span><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">char charValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">INumberBeanProxy</span><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">int intValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">long longValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">byte byteValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">short shortValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">float floatValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">double doubleValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">number numberValue()</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">IIntegerBeanProxy<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> It is possible to register custom
+sub instances of IBeanProxy for plugin specific objects and this occurs
+with <span style="font-style: italic;">org.eclipse.ve.jfc </span>plugin
+that has introduces the types <span style="font-family: monospace;">IPointBeanProxy</span>,<span
+ style="font-family: monospace;"> IRectangleBeanProxy</span> and <span
+ style="font-family: monospace;">IDimensionBeanProxy</span>.&nbsp; This
+can occur safely if you know that the Eclipse workbench's JVM contains
+the classes in its -classpath and that these are a compatible shape
+with the target VM's instances.&nbsp; This and and other advanced
+topics such as handling arrays, exceptions and debugging the target VM
+are covered in a later tutorial specific to the target VM architecture.<br>
+<h4>Overriding doSetValue(Object anObject) </h4>
+Having covered some of the background to the target VM API the method <span
+ style="font-family: monospace;">doSetValue(Object value)</span> can
+now be overriden on CustomLabelEditor.&nbsp; This is so that the
+Properties view can render correctly the value of the <span
+ style="font-style: italic;">text </span>property<span
+ style="font-style: italic;">.&nbsp; </span><span
+ style="font-style: italic;"></span><br>
+<pre><img style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"> protected String stringValue = <span
+ style="color: rgb(51, 51, 255);">""</span>;<br><span
+ style="color: rgb(0, 153, 0);">    // ...</span><br>    protected void doSetValue(Object value) {<br>      if (value != null){<br>        IStringBeanProxy stringBeanProxy =<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif"> (IStringBeanProxy) BeanProxyUtilities.getBeanProxy(<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">(IJavaInstance) value);<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     stringValue = stringBeanProxy.stringValue();<br>      }<br>      super.doSetValue(value);<br>    }<br><span
+ style="color: rgb(0, 153, 0);">    // ...</span><br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif"> protected void updateContents(Object value) {<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">   super.updateContents(stringValue);<br>    }<br></pre>
+<p>A String instance varialble&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> is
+created to store the value of the <span style="font-style: italic;">text
+</span>property result that the CustomLabelEditor is working
+with.&nbsp; <br>
+</p>
+<p>The doSetValue(Object) method will be called when the editor is
+first created by the Properties view and after each time the dialog
+editor is closed. The argument to this is an&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">
+IJavaInstance for the String inside the Visual Editor's EMF model, so
+the target VM can be used to locate the IBeanProxy which, because the <span
+ style="font-style: italic;">type </span>property is typed to <span
+ style="font-family: monospace;">java.lang.String</span>, will be an
+instance of&nbsp; <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_3.gif"><span style="font-family: monospace;">IStringBeanProxy</span>.&nbsp;&nbsp;
+The <span style="font-family: monospace;">java.lang.String</span>
+value of this inside the workbench's JVM is retrieved using&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif"> <span
+ style="font-family: monospace;">IStringBeanProxy.stringValue() </span>and
+this is stored in the instance field <span
+ style="font-family: monospace;">stringValue</span>;<br>
+</p>
+<p>To ensure that the contents of the Label used by the cell editor
+shows the string correctly the method&nbsp;<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif">
+<span style="font-family: monospace;">updateContents(Object value)</span>
+is overriden to ignore the argument and call&nbsp;<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_6.gif">
+<span style="font-family: monospace;">super.updateContents()</span>
+with the actual String.<br>
+</p>
+<p style="color: rgb(153, 0, 0);">&lt;&lt; edit up to here - JRW
+&gt;&gt;&nbsp;
+</p>
 <h2><a name="Overriding_a_GEF_edit_part">Overriding a GEF edit part</a></h2>
 <p>&nbsp;</p>
 <p>Since the MyCustomPrompter is a SWT Composite, VE will use the
@@ -1550,7 +2349,8 @@ override the edit part that VE will use for the prompter.&nbsp; This
 edit part will not do much, but add to the prompter's image an <font
  color="#0000ff">icon</font>, and some <font color="#0000ff">text</font>
 on top of the screen scrape image of the prompter.&nbsp; The new class
-<a href="../src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">CustomWidgetGraphicalEditPart.java</a>
+<a
+ href="../src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">CustomWidgetGraphicalEditPart.java</a>
 adds this logic as following:</p>
 <pre>public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {<br><br>	protected IFigure createFigure() {<br><br>		<font
  color="#0000ff">ImageFigure figure = (ImageFigure) super.createFigure();</font><br>		<font
@@ -1563,7 +2363,8 @@ Composite).&nbsp; All we do here, is add a Label figure to the main
 (screen scraped) figure.</p>
 <p>Now that we have a custom edit part we will tell VE to use it by
 updating the
-<a href="../overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override">MyCustomPrompter.override</a>
+<a
+ href="../overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override">MyCustomPrompter.override</a>
 file as following;</p>
 <pre>    <br>  &lt;event:AddMany featureName="eAnnotations"&gt;<br>	  &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br>	    <font
  color="#0000ff">graphViewClassname</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font>/<font
@@ -1614,7 +2415,8 @@ can potentially be modified by users and picked up by VE on the fly.</p>
 when generating a <i>setText</i> expression (as a result of changing
 the <i><b>text</b></i> property is changed for a MyCustomPrompter
 instance).&nbsp; We will first create the
-<a href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java">CustomPrompterDecoderHelper.java</a>
+<a
+ href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java">CustomPrompterDecoderHelper.java</a>
 helper.&nbsp; </p>
 <pre>public class CustomPrompterDecoderHelper extends SimpleAttributeDecoderHelper {<br>	<br>	/* (non-Javadoc)<br>	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])<br>	 */<br>	public String generate(Object[] noArgs) throws CodeGenException {		<br>		<font
  color="#0000ff">String result = super.generate(noArgs);</font><br>		// Add a comment at the end of the expression <br>		int idx = result.lastIndexOf(';') + 1;<br>		return result.substring(0, idx)<font
@@ -1627,7 +2429,8 @@ Prompter Text Property
 </font><font face="Arial">comment at the end of the expression that is
 generated by the <i>SimpleAttributeDecoderHelper</i>.</font></p>
 <p><font face="Arial">We will now create a special Decoder,
-<a href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
+<a
+ href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
 This Decoder will use the helper above when the text property is the
 one that the Decoder instance is responsible for:</font></p>
 <pre>public class CustomPrompterDecoder extends SWTControlDecoder {<br><br>	protected void initialDecoderHelper() {<br>		// if it is the text property that this decoder is decoding, use <br>		// our special helper<br>		if (<font
@@ -1668,7 +2471,8 @@ context menu:</p>
 <img border="0" src="images/index.68.jpg" class="PictureStyle"></p>
 <p>&nbsp;</p>
 <p>The
-<a href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">MyCustomPrompterBeanInfo.java</a>
+<a
+ href="../src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">MyCustomPrompterBeanInfo.java</a>
 also overrides the <i>getEventSetDescriptors</i> method, and set the
 preferred flag to true.</p>
 <pre>	public EventSetDescriptor[] getEventSetDescriptors() {<br>		<br>		try{<br>			MethodDescriptor addButtonSelectionMD = new MethodDescriptor(<br>				ButtonSelectionListener.class.getMethod("buttonSelected",<br>				new Class[]{SelectionEvent.class})<br>				);<br>			<font

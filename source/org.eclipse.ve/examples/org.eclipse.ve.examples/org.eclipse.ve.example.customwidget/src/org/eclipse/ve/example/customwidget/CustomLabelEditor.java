@@ -45,7 +45,11 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 	}
 
 	private IJavaInstance createStringJavaObject(String aString) {
-		return BeanUtilities.createString(JavaEditDomainHelper.getResourceSet(fEditDomain), aString);
+		return BeanUtilities.createJavaObject(
+				"java.lang.String",
+				JavaEditDomainHelper.getResourceSet(fEditDomain),
+				BeanUtilities.createStringInitString(aString)
+				);
 	}
 
 	/* (non-Javadoc)
@@ -84,7 +88,6 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 	 * @see org.eclipse.ve.internal.propertysheet.INeedData#setData(java.lang.Object)
 	 */
 	public void setData(Object data) {
-		// TODO Auto-generated method stub
 		fEditDomain = (EditDomain) data;
 	}
 	
