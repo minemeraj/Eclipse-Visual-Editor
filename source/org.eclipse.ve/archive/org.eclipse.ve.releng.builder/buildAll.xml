@@ -7,6 +7,14 @@
 		<antcall target="create.label.properties" />
 		<property file="${buildDirectory}/label.properties" />
 		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
+		<condition property="ftppush">
+			<and>
+				<available file="${basedir}/../org.eclipse.releng.basebuilder/plugins/org.eclipse.ant.optional.ftp/plugin.xml"/>
+				<isset property="ftpUser"/>
+				<isset property="ftpPassword"/>
+			</and>
+		</condition>
+		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 	</target>
 
 	<target name="create.label.properties" unless="label.properties.exists">
@@ -105,9 +113,20 @@
 		<replace file="${result}/${indexFileName}" token="@gefZipURL@" value="${gefZipURL}"/>
 	</target>
 	
-	<target name="push" depends="init">
-		<!--
-		FTP or rsync the entire ${buildLabel} directory to the downloads server.
-		-->
+	<target name="push" depends="init,pushftp,pushrsync">
 	</target>
+	
+	<target name="pushftp" if="ftppush">
+	  	<ftp server="download.eclipse.org"
+       		userid="${ftpUser}"
+		       password="${ftpPassword}"
+			remotedir="${remoteDir}">
+		    <fileset dir="${buildDirectory}">
+				<include name="${buildLabel}/**"/>
+		    </fileset>
+		</ftp>
+	</target>
+	
+	<target name="pushrsync" if="rsyncpush"/>
+	
 </project>
