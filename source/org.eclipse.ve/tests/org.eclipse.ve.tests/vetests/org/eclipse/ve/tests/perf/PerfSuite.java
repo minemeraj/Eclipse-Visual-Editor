@@ -173,9 +173,9 @@ public class PerfSuite extends TestSetup {
 		JavaProjectUtil.setAutoBuild(oldAutoBuildingState);
 
 		joinAutoBuild();
-		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
-			System.out.println("-- uploaded successfully -- ");
-		}
+//		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
+//			System.out.println("-- uploaded successfully -- ");
+//		}
 		System.out.println("-- performance suite complete --");
 	}
 
