@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.30 $  $Date: 2005-02-16 00:37:51 $ 
+ *  $Revision: 1.31 $  $Date: 2005-02-17 11:56:40 $ 
  */
 
 import java.util.*;
@@ -671,16 +671,12 @@ public IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttr
 protected IBeanProxy getInternalBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute){
 	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)aBeanPropertyAttribute);
 	// If we have a properyt decorator then it has a get method so just call it
-	if ( propertyDecorator != null && propertyDecorator.getReadMethod() != null ) {
+	if ( propertyDecorator != null && propertyDecorator.isReadable()) {
 		return getBeanProxyValue(aBeanPropertyAttribute, propertyDecorator, null);
+	} else {
+	    return null;
 	}
-	
-	// It may be that this is a public field - this has a decorator to get the value
-	// ( which also makes it generic for other types of as yet unthought of features )
-	BeanFeatureDecorator featureDecor = (BeanFeatureDecorator)Utilities.getDecorator((EModelElement)aBeanPropertyAttribute,BeanFeatureDecorator.class);
-	if (featureDecor != null)
-		return getBeanProxyValue(aBeanPropertyAttribute, propertyDecorator, featureDecor);
-	return null;
+
 }
 
 protected IBeanProxy primReadBeanFeature(PropertyDecorator propDecor, IBeanProxy aSource) throws ThrowableProxy{
