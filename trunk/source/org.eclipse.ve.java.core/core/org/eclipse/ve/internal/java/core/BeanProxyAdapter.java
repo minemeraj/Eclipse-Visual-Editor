@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.25 $  $Date: 2005-01-21 15:18:42 $ 
+ *  $Revision: 1.26 $  $Date: 2005-01-25 15:11:29 $ 
  */
 
 import java.util.*;
@@ -35,7 +35,6 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.emf.FeatureValueProvider;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;

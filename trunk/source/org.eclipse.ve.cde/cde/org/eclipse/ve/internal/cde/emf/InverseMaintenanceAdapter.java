@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-01-24 22:20:31 $ 
+ *  $Revision: 1.8 $  $Date: 2005-01-25 15:11:28 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -24,6 +24,9 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
+
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 
 /**
