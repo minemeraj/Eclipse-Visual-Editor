@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.18 $  $Date: 2004-04-02 16:34:23 $ 
+ *  $Revision: 1.19 $  $Date: 2004-04-02 19:46:32 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -998,6 +998,7 @@ public synchronized void dispose() {
  * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#startTransaction()
  */
 public void startTransaction() {
+	fBeanModel.aboutTochangeDoc();
 	fSrcSync.getLockMgr().setGUIUpdating(true);
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.18 $  $Date: 2004-04-02 16:34:43 $ 
+ *  $Revision: 1.19 $  $Date: 2004-04-02 19:46:32 $ 
  */
 
 
@@ -557,7 +557,6 @@ protected void updateDocument(int docOff, int len, String newContent) {
 	IBeanDeclModel model = fBean.getModel() ;
 	
 		try {
-			model.aboutTochangeDoc();
 			model.getDocumentBuffer().replace(docOff,len,newContent) ;				
 			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;		
 			setState(STATE_EXP_NOT_PERSISTED,false);

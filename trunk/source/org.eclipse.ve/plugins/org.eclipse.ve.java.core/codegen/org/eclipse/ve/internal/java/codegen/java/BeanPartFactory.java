@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.19 $  $Date: 2004-03-16 20:55:58 $ 
+ *  $Revision: 1.20 $  $Date: 2004-04-02 19:46:32 $ 
  */
 
 import java.util.*;
@@ -415,7 +415,14 @@ protected CodeMethodRef generateThisInitMethod() throws CodeGenException {
    
    generateNullConstructorIfNeeded(bp,mref) ;
       
-    
+   try {
+   	// If someone made a change to the document buffer, the IMethod's source 
+   	// ranges will not reflect immediately - hence force it to do that.
+	fBeanModel.getCompilationUnit().reconcile();
+   } catch (JavaModelException e1) {
+   		JavaVEPlugin.log(e1, Level.FINE);
+   }
+   
    CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;    
    
    return mref ;    
@@ -444,7 +451,6 @@ protected JCMMethod getInitializingMethod(IJavaObjectInstance component) {
 public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
 			
-	  fBeanModel.aboutTochangeDoc();
       IType cuType = CodeGenUtil.getMainType(cu) ;
       String varName = getVarRule().getInstanceVariableName(component,cuType,fCompositionModel,fBeanModel) ;    
     
@@ -534,7 +540,6 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
  */
 public void removeBeanPart (BeanPart bean) {
 	boolean jdtChangesMade = false ; // MethodRef offsets not being updated - hence check.
-	fBeanModel.aboutTochangeDoc();
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
 	if (bean.isInstanceVar()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
