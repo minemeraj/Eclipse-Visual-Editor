@@ -16,17 +16,10 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.part.FileEditorInput;
-
-import org.eclipse.jem.util.PerformanceMonitorUtil;
 
 public class Scenario179 extends TestCase implements Test {
 	private static final String TEST_FILENAME = "test/UserAdmin.java";
@@ -69,30 +62,6 @@ public class Scenario179 extends TestCase implements Test {
 		action.run();
 	}
 
-	public void xtestSimpleJavaEditor1() {
-		runSimpleJavaEditor();
-	}
-	public void runSimpleJavaEditor() {
-		long start;
-		
-		for (int i = 0; i < 3; i++) {
-			start = System.currentTimeMillis();
-			PerformanceMonitorUtil.getMonitor().snapshot(100);
-			openJavaEditor(TEST_FILENAME);
-			PerformanceMonitorUtil.getMonitor().snapshot(101);
-			System.err.println("-- Java editor opened in " + (System.currentTimeMillis() - start) + "ms --");			
-			PerfSuite.waitFor(4000);
-			closeAllEditors();
-			if (i == 1) { // second time 
-				closeOpenTestProject();
-				PerfSuite.waitFor(4000);
-			} else {
-				PerfSuite.waitFor(2000);
-			}
-		}
-		PerfSuite.waitFor(5000);		
-	}
-	
 	public void testUserAdminOpen() {
 		long start;
 		
@@ -110,7 +79,7 @@ public class Scenario179 extends TestCase implements Test {
 		PerfSuite.waitFor(119, 60000);
 		System.err.println("-- editor opened in " + (System.currentTimeMillis() - start) + "ms --");
 		
-		PerfSuite.waitFor(10000);		
+		PerfSuite.waitFor(5000);		
 		closeAllEditors();
 		PerfSuite.waitFor(5000);		
 		
@@ -139,9 +108,6 @@ public class Scenario179 extends TestCase implements Test {
 
 	private void openJVE(String member) {
 		openEditor(member, "org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor");
-	}
-	private void openJavaEditor(String member) {
-		openEditor(member, "org.eclipse.jdt.ui.CompilationUnitEditor");
 	}
 	private void openEditor(String member, String id) {
 		System.out.println("-- open editor on " + member + " --");
