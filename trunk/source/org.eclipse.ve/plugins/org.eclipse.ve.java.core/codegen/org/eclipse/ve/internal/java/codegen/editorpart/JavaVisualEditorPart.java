@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.21 $  $Date: 2004-04-02 16:34:43 $ 
+ *  $Revision: 1.22 $  $Date: 2004-04-05 22:16:36 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1368,7 +1368,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
 			CDEUtilities.setModelAdapterFactory(editDomain, new DefaultModelAdapterFactory(policy));
 
-			NameInCompositionPropertyDescriptor desc = new NameInCompositionPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName")); //$NON-NLS-1$
+			NameInCompositionPropertyDescriptor desc = new NameInCompositionPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName"), new FieldNameValidator()); //$NON-NLS-1$
 			editDomain.registerKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY, desc);
 			// Make the default add annotations command be the one to make names unique.
 			try {
