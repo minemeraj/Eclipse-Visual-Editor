@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.25 $  $Date: 2004-09-09 16:14:15 $ 
+ *  $Revision: 1.26 $  $Date: 2004-10-12 20:45:07 $ 
  */
 
 import java.util.Iterator;
@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -32,7 +31,6 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -91,175 +89,20 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			method = AbstractFeatureMapper.getWriteMethod(fExpr);
 		return method != null && method.equals(writeMethodName);
 	}
-
-	/**
-	 *  Figure out what is the initialization string for an attribute
-	 */
-	protected String getInitString(QualifiedName arg) {
-		String initString = arg.toString();
-		//TODO: use PT instead ... note that this needs to be a resolveField not a type
-//		try{
-//			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
-//			   fbeanPart.getModel().getCompilationUnit()!=null && 
-//			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
-//				Resolved resolved = fbeanPart.getModel().getResolver().resolveType(arg);
-//				if(resolved!=null)	{
-//                    fUnresolveInitString = initString ;
-//					initString = resolved.getName();
-//                }                    
-//			}
-//		}catch(JavaModelException e){
-//			JavaVEPlugin.log(e);
-//		}
-		return initString;
-	}
 	
-	protected String getInitString(MethodInvocation msg){
-		String initstring = msg.toString();
-		//TODO: use PT instead this logic... note that the resolving here is for a FIELD not a type
-//		if (msg.getExpression() instanceof Name){
-//			String unResolved = msg.getExpression().toString();
-//		    if(fbeanPart!=null && fbeanPart.getModel()!=null){
-//				FieldResolvedType resolved = fbeanPart.getModel().getResolver().resolveWithPossibleField((Name)msg.getExpression());
-//				if(resolved != null && !resolved.getName().equals(unResolved)){
-//					int from = initstring.indexOf(unResolved);
-//					int to = from+unResolved.length();
-//					if(from>-1 && from<initstring.length() && 
-//					   to>-1 && to<initstring.length() && from<=to){
-//					   	String newInitstring = initstring.substring(0,from)+resolved+initstring.substring(to,initstring.length());
-//						initstring = newInitstring;
-//					}
-//				}
-//			}
-//		}
-		return initstring;
-	}
-	
-	/**
-	 *  Figure out what is the initialization string for an attribute
-	 */
-	protected String getInitString(ClassInstanceCreation arg) {
-		String initString = arg.toString();
-		fUnresolveInitString = arg.toString();
-		try{
-			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
-			   fbeanPart.getModel().getCompilationUnit()!=null && 
-			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
-		   		//String rt = CodeGenUtil.resolveTypeComplex(fbeanPart.getModel().getCompilationUnit().getTypes()[0], type);
-		   		Resolved rt = fbeanPart.getModel().getResolver().resolveType(arg.getName());
-		   		String resolvedType;
-		   		if(rt != null)
-		   			resolvedType = rt.getName();
-		   		else
-		   			resolvedType = arg.getName().getFullyQualifiedName();
-				StringBuffer initConstruction = new StringBuffer("new "); //$NON-NLS-1$
-				initConstruction.append(resolvedType);
-				initConstruction.append("("); //$NON-NLS-1$
-				for(int i=0; i<arg.arguments().size();i++){
-					initConstruction.append(arg.arguments().get(i).toString());
-					if(i!=arg.arguments().size()-1)
-						initConstruction.append(","); //$NON-NLS-1$
-				}
-				initConstruction.append(")"); //$NON-NLS-1$
-				initString = initConstruction.toString();
-			}
-		}catch(JavaModelException e){
-			JavaVEPlugin.log(e);
-		}
-		return initString;
-	}
-	
-	protected String getInitString(SimpleName snr){
-		int loc = snr.getStartPosition();
-		if(fOwner.getExprRef()!=null && fOwner.getExprRef().getMethod()!=null)
-			loc = fOwner.getExprRef().getOffset()+fOwner.getExprRef().getMethod().getOffset();
-		return ASTHelper.resolveVariavleValue(snr, loc, fOwner.getBeanModel().getWorkingCopyProvider().getDocument().get());
-	}
-	/**
-	 * 
-	 */
-	protected String parseInitString(Expression exp) {
-		String initString = null;
-		try{
-		    if (exp instanceof NullLiteral ||
-		        exp instanceof NumberLiteral ||
-		        exp instanceof StringLiteral)
-    			initString = getInitString(exp, fFmapper.getFeature(fExpr));
-    		else if (exp instanceof QualifiedName)
-    			initString = getInitString((QualifiedName)exp);
-    		else if(exp instanceof ClassInstanceCreation)
-    			initString = getInitString((ClassInstanceCreation)exp);
-    		else if(exp instanceof MethodInvocation)
-    			initString = getInitString((MethodInvocation)exp);
-    		else if (exp instanceof SimpleName)
-    			initString = getInitString((SimpleName)exp);
-    		else{
-    			// TODO  Will do for now?????
-    			initString = exp.toString();
-    		}
-		}catch(Exception e){
-			JavaVEPlugin.log(e, Level.WARNING) ;
-			initString = exp.toString();
-		}
-		return initString;
-    }
-    
-    protected boolean dealwithInternalBean(ClassInstanceCreation exp) {
-        
-        try {
-          CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-          JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-          		ConstructorDecoderHelper.getParsedTree(exp,expOfMethod,fbeanPart.getModel(),null));
-
-          Resolved resolved = fbeanPart.getModel().getResolver().resolveType(exp.getName()) ;
-          
-          if (resolved==null) return false;
-          
-          EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
-        
-          IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved.getName(), fbeanPart.getModel().getCompositionModel()) ;
-          attr.setAllocation(alloc);
-          
-          EObject target = fbeanPart.getEObject() ;
-  		// Smart decoding capability:
-		// If the value has not changed - no need to re-apply it
-		boolean currentValueSet = target.eIsSet(sf);
-		if(currentValueSet){
-			Object currentValue = target.eGet(sf);
-			if(currentValue==null && attr==null)
-				return true;
-			if(currentValue!=null && attr!=null){
-				IJavaInstance currentInstance = (IJavaInstance) currentValue;
-				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
-				String newInitString = CodeGenUtil.getInitString(attr, fOwner.getBeanModel(), null);
-				if(newInitString.equals(currentInitString))
-					return true; 
-			}
-		}
-          
-  		CodeGenUtil.propertyCleanup(target,sf) ;
-          fbeanPart.getInitMethod().getCompMethod().getProperties().add(attr) ;          
-          target.eSet(sf,attr) ; 
-          fInitString = parseInitString(exp) ;       
-        }
-        catch (CodeGenException e) {
-            return false ;
-        }
-        
-        return true ;
-    }
-    
-    
-    protected IJavaInstance createPropertyInstance(String initString, EClassifier argType) throws CodeGenException {
-    	IJavaInstance result ;
-    	if (initString != null) {
-			EFactory fact = argType.getEPackage().getEFactoryInstance();
-			result = (IJavaInstance) fact.create((EClass) argType);
-			result.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
-		} else
-			result = null;
-			
-	    return result ;
+    protected IJavaInstance createPropertyInstance(Expression arg, EClassifier argType) {    
+    		if (arg instanceof NullLiteral) return null;
+    			
+            CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+            JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            
+            EFactory fact = argType.getEPackage().getEFactoryInstance();
+			IJavaInstance result = (IJavaInstance) fact.create((EClass) argType);
+            
+            result.setAllocation(alloc);
+            
+            return result;            
     }
 
 	/**
@@ -270,7 +113,6 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 
 		if (fbeanPart.getEObject() == null)
 			throw new CodeGenException("null EObject:" + fExpr); //$NON-NLS-1$
-
 		
 
         EClassifier argType = null ;
@@ -280,7 +122,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
             EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
             if (sf == null) throw new CodeGenException("Invalid SF"); //$NON-NLS-1$
             argType = sf.getEType() ;   
-            newInitString = parseInitString(((Assignment)getExpression()).getRightHandSide()) ;
+            newPropInstance = createPropertyInstance(((Assignment)getExpression()).getRightHandSide(), argType);
         }
         else {
             // Regular setter JCMMethod
@@ -288,25 +130,16 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		    if (pd == null) 
 		       throw new CodeGenException("Invalid PropertyDecorator"); //$NON-NLS-1$
 			argType =  pd.getPropertyType();            
-			// TODO  We really need to parse the argument for the true value
-		    //As the PD type may be an abstract or interface !!!!!!!" 
 		    List argExpr = ((MethodInvocation)getExpression()).arguments();
 		    if (argExpr.size() != 1) throw new CodeGenException("Expression has more than one argument"); //$NON-NLS-1$
-            if (argExpr.get(0) instanceof ClassInstanceCreation) 
-               return dealwithInternalBean((ClassInstanceCreation)argExpr.get(0)) ;
-    		// Determine the value of the attribute
-    		newInitString = parseInitString((Expression)argExpr.get(0)) ;		    
+		    newPropInstance = createPropertyInstance((Expression)argExpr.get(0), argType);
         }
-
-		try {
-			newPropInstance = createPropertyInstance(newInitString, argType) ;
-			if (newInitString == null)
-			   newInitString = NULL_STRING ;
-		}
-		catch (CodeGenException e) {
-			return false ;
-		}
-		
+        
+	    if (newPropInstance!=null)
+	        newInitString = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
+	    else
+	    	newInitString = NULL_STRING;
+	    
 		EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
 		EObject target = fbeanPart.getEObject() ;
 		
@@ -315,15 +148,13 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		boolean currentValueSet = target.eIsSet(sf);
 		if(currentValueSet){
 			Object currentValue = target.eGet(sf);
-			if(currentValue==null && newPropInstance==null)
-				return true;
-			if(currentValue!=null && newPropInstance!=null){
-				IJavaInstance currentInstance = (IJavaInstance) currentValue;
-				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
-				String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
-				if(newInitString1.equals(currentInitString))
-					return true; 
-			}
+			String currentInitString;
+			if (currentValue != null)
+				currentInitString = CodeGenUtil.getInitString((IJavaInstance)currentValue, fOwner.getBeanModel(), null);
+			else
+				currentInitString = NULL_STRING;
+			if(currentInitString.equals(newInitString)) 
+				return true; 			
 		}
 		
 		fPropInstance = newPropInstance;
@@ -338,7 +169,6 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	      	fbeanPart.getInitMethod().getCompMethod().getProperties().add(fPropInstance) ;
 			target.eSet(sf,fPropInstance) ;			            
 		}
-
 		return true;
 	}
 
