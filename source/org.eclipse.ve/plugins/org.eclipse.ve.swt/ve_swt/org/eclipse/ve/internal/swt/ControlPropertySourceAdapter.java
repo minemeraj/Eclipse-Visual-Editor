@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-05 20:57:04 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-06 11:26:52 $ 
  */
 import java.util.*;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -36,7 +36,7 @@ import org.eclipse.jem.java.JavaClass;
  * otherwise they are read only
  */
 
-public class ControlPropertySourceAdapter extends BeanPropertySourceAdapter {
+public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 	
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		
@@ -106,6 +106,8 @@ public class ControlPropertySourceAdapter extends BeanPropertySourceAdapter {
 				} else {
 					descriptorList.add(pd);
 				}
+			} else {
+				descriptorList.add(pd);  // Without a structural feature it is included as required by constructor style bits
 			}
 		}
 		return (IPropertyDescriptor[]) descriptorList.toArray(new IPropertyDescriptor[descriptorList.size()]);
