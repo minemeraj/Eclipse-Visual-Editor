@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-10 23:37:16 $ 
  */
 
 import java.util.Iterator;
@@ -55,25 +55,7 @@ protected boolean isMethod(String mSig) {
 
 	  return isMethod(mSig,CodeGenUtil.getComponentFeature(fbeanPart.getEObject())) ;
 } 
-/**
- *  Is this a component add expression
- */
-protected boolean isMethod(String mSig, EStructuralFeature sf) {	
 
-	  String method=null ;
-	  
-	  if (fFeatureMapper!= null)
-	    if(fFeatureMapper.getDecorator()!= null &&
-	       fFeatureMapper.getDecorator().getWriteMethod()!=null) 
-	       method = fFeatureMapper.getDecorator().getWriteMethod().getName() ;
-	    else 
-	    	 if (fFeatureMapper.getFeature(null).equals(sf))
-	    	    return true ;
-	    	    
-	  if (method == null)
-	    method = CodeGenUtil.getWriteMethod(fExpr) ;	  
-	  return method != null && method.equals(mSig) ;	
-} 
 
 /**
  *  Which FeatureMapper to use

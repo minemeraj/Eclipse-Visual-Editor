@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-10 23:37:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -39,16 +39,18 @@ public interface IMethodTextGenerator {
 	public String generateMethod(CodeMethodRef method,String methodName,String beanName) throws CodeGenException ;
 	
 	/**
+	 * Insert the decleration of beanName in method and all its associated property  
+	 * settings
 	 * 
 	 * @param method
 	 * @param beanName
 	 * @param kids referenced IJavaObjects that are owned by this bean
-	 * @return
+	 * @return Source code that was inserted.
 	 * @throws CodeGenException
 	 * 
 	 * @since 1.0.0
 	 */
-	public String generateInLine(CodeMethodRef method,String beanName, List kids) throws CodeGenException ;
+	public void generateInLine(CodeMethodRef method,String beanName, List kids) throws CodeGenException ;
 	
 	/**
 	 * This method will look/generate Expression meta objects for all settings for a given

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultMethodInvocationGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-10 23:37:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.ve.internal.java.vce.templates.*;
  
 /**
+ * e.g., a call to createComposite();
  * @author Gili Mendel
  * @since 1.0.0
  */

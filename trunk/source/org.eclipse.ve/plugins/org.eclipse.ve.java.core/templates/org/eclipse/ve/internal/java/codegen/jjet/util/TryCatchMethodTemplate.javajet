@@ -1,0 +1,42 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: TryCatchMethodTemplate.javajet,v $
+ *  $Revision: 1.1 $
+ */
+ 
+ // This Method is expected to generate a getter method skelaton 
+ // see AbstractMethodTextGenerator.MethodInfo for more information regarding the info structure
+  
+%><%@ jet skeleton="MethodSkelaton.java" 
+        package="org.eclipse.ve.internal.java.codegen.jjet.util"
+        class="TryCatchMethodTemplate"
+%>
+	/**
+<%// Generate method's JavaDoc/Comments
+	for(int i=0; i<info.fComments.length; i++) { %>
+	 * <%=info.fComments[i]%>	
+<%}
+%>
+	 */    
+	private <%=info.freturnType%> <%=info.fmethodName%>() {
+		if (<%=info.finitBeanName%> != null) {
+			try {
+				<%=info.finitBeanName%> = new <%=info.finitBeanType%>(<%
+				boolean first = true ;
+				// Generate constructor arguments, if needed
+				if (info.finitBeanArgs != null) 
+				   for (int i=0; i<info.finitBeanArgs.length; i++) {
+				      if (!first) {%>, <%
+				      }
+				      first=false;
+				      %><%=info.finitBeanArgs[i]%><%
+				   }%>);
+			}
+			catch (java.lang.Throwable e) {
+				// TODO: Something
+			}
+		}
+		return <%=info.finitBeanName%>;
+	}
+ 

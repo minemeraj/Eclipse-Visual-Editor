@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-10 23:37:16 $ 
  */
 
 
@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -84,12 +85,43 @@ protected boolean isLocation() {
 	 
 } 
 
+/**
+ *  Is this a component add expression
+ */
+protected boolean isMethod(String mSig, EStructuralFeature sf) {	
+
+	String method=null ;
+	
+	if (fFeatureMapper!= null)
+		if(fFeatureMapper.getDecorator()!= null &&
+				fFeatureMapper.getDecorator().getWriteMethod()!=null) 
+			method = fFeatureMapper.getDecorator().getWriteMethod().getName() ;
+		else 
+			if (fFeatureMapper.getFeature(null).equals(sf))
+				return true ;
+			
+	if (method == null)
+		method = CodeGenUtil.getWriteMethod(fExpr) ;	  
+	return method != null && method.equals(mSig) ;	
+} 
+
+protected boolean isJFCAtrribute() {
+	for (int i=0;i<AttributeFeatureMapper.hardCodeMethods.length; i++) {
+		String method = AttributeFeatureMapper.hardCodeMethods[i];
+		EStructuralFeature sf = JavaInstantiation.getSFeature((IJavaObjectInstance)fbeanPart.getEObject(),AttributeFeatureMapper.hardCodedURI[i]);
+		if (isMethod(method,sf)) return true;		
+	}
+	return false;
+}
 
 /**
  *
  */
 protected void initialFeatureMapper(){
-               super.initialFeatureMapper() ;                       
+		if (isJFCAtrribute()) 
+			fFeatureMapper = new AttributeFeatureMapper();		
+        else
+        	super.initialFeatureMapper() ;                       
 }
 
 /**

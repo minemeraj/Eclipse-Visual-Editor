@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-05 17:50:27 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-10 23:37:11 $ 
  */
 import java.util.*;
 
@@ -638,7 +638,23 @@ public  void dispose() {
     	fFFDecoder.dispose() ;
     fFFDecoder=null;
 	if (fModel != null)
-	  fModel.removeBean(this) ;	
+	  fModel.removeBean(this) ;
+	
+	for (int i = 0; i < fbackReferences.size(); i++) {
+		// This should be empty if decoders had the chance to do their thing
+		BeanPart bp = (BeanPart) fbackReferences.get(i);		
+		for (Iterator iter = bp.getRefExpressions().iterator(); iter.hasNext();) {
+			CodeExpressionRef exp = (CodeExpressionRef) iter.next();
+			Object[] added = exp.getAddedInstances();
+			if (added!=null)
+				for (int j = 0; j < added.length; j++) {
+					if (added[j].equals(getEObject())) {
+						exp.dispose();
+						break;
+					}
+				}
+		}
+	}
 	
 	for (int i = 0; i < fBeanInitMethods.size(); i++) 
 		disposeMethod((CodeMethodRef) fBeanInitMethods.get(i),model);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-06 22:52:35 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -134,22 +134,14 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	public String generate(Object[] args) throws CodeGenException {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
-		StringBuffer sb = new StringBuffer();		
-		if (obj.getAllocation() instanceof ParseTreeAllocation) {
+		StringBuffer sb = new StringBuffer();				
 			// ivjFoo = <allocation>;			
-			sb.append(fbeanPart.getSimpleName());
-			sb.append(" = ");
-			PTExpression exp = ((ParseTreeAllocation) obj.getAllocation()).getExpression();
-			CodeGenExpFlattener ef = new CodeGenExpFlattener(fbeanPart.getModel()) ;
-			// Visit the parsed tree
-			exp.accept(ef) ;
-			sb.append(ef.getResult());
-			sb.append(";");
-			sb.append(fbeanPart.getModel().getLineSeperator());
-			return sb.toString();
-		}
-		else
-			 return CodeGenUtil.getInitString(obj) ;
+		sb.append(fbeanPart.getSimpleName());
+		sb.append(" = ");
+		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel()));
+		sb.append(";");
+		sb.append(fbeanPart.getModel().getLineSeperator());
+		return sb.toString();
 		
 	}
 

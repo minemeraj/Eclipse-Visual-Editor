@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.11 $  $Date: 2004-02-06 15:21:25 $ 
+ *  $Revision: 1.12 $  $Date: 2004-02-10 23:37:11 $ 
  */
 
 
@@ -863,9 +863,11 @@ public String getMethodNameContent(){
 public void dispose() {
 	// A dispose will be called after a delete.
   
-	if (!isStateSet(STATE_DELETE) && primGetDecoder() != null) {
-		primGetDecoder().dispose();		
-	}
+	try {
+		if (!isStateSet(STATE_DELETE) && primGetDecoder() != null) {
+			primGetDecoder().dispose();
+		}
+	} catch (Exception e) {}
 	fDecoder = null ;
 	clearState();	
 	setState(STATE_DELETE, true) ;
@@ -1018,6 +1020,12 @@ public void setNoSrcExpression() {
 	    getMethod().removeExpressionRef(this) ;
 	    fMethod=null;
 	}
+}
+
+public Object[] getAddedInstances() {
+	if (fDecoder != null)
+		 return fDecoder.getAddedInstance();
+	return null ;	
 }
 
 }

@@ -10,18 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-29 12:58:26 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:07 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  
 /**
@@ -63,15 +59,6 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
         return getMethodTemplate(METHOD_TEMPLATE_NAME,METHOD_TEMPLATE_CLASS_NAME) ;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#generateInLine(org.eclipse.ve.internal.java.codegen.model.CodeMethodRef, java.lang.String, java.util.List)
-	 */
-	public String generateInLine(CodeMethodRef method, String beanName, List kids) throws CodeGenException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator#getBasePlugin()

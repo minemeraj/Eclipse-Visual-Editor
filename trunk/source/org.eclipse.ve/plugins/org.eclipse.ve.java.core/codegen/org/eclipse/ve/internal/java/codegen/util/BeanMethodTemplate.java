@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanMethodTemplate.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-10 23:37:11 $ 
  */
 
 import org.eclipse.core.runtime.Preferences;
@@ -21,6 +21,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 /**
  *   Temporary thing -- need major cleanup
+ * @deprecated  move to JavaJets instead
  */
 public class BeanMethodTemplate {
     public static final String COMMENT_BEG =    "/**" ; //$NON-NLS-1$

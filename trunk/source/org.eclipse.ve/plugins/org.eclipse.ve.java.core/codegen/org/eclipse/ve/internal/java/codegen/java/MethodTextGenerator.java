@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.12 $  $Date: 2004-02-07 00:02:04 $ 
+ *  $Revision: 1.13 $  $Date: 2004-02-10 23:37:11 $ 
  */
 
 import java.util.*;
@@ -32,7 +32,11 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 //*****************************************************************
 // TODO:  this class should be converted to use a JavaJet template extending AbstractMethodTextGenerator
 //*****************************************************************
-
+/**
+ * @deprecated
+ * @author Gili Mendel
+ * @since 1.0.0
+ */
 public class MethodTextGenerator implements IMethodTextGenerator {
 	
 protected   IBeanDeclModel    fModel ;
@@ -105,13 +109,7 @@ protected boolean ignoreSF(EStructuralFeature sf) {
 	// TODO  Need to set up a hash somewere
 	return isNotToBeCodedAttribute(sf,fComponent) ;	
 }
-/**
- * @deprecated
- */
 
-protected void appendNewSource(StringBuffer buf,BeanPart bean, List kids) throws CodeGenException {
-    appendNewSource(buf,bean,kids,false) ;
-}
 
 /**
  * This method will look/generate Expression meta objects for all settings for a given
@@ -178,9 +176,14 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 }
 
 
-CodeExpressionRef createInitExpression(BeanPart bean) {
+CodeExpressionRef parseInitExpression(BeanPart bean) {
 	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
 	return eg.parseInitExpression() ;
+}
+
+CodeExpressionRef createInitExpression(BeanPart bean) {
+	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
+	return eg.createInitExpression() ;
 }
 
 
@@ -225,22 +228,14 @@ protected void setConstructorString (BeanMethodTemplate tp, Object component) {
     if (component instanceof IJavaObjectInstance) {
      // use the init string rather than default template string
         IJavaObjectInstance obj = (IJavaObjectInstance) component ;
-        String st = CodeGenUtil.getInitString(obj) ;  
+        String st = CodeGenUtil.getInitString(obj,fModel) ;  
         tp.setBeanConstructorString(st) ;
     }
 }
 
-/**
- *  Create a NOop expression reference for the initializationn expression..
- * 
- * @deprecate untill we deal with internal bean creation.
- */
-CodeExpressionRef createInitExpression(BeanMethodTemplate mt,BeanPart bean) {
-	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
-	return eg.createInitExpression(mt) ;
-}
 
-public String generateInLine(CodeMethodRef method,String beanName, List kids) throws CodeGenException {
+
+public void generateInLine(CodeMethodRef method,String beanName, List kids) throws CodeGenException {
     
     fMethodRef = method ;    
     freturnType = ((IJavaObjectInstance)fComponent).getJavaType().getQualifiedName() ;
@@ -251,14 +246,10 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
     BeanPart bp = fModel.getABean(fName) ;
     if(bp==null)
     	bp = fModel.getABean(BeanDeclModel.constructUniqueName(method,fName));//method.getMethodHandle()+"^"+fName);
- 	BeanMethodTemplate template = new BeanMethodTemplate(freturnType,fName,"",fComments) ; //$NON-NLS-1$
-    setConstructorString (template, fComponent) ;
- 	template.setSeperator(fModel.getLineSeperator());
- 	template.setInLineMethod(true) ;
     
    StringBuffer sb = new StringBuffer () ;
     
-   CodeExpressionRef initExp = createInitExpression(template,bp) ;
+   CodeExpressionRef initExp = createInitExpression(bp);
    // Allow the expression sorted to find a nice spot for this one
    initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
    initExp.setOffset(-1) ;
@@ -267,7 +258,7 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
    }
    catch (Throwable e) {
         JavaVEPlugin.log(e, MsgLogger.LOG_SEVERE) ;
-        return null ;
+        return  ;
    }
    // We may be processing a nested child, 
    // and the method is not in the source yet
@@ -277,17 +268,9 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
       initExp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED, true) ;
             
     appendNewSource(sb,bp,kids,true) ;
-//    if (kids != null) {
-//    	Iterator itr = kids.iterator() ;
-//    	while (itr.hasNext()) {
-//    	  BeanPart child = (BeanPart)itr.next() ;
-//    	  child.addBackRef(bp) ;    	      	      	  
-//    	  GenerateAChild(sb,bp,child,(EStructuralFeature)itr.next()) ;    	  
-//      }
-//    }    
-    sb.append(template.getPostfix()) ;
     
-    return (sb.toString()) ;
+    
+    
 }
 
 public String generateMethod(CodeMethodRef method,String methodName,String beanName) throws CodeGenException {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCObjectDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-10 23:37:16 $ 
  */
 
 
@@ -47,7 +47,7 @@ public JFCObjectDecoder() {
 
 protected void initialFeatureMapper(){	
 	   // Use a Simple Attribute Mapper
-         fFeatureMapper = new AttributeFeatureMapper()  ;                      
+	super.initialFeatureMapper() ;                  
 }
 
 protected void initialFeatureMapper(EStructuralFeature sf) {
@@ -63,7 +63,7 @@ protected void initialDecoderHelper() {
 		fhelper = new JFCChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
 	}
 	else
-	   fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this) ;	
+		super.initialDecoderHelper() ;	
 }
 
 protected boolean isSimpleObject(IJavaObjectInstance obj) {
