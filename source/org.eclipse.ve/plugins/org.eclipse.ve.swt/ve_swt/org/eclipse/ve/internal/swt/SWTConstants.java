@@ -46,7 +46,11 @@ public class SWTConstants {
 		
 		SF_TABLE_COLUMNS,
 		SF_TABFOLDER_ITEMS,
-		SF_TABITEM_CONTROL;
+		SF_TABITEM_CONTROL,
+		SF_COOLBAR_ITEMS,
+		SF_COOLITEM_CONTROL,
+		SF_TOOLBAR_ITEMS,
+		SF_MENU_ITEMS;
 		
 	public static final String
 		POINT_CLASS_NAME,
@@ -100,5 +104,9 @@ public class SWTConstants {
 		SF_TABLE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableColumns");    //$NON-NLS-1$
 		SF_TABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#TabFolder/items");	 //$NON-NLS-1$
 		SF_TABITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#TabItem/control");	 //$NON-NLS-1$
+		SF_COOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#CoolBar/items");	 //$NON-NLS-1$
+		SF_COOLITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#CoolItem/control");	 //$NON-NLS-1$
+		SF_TOOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#ToolBar/items");	 //$NON-NLS-1$
+		SF_MENU_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Menu/items");	 //$NON-NLS-1$
 	}
 }	
