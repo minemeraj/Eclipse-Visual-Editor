@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-16 21:05:12 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-12 19:13:31 $ 
  */
 
 import java.util.Iterator;
@@ -85,6 +85,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 */
 	public void stopSynchronizer() {
 		JavaCore.removeElementChangedListener(this);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceTracker);
 	}
 
 	protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
