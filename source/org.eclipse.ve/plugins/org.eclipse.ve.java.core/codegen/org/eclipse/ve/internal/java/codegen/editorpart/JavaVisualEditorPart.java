@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.80 $  $Date: 2005-02-08 23:20:28 $ 
+ *  $Revision: 1.81 $  $Date: 2005-02-11 16:59:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1998,7 +1998,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		public void focusGained(FocusEvent e) {			
 			textEditorFocus = textEditorActive = e.getSource() == getSourceViewer().getTextWidget();
-			enableDelCommand(textEditorFocus); // disable the del command if the GEF pane is in focus.
+// TODO fix for Eclipse 3.1			enableDelCommand(textEditorFocus); // disable the del command if the GEF pane is in focus.
 			if (textEditorActive) {
 				
 				// Set the common actions up from the text editor.
@@ -2019,7 +2019,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		public void focusLost(FocusEvent e) {
 			if (textEditorActive)
 				textEditorFocus = false;
-			enableDelCommand(true);  // ReActivate the command for other editors
+//	TODO fix for Eclipse 3.1		enableDelCommand(true);  // ReActivate the command for other editors
 		}
 	};
 		
