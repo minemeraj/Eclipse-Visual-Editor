@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.91 $  $Date: 2005-03-18 18:49:20 $ 
+ *  $Revision: 1.92 $  $Date: 2005-03-28 10:32:06 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1380,11 +1380,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						}
 					}
 					
+					
 					// Now run though visible plugin ids.
 					if (!regResult.configInfo.getPluginIds().isEmpty()) {
 						for (Iterator iter = regResult.configInfo.getPluginIds().entrySet().iterator(); iter.hasNext();) {
 							Map.Entry entry = (Map.Entry) iter.next();
-							if (((Boolean) entry.getValue()).booleanValue()) {
+//							if (((Boolean) entry.getValue()).booleanValue()) {
 								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
 								if (contributors != null) {
 									for (int i = 0; i < contributors.length; i++) {
@@ -1414,7 +1415,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 										});
 									}
 								}
-							}
+//							}
 						}
 					}
 
