@@ -69,7 +69,7 @@ then
 	# Replace the boot eclipse (The eclipse used to run the main test.xml, this will start another eclipse later)
 	rm -r eclipse
 	rm -r workspace
-	unzip -qq -o eclipse-SDK*.zip
+	tar -xzf eclipse-SDK*.zip
 	unzip -qq -o -C VE-junit-tests-*.zip */plugins/org.eclipse.test*
 	
 	if [ "$installmode" = "noclean" ]
