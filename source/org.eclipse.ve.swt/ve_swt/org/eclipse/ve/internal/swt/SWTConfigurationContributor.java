@@ -1,31 +1,31 @@
 package org.eclipse.ve.internal.swt;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.List;
-import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-
-import org.eclipse.ve.internal.java.core.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class SWTConfigurationContributor implements IConfigurationContributor {
 
 	public void contributeClasspaths(List classpaths, IClasspathContributionController controller) throws CoreException {
 				
 		// Add the SWT jar to the classpath of the target VM
-		// TODO needs thought about how to cope with SWTContainer being the one in the build pathh
-  		SWTContainer swtContainer = new SWTContainer();
-		IPath swtJarPath = swtContainer.getPath();
-		String[] swtJarLocation = new String[] {swtJarPath.toString()};
+		// TODO when we figure out how to get dll path automatically added too for beaninfo, then we can make the
+		// swtcontainer by an application type (as it should) so that it shows automatically in classpath and then
+		// we can get rid of both of these.
+  		IClasspathContainer swtContainer = JavaCore.getClasspathContainer(new Path("SWT_CONTAINER"), controller.getJavaProject());
+		IClasspathEntry[] swtJarPath = swtContainer.getClasspathEntries();	// We know for there is only one.
+		String[] swtJarLocation = new String[] {JavaCore.getResolvedClasspathEntry(swtJarPath[0]).getPath().toString()};
 		controller.contributeClasspath(
 			swtJarLocation,
 			classpaths,
@@ -47,19 +47,36 @@ public class SWTConfigurationContributor implements IConfigurationContributor {
 
 		// Get the location of the swt dll in the workbench path and add it
 		// TODO This needs changing so if a build path project is being used then the
-		// TODO SWT DLL comes from there + we need to think about Linux where the folder name is different
-		Path path = new Path("os/win32/x86");
-		URL localURL = Platform.getPlugin("org.eclipse.swt").find(path);		
+		Path path = new Path("$os$");	// we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
+		URL localURL = Platform.getPlugin("org.eclipse.swt").find(path);
+		if (localURL == null)
+			return;	// can't find it.
+		try {
+			localURL = Platform.resolve(localURL);
+		} catch (IOException e) {
+			return;	// can't find it or resolve it locally.
+		}
 		String dllLocation = localURL.getFile();
 		dllLocation = dllLocation.replace('/',java.io.File.separatorChar);		
 
-		String programArg = "-Djava.library.path=" + dllLocation;		
+		boolean foundit = false;		
 		String[] existingVMArguments = aConfig.getVMArguments();
-		// Create a new array of VM arguments so we can add in the two new entries
-		String[] newVMArguments = new String[existingVMArguments.length + 1];
-		System.arraycopy(existingVMArguments,0,newVMArguments,1,existingVMArguments.length);
-		newVMArguments[0] = programArg;
-		aConfig.setVMArguments(newVMArguments);
+		for (int i = 0; i < existingVMArguments.length; i++) {
+			if (existingVMArguments[i].startsWith("-Djava.library.path")) {
+				existingVMArguments[i] = existingVMArguments[i]+File.pathSeparatorChar+dllLocation;
+				foundit = true;
+			}
+		}
+		
+		if (!foundit) {
+			// Create a new array of VM arguments so we can add in the two new entries
+			String[] newVMArguments = new String[existingVMArguments.length + 1];
+			System.arraycopy(existingVMArguments,0,newVMArguments,1,existingVMArguments.length);
+			newVMArguments[0] = "-Djava.library.path="+dllLocation;
+			aConfig.setVMArguments(newVMArguments);
+		} else
+			aConfig.setVMArguments(existingVMArguments);	// put them back because we modified one of them.
+		
 		
 		// For Linux/MOTIF we need to export some stuff using an environment variable
 		// TODO This is not finished yet.  It should check to see that we're on Linux using
