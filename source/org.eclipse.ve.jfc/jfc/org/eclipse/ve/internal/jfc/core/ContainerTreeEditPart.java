@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2004-08-27 15:34:48 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-02-09 13:57:31 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -142,10 +142,17 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			// It is possible the live JavaBean failed to create
 			ILayoutPolicyHelper lpHelper = null;
 			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
-				IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) getModel());
-				if (containerProxy != null) {
-					ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
-					lpHelper = lpFactory.getLayoutPolicyHelper(null);
+				// Get the layout policy helper for the correct layout manager
+				IJavaInstance layoutManager =  (IJavaInstance) container.eGet(sf_containerLayout);
+				if(layoutManager != null){
+					BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManager(layoutManager,EditDomain.getEditDomain(this)).getLayoutPolicyHelper(null);
+				} else {
+					IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(container);
+					IBeanProxy layoutManagerProxy = BeanAwtUtilities.invoke_getLayout(containerProxy);
+					if (containerProxy != null) {
+						ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerProxy, EditDomain.getEditDomain(this));
+						lpHelper = lpFactory.getLayoutPolicyHelper(null);
+					}
 				}
 			}
 

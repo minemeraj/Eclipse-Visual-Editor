@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2004-08-27 15:34:48 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-02-09 13:57:32 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -73,8 +73,15 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 		// Get the layout input policy class from the layout policy factory
 		IBeanProxy containerProxy = getComponentProxy().getBeanProxy();
 		if (containerProxy != null) {
-			// a container was created.
-			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
+			// See if we have a layout manager set - if so use it to find the policy factory
+			IJavaInstance layoutManager = (IJavaInstance)getBean().eGet(sf_containerLayout);
+			ILayoutPolicyFactory lpFactory = null;
+			if(layoutManager != null){
+				lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManager(layoutManager,EditDomain.getEditDomain(this));
+			} else {
+				IBeanProxy layoutManagerProxy = BeanAwtUtilities.invoke_getLayout(getComponentProxy().getBeanProxy()); 
+				lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerProxy, EditDomain.getEditDomain(this));				
+			}			
 			layoutPolicy = lpFactory.getLayoutEditPolicy(getContainerPolicy());
 		}
 		// If the LayoutPolicyFactory didn't specifiy a LayoutInputPolicy, use UnknownLayoutInputPolicy
