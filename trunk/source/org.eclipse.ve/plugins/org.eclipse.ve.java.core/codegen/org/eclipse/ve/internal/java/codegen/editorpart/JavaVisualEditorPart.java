@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.28 $  $Date: 2004-04-22 22:43:06 $ 
+ *  $Revision: 1.29 $  $Date: 2004-04-23 20:35:20 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -964,11 +964,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							} catch (InterruptedException e) {
 							}
 						}
-						d.asyncExec(new Runnable() {
-							public void run() {
-								finalDispose();							
-							}
-						});
+						// Slight possibility display is already disposed, that this occurred on shutdown, so don't bother with final dispose.
+						if (!d.isDisposed()) {
+							d.asyncExec(new Runnable() {
+								public void run() {
+									finalDispose();							
+								}
+							});
+						}
 						return Status.OK_STATUS;
 					}
 				}).schedule();
@@ -1273,7 +1276,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// to just wait until this thread finishes when closing because that holds everything up when we don't
 				// really care. This way we let it throw an exception because something was in a bad state and just
 				// don't put up a message.
-				if (!isDisposed()) {
+				// It is slightly possible that we are shutting down whole app and so shell no longer exists,
+				// so we treat that as disposed too.
+				if (!isDisposed() && getSite().getShell() != null) {
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							if (isDisposed())
