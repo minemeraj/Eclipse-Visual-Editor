@@ -11,12 +11,11 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentChildCommandRequest.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
 
 
-import org.eclipse.gef.Request;
 import org.eclipse.gef.EditPart;
 /**
  * Request for Alignment on a a child of this component.
@@ -34,17 +33,12 @@ import org.eclipse.gef.EditPart;
  * child is on a Flow Layout, there align doesn't make sense).
  *
  */
-public class AlignmentChildCommandRequest extends Request {
+public class AlignmentChildCommandRequest extends ChildRequest {
 	protected AlignmentCommandRequest fAlignRequest;
-	protected EditPart fEditPart;
 
 public AlignmentChildCommandRequest(EditPart editpart, AlignmentCommandRequest alignRequest) {
-	super(RequestConstantsCDE.REQ_ALIGNMENT_CHILD);
+	super(RequestConstantsCDE.REQ_ALIGNMENT_CHILD, editpart);
 	fAlignRequest = alignRequest;
-	fEditPart = editpart;
-}
-public EditPart getChildEditPart() {
-	return fEditPart;
 }
 public AlignmentCommandRequest getAlignmentRequest() {
 	return fAlignRequest;

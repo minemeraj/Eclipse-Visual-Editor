@@ -10,21 +10,23 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: RequestConstantsCDE.java,v $
- *  $Revision: 1.3 $  $Date: 2005-03-28 14:14:29 $ 
+ *  $RCSfile: ChildRequest.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
-/**
- * Request Constants for CDE Requests.
- */
-public interface RequestConstantsCDE {
-	public static String
-		REQ_ALIGNMENT = "cde align",	//$NON_NLS-1$ //$NON-NLS-1$
-		REQ_ALIGNMENT_CHILD = "cde align child",	//$NON-NLS-1$
-		REQ_RESTORE_PREFERRED_SIZE = "restore preferred", //$NON-NLS-1$
-		REQ_RESTORE_PREFERRED_SIZE_CHILD = "restore preferred child", //$NON-NLS-1$
-		REQ_DISTRIBUTE = "distribute",	//$NON-NLS-1$
-		REQ_DISTRIBUTE_CHILD = "distribute child";	//$NON-NLS-1$
-	    
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.Request;
 
+public class ChildRequest extends Request {
+
+	protected EditPart fEditPart;
+	
+	public ChildRequest(Object type, EditPart child) {
+		super(type);
+		fEditPart = child;
+	}
+	
+	public EditPart getChildEditPart() {
+		return fEditPart;
+	}
 }

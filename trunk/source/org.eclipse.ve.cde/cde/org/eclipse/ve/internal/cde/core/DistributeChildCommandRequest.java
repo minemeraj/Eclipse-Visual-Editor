@@ -11,12 +11,11 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DistributeChildCommandRequest.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-28 14:14:29 $ 
  */
 
 
 
-import org.eclipse.gef.Request;
 import org.eclipse.gef.EditPart;
 /**
  * Request for Distribute on a a child of this component.
@@ -34,21 +33,15 @@ import org.eclipse.gef.EditPart;
  * child is on a Flow Layout, there distribute doesn't make sense).
  *
  */
-public class DistributeChildCommandRequest extends Request {
+public class DistributeChildCommandRequest extends ChildRequest {
 	protected DistributeCommandRequest fDistributeReq;
-	protected EditPart fEditPart;
 	
 public DistributeChildCommandRequest(EditPart childEditPart, DistributeCommandRequest distributeReq) {
-	super(RequestConstantsCDE.REQ_DISTRIBUTE_CHILD);
-	fEditPart = childEditPart;
+	super(RequestConstantsCDE.REQ_DISTRIBUTE_CHILD, childEditPart);
 	fDistributeReq = distributeReq;
 }
 
 public DistributeCommandRequest getDistributeRequest() {
 	return fDistributeReq;
-}
-
-public EditPart getChildEditPart() {
-	return fEditPart;
 }
 }

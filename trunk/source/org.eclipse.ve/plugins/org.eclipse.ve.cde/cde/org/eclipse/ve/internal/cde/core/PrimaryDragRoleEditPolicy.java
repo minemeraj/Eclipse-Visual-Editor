@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PrimaryDragRoleEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-28 14:14:29 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -69,6 +69,8 @@ public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 			return getAlignmentCommand(request);
 		if (allowAlignment && RequestConstantsCDE.REQ_DISTRIBUTE.equals(request.getType()))
 			return getDistributeCommand(request);
+		if (allowAlignment && RequestConstantsCDE.REQ_RESTORE_PREFERRED_SIZE.equals(request.getType()))
+			return getRestorePreferredSizeCommand(request);
 			
 		return dragRolePolicy.getCommand(request);
 	}
@@ -82,6 +84,11 @@ public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 	protected Command getDistributeCommand(Request request) {
 		DistributeCommandRequest distReq = (DistributeCommandRequest) request;
 		DistributeChildCommandRequest req = new DistributeChildCommandRequest(host, distReq);
+		return host.getParent().getCommand(req);
+	}
+	
+	protected Command getRestorePreferredSizeCommand(Request request) {
+		ChildRequest req = new ChildRequest(RequestConstantsCDE.REQ_RESTORE_PREFERRED_SIZE_CHILD, host);
 		return host.getParent().getCommand(req);
 	}
 	
