@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JScrollPaneContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-11-24 17:08:41 $ 
  */
+
+import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -27,6 +29,12 @@ public class JScrollPaneContainerPolicy extends JavaContainerPolicy {
 		super(JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), JFCConstants.SF_JSCROLLPANE_VIEWPORTVIEW ), domain);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.JavaContainerPolicy#isValidBeanLocation(java.lang.Object)
+	 */
+	protected boolean isValidBeanLocation(Object child) {
+		return child instanceof EObject && BeanAwtUtilities.isValidBeanLocation(domain, (EObject)child);
+	}
 }
 
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.5 $  $Date: 2004-11-24 17:08:41 $ 
  */
 
 import java.util.*;
@@ -112,10 +112,11 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		cb.setApplyRules(false);	
 		Iterator cons = constraints.iterator();
 		Iterator chlds = children.iterator();
-		while(cons.hasNext()) {
+		while (cons.hasNext()) {
 			Object childConstraintComponent = cons.next();
 			Object childComponent = chlds.next();
-			if (!isValidChild(childConstraintComponent, containmentSF) || !isValidComponent(childComponent) || !isParentAcceptable(childComponent))
+			if (!isValidChild(childConstraintComponent, containmentSF) || !isValidComponent(childComponent) || !isParentAcceptable(childComponent)
+					|| !(BeanAwtUtilities.isValidBeanLocation(domain, (EObject) childComponent)))
 				return UnexecutableCommand.INSTANCE;
 			cb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
 		}

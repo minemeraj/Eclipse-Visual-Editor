@@ -10,26 +10,25 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.7 $$  $$Date: 2004-04-20 09:09:37 $$ 
+ *  $$Revision: 1.8 $$  $$Date: 2004-11-24 17:08:40 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.PTClassInstanceCreation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
@@ -169,6 +168,8 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		Iterator iter = children.iterator();
 		while(iter.hasNext()){
 			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
+			if (!(BeanSWTUtilities.isValidBeanLocation(domain, child, (EObject)container)))
+				return UnexecutableCommand.INSTANCE;
 			cmd.append(new EnsureCorrectParentCommand(child));
 		}
 		cmd.append(super.primAddCommand(children, positionBeforeChild, containmentSF));
