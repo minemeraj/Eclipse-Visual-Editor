@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-17 13:46:40 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-18 20:35:22 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -533,7 +533,8 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 	   if (fVEModel != null) {
 		  if (fBeanModel!=null && !fdisconnected) {
 			disconnect(false);
-			fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+			if (fBeanModel!=null)
+			   fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
 			fBeanModel = null;			
 		  }				  
 	  }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-18 20:35:22 $ 
  */
 
 import java.util.Iterator;
@@ -322,7 +322,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	protected String primGetInitString() {
 		Object currentVal = fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));
-		if (currentVal instanceof IJavaInstance) {
+		if (currentVal==null || currentVal instanceof IJavaInstance) {
 			fPropInstance = (IJavaInstance) currentVal;
 			if (currentVal != null) {
 				if (currentVal instanceof IJavaObjectInstance)
