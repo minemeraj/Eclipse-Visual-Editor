@@ -11,27 +11,27 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-15 22:31:11 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.ILayoutSwitcher;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 public class LayoutPropertyDescriptor extends BeanPropertyDescriptorAdapter implements ICommandPropertyDescriptor {
 
@@ -64,7 +64,7 @@ public Command setValue(IPropertySource source, Object setValue){
 		EClassifier layoutManagerClass = null;
 		if (setValue != null)
 			layoutManagerClass = ((IJavaObjectInstance)setValue).eClass();
-		ILayoutPolicyFactory layoutFactory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerClass, domain);
+		ILayoutPolicyFactory layoutFactory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, domain);
 		if (layoutFactory != null) {
 			CompositeContainerPolicy cp = new CompositeContainerPolicy(domain);
 			cp.setContainer(container);
@@ -97,7 +97,7 @@ public Command resetValue(IPropertySource source){
 	EClassifier layoutManagerClass = null;
 	if (defaultLayoutManager != null)
 		layoutManagerClass = (EClassifier) BeanProxyUtilities.getJavaType(defaultLayoutManager, container.eResource().getResourceSet());
-	ILayoutPolicyFactory layoutFactory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerClass, domain);
+	ILayoutPolicyFactory layoutFactory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, domain);
 	if (layoutFactory != null) {
 		CompositeContainerPolicy cp = new CompositeContainerPolicy(domain);
 		cp.setContainer(container);

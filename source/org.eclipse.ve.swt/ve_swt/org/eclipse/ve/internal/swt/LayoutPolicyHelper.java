@@ -10,12 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-15 22:31:11 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
@@ -25,8 +31,6 @@ import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
-
-import org.eclipse.gef.commands.UnexecutableCommand;
 /**
  * 
  * @since 1.0.0
@@ -82,9 +86,20 @@ public Command getOrphanChildrenCommand(List children) {
 }
 protected abstract void cancelConstraints(CommandBuilder commandBuilder, List children);
 
+/*
+ *  (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getOrphanConstraintsCommand(java.util.List)
+ * 
+ * Forward to subclasses to remove any specific contraints, properties, etc. (e.g. null layout to remove bounds, size, location).
+ * Then remove the layout data of each child since it's not applicable to what layout we've switched to.
+ */
 public Command getOrphanConstraintsCommand(List children) {
 	RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
 	cancelConstraints(cb, children);
+	// We need to cancel the layout data for each of the controls
+	IJavaObjectInstance parent = (IJavaObjectInstance) policy.getContainer();
+	EStructuralFeature sf_layoutData = JavaInstantiation.getSFeature(parent, SWTConstants.SF_CONTROL_LAYOUTDATA);
+	cb.cancelGroupAttributeSetting(children, sf_layoutData);
 	return cb.getCommand();
 }
 

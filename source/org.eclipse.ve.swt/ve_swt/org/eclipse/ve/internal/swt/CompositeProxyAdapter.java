@@ -9,18 +9,20 @@ package org.eclipse.ve.internal.swt;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.*;
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 
 import org.eclipse.ve.internal.java.core.*;
  
-public class CompositeProxyAdapter extends ControlProxyAdapter {
+public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldProcessing {
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
-	private IMethodProxy getLayoutMethodProxy;  // Field to cache the IMethodProxy for the getLayout() method on the composite
 	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
 
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
@@ -48,18 +50,6 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 
 	}
 
-	protected IBeanProxy getLayoutBeanProxy(){
-		// Invoke getLayout() on the display thread
-		if(getLayoutMethodProxy == null){
-			getLayoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getLayout");
-		}
-		return (IBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				return getLayoutMethodProxy.invoke(getBeanProxy());
-			}
-		}); 
-	}
-	
 	protected IMethodProxy layoutMethodProxy(){
 		if(layoutMethodProxy == null){
 			layoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("layout");
@@ -112,19 +102,53 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	}
 	
 	public void childValidated(ControlProxyAdapter childProxy) {
-		// Do a layout on us
-		// TODO - this is only required if the parent's layout is null.  Add this later for performance checking ??
-		try {		
-			invokeSyncExec(new DisplayManager.DisplayRunnable() {
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-					// Call the layout() method
-					return layoutMethodProxy().invoke(getBeanProxy());
-				}
-			});
-			if(imSupport != null) refreshImage();
-		} catch (ThrowableProxy e) {
-			e.printStackTrace();
-		}
-		if(parentProxyAdapter != null) parentProxyAdapter.childValidated(this);		
+		// Hold up layout processing if we are executing a HoldProcessingCommand
+        if (!holding()) {
+            try {
+                // We are the top with no parents, do a layout() on us
+                invokeSyncExec(new DisplayManager.DisplayRunnable() {
+
+                    public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                        // Call the layout() method
+                        return layoutMethodProxy().invoke(getBeanProxy());
+                    }
+                });
+                if (imSupport != null) refreshImage();
+            } catch (ThrowableProxy e) {
+                SwtPlugin.getDefault().getLogger().log(e);
+            }
+            if (parentProxyAdapter != null) super.childValidated(childProxy);
+        }
 	}	
+	private int holdCount = 0;
+	
+	protected final boolean holding() {
+		return holdCount > 0;
+	}
+	
+	/**
+	 * ContainerProxyAdapter holds the "components" relationship listening to
+	 * allow major changes to occur. When resumed, it will completely refresh
+	 * the "components" relationship.
+	 * @see org.eclipse.ve.internal.jfc.core.IHoldProcessing#holdProcessing()
+	 */
+	public final void holdProcessing() {
+		holdCount++;
+	}
+	
+	/**
+	 * @see org.eclipse.ve.internal.jfc.core.IHoldProcessing#resumeProcessing()
+	 */
+	public final void resumeProcessing() {
+		if (--holdCount == 0) {
+			holdEnded();
+		} else if (holdCount < 0)
+			holdCount = 0;
+	}
+	
+	protected void holdEnded() {
+		// Force the Composite to re-layout its controls
+		revalidateBeanProxy();
+	}
+
 }

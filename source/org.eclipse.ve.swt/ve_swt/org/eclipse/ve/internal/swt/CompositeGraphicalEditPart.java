@@ -24,7 +24,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * ViewObject for the awt Container.
@@ -74,25 +75,21 @@ protected void createLayoutEditPolicy() {
 	EditPolicy layoutPolicy = null;
 	CompositeProxyAdapter compositeBeanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
 	// See the layout of the composite to determine the edit policy
-	IBeanProxy layoutBeanProxy = compositeBeanProxyAdapter.getLayoutBeanProxy();
+	IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeBeanProxyAdapter.getBeanProxy());
 	// If the layoutBeanProxy is null then we use the null layout edit policy
 	if(layoutBeanProxy == null){
 		layoutPolicy = new NullLayoutEditPolicy((VisualContainerPolicy)getContainerPolicy(),compositeBeanProxyAdapter.getClientBox());		
 	} else {
 		// Get the layoutPolicyFactory
-		ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(layoutBeanProxy.getTypeProxy(),EditDomain.getEditDomain(this));
-		// If we have one then try to get the EditPolicy from it
-		if(layoutPolicyFactory != null) {
-			layoutPolicy = layoutPolicyFactory.getLayoutEditPolicy(getContainerPolicy());
-		} else if(layoutPolicyFactory == null){
-			layoutPolicy = new DefaultLayoutEditPolicy(getContainerPolicy());			
-		}
+		ILayoutPolicyFactory layoutPolicyFactory = BeanSWTUtilities.getLayoutPolicyFactory(compositeBeanProxyAdapter.getBeanProxy(), EditDomain.getEditDomain(this));
+		layoutPolicy = layoutPolicyFactory.getLayoutEditPolicy(getContainerPolicy());
 	}
-	if(layoutPolicy != null){
-		removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
-		//	Layout policies put figure decorations for things like grids so we should remove this
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
-	}
+	if(layoutPolicy == null) 
+	    layoutPolicy = new DefaultLayoutEditPolicy(getContainerPolicy());			
+
+	removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
+	//	Layout policies put figure decorations for things like grids so we should remove this
+	installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
 }
 	
 protected List getModelChildren() {
