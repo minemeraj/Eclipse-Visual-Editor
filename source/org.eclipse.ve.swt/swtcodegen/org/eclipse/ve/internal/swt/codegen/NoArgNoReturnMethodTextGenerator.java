@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 21:54:02 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -38,6 +38,9 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
 	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
 	
+	public final static  String[] ignoredFeatures = {
+	                                                  "allocation" };
+												
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
 
 	/**
@@ -59,14 +62,6 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	}
 	
 	
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#generateExpressionsContent()
-	 */
-	public void generateExpressionsContent() throws CodeGenException {
-		// TODO Auto-generated method stub
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#generateInLine(org.eclipse.ve.internal.java.codegen.model.CodeMethodRef, java.lang.String, java.util.List)
 	 */
@@ -88,6 +83,13 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	 */
 	protected String getTemplatePath() {
 		return TEMPLATE_PATH ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator#getIgnoreSFnameList()
+	 */
+	protected String[] getIgnoreSFnameList() {
+		return ignoredFeatures;
 	}
 
 }
