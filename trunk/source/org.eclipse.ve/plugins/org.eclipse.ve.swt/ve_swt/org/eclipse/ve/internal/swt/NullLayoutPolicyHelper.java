@@ -16,9 +16,12 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
@@ -27,7 +30,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
  * Null layout policy helper.
  */
 public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
-
+	 
 	
 /**
  * Constraint object to be passed into this class.
@@ -95,12 +98,23 @@ protected void cancelConstraints(CommandBuilder cb, List children) {
  * Return a List with a constraint for each child.
  */
 public List getDefaultConstraint(List children) {
-
-	// We are going to return a array of constraints that 
-	// have x and y values equal to Integer.MIN_VALUE and a width and height that are equal to -1.
-	// These are the place holders that mean that when the constraints are applied, the 
-	// preferred size will be used.
-	return Collections.nCopies(children.size(), new NullConstraint(new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1), true, true));
+	Iterator itr = children.iterator();
+	ArrayList constraints = new ArrayList(children.size());
+	Rectangle bounds = new Rectangle();
+	while(itr.hasNext()) {
+		IJavaObjectInstance child = (IJavaObjectInstance) itr.next();
+		IJavaObjectInstance constraint = (IJavaObjectInstance) child.eGet(JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS));
+		if (constraint != null) {
+			IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
+			IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
+			bounds =  new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
+		}else{
+			bounds = new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+		}
+		constraints.add(new NullConstraint((bounds), true, true));
+	}
+	//return Collections.nCopies(children.size(), new NullConstraint(new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1), true, true));
+	return constraints;
 }
 
 public Command getChangeConstraintCommand(List children, List constraints) {
@@ -124,5 +138,18 @@ protected Command createChangeConstraintCommand(IJavaObjectInstance child, NullC
 		return null;
 	return cmd;
 }
-
+private IBeanTypeProxy environmentBeanTypeProxy;
+private IMethodProxy getFieldMethodProxy; 
+protected final IBeanTypeProxy getEnvironmentBeanTypeProxy(ProxyFactoryRegistry aProxyFactoryRegistry){
+	if(environmentBeanTypeProxy == null){	
+		environmentBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$		
+	}
+	return environmentBeanTypeProxy;
+}
+protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyFactoryRegistry){
+	if(getFieldMethodProxy == null){	
+		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		
+	}
+	return getFieldMethodProxy;
+}
 }

@@ -1,16 +1,18 @@
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.emf.ecore.EClassifier;
-
+import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
-import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
-
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
@@ -20,7 +22,10 @@ public class BeanSWTUtilities {
     // JCMMethod proxies are cached in a registry constants.
     public IMethodProxy getLayoutMethodProxy,
 		setBoundsMethodProxy,
-		getBoundsMethodProxy;
+		getBoundsMethodProxy,
+		getLocationMethodProxy,
+		getChildrenMethodProxy,		
+		computeSizeMethodProxy;
 
     public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
 
@@ -130,7 +135,63 @@ public class BeanSWTUtilities {
         }
     	return null;
     }
-    
+
+    public static IPointBeanProxy invoke_computeSize(final IBeanProxy aBeanProxy, final IBeanProxy aDefaultX, final IBeanProxy aDefaultY ){
+    	BeanSWTUtilities constants = getConstants(aBeanProxy);
+    	
+    	if (constants.computeSizeMethodProxy == null) {
+    		constants.computeSizeMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("computeSize",
+    				new String[] {"int" , "int"}); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.computeSizeMethodProxy != null) {
+        	final IMethodProxy computeSizeMethodProxy = constants.computeSizeMethodProxy;
+            return (IPointBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                        	
+                            return computeSizeMethodProxy.invoke(aBeanProxy,new IBeanProxy[] {aDefaultX , aDefaultY});
+                        }
+                    });
+        }
+    	return null;
+    }
+    public static IPointBeanProxy invoke_getLocation(final IBeanProxy aBeanProxy){
+    	BeanSWTUtilities constants = getConstants(aBeanProxy);
+    	
+    	if (constants.getLocationMethodProxy == null) {
+    		constants.getLocationMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("getLocation"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.getLocationMethodProxy != null) {
+        	final IMethodProxy getLocationMethodProxy = constants.getLocationMethodProxy;
+            return (IPointBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return getLocationMethodProxy.invoke(aBeanProxy);
+                        }
+                    });
+        }
+    	return null;
+    }
+    public static IArrayBeanProxy invoke_getChildren(final IBeanProxy aBeanProxy){
+    	BeanSWTUtilities constants = getConstants(aBeanProxy);
+    	
+    	if (constants.getChildrenMethodProxy == null) {
+    		constants.getChildrenMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Composite").getMethodProxy("getChildren"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.getChildrenMethodProxy != null) {
+        	final IMethodProxy getChildrenMethodProxy = constants.getChildrenMethodProxy;
+            return (IArrayBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return getChildrenMethodProxy.invoke(aBeanProxy);
+                        }
+                    });
+        }
+    	return null;
+    }
     public static Point getOffScreenLocation(){
     	
     	boolean showWindow = VCEPreferences.isLiveWindowOn();

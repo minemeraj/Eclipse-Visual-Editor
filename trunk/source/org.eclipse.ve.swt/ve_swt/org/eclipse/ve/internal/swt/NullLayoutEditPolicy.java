@@ -5,9 +5,11 @@ package org.eclipse.ve.internal.swt;
  * US Government Users Restricted Rights - Use, duplication or disclosure 
  * restricted by GSA ADP Schedule Contract with IBM Corp. 
  */
+import java.util.ArrayList;
 import java.util.Collections;
 
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -15,13 +17,18 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+import org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
+
 /**
  * Layout Input policy for when a java.awt.Container's layout manager
  * is null (i.e. not set)
@@ -182,7 +189,7 @@ private int getX(IBeanProxy anSWTRectangleBeanProxy){
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
 	} catch (ThrowableProxy exc) {
-		exc.printStackTrace();
+		exc.printProxyStackTrace();
 		return 0;
 	}
 }
@@ -192,7 +199,7 @@ private int getY(IBeanProxy anSWTRectangleBeanProxy){
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
 	} catch (ThrowableProxy exc) {
-		exc.printStackTrace();
+		exc.printProxyStackTrace();
 		return 0;
 	}
 }
@@ -202,7 +209,7 @@ private int getWidth(IBeanProxy anSWTRectangleBeanProxy){
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
 	} catch (ThrowableProxy exc) {
-		exc.printStackTrace();
+		exc.printProxyStackTrace();
 		return 0;
 	}
 }
@@ -212,7 +219,7 @@ private int getHeight(IBeanProxy anSWTRectangleBeanProxy){
 		IIntegerBeanProxy xProxy = (IIntegerBeanProxy) getGetFieldMethodProxy(anSWTRectangleBeanProxy.getProxyFactoryRegistry()).invoke(xFieldProxy,anSWTRectangleBeanProxy);
 		return xProxy.intValue();			
 	} catch (ThrowableProxy exc) {
-		exc.printStackTrace();
+		exc.printProxyStackTrace();
 		return 0;
 	}
 }	
@@ -230,4 +237,115 @@ protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyF
 	}
 	return getFieldMethodProxy;
 }
+
+public static boolean adjustForPreferredSizeAndPosition(IBeanProxy childProxy, IJavaObjectInstance parentComposite, Rectangle bounds, int marginWidth, int marginHeight, IBeanProxy defaultX, IBeanProxy defaultY) {
+	boolean changedit = false;
+	// If either the width or height are -1 we need to make them the current preferred size of the live component
+	// This would be the state after a drop on the graph viewer with just a point and no drag rectangle,
+	// or else a drop onto a tree
+	if (bounds.width == -1 || bounds.height == -1) {
+		changedit = true;
+		IPointBeanProxy preferredSize = BeanSWTUtilities.invoke_computeSize(childProxy,defaultX,defaultY);
+		if (bounds.width == -1)
+			bounds.width = Math.max(preferredSize.getX(), marginWidth);
+		if (bounds.height == -1)
+			bounds.height = Math.max(preferredSize.getY(), marginHeight);
+	}	
+	if (bounds.x == Integer.MIN_VALUE && bounds.y == Integer.MIN_VALUE) {
+		changedit = true;
+		//IPointBeanProxy point = BeanSWTUtilities.invoke_getLocation(childProxy);
+		
+		//IBeanProxy containerBeanProxy = BeanAwtUtilities.invoke_getParent(childProxy);
+		Point position = findNextAvailablePosition(bounds , parentComposite , marginWidth, marginHeight);
+		bounds.x = position.x;
+		bounds.y = position.y;
+	}
+	return changedit;
+}
+protected static Point findNextAvailablePosition(Rectangle bounds, IJavaObjectInstance parentComposite, int marginWidth, int marginHeight) {
+	int requestedWidth = bounds.width + 2 * marginWidth; // Increase by double margin width (one on each side)
+	int requestedHeight = bounds.height + 2 * marginHeight;
+	IBeanProxy compositeBeanProxy = (IBeanProxy) BeanProxyUtilities.getBeanProxy(parentComposite);
+	IRectangleBeanProxy boundingRect = BeanSWTUtilities.invoke_getBounds(compositeBeanProxy);
+	// Gather the bounds for all the children in the container
+	
+	IArrayBeanProxy children = BeanSWTUtilities.invoke_getChildren(compositeBeanProxy);
+	// Collect all rectangles that have non zero widths and height
+	ArrayList rects = new ArrayList(children.getLength());
+	for (int i = 0; i < children.getLength(); i++) {
+		try {
+			IRectangleBeanProxy cBounds = BeanSWTUtilities.invoke_getBounds(children.get(i));
+			// Exclude the children being added which are unadjusted 
+			if (cBounds.getWidth() != -1 && cBounds.getHeight() != -1){
+				// Convert the IRectangleBeanProxy to a 2d rectangle that we can work with
+				Rectangle lBounds = new Rectangle(cBounds.getX(),cBounds.getY(),cBounds.getWidth(),cBounds.getHeight());
+				rects.add(lBounds);
+			}
+		} catch ( ThrowableProxy exc ) {
+			exc.printProxyStackTrace();
+		}
+	}
+	if (requestedWidth < boundingRect.getWidth()) {
+		// The requested size is less than the bounding rectangle, see where on the right
+		// it can fit, moving down as needed.
+
+		int highestBottom = 0; // How high up to do search. Start at the the top.
+		// Perform search by width, then by height. Start at upper left and see if any intersections.
+		// If there aren't any, good, we found a spot. If there are, move right beyond all of the
+		// intersections and try again. If we get all of the way over, then move back to the highest
+		// bottom we found among all of the intersections and to the far left and try again, moving
+		// down the page until we find something.
+		while (true) {
+			int x = 0;
+			int y = highestBottom;
+			highestBottom = Integer.MAX_VALUE;
+			while (x + requestedWidth < boundingRect.getWidth()) {
+				boolean intersects = false;
+				Rectangle tryRect = new Rectangle(x, y, requestedWidth, requestedHeight);
+				for (int i = 0; i < rects.size(); i++) {
+					Rectangle rect = (Rectangle) rects.get(i);
+					if (rect.intersects(tryRect)) {
+						intersects = true;
+						x = Math.max(x, rect.x + rect.width);
+						highestBottom = Math.min(highestBottom, rect.y + rect.height);
+					}
+				}
+				if (!intersects) {
+					// We got a space for it.
+					// Move right and down by margin amount.
+					Point position = new Point(tryRect.x + marginWidth, tryRect.y + marginHeight);
+					return position;
+				}
+				// There was an intersection, x is now just right of the rightmost intersection.
+				// Loop will try searching here now.
+			}
+			// We gone all of the way to the right and couldn't find anything. Now move down
+			// to just below the height intersect bottom. Loop will try searching here.
+		}
+	} else {
+		// The requested width is larger than the bounding area, so go down and find first
+		// y that we can use that doesn't intersect anything.
+		int y = 0;
+		while (true) {
+			boolean intersects = false;
+			Rectangle tryRect = new Rectangle(0, y, requestedWidth, requestedHeight);
+			for (int i = 0; i < rects.size(); i++) {
+				Rectangle rect = (Rectangle) rects.get(i);
+				if (rect.intersects(tryRect)) {
+					intersects = true;
+					y = Math.max(y, rect.y + rect.height);
+				}
+				if (!intersects) {
+					// We got a space for it.
+					// Move right and down by margin amount.
+					Point position = new Point(tryRect.x + marginWidth, tryRect.y + marginHeight);
+					return position;
+				}
+				// It intersects something in this row, move below the lowest of the intersections
+				// Loop will try again.
+			}
+		}
+	}
+}
+
 }
