@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.19 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.20 $  $Date: 2004-08-20 19:10:18 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -939,8 +939,13 @@ public   void removeFromJVEModel()  {
 	}
 	
 	public boolean isInitMethod(MethodDeclaration method) {
-		MethodDeclaration md = getInitMethod() == null ? null : getInitMethod().getDeclMethod();
-		if (md == null || method == null)
+		if (method == null)
+			return false;
+		CodeMethodRef initMethod = getInitMethod();
+		if (initMethod == null)
+			return false;
+		MethodDeclaration md = initMethod.getDeclMethod();
+		if (md == null)
 			return false;
 
 		if (method.getName().getIdentifier().equals(md.getName().getIdentifier())) {
@@ -950,7 +955,7 @@ public   void removeFromJVEModel()  {
 				return true ;//TODO Need to be more specif
 
 		}
-		return (false);
+		return false;
 	}
 
 	/**
