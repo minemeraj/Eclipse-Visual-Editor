@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.5 $  $Date: 2004-11-24 17:08:41 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -63,5 +63,11 @@ public class JMenuContainerPolicy extends JavaContainerPolicy {
 			JavaClass modelType = (JavaClass) ((EObject) container).eClass();
 			containmentSF = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
 		}
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.JavaContainerPolicy#isValidBeanLocation(java.lang.Object)
+	 */
+	protected boolean isValidBeanLocation(Object child) {
+		return child instanceof EObject && BeanAwtUtilities.isValidBeanLocation(domain, (EObject)child);
 	}
 }

@@ -11,13 +11,15 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-11-24 17:08:38 $ 
  */
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -53,5 +55,23 @@ public class JavaContainerPolicy extends AbstractJavaContainerPolicy {
 	
 	public Command getOrphanChildrenCommand(List children) {
 		return getOrphanChildrenCommand(children, containmentSF);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getAddCommand(java.util.List, java.lang.Object, org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected Command getAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		Iterator itr = children.iterator();
+		while (itr.hasNext()) {
+			Object child = itr.next();
+			if (!isValidBeanLocation(child))
+				return UnexecutableCommand.INSTANCE;
+		}
+		return super.getAddCommand(children, positionBeforeChild, containmentSF);
+	}
+	/*
+	 * Subclasses can override to check for valid bean location (i.e. Global/Global, Global/Local, etc.
+	 */
+	protected boolean isValidBeanLocation (Object child) {
+		return true;
 	}
 }

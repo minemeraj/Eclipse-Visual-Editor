@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.15 $  $Date: 2004-11-24 17:08:41 $ 
  */
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 
@@ -29,6 +30,11 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.GridController;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.JCMMethod;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -711,6 +717,29 @@ public static void hideGrids (EditPart editpart) {
 	for (int i = 0; i < children.size(); i++) {
 		hideGrids((EditPart)children.get(i));
 	}
+}
+
+/*
+ * Check to ensure the childComponent we are adding is a Global/Global which means: 
+ * - it has a global variable (i.e. is a member) 
+ * - has it's own initialization method (i.e. getJButton() for a jButton variable)
+ */
+public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent) {
+	Object bcm = domain.getDiagramData();
+	if (bcm instanceof BeanSubclassComposition) {
+		BeanSubclassComposition beanComposition = (BeanSubclassComposition) bcm;
+		// Check that it's a global variable
+		if (beanComposition.getMembers().indexOf(childComponent) != -1) {
+			// Check for Global/Global by ensuring the return from the initialize method is the same
+			// as the child component.
+			EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) childComponent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+			if (cRef != null && cRef instanceof JCMMethod) {
+				if (((JCMMethod) cRef).getReturn() == childComponent)
+					return true;
+			}
+		}
+	}
+	return false;
 }
 
 protected BeanAwtUtilities() {

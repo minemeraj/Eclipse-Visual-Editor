@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.graphics.Point;
 
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -21,7 +23,12 @@ import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
+import org.eclipse.ve.internal.jcm.JCMMethod;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
@@ -233,4 +240,26 @@ public class BeanSWTUtilities {
         }
     }
 
+	public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent, EObject targetContainer) {
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
+		EReference sfControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
+		// Check the child's init method and the target init method. It's valid if the same
+		// since the adding is done in the same init method.
+		EObject childRef = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		EObject targetRef = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) targetContainer, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		// If the child's init method and the target init method is the same, this is valid.
+		if (childRef instanceof JCMMethod && targetRef instanceof JCMMethod && childRef == targetRef)
+			return true;
+
+		EObject parent = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, sfControls);
+		EObject parentRef = InverseMaintenanceAdapter.getFirstReferencedBy(parent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		/* 
+		 * The only valid case is one in which the child's init method is different
+		 * from the parent's init method.
+		 */
+		if (childRef instanceof JCMMethod && parentRef instanceof JCMMethod)
+			if (childRef != parentRef)
+				return true;
+		return false;
+	}
 }
