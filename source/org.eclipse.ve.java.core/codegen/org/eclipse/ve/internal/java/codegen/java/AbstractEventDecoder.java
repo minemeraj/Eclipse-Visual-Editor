@@ -10,16 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-28 14:21:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.BeanMethodTemplate;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -105,8 +107,8 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#determinePriority()
 	 */
-	public Object determinePriority() {
-		return new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, IJavaFeatureMapper.PRIORITY_DEFAULT};
+	public VEexpressionPriority determinePriority() {
+		return IJavaFeatureMapper.DEFAULTPriority;
 	}
 
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractIndexedChildrenDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getSFPriority()
 	 */
 	protected int getSFPriority() {
-		return IJavaFeatureMapper.PRIORITY_ADD_CHANGE + super.getSFPriority();
+		return IJavaFeatureMapper.PRIORITY_ADD ;
 	}
 
 	/**

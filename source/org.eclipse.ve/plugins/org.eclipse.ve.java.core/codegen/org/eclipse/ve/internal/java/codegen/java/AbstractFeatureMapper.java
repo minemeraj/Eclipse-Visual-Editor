@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-28 14:21:33 $ 
  */
 import java.util.logging.Level;
 
@@ -117,10 +117,10 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper#getPriorityIncrement(String)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper#getFeaturePriority(String)
 	 */
-	public int getPriorityIncrement(String methodType) {
-		return 0;
+	public int getFeaturePriority(String methodType) {
+		return IJavaFeatureMapper.PRIORITY_DEFAULT;
 	}
 	
 	/**

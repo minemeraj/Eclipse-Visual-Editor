@@ -10,40 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2004-04-27 23:16:22 $ 
+ *  $Revision: 1.16 $  $Date: 2004-04-28 14:21:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.Assignment;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.PTExpression;
-import org.eclipse.jem.internal.instantiation.PTFieldAccess;
-import org.eclipse.jem.internal.instantiation.PTInstanceReference;
-import org.eclipse.jem.internal.instantiation.PTName;
+import org.eclipse.jdt.core.dom.*;
+
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
  
@@ -263,6 +244,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			// to figure out constructor expression index priority.
 			BeanPart obj = fbeanPart;
 			int parentCount = 0;
+			if (fbeanPart.getReturnedMethod() != fbeanPart.getInitMethod()) {
+				// Let the constructor of the returned bean have a higher priority
+				parentCount++;
+			}
 			while(obj!=null){
 				parentCount++;
 				obj = CodeGenUtil.determineParentBeanpart(obj);

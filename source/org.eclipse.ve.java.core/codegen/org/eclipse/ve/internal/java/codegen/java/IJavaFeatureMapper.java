@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-16 19:32:18 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -41,17 +41,55 @@ public String getIndexMethodName() ;
 public String getReadMethodName() ;
 public PropertyDecorator getDecorator() ;
 public boolean isFieldFeature() ;
-public int getPriorityIncrement(String methodName);
 
-public static final int INTER_PRIORITY_GAP = 5;
+// Expresson priority will determine where new expressions will 
+// be inserted in the code
 
-// Higher Values will come first in the code
-public static final int PRIORITY_DEFAULT = 0;
-public static final int PRIORITY_CONSTRAINT_CHANGE = PRIORITY_DEFAULT + INTER_PRIORITY_GAP;
-public static final int PRIORITY_ADD_CHANGE = PRIORITY_CONSTRAINT_CHANGE + INTER_PRIORITY_GAP;
-public static final int PRIORITY_LAYOUT_CHANGE = PRIORITY_ADD_CHANGE + INTER_PRIORITY_GAP;
-public static final int PRIORITY_IMPLICIT = PRIORITY_LAYOUT_CHANGE + INTER_PRIORITY_GAP;
+public class VEexpressionPriority {	
+    int priority;  // Expression "feature" level priority
+    int index;     // In the case of same "feature", index  (e.g., z order of add(Foo)
+    
+    public VEexpressionPriority (int p, int i) {
+    	priority = p;
+    	index=i;    	
+    }
+	public int getProiority() {  		
+		return priority;
+	}
+	public int getProiorityIndex() {  	
+		return index;
+	}
+	public String toString() {
+		if (priority<0) 
+			return "[NO Priority]"; //$NON-NLS-1$
+		else
+			return "["+priority+", "+index+"]"; //$NON-NLS-1$
+	}
+}
 
-public static final int PRIORITY_INIT_EXPR = Integer.MAX_VALUE;
-public static final int PRIORITY_CONSTRUCTOR = PRIORITY_INIT_EXPR; 
+/**
+ * 
+ * @param methodName  feature's method name
+ * @return feature level priority
+ * The VEexpresssionPriority will determine where an expression be inserted
+ * in the code.
+ * The feature level priority comes to force ordering between features.
+ * e.g., setLayout()  will come before add(component)
+ */
+public int getFeaturePriority(String methodName);
+
+// Higher Values will come first in the code ... 
+// priority will be determined by FeatureMappers using
+// getFeaturePriority()
+// The following are generic, preCanned priorities
+public static final int PRIORITY_DEFAULT =				10000;
+//Add to a container should be at the end all default expression settings 
+public static final int PRIORITY_ADD = 					PRIORITY_DEFAULT - 5000; 
+// Constructor Expression, all at the top
+public static final int PRIORITY_CONSTRUCTOR = 			100000;
+
+
+public static final VEexpressionPriority NOPriority = new VEexpressionPriority(-1,-1);
+public static final VEexpressionPriority DEFAULTPriority = new VEexpressionPriority(PRIORITY_DEFAULT,0);
+
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-16 20:56:05 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:37 $ 
  */
 
 
@@ -372,13 +372,6 @@ public Object[] getArgsHandles(Statement expr) {
 	        if (a != null)
 	          o.eAdapters().remove(a) ;
 		}
-	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getSFPriority()
-	 */
-	protected int getSFPriority() {
-		return IJavaFeatureMapper.PRIORITY_CONSTRAINT_CHANGE + super.getSFPriority();
 	}
 
 }
