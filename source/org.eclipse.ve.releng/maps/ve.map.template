@@ -5,6 +5,7 @@ plugin@com.ibm.wtp.emf=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclips
 plugin@com.ibm.etools.emf.event=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
 plugin@com.ibm.wtp.emf.workbench=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.workbench
 plugin@com.ibm.wtp.common=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common
+feature@com.ibm.wtp.emf.integration=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.integration-feature
 
 !*** Special ones from eclipse.
 plugin@org.eclipse.test=v20031125,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
