@@ -1055,7 +1055,8 @@ The next steps are to configure the Visual Editor so that <span
  style="font-style: italic;">MyCustomPrompter </span>has custom
 behavior over and above that it inherits by virtue of extending <span
  style="font-style: italic;">org.eclipse.swt.widgets.Composite</span>.<br>
-<h2><a name="Using_an_ENUM_cell_editor">Enumerated values for a property</a></h2>
+<h2><a name="Using_an_ENUM_cell_editor">Enumerated values for the <span
+ style="font-style: italic;">type</span> property</a></h2>
 <p><span style="font-family: monospace;">MyCustomPrompter </span>class
 has an <i>int</i> property named <i style="font-weight: bold;">type</i><span
  style="font-weight: bold;">
@@ -1365,20 +1366,83 @@ IDE or Visual Editor specific behavior for a class.<span
 <p>At the heart of the Visual Editor is an EMF model that describes a
 class being edited.&nbsp; This model describes the instances, their
 relationships and property settings. Instances of objects in this model
-implement org.eclipse.jem.internal.instantiation.base.IJavaInstance<br>
+implement <span style="font-family: monospace;">org.eclipse.jem.internal.instantiation.base.IJavaInstance</span>.&nbsp;
+For example, a visual editor class that has a <span
+ style="font-family: monospace;">Shell </span>whose size is 200,200
+will contain two <span style="font-family: monospace;">IJavaInstance </span>objects.&nbsp;
+The first of these is for the <span style="font-family: monospace;">Shell
+</span>itself and the second is for a <span
+ style="font-family: monospace;">Point </span>representing the
+size.&nbsp; An EMF relationship between the <span
+ style="font-family: monospace;">Shell </span>and the <span
+ style="font-family: monospace;">Point </span>instance will exist
+whose structural feature represents the size property.<br>
 <br>
-</p>
-<p>EMF is a self describing structure, so behind the instance model
-there
+EMF is a self describing structure, so behind the instance model there
 is a meta-model that describes the classes themselves - their methods,
 properties, events and hierarchy. The meta-model is created by the
 Visual Editor using a combination of reflection and JavaBeans
-Introspection.&nbsp; <br>
+Introspection.&nbsp; Instances in this metamodel consist of <span
+ style="font-family: monospace;">org.eclipse.jem.java.JavaClass</span>&nbsp;
+for each Java class.&nbsp; The structural features in the model are
+instances of EReference and represent the properties of the Java class.<br>
+</p>
+<p>There are times when it is necessary to provide additional
+information that should be merged in with the EMF model of a
+JavaClass.&nbsp; An example of this is a new feature has to be added
+over and above those that can be determined by reflection. <br>
+</p>
+<p>The Visual Editor uses the EMF model of a JavaClass not only to
+define its shape but also to define a number of helper classes used by
+the Visual Editor.&nbsp; These are typically mediator classes that are
+used by the different Visual Editor subsystems.&nbsp; The names of the
+mediator classes to use for a given JavaClass are held in the EMF
+model, thereby allowing specific classes to have custom behavior for
+each subsystem.&nbsp; Rather than hold these directly against the
+JavaClass (which is a generic model of Java classes that can be used by
+Eclipse plugins other than the Visual Editor)&nbsp; they are held
+against decorators classes that annotate the descriptive information of
+a class.&nbsp; These can be thought of similar to key value pairs that
+hold information rather than provide functionality.&nbsp; <br>
+</p>
+<p>In summary, override files are used as means to modify, add to or
+delete from an EMF JavaClass whose shape is determined through using
+standard Java reflection combined with BeanInfo introspection. <br>
+</p>
+<p>For a plugin to contribute override files its plugin manifest must
+implement the extension point <span style="font-style: italic;">org.eclipse.jem.beaninfo.registrations</span>.&nbsp;
+This specifies the trigger in the build path that will cause the
+overrides to be applied (either a classpath container or pre-requisite
+project) as well as the name of a Java package and where override files
+for its contents are held within the plugin folder structure.&nbsp; The
+code below shows the extension used for the plugin.xml for the <span
+ style="font-style: italic;">org.eclipse.ve.examples.customwidget </span>example
+in this tutorial.</p>
+<p></p>
+<pre>    &lt;extension<br>         point="org.eclipse.jem.beaninfo.registrations"&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">      &lt;registration container="org.eclipse.ve.example.PrompterContainer"&gt;<br>         &lt;override<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">         package="org.eclipse.ve.example.customwidget.prompter"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">         path="overrides/org/eclipse/ve/example/customwidget/prompter"&gt;<br>         &lt;/override&gt;<br>      &lt;/registration&gt;     <br>    &lt;/extension&gt;<br></pre>
+<p>The classpath container with an id of <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> is
+the one used by the <span style="font-style: italic;">Custom Prompter </span>library.&nbsp;
+The class being overriden is <span style="font-family: monospace;">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter</span>
+so its<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> package is declared together with&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"> a
+folder location for where the override files will be stored.&nbsp; The
+location of the override folder is up to the creator of the plugin and
+is any arbitrary folder, however there is a convention that the Visual
+Editor uses where override files are held in a top level folder called <span
+ style="font-style: italic;">overrides </span>and then sub folders
+created for the package path. &nbsp; <br>
+</p>
+<p><img style="border: 1px solid ; width: 365px; height: 226px;" alt=""
+ src="images/OverrideFileStructure.JPG"><br>
 <br>
 </p>
-<p><br>
-</p>
-<h2><a name="Creating_A_SWT_cell_editor">Creating A SWT cell editor</a></h2>
+<h2><a name="Creating_A_SWT_cell_editor">Custom cell editing for the <span
+ style="font-style: italic;">text </span>property</a></h2>
 <p>&nbsp;</p>
 <p>The <i>MyCustomPrompter</i> class has a String property named <b><i>text</i></b>.&nbsp;
 By default the Visual Editor will use a generic String cell editor for
@@ -1459,22 +1523,7 @@ value format is as following:
 &lt;plugin_name&gt;/&lt;class_name&gt;.&nbsp; The Property Sheet will
 use this information to determine which cell editor to use.&nbsp; If
 one is not set, it will use the annotation of a super class.</p>
-<p>Now that we have an override file will need to contribute it to
-VE.&nbsp; We will do so by adding the following extension to the
-<a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
-of our plugin project:</p>
-<p>
-</p>
-<pre>    &lt;extension<br>         point="org.eclipse.jem.beaninfo.registrations"&gt;<br>      &lt;registration<br>            container="org.eclipse.ve.example.PrompterContainer"&gt;<br>         &lt;override<br>               <font
- color="#0000ff">package</font>="org.eclipse.ve.example.customwidget.prompter"<br>               <font
- color="#0000ff">path</font>="<font color="#ff0000">overrides/org/eclipse/ve/example/customwidget/prompter</font>"&gt;<br>         &lt;/override&gt;<br>      &lt;/registration&gt;     <br>    &lt;/extension&gt;<br></pre>
-<p>This extension tell the introspector that if the PrompterContainer
-is on the class path, for every class that is on the <i>org.eclipse.ve.example.customwidget.prompter</i>
-java package, use the override file that is in the <font face="Arial"><i>overrides/org/eclipse/ve/example/customwidget/prompter
-</i>directory (relative to this plugin).&nbsp; For a any <i>Foo.class </i>in
-this package, the introspector will look for a <i>Foo.override</i> xmi
-file in that directory and apply it if it exists.</font></p>
+<br>
 <p><font face="Arial">The following is the directory structure after
 adding the new cell editor classes, and override file:</font></p>
 <p class="PictureParagraph">
