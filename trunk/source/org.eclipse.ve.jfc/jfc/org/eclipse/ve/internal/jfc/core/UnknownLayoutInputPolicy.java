@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutInputPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 import java.util.Collections;
@@ -23,6 +23,8 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.*;
+
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * The layout input policy for java.awt.Containers for 
  * layout managers that we don't know how to handle.
@@ -34,11 +36,11 @@ import org.eclipse.gef.requests.*;
  * This is true no matter whether it is LayoutManager or LayoutManager2.
  */
 public class UnknownLayoutInputPolicy extends LayoutEditPolicy {
-	protected ContainerPolicy containerPolicy;
+	protected VisualContainerPolicy containerPolicy;
 	
 	protected UnknownLayoutPolicyHelper fLayoutPolicyHelper;	
 	
-public UnknownLayoutInputPolicy(ContainerPolicy aPolicy) {
+public UnknownLayoutInputPolicy(VisualContainerPolicy aPolicy) {
 	containerPolicy = aPolicy;
 	fLayoutPolicyHelper = new UnknownLayoutPolicyHelper(aPolicy);
 }

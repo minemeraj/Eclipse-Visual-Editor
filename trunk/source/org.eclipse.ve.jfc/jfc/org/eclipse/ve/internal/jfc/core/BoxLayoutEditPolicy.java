@@ -8,6 +8,7 @@ import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
@@ -21,7 +22,7 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
@@ -30,7 +31,7 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 
 	EStructuralFeature sfLayout = null;
 	
-	public BoxLayoutEditPolicy(ContainerPolicy containerPolicy) {
+	public BoxLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 	   super(containerPolicy);
 	}
 	/**

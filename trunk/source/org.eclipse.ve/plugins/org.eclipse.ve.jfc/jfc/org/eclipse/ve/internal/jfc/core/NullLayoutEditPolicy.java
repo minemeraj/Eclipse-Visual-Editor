@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
  */
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +27,8 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.awt.*;
 /**
@@ -34,13 +36,13 @@ import org.eclipse.jem.internal.proxy.awt.*;
  * is null (i.e. not set)
  */
 public class NullLayoutEditPolicy extends XYLayoutEditPolicy {
-	protected ContainerPolicy containerPolicy;		// Handles the containment functions
+	protected VisualContainerPolicy containerPolicy;		// Handles the containment functions
 	protected NullLayoutPolicyHelper helper = new NullLayoutPolicyHelper();
 	
 /**
  * Create with the container policy for handling DiagramFigures.
  */
-public NullLayoutEditPolicy(ContainerPolicy containerPolicy) {
+public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 	this.containerPolicy = containerPolicy;
 	helper.setContainerPolicy(containerPolicy);
 }

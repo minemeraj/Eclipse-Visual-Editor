@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 import java.util.Collections;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * Layout input policiy for hanlding the Flow layout of a Container.
@@ -29,7 +30,7 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 	/**
 	 * Create with the container policy for handling DiagramFigures.
 	 */
-	public FlowLayoutEditPolicy(ContainerPolicy containerPolicy) {
+	public FlowLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
 		helper.setContainerPolicy(containerPolicy);
 	}
