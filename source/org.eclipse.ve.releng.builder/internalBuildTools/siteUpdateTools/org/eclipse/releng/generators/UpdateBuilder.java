@@ -526,8 +526,8 @@ protected static final String DEFAULT_CATNAME = "...";
 									pluginFolder = renameFolder(pluginFolder, id, version);
 								}
 								long[] sizes = writeJAR(pluginFolder, "plugins");
-								pdata.installedSize = sizes[DOWNLOAD_SIZE_INDEX];
-								pdata.downloadSize = sizes[INSTALLED_SIZE_INDEX];
+								pdata.downloadSize = sizes[DOWNLOAD_SIZE_INDEX];
+								pdata.installedSize = sizes[INSTALLED_SIZE_INDEX];
 								return changedFile;
 							}
 						}
