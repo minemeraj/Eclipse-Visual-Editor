@@ -1,5 +1,6 @@
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.emf.ecore.EClassifier;
 
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
@@ -10,6 +11,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
@@ -127,5 +129,15 @@ public class BeanSWTUtilities {
                     });
         }
     	return null;
+    }
+    
+    public static Point getOffScreenLocation(){
+    	
+    	boolean showWindow = VCEPreferences.isLiveWindowOn();
+    	if (showWindow)
+    		return new Point(0,0);
+    	else {
+    		return new Point(10000, 10000);
+    	}
     }
 }

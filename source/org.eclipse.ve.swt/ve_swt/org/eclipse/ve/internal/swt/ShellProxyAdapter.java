@@ -9,9 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2004-07-28 15:04:15 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.8 $ $Date: 2004-07-28 17:12:59 $
  */
 package org.eclipse.ve.internal.swt;
+
+import org.eclipse.swt.graphics.Point;
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -46,9 +48,11 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 						// Position the shell off screen for the moment
 						// TODO this needs to be done properly so that the location can be set in the model and ignored
 						// likewise for the visibility
-						IIntegerBeanProxy intBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-5000);
+						Point offscreen = BeanSWTUtilities.getOffScreenLocation();
+						IIntegerBeanProxy intXBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.x);
+						IIntegerBeanProxy intYBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.y);
 						IMethodProxy setlocationMethodProxy = shellProxy.getTypeProxy().getMethodProxy("setLocation", new String[] { "int", "int"});  //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
-						setlocationMethodProxy.invoke(shellProxy, new IBeanProxy[] { intBeanProxy, intBeanProxy});
+						setlocationMethodProxy.invoke(shellProxy, new IBeanProxy[] { intXBeanProxy, intYBeanProxy});
 						
 						// Add a ShellListener that prevents the closing or minimization of the shell.
 						IBeanTypeProxy listenerType = displayProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener");  //$NON-NLS-1$
