@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScaleBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-07-26 21:57:12 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-27 19:22:23 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -61,12 +61,6 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
-			// enabled
-			super.createPropertyDescriptor(getBeanClass(),"enabled", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ScaleMessages.getString("enabledDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ScaleMessages.getString("enabledSD"), //$NON-NLS-1$
-			}
-			),
 			// increment
 			super.createPropertyDescriptor(getBeanClass(),"increment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ScaleMessages.getString("incrementDN"), //$NON-NLS-1$
