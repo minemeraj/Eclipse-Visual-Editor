@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.2 $  $Date: 2005-03-09 21:44:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-09 22:27:00 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -154,7 +154,7 @@ public abstract class ModelChangeController {
         if (getHoldState() != ModelChangeController.READY_STATE)
             return false; // Not in position to execute.
 
-        boolean nested = !phases.contains(MODEL_CHANGES_PHASE);	// Is this a nested model changes call.
+        boolean nested = phases.contains(MODEL_CHANGES_PHASE);	// Is this a nested model changes call.
         try {
         	transactionBeginning(MODEL_CHANGES_PHASE);
             startChange(nested);
