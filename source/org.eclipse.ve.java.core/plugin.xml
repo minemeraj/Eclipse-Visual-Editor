@@ -161,6 +161,17 @@
                id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
          </action>
       </objectContribution>
+<!-- Add a popup to open the Customize Layout window -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.customizelayout.popup.object">
+         <action
+               label="%PopupMenus.OpenCustomizeLayoutAction.Label  Open Customize Layout Window"
+               class="org.eclipse.ve.internal.cde.core.OpenCustomizeLayoutObjectActionDelegate"
+               id="org.eclipse.ve.internal.java.core.opencustomizelayoutaction">
+         </action>
+      </objectContribution>
+      
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
