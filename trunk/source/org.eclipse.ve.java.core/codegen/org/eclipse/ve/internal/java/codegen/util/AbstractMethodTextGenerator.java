@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-29 12:58:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -40,7 +40,7 @@ import org.eclipse.ve.internal.java.vce.templates.*;
 public abstract class AbstractMethodTextGenerator implements IMethodTextGenerator {
 	
 	public final static String  JAVAJET_EXT = ".javajet" ; //$NON-NLS-1$
-	public final static String  DEFAULT_PREFIX = "get";   //$NON-NLS-1$
+	public final static String  DEFAULT_METHOD_PREFIX = "get";   //$NON-NLS-1$
 
 
 	protected	IBeanDeclModel	fModel ;
@@ -248,7 +248,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#getMethodPrefix()
 	 */
 	public String getMethodPrefix() {
-		return DEFAULT_PREFIX;
+		return DEFAULT_METHOD_PREFIX;
 	}
 
 }

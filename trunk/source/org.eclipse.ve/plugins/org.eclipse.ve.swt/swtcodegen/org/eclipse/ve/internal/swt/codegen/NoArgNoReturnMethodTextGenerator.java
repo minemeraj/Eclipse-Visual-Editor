@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 21:54:02 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-29 12:58:26 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -37,6 +37,8 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	public static final String METHOD_TEMPLATE_NAME = METHOD_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;
 	public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
 	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
+	
+	public final static  String METHOD_PREFIX = "create";
 	
 	public final static  String[] ignoredFeatures = {
 	                                                  "allocation" };
@@ -90,6 +92,9 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	 */
 	protected String[] getIgnoreSFnameList() {
 		return ignoredFeatures;
+	}
+	public String getMethodPrefix() {
+		return METHOD_PREFIX;
 	}
 
 }
