@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-01 21:07:54 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 17:52:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -37,7 +37,6 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
@@ -51,7 +50,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  * 
  * @since 1.0.0
  */
-public class GridLayoutLayoutPage extends CustomizeLayoutPage {
+public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
 	EditPart fEditPart = null;
 	

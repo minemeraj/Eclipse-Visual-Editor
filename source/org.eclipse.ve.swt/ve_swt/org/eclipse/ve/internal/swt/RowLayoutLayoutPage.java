@@ -10,13 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-01 21:07:54 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.*;
@@ -26,8 +25,6 @@ import org.eclipse.gef.commands.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -40,7 +37,6 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
@@ -54,7 +50,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  * 
  * @since 1.0.0
  */
-public class RowLayoutLayoutPage extends CustomizeLayoutPage {
+public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
 	EditPart fEditPart = null;
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-26 18:23:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:16 $ 
  */
 
 import java.util.Collections;
@@ -40,13 +40,14 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.jfc.core.JFCConstants;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
@@ -54,7 +55,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  * It shows and allows selection of the "anchor" and "fill" properties of an AWT GridBagConstraints object which is
  * the constraint on a component that is a child of a container that uses a GridBagLayout as it's layout manager. 
  */
-public class GridBagComponentPage extends CustomizeLayoutPage {
+public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
 	private final static String[] resAnchorPrefix = { "AnchorAction.northwest.", //$NON-NLS-1$
 		"AnchorAction.north.", //$NON-NLS-1$

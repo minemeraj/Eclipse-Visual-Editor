@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-26 18:23:33 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:14 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -41,7 +41,7 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
@@ -55,7 +55,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  * It shows and allows selection of the "alignment", "span" and "grab" properties of an SWT GridData object which is
  * the constraint on a component that is a child of a container that uses a GridLayout as it's layout manager. 
  */
-public class GridLayoutComponentPage extends CustomizeLayoutPage {
+public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
 	
 	private final static String resAlignmentPrefix = "AlignmentAction."; //$NON-NLS-1$

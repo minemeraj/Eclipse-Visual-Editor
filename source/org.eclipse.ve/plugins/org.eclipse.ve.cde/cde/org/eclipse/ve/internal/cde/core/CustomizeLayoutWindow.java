@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-01 21:07:49 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 17:52:10 $ 
  */
 
 import java.util.ArrayList;
@@ -68,6 +68,9 @@ public class CustomizeLayoutWindow extends Window {
 	
 	private Point location;
 	protected CustomizeLayoutWindowAction windowAction;
+	
+	protected Shell parentShell;
+	protected CustomizeLayoutPage selectedPage = null;
 
 	/**
 	 * Create the CustomizeLayoutWindow. It will be parented to the given shell whenever the 
@@ -83,7 +86,19 @@ public class CustomizeLayoutWindow extends Window {
 	
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(CDEMessages.getString("CustomizeLayoutWindow.title")); //$NON-NLS-1$
+		setTitle(null);
+	}
+	
+	protected void setTitle(String description) {
+		Shell shell = getShell();
+		if (shell == null || shell.isDisposed()) {
+			return;
+		}
+		if (description == null) {
+			shell.setText(CDEMessages.getString("CustomizeLayoutWindow.title")); //$NON-NLS-1$
+		} else {
+			shell.setText(CDEMessages.getString("CustomizeLayoutWindow.title") + " - " + description); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	protected Point getInitialSize() {
@@ -139,7 +154,7 @@ public class CustomizeLayoutWindow extends Window {
 		noLayoutPage = new Composite(layoutPage, SWT.NONE);
 		noLayoutPage.setLayout(new GridLayout());
 		Label noLayoutLabel = new Label(noLayoutPage, SWT.WRAP);
-		noLayoutLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noLayoutText"));
+		noLayoutLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noLayoutText")); //$NON-NLS-1$
 		GridData gd = new GridData();
 		gd.widthHint = 200;
 		noLayoutLabel.setLayoutData(gd);
@@ -150,7 +165,7 @@ public class CustomizeLayoutWindow extends Window {
 		noComponentPage = new Composite(componentPage, SWT.NONE);
 		noComponentPage.setLayout(new GridLayout());
 		Label noComponentLabel = new Label(noComponentPage, SWT.WRAP);
-		noComponentLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noComponentText"));
+		noComponentLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noComponentText")); //$NON-NLS-1$
 		gd = new GridData();
 		gd.widthHint = 200;
 		noComponentLabel.setLayoutData(gd);
@@ -306,6 +321,7 @@ public class CustomizeLayoutWindow extends Window {
 		this.selection = selection;
 		boolean found = false;
 		boolean isLayout = false;
+		CustomizeLayoutPage lPage = null, cPage = null;
 		for (int i = 0; i < layoutPages.size(); i++) {
 			CustomizeLayoutPage page = (CustomizeLayoutPage) layoutPages.get(i);
 			if (page != null)
@@ -318,6 +334,7 @@ public class CustomizeLayoutWindow extends Window {
 				}
 				layoutPageLayout.topControl = control;
 				layoutPage.layout();
+				lPage = page;
 				// If the selection is a container and this is the container's
 				// layout, stop looking through the available pages.
 				if (page.selectionIsContainer(selection)) {
@@ -327,6 +344,7 @@ public class CustomizeLayoutWindow extends Window {
 			}
 		}
 		if (!found) {
+			lPage = null;
 			layoutPageLayout.topControl = noLayoutPage;
 			layoutPage.layout();
 		}
@@ -344,10 +362,12 @@ public class CustomizeLayoutWindow extends Window {
 				}
 				componentPageLayout.topControl = control;
 				componentPage.layout();
+				cPage = page;
 				break;
 			}
 		}
 		if (!found) {
+			cPage = null;
 			componentPageLayout.topControl = noComponentPage;
 			componentPage.layout();
 		}
@@ -357,10 +377,20 @@ public class CustomizeLayoutWindow extends Window {
 			// Set the layout tab to the top
 			if (tabFolder.getSelectionIndex() != 0)
 				tabFolder.setSelection(0);
+			if (lPage != null) {
+				setTitle(lPage.getLabelForSelection(selection));
+			}
 		} else {
 			// else set the component tab to the top
 			if (tabFolder.getSelectionIndex() != 1)
 				tabFolder.setSelection(1);
+			if (cPage != null) {
+				setTitle(cPage.getLabelForSelection(selection));
+			}
+		}
+		
+		if (lPage == null && lPage == null) {
+			setTitle(null);
 		}
 	}
 	
@@ -417,7 +447,7 @@ public class CustomizeLayoutWindow extends Window {
 
 	public Point getLocation() {
 		return location;
-	}	
+	}
 
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:12 $ 
  */
 
 import java.text.Collator;
@@ -392,7 +392,7 @@ public class AddEventWizard extends Wizard {
 					ArrayList parmTypes = new ArrayList(2);
 					parmTypes.add("java.lang.String"); //$NON-NLS-1$					
 					parmTypes.add("java.beans.PropertyChangeListener"); //$NON-NLS-1$										
-					propertyTwoArgumentMethod = ((JavaClass)javaBean.getJavaType()).getMethodExtended("addPropertyChangeListener",parmTypes);
+					propertyTwoArgumentMethod = ((JavaClass)javaBean.getJavaType()).getMethodExtended("addPropertyChangeListener",parmTypes); //$NON-NLS-1$
 					c1createNewListenerTwoArgumentMethod.setEnabled(propertyTwoArgumentMethod != null);
 					// Property change events are handled differently from regular EventSetDescriptors
 					// Each java.beans.PropertyDescriptor that answers true to isBound is a candidate propertyChangeEvent
@@ -600,7 +600,7 @@ public class AddEventWizard extends Wizard {
 			EventData eventData = (EventData)treeItem.getData();
 			eventSetDecorator = eventData.eventSetDecor;
 			// If the event is a propertyChange then enable the property controls and exit
-			if(eventSetDecorator.getName().equals("propertyChange")){
+			if(eventSetDecorator.getName().equals("propertyChange")){ //$NON-NLS-1$
 				label.setText(eventSetDecorator.getShortDescription().trim()); //$NON-NLS-1$
 				stackLayout.topControl = propertyComposite;
 				c1useExistingListener.setEnabled(false);
@@ -699,8 +699,10 @@ public class AddEventWizard extends Wizard {
 		ILabelProvider provider = ClassDescriptorDecoratorPolicy.getPolicy(editPart).getLabelProvider(javaBean.eClass());		
 		if ( provider != null && javaBean != null ) {
 			javaBeanDescription = provider.getText(javaBean);
-			setWindowTitle(javaBeanDescription);
+			setWindowTitle(JavaMessages.getString("AddEventWizard.addEventTitle") + " - " + javaBeanDescription); //$NON-NLS-1$ //$NON-NLS-2$
 			javaBeanImage = provider.getImage(javaBean);
+		} else {
+			setWindowTitle(JavaMessages.getString("AddEventWizard.addEventTitle")); //$NON-NLS-1$
 		}
 	}
 	public Image getJavaBeanImage(){
