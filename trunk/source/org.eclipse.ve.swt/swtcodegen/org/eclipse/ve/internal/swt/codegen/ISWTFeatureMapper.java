@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ISWTFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-17 19:12:55 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-13 16:20:37 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -31,6 +31,6 @@ public interface ISWTFeatureMapper {
 	public static String  COMPOSITE_SIZE_NAME = "setSize";
 
 	// If setBounds() or setSize() on composite, reduce its priority as re-lays out its children
-	final static int PRIORITY_COMPOSITE_BOUNDS = IJavaFeatureMapper.PRIORITY_DEFAULT - 1000;
+	final static int PRIORITY_COMPOSITE_BOUNDS = IJavaFeatureMapper.PRIORITY_ADD - 1000;
 	
 }
