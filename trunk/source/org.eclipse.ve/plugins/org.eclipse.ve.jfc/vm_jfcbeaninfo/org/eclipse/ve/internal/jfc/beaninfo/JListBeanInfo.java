@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JListBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-21 22:15:37 $ 
  */
 
 import java.beans.*;
@@ -751,9 +751,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JListMessages.getString("model.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JListMessages.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY , Boolean.FALSE,
 	      	PREFERRED, Boolean.TRUE,
-	      	// DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// opaque
