@@ -12,20 +12,15 @@
  *  Created Jan 11, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReverseParserJob.java,v $
- *  $Revision: 1.2 $  $Date: 2005-01-19 17:59:23 $ 
+ *  $Revision: 1.3 $  $Date: 2005-01-19 19:20:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import org.eclipse.core.internal.runtime.InternalPlatform;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 
 import org.eclipse.jem.internal.proxy.common.ICallbackRunnable;
-
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
  
 
 /**
