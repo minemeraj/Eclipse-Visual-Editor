@@ -19,6 +19,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
 
 import org.eclipse.ve.internal.java.core.*;
  
@@ -29,6 +30,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	private IMethodProxy moveAboveMethodProxy, moveBelowMethodProxy;	// method proxy for move above and below
 	// TODO these method proxies should be off in the factory constants so we don't need to get it for each and every composite.
 
+	
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
@@ -220,7 +222,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		revalidateBeanProxy();
 	}
 	
-	public void childValidated(ControlProxyAdapter childProxy) {
+	public void childValidated(IControlProxyHost childProxy) {
 		// Hold up layout processing if we are executing a HoldProcessingCommand
 	    if (!holding()) {
 	        // We are the top with no parents, do a layout() on us
