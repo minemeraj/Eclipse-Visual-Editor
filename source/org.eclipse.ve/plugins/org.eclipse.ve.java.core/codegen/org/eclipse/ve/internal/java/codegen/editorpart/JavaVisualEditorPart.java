@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.38 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.39 $  $Date: 2004-06-01 16:29:20 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -42,8 +42,11 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.*;
 import org.eclipse.gef.ui.parts.TreeViewer;
+import org.eclipse.gef.ui.views.palette.PalettePage;
+import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
@@ -64,6 +67,8 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
+import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -129,6 +134,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	protected GraphicalViewer primaryViewer;
 	protected XMLTextPage xmlTextPage;
+	private PalettePage palettePage;	// Palette page for the palette viewer	
 
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
@@ -384,6 +390,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (store.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW)) {
 			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.BeansList"); //$NON-NLS-1$
 		}
+		
+		if(store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER)) {
+			site.getPage().showView("org.eclipse.gef.ui.palette_view"); //$NON-NLS-1$
+		}
 
 		// Now restore focus to new editor since the above caused it to be lost.
 		site.getPage().activate(site.getPage().findEditor(getEditorInput()));
@@ -395,7 +405,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	public void createPartControl(Composite parent) {	
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
-
+		
 		boolean isNotebook = store.getBoolean(VCEPreferences.NOTEBOOK_PAGE);
 		if (isNotebook) {
 			createNotebookEditor(parent, store);
@@ -432,28 +442,34 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * Create the editor as a split pane editor with the graphical editor on top and the text editor on the bottom.
 	 */
 	protected void createSplitpaneEditor(Composite parent, Preferences store) {
-		// Split them all on the same parent.
-		CustomSashForm jveParent = new CustomSashForm(parent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
+		
+			boolean paletteInViewer = store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER);		
 
-		// Palette will be on the left.
-		createPaletteViewer(jveParent);
+			Composite jveParent = null;
+			CustomSashForm paletteEditorSashForm = null;
+			if(paletteInViewer){
+				jveParent = parent;
+			} else {
+				// Split them all on the same parent.
+				paletteEditorSashForm = new CustomSashForm(parent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
+				jveParent = paletteEditorSashForm;
+				createPaletteViewer(jveParent);				
+			}
+			
+			// JVE/Text editor split on the right under editorComposite
+			CustomSashForm editorParent = new CustomSashForm(jveParent, SWT.VERTICAL);
+			createPrimaryViewer(editorParent);
 
-		// JVE/Text editor split on the right under editorComposite
-		CustomSashForm editorParent = new CustomSashForm(jveParent, SWT.VERTICAL);
-		createPrimaryViewer(editorParent);
+			// Let the super java text editor fill it in.			
+			super.createPartControl(editorParent);
 
-		// Let the super java text editor fill it in.			
-		super.createPartControl(editorParent);
+			if(!paletteInViewer){
+				paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
+				paletteEditorSashForm.setWeights(getPaletteSashWeights());
+			}
 
-		jveParent.setSashBorders(new boolean[] { false, true });
-		jveParent.setWeights(getPaletteSashWeights());
+			editorParent.setSashBorders(new boolean[] { true, true });
 
-		editorParent.setSashBorders(new boolean[] { true, true });
-
-		// Display the palette if the preferences state it should be initially shown
-		boolean showPalette = store.getBoolean(VCEPreferences.SPLITPANE_SHOW_GEF_PALETTE);
-		if (!showPalette)
-			jveParent.maxLeft();
 	}
 	/*
 	 * Create the editor as a note book with one tab for the design and the other for the text editor.
@@ -470,14 +486,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Create a 1:4 sash with the palette on the left and the JVE on the right
 		CustomSashForm jveParent = new CustomSashForm(editorParent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
-		createPaletteViewer(jveParent);
+//		createPaletteViewer(jveParent);
 		createPrimaryViewer(jveParent);
 		jveParent.setSashBorders(new boolean[] { false, true });
 		jveParent.setWeights(getPaletteSashWeights());
-		// Display the palette if the preferences state it should be initially shown
-		boolean showPalette = store.getBoolean(VCEPreferences.NOTEBOOK_SHOW_GEF_PALETTE);
-		if (!showPalette)
-			jveParent.maxLeft();
 
 		// Create the parent (new tab) for the java text editor.
 		Composite javaParent = new Composite(folder, SWT.NONE);
@@ -496,10 +508,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/*
 	 * create the palette viewer.
 	 */
-	protected void createPaletteViewer(Composite parent) {
+	protected Control createPaletteViewer(Composite parent) {
 		PaletteViewer paletteViewer = new PaletteViewer();
-		paletteViewer.createControl(parent);
 		editDomain.setPaletteViewer(paletteViewer);
+		if(rebuildPalette){
+			rebuildPalette();
+		}		
+		Control paletteControl = paletteViewer.createControl(parent);
+		return paletteControl;
 	}
 	
 	private List paletteCategories = new ArrayList(5);
@@ -508,9 +524,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * NOTE: This must be run in the display thread.
 	 */
 	protected void rebuildPalette() {
+		if(editDomain.getPaletteViewer() == null) return;
+		ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);
+		if(rset == null) return;
 		rebuildPalette = false;
 		PaletteRoot paletteRoot = editDomain.getPaletteRoot();
-		ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);
+
 		List newChildren = null; // New list of children. We will build entire list and then set into palette root to speed it up.
 		// What happens is first time through we will build the palette up before applying into the palette viewer,
 		// that way it gets it all at once. For later times, since palette root can't be replaced, we will instead
@@ -1818,17 +1837,39 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-	public Object getAdapter(Class required) {
-		if (required == IPropertySheetPage.class)
+	public Object getAdapter(Class adapterKey) {
+		if (adapterKey == IPropertySheetPage.class)
 			return getPropertySheetPage();
-		else if (required == BeansList.class)
+		else if (adapterKey == BeansList.class)
 			return getContentOutlinePage();
-		else if (required == EditPartViewer.class)
+		else if (adapterKey == EditPartViewer.class)
 			return primaryViewer;	// Current impl. only has one active editpart viewer. The outline viewer is its own IWorkbenchPart.
-		else if (required == CommandStack.class)
+		else if (adapterKey == CommandStack.class)
 			return editDomain.getCommandStack();
+		else if (adapterKey == PalettePage.class){
+			return getPalettePage();
+		}
 		else
-			return super.getAdapter(required);
+			return super.getAdapter(adapterKey);
+	}
+	
+	class VEPalettePage extends Page implements PalettePage{
+			Control control;
+		public void createControl(Composite parent) {
+			control = createPaletteViewer(parent);		
+		}
+		public Control getControl() {
+			return control;
+		}
+		public void setFocus() {
+		}		
+	};
+	
+	protected PalettePage getPalettePage(){
+		if(palettePage == null){
+			palettePage = new VEPalettePage();
+		};
+		return palettePage;
 	}
 	
 	protected IContentOutlinePage getContentOutlinePage(){
