@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.11 $  $Date: 2004-11-05 20:08:15 $ 
  */
 import java.util.logging.Level;
 
@@ -158,6 +158,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 			fExprRef.setState(CodeExpressionRef.STATE_EXIST, true);
 			fExprRef.setState(CodeExpressionRef.STATE_IN_SYNC, true);
 			fhelper.adaptToCompositionModel(this);
+			fbeanPart.getBadExpressions().remove(this);
 		}
 		return result;
 	}

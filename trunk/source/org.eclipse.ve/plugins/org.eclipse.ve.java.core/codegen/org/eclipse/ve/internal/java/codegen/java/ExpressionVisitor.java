@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.14 $  $Date: 2004-09-10 21:03:24 $ 
+ *  $Revision: 1.15 $  $Date: 2004-11-05 20:08:15 $ 
  */
 
 import java.util.*;
@@ -148,6 +148,11 @@ protected BeanPart[] processCreateMethod(MethodInvocation stmt) {
 					beans.add(bp) ;
 				}
 			}
+			else {
+				// If we got here, than not all beans were processed yet
+				// we will have to come back on the 2nd reTry
+				break;
+			}
 		}
 		return  (BeanPart[]) beans.toArray(new BeanPart[beans.size()]);
 }
@@ -192,6 +197,7 @@ protected void processAMessageSend() {
 		  }
 		  else {
 		  	for (int i = 0; i < bs.length; i++) {
+		  			// Attach the expression to a potential child
 					bs[i].addParentExpression(fExpression);				
 			}
 		  }
