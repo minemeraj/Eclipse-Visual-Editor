@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-15 22:31:11 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-07 23:15:19 $ 
  */
 
 import java.util.List;
@@ -82,7 +82,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		if (!controls.isEmpty()) {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.
-			ILayoutPolicyFactory lpFactory = VisualUtilities.getLayoutPolicyFactory(defaultManager.getTypeProxy(), policy.getEditDomain());
+			ILayoutPolicyFactory lpFactory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(defaultManager, policy.getEditDomain());
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(controls));
 		}
