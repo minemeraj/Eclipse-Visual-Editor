@@ -11,15 +11,13 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-09 17:40:57 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.logging.Level;
 
-import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.compiler.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -169,21 +167,23 @@ protected int reverseLineSeperator(int position) {
  */
 public String getSelectorContent() {
 	String code = getCode() ;
-	Scanner scanner = new Scanner() ;
-	scanner.setSource(code.toCharArray()) ;
-	scanner.recordLineSeparator = true ;
-	scanner.tokenizeWhiteSpace = true ;
-	scanner.tokenizeComments = true ;
+	//Scanner scanner = new Scanner() ;
+	//scanner.setSource(code.toCharArray()) ;
+	//scanner.recordLineSeparator = true ;
+	//scanner.tokenizeWhiteSpace = true ;
+	//scanner.tokenizeComments = true ;
 	
+	IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+	scanner.setSource(code.toCharArray());
 	int token ;
 	String prevIdentifier=null ;
 	try {
 	 token = scanner.getNextToken() ;
-	 while (token != Scanner.TokenNameEOF &&
-	        token != Scanner.TokenNameLPAREN &&
-	        token != Scanner.TokenNamenew) {
+	 while (token != ITerminalSymbols.TokenNameEOF &&
+	        token != ITerminalSymbols.TokenNameLPAREN &&
+	        token != ITerminalSymbols.TokenNamenew) {
 	       
-	       if (token == Scanner.TokenNameIdentifier)
+	       if (token == ITerminalSymbols.TokenNameIdentifier)
 	         if (prevIdentifier == null)
 	            prevIdentifier = new String(scanner.getCurrentTokenSource()) ;
 	         else
@@ -196,7 +196,7 @@ public String getSelectorContent() {
 		return null;
 	}
 	
-	if (token == Scanner.TokenNameIdentifier || token == Scanner.TokenNamenew)
+	if (token == ITerminalSymbols.TokenNameIdentifier || token == ITerminalSymbols.TokenNamenew)
 	   return new String (scanner.getCurrentTokenSource()) ;
 	else
 	   if (prevIdentifier != null)
@@ -211,18 +211,20 @@ protected int skipSemiColonifNeeded(int right) {
     	// hold Comments in them - so strip the comments off.
     	
     	String targetSrc = fSource.substring(fSourceOff,right);
-		Scanner scanner = new Scanner() ;
-		scanner.setSource(targetSrc.toCharArray()) ;
-		scanner.recordLineSeparator = true ;
-		scanner.tokenizeWhiteSpace = true ;
-		scanner.tokenizeComments = true ;
+		//Scanner scanner = new Scanner() ;
+		//scanner.setSource(targetSrc.toCharArray()) ;
+		//scanner.recordLineSeparator = true ;
+		//scanner.tokenizeWhiteSpace = true ;
+		//scanner.tokenizeComments = true ;
+		IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+		scanner.setSource(targetSrc.toCharArray());
 		
 		try{
 			int token = scanner.getNextToken();
 			for(int i=0;i<targetSrc.length();i++){
-				if(token==Scanner.TokenNameEOF)
+				if(token==ITerminalSymbols.TokenNameEOF)
 					break;
-				if(token==Scanner.TokenNameSEMICOLON)
+				if(token==ITerminalSymbols.TokenNameSEMICOLON)
 					return right ;
 				token = scanner.getNextToken();
 			}
@@ -237,19 +239,22 @@ protected int skipSemiColonifNeeded(int right) {
 }
 
 public static int indexOfSemiColon(String targetSrc) {
-	Scanner scanner = new Scanner() ;
-	scanner.setSource(targetSrc.toCharArray()) ;
-	scanner.recordLineSeparator = false ;
-	scanner.tokenizeWhiteSpace = true ;
-	scanner.tokenizeComments = true ;
+	//Scanner scanner = new Scanner() ;
+	//scanner.setSource(targetSrc.toCharArray()) ;
+	//scanner.recordLineSeparator = false ;
+	//scanner.tokenizeWhiteSpace = true ;
+	//scanner.tokenizeComments = true ;
+	IScanner scanner = ToolFactory.createScanner(true, true, false, false);
+	scanner.setSource(targetSrc.toCharArray());
 	
 	try{
 		int token = scanner.getNextToken();
 		for(int i=0;i<targetSrc.length();i++){
-			if(token==Scanner.TokenNameEOF)
+			if(token==ITerminalSymbols.TokenNameEOF)
 				break;
-			if(token==Scanner.TokenNameSEMICOLON)
-				return scanner.currentPosition - 1; // current position goes to the position after getNextToken() 
+			if(token==ITerminalSymbols.TokenNameSEMICOLON)
+				return scanner.getCurrentTokenStartPosition();
+				//return scanner.currentPosition - 1; // current position goes to the position after getNextToken() 
 			token = scanner.getNextToken();
 		}
 	}
@@ -260,19 +265,23 @@ public static int indexOfSemiColon(String targetSrc) {
 }
 
 public static int indexOfLastSemiColon(String targetSrc) {
-	Scanner scanner = new Scanner() ;
-	scanner.setSource(targetSrc.toCharArray()) ;
-	scanner.recordLineSeparator = false ;
-	scanner.tokenizeWhiteSpace = true ;
-	scanner.tokenizeComments = true ;
+	//Scanner scanner = new Scanner() ;
+	//scanner.setSource(targetSrc.toCharArray()) ;
+	//scanner.recordLineSeparator = false ;
+	//scanner.tokenizeWhiteSpace = true ;
+	//scanner.tokenizeComments = true ;
+	IScanner scanner = ToolFactory.createScanner(true, true, false, false);
+	scanner.setSource(targetSrc.toCharArray());
+
 	int semicolonIndex = -1;
 	try{
 		int token = scanner.getNextToken();
 		for(int i=0;i<targetSrc.length();i++){
-			if(token==Scanner.TokenNameEOF)
+			if(token==ITerminalSymbols.TokenNameEOF)
 				break;
-			if(token==Scanner.TokenNameSEMICOLON)
-				semicolonIndex = scanner.currentPosition - 1; // current position goes to the position after getNextToken() 
+			if(token==ITerminalSymbols.TokenNameSEMICOLON)
+				//semicolonIndex = scanner.currentPosition - 1; // current position goes to the position after getNextToken()
+				semicolonIndex = scanner.getCurrentTokenStartPosition();
 			token = scanner.getNextToken();
 		}
 	}
@@ -298,26 +307,29 @@ protected void primParseExpression() {
 	// right is now after the ; OR will be unaffected if ; is before right
 	
 	// Skip white space until EOL
-	Scanner scanner = new Scanner() ;
-	scanner.setSource(fSource.substring(right).toCharArray()) ;
-	scanner.recordLineSeparator = true ;
-	scanner.tokenizeWhiteSpace = true ;
-	scanner.tokenizeComments = true ;
+	//Scanner scanner = new Scanner() ;
+	//scanner.setSource(fSource.substring(right).toCharArray()) ;
+	//scanner.recordLineSeparator = true ;
+	//scanner.tokenizeWhiteSpace = true ;
+	//scanner.tokenizeComments = true ;
+	IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+	scanner.setSource(fSource.substring(right).toCharArray());
 	
 	try {
 	 int token = scanner.getNextToken() ;	 
 	 int prevToken = -1, prevStart = -1 ;
-	 while (token == Scanner.TokenNameWHITESPACE) {
+	 while (token == ITerminalSymbols.TokenNameWHITESPACE) {
 	     prevToken = token ;
-	     prevStart = scanner.startPosition ;
+	     //prevStart = scanner.startPosition ;
+	     prevStart = scanner.getCurrentTokenStartPosition();
 	     token = scanner.getNextToken() ;
 	 }
 	     		   
 	 // workaround: the Scanner will not record Line Seperators if it tokenizes white space
      int overide = -1 ;
-	 if (prevToken == Scanner.TokenNameWHITESPACE) {
+	 if (prevToken == ITerminalSymbols.TokenNameWHITESPACE) {
 	 	int index ;
-	 	for (index=prevStart; index<scanner.startPosition; index++) 
+	 	for (index=prevStart; index<scanner.getCurrentTokenStartPosition(); index++) 
 	 	   if (fSource.charAt(right+index) == '\r' || fSource.charAt(right+index) == '\n') {
 	 	   	overide = right+index ;
 	 	   	break ;
@@ -326,20 +338,20 @@ protected void primParseExpression() {
 	 	   overide = advanceLineSeperator(overide) ;
 	 }	 
 	 
-	 if (scanner.lineEnds.length > 0 && scanner.getLineEnd(1)>0) { 
+	 if (scanner.getLineEnds().length > 0 && scanner.getLineEnd(1)>0) { 
 	 	// We advanced to the next line/s
 	   right += scanner.getLineEnd(1) ;
 	   right = advanceLineSeperator(right) ;
 	 }
-	 else if (token == Scanner.TokenNameEOF) {
-	 	right += scanner.currentPosition-1 ;
+	 else if (token == ITerminalSymbols.TokenNameEOF) {
+	 	right += scanner.getCurrentTokenEndPosition() ;
 	 }
 	 else {
 	 	// We have more than one expression on a given line, keep the white space
 	 	if (overide > 0)
 	 	   right = overide ;
 	 	else
-	 	   right += scanner.startPosition-1 ;
+	 	   right += scanner.getCurrentTokenStartPosition()-1 ;
 	 }
 	 
 	 
@@ -411,42 +423,45 @@ public String getExpression() {
 
 protected void primParseComment() {
  
-	Scanner scanner = new Scanner() ;
 	int scanOff = fSourceOff+fSourceLen ;
 	String scannerString = fSource.substring(scanOff);
-	scanner.setSource(scannerString.toCharArray()) ;
-	scanner.recordLineSeparator = true ;
-	scanner.tokenizeComments = true ;
+	//Scanner scanner = new Scanner() ;
+	//scanner.setSource(scannerString.toCharArray()) ;
+	//scanner.recordLineSeparator = true ;
+	//scanner.tokenizeComments = true ;
+	IScanner scanner = ToolFactory.createScanner(true, false, false, true);
+	scanner.setSource(scannerString.toCharArray());
 	
 	try {
 	 int token = scanner.getNextToken() ;	 
-	 while (token == Scanner.TokenNameSEMICOLON ||	
-	        token == Scanner.TokenNameWHITESPACE) 
+	 while (token == ITerminalSymbols.TokenNameSEMICOLON ||	
+	        token == ITerminalSymbols.TokenNameWHITESPACE) 
 	     token = scanner.getNextToken() ;
 	 
      if (
-         ((token == Scanner.TokenNameCOMMENT_LINE) &&
+         ((token == ITerminalSymbols.TokenNameCOMMENT_LINE) &&
           ((scanner.getLineEnd(1)==0) || 
-           (scanner.getLineEnd(1)>0 && scanner.currentPosition == scanner.getLineEnd(1)+1) ||
-           (scanner.getLineEnd(2)>0 && scanner.currentPosition == scanner.getLineEnd(2)+1))
+           (scanner.getLineEnd(1)>0 && (scanner.getCurrentTokenEndPosition()+1) == scanner.getLineEnd(1)+1) ||
+           (scanner.getLineEnd(2)>0 && (scanner.getCurrentTokenEndPosition()+1) == scanner.getLineEnd(2)+1))
          )  ||
-         ((token == Scanner.TokenNameCOMMENT_BLOCK || token == Scanner.TokenNameCOMMENT_JAVADOC) &&
-     	  (scanner.lineEnds.length == 0 || scanner.getLineEnd(1)<=0 ||     	
-     	     scanner.startPosition < scanner.getLineEnd(1)) 
+         ((token == ITerminalSymbols.TokenNameCOMMENT_BLOCK || token == ITerminalSymbols.TokenNameCOMMENT_JAVADOC) &&
+     	  (scanner.getLineEnds().length == 0 || scanner.getLineEnd(1)<=0 ||     	
+     	     scanner.getCurrentTokenStartPosition() < scanner.getLineEnd(1)) 
      	 )) {
+     		int firstCommenStartPosition = scanner.getCurrentTokenStartPosition();
      	     // Comment starts on our line
-     	     int endOfComment = scanner.currentPosition;
+     	     int endOfComment = scanner.getCurrentTokenEndPosition()+1;
      	     
      	     // COMMENT_LINE tokens have the \r\n in them - 
      	     // this shouldnt be in the comment - it should be part of the expression.
-     	     if(token == Scanner.TokenNameCOMMENT_LINE && scanner.getLineEnd(1)>0 && 
-     	        ((scanner.currentPosition == scanner.getLineEnd(1)+1) ||
-     	         (scanner.currentPosition == scanner.getLineEnd(2)+1))){
+     	     if(token == ITerminalSymbols.TokenNameCOMMENT_LINE && scanner.getLineEnd(1)>0 && 
+     	        (((scanner.getCurrentTokenEndPosition()+1) == scanner.getLineEnd(1)+1) ||
+     	         ((scanner.getCurrentTokenEndPosition()+1) == scanner.getLineEnd(2)+1))){
      	     	for(int f=0;f<2;f++)
 	     	     	if(scannerString.charAt(endOfComment-1)=='\r' || scannerString.charAt(endOfComment-1)=='\n') 
 	     	     		endOfComment--;
      	     }
-	 	     fCommentsOff = scanOff+scanner.commentStarts[0] ;
+	 	     fCommentsOff = scanOff+firstCommenStartPosition ;
        	     fCommentsLen = scanOff+endOfComment-fCommentsOff ;
 	 }	      
     } 

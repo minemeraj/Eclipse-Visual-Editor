@@ -11,16 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ASTHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
 
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.lookup.*;
-
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.jdt.core.dom.*;
 
 /**
  * @author sri
@@ -32,7 +28,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
  */
 public class ASTHelper {
 
-public static class SingleNameReferenceValueSyntaxTreeVisitor 
+public static class VariableValueVisitor 
 	extends ASTVisitor{
 	
 	private String selector = null;
@@ -41,7 +37,7 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 	private Stack scopeStack = null;
 	private int selectorLocation = -1;
 		
-	public SingleNameReferenceValueSyntaxTreeVisitor(String selector, int selectorLocation){
+	public VariableValueVisitor(String selector, int selectorLocation){
 		this.selector = selector;
 		this.selectorLocation = selectorLocation;
 	}
@@ -49,10 +45,12 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 	public String getValue(){
 		if (value != null) {
 			// This is a workaround for AST with ArrayInitialzer bug (see 230955)
-			if (value instanceof ArrayInitializer) {
+/*			if (value instanceof ArrayInitializer) {
 				StringBuffer sb = new StringBuffer();
 				sb.append("{"); //$NON-NLS-1$
-				Expression args[] = ((ArrayInitializer) value).expressions;
+				List expressions = ((ArrayInitializer) value).expressions();
+				Expression args[] = new Expression[expressions.size()];
+				expressions.toArray(args);
 				for (int i = 0; i < args.length; i++) {
 					if (i > 0)
 						sb.append(","); //$NON-NLS-1$
@@ -62,14 +60,24 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 				return sb.toString();
 			}
 			else
-				return value.toString();
+*/				return value.toString();
 		}
 		return selector;
 	}
 	private boolean isValuable(ASTNode node){
-		if (node instanceof Literal)
+		if (node instanceof BooleanLiteral)
 			return true;
-		if (node instanceof ArrayInitializer)
+		if (node instanceof CharacterLiteral)
+			return true;
+		if (node instanceof NullLiteral)
+			return true;
+		if (node instanceof NumberLiteral)
+			return true;
+		if (node instanceof StringLiteral)
+			return true;
+		if (node instanceof TypeLiteral)
+			return true;
+		if (node instanceof ArrayCreation)
 			return true;
 		return false;
 	}
@@ -96,92 +104,58 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(Assignment, BlockScope)
 	 */
-	public boolean visit(Assignment assignment, BlockScope scope) {
-		if(isValuable(assignment.expression)){
-			Expression ref = assignment.lhs;
+	public boolean visit(Assignment assignment) {
+		if(isValuable(assignment.getRightHandSide())){
+			Expression ref = assignment.getLeftHandSide();
 			String varName = "?"; //$NON-NLS-1$
-			
-			if (ref instanceof ArrayReference) {
-				ArrayReference arRef = (ArrayReference) ref;
-				varName = CodeGenUtil.expressionToString(arRef) ;							
-			}else if (ref instanceof FieldReference) {
-				FieldReference fieldRef = (FieldReference) ref;
-				varName = CodeGenUtil.expressionToString(fieldRef) ;
-			}else if (ref instanceof NameReference) {
-				NameReference nameRef = (NameReference) ref;
-				varName = CodeGenUtil.expressionToString(nameRef) ;
-			}else if (ref instanceof ThisReference) {
-				ThisReference thisRef = (ThisReference) ref;
-				varName = CodeGenUtil.expressionToString(thisRef) ;
+			if (ref instanceof Name) {
+					Name varNameNode = (Name) ref;
+					varName = varNameNode.toString();
 			}
-			getHash().put(varName, assignment.expression);
+			getHash().put(varName, assignment.getRightHandSide());
 		}
-		return super.visit(assignment, scope);
+		return super.visit(assignment);
 	}
 
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(FieldDeclaration, MethodScope)
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.VariableDeclarationFragment)
 	 */
-	public boolean visit(
-		FieldDeclaration fieldDeclaration,
-		MethodScope scope) {
-		if(isValuable(fieldDeclaration.initialization))
-			getHash().put(String.valueOf(fieldDeclaration.name), fieldDeclaration.initialization);
-		return super.visit(fieldDeclaration, scope);
+	public boolean visit(VariableDeclarationFragment node) {
+		if(isValuable(node.getInitializer()))
+			getHash().put(node.getName().toString(), node.getInitializer());
+		return super.visit(node);
 	}
 
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(LocalDeclaration, BlockScope)
-	 */
-	public boolean visit(LocalDeclaration localDeclaration, BlockScope scope) {
-		if(isValuable(localDeclaration.initialization))
-			getHash().put(String.valueOf(localDeclaration.name), localDeclaration.initialization);
-		return super.visit(localDeclaration, scope);
-	}
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#endVisit(Block, BlockScope)
 	 */
-	public void endVisit(Block block, BlockScope scope) {
-		exitingScope(block.sourceStart, block.sourceEnd);
-		super.endVisit(block, scope);
+	public void endVisit(Block block) {
+		exitingScope(block.getStartPosition(), block.getStartPosition()+block.getLength());
+		super.endVisit(block);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#endVisit(CompilationUnitDeclaration, CompilationUnitScope)
 	 */
-	public void endVisit(
-		CompilationUnitDeclaration compilationUnitDeclaration,
-		CompilationUnitScope scope) {
-			exitingScope(compilationUnitDeclaration.sourceStart, compilationUnitDeclaration.sourceEnd);
-		super.endVisit(compilationUnitDeclaration, scope);
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#endVisit(ConstructorDeclaration, ClassScope)
-	 */
-	public void endVisit(
-		ConstructorDeclaration constructorDeclaration,
-		ClassScope scope) {
-			exitingScope(constructorDeclaration.sourceStart, constructorDeclaration.declarationSourceEnd);
-		super.endVisit(constructorDeclaration, scope);
+	public void endVisit(CompilationUnit compilationUnit) {
+		exitingScope(compilationUnit.getStartPosition(), compilationUnit.getStartPosition()+compilationUnit.getLength());
+		super.endVisit(compilationUnit);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#endVisit(ForStatement, BlockScope)
 	 */
-	public void endVisit(ForStatement forStatement, BlockScope scope) {
-		exitingScope(forStatement.sourceStart, forStatement.sourceEnd);
-		super.endVisit(forStatement, scope);
+	public void endVisit(ForStatement forStatement) {
+		exitingScope(forStatement.getStartPosition(), forStatement.getStartPosition()+forStatement.getLength());
+		super.endVisit(forStatement);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#endVisit(MethodDeclaration, ClassScope)
 	 */
-	public void endVisit(
-		MethodDeclaration methodDeclaration,
-		ClassScope scope) {
-			exitingScope(methodDeclaration.sourceStart, methodDeclaration.declarationSourceEnd);
-		super.endVisit(methodDeclaration, scope);
+	public void endVisit(MethodDeclaration methodDeclaration) {
+		exitingScope(methodDeclaration.getStartPosition(), methodDeclaration.getStartPosition()+methodDeclaration.getLength());
+		super.endVisit(methodDeclaration);
 	}
 	
 	private void exitingScope(int scopeStart, int scopeEnd){
@@ -195,65 +169,45 @@ public static class SingleNameReferenceValueSyntaxTreeVisitor
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(Block, BlockScope)
 	 */
-	public boolean visit(Block block, BlockScope scope) {
+	public boolean visit(Block block) {
 		pushScope();
-		return super.visit(block, scope);
+		return super.visit(block);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(CompilationUnitDeclaration, CompilationUnitScope)
 	 */
-	public boolean visit(
-		CompilationUnitDeclaration compilationUnitDeclaration,
-		CompilationUnitScope scope) {
+	public boolean visit(CompilationUnit compilationUnit) {
 		pushScope();
-		return super.visit(compilationUnitDeclaration, scope);
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(ConstructorDeclaration, ClassScope)
-	 */
-	public boolean visit(
-		ConstructorDeclaration constructorDeclaration,
-		ClassScope scope) {
-		pushScope();
-		return super.visit(constructorDeclaration, scope);
+		return super.visit(compilationUnit);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(MethodDeclaration, ClassScope)
 	 */
-	public boolean visit(
-		MethodDeclaration methodDeclaration,
-		ClassScope scope) {
+	public boolean visit(MethodDeclaration methodDeclaration) {
 		pushScope();
-		return super.visit(methodDeclaration, scope);
+		return super.visit(methodDeclaration);
 	}
 
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(ForStatement, BlockScope)
 	 */
-	public boolean visit(ForStatement forStatement, BlockScope scope) {
+	public boolean visit(ForStatement forStatement) {
 		pushScope();
-		return super.visit(forStatement, scope);
+		return super.visit(forStatement);
 	}
 
 }
 
-public static String resolveSingleNameReference(String selector, int location, String entireCode){
-	List parserOutput = CodeSnippetTranslatorHelper.parseSyntacticallyCodeSnippet(entireCode);
-	if(parserOutput==null)
-		return selector;
-	if(parserOutput.size()<1)
-		return selector;
-	if (parserOutput.get(0) instanceof CompilationUnitDeclaration) {
-		CompilationUnitDeclaration decl = (CompilationUnitDeclaration) parserOutput.get(0);
-		SingleNameReferenceValueSyntaxTreeVisitor valueVisitor = 
-			new SingleNameReferenceValueSyntaxTreeVisitor(selector,location);
-		decl.traverse(valueVisitor,decl.scope);
-		return valueVisitor.getValue();
-	}
-	return selector;
+public static String resolveVariavleValue(SimpleName variable, int location, String entireCode){
+	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+	parser.setSource(entireCode.toCharArray());
+	CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+
+	VariableValueVisitor valueVisitor = new VariableValueVisitor(variable.toString(), location);
+	cu.accept(valueVisitor);
+	return valueVisitor.getValue();
 }
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
@@ -63,7 +63,6 @@ public interface IBeanDeclModel extends ITypeResolver{
     public void removeBean (BeanPart bean) ;
     public void removeMethodRef(CodeMethodRef mr) ;
     public void UpdateRefObjKey(BeanPart bean,EObject prev) ;    
-    public String resolveSingleNameReference(String selector, int location);
     public void setLineSeperator(String sep) ;
     public String getLineSeperator() ;
     public void setWorkingCopyProvider(IWorkingCopyProvider wcp) ;

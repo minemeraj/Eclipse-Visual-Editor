@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import com.ibm.etools.java.JavaClass;

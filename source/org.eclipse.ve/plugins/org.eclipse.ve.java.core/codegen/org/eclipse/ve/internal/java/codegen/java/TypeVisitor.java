@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
@@ -173,7 +173,8 @@ public void visit()  {
 			int methodHandleUseCount = 0;
 			for(int i=0; i<methods.length; i++){
 				if(	(methods[i]!=null) &&
-					(methods[i] instanceof MethodDeclaration)){
+					(methods[i] instanceof MethodDeclaration) &&
+					(!((MethodDeclaration)methods[i]).isConstructor())){
 					String thisMethodHandle = ""; //$NON-NLS-1$
 					if (methods[i] instanceof MethodDeclaration) {
 						thisMethodHandle = methodHandles[methodHandleUseCount];

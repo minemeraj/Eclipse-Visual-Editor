@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.Iterator;
@@ -170,8 +170,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		int loc = snr.getStartPosition();
 		if(fOwner.getExprRef()!=null && fOwner.getExprRef().getMethod()!=null)
 			loc = fOwner.getExprRef().getOffset()+fOwner.getExprRef().getMethod().getOffset();
-		return fOwner.getBeanModel().resolveSingleNameReference(snr.toString(), loc);
-		
+		return ASTHelper.resolveVariavleValue(snr, loc, fOwner.getBeanModel().getWorkingCopyProvider().getDocument().get());
 	}
 	/**
 	 * 
@@ -376,9 +375,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		// TODO  Need to deal with un initialized init string
 		// Isolate the initialization string int he current expression
 		int[] positions =
-			CodeSnippetTranslator.indexOfIgnoringSpace(fExprSig, "("+fInitString+")");         //$NON-NLS-1$ //$NON-NLS-2$
+			CodeGenUtil.indexOfIgnoringSpace(fExprSig, "("+fInitString+")");         //$NON-NLS-1$ //$NON-NLS-2$
 		if (fUnresolveInitString!=null && (positions[0] < 0 || positions[1] < 0)) {
-            positions = CodeSnippetTranslator.indexOfIgnoringSpace(fExprSig, "("+fUnresolveInitString+")"); //$NON-NLS-1$ //$NON-NLS-2$
+            positions = CodeGenUtil.indexOfIgnoringSpace(fExprSig, "("+fUnresolveInitString+")"); //$NON-NLS-1$ //$NON-NLS-2$
         
             if (positions[0] < 0 || positions[1] < 0)
             {
