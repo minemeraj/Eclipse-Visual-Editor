@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertysheetMessages.java,v $
- *  $Revision: 1.2 $  $Date: 2004-07-22 15:49:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 20:31:16 $ 
  */
 
 import java.util.MissingResourceException;
@@ -57,9 +57,7 @@ public class PropertysheetMessages {
 		SHOW_SET_VALUES_HIDE_TOOLTIP = "show_set_values.hide.tooltip", //$NON-NLS-1$
 		
 		SET_NULLS_LABEL = "set_nulls.label", //$NON-NLS-1$
-		SET_NULLS_TOOLTIP = "set_nulls.tooltip", //$NON-NLS-1$
-		
-		GRIDLAYOUT_ROWCOLUMN_VALIDATOR_ERROR = "gridlayout_rowcolumn_not_valid_WARN"; //$NON-NLS-1$
+		SET_NULLS_TOOLTIP = "set_nulls.tooltip"; //$NON-NLS-1$
 	
 	private static final ResourceBundle RESOURCE_BUNDLE =
 		ResourceBundle.getBundle(BUNDLE_NAME);
