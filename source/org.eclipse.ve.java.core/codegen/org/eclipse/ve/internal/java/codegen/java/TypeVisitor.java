@@ -11,25 +11,22 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class TypeVisitor extends SourceVisitor {
 	
@@ -107,13 +104,13 @@ protected void createThisIfNecessary() {
         
     IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(fModel).getRule(IThisReferenceRule.RULE_ID) ;
     
-    String superName = null ;
+    Resolved superResolved = null ;
     if (fType.getTypeDecl().getSuperclass() != null)
-      superName = CodeGenUtil.resolve(fType.getTypeDecl().getSuperclass(),fModel) ;
+      superResolved = fModel.getResolver().resolveType(fType.getTypeDecl().getSuperclass()) ;
     ResourceSet rs = fModel.getCompositionModel().getModelResourceSet() ;
     // The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
     // So, try the super first    
-    if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(fType.getName(),rs))) {
+    if ((superResolved!= null && (thisRule.useInheritance(superResolved.getName(),rs)) || thisRule.useInheritance(fType.getName(),rs))) {
         BeanPartFactory bpg = new BeanPartFactory(fType.getBeanModel(),null) ;
         // No Init method yet.
 	   	bpg.createThisBeanPartIfNeeded(null) ;	 
@@ -151,10 +148,10 @@ public void visit()  {
 	if (fields != null) 
 		for (int i=0 ; i<fields.length; i++) {
 			// Should we skip this field ??
-			if (instVarRule!=null && instVarRule.ignoreVariable(fields[i],fModel,fModel.getCompositionModel())) continue ;
+			if (instVarRule!=null && instVarRule.ignoreVariable(fields[i],fModel.getResolver(),fModel.getCompositionModel())) continue ;
 			BeanPart bp = new BeanPart(fields[i]) ;
 			fModel.addBean(bp) ;
-			String overidInitMethod = instVarRule.getDefaultInitializationMethod(fields[i], fModel, (TypeDeclaration)fVisitedNode) ;
+			String overidInitMethod = instVarRule.getDefaultInitializationMethod(fields[i], fModel.getResolver(), (TypeDeclaration)fVisitedNode) ;
 			if (overidInitMethod!=null) {			
 			  addFieldToMap(bp, overidInitMethod) ;
 			  bp.setInstanceInstantiation(true) ;

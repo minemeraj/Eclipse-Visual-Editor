@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.codegen.util;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,19 +10,19 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: IWorkingCopyProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 21:36:17 $ 
  */
+package org.eclipse.ve.internal.java.codegen.util;
+
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 
 
-
-public interface IWorkingCopyProvider extends ITypeResolver{
+public interface IWorkingCopyProvider {
 
 
 /**
@@ -86,5 +85,11 @@ public interface IWorkingCopyProvider extends ITypeResolver{
  
  public void dispose() ;
  
- 
+ /**
+  * Return the type resolver for this provider.
+  * @return type resolver.
+  * 
+  * @since 1.0.0
+  */
+ public TypeResolver getResolver();
 }

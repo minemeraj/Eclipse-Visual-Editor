@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-04 21:36:17 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -32,7 +32,6 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 	protected Statement fExpr; // This hold the parsed Source
 	protected String fExprSig; // This holds the actual source
 	protected BeanPart fbeanPart = null;
-	protected String fdebugString = null;
 	protected ExpressionDecoderAdapter fexpAdapter = null;
 
 	public ExpressionDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner) {
@@ -40,8 +39,6 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		fbeanPart = bean;
 		fFmapper = fm;
 		fExpr = exp;
-		if (fExpr != null)
-			fdebugString = fExpr.toString();
 	}
 
 	public abstract boolean decode() throws CodeGenException;
@@ -142,7 +139,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		// Insert code to print the receiver here.
 		// This implementation forwards the message to super.
 		// You may replace or supplement this.
-		return (super.toString() + ":\n\t" + fdebugString); //$NON-NLS-1$
+		return (super.toString() + ":\n\t" + fExpr != null ? fExpr.toString() : "?"); //$NON-NLS-1$
 	}
 
 	/**

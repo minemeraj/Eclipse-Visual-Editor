@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.12 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.13 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
@@ -471,23 +471,14 @@ public String toString() {
 	return sb.toString();
 }
 
-public String resolve(String unresolved){
-	return getWorkingCopyProvider().resolve(unresolved);
-}
-public String resolveType(String unresolved){
-	return getWorkingCopyProvider().resolveType(unresolved);
-}
-/*
- * @see IBeanDeclModel#resolveThis()
- */
-public String resolveThis() {
-	return getWorkingCopyProvider().resolveThis();
-}
-
 public ITypeHierarchy getClassHierarchy() {
     return getWorkingCopyProvider().getHierarchy() ;
 }
 
+public TypeResolver getResolver() {
+	return getWorkingCopyProvider().getResolver();
+}
+	
 protected void setState(int flag) {
 	fState = flag ;
 }

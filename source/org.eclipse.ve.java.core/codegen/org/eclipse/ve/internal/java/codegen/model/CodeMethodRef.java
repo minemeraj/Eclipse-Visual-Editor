@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.19 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -648,7 +649,7 @@ public void setModel(IBeanDeclModel model) {
 public void refreshIMethod(){
 	try{
 	    try {
-	      if (!fModel.getCompilationUnit().isConsistent()) fModel.getCompilationUnit().reconcile(false,null) ;
+	      if (!fModel.getCompilationUnit().isConsistent()) fModel.getCompilationUnit().reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;
 	    }
 	    catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());

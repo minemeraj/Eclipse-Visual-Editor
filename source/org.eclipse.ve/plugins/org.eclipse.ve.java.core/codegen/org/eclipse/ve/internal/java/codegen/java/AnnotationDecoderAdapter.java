@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2004-06-30 20:59:20 $ 
+ *  $Revision: 1.13 $  $Date: 2004-08-04 21:36:17 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -38,6 +38,7 @@ import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescripto
 import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -328,15 +329,18 @@ protected IMethod getReturnMethod(ICompilationUnit cu, BeanPart bp){
 	IMethod returnMethod = null;
 	if(bp.isInstanceVar() && bp.getReturnedMethod()!=null && cu.findPrimaryType()!=null){
 		try {
+			TypeResolver resolver = bp.getModel().getResolver();
 			IMethod[] methods = cu.findPrimaryType().getMethods();
 			for (int mc = 0; mc < methods.length; mc++) {
-				String returnType = Signature.toString(Signature.getReturnType(methods[mc].getSignature()));
+				String returnType = Signature.toString(methods[mc].getReturnType());
 				if(	returnType!=null &&
 						!returnType.equals("void") &&
-						bp.getReturnedMethod().getMethodName().equals(methods[mc].getElementName()) &&
-						bp.getType().equals(bp.getModel().resolve(returnType))){
-					returnMethod = methods[mc];
-					break;
+						bp.getReturnedMethod().getMethodName().equals(methods[mc].getElementName())) {
+					Resolved r = resolver.resolveType(returnType);
+					if (r != null && bp.getType().equals(r.getName())){
+						returnMethod = methods[mc];
+						break;
+					}
 				}
 			}
 		} catch (IllegalArgumentException e) {

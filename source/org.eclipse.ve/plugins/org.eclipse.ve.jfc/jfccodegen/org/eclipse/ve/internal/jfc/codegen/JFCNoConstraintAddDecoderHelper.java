@@ -11,26 +11,25 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-28 14:21:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-04 21:36:30 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.NumberLiteral;
-import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.internal.compiler.ast.MessageSend;
 
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -126,7 +125,10 @@ protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException 
             	//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
       }
       else if (args.get(0) instanceof ClassInstanceCreation) {
-      	 String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)args.get(0)).getName(), fbeanPart.getModel());
+      	Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
+      	if (resolved == null)
+      		return null;
+      	 String clazzName = resolved.getName();
       	  IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
       	  JavaClass c = (JavaClass) obj.getJavaType() ;
       	  if (c.isExistingType()) fAddedInstance = obj ;      

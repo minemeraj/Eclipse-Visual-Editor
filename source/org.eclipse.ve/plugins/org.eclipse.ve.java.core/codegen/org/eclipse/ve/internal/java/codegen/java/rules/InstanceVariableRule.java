@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-29 19:55:17 $ 
+ *  $Revision: 1.11 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.HashMap;
@@ -26,8 +26,8 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter;
-import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class InstanceVariableRule implements IInstanceVariableRule, IMethodVariableRule {
@@ -37,7 +37,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	String fInitMethod = null;
 	boolean fInitMethodSet = false;
 
-	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) {
+	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
 		if (isModelled(field.getType(), resolver, di))
@@ -48,7 +48,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
 	}
 	
-	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IVEModelInstance di) {
+	public boolean ignoreVariable(VariableDeclarationStatement stmt, TypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
 		if (isModelled(stmt.getType(), resolver, di))
@@ -59,7 +59,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
 	}
 	
-	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
+	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, TypeResolver resolver, IVEModelInstance di) {
 		try {
 			String name = decl.getName().getIdentifier();
 			if (name.startsWith("ivj")) {
@@ -92,18 +92,16 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		}
 	}
 	
-	protected String resolveType(Type t, ITypeResolver resolver) {		
-		if (t instanceof SimpleType) {
-			return CodeGenUtil.resolve(((SimpleType)t).getName(), resolver) ;
-		} else
-			return null;
+	protected String resolveType(Type t, TypeResolver resolver) {
+		Resolved resolved = resolver.resolveType(t);
+		return resolved != null ? resolved.getName() : null;
 	}
 
 	/**
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isModelled(Type tp, ITypeResolver resolver, IVEModelInstance di) {
+	protected boolean isModelled(Type tp, TypeResolver resolver, IVEModelInstance di) {
 
 		// Try to bypass resolving, and isAssignableFrom
 		if (modelledBeansCache == null)
@@ -135,7 +133,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#getDefaultInitializationMethod(org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.jdt.internal.compiler.ast.TypeDeclaration)
 	 */
-	public String getDefaultInitializationMethod(FieldDeclaration f, ITypeResolver resolver, TypeDeclaration typeDec) {
+	public String getDefaultInitializationMethod(FieldDeclaration f, TypeResolver resolver, TypeDeclaration typeDec) {
 		//TODO: deal with multi delerations
 		Expression init = ((VariableDeclaration) f.fragments().get(0)).getInitializer();
 		if (init != null) {

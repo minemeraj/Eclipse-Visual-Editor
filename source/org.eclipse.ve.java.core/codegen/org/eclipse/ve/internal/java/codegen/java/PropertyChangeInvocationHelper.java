@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,7 +24,6 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.java.*;
@@ -34,6 +33,8 @@ import org.eclipse.ve.internal.jcm.PropertyEvent;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -81,29 +82,28 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 		JavaClass beanClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(
 					fbeanPart.getType(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 		
+		JavaClass propChangeClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(
+				"java.beans.PropertyChangeListener",fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ; //$NON-NLS-1$	
+		
 		List argsList = new ArrayList() ;
+		TypeResolver resolver = fbeanPart.getModel().getResolver();
 		for (int i = 0; i < event.arguments().size(); i++) {			
 			if (event.arguments().get(i) instanceof StringLiteral)
 				   argsList.add("java.lang.String") ; //$NON-NLS-1$
 			else if (event.arguments().get(i) instanceof ClassInstanceCreation) {
-				String t = CodeGenUtil.resolve(((ClassInstanceCreation)event.arguments().get(i)).getName(),
-						                       fbeanPart.getModel());
-				argsList.add(t) ;
-			}
-			else if (event.arguments().get(i) instanceof ClassInstanceCreation){
-				ClassInstanceCreation ae = (ClassInstanceCreation)event.arguments().get(i) ;
-				String t = CodeGenUtil.resolve(ae.getName(), fbeanPart.getModel());				
-				if ((event.arguments().size() ==1||event.arguments().size() ==2)
-				        && ae.getName() instanceof SimpleName){				
-				    // Reference to an inner listener class
-				    argsList.add("java.beans.PropertyChangeListener") ; //$NON-NLS-1$	
-				}
-				else
-				   argsList.add(t) ;
+				ResolvedType resolveType = resolver.resolveType(((ClassInstanceCreation)event.arguments().get(i)).getName());
+				if (resolveType == null)
+					return null;
+				String t = resolveType.getName();
+				JavaClass tclass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(t, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
+				if (propChangeClass.isAssignableFrom(tclass))
+					argsList.add("java.beans.PropertyChangeListener") ; //$NON-NLS-1$	
 			}
 			else if (event.arguments().get(i) instanceof SimpleName) {
 				// Just hard coded at this time
-				argsList.add("java.beans.PropertyChangeListener") ;		//$NON-NLS-1$				
+				SimpleName sn = (SimpleName)event.arguments().get(i);				
+				if (resolveInstance(sn.getIdentifier()) != null) 
+				   argsList.add("java.beans.PropertyChangeListener") ;		//$NON-NLS-1$				
 			}
 		}		
 		Method listenRegMethod = null ;

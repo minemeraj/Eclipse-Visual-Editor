@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-07-12 17:57:52 $ 
+ *  $Revision: 1.12 $  $Date: 2004-08-04 21:36:29 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -31,6 +31,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
@@ -115,7 +116,10 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
 		}
 		else if (args.get(0) instanceof ClassInstanceCreation) {
-			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)args.get(0)).getName(), fbeanPart.getModel());
+			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
+			if (resolved == null)
+				return null;
+			String clazzName = resolved.getName();			
 			IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
 			JavaClass c = (JavaClass) obj.getJavaType() ;
 			if (c.isExistingType()) fAddedInstance = obj ;      

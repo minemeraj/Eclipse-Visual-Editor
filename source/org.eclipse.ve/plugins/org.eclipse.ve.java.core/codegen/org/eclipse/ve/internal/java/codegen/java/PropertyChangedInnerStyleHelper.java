@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedInnerStyleHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -68,7 +68,7 @@ public class PropertyChangedInnerStyleHelper extends PropertyChangeInvocationHel
 		if (exp instanceof SimpleName) {
 			// Instance of Event
 			SimpleName nr = (SimpleName) exp;
-			JavaClass clazz = resolveInstance(nr.getIdentifier().toCharArray());
+			JavaClass clazz = resolveInstance(nr.getIdentifier());
 			if (clazz == null)
 				return false;
 				

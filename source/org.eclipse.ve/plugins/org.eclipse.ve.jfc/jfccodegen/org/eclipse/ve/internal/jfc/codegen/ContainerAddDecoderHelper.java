@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:29 $ 
+ *  $Revision: 1.12 $  $Date: 2004-08-04 21:36:30 $ 
  */
 
 import java.util.ArrayList;
@@ -52,9 +52,11 @@ import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
@@ -278,7 +280,10 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
 		} else if (args.get(0) instanceof ClassInstanceCreation) {
-			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)args.get(0)).getName(), fbeanPart.getModel()); 			
+			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
+			if (resolved == null)
+				return null;
+			String clazzName = resolved.getName();  			
 			IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
 			JavaClass c = (JavaClass) obj.getJavaType();
@@ -330,8 +335,6 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 	}
 	protected IJavaObjectInstance parseAllocatedConstraint(ClassInstanceCreation exp) {
-		String type;
-		type = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()); //		fbeanPart.getModel().resolve(exp.type.toString());
 		// resolve class qualification 
 //		String initString = addQualifier(exp.toString(), exp.type.toString(), type);
 //		initString = resolveArgQualification(exp.arguments, initString);
@@ -339,7 +342,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fbeanPart.getModel(), null);
 		IJavaObjectInstance result = null;
 		try {
-			result = (IJavaObjectInstance) CodeGenUtil.createInstance(type, fbeanPart.getModel().getCompositionModel());
+			result = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.Object", fbeanPart.getModel().getCompositionModel());
 			result.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(pt));
 		} catch (CodeGenException e) {
 		}
@@ -400,7 +403,18 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 							if (!defaultConstraintFound) {
 								defaultConstraintFound = true;
 								fnonResolvedAddedConstraint = args.get(arg).toString();
-								fAddedConstraint = CodeGenUtil.resolve((Name)args.get(arg),fbeanPart.getModel()); 
+								TypeResolver.FieldResolvedType resolvedField = fbeanPart.getModel().getResolver().resolveWithPossibleField((Name)args.get(arg));
+								if (resolvedField != null) {
+									StringBuffer sb = new StringBuffer(fnonResolvedAddedConstraint.length());
+									sb.append(resolvedField.resolvedType.getName());
+									String[] accessors = resolvedField.fieldAccessors;
+									for (int i = 0; i < accessors.length; i++) {
+										sb.append('.');
+										sb.append(accessors[i]);
+									}
+									fAddedConstraint = sb.toString();
+								} else
+									fAddedConstraint = fnonResolvedAddedConstraint;
 							}
 						} else if (args.get(arg) instanceof NullLiteral) {
 							// TODO  Arg index should be consulted

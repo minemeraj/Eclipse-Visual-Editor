@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2004-06-04 18:38:37 $ 
+ *  $Revision: 1.22 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,8 +25,9 @@ import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
  
 /**
  * @author Gili Mendel
@@ -57,22 +58,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @deprecated
 	 */
 	protected Expression  getAST() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("class Foo {\n void method() {\n") ;
-		sb.append(fExpr.toString()) ;
-		sb.append(";\n}\n}") ;
-				
-		CompilationUnit cu = AST.parseCompilationUnit(sb.toString().toCharArray());
-		Statement s = (Statement)((TypeDeclaration)cu.types().get(0)).getMethods()[0].getBody().statements().get(0);
-		if (s instanceof ExpressionStatement) {
-			Expression e = ((ExpressionStatement)s).getExpression();
+		if (fExpr instanceof ExpressionStatement) {
+			Expression e = ((ExpressionStatement)fExpr).getExpression();
 			if (e instanceof Assignment)
 			   return ((Assignment)e).getRightHandSide();
 			else
 				return null ;
 		}
-		else if (s instanceof VariableDeclarationStatement)
-			return ((VariableDeclarationFragment)((VariableDeclarationStatement)s).fragments().get(0)).getInitializer();
+		else if (fExpr instanceof VariableDeclarationStatement)
+			return ((VariableDeclarationFragment)((VariableDeclarationStatement)fExpr).fragments().get(0)).getInitializer();
 		else
 			return null;
 		
@@ -94,27 +88,97 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	public  static PTExpression getParsedTree(Expression ast, final CodeMethodRef expMethodRef, final IBeanDeclModel bdm, final List ref) {
 		class Resolver extends ParseTreeCreationFromAST.Resolver{
+			/*
+			 *  (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveName(org.eclipse.jdt.core.dom.Name)
+			 */
 			public PTExpression resolveName(Name name) {
-				String n=null;
 				if (name instanceof QualifiedName) {
-					n = ((QualifiedName)name).toString();
-					// This could be a type, or a field access
-					// TODO:  this is a temporary fix, and will not deal with
-					//        factories call etc.
-					String r = 	bdm.resolveType(n);					
-					if (r != null && !r.equals(n)) {
-						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
-						ptname.setName(bdm.resolve(r)) ;
-						PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess() ;
-						fa.setReceiver(ptname) ;
-						fa.setField(n.substring(r.length()+1)) ;
-						return fa;
+					// This could be a type, or a field access.
+					// First check if first qualifier is a known bean part.
+					Name firstq = name;
+					while (firstq.isQualifiedName()) {
+						firstq = ((QualifiedName) firstq).getQualifier();
+					}
+					
+					PTExpression exp = resolveToBean((SimpleName) firstq);	// See if we can resolve it.
+					if (exp != null) {
+						// It was an access to a bean part, so the rest must be a field access to it.
+						// Now we will walk back up creating field accesses.
+						while (firstq.getParent() instanceof Name) {
+							firstq = (Name) firstq.getParent();
+							exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, ((QualifiedName) firstq).getName().getIdentifier());
+						}
+						return exp;
+					}
+					
+					// First was not a bean part, so it must be type/field access.
+					FieldResolvedType r = bdm.getResolver().resolveWithPossibleField(name);					
+					if (r != null) {
+						PTName ptname = InstantiationFactory.eINSTANCE.createPTName(r.resolvedType.getName());					
+						if (r.fieldAccessors.length == 0) {
+							// Just a type.
+							return ptname;
+						}
+						// It is a field access. Put the resolved PTName as the receiver of the field access.
+						// Now we will walk back up creating field accesses.
+						exp = ptname;
+						for (int i = 0; i < r.fieldAccessors.length; i++) {
+							exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, r.fieldAccessors[i]);
+						}
+						return exp;
 					}
 				}
 				else if (name instanceof SimpleName) {
-					// possibly a ref. to an instance variable
-					n = ((SimpleName)name).getIdentifier();
-					BeanPart bp = bdm.getABean(n);
+					// Possibly a reference to a known beanpart.
+					PTExpression exp = resolveToBean((SimpleName) name);	// See if we can resolve it.
+					if (exp != null)
+						return exp;	// It is a known BeanPart.
+					
+					// See if it is a type.
+					Resolved r = bdm.getResolver().resolveType(name);
+					if (r != null)
+						return InstantiationFactory.eINSTANCE.createPTName(r.getName());
+				}
+				return null;
+			}
+			
+			/*
+			 *  (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Type)
+			 */
+			public String resolveType(Type type) {
+				Resolved r = bdm.getResolver().resolveType(type);
+				return r != null ? r.getName() : null;
+			}
+			
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
+			 */
+			public String resolveType(Name name) {
+				Resolved r = bdm.getResolver().resolveType(name);
+				return r != null ? r.getName() : null;
+			}
+			
+			/*
+			 * See if the simple name can be resolved down to a bean, either a local
+			 * variable or global. Return null if not.
+			 */
+			private PTExpression resolveToBean(SimpleName name) {
+				BeanPart bp = bdm.getABean(name.getIdentifier());
+				if (bp!=null) {
+					PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+					IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
+					if (ref!=null && !ref.contains(o))
+					    ref.add(o);
+					ptref.setObject(o);
+					return ptref;
+				}
+				// possibly a ref. to a local variable - check bean with unique name
+				if(expMethodRef!=null){
+					String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, name.getIdentifier());
+					bp = bdm.getABean(uniqueName);
 					if (bp!=null) {
 						PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 						IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
@@ -123,54 +187,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						ptref.setObject(o);
 						return ptref;
 					}
-					// possibly a ref. to a local variable - check bean with unique name
-					if(expMethodRef!=null){
-						String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, n);
-						bp = bdm.getABean(uniqueName);
-						if (bp!=null) {
-							PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-							IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
-							if (ref!=null && !ref.contains(o))
-							    ref.add(o);
-							ptref.setObject(o);
-							return ptref;
-						}
-					}
-					n = bdm.resolve(n);
 				}
-				if (n!=null) {
-					PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
-					ptname.setName(n);
-					return ptname;				
-				}				
-				return null ;
-			}
-			public String resolveType(Type type) {
-				if (type.isSimpleType())
-				   return CodeGenUtil.resolve(((SimpleType)type).getName(), bdm);
-				else if (type.isPrimitiveType())
-					return ((PrimitiveType) type).getPrimitiveTypeCode().toString();
-				else if (type.isArrayType()) {
-					ArrayType at = (ArrayType) type;
-					// Resolve the final type. We know it won't be an array type, so we won't recurse.
-					// Then append "dims" number of "[]" to make a formal name.
-					StringBuffer st = new StringBuffer(resolveType(at.getElementType()));
-					int dims = at.getDimensions();
-					while(dims-- > 0) {
-						st.append("[]");
-					}
-					return st.toString();
-				} else
-					//TBD
-					return "?";	// So it ends up with class not found exception.
-			}
-			
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
-			 */
-			public String resolveType(Name name) {
-				return CodeGenUtil.resolve(name, bdm);
+				return null;
 			}
 		}		
 		Resolver r = new Resolver() ;

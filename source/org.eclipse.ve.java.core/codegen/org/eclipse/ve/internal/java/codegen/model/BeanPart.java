@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.18 $  $Date: 2004-05-14 19:53:38 $ 
+ *  $Revision: 1.19 $  $Date: 2004-08-04 21:36:17 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -36,6 +36,7 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.IParentChildRelationship;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class BeanPart {
@@ -502,9 +503,9 @@ protected void setType(String fType){
     	if(getModel().getCompilationUnit()!=null){
 		  //IType t = CodeGenUtil.getMainType(getModel().getCompilationUnit()) ;
 		  //String rt = CodeGenUtil.resolveTypeComplex(t,fType) ;
-		String rt = getModel().resolve(fType);
+		Resolved rt = getModel().getResolver().resolveType(fType);
 		  if(rt!=null)
-		  	this.fType = rt;
+		  	this.fType = rt.getName();
 		  else
 		  	this.fType = fType;
     	}
@@ -515,13 +516,15 @@ protected void setType(String fType){
 
 protected void setType(Name t){	
 	// The BeanSubClassComposition pseodo bean part has an empty type
-	String result=t.toString();
-	if (getModel() != null && t !=null && !t.toString().equals("")) { //$NON-NLS-1$
-		String r=CodeGenUtil.resolve(t, getModel());
+	if (getModel() != null && t !=null) {
+		Resolved r=getModel().getResolver().resolveType(t);
 		if (r!=null)
-			result=r;
-	}
-	fType=result;
+			fType=r.getName();
+		else
+			fType = t.getFullyQualifiedName();
+			
+	} else
+		fType=t.getFullyQualifiedName();
 }
 
 

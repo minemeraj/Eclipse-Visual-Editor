@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SynchronizerWorkItem.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jface.text.DocumentEvent;
@@ -215,7 +216,7 @@ public class SynchronizerWorkItem {
 				referenceCU = cu;
 				setSourceCode(cu.getSource());
 				if (!cu.isConsistent())
-					cu.reconcile() ;			    			 
+					cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;			    			 
 				IJavaElement elm = null;
 				int changeFrom = docDelta.getOffset();
 				int changeTo = docDelta.getOffset();
@@ -840,7 +841,7 @@ public class SynchronizerWorkItem {
 				referenceCU = cu;
 				setSourceCode(cu.getSource());
 				if (!cu.isConsistent())
-					cu.reconcile() ;			    			 
+					cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;			    			 
 				IType t = CodeGenUtil.getMainType(cu) ;			 
 				// TODO  Need to consider new methods as well
 				if (t == null) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.20 $  $Date: 2004-07-12 17:55:45 $ 
+ *  $Revision: 1.21 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -33,8 +33,8 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
@@ -866,14 +866,16 @@ public class BDMMerger {
 	protected boolean createThisBean(final BeanPart referenceBP){
 		mainModel.setTypeDecleration(referenceBP.getModel().getTypeDecleration());
 		IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(mainModel).getRule(IThisReferenceRule.RULE_ID) ;
-		String typeName = referenceBP.getModel().resolveThis() ;
-		String superName = null ;
-		if (referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass() != null)
-			superName = CodeGenUtil.resolve(referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass(),referenceBP.getModel()) ;
+		TypeResolver resolver = referenceBP.getModel().getResolver();
+		String typeName = resolver.resolveMain().getName();
+		Resolved superResolve = null ;
+		if (referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass() != null) { 
+			superResolve = resolver.resolveType(referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass());
+		}
 		ResourceSet rs = mainModel.getCompositionModel().getModelResourceSet() ;
 		// The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
 		// So, try the super first    
-		if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(typeName,rs))) {
+		if ((superResolve != null && (thisRule.useInheritance(superResolve.getName(),rs)) || thisRule.useInheritance(typeName,rs))) {
 			BeanPartFactory bpg = new BeanPartFactory(mainModel,null) ;
 			// No Init method yet.
 			BeanPart thisBP = bpg.createThisBeanPartIfNeeded(null) ;
@@ -967,12 +969,13 @@ public class BDMMerger {
 				boolean isNewBeanThisPart = newBean.getSimpleName().equals(BeanPart.THIS_NAME);
 				Name mainBeanExtendsName = (isMainBeanThisPart && mainBean.getModel().getTypeDecleration()!=null) ? mainBean.getModel().getTypeDecleration().getSuperclass() : null;
 				Name newBeanExtendsName = (isNewBeanThisPart && newBean.getModel().getTypeDecleration()!=null) ? newBean.getModel().getTypeDecleration().getSuperclass() : null;
+				TypeResolver resolver = mainBean.getModel().getResolver();
 				if(isMainBeanThisPart && mainBeanExtendsName!=null)
-					mainType = CodeGenUtil.resolve(mainBeanExtendsName, mainBean.getModel());
+					mainType = resolver.resolveType(mainBeanExtendsName).getName();
 				else
 					mainType = mainBean.getType();
 				if(isNewBeanThisPart && newBeanExtendsName!=null)
-					newType = CodeGenUtil.resolve(newBeanExtendsName, mainBean.getModel()) ;
+					newType = resolver.resolveType(newBeanExtendsName).getName() ;
 				else
 					newType = newBean.getType();
 				boolean typeChanged = !mainType.equals(newType) ;
