@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FlowLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * FlowLayout policy helper.
  *
@@ -24,7 +26,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  */
 public class FlowLayoutPolicyHelper extends LayoutPolicyHelper {
 	
-	public FlowLayoutPolicyHelper(ContainerPolicy ep) {
+	public FlowLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -34,6 +34,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.visual.*;
+
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 /**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -30,6 +30,7 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * AWT Container policy for handling children in an AWT container.
  * This is special in that none of the add/create commands
@@ -44,7 +45,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  * standard way because no pre-processing is needed in the
  * layout/tree policies to strip out the components and constraints.
  */
-public class ContainerPolicy extends JavaContainerPolicy {
+public class ContainerPolicy extends VisualContainerPolicy {
 	
 	protected EReference sfConstraintComponent;
 	protected EClass 

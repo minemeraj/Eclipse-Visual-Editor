@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,11 +11,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-02 20:48:57 $ 
  */
 
 import java.util.List;
-
 import org.eclipse.gef.commands.Command;
 
 /**
@@ -98,7 +97,7 @@ public List getDefaultConstraint(List children);
 /**
  * Set ContainerEditPolicy to use.
  */
-public void setContainerPolicy(ContainerPolicy policy);
+public void setContainerPolicy(VisualContainerPolicy policy);
 }
 
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -20,7 +20,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.visual.*;
 
 public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
@@ -32,10 +35,10 @@ public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public Class getLayoutInputPolicyClass() {
 		return FlowLayoutEditPolicy.class;
 	}
-	public ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy ep) {
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
 		return new FlowLayoutPolicyHelper(ep);
 	}
-	public ILayoutSwitcher getLayoutSwitcher(ContainerPolicy cp) {
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy cp) {
 		return new GridLayoutSwitcher(cp);
 	}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 
@@ -24,28 +24,31 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * Layout Policy helper. This can be used by all layout types if they wish.
  * Creation date: (11/10/00 11:55:27 AM)
  * @author: Peter Walker
  */
 public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
-	protected ContainerPolicy policy;
+	protected VisualContainerPolicy policy;
 
 	protected EReference sfConstraintComponent, sfConstraintConstraint, sfComponents;
 	protected EClass classConstraintComponent;
 	protected EFactory visualFact;
 	
-	public LayoutPolicyHelper(ContainerPolicy ep) {
+	public LayoutPolicyHelper(VisualContainerPolicy ep) {
 		setContainerPolicy(ep);
 	}
 	
 	public LayoutPolicyHelper() {
 	}
 	
-	public void setContainerPolicy(ContainerPolicy policy) {
+	public void setContainerPolicy(VisualContainerPolicy policy) {
 		this.policy = policy;
 		if (policy != null) {
 			// Eventually we will be set with a policy. At that time we can compute these.

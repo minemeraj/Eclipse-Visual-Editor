@@ -3,6 +3,7 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.ui.plugin.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.resources.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import java.util.*;
 
 /**

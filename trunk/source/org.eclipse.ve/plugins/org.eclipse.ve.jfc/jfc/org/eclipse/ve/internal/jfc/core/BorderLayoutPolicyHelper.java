@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -26,6 +26,8 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 
@@ -36,7 +38,7 @@ import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
  * be of the values listed here or null.
  */
 public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
-	protected ContainerPolicy policy;
+	protected VisualContainerPolicy policy;
 	public static final int 
 		LEFT_TO_RIGHT = 0,
 		RIGHT_TO_LEFT = 1;
@@ -146,7 +148,7 @@ protected static int getComponentOrientation(IJavaObjectInstance aComponent) {
 	return result;
 }
 	
-public BorderLayoutPolicyHelper(ContainerPolicy ep) {
+public BorderLayoutPolicyHelper(VisualContainerPolicy ep) {
 	super(ep);
 }
 

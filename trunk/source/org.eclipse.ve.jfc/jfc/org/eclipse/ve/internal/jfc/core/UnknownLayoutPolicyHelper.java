@@ -11,11 +11,13 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * Layout Policy Helper for unknown layouts. We can't handle
  * constraint. So no default constraint.
@@ -26,7 +28,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  */
 public class UnknownLayoutPolicyHelper extends LayoutPolicyHelper {
 	
-	public UnknownLayoutPolicyHelper(ContainerPolicy ep) {
+	public UnknownLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
 	}
 	

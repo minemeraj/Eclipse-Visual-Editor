@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -35,6 +35,8 @@ import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.awt.*;
 /**
@@ -61,7 +63,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		"java.awt.GridBagConstraints.VERTICAL" //$NON-NLS-1$
 	};
 
-	public GridBagLayoutPolicyHelper(ContainerPolicy ep) {
+	public GridBagLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
 	}
 
@@ -754,7 +756,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	public void refresh() {
 		resetLists();
 	}
-	public void setContainerPolicy(ContainerPolicy policy) {
+	public void setContainerPolicy(VisualContainerPolicy policy) {
 		super.setContainerPolicy(policy);
 
 		if (policy != null) {

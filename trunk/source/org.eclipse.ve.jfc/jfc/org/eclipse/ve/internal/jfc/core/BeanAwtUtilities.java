@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.List;
@@ -32,6 +32,7 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.java.vce.*;
+import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.jem.internal.java.JavaClass;
 import org.eclipse.ve.internal.java.core.*;

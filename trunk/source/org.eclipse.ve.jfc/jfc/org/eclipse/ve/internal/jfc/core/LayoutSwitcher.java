@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -22,16 +22,20 @@ import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.*;
+
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 /**
  * Base LayoutSwitcher class.
  */
 public abstract class LayoutSwitcher implements ILayoutSwitcher {
-	protected ContainerPolicy policy;
+	protected VisualContainerPolicy policy;
 	
-	public LayoutSwitcher(ContainerPolicy policy) {
+	public LayoutSwitcher(VisualContainerPolicy policy) {
 		this.policy = policy;
 	}
 	

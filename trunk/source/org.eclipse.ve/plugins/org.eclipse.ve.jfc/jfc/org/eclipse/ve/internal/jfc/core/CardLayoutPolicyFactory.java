@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -23,6 +23,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.*;
 
 /**
  * @version 	1.0
@@ -33,7 +34,7 @@ public class CardLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/*
 	 * @see ILayoutPolicyFactory#getLayoutSwitcher(ContainerPolicy)
 	 */
-	public ILayoutSwitcher getLayoutSwitcher(ContainerPolicy ep) {
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep) {
 		return new CardLayoutSwitcher(ep);
 	}
 
@@ -47,7 +48,7 @@ public class CardLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/*
 	 * @see ILayoutPolicyFactory#getLayoutPolicyHelper(ContainerPolicy)
 	 */
-	public ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy ep) {
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
 		return new CardLayoutPolicyHelper(ep);
 	}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -20,7 +20,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * Layout Policy Factory for "null" awt layout. (i.e. no layout manager set on an awt container).
  * Creation date: (10/23/00 3:30:18 PM)
@@ -36,7 +39,7 @@ public class NullLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * getConstraintConverter method comment.
 	 */
-	public ILayoutSwitcher getLayoutSwitcher(ContainerPolicy ep) {
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep) {
 		return new NullLayoutSwitcher(ep);
 	}
 	/**
@@ -45,7 +48,7 @@ public class NullLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public Class getLayoutInputPolicyClass() {
 		return NullLayoutEditPolicy.class;
 	}
-	public ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy ep) {
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
 		return new NullLayoutPolicyHelper(ep);
 	}
 
