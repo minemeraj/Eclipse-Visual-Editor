@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-23 22:44:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-03-24 00:30:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -59,7 +59,9 @@ public class FontCustomPropertyEditor extends Composite {
 	private boolean isUpdating = false;
 
 	protected Font value;
-
+	private TabFolder tabFolder = null;
+	private Composite composite = null;
+	private Composite composite1 = null;
 	// Used to perform comparisons on strings ignoring case.
 	public class StringIgnoreCaseComparator implements Comparator {
 
@@ -88,70 +90,17 @@ public class FontCustomPropertyEditor extends Composite {
 	}
 
 	private void initialize() {
-		setSize(new org.eclipse.swt.graphics.Point(300, 200));
+		setSize(new org.eclipse.swt.graphics.Point(322,245));
 		GridLayout grid = new GridLayout();
-		grid.numColumns = 3;
-		grid.marginHeight = 5;
-		grid.marginWidth = 5;
-		grid.horizontalSpacing = 5;
-		grid.verticalSpacing = 5;
+		grid.horizontalSpacing = 1;
+		grid.verticalSpacing = 1;
 		this.setLayout(grid);
 
-		Label nameLabel = new Label(this, SWT.NONE);
-		nameLabel.setText(FontPropertyEditorMessages.getString("nameLabel")); //$NON-NLS-1$
-
-		Label styleLabel = new Label(this, SWT.NONE);
-		styleLabel.setText(FontPropertyEditorMessages.getString("styleLabel")); //$NON-NLS-1$
-
-		Label sizeLabel = new Label(this, SWT.NONE);
-		sizeLabel.setText(FontPropertyEditorMessages.getString("sizeLabel")); //$NON-NLS-1$
-
-		nameField = new Text(this, SWT.SINGLE | SWT.BORDER);
-		GridData gd01 = new GridData();
-		gd01.horizontalAlignment = GridData.FILL;
-		gd01.grabExcessHorizontalSpace = true;
-		nameField.setLayoutData(gd01);
-
-		styleField = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-		GridData gd11 = new GridData();
-		gd11.horizontalAlignment = GridData.FILL;
-		styleField.setLayoutData(gd11);
-
-		sizeField = new Text(this, SWT.SINGLE | SWT.BORDER);
-		GridData gd21 = new GridData();
-		gd21.horizontalAlignment = GridData.FILL;
-		sizeField.setLayoutData(gd21);
-
-		namesList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gd02 = new GridData();
-		gd02.horizontalAlignment = GridData.FILL;
-		gd02.verticalAlignment = GridData.FILL;
-		gd02.grabExcessHorizontalSpace = true;
-		gd02.grabExcessVerticalSpace = true;
-		gd02.heightHint = 100;
-		gd02.widthHint = 200;
-		namesList.setLayoutData(gd02);
-
-		stylesList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gd12 = new GridData();
-		gd12.horizontalAlignment = GridData.FILL;
-		gd12.verticalAlignment = GridData.FILL;
-		gd12.grabExcessVerticalSpace = true;
-		stylesList.setLayoutData(gd12);
-
-		sizesList = new List(this, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gd22 = new GridData();
-		gd22.horizontalAlignment = GridData.FILL;
-		gd22.verticalAlignment = GridData.FILL;
-		gd22.grabExcessVerticalSpace = true;
-		gd22.heightHint = 100;
-		gd22.widthHint = 40;
-		sizesList.setLayoutData(gd22);
+		createTabFolder();
 
 		previewText = new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
 		previewText.setText(FontPropertyEditorMessages.getString("previewText")); //$NON-NLS-1$
 		GridData gd03 = new GridData();
-		gd03.horizontalSpan = 3;
 		gd03.horizontalAlignment = GridData.FILL;
 		gd03.verticalAlignment = GridData.FILL;
 		gd03.grabExcessHorizontalSpace = true;
@@ -160,93 +109,7 @@ public class FontCustomPropertyEditor extends Composite {
 		gd03.widthHint = 500;
 		previewText.setLayoutData(gd03);
 
-		initializeLists();
-
-		namesList.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
-				if (!isUpdating) {
-					String newSelection = namesList.getSelection()[0];
-					isUpdating = true;
-					nameField.setText(newSelection);
-					isUpdating = false;
-				}
-				updateFont();
-			}
-		});
-
-		nameField.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				if (!isUpdating) {
-					int newIndex = searchFontNames(nameField.getText());
-					if (namesList.getSelectionIndex() != newIndex) {
-						isUpdating = true;
-						namesList.setSelection(newIndex);
-						isUpdating = false;
-						updateFont();
-					}
-				}
-			}
-		});
-
-		nameField.addMouseListener(new MouseAdapter() {
-
-			public void mouseUp(MouseEvent e) {
-				nameField.selectAll();
-			}
-		});
-
-		stylesList.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
-				String newSelection = stylesList.getSelection()[0];
-				styleField.setText(newSelection);
-				updateFont();
-			}
-		});
-
-		sizesList.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
-				String newSelection = sizesList.getSelection()[0];
-				sizeField.setText(newSelection);
-				updateFont();
-			}
-		});
-
-		sizeField.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				String newText = sizeField.getText();
-				int newSize = 1;
-				if (newText.length() > 0) {
-					try {
-						newSize = Integer.parseInt(newText);
-						if (newSize < 1) { throw new NumberFormatException(); }
-					} catch (NumberFormatException e1) {
-						sizeField.setText(String.valueOf(value.getFontData()[0].getHeight()));
-						return;
-					}
-				}
-				updateFont();
-				sizesList.deselectAll();
-				for (int i = 0; i < sizeValues.length; i++) {
-					if (newSize == sizeValues[i]) {
-						sizesList.setSelection(i);
-						break;
-					}
-				}
-			}
-		});
-
-		sizeField.addMouseListener(new MouseAdapter() {
-
-			public void mouseUp(MouseEvent e) {
-				sizeField.selectAll();
-			}
-		});
-
+		grid.numColumns = 3;
 		createFontFromProxy(this);
 		updateSelections();
 		nameField.selectAll();
@@ -430,4 +293,183 @@ public class FontCustomPropertyEditor extends Composite {
 		this.value = null;
 	}
 
-}
+	/**
+	 * This method initializes tabFolder	
+	 *
+	 */    
+	private void createTabFolder() {
+		GridData gridData4 = new org.eclipse.swt.layout.GridData();
+		tabFolder = new TabFolder(this, SWT.NONE);		   
+		createComposite();
+		createComposite1();
+		TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
+		TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
+		tabItem1.setControl(composite);
+		tabItem1.setText("Named Fonts");
+		tabItem2.setControl(composite1);
+		tabItem2.setText("JFace Fonts");
+		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData4.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData4.grabExcessHorizontalSpace = true;
+		gridData4.grabExcessVerticalSpace = true;
+		gridData4.horizontalSpan = 3;
+		tabFolder.setLayoutData(gridData4);
+	}
+
+	/**
+	 * This method initializes composite	
+	 *
+	 */    
+	private void createComposite() {
+		GridLayout gridLayout1 = new GridLayout();
+		composite = new Composite(tabFolder, SWT.NONE);
+		composite.setLayout(gridLayout1);
+		Label nameLabel = new Label(composite, SWT.NONE);
+		nameLabel.setText(FontPropertyEditorMessages.getString("nameLabel")); //$NON-NLS-1$
+
+		Label styleLabel = new Label(composite, SWT.NONE);
+		styleLabel.setText(FontPropertyEditorMessages.getString("styleLabel")); //$NON-NLS-1$
+		
+		Label sizeLabel = new Label(composite, SWT.NONE);
+		sizeLabel.setText(FontPropertyEditorMessages.getString("sizeLabel")); //$NON-NLS-1$
+		
+		nameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		GridData gd01 = new GridData();
+		gd01.horizontalAlignment = GridData.FILL;
+		gd01.grabExcessHorizontalSpace = true;
+		nameField.setLayoutData(gd01);
+		
+		styleField = new Text(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+		GridData gd11 = new GridData();
+		gd11.horizontalAlignment = GridData.FILL;
+		styleField.setLayoutData(gd11);
+		
+		sizeField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		GridData gd21 = new GridData();
+		gd21.horizontalAlignment = GridData.FILL;
+		sizeField.setLayoutData(gd21);
+		
+		namesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData gd02 = new GridData();
+		gd02.horizontalAlignment = GridData.FILL;
+		gd02.verticalAlignment = GridData.FILL;
+		gd02.grabExcessHorizontalSpace = true;
+		gd02.grabExcessVerticalSpace = true;
+		gd02.heightHint = 100;
+		gd02.widthHint = 200;
+		namesList.setLayoutData(gd02);
+		
+		stylesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData gd12 = new GridData();
+		gd12.horizontalAlignment = GridData.FILL;
+		gd12.verticalAlignment = GridData.FILL;
+		gd12.grabExcessVerticalSpace = true;
+		stylesList.setLayoutData(gd12);
+
+		sizesList = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData gd22 = new GridData();
+		gd22.horizontalAlignment = GridData.FILL;
+		gd22.verticalAlignment = GridData.FILL;
+		gd22.grabExcessVerticalSpace = true;
+		gd22.heightHint = 100;
+		gd22.widthHint = 40;
+		sizesList.setLayoutData(gd22);
+		gridLayout1.numColumns = 3;
+		initializeLists();
+
+		namesList.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				if (!isUpdating) {
+					String newSelection = namesList.getSelection()[0];
+					isUpdating = true;
+					nameField.setText(newSelection);
+					isUpdating = false;
+				}
+				updateFont();
+			}
+		});
+
+		nameField.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				if (!isUpdating) {
+					int newIndex = searchFontNames(nameField.getText());
+					if (namesList.getSelectionIndex() != newIndex) {
+						isUpdating = true;
+						namesList.setSelection(newIndex);
+						isUpdating = false;
+						updateFont();
+					}
+				}
+			}
+		});
+
+		nameField.addMouseListener(new MouseAdapter() {
+
+			public void mouseUp(MouseEvent e) {
+				nameField.selectAll();
+			}
+		});
+
+		stylesList.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				String newSelection = stylesList.getSelection()[0];
+				styleField.setText(newSelection);
+				updateFont();
+			}
+		});
+
+		sizesList.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				String newSelection = sizesList.getSelection()[0];
+				sizeField.setText(newSelection);
+				updateFont();
+			}
+		});
+
+		sizeField.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				String newText = sizeField.getText();
+				int newSize = 1;
+				if (newText.length() > 0) {
+					try {
+						newSize = Integer.parseInt(newText);
+						if (newSize < 1) { throw new NumberFormatException(); }
+					} catch (NumberFormatException e1) {
+						sizeField.setText(String.valueOf(value.getFontData()[0].getHeight()));
+						return;
+					}
+				}
+				updateFont();
+				sizesList.deselectAll();
+				for (int i = 0; i < sizeValues.length; i++) {
+					if (newSize == sizeValues[i]) {
+						sizesList.setSelection(i);
+						break;
+					}
+				}
+			}
+		});
+
+		sizeField.addMouseListener(new MouseAdapter() {
+
+			public void mouseUp(MouseEvent e) {
+				sizeField.selectAll();
+			}
+		});
+
+	}
+
+	/**
+	 * This method initializes composite1	
+	 *
+	 */    
+	private void createComposite1() {
+		composite1 = new Composite(tabFolder, SWT.NONE);		   
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="10,10"
