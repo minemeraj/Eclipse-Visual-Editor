@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-01 00:51:21 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -668,7 +668,8 @@ public  void dispose() {
     fFFDecoder=null;
 	if (fModel != null)
 	  fModel.removeBean(this) ;	
-	
+	// TODO: This should not work on the child relationship... need to work 
+	//       on the inverse adapter instead
 	for (int i = 0; i < fbackReferences.size(); i++) {
 		// This should be empty if decoders had the chance to do their thing
 		BeanPart bp = (BeanPart) fbackReferences.get(i);		
