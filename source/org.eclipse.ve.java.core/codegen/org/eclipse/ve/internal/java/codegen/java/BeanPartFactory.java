@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.22 $  $Date: 2004-04-22 20:51:31 $ 
+ *  $Revision: 1.23 $  $Date: 2004-04-27 18:50:35 $ 
  */
 
 import java.util.*;
@@ -634,8 +634,6 @@ public void removeBeanPart (BeanPart bean) {
 	while (itr != null && itr.hasNext()) {
 		CodeExpressionRef e = (CodeExpressionRef) itr.next();
 		//e.primSetState(e.STATE_NOT_EXISTANT) ;
-		e.clearState();
-		e.setState(CodeExpressionRef.STATE_DELETE, true);
 		deleteList.add(e);
 	}
 	// If the method is not removed, we need to remove the expressions
@@ -644,11 +642,22 @@ public void removeBeanPart (BeanPart bean) {
 	  fBeanModel.refreshMethods();
 	  for (int i = deleteList.size() - 1; i >= 0; i--) {
 		// If it is an instance bean, we removed the method
+	  	// We mark expressions as deleted as we remove them because
+	  	// updating of subsequent expression offsets is not performed
+	  	// if they are marked as deleted - something which will cause
+	  	// the removal of incorrect code causing broken code. (60079)
+	  	((CodeExpressionRef) deleteList.get(i)).clearState();
+	  	((CodeExpressionRef) deleteList.get(i)).setState(CodeExpressionRef.STATE_DELETE, true);
 		((CodeExpressionRef) deleteList.get(i)).updateDocument(i == 0); // Update the source code once
 	  }
 	}
 	else {
 		// expressions will be disposed when mr is disposed.
+		  for (int i = deleteList.size() - 1; i >= 0; i--) {
+			// If it is an instance bean, we removed the method
+		  	((CodeExpressionRef) deleteList.get(i)).clearState();
+		  	((CodeExpressionRef) deleteList.get(i)).setState(CodeExpressionRef.STATE_DELETE, true);
+		  }
 	}
 
 	
