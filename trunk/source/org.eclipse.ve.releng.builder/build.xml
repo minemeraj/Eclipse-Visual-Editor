@@ -7,8 +7,6 @@
 		<touch file="${user.home}/.cvspass" />
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
 		<property name="buildDirectory" value="${basedir}/src/eclipse" />
-		<property name="bootclasspath" value="${java.home}/lib/rt.jar" />
-		<property name="rt" value="${java.home}/lib/rt.jar" />
 
 		<property name="buildType" value="I" />
 		<property name="buildId" value="build" />
