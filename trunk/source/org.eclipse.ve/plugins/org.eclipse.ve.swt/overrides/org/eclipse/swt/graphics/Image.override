@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event:AddMany xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
+    featureName="eAnnotations">
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ImageProxyAdapter"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ImageLabelProvider"
+      cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ImageCellEditor"
+      entryExpandable="false"/>
+</event:AddMany> 
