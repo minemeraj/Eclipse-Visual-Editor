@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-26 18:23:30 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-27 14:46:52 $ 
  */
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.CDEActionFilter;
@@ -65,16 +64,13 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
  *   (name)        - (value)
  *   BEANTYPE      - "" means the model of the EditPart is any type of bean, IJavaInstance
  *                   "class" means the model of the EditPart can be assigned to this type (through the JavaModel (EMF), not straight Java).
- *   PROPERTY      - "nameOfFeature" tests if the given feature is an available property of the model of the editpart. (Model needs to be EMF, does not need to be JavaModel).
  */
 public class JavaBeanActionFilter extends CDEActionFilter {
 	
 	public static final JavaBeanActionFilter INSTANCE = new JavaBeanActionFilter();	// Only one is needed. All the info it needs comes from the input.
 	
 	public static final String 
-		BEAN_TYPE_STRING = "BEANTYPE", //$NON-NLS-1$
-		PROPERTY_STRING = "PROPERTY"; //$NON-NLS-1$
-
+		BEAN_TYPE_STRING = "BEANTYPE"; //$NON-NLS-1$
 	
 	/*
 	 * Protected so that only singleton INSTANCE, or a subclass can instantiate it.
@@ -95,28 +91,9 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 			EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain((EditPart)target)));
 			if (type != null)
 				return type.isInstance(((EditPart) target).getModel());
-		} else if (name.equals(PROPERTY_STRING)) {
-			// This allows an extension so that a popup action could be provided if a component
-			// had a specific property with its name equal to 'value'.			
-			return testAttributeForPropertyName(target, value);
 		}
 		
 		// Pass this test up to the parent CDEActionFilter
 		return super.testAttribute(target, name, value);
-	}
-	
-
-	
-	/**
-	 * Return true if this target bean has a structural feature name equal to 'value'
-	 */
-	public boolean testAttributeForPropertyName(Object target, String value) {
-		if (((EditPart) target).getModel() != null) {
-			JavaClass modelType = (JavaClass) (((EObject)((EditPart) target).getModel())).eClass();
-			EStructuralFeature textSF = modelType.getEStructuralFeature(value);
-			if (textSF != null)
-				return true;
-		}
-		return false;
 	}
 }
