@@ -1,7 +1,7 @@
 # !/bin/sh
 
 usage() {
-	echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-vm <url to java executable to run build>] [-bc <bootclasspath>] [-target <buildall target to execute>] [-buildID <buildID, e.g. 2.1.2>]  [-ftp <userid> <password>] I|M"
+	echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-vm <url to java executable to run build>] [-bc <bootclasspath>] [-target <buildall target to execute>] [-buildID <buildID, e.g. 2.1.2>]  [-ftp <userid> <password>] [-rsync <rsync password file>] I|M"
 }
 
 # tag to use when checking out .map file project
@@ -25,6 +25,9 @@ target=""
 # FTP user/password, required for Windows to ftp. Without it, no push.
 ftpUser=""
 ftpPassword=""
+
+# RSYNC Password file location, required for Linux. Without it, no push.
+rsyncPWFile=""
 
 if [ "x$1" == "x" ] ; then
         usage
@@ -58,6 +61,10 @@ while [ "$#" -gt 0 ] ; do
                         ftpPassword="-DftpPassword=$3"
                         shift 2
                     ;;
+                '-rsync')
+                		rsyncPWFile="-DrsyncPWFile=$2"
+                		shift 1
+                	;;
                 *)
                         buildType=$1
                     ;;
@@ -70,4 +77,4 @@ if [ -z $buildType ] ; then
 	exit 0
 fi
 
-$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $buildID $ftpUser $ftpPassword
+$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $buildID $rsyncPWFile $ftpUser $ftpPassword

@@ -13,15 +13,28 @@
 				<available file="${basedir}/../org.eclipse.releng.basebuilder/plugins/org.eclipse.ant.optional.ftp/plugin.xml"/>
 				<isset property="ftpUser"/>
 				<isset property="ftpPassword"/>
+				<not>
+					<isset property="nopush"/>
+				</not>
 			</and>
 		</condition>
-		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 		<condition property="isWindows">
 			<equals arg1="${platform}" arg2="Win32" />
 		</condition>
 		<condition property="isLinuxGTK">
 			<equals arg1="${platform}" arg2="LinuxGTK" />
-		</condition>		
+		</condition>
+		<condition property="rsyncpush">
+			<and>
+				<not>
+					<or>
+						<isset property="ftppush"/>
+						<isset property="nopush"/>
+					</or>
+				</not>
+				<isset property="rsyncPWFile"/>
+			</and>
+		</condition>
 	</target>
 
 	<target name="create.label.properties" unless="label.properties.exists">
@@ -135,6 +148,7 @@
 	</target>
 	
 	<target name="pushftp" if="ftppush">
+		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 		<echo message="FTP to: ${remoteDirectory}/${buildLabel}"/>	
 	  	<ftp server="download.eclipse.org"
        		userid="${ftpUser}"
@@ -155,6 +169,17 @@
 		
 	</target>
 		
-	<target name="pushrsync" if="rsyncpush"/>
+	<target name="pushrsync" if="rsyncpush">
+		<property name="remoteDirectory" value="downloads/drops"/>
+		<echo message="RSYNC to: ${remoteDirectory}/${buildLabel}"/>
+		<!-- Need to get permissions correct so that Webserver will work. -->
+		<chmod dir="${buildDirectory}" type="file" perm="ugo+r" includes="${buildLabel}/**"/>
+		<chmod dir="${buildDirectory}" type="file" perm="ug+rw" includes="${buildLabel}/**"/>		
+		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**"/>
+		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**"/>				
+		<exec dir="${buildDirectory}" executable="rsync">
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${buildLabel} versync@download.eclipse.org::eclipseVeTools/${remoteDirectory}" />
+		</exec>
+	</target>
 	
 </project>
