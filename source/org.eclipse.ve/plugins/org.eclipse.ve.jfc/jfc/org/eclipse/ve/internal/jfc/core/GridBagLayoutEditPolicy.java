@@ -21,14 +21,16 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 
 public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	public static final String copyright = "(c) Copyright IBM Corporation 2002."; //$NON-NLS-1$
 	protected GridBagLayoutFeedBack fGridBagLayoutFeedback = null;
 	protected GridBagLayoutPolicyHelper helper = new GridBagLayoutPolicyHelper();
-	protected ContainerPolicy containerPolicy;		// Handles the containment functions
+	protected VisualContainerPolicy containerPolicy;		// Handles the containment functions
 
-public GridBagLayoutEditPolicy(ContainerPolicy containerPolicy) {
+public GridBagLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 	this.containerPolicy = containerPolicy;
 	helper.setContainerPolicy(containerPolicy);
 }

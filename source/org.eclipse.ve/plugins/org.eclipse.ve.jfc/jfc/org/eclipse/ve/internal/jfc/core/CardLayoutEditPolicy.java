@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
  */
 import java.util.*;
 
@@ -33,6 +33,8 @@ import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 
@@ -57,12 +59,12 @@ import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	private EditPartListener cardListener;
 	protected CardLayoutPolicyHelper helper = new CardLayoutPolicyHelper();
-	protected ContainerPolicy containerPolicy;		// Handles the containment functions
+	protected VisualContainerPolicy containerPolicy;		// Handles the containment functions
 	protected EditPart fSelectedCard;
 	protected EReference sfConstraintConstraint, sfConstraintComponent, sfName;
 	protected CardLayoutComponentListener fComponentListener;
 
-	public CardLayoutEditPolicy(ContainerPolicy containerPolicy) {
+	public CardLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = containerPolicy;
 		helper.setContainerPolicy(containerPolicy);
 	}

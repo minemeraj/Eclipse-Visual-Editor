@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-05 23:19:15 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-04 12:17:19 $ 
  */
 import java.util.*;
 
@@ -76,9 +76,7 @@ protected void createLayoutEditPolicy() {
 	if (containerProxy != null) {
 		// a container was created. 
 		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
-		if(lpFactory.getLayoutInputPolicyClass() != null){
-			layoutPolicy = VisualUtilities.getLayoutPolicy(lpFactory.getLayoutInputPolicyClass(),getContainerPolicy());
-		}
+		layoutPolicy = lpFactory.getLayoutEditPolicy(getContainerPolicy());
 	}
 	// If the LayoutPolicyFactory didn't specifiy a LayoutInputPolicy, use UnknownLayoutInputPolicy
 	if (layoutPolicy == null) {

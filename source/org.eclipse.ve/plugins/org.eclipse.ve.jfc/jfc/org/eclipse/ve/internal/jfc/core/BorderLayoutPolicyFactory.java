@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +25,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaHelpers;
 
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.visual.*;
 /**
@@ -44,12 +46,10 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy policy) {
 		return new BorderLayoutSwitcher(policy);
 	}
-	/**
-	 * getLayoutInputPolicyClass method comment.
-	 */
-	public Class getLayoutInputPolicyClass() {
-		return BorderLayoutEditPolicy.class;
-	}
+	
+	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
+		return new BorderLayoutEditPolicy(containerPolicy);
+	}	
 	/**
 	 * getLayoutPolicyHelperClass method comment.
 	 */
@@ -76,5 +76,6 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
 		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 	}
+
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 import java.util.*;
@@ -32,12 +32,13 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 /**
  * Layout input policy for a java.awt.BorderLayoutManager.
  */
 public class BorderLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
-	protected ContainerPolicy fPolicy;
+	protected VisualContainerPolicy fPolicy;
 	protected BorderLayoutPolicyHelper fLayoutPolicyHelper;
 	protected BorderLayoutFeedback fBorderLayoutFeedback = null;
 	protected BorderLayoutRegionFeedback fRegionFeedback = null;
@@ -47,7 +48,7 @@ public class BorderLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
  * Creation date: (09/05/00 11:48:38 AM)
  * @param aPolicyHelper com.ibm.etools.vce.IContainerInputPolicyHelper
  */
-public BorderLayoutEditPolicy(ContainerPolicy aContainerPolicy) {
+public BorderLayoutEditPolicy(VisualContainerPolicy aContainerPolicy) {
 	fLayoutPolicyHelper = new BorderLayoutPolicyHelper();
 	fLayoutPolicyHelper.setContainerPolicy(aContainerPolicy);
 	fPolicy = aContainerPolicy;

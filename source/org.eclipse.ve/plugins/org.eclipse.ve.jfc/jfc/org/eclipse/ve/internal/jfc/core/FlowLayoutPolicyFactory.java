@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FlowLayoutPolicyFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-04 12:17:19 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -42,12 +43,11 @@ public class FlowLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy cp) {
 		return new FlowLayoutSwitcher(cp);
 	}
-	/**
-	 * getLayoutInputPolicyClass method comment.
-	 */
-	public Class getLayoutInputPolicyClass() {
-		return FlowLayoutEditPolicy.class;
+	
+	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
+		return new FlowLayoutEditPolicy(containerPolicy);
 	}
+	
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
 		return new FlowLayoutPolicyHelper(ep);
 	}
