@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-08-04 21:36:29 $ 
+ *  $Revision: 1.13 $  $Date: 2004-08-20 13:44:07 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -127,6 +127,54 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		return bp ;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#shouldCommit(org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.emf.ecore.EObject, java.util.List)
+	 */
+	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args) {
+		boolean shouldCommit = super.shouldCommit(oldAddedPart, newAddedPart, newAddedInstance, args);
+		// Affected by offset changes?
+		if(!shouldCommit){
+			if (args.size() == 2 && args.get(1) instanceof NumberLiteral) {}
+			else shouldCommit = !canAddingBeSkippedByOffsetChanges();
+		}
+		if(!shouldCommit){
+			if(fAddedPart!=null){
+		      	  boolean backRefAdded = false;
+			      BeanPart[] bRefs = fAddedPart.getBackRefs();
+			      int bRefCount = 0;
+			      for (; bRefCount < bRefs.length; bRefCount++) 
+					if(fbeanPart.equals(bRefs[bRefCount])){
+						backRefAdded = true;
+						break;
+					}
+				    
+			       boolean childAdded = false;
+				   Iterator childItr = fbeanPart.getChildren();
+				   while (childItr.hasNext()) {
+						BeanPart child = (BeanPart) childItr.next();
+						if(child.equals(fAddedPart)){
+							childAdded = true;
+							break;
+						}
+				   }
+					shouldCommit = !backRefAdded || !childAdded;
+			}
+			if(!shouldCommit){
+				int index = findIndex(fbeanPart);
+				EStructuralFeature sf = fFmapper.getFeature(null);
+				EObject targetEObject = fbeanPart.getEObject();
+				EObject addedOne = getRootObject(false);
+				if (sf.isMany()) {
+					List elements = getRootComponentList();
+					if((!elements.contains(addedOne)) || (index>-1 && elements.indexOf(addedOne)!=index))
+						shouldCommit = true;
+				}else
+				   shouldCommit =  (!targetEObject.eIsSet(sf)) || (!targetEObject.eGet(sf).equals(addedOne));
+			}
+		}
+		return shouldCommit;
+	}
+	
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAndAddArguments(Expression[])
 	 */
