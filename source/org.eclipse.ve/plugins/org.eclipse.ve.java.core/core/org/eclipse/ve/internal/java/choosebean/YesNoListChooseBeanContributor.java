@@ -10,19 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: YesNoListChooseBeanContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-17 12:23:39 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-20 21:43:03 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredList;
 import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
 
@@ -91,43 +93,54 @@ public class YesNoListChooseBeanContributor implements IChooseBeanContributor {
 	 * Expects {"pkg1","class1", "pkg2", "class2"}
 	 */
 	protected List getSubTypes(final String[] types){
+		if (types == null)
+			return Collections.EMPTY_LIST;
 		final List subTypesList = new ArrayList();
-		BusyIndicator.showWhile(Display.getDefault(), new Runnable(){
-			public void run() {
-				for (int c = 0; types!=null && c < types.length; c+=2) {
-					try {
-						IType baseClass = getJavaProject().findType(types[c], types[c+1]);
-						if(baseClass!=null){
-							ITypeHierarchy th = baseClass.newTypeHierarchy(getJavaProject(), null);
-							IType[] subTypes = null;
-							if(baseClass.isClass()){
-								subTypes = th.getAllSubtypes(baseClass);
-							} else if (baseClass.isInterface()){
-								// Get all implementors
-								subTypes = th.getAllSubtypes(baseClass);
+		try {
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress(){
+				public void run(IProgressMonitor pm) throws InterruptedException {
+					pm.beginTask("Search types", 100*(types.length/2));
+					for (int c = 0; c < types.length; c+=2) {
+						if (pm.isCanceled())
+							throw new InterruptedException();
+						try {
+							IType baseClass = getJavaProject().findType(types[c], types[c+1]);
+							if(baseClass!=null){
+								ITypeHierarchy th = baseClass.newTypeHierarchy(getJavaProject(), new SubProgressMonitor(pm, 100));
+								IType[] subTypes = null;
+								if(baseClass.isClass()){
+									subTypes = th.getAllSubtypes(baseClass);
+								} else if (baseClass.isInterface()){
+									// Get all implementors
+									subTypes = th.getAllSubtypes(baseClass);
+									for (int stc = 0; stc < subTypes.length; stc++) {
+										subTypesList.add(subTypes[stc].getFullyQualifiedName());
+									}																
+									// Some of these will be hierarchy roots themselves								
+									// So collect all the classes that extend them
+									for (int i = 0; i < subTypes.length; i++) {
+										IType[] implementors = th.getAllSubtypes(subTypes[i]);								
+										for (int stc = 0; stc < implementors.length; stc++) {
+											subTypesList.add(implementors[stc].getFullyQualifiedName());
+										}																	
+									}
+								}
+								subTypesList.add(baseClass.getFullyQualifiedName());
 								for (int stc = 0; stc < subTypes.length; stc++) {
 									subTypesList.add(subTypes[stc].getFullyQualifiedName());
-								}																
-								// Some of these will be hierarchy roots themselves								
-								// So collect all the classes that extend them
-								for (int i = 0; i < subTypes.length; i++) {
-									IType[] implementors = th.getAllSubtypes(subTypes[i]);								
-									for (int stc = 0; stc < implementors.length; stc++) {
-										subTypesList.add(implementors[stc].getFullyQualifiedName());
-									}																	
-								}
+								}								
 							}
-							subTypesList.add(baseClass.getFullyQualifiedName());
-							for (int stc = 0; stc < subTypes.length; stc++) {
-								subTypesList.add(subTypes[stc].getFullyQualifiedName());
-							}								
+						} catch (JavaModelException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
 						}
-					} catch (JavaModelException e) {
-						JavaVEPlugin.log(e, Level.WARNING);
 					}
 				}
-			}
-		});
+			});
+		} catch (InvocationTargetException e) {
+			JavaVEPlugin.log(e.getCause(), Level.WARNING);
+		} catch (InterruptedException e) {
+			// Not an error, was canceled.
+		}
 		return subTypesList;
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: CompanyGraphicalEditorPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-20 21:42:41 $ 
  */
 
 import java.io.*;
@@ -33,7 +33,6 @@ import org.eclipse.gef.editparts.FreeformGraphicalRootEditPart;
 import org.eclipse.gef.palette.*;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.parts.*;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -42,8 +41,10 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.*;
 
-import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cdm.*;
+
+import org.eclipse.ve.internal.cde.core.CDEMessages;
+
 import org.eclipse.ve.examples.cdm.dept.Company;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
@@ -200,7 +201,7 @@ public class CompanyGraphicalEditorPart extends GraphicalEditorWithPalette {
 		};
 
 		try {
-			new ProgressMonitorDialog(getSite().getWorkbenchWindow().getShell()).run(false, true, op);
+			PlatformUI.getWorkbench().getProgressService().run(false, true, op);
 			setInput(new FileEditorInput((IFile) file));
 			getCommandStack().flush();
 		} catch (Exception x) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-12 15:58:26 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-20 21:43:03 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -22,12 +22,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.*;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.debug.ui.JavaUISourceLocator;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -51,9 +51,8 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 	public void searchAndLaunch(Object[] search, String mode) {
 		IType[] types = null;
 		if (search != null) {			
-			try {
-				ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());				
-				types = JavaBeanFinder.findTargets(dialog, search);
+			try {			
+				types = JavaBeanFinder.findTargets(PlatformUI.getWorkbench().getProgressService(), search);
 			} catch (InterruptedException e) {
 				return;
 			} catch (InvocationTargetException e) {

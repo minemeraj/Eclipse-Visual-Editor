@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-01 21:25:25 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-20 21:42:35 $ 
  */
 
 
@@ -42,7 +42,6 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.parts.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -1326,8 +1325,7 @@ protected boolean performSaveAs(){
 	};
 
 	try {
-		ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(shell);
-		monitorDialog.run(false, false, op); // Not cancelable.
+		PlatformUI.getWorkbench().getProgressService().run(false, false, op); // Not cancelable.
 	} catch (InterruptedException e) {
 	} catch (InvocationTargetException e) {
 		Throwable eReal = e.getTargetException();
