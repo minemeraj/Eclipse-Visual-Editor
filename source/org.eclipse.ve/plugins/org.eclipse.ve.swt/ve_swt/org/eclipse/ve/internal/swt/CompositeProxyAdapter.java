@@ -9,6 +9,7 @@ package org.eclipse.ve.internal.swt;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,6 +26,8 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
 	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
+	private IMethodProxy moveAboveMethodProxy;	// method proxy for move above.
+	// TODO these method proxies should be off in the factory constants so we don't need to get it for each and every composite.
 
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
@@ -33,14 +36,34 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 
 	}
 	
+	/*
+	 * Return the first instantiated bean proxy at or after the given index.
+	 * It is assumed that tests for the container being instantiated has already been done.
+	 * Return null if not found.
+	 */
+	protected IBeanProxy getBeanProxyAt(int position) {
+		if (position < 0)
+			return null;
+		List controls = (List) ((EObject) getTarget()).eGet(sf_containerControls);
+		for (int i=position; i<controls.size(); i++) {
+			EObject control = (EObject) controls.get(i);
+			IBeanProxyHost controlProxyHost =
+				BeanProxyUtilities.getBeanProxyHost((IJavaInstance) control);
+			if (controlProxyHost.isBeanProxyInstantiated())
+				return controlProxyHost.getBeanProxy();
+		}
+		
+		return null;
+	}	
+	
 	protected void appliedList(EStructuralFeature sf, List newValues, int position, boolean testValidity){
 		// The default inherited behavior is to iterate everything in the list and apply it one by one
-		// This is not good for SWT composites where each time an element is applied it disposes everyone that came after it
-		// and re-creates the whole list in order, creating n squared type performance problems
+		// This is not good for SWT composites because we get a new image on each apply. So in case
+		// of list, we will do a primitive add, and then validate once at the end.
 		if(sf == sf_containerControls){
 			Iterator iter = newValues.iterator();
 			while(iter.hasNext()){
-				primAddControl((IJavaObjectInstance)iter.next());
+				primAddControl((IJavaObjectInstance)iter.next(), position++);
 			}
 			childValidated(this);
 		} else 
@@ -72,36 +95,34 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		return layoutMethodProxy;
 	}
 	
+	protected IMethodProxy moveAboveMethodProxy(){
+		if(moveAboveMethodProxy == null){
+			moveAboveMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveAbove", "org.eclipse.swt.widgets.Control");
+		}
+		return moveAboveMethodProxy;
+	}	
+	
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
 		// Find the index of the child - remove it and re-insert it at this position
 		IJavaObjectInstance child = (IJavaObjectInstance)aChildProxyHost.getTarget();
 		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
 		int indexOfChild = controls.indexOf(child);
 		removeControl(child);
-		addControl(child,indexOfChild);
+		addControl(child, indexOfChild);
 	}
 	
-	protected void addControl(IJavaObjectInstance aControl, int position) throws ReinstantiationNeeded {
-		
-		// Whenever a control is added unless it is at the end there is no way to insert it at a particular
-		// position, so the existing controls before it must all be disposed 
-		// Then add in the new control and instantiate everyone behind him to maintain target VM order
-		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
-		Iterator iter = controls.iterator();
-		int controlCount = 0;
-		while(iter.hasNext()){
-			// If the number of times we have iterated over controls > position we are adding continue
-			if(controlCount++ < position) {
-				// Read the control off the iteration but ignore it as it is before the one being inserted and can be left alone
-				iter.next();
-				continue;			
-			}
-			primAddControl((IJavaObjectInstance)iter.next());
-		}		
+	
+	/**
+	 * @param child
+	 * @param indexOfChild
+	 * 
+	 * @since 1.0.2
+	 */
+	protected void addControl(IJavaObjectInstance child, int indexOfChild) {
+		primAddControl(child,indexOfChild);
 		childValidated(this);
 	}
-	
-	
+
 	public void releaseBeanProxy() {
 		// Need to release all of the controls.  This is because they will be implicitly disposed anyway when super
 		// gets called because the target VM will dispose them as children
@@ -118,19 +139,29 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		super.releaseBeanProxy();
 	}
 	
-	protected void primAddControl(IJavaObjectInstance aControl){
-		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
-		((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);
+	protected void primAddControl(IJavaObjectInstance aControl, int position) {
+		final IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
+		((ControlProxyAdapter) controlProxyHost).setParentProxyHost(this);
 		controlProxyHost.releaseBeanProxy();
-		controlProxyHost.instantiateBeanProxy();		
+		controlProxyHost.instantiateBeanProxy();
+
+		// Now we need to move it above the correct guy.
+		final IBeanProxy before = getBeanProxyAt(position + 1);
+		if (before != null) {
+			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					moveAboveMethodProxy().invokeCatchThrowableExceptions(controlProxyHost.getBeanProxy(), before);
+					return null;
+				}
+			});
+		}
 	}
 	
 	protected void removeControl(IJavaObjectInstance aControl) throws ReinstantiationNeeded {
 		// Dispose the control
 		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
-		if(controlProxyHost.isBeanProxyInstantiated()){
-			((ControlProxyAdapter)controlProxyHost).releaseBeanProxy();
-		}
+		controlProxyHost.releaseBeanProxy();
 		revalidateBeanProxy();
 	}
 	
