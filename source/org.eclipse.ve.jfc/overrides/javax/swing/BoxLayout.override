@@ -8,20 +8,4 @@
           value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
     </addedEObjects>
   </event:Add>
-  
-  <!-- Kludge Warning: Inheritance of unreal java classes can't be set because Java Reflection wipes that out and tries to
-       recreate it. But since the classes aren't real, it won't find them. So we just need to duplicate
-       the decorators from BoxLayout for the layout policy factory. -->
-  <event:Add notifierURI="java:/javax.swing#BoxLayoutX_Axis" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
-          value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
-    </addedEObjects>
-  </event:Add>
-  <event:Add notifierURI="java:/javax.swing#BoxLayoutY_Axis" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
-          value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
-    </addedEObjects>
-  </event:Add>
 </xmi:XMI>
