@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
  */
 
 import java.util.*;
@@ -597,7 +597,7 @@ protected void addElement (Notification msg) {
 			CodeExpressionRef exp = eGen.createFromJVEModel(args);
 			exp.insertContentToDocument();
 		}
-		catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
+		catch (Exception e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
 			return;
 		}

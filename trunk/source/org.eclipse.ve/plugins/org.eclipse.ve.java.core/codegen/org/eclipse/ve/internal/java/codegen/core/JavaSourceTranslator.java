@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-21 21:13:41 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -221,7 +221,9 @@ String fUri;
 			}
 		}
 		return DELTA_SKIP;
-	}  	/**
+	}  	
+	
+	/**
   	 *  ReLoad the BDM model from stratch
   	 */
   	private synchronized void Reload(Display disp,ICancelMonitor monitor) {
