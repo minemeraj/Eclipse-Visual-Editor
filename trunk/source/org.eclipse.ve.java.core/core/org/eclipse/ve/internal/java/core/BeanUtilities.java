@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.22 $  $Date: 2004-09-10 21:03:24 $ 
+ *  $Revision: 1.23 $  $Date: 2004-09-10 22:13:35 $ 
  */
 
 import org.eclipse.emf.common.util.BasicEMap;
@@ -229,8 +229,17 @@ public class BeanUtilities {
             key.setValue(Boolean.TRUE);
         else
         	key.setValue(Boolean.FALSE);
-								
-		return AnnotationPolicy.applyAnnotationSetting(newJavaBean, (BasicEMap.Entry)key, domain);
+    	// find the primary diagram
+    	Diagram d = null ;    	
+		for (int i=0; i<domain.getDiagramData().getDiagrams().size(); i++) {
+    		Diagram di = (Diagram) domain.getDiagramData().getDiagrams().get(i);
+    		if (Diagram.PRIMARY_DIAGRAM_ID.equals(di.getId())) {
+    			d = di ;
+    			break;
+    		}
+    	}
+        
+        return VisualInfoPolicy.applyVisualInfoSetting(newJavaBean, key, domain, d);        
 	}
 
 	/**
