@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:19:47 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -86,6 +86,8 @@ public class BoxLayoutProxyAdapter extends BeanProxyAdapter {
 		if (containerProxy != null && boxLayoutCtor != null && axisBeanProxy != null)
 			return boxLayoutCtor.newInstance(new IBeanProxy[] { containerProxy, axisBeanProxy });
 
-		return super.instantiateWithString(targetClass, initString);
+		// TODO Need to fix this compile error... for now just return null
+		return null;
+//		return super.instantiateWithString(targetClass, initString);
 	}
 }

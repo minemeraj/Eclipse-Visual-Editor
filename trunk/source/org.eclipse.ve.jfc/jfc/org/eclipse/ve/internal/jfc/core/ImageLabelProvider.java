@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:19:47 $ 
  */
 
 import java.util.StringTokenizer;
@@ -26,7 +26,9 @@ public class ImageLabelProvider extends LabelProvider {
 
 		if (element instanceof IJavaObjectInstance) {
 			IJavaObjectInstance image = (IJavaObjectInstance) element;
-			return getPathFromInitializationString(image.getInitializationString());
+			// TODO Need to fix this compile error... for now just return null
+			return null;
+//			return getPathFromInitializationString(image.getInitializationString());
 		}
 		return ""; //$NON-NLS-1$
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:19:47 $ 
  */
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
@@ -77,9 +77,10 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 
 		String text = ""; //$NON-NLS-1$
 		if (aValue != null) {
-			String initString = getPathFromInitializationString(((IJavaObjectInstance) aValue).getInitializationString());
-			if (initString != "") //$NON-NLS-1$
-				text = initString;
+			// TODO need to fix compile error
+//			String initString = getPathFromInitializationString(((IJavaObjectInstance) aValue).getInitializationString());
+//			if (initString != "") //$NON-NLS-1$
+//				text = initString;
 		}
 		lbl.setText(text);
 	}
@@ -92,10 +93,11 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();
 		if (aValue != null) {
-			path = getPathFromInitializationString(aValue.getInitializationString());
-			if (path != "") { //$NON-NLS-1$
-				iconDialog.setValue(path);
-			}
+			// TODO need to fix compile error
+//			path = getPathFromInitializationString(aValue.getInitializationString());
+//			if (path != "") { //$NON-NLS-1$
+//				iconDialog.setValue(path);
+//			}
 		}
 		int returnCode = iconDialog.open();
 		// The return code says whether or not OK was pressed on the property editor
