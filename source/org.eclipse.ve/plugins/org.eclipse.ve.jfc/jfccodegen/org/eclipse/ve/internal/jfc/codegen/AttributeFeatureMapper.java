@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AttributeFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-20 17:09:27 $ 
  */
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -27,13 +27,20 @@ public class AttributeFeatureMapper extends PropertyFeatureMapper implements IJF
 protected final static String hardCodeMethods[] = {
 	IJFCFeatureMapper.CONSTRAINT_BOUND,
 	IJFCFeatureMapper.CONSTRAINT_SIZE,
-	IJFCFeatureMapper.LOCATION_NAME
+	IJFCFeatureMapper.LOCATION_NAME,
+	IJFCFeatureMapper.LAYOUT_NAME,
+	IJFCFeatureMapper.JTABLE_MODEL_NAME,
+	IJFCFeatureMapper.JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME
 };
 
 protected final static URI hardCodedURI[] = {
 	JFCConstants.SF_COMPONENT_BOUNDS,
 	JFCConstants.SF_COMPONENT_SIZE,
-	JFCConstants.SF_COMPONENT_LOCATION
+	JFCConstants.SF_COMPONENT_LOCATION,
+	JFCConstants.SF_CONTAINER_LAYOUT,
+	JFCConstants.SF_JTABLE_MODEL,
+	JFCConstants.SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL
+	
 };
 
 
@@ -64,11 +71,11 @@ protected void processHardCodedProperty(String method, Object bean) {
  * @see org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper#getPriorityIncrement(String)
  */
 public int getPriorityIncrement(String methodType) {
-	if (methodType.equals("setLayout")) //$NON-NLS-1$
+	if (methodType.equals(IJFCFeatureMapper.LAYOUT_NAME)) //$NON-NLS-1$
 		return IJavaFeatureMapper.PRIORITY_LAYOUT_CHANGE;
-	if(methodType.equals("setModel")) //$NON-NLS-1$
+	if(methodType.equals(IJFCFeatureMapper.JTABLE_MODEL_NAME)) //$NON-NLS-1$
 		return 1;
-	if(methodType.equals("setAutoCreateColumnsFromModel")) //$NON-NLS-1$
+	if(methodType.equals(IJFCFeatureMapper.JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME)) //$NON-NLS-1$
 		return IJavaFeatureMapper.PRIORITY_ADD_CHANGE+1;
 	return super.getPriorityIncrement(methodType);
 }
