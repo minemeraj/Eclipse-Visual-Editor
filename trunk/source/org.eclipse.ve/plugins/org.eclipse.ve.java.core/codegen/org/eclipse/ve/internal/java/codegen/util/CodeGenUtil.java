@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.19 $  $Date: 2004-04-15 19:35:17 $ 
+ *  $Revision: 1.20 $  $Date: 2004-04-15 19:55:50 $ 
  */
 
 
@@ -47,6 +47,8 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.IEditorStyle;
@@ -813,7 +815,9 @@ public static IWorkingCopyProvider getRefWorkingCopyProvider(ICompilationUnit re
 	 	return wcp ;
 }
 public static void clearCache () {
-	
+	PropertyFeatureMapper.clearCache() ;
+	InstanceVariableCreationRule.clearCache() ;
+	InstanceVariableRule.clearCache() ;
 }
 
 public static IEditorStyle getEditorStyle (org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel beanModel) {
