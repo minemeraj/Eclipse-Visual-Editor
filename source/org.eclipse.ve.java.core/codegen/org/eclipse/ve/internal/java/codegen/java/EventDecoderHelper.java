@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.15 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -203,19 +204,87 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		fEventSF = JavaInstantiation.getSFeature((IJavaObjectInstance)fbeanPart.getEObject(),JavaBeanEventUtilities.EVENTS);
 		return fEventSF;		
 	}
+	
+	protected boolean isEquivalent(Callback c1, Callback c2) {
+		if (c1==c2) return true;
+		if (c1.isSharedScope()!=c2.isSharedScope()) return false;
+		if (c1.getMethod() != c2.getMethod()) return false;
+		List c1Statements = c1.getStatements();
+		List c2Statements = c2.getStatements();
+		if (c1Statements.size()!=c2Statements.size()) return false;
+		// TODO here check for content.
+		return true;
+	}
+	
+	protected abstract boolean isDiffrentDetails (AbstractEventInvocation ee) ;
+	
+	/**
+	 * 
+	 * @param ee EventInvocation that is needed
+	 * @return true if it is different than the current event invocation in the model
+	 * 
+	 * @since 1.1.0
+	 */
+	protected boolean isDiffrent (AbstractEventInvocation ee) {
+		if (ee == fEventInvocation) 
+			return false ;
+		if (ee.getListener()!=null) {
+			if (fEventInvocation.getListener()==null)
+				return true;
+		}
+		else if (fEventInvocation.getListener()!=null)
+			    return true;
+			
+		if (ee.getListener().getListenerType() != fEventInvocation.getListener().getListenerType())
+			return true;
+		List eeCalls = ee.getCallbacks();
+		List currentCalls = fEventInvocation.getCallbacks();
+		if (eeCalls.size() != currentCalls.size())
+			return true;
+		for (int i = 0; i < eeCalls.size(); i++) {
+			boolean found = false;
+			for (int j = 0; j < currentCalls.size(); j++) {
+				if (isEquivalent((Callback)eeCalls.get(i), (Callback)currentCalls.get(j))) {
+					found = true;
+					break;
+				}				
+			}
+			if (!found) return true;
+		}
+		return isDiffrentDetails(ee);		   	
+	}
+	/**
+	 * Only update the model if the EventInvocation has changed
+	 * @param ee
+	 * @param index
+	 * 
+	 * @since 1.1.0
+	 */	
     protected void addInvocationToModel(AbstractEventInvocation ee, int index) {
-    	ListenerType lt = ee.getListener().getListenerType() ;
-    	if (lt.eContainer() == null) {
-    		BeanSubclassComposition bsc = getBSC() ;
-    		bsc.getListenerTypes().add(lt) ;
+    	if (isDiffrent(ee)) {
+    		cleanUpPreviousIfNedded();
+	    	ListenerType lt = ee.getListener().getListenerType() ;
+	    	if (lt.eContainer() == null) {
+	    		BeanSubclassComposition bsc = getBSC() ;
+	    		bsc.getListenerTypes().add(lt) ;
+	    	}
+	    	if (ee.eContainer() == null) {
+	    	 // events SF
+	    	 EStructuralFeature sf = getEventSF();
+	    	 if (index>=0)
+			 ((List)fbeanPart.getEObject().eGet(sf)).add(index,ee) ;
+	    	 else
+	    	   ((List)fbeanPart.getEObject().eGet(sf)).add(ee) ;
+	    	}
+	    	((CodeEventRef)fOwner.getExprRef()).setEventInvocation(ee);
     	}
-    	if (ee.eContainer() == null) {
-    	 // events SF
-    	 EStructuralFeature sf = getEventSF();
-    	 if (index>=0)
-		 ((List)fbeanPart.getEObject().eGet(sf)).add(index,ee) ;
-    	 else
-    	   ((List)fbeanPart.getEObject().eGet(sf)).add(ee) ;
+    	else {
+    		EList events = (EList) fbeanPart.getEObject().eGet(getEventSF());
+    		int currentIndex = events.indexOf(fEventInvocation);
+    		if (currentIndex!=index && index>=0) {
+    			events.move(index,fEventInvocation);    		    
+    		}
+    	    removeInvocationToModel(ee);	
     	}
     }
     
@@ -236,6 +305,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		// events SF
 		EStructuralFeature sf = JavaInstantiation.getSFeature((org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance) fbeanPart.getEObject(), JavaBeanEventUtilities.EVENTS);
 		List eeList = (List) fbeanPart.getEObject().eGet(sf);
+		eeList.remove(ee);
 		int index = eeList.indexOf(ee);
 		eeList.remove(ee);
 		
@@ -465,15 +535,24 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	public AbstractEventInvocation getEventInvocation() {
 		return fEventInvocation;
 	}
+	
+    protected abstract boolean isDifferntEnvocation (AbstractEventInvocation ei);
 
 	/**
 	 * Sets the eventDecorator.
 	 * @param eventDecorator The eventDecorator to set
 	 */
-	public void setEventInvocation(AbstractEventInvocation ei) {
-		if (fEventInvocation != null && fEventInvocation!=ei)
-		   cleanUpPreviousIfNedded();
-		fEventInvocation = ei;
+	public boolean setEventInvocation(AbstractEventInvocation ei) {
+		// if the invocation is already in the model (a restore) or
+		// a different kind, reSet it
+		if (ei.eContainer()!=null || isDifferntEnvocation(ei)) {
+		  if (fEventInvocation != null && fEventInvocation!=ei)
+		     cleanUpPreviousIfNedded();
+		  fEventInvocation = ei;
+		  return true;
+		}
+		else
+			return false;
 	}
 	
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.Method;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -56,15 +57,15 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 			Expression exp = (Expression) event.arguments().get(0) ;
 			
 			int index = getInvocationIndex();			
-			if (addToEMFmodel)
-				 cleanUpPreviousIfNedded() ;
-			else {
+			if (!addToEMFmodel) {
 				restoreInvocationFromModel(index);
 				return true;
 			}
 
+			// Build a new Event Invocation, and compare it to the current one
+			// If need to change it go for it, if not throw it away
+			EventInvocation ee = JCMFactory.eINSTANCE.createEventInvocation();
 
-			EventInvocation ee = (EventInvocation) fEventInvocation ;             
 			if (exp instanceof SimpleName) {
 				// Instance of Event
 				SimpleName nr = (SimpleName) exp;

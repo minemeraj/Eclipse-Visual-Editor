@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -32,7 +32,7 @@ public interface IEventDecoder extends IJVEDecoder {
    	// Generate the source code from the JVE model
    public String generate(AbstractEventInvocation ei, Object[] args) throws CodeGenException ;
    public AbstractEventInvocation getEventInvocation() ;
-   public void setEventInvocation(AbstractEventInvocation eventInvocation) ;
+   public boolean setEventInvocation(AbstractEventInvocation eventInvocation) ;
    public void   setFiller(String filler) ;
    public String getFiller() ;
    public void   addCallBack(Callback c) ;

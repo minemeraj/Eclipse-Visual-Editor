@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.15 $  $Date: 2005-03-08 18:23:14 $ 
+ *  $Revision: 1.16 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -20,12 +20,14 @@ import java.util.logging.Level;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.codegen.java.*;
+
+import org.eclipse.ve.internal.java.codegen.java.IEventDecoder;
+import org.eclipse.ve.internal.java.codegen.java.IJVEDecoder;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -163,14 +165,18 @@ public boolean  decodeExpression() throws CodeGenException {
 	 * @param eventDecorator The eventDecorator to set
 	 */
 	public void setEventInvocation(AbstractEventInvocation ei) {
-		fEventInvocation = ei;
+		
 		if (fDecoder != null) {
 			try {
 				fDecoder.setExpression(this);
 			}
-			catch (CodeGenException e) { JavaVEPlugin.log(e); }			
-			fDecoder.setEventInvocation(ei);
+			catch (CodeGenException e) { JavaVEPlugin.log(e); }		
+			// A decoder may not need to replace its EventInvocation
+			if (fDecoder.setEventInvocation(ei))
+				fEventInvocation = ei;
 		}
+		else
+			fEventInvocation = ei;
 	}
 	
 	/**

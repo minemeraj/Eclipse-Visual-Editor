@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -266,7 +266,8 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 * The expression (fexpStmt) has changed as well.
 	 * 
 	 */
-	public void setEventInvocation(AbstractEventInvocation ei) {
+	public boolean setEventInvocation(AbstractEventInvocation ei) {
+		boolean result = true;
 		if (fEventInvocation!=null && ei!=fEventInvocation) {
 			if (fhelper != null) {
 				// Potentially active decoder.
@@ -279,9 +280,11 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 					fhelper=d ;
 				}
 			}
-			fhelper.setEventInvocation(ei);
+			result = fhelper.setEventInvocation(ei);
 		}
-		fEventInvocation = ei;
+		if (result)
+		   fEventInvocation = ei;
+		return result;
 	}
 
 	public String generate(AbstractEventInvocation ei, Object[] args) throws CodeGenException {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -82,13 +82,13 @@ public interface IEventDecoderHelper {
    public void setDecodingContent (Statement exp) ;
    
    
-   	public AbstractEventInvocation getEventInvocation() ;
+   public AbstractEventInvocation getEventInvocation() ;
 
 	/**
 	 * Sets the eventDecorator.
 	 * @param eventDecorator The eventDecorator to set
 	 */
-	public void setEventInvocation(AbstractEventInvocation ei) ;
+   public boolean setEventInvocation(AbstractEventInvocation ei) ;
 	
    public void   setFiller(String filler) ;
    public String getFiller(String filler) ;
