@@ -34,10 +34,10 @@ REM Install Eclipse and org.eclipse.test plugin
 REM
 REM ****************************************************************
 
-unzip -qq -o eclipse-SDK-*.zip
-unzip -qq -o emf_*.zip -d ./eclipse
-unzip -qq -o GEF-runtime-*.zip -d ./eclipse
-unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test*
+unzip -qq -o eclipse-SDK-*.zip -d target
+unzip -qq -o emf_*.zip -d target/eclipse
+unzip -qq -o GEF-runtime-*.zip -d target/eclipse
+unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test* -d target
 
 
 :processcmdlineargs
