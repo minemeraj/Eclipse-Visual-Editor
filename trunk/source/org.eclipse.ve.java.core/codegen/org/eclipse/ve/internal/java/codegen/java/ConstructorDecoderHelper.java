@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-07 17:38:51 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-14 18:25:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -189,7 +189,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#primIsDeleted()
 	 */
 	public boolean primIsDeleted() {
-		return fbeanPart.getEObject().eIsSet(fFmapper.getFeature(null)) ;
+		return !fbeanPart.getEObject().eIsSet(fFmapper.getFeature(null)) ;
 	}
 
 	/* (non-Javadoc)
