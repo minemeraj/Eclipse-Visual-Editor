@@ -11,51 +11,27 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-08-04 21:36:30 $ 
+ *  $Revision: 1.13 $  $Date: 2004-08-09 19:16:08 $ 
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.NullLiteral;
-import org.eclipse.jdt.core.dom.NumberLiteral;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.ThisExpression;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.PTExpression;
+import org.eclipse.jdt.core.dom.*;
+
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.AbstractIndexedChildrenDecoderHelper;
-import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
-import org.eclipse.ve.internal.java.codegen.java.ConstructorDecoderHelper;
-import org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderAdapter;
-import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
-import org.eclipse.ve.internal.java.codegen.java.IExpressionDecoder;
-import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -301,20 +277,11 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 	protected boolean addComponent() throws CodeGenException {
 
 		BeanPart oldAddedPart = fAddedPart;
-
-		fAddedPart = parseAddedPart((MethodInvocation) ((ExpressionStatement)fExpr).getExpression());
-
-		if (oldAddedPart != null)
-			if (fAddedPart != oldAddedPart) {
-				oldAddedPart.removeBackRef(fbeanPart, true);
-			}
-
-		if (fAddedPart == null && fAddedInstance == null)
+		BeanPart newAddedPart = parseAddedPart((MethodInvocation) ((ExpressionStatement)fExpr).getExpression());
+		if (newAddedPart == null && fAddedInstance == null)
 			throw new CodeGenException("No Added Part"); //$NON-NLS-1$
-		clearPreviousIfNeeded();
-
 		List args = ((MethodInvocation)((ExpressionStatement)fExpr).getExpression()).arguments();
-		return understandAddArguments(args);
+		return understandAddArguments(args, oldAddedPart, newAddedPart);
 	}
 
 	/**
@@ -350,14 +317,67 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		return result;
 	}
 
-	protected boolean understandAddArguments(List args) throws CodeGenException {
+	/**
+	 * Smart decoding capability:
+	 * This method returns whether decoding should be performed or not due to offset
+	 * changes. This is helpful during snippet update process where re-decoding is done for 
+	 * offset changes, and decoding should not be done unless there is some 
+	 * content change, or if the expression ordering has not changed 
+	 * 
+	 * @return
+	 */
+	protected boolean canAddingBeSkippedByOffsetChanges(BeanPart oldAddedPart, BeanPart newAddedPart) {
+		if(oldAddedPart==null && newAddedPart==null)
+			return true;
+		if(oldAddedPart==newAddedPart){
+			List components = getComponentList();
+			EObject currentCC = getConstraintComponent(false);
+			int currentIndex = components.indexOf(currentCC);
+			Collection expressions = fbeanPart.getRefExpressions();
+			for (Iterator expItr = expressions.iterator(); expItr.hasNext();) {
+				CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+				Object[] expAddedInstances = exp.getAddedInstances();
+				for(int eaic=0; expAddedInstances!=null && eaic<expAddedInstances.length; eaic++){
+					if(		components.contains(expAddedInstances[eaic]) && 
+							(	(components.indexOf(expAddedInstances[eaic]) < currentIndex && 
+								exp.getOffset()>=fOwner.getExprRef().getOffset()) ||
+								(components.indexOf(expAddedInstances[eaic]) > currentIndex && 
+								exp.getOffset()<=fOwner.getExprRef().getOffset()))){
+								return false;
+							}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean understandAddArguments(List args, BeanPart oldAddedPart, BeanPart newAddedPart) throws CodeGenException {
+		boolean addedPartChanged = newAddedPart!=oldAddedPart;
+		boolean constraintChanged = !canAddingBeSkippedByOffsetChanges(oldAddedPart, newAddedPart);
+		
+		IJavaObjectInstance tmpAddedConstraintInstance = null;
+		String tmpAddedConstraint = null;
+		String tmpNonResolvedAddedConstraint = null;
+		boolean tmpIsAddedConstraintSet = false;
+		String tmpAddedIndex = null;
+		boolean tmpIndexValueFound = false;
+		BeanPart tmpConstraintBeanPart = null;
+
 		boolean defaultConstraintFound = false;
 		int indexValuePosition = -1;
-		fAddedConstraintInstance = null;
-		fisAddedConstraintSet = false;
+
 		if (fAddedPart != null || fAddedInstance != null) {
 			// TODO  Deal with all signitures of add()
 			if (args.size() >= 2) {
+				// Get the current constraint
+				EObject currentComponentConstraint = getConstraintComponent(false);
+				EObject currentConstraint = null;
+				if (currentComponentConstraint != null) {
+					EStructuralFeature sf = currentComponentConstraint.eClass().getEStructuralFeature("constraint"); //$NON-NLS-1$
+					currentConstraint = (IJavaObjectInstance) currentComponentConstraint.eGet(sf);
+				}
+				
 				// Process all arguments to determine which is constraint and which is index.
 				for (int arg = 1; arg < args.size(); arg++) {
 					// Check to see if there is layout manager constraint
@@ -377,24 +397,48 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 					} else //  This is a Temporary solution !!!! we need to better fit for param. number for semantics
 						if (args.get(arg) instanceof StringLiteral) {
 							defaultConstraintFound = true;
-							fAddedConstraint = fnonResolvedAddedConstraint = args.get(arg).toString();
+							tmpAddedConstraint = tmpNonResolvedAddedConstraint = args.get(arg).toString();
+							
+							// SMART UPDATE CHECK
+							if(!constraintChanged){
+								if(currentConstraint instanceof IJavaObjectInstance){
+									IJavaObjectInstance javaConstraint = (IJavaObjectInstance) currentConstraint;
+									if(javaConstraint.getAllocation() instanceof InitStringAllocation){
+										InitStringAllocation alloc = (InitStringAllocation) javaConstraint.getAllocation();
+										constraintChanged = !tmpAddedConstraint.equals(alloc.getInitString());
+									}else
+										constraintChanged = true;
+								}else
+									constraintChanged = true;
+							}
 						} else if (args.get(arg) instanceof NumberLiteral) {
-							indexValueFound = true;
+							tmpIndexValueFound = true;
 							indexValuePosition = arg;
+							
+							// SMART UPDATE CHECK - determine the current index, and see if it has changed?
+							if(fbeanPart!=null && fbeanPart.getEObject()!=null){
+								EStructuralFeature cf = CodeGenUtil.getComponentFeature(fbeanPart.getEObject());
+								java.util.List compList = (java.util.List) fbeanPart.getEObject().eGet(cf);
+								if(compList!=null && compList.contains(currentComponentConstraint)){
+									int currentIndex = compList.indexOf(currentComponentConstraint);
+									int newIndex = Integer.parseInt(args.get(arg).toString());
+									constraintChanged = currentIndex!=newIndex;
+								}
+							}
 						} else if (args.get(arg) instanceof SimpleName) {
 							// A Variable - like a bean name
 							String beanName = ((SimpleName)args.get(arg)).getIdentifier();
-
-							BeanPart cbp =
+							tmpConstraintBeanPart =
 								fbeanPart.getModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
-							if (cbp == null)
-								cbp = fbeanPart.getModel().getABean(beanName);
-							if (cbp != null) {
-								cbp.addBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));
-								fbeanPart.addChild(cbp);
-								fAddedConstraintInstance = (IJavaObjectInstance) cbp.getEObject();
-								fisAddedConstraintSet = fAddedConstraint != null;
-								cbp.addToJVEModel();
+							if (tmpConstraintBeanPart == null)
+								tmpConstraintBeanPart = fbeanPart.getModel().getABean(beanName);
+							
+							// SMART UPDATE CHECK
+							if(!constraintChanged){
+								if(tmpConstraintBeanPart!=null)
+									constraintChanged = (currentConstraint!=tmpConstraintBeanPart.getEObject());
+								else
+									constraintChanged = true;
 							}
 						} else if (args.get(arg) instanceof QualifiedName) {
 							// Something dot separated - like a fqn class name, or a static variable.
@@ -402,61 +446,141 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 							// should become the defaultConstraint if one is not found already.
 							if (!defaultConstraintFound) {
 								defaultConstraintFound = true;
-								fnonResolvedAddedConstraint = args.get(arg).toString();
+								tmpNonResolvedAddedConstraint = args.get(arg).toString();
 								TypeResolver.FieldResolvedType resolvedField = fbeanPart.getModel().getResolver().resolveWithPossibleField((Name)args.get(arg));
 								if (resolvedField != null) {
-									StringBuffer sb = new StringBuffer(fnonResolvedAddedConstraint.length());
+									StringBuffer sb = new StringBuffer(tmpNonResolvedAddedConstraint.length());
 									sb.append(resolvedField.resolvedType.getName());
 									String[] accessors = resolvedField.fieldAccessors;
 									for (int i = 0; i < accessors.length; i++) {
 										sb.append('.');
 										sb.append(accessors[i]);
 									}
-									fAddedConstraint = sb.toString();
+									tmpAddedConstraint = sb.toString();
 								} else
-									fAddedConstraint = fnonResolvedAddedConstraint;
+									tmpAddedConstraint = tmpNonResolvedAddedConstraint;
+								
+								// SMART UPDATE CHECK
+								if(!constraintChanged){
+									if (currentConstraint instanceof IJavaObjectInstance) {
+										IJavaObjectInstance javaConstraint = (IJavaObjectInstance) currentConstraint;
+										if (javaConstraint.getAllocation() instanceof InitStringAllocation) {
+											InitStringAllocation stringAlloc = (InitStringAllocation) javaConstraint.getAllocation();
+											constraintChanged = !stringAlloc.getInitString().equals(tmpAddedConstraint);
+										}else
+											constraintChanged = true;
+									}else
+										constraintChanged = true;
+								}
 							}
 						} else if (args.get(arg) instanceof NullLiteral) {
 							// TODO  Arg index should be consulted
 							defaultConstraintFound = true;
-							fAddedConstraint = fnonResolvedAddedConstraint = null;
+							tmpAddedConstraint = tmpNonResolvedAddedConstraint = null;
+							
+							// SMART UPDATE CHECK
+							if(!constraintChanged){
+								constraintChanged = currentConstraint!=null;
+							}
 						} else if (args.get(arg) instanceof ClassInstanceCreation) {
-							fAddedConstraintInstance = parseAllocatedConstraint((ClassInstanceCreation) args.get(arg));
+							tmpAddedConstraintInstance = parseAllocatedConstraint((ClassInstanceCreation) args.get(arg));
+							
+							// SMART UPDATE CHECK
+							if(!constraintChanged){
+								if(	(currentConstraint!=null && tmpAddedConstraintInstance==null) ||
+									(currentConstraint==null && tmpAddedConstraintInstance!=null))
+										constraintChanged = true;
+								else{
+									// both current and new constraints are not null
+									IJavaObjectInstance javaConstraint = (IJavaObjectInstance) currentConstraint;
+									if (javaConstraint.getAllocation() instanceof ParseTreeAllocation && tmpAddedConstraintInstance.getAllocation() instanceof ParseTreeAllocation) {
+										ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) javaConstraint.getAllocation();
+										ParseTreeAllocation newPTAlloc = (ParseTreeAllocation) tmpAddedConstraintInstance.getAllocation();
+										
+										NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
+										currentPTAlloc.getExpression().accept(flattener);
+										String currentAlloc = flattener.getResult();
+										flattener.reset();
+										
+										newPTAlloc.getExpression().accept(flattener);
+										String newAlloc = flattener.getResult();
+										flattener.reset();
+										constraintChanged=!currentAlloc.equals(newAlloc);
+										if(!constraintChanged && fbeanPart!=null){
+											// problem with interchanging simple var name and class instance creation decl
+											constraintChanged = fbeanPart.getModel().getABean(currentConstraint)!=null;
+										}
+									}else
+										constraintChanged = true; // allocations of both are not PTAllocs - something changed
+								}
+							}
 						}
 				}
 			}
-			try {
-				if (fCC != null)
-					CodeGenUtil.propertyCleanup(fCC, CodeGenUtil.getConstraintFeature(fCC));
-
-				int index = -1;
-				if (indexValueFound)
-					//index = Integer.parseInt((CodeGenUtil.expressionToString(args[indexValuePosition])));
-					index = Integer.parseInt(args.get(indexValuePosition).toString());
-				EObject CC = getNewCC(fbeanPart.getModel().getCompositionModel());
-				if (defaultConstraintFound) {
-					fisAddedConstraintSet = true;
-					// Add the constraint to the added part
-					CodeGenUtil.addConstraintString(
-						fbeanPart.getInitMethod().getCompMethod(),
-						CC,
-						fAddedConstraint,
-						CodeGenUtil.getConstraintFeature(CC),
-						fOwner.getCompositionModel());
-				} else if (fAddedConstraintInstance != null) {
-					CC.eSet(CodeGenUtil.getConstraintFeature(CC), fAddedConstraintInstance);
+			
+			// Smart decoding - we would like to change the EMF model
+			// only if anything has changed, else no point in changing
+			if(addedPartChanged || constraintChanged){
+				
+				// Added part changed - disconnect previous one
+				if(addedPartChanged){
+					fAddedPart = newAddedPart;
+					if (oldAddedPart != null)
+						oldAddedPart.removeBackRef(fbeanPart, true);
 				}
-				if (indexValueFound) {
-					//fAddedIndex = CodeGenUtil.expressionToString(args[indexValuePosition]);
-					fAddedIndex = args.get(indexValuePosition).toString();
+				
+				// Clear all things in EMF
+				clearPreviousIfNeeded();
+				
+				// Apply changes to the values
+				fAddedConstraintInstance = tmpAddedConstraintInstance;
+				fisAddedConstraintSet = tmpIsAddedConstraintSet;
+				fAddedConstraint = tmpAddedConstraint;
+				fnonResolvedAddedConstraint = tmpNonResolvedAddedConstraint;
+				fisAddedConstraintSet = tmpIsAddedConstraintSet;
+				fAddedIndex = tmpAddedIndex;
+				indexValueFound = tmpIndexValueFound;
+				if (tmpConstraintBeanPart != null) {
+					tmpConstraintBeanPart.addBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));
+					fbeanPart.addChild(tmpConstraintBeanPart);
+					fAddedConstraintInstance = (IJavaObjectInstance) tmpConstraintBeanPart.getEObject();
+					fisAddedConstraintSet = fAddedConstraint != null;
+					tmpConstraintBeanPart.addToJVEModel();
 				}
-				// Now add it to the model
-				if (fAddedPart != null)
-					add(CC, fAddedPart, fbeanPart, index);
-				else
-					add(CC, fAddedInstance, fbeanPart, index, true);
-			} catch (Exception e) {
-				throw new CodeGenException(e);
+				
+				try {
+					if (fCC != null)
+						CodeGenUtil.propertyCleanup(fCC, CodeGenUtil.getConstraintFeature(fCC));
+	
+					int index = -1;
+					if (indexValueFound)
+						//index = Integer.parseInt((CodeGenUtil.expressionToString(args[indexValuePosition])));
+						index = Integer.parseInt(args.get(indexValuePosition).toString());
+					EObject CC = getNewCC(fbeanPart.getModel().getCompositionModel());
+					if (defaultConstraintFound) {
+						fisAddedConstraintSet = true;
+						// Add the constraint to the added part
+						CodeGenUtil.addConstraintString(
+							fbeanPart.getInitMethod().getCompMethod(),
+							CC,
+							fAddedConstraint,
+							CodeGenUtil.getConstraintFeature(CC),
+							fOwner.getCompositionModel());
+					} else if (fAddedConstraintInstance != null) {
+						CC.eSet(CodeGenUtil.getConstraintFeature(CC), fAddedConstraintInstance);
+					}
+					if (indexValueFound) {
+						//fAddedIndex = CodeGenUtil.expressionToString(args[indexValuePosition]);
+						fAddedIndex = args.get(indexValuePosition).toString();
+					}
+					// Now add it to the model
+					if (fAddedPart != null)
+						add(CC, fAddedPart, fbeanPart, index);
+					else
+						add(CC, fAddedInstance, fbeanPart, index, true);
+				} catch (Exception e) {
+					throw new CodeGenException(e);
+				}
 			}
 			return true;
 		}
