@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:21 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-29 15:02:05 $ 
  */
 
 import java.util.*;
@@ -842,9 +842,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 				sfConstraintComponent,
 				(IJavaObjectInstance) childEditPart.getModel());
 		if (constraintComponent != null) {
-			// First be sure the cell is unoccupied or is occupied by the same component
-			if (isCellEmpty(endCellLocation.x, endCellLocation.y)
-				|| constraintComponent == getCellOccupant(endCellLocation.x, endCellLocation.y)) {
+			// First be sure the intermediate cells are unoccupied or are occupied by the same component
+			if (checkIntermediateCellsOccupied(constraintComponent, childCellLocation, endCellLocation)) {
 				IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 				if (gridbagconstraint != null) {
 					RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
@@ -867,6 +866,32 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			return UnexecutableCommand.INSTANCE;
 		}
 		return cb.getCommand();
+	}
+
+	/**
+	 * Check that all the cells between the child location and the end location
+	 * are either empty, or occupied by the given constraintComponent.
+	 * 
+	 * @param constraintComponent
+	 * @param childCellLocation
+	 * @param endCellLocation
+	 * @return  true if no other constraints are occupying the intermediate cells, false otherwise
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean checkIntermediateCellsOccupied(EObject constraintComponent, Point childCellLocation, Point endCellLocation) {
+		boolean valid = true;
+		// Check horizontally oriented differences
+		for (int i = childCellLocation.x; valid && i <= endCellLocation.x; i++) {
+			valid = isCellEmpty(i, endCellLocation.y)
+				|| constraintComponent == getCellOccupant(i, endCellLocation.y);
+		}
+		// Check vertically oriented differences
+		for (int i = childCellLocation.y; valid && i <= endCellLocation.y; i++) {
+			valid = isCellEmpty(endCellLocation.x, i)
+				|| constraintComponent == getCellOccupant(endCellLocation.x, i);
+		}
+		return valid;
 	}
 
 	/* (non-Javadoc)
