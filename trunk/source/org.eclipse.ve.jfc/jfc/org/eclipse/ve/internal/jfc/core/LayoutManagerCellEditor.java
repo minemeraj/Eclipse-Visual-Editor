@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-01 21:25:17 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-20 09:04:47 $ 
  */
 
 import java.util.ArrayList;
@@ -23,9 +23,12 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
 
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.IJavaCellEditor;
@@ -33,17 +36,18 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
+import org.eclipse.ve.internal.propertysheet.ISourced;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 /**
  * The method createItems shows a list of available layout manager classes from which the 
  * user can pick one.
  */
-public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData {
+public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData , ISourced {
 	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.jfc.core.LayoutManagerCellEditor";
 	public static final int CLASSNAMES_INDEX = 0;
 	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
-	
+	protected IJavaObjectInstance container;
 	
 /**
  * This method shows a list of available layout manager classes from which the 
@@ -64,7 +68,7 @@ protected Object doGetObject(int index) {
 	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
 	ILayoutPolicyFactory factory =
 		BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger((EClassifier) javaClass, fEditDomain);
-	return factory.getLayoutManagerInstance(javaClass, rset);
+	return factory.getLayoutManagerInstance(container, javaClass, rset);
 }
 
 protected int doGetIndex(Object anObject){
@@ -170,5 +174,9 @@ public void setData(Object data){
 			}
 		}
 		return layoutManagerLists;
+	}
+	
+	public void setSources(Object[] sources, IPropertySource[] propertySources, IPropertyDescriptor[] descriptors) {
+		container = (IJavaObjectInstance) sources[0];
 	}
 }

@@ -11,15 +11,14 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-20 09:04:04 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaHelpers;
 
 /**
@@ -58,8 +57,10 @@ IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstra
 /**
  * Return a default LayoutManager instance. 
  * Used by the LayoutManagerCellEditor. The javaclass allows subclasses to be created too.
+ * The container argument is because some layout manager construction (such as BorderLayout) requires
+ * the actual parent container to be passed in
  */
-IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset);
+IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset);
 }
 
 

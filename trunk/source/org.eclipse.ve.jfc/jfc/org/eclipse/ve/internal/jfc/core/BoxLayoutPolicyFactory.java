@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutPolicyFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-20 09:04:47 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
@@ -47,23 +47,46 @@ public class BoxLayoutPolicyFactory implements ILayoutPolicyFactory {
 	}
 
 	/**
-	 * Hack for now since we can't set a property for Axis on a boxlayout. 
-	 * There are two possible BoxLayout's in the layout dropdown list. One for
+	 * Since we can't set a property for Axis on a boxlayout. 
+	 * there are two possible BoxLayout's in the layout dropdown list. One for
 	 * each possible axis orientation. A special object is used for each. 
-	 * Use the type of object to determine the initialization string for the
-	 * ctor of the BoxLayout.
+	 * Use the type of object to determine the parse tree allocation for the
+	 * correct construction of the BoxLayout.
 	 */
-	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
-		JavaHelpers boxLayoutJavaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$
-		String initString = "new javax.swing.BoxLayout(,javax.swing.BoxLayout."; //$NON-NLS-1$
-		String javaClassName = ((JavaClass) javaClass).getName();
-		if (javaClassName.equals("BoxLayoutX_Axis")) { //$NON-NLS-1$
-			initString += "X_AXIS)"; //$NON-NLS-1$
-		} else if (javaClassName.equals("BoxLayoutY_Axis")) { //$NON-NLS-1$
-			initString += "Y_AXIS)"; //$NON-NLS-1$
+	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
+		// The parse tree allocation for the object must be correct to allow for instantiation of the BoxLayout instance
+		// that needs the container constructor argument
+		// <allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+		//   <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="javax.swing.BoxLayout"/>
+  	    //     <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTInstanceReference" object=(..container...)/>
+	    //     <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="X_AXIS>
+	    //       <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="javax.swing.BoxLayout"/>
+	    //     </arguments>
+	    //   </expression>	  			
+		// </allocation>
+
+		// Class Creation tree - new javax.swing.BoxLayout()
+		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
+		ic.setType("javax.swing.BoxLayout") ;
+		
+		// set the arguments
+		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
+		ir.setObject(container) ;	
+		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("javax.swing.BoxLayout") ;
+		if (javaClass.getName().equals("BoxLayoutY_Axis")) { //$NON-NLS-1$
+			fa.setField("Y_AXIS"); //$NON-NLS-1$ 
 		} else {
-			initString += "X_AXIS)";	// default to X_AXIS //$NON-NLS-1$
-		}
-		return BeanUtilities.createJavaObject(boxLayoutJavaClass, rset, initString);
+			fa.setField("X_AXIS");	// default to X_AXIS //$NON-NLS-1$
+		}		
+		fa.setReceiver(name) ;
+			
+		ic.getArguments().add(ir);
+		ic.getArguments().add(fa) ;
+		
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);	
+		JavaHelpers boxLayoutJavaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$		
+		
+		return BeanUtilities.createJavaObject(boxLayoutJavaClass, rset, alloc);
 	}
 }

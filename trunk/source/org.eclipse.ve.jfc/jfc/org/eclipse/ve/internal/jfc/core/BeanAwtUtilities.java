@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-02 19:34:38 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-20 09:05:28 $ 
  */
 
 import java.util.List;
@@ -455,7 +455,7 @@ public static boolean getBoxLayoutAxis(IBeanProxy boxlayoutProxy) {
 	
 	if (constants.getBoxLayoutAxisFieldProxy == null) {
 		IBeanTypeProxy boxlayoutType = boxlayoutProxy.getTypeProxy();
-		constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getFieldProxy("axis");
+		constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getDeclaredFieldProxy("axis");
 		try {
 			constants.getBoxLayoutAxisFieldProxy.setAccessible(true);
 			constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null);
