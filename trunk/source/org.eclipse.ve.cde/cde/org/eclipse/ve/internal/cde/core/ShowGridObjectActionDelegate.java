@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowGridObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 16:35:58 $ 
+ *  $Revision: 1.1 $  $Date: 2004-04-28 15:57:51 $ 
  */
 
 import org.eclipse.gef.EditPart;
@@ -21,8 +21,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.ShowGridAction;
 
 public class ShowGridObjectActionDelegate implements IObjectActionDelegate {
 	protected ShowGridAction sgAction;
