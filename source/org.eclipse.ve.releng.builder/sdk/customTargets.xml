@@ -161,11 +161,11 @@
 
 <target name="getBaseInit">
 	<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
-	<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg"/>	
+	<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg"/>
 </target>
 
 <target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-	<get src="${eclipseZipURL}" dest="${buildDirectory}/../eclipse-SDK.zip" usetimestamp="true"/>
+	<get src="${eclipseWin32ZipURL}" dest="${buildDirectory}/../eclipse-SDK.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq eclipse-SDK.zip"/>
    	</exec>
