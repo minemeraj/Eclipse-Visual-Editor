@@ -10,15 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventSrcGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-24 20:35:00 $ 
+ *  $Revision: 1.3 $  $Date: 2003-12-01 18:37:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.*;
 
-import org.eclipse.ve.internal.java.codegen.java.PropertyChangeInvocationHelper;
-import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.jem.internal.java.*;
+
+import org.eclipse.ve.internal.jcm.*;
 
 /**
  * @author Gili Mendel
