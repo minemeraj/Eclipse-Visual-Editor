@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-03-26 23:07:38 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2004-07-12 21:54:12 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -107,8 +107,22 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 	private Adapter containerAdapter = new EditPartAdapterRunnable() {
 
 		public void run() {
-			if (isActive())
-				refreshChildren();		
+			if (isActive()) {
+				refreshChildren();
+				// Now we need to run through the children and set the Property source correctly.
+				// This is needed because the child could of been removed and then added back in with
+				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
+				// doesn't see the child as being different so it doesn't create a new child editpart, and
+				// so we don't get the new property source that we should. We didn't keep a record of which
+				// one changed, so we just touch them all.
+				List children = getChildren();
+				int s = children.size();
+				for (int i = 0; i < s; i++) {
+					EditPart ep = (EditPart) children.get(i);
+					if (ep instanceof ComponentGraphicalEditPart) 
+						setPropertySource((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+				}
+			}
 		}
 		
 		public void notifyChanged(Notification notification) {
@@ -148,9 +162,11 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 	}
 
 	protected void setPropertySource(ComponentGraphicalEditPart childEP, EObject child) {
-		childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter.getFirstReferencedBy(child,
-				sf_constraintComponent), IPropertySource.class)); // This is the property source of the actual model which is part of the
-		// constraintComponent.
+		EObject componentConstraintObject = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_containerComponents, sf_constraintComponent, child);
+		if (componentConstraintObject != null)
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(componentConstraintObject, IPropertySource.class)); // This is the property source of the actual model which is part of the constraintComponent.
+		else
+			childEP.setPropertySource(null);	// No CC.
 	}
 
 	/*

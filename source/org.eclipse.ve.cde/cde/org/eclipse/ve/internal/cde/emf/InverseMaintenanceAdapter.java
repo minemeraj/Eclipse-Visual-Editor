@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-12 21:54:11 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -130,6 +130,21 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(object, InverseMaintenanceAdapter.ADAPTER_KEY);
 		return ai != null ? ai.getReferencedBy(feature) : EMPTY_EOBJECTS;
 	}
+	
+	/**
+	 * Internal static helper for efficient access to backrefs, but result requires interpretation. Used by public
+	 * accessors.
+	 * 
+	 * @param object
+	 * @param feature
+	 * @return <code>null</code> if no references, <code>EObject</code> if only one reference, <code>List</code> of WeakReferences if more than one.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected static Object getInternalReferencedBy(Notifier object, EReference feature) {
+		InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(object, InverseMaintenanceAdapter.ADAPTER_KEY);
+		return ai != null ? ai.getInternalReferencedBy(feature) : null;
+	}
 
 	/**
 	 * Static helper to get InverseMaintenanceAdapter and
@@ -157,25 +172,49 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	 * @param ref2 The reference from intermediate to target (this ref must be a shared ref).
 	 * @param target The object to back track from.
 	 * 
-	 * @return The intermediate object. null if no intermediate is found.
+	 * @return The intermediate object. <code>null</code> if no intermediate is found.
 	 */
 	public static EObject getIntermediateReference(EObject source, EReference ref1, EReference ref2, Notifier target) {
 		Object ref1s = null;
 		// If ref1 is containment, it is quicker to check eContainmentFeature for the searched for then to do a contains against
 		// all of the ref1 settings from source.
-		if (!ref1.isContainment()) 
+		boolean ref1IsContainment = ref1.isContainment(); 
+		if (!ref1IsContainment) 
 			ref1s = source.eGet(ref1);
-		EObject[] backRefs = getReferencedBy(target, ref2);
-		for (int i = 0; i < backRefs.length; i++) {
-			EObject i1 = backRefs[i];
-			if (ref1.isContainment()) {
-				if (i1.eContainmentFeature() == ref1)
-					return i1;
+		Object backRefs = getInternalReferencedBy(target, ref2);
+		if (backRefs == null)
+			return null;
+		else if (backRefs instanceof EObject) {
+			if (ref1IsContainment) {
+				if (((EObject) backRefs).eContainmentFeature() == ref1)
+					return (EObject) backRefs;
 			} else if (ref1s instanceof List) {
-				if (((List) ref1s).contains(i1))
+				if (((List) ref1s).contains(backRefs))
+					return (EObject) backRefs;
+			} else if (backRefs == ref1s)
+				return (EObject) backRefs;				
+			return null;
+		} else {
+			List l = (List) backRefs;
+			int s = l.size();
+			for (int i = 0; i < s; i++) {
+				WeakReference w = (WeakReference) l.get(i);
+				EObject i1 = (EObject) w.get();
+				if (i1 == null) {
+					// Been GC'd. Get rid of it.
+					l.remove(i);
+					s--;
+					continue;
+				}
+				if (ref1IsContainment) {
+					if (i1.eContainmentFeature() == ref1)
+						return i1;
+				} else if (ref1s instanceof List) {
+					if (((List) ref1s).contains(i1))
+						return i1;
+				} else if (i1 == ref1s)
 					return i1;
-			} else if (i1 == ref1s)
-				return i1;
+			}
 		}
 		
 		return null;
@@ -226,41 +265,82 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	 * @return List of objects referencing this object through the feature.
 	 */
 	public EObject[] getReferencedBy(EReference feature) {
-		if (backRefs == null)
+		Object eos = getInternalReferencedBy(feature);
+		if (eos == null)
 			return EMPTY_EOBJECTS;
+		else if (eos instanceof List) {
+			List l = (List) eos;
+			// We know list is an ArrayList, so direct access is more efficient than iterator.
+			int s = l.size();
+			ArrayList tList = new ArrayList(s);
+			for (int i=0; i<s; i++) {
+				WeakReference wr = (WeakReference) l.get(i);
+				if (wr.get() != null)
+					tList.add(wr.get());
+				else {
+					// Get it out of the list, has been GC'd
+					l.remove(i);
+					s--;	// Since one smaller now.
+				}
+			}
+			return !tList.isEmpty() ? (EObject[]) tList.toArray(new EObject[tList.size()]) : EMPTY_EOBJECTS;
+
+		} else 
+			return new EObject[] {(EObject) eos};
+	}
+
+	/**
+	 * An internal one that is efficient access but requires interpretation. Used by the
+	 * main public accessers.
+	 * 
+	 * @param feature
+	 * @return <code>null</code> if no references, <code>EObject</code> if only one reference, <code>List</code> of WeakReferences if more than one.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected Object getInternalReferencedBy(EReference feature) {
+		if (backRefs == null)
+			return null;
 		else {
 			Object refs = backRefs.get(feature);
 			if (refs == null)
-				return EMPTY_EOBJECTS;
+				return null;
 			else if (refs instanceof WeakReference)
-				return ((WeakReference) refs).get() != null ? new EObject[] { (EObject) ((WeakReference) refs).get() } : EMPTY_EOBJECTS;
+				return ((WeakReference) refs).get();
 			else if (((List) refs).isEmpty())
-				return EMPTY_EOBJECTS;
+				return null;
 			else {
-				List l = (List) refs;
-				ArrayList tList = new ArrayList(l.size());
-				Iterator itr = l.iterator();
-				while (itr.hasNext()) {
-					WeakReference wr = (WeakReference) itr.next();
-					if (wr.get() != null)
-						tList.add(wr.get());
-					else
-						itr.remove();	// Get it out of the list
-				}
-				return !tList.isEmpty() ? (EObject[]) tList.toArray(new EObject[tList.size()]) : EMPTY_EOBJECTS;
+				return refs;
 			}
 		}
 	}
-	
+
 	/**
 	 * A simple helper to get just the first back reference for a feature.
 	 * 
 	 * @param feature The feature looked for.
-	 * @return First object referencing this object through the feature. null is none are.
+	 * @return First object referencing this object through the feature. <code>null</code> if none are.
 	 */
 	public EObject getFirstReferencedBy(EReference feature) {
-		EObject[] eos = getReferencedBy(feature);
-		return eos.length > 0 ? eos[0] : null;
+		Object eos = getInternalReferencedBy(feature);
+		if (eos == null)
+			return null;
+		else if (eos instanceof List) {
+			// Some may of been GC'd, so walk to find first non-GC'd.
+			List l = (List) eos;
+			// We know the list is an ArrayList, so more efficient to use direct access then use an iterator.
+			int s = l.size();
+			for (int i = 0; i < s; i++) {
+				WeakReference w = (WeakReference) l.get(i);
+				if (w.get() != null)
+					return (EObject) w.get();
+				// Been GC'd, get rid of it.
+				l.remove(i);
+				s--;	// One less now.
+			}
+			return null;	// All were gone.
+		} else 
+			return (EObject) eos;
 	}
 	
 	private static final EReference[] EMPTY_FEATURES = new EReference[0];

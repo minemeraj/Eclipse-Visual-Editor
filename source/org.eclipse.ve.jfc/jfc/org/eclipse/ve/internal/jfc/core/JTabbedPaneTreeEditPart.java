@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-07-12 21:54:12 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -52,8 +52,22 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	private Adapter containerAdapter = new EditPartAdapterRunnable() {
 		public void run() {
-			if (isActive())
+			if (isActive()) {
 				refreshChildren();
+				// Now we need to run through the children and set the Property source correctly.
+				// This is needed because the child could of been removed and then added back in with
+				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
+				// doesn't see the child as being different so it doesn't create a new child editpart, and
+				// so we don't get the new property source that we should. We didn't keep a record of which
+				// one changed, so we just touch them all.
+				List children = getChildren();
+				int s = children.size();
+				for (int i = 0; i < s; i++) {
+					EditPart ep = (EditPart) children.get(i);
+					if (ep instanceof ComponentTreeEditPart) 
+						setPropertySource((ComponentTreeEditPart) ep, (EObject) ep.getModel());
+				}
+			}
 		}
 
 		public void notifyChanged(Notification notification) {
@@ -74,9 +88,7 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		((ComponentTreeEditPart) ep).setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter
-				.getFirstReferencedBy((EObject) model, sfComponent), IPropertySource.class)); // This is the property source of the actual model
-																							  // which is part of the constraintComponent.
+		setPropertySource((ComponentTreeEditPart) ep, (EObject) model);
 		// keep the following for the future so we can show the tab title in the beans viewer.
 		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator());
 		return ep;
@@ -111,4 +123,13 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		sfTabs = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABBEDPANE_TABS);
 		sfComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_COMPONENT);
 	}
+	
+	protected void setPropertySource(ComponentTreeEditPart childEP, EObject child) {
+		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sfTabs, sfComponent, child);
+		// This is the property source of the actual child, which is the tab.
+		if (tab != null)
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
+		else
+			childEP.setPropertySource(null);
+	}	
 }
