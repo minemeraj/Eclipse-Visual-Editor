@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2004-10-12 20:45:07 $ 
+ *  $Revision: 1.27 $  $Date: 2004-10-13 16:20:21 $ 
  */
 
 import java.util.Iterator;
@@ -31,7 +31,6 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
@@ -50,21 +49,6 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		IJavaFeatureMapper fm,
 		IExpressionDecoder owner) {
 		super(bean, exp, fm, owner);
-	}
-
-	/**
-	 *  Figure out what is the initialization string for an attribute
-	 */
-	protected String getInitString(Expression arg, EStructuralFeature sf) {
-		if (arg instanceof NullLiteral)
-			return null;
-		else if (arg instanceof StringLiteral) {
-			String val = ((StringLiteral)arg).getLiteralValue();
-			return (BeanUtilities.createStringInitString(val));
-		} else {
-			// TODO  Need more thinking
-			return arg.toString();
-		}
 	}
 
 	public int getSFPriority() {
