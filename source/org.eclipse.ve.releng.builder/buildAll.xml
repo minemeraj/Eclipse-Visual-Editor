@@ -14,7 +14,7 @@
 				<isset property="ftpUser"/>
 				<isset property="ftpPassword"/>
 				<not>
-					<isset property="nopush"/>
+					<isset property="rsyncPWFile"/>
 				</not>
 			</and>
 		</condition>
@@ -27,10 +27,7 @@
 		<condition property="rsyncpush">
 			<and>
 				<not>
-					<or>
-						<isset property="ftppush"/>
-						<isset property="nopush"/>
-					</or>
+					<isset property="ftppush"/>
 				</not>
 				<isset property="rsyncPWFile"/>
 			</and>
@@ -111,7 +108,7 @@
 	</target>
 	
 
-	<target name="test" depends="init">
+	<target name="test" unless="notest" depends="init">
 		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
 		<!--<parallel>-->
 
@@ -172,7 +169,7 @@
 	<target name="push" depends="init,pushftp,pushrsync">
 	</target>
 	
-	<target name="pushftp" if="ftppush">
+	<target name="pushftp" unless="nopush" if="ftppush">
 		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 		<echo message="FTP to: ${remoteDirectory}/${buildLabel}"/>	
 	  	<ftp server="download.eclipse.org"
@@ -194,7 +191,7 @@
 		
 	</target>
 		
-	<target name="pushrsync" if="rsyncpush">
+	<target name="pushrsync" unless="nopush" if="rsyncpush">
 		<property name="remoteDirectory" value="downloads/drops"/>
 		<echo message="RSYNC to: ${remoteDirectory}/${buildLabel}"/>
 		<!-- Need to get permissions correct so that Webserver will work. -->
@@ -256,7 +253,7 @@
 
 	</target>
 	
-	<target name="pushupdatesite" if="rsyncpush" depends="init">
+	<target name="pushupdatesite" if="rsyncpush" unless="nopush" depends="init">
 		<echo message="Push the update site to the download site."/>
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
