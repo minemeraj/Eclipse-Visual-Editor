@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-17 19:12:55 $ 
+ *  $Revision: 1.12 $  $Date: 2004-07-13 16:20:37 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -121,10 +121,7 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	 */
 	protected void initialFeatureMapper(EStructuralFeature sf) {
 		// If setBounds() or setSize() on composite, reduce its priority as re-lays out its children
-		EStructuralFeature boundsSF = fbeanPart.getEObject().eClass().getEStructuralFeature(ISWTFeatureMapper.COMPOSITE_BOUNDS_FEATURE_NAME);
-		EStructuralFeature sizeSF = fbeanPart.getEObject().eClass().getEStructuralFeature(ISWTFeatureMapper.COMPOSITE_SIZE_FEATURE_NAME);
-		if(		(boundsSF!=null && boundsSF.equals(sf)) ||
-				(sizeSF!=null && sizeSF.equals(sf))){
+		if(	sf!=null && ( ISWTFeatureMapper.COMPOSITE_SIZE_FEATURE_NAME.equals(sf.getName()) || ISWTFeatureMapper.COMPOSITE_BOUNDS_FEATURE_NAME.equals(sf.getName()))){
 			fFeatureMapper = new CompositePropertyFeatureMapper();
 			fFeatureMapper.setFeature(sf);
 		}else
