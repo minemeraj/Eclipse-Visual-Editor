@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-24 23:23:39 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-02 20:41:41 $ 
  */
 
 
@@ -881,7 +881,7 @@ public void init(IEditorSite site, IEditorInput input)
 {
 	// Check input.
 	if (!(input instanceof IFileEditorInput))
-		throw new PartInitException(MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] {input.getName()}));
+		throw new PartInitException(MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] {input.getName()})); //$NON-NLS-1$
 
 	// Save input.
 	setSite(site);
@@ -1234,7 +1234,7 @@ protected void save(IProgressMonitor monitor) {
 		
 	WorkspaceModifyOperation op= new WorkspaceModifyOperation() {	
 		public void execute(final IProgressMonitor monitor) throws CoreException {		
-			monitor.beginTask(CDEMessages.getString("SAVING_UI_"), 2000);
+			monitor.beginTask(CDEMessages.getString("SAVING_UI_"), 2000); //$NON-NLS-1$
 			try {		
 				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -1245,13 +1245,13 @@ protected void save(IProgressMonitor monitor) {
 					}
 					fResource.save(os, XML_TEXT_OPTIONS);
 				} catch (Exception e) {
-					throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
+					throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		 //$NON-NLS-1$
 				}
 				monitor.worked(1000);
 				InputStream stream= new ByteArrayInputStream(os.toByteArray());
 				file.setContents(stream, false, true, new SubProgressMonitor(monitor, 1000));				
 			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), e));
+				throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), e)); //$NON-NLS-1$
 			}
 			setDirty(false);
 			monitor.done();
@@ -1267,7 +1267,7 @@ protected void save(IProgressMonitor monitor) {
 		if (eReal instanceof CoreException) {
 			status = ((CoreException) eReal).getStatus();
 		} else {
-			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), eReal);
+			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {fResource.getURI().toString()}), eReal); //$NON-NLS-1$
 		}
 		CDEPlugin.getPlugin().getLog().log(status);
 		showErrorMessage(status.getMessage());
@@ -1307,7 +1307,7 @@ protected boolean performSaveAs(){
 
 	WorkspaceModifyOperation op= new WorkspaceModifyOperation() {
 		public void execute(final IProgressMonitor monitor) throws CoreException {
-			monitor.beginTask(CDEMessages.getString("SAVING_AS_UI_"), 2000);
+			monitor.beginTask(CDEMessages.getString("SAVING_AS_UI_"), 2000); //$NON-NLS-1$
 			saveAs(new SubProgressMonitor(monitor,1000), file, fResource);
 			setInput(new FileEditorInput(file));
 			monitor.done();			
@@ -1323,7 +1323,7 @@ protected boolean performSaveAs(){
 		if (eReal instanceof CoreException) {
 			status = ((CoreException) eReal).getStatus();
 		} else {
-			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {path.toString()}), eReal);
+			status = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {path.toString()}), eReal); //$NON-NLS-1$
 		}
 		CDEPlugin.getPlugin().getLog().log(status);
 		showErrorMessage(status.getMessage());
@@ -1337,7 +1337,7 @@ protected void saveAs(IProgressMonitor monitor, IFile file, Resource resource) t
 	try {
 		resource.save(os, XML_TEXT_OPTIONS);
 	} catch (Exception e) {
-		throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		
+		throw new CoreException(new Status(IStatus.ERROR, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, MessageFormat.format(CDEMessages.getString("SAVE_FAIL_ERROR_"), new Object[] {file.getFullPath().toString()}), e));		 //$NON-NLS-1$
 	}
 	
 	InputStream stream= new ByteArrayInputStream(os.toByteArray());
@@ -1424,7 +1424,7 @@ protected void initializeWithNewRoot(EObject newModel){
 
 protected void showErrorMessage( String message ) {
 	Shell shell= getSite().getShell();
-	MessageDialog.openError(shell, CDEMessages.getString("ERROR_TITLE_UI_"), message);
+	MessageDialog.openError(shell, CDEMessages.getString("ERROR_TITLE_UI_"), message); //$NON-NLS-1$
 }
 
 // This method is mainly a result of code-factoring.  Also, there was a need to call

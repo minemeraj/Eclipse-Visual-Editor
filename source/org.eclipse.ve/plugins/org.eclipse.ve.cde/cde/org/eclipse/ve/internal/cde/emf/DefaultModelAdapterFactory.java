@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultModelAdapterFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 20:41:41 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -89,7 +89,7 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 			return adapter;
 		} catch (Exception e) {
 			String message =
-				java.text.MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { classString });
+				java.text.MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { classString }); //$NON-NLS-1$
 			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 			CDEPlugin.getPlugin().getLog().log(s);
 			return null;
@@ -122,7 +122,7 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 			return editpart;
 		} catch (Exception e) {
 			String message =
-				java.text.MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { epClassString });
+				java.text.MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { epClassString }); //$NON-NLS-1$
 			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 			CDEPlugin.getPlugin().getLog().log(s);
 			return null;

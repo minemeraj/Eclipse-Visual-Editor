@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-24 23:23:39 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-02 20:41:41 $ 
  */
 
 import java.net.URL;
@@ -264,7 +264,7 @@ public class ClassDescriptorDecoratorPolicy {
 					 ((INeedData) provider).setData(editDomain);
 				return provider;
 			} catch (Exception exc) {
-				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz });
+				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz }); //$NON-NLS-1$
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
 			}
 		} catch (ClassNotFoundException e) {

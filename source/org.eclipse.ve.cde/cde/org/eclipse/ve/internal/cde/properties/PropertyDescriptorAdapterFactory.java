@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyDescriptorAdapterFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-24 23:23:39 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 20:43:22 $ 
  */
 
 import java.text.MessageFormat;
@@ -134,7 +134,7 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 			try {
 				return (Adapter) CDEPlugin.createInstance(null, cname);
 			} catch (Exception e) {
-				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { cname });
+				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { cname }); //$NON-NLS-1$
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 			}
 		}
@@ -151,7 +151,7 @@ public class PropertyDescriptorAdapterFactory extends AdapterFactoryImpl {
 					} catch (CoreException e) {
 						String msg =
 							MessageFormat.format(
-								CDEMessages.getString("Object.noinstantiate_EXC_"),
+								CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
 								new Object[] { fTypes[i].fConfigElement.getAttributeAsIs(CDEPlugin.ADAPTER_CLASS)});
 						CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 					}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: DecoratedPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-04 22:31:15 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-02 20:43:22 $ 
  */
 
 import java.text.MessageFormat;
@@ -147,7 +147,7 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 			} catch (Exception e) {
 				String msg =
 					MessageFormat.format(
-						CDEMessages.getString("Object.noinstantiate_EXC_"),
+						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
 						new Object[] { decorator.getCellEditorValidatorClassnames()});
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 			}
@@ -173,7 +173,7 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 			} catch (Exception e) {
 				String msg =
 					MessageFormat.format(
-						CDEMessages.getString("Object.noinstantiate_EXC_"),
+						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
 						new Object[] { bdec.getCellEditorValidatorClassnames()});
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 			}

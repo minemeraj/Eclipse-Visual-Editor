@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ToolEntryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 20:42:29 $ 
  */
 import java.text.MessageFormat;
 
@@ -99,10 +99,10 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 		try {
 			return (Tool) CDEPlugin.createInstance(null, toolClassName);
 		} catch (InstantiationException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { toolClassName });
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { toolClassName }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		} catch (ClassCastException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { toolClassName, Tool.class });
+			String msg = MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { toolClassName, Tool.class }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		} catch (Exception e) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
