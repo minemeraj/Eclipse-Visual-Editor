@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-09 12:05:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -81,9 +81,13 @@ protected void processAMessageSend() {
     else {
 		EventSetDecorator ed = null;    
 		for (int i = 0; i < fEventSigs.size(); i++) {
-			if (((EventSetDecorator) fEventSigs.get(i)).getAddListenerMethod().getName().equals(selector)) {
-				ed = (EventSetDecorator) fEventSigs.get(i);
-				break;
+			try {
+				if (((EventSetDecorator) fEventSigs.get(i)).getAddListenerMethod().getName().equals(selector)) {
+					ed = (EventSetDecorator) fEventSigs.get(i);
+					break;
+				}
+			} catch (NullPointerException e) {
+				// In case of Introspection error, continue
 			}
 		}
 		if (ed == null) {			
