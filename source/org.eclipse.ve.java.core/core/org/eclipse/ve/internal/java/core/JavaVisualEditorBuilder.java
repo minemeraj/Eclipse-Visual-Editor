@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2005-01-21 21:20:55 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-31 22:06:20 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -35,10 +35,10 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 	IPath	currentProjectPath = null;
 	IProgressMonitor currentMonitor = null;
 	
-	protected File getCacheDirectory() {
+	protected File getModelCacheDirectory() {
 		if (cacheDir!=null)
 			return cacheDir;
-		cacheDir = JavaVEPlugin.VE_CACHE_DESTINATION.toFile();
+		cacheDir = JavaVEPlugin.getEMFModelCacheDestination(getProject()).toFile();
 		return cacheDir;
 	}
 	protected File getJetDirectory() {
@@ -90,7 +90,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		return target.toFile();
 	}
 	protected boolean  cleanMetaDirectory(IPath root, boolean delRoot) {
-			return deleteDirectoryConntent(appendProjectPath(getCacheDirectory(),root),delRoot);			
+			return deleteDirectoryConntent(appendProjectPath(getModelCacheDirectory(),root),delRoot);			
 	}
 	protected void processDelta(IResourceDelta delta) {
 		if (delta!=null) {
@@ -150,7 +150,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 	 * @since 1.1.0
 	 */
 	protected void cleanStale() {
-		File root = getCacheDirectory();
+		File root = getModelCacheDirectory();
 		HashMap map = new HashMap();
 		if (root.canRead()) {
 		   try {
@@ -193,8 +193,11 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		   cleanMetaDirectory(currentProjectPath,false);
 		   // this is an over kill, but will take it on a clean
 		   deleteDirectoryConntent(getJetDirectory(),false);
-		   // It is possble that projects were deleted while closed... left over cache
-		   cleanStale();
+//         Project cache are stored in the IProject.getWorkingLocation(JavaVEPlugin.id)
+//		   When a project is deleted, The workingLocation will be removed automatically
+//		   so we do not need to waste time cleaning stale on a clean.		   
+//		   // It is possble that projects were deleted while closed... left over cache
+//		   cleanStale();
 		}
 		monitor.done();
 		currentProjectPath=null;
