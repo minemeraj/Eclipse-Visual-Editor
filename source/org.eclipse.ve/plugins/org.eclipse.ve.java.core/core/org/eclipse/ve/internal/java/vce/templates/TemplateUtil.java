@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-04 16:04:27 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -35,10 +35,6 @@ public class TemplateUtil {
     private final static HashMap fClassPathMap = new HashMap() ;  // cache class path
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
     private static List fPlatformJRE = null ;
-	
-	static public boolean isDevMode(IPluginDescriptor desc) {
-		return BootLoader.inDevelopmentMode();
-	}
 	
 	/**
 	 * This will return the absolute class path associated with a Plugin
@@ -76,19 +72,21 @@ public class TemplateUtil {
 				
 		IPluginDescriptor desc = Platform.getPlugin(plugin).getDescriptor();
 		ArrayList list = new ArrayList();
-		if (!isDevMode(desc)) {
-			// Pick up the Jars
-			ILibrary[] lib = desc.getRuntimeLibraries();			
-			for (int i = 0; i < lib.length; i++) {
-				String names[] = ProxyPlugin.getPlugin().localizeFromPluginDescriptorAndFragments(desc, lib[i].getPath().toString());
-				if (names == null || names.length == 0)
-					continue;
+		// Pick up the Jars
+		ILibrary[] lib = desc.getRuntimeLibraries();			
+		for (int i = 0; i < lib.length; i++) {
+			String names[] = ProxyPlugin.getPlugin().localizeFromPluginDescriptorAndFragments(desc, lib[i].getPath().toString());
+			if (names.length > 0) {
 				// pickup the first one in line				
 				list.add(getCorrectPath(names[0]));
+			} else {
+				// Not found nor is there an override to tell where to look. Maybe in dev
+				// mode, so add bin to be safe. then break out of loop because if first runtime
+				// was not found, then the rest wouldn't be found either because this would be a plugin error.
+				list.add(getCorrectPath(ProxyPlugin.getPlugin().localizeFromPluginDescriptor(desc, "bin")));
+				break;
 			}
 		}
-		else
-			list.add(getCorrectPath(ProxyPlugin.getPlugin().localizeFromPluginDescriptor(desc, "bin"))); //$NON-NLS-1$
 	    fClassPathMap.put(plugin,list) ;
 		return list;
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaConfigurationContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-04 16:04:27 $ 
  */
 
 import java.util.*;
@@ -19,9 +19,9 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -52,13 +52,10 @@ public class JavaConfigurationContributor implements IConfigurationContributor {
 	 * the common code that is required by any VM for proxy
 	 * support.
 	 */
-	public void contributeClasspaths(List classPaths, IClasspathContributionController controller)
+	public void contributeClasspaths(IConfigurationContributionController controller)
 		throws CoreException {
 		// Add in the remote vm jar and any nls jars that is required for JBCF itself.
-		controller.contributeClasspath(
-			ProxyPlugin.getPlugin().urlLocalizeFromPluginDescriptorAndFragments(JavaVEPlugin.getPlugin().getDescriptor(), "vm/javaremotevm.jar"), //$NON-NLS-1$
-			classPaths,
-			-1);
+		controller.contributeClasspath(JavaVEPlugin.getPlugin(), "vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
 
 		// Need to find any additional contributors.
 		HashSet visitedProjects = new HashSet();
@@ -81,7 +78,7 @@ public class JavaConfigurationContributor implements IConfigurationContributor {
 
 			itr.set(contrib); // Set to what should be used, null is valid for not found.
 			if (contrib != null)
-				contrib.contributeClasspaths(classPaths, controller);
+				contrib.contributeClasspaths( controller);
 			String pcat = v.getAttributeAsIs(JavaVEPlugin.PI_PALETTECATS); //$NON-NLS-1$
 			if (pcat != null && pcat.length() > 0) {
 				if (paletteCats == null)
@@ -186,11 +183,20 @@ public class JavaConfigurationContributor implements IConfigurationContributor {
 			variableContributors.add(registrations[i]);
 	}
 
-	public void contributeToConfiguration(VMRunnerConfiguration config) {
+	public void contributeToConfiguration(final ILaunchConfigurationWorkingCopy config) {
 		for (int i = 0; i < variableContributors.size(); i++) {
-			IConfigurationContributor contrib = (IConfigurationContributor) variableContributors.get(i);
-			if (contrib != null)
-				contrib.contributeToConfiguration(config);
+			final int ii = i;
+			Platform.run(new ISafeRunnable() {
+				public void handleException(Throwable exception) {
+					// don't do anything because default is logged by platform
+				}
+
+				public void run() throws Exception {
+					IConfigurationContributor contrib = (IConfigurationContributor) variableContributors.get(ii);
+					if (contrib != null)
+						contrib.contributeToConfiguration(config);
+				}
+			});
 		}
 	}
 
