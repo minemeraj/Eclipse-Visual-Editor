@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -43,8 +43,8 @@ CompilationUnit				fastDom ;
 List						fEventSigs ;
 	
 
-EventExpressionVisitor(BeanPart b, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
-	super((ASTNode)stmt,model,null) ;	
+public void initialize(BeanPart b, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
+	super.initialize((ASTNode)stmt,model,null) ;	
 	fMethod = b.getInitMethod() ;
 	fBean = b ;
 	fExpression = new CodeEventRef (stmt,fMethod, dom) ;
@@ -52,8 +52,8 @@ EventExpressionVisitor(BeanPart b, Statement stmt,IBeanDeclModel model, List eSi
 	fEventSigs = eSigs ;
 }
 
-EventExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
-	super((ASTNode)stmt,model,null) ;	
+public void initialize(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model, List eSigs, CompilationUnit dom) {
+	super.initialize((ASTNode)stmt,model,null) ;	
 	fMethod = mref ;
 	fBean = b ;
 	fExpression = new CodeEventRef (stmt,fMethod, dom) ;

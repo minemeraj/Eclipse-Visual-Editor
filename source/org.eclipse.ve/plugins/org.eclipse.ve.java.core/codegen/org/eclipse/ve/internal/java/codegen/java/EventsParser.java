@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -26,6 +26,7 @@ import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventProcessingRule;
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
@@ -92,7 +93,7 @@ public class EventsParser {
 		return m ;
 	}
 	
-	protected void analyze(BeanPart b, JavaClass h) {
+	protected void analyze(BeanPart b, JavaClass h, IVisitorFactoryRule visitorFactoryRule) {
 		List addSignitures = getAddSignitures(h) ;
 		if (addSignitures==null || addSignitures.size()==0) return ;
 		
@@ -102,13 +103,15 @@ public class EventsParser {
 		for (idx = 0; idx < domMethods.length; idx++) {
 			if (rule.parseForEvents(domMethods[idx], b)) {
 				EventMethodVisitor v=null;
-				if (b.isInitMethod(domMethods[idx])) 
-				   v = new EventMethodVisitor(b, fModel, addSignitures, fastDom); 
-				else {
+				if (b.isInitMethod(domMethods[idx])) {
+				   v = visitorFactoryRule.getEventMethodVisitor();
+				   v.initialize(b, fModel, addSignitures, fastDom, visitorFactoryRule); 
+				} else {
 				  try {
 					MethodDeclaration md = (MethodDeclaration) domMethods[idx];
 					CodeMethodRef mref = getMethodRef(md,cuMethods[idx]) ;
-					v = new EventMethodVisitor(md, mref, b, fModel, addSignitures, fastDom);
+					v = visitorFactoryRule.getEventMethodVisitor();
+					v.initialize(md, mref, b, fModel, addSignitures, fastDom,visitorFactoryRule);
 				}
 				catch (JavaModelException e) {}
 				}
@@ -120,14 +123,14 @@ public class EventsParser {
 		}
 	}
 	
-	public void addEvents(BeanPart b) {		
+	public void addEvents(BeanPart b, IVisitorFactoryRule visitorFactoryRule) {		
 		
 		CodeMethodRef m = b.getInitMethod() ;
 		if (m != null) {
 			String t = b.getType() ;
 			JavaHelpers h = JavaRefFactory.eINSTANCE.reflectType(t,fModel.getCompositionModel().getModelResourceSet()) ;
 			if (h instanceof JavaClass)			
-			   analyze(b, (JavaClass)h) ;
+			   analyze(b, (JavaClass)h, visitorFactoryRule) ;
 		}
 		
 	}

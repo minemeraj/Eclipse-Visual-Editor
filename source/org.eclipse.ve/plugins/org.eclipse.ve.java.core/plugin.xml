@@ -263,10 +263,6 @@
                id="ruleMethodVariable">
          </rule>
          <rule
-               class="org.eclipse.ve.internal.java.codegen.java.rules.OverideMethodVisitRule"
-               id="ruleOverideMethod">
-         </rule>
-         <rule
                class="org.eclipse.ve.internal.java.codegen.java.rules.IfStatementRule"
                id="ruleIfStatement">
          </rule>
@@ -297,6 +293,10 @@
          <rule
                class="org.eclipse.ve.internal.java.codegen.java.rules.ParentChildRelationship"
                id="ruleParentChild">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.DefaultVisitorFactoryRule"
+               id="ruleVisitorFactory">
          </rule>
       </style>
    </extension>

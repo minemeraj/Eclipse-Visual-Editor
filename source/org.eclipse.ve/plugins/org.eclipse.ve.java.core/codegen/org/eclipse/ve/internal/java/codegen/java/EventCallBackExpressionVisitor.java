@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventCallBackExpressionVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -30,8 +30,8 @@ CodeMethodRef				fMethod  ;
 CodeCallBackRef				fExpression  ;
 BeanPart					fBean ;
 
-public EventCallBackExpressionVisitor(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model) {
-	super((ASTNode)stmt,model,null) ;	
+public void initialize(BeanPart b, CodeMethodRef mref, Statement stmt,IBeanDeclModel model) {
+	super.initialize((ASTNode)stmt,model,null) ;	
 	fMethod = mref ;
 	fBean = b ;
 	fExpression = new CodeCallBackRef (stmt,fMethod) ;

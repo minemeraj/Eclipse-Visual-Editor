@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodCallBackVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -32,8 +33,8 @@ public class EventMethodCallBackVisitor extends MethodVisitor {
 /**
  *
  */		
-public EventMethodCallBackVisitor (MethodDeclaration node, IBeanDeclModel model,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
-	super(node,model,new ArrayList(), typeRef, methodHandle, range, content) ;	
+public void initialize (MethodDeclaration node, IBeanDeclModel model,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content, IVisitorFactoryRule visitorFactory) {
+	super.initialize(node,model,new ArrayList(), typeRef, methodHandle, range, content, visitorFactory) ;	
 }
 
 /**
@@ -83,7 +84,8 @@ protected boolean processCondition(Expression condition, IfStatement stmt) {
 					// A e.getSource() method call on an if statement, check the target
 					BeanPart bp = getBeanPart(ee.getRightOperand());
 					if (bp != null) {
-						EventCallBackExpressionVisitor v = new EventCallBackExpressionVisitor(bp, fMethod, stmt, fModel);
+						EventCallBackExpressionVisitor v = visitorFactory.getEventCallBackExpressionVisitor();
+						v.initialize(bp, fMethod, stmt, fModel);
 						v.setProgressMonitor(getProgressMonitor());
 						v.visit();
 						return true;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SourceVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.List;
@@ -32,8 +32,8 @@ public abstract class SourceVisitor implements ISourceVisitor {
 	protected IBeanDeclModel 	fModel ; 
 	protected List			fReTryLater = null ;
 	protected IProgressMonitor progressMonitor = null; 
-		
-public SourceVisitor (ASTNode node, IBeanDeclModel model, List reTryList) {
+	
+public void initialize (ASTNode node, IBeanDeclModel model, List reTryList) {
 	fVisitedNode = node ;
 	fReTryLater = reTryList ;
 	fModel = model ;

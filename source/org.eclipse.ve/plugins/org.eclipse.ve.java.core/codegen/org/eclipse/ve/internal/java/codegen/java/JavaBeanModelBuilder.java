@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.24 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.25 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.*;
@@ -23,11 +23,15 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
 import org.eclipse.jem.util.TimerTests;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -315,7 +319,7 @@ protected List getInnerTypes() {
   return l ;
 }
 
-protected  void analyzeEvents() {
+protected  void analyzeEvents(IVisitorFactoryRule visitorFactoryRule) {
 	TimerTests.basicTest.startStep("Parse Events");
 	fMonitor.subTask("Analyzing events");
 	Iterator itr = fModel.getBeans().iterator() ;
@@ -328,7 +332,7 @@ protected  void analyzeEvents() {
 	       return;
 	    }
 		BeanPart b = (BeanPart) itr.next();
-		p.addEvents(b) ;
+		p.addEvents(b, visitorFactoryRule) ;
 	}
 	
 	List sharedListeners = mineForSharedListeners() ;
@@ -341,7 +345,8 @@ protected  void analyzeEvents() {
 	    }
 		String name = ((TypeDeclaration)innerTypes.get(i)).getName().getIdentifier();
 		if (sharedListeners.contains(name)) {
-			EventHandlerVisitor visitor = new EventHandlerVisitor((TypeDeclaration)innerTypes.get(i),fModel,false);
+			EventHandlerVisitor visitor = visitorFactoryRule.getEventHandlerVisitor();
+			visitor.initialize((TypeDeclaration)innerTypes.get(i),fModel,false, visitorFactoryRule);
 			visitor.setProgressMonitor(fMonitor);
 			visitor.visit() ;
 			break ;
@@ -390,9 +395,13 @@ public IBeanDeclModel build () throws CodeGenException {
     // Run them again, if they put themself on the re-try list.
     try {
 		List  tryAgain = new ArrayList () ;
+		
+		TypeDeclaration mainType = (TypeDeclaration)fastCU.types().get(0);
+		
+		IVisitorFactoryRule visitorFactoryRule = determineVisitorFactoryRule(mainType);
 	    
 	    // Start visiting our main type
-	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
+	    visitType(mainType, fModel, jdtMethods, tryAgain, fMonitor, visitorFactoryRule) ;
 	    if (fMonitor.isCanceled()) {
 	    	fMonitor.done();
 	    	return null;
@@ -410,7 +419,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    	return null;
 	    }
 
-	    analyzeEvents() ;	    
+	    analyzeEvents(visitorFactoryRule) ;	    
 	    fMonitor.worked(100);
 	    if (fMonitor.isCanceled()) {
 	    	fMonitor.done();
@@ -441,7 +450,21 @@ public IBeanDeclModel build () throws CodeGenException {
    
 }
     
- /**
+ private IVisitorFactoryRule determineVisitorFactoryRule(TypeDeclaration declaration) {
+	 IVisitorFactoryRule visitorFactory = (IVisitorFactoryRule) CodeGenUtil.getEditorStyle(fModel).getRule(IVisitorFactoryRule.RULE_ID) ;
+	 Name superClassName = declaration.getSuperclass();
+	 String superClassFQN = "java.lang.Object"; // default to java.lang.Object class if it extends nothing or cannot be resolved.
+	 if(superClassName!=null){
+		 TypeResolver.Resolved resolved = fModel.getResolver().resolveType(superClassName);
+		 if(resolved!=null)
+			 superClassFQN = resolved.getName();
+	 }
+	 JavaHelpers superClassEClass = JavaRefFactory.eINSTANCE.reflectType(superClassFQN, EMFEditDomainHelper.getResourceSet(fModel.getDomain()));
+	 visitorFactory.setClassifier(superClassEClass);
+	 return visitorFactory;
+}
+
+/**
   * Determines the work amount to be the number of methods in the 
   * type that is being parsed along with some fixed amount of other 
   * work like cleaning model etc.
@@ -460,12 +483,15 @@ private int determineWorkAmount() {
 	return amount;
 }
 
-protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor){
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor, IVisitorFactoryRule visitorFactoryRule){
 	TimerTests.basicTest.startStep("Creating Instance Var. BeanParts");
- 	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
-	v.setJDTMethods(mthds);
-	v.setProgressMonitor(monitor);
-	v.visit()  ;
+	if (visitorFactoryRule != null) {
+	 	TypeVisitor v = visitorFactoryRule.getTypeVisitor();
+		v.initialize(type,model, tryAgain,false, visitorFactoryRule) ;
+		v.setJDTMethods(mthds);
+		v.setProgressMonitor(monitor);
+		v.visit()  ;
+	}
 	TimerTests.basicTest.stopStep("Creating Instance Var. BeanParts");
 }
 

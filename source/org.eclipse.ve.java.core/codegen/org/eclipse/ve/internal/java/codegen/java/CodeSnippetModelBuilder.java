@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.11 $  $Date: 2005-03-30 17:34:23 $ 
  */
 
 import java.util.List;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.JavaElementInfo;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -97,8 +98,9 @@ protected void updateModelPositions(CompilationUnit decl){
 	}
 }
 
-protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor pm){
-	TypeVisitor visitor = new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true);
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor pm, IVisitorFactoryRule visitorFactoryRule){
+	TypeVisitor visitor = visitorFactoryRule.getTypeVisitor();
+	visitor.initialize(type,model,fFileContent, methodHandles,tryAgain,true, visitorFactoryRule);
 	visitor.setProgressMonitor(pm);
 	visitor.visit()  ;
 }

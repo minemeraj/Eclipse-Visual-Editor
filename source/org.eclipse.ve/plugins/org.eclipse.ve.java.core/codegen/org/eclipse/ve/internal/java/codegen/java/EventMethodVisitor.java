@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.13 $  $Date: 2005-03-30 17:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,6 +23,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 
+import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -43,18 +44,18 @@ public class EventMethodVisitor extends MethodVisitor {
 	String					fPrefixConstraint = null ;   // Help ignore most setting expressions up front
 	final static String		fDefaultPrefix = "add" ; //$NON-NLS-1$
 
-	public EventMethodVisitor(BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
-		this(b.getInitMethod().getDeclMethod(), b, model, signitures, dom);
+	public void initialize(BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom, IVisitorFactoryRule visitorFactory) {
+		initialize(b.getInitMethod().getDeclMethod(), b, model, signitures, dom, visitorFactory);
 	}
 	
-	public EventMethodVisitor(MethodDeclaration method, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
-		this(method, b.getInitMethod(), b, model, signitures, dom) ;
+	public void initialize(MethodDeclaration method, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom, IVisitorFactoryRule visitorFactory) {
+		initialize(method, b.getInitMethod(), b, model, signitures, dom, visitorFactory) ;
 	}
 	/**
 	 * Overidde CodeMethodRef
 	 */	
-	public EventMethodVisitor(MethodDeclaration method, CodeMethodRef m, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
-		super(method, model, null, m);
+	public void initialize(MethodDeclaration method, CodeMethodRef m, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom, IVisitorFactoryRule visitorFactory) {
+		super.initialize(method, model, null, m, visitorFactory);
 		fBean = b ;
 		fESigs = signitures;
 		fastDom = dom ;
@@ -115,7 +116,8 @@ public class EventMethodVisitor extends MethodVisitor {
 						if (!cuMethods[idx].getName().equals(md.getName().getIdentifier()))
 							throw new CodeGenException("Not the same JCMMethod"); //$NON-NLS-1$						
 					    CodeMethodRef mref = getMethodRef(md, fMethod.getTypeRef(), cuMethods[idx].getHandle(), cuMethods[idx].getSourceRange(), cuMethods[idx].getContent());
-						newVisitor = new EventMethodVisitor(md, mref, fBean, fModel, fESigs, fastDom);
+						newVisitor = visitorFactory.getEventMethodVisitor();
+						newVisitor.initialize(md, mref, fBean, fModel, fESigs, fastDom, visitorFactory);
 					
 						break;
 					}
@@ -145,7 +147,8 @@ public class EventMethodVisitor extends MethodVisitor {
 			MethodInvocation ms = (MethodInvocation) stmt.getExpression();
 			if (mref != null) {
 				if (mref.getMethodName().equals(ms.getName().getIdentifier())) {
-					EventExpressionVisitor v = new EventExpressionVisitor(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom);
+					EventExpressionVisitor v = visitorFactory.getEventExpressionVisitor();
+					v.initialize(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom);
 					v.setProgressMonitor(getProgressMonitor());
 					v.visit();
 				}
@@ -155,7 +158,8 @@ public class EventMethodVisitor extends MethodVisitor {
 		          stmt.getExpression() instanceof ThisExpression) {
 			// ivjBean.addXXX()
 			if (fBean.getSimpleName().equals(stmt.getExpression().toString())) {
-				EventExpressionVisitor v = new EventExpressionVisitor(fBean, fMethod, (Statement) stmt.getParent(), fModel, fESigs, fastDom);
+				EventExpressionVisitor v = visitorFactory.getEventExpressionVisitor();
+				v.initialize(fBean, fMethod, (Statement) stmt.getParent(), fModel, fESigs, fastDom);
 				v.setProgressMonitor(getProgressMonitor());
 				v.visit();
 			}
