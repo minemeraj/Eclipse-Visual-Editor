@@ -9,12 +9,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:07:38 $
+ * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-04-20 09:13:12 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +28,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -64,6 +68,26 @@ public class JScrollPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 	 */
 	protected void createLayoutEditPolicy() {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new JScrollPaneLayoutEditPolicy(EditDomain.getEditDomain(this)));
+	}
+	
+	/**
+	 * JScrollPane hosts JTable which has special behavior - with autoCreateColumnsFromModel=false and no columns
+	 * its height is 0 which means it cannot be selected, and also its height can exceed the table.  This creates a GEF figure
+	 * that is either not selectable or else looks too deep
+	 * Override this behavior with a special layout policy
+	 */
+	protected void createEditPolicies() {
+		super.createEditPolicies();
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(){			
+			protected void constrain(Dimension size, IFigure parentFigure) {
+				//TODO Condition this occuring for JTable children only
+				// If the bounds height is 0 or larger than us (we are the parent) then
+				// make the height of the child be us
+				if(size.height == 0 || size.height > parentFigure.getSize().height){
+					size.height = parentFigure.getSize().height - 1; //Reduce by -1 to make the bottom edge align better
+				}
+			}
+		}); 
 	}
 
 	public List getModelChildren() {
