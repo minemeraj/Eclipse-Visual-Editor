@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableColumnFeatureMapper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-28 14:21:37 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-17 16:43:12 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -59,7 +59,7 @@ public class JTableColumnFeatureMapper extends AbstractFeatureMapper {
 	 */
 	public int getFeaturePriority(String methodType) {
 		if (methodType.equals(JTableDecoder.JTABLE_ADDCOLUMN_METHOD))
-		    return IJavaFeatureMapper.PRIORITY_ADD+1000; // a bit more than a regular add
+		    return IJFCFeatureMapper.PRIORITY_JTABLECOLUMN_ADDCOLUMN; // a bit more than a regular add
 		else
 			return super.getFeaturePriority(methodType);
 	}
