@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Set Map Version Ids" default="setids" basedir=".">
 
-<target name="setids" description="Set maps ids. (Define property id for id)" >
-	<fail message="No id passed in." unless="id"/>
+<target name="init" unless="id">
+	<fail message="No id passed in."/>
+</target>
+
+<target name="setids" depends="init" description="Set maps ids. (Define property id for id)" >
 	<copy file="ve.map.template" tofile="ve.map" overwrite="true">
 		<filterset >
 			<filter token="v" value="${id}"/>
@@ -12,8 +15,7 @@
 	<eclipse.refreshLocal resource="${mypath}" depth="infinite"/>
 </target>
 
-<target name="version" description="Use this target to version the projects (Define property id for version id)" >
-	<fail message="No id passed in." unless="id"/>
+<target name="version" depends="init" description="Use this target to version the projects (Define property id for version id)" >
 	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo.ui" versionName="${id}"/>
