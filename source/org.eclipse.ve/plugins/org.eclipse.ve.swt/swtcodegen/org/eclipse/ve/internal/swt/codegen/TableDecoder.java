@@ -10,11 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-16 20:29:43 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-20 15:58:49 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
+
+import org.eclipse.ve.internal.swt.SWTConstants;
 
  
 
@@ -26,7 +28,7 @@ import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
  */
 public class TableDecoder extends CompositeDecoder {
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
-	protected final static String ADD_METHOD_SF_NAME = "tableColumns"; //$NON-NLS-1$
+	protected final static String ADD_METHOD_SF_NAME = SWTConstants.SF_TABLE_COLUMNS.lastSegment();
 
 	public TableDecoder(){
 		super();

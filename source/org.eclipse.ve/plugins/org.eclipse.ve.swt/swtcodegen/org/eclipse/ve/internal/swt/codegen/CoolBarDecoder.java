@@ -9,28 +9,26 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-20 15:58:49 $ 
+ *  $RCSfile: CoolBarDecoder.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-08-20 15:58:49 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
+import org.eclipse.ve.internal.java.codegen.java.HardCodedFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 
 import org.eclipse.ve.internal.swt.SWTConstants;
-
  
 
 /**
- * @author sri
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * @since 1.0.0
  */
-public class TableDecoder extends CompositeDecoder {
+public class CoolBarDecoder extends CompositeDecoder {
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
-	protected final static String ADD_METHOD_SF_NAME = SWTConstants.SF_TABLE_COLUMNS.lastSegment();
+	protected final static String ADD_METHOD_SF_NAME = SWTConstants.SF_COOLBAR_ITEMS.lastSegment();
 
-	public TableDecoder(){
+	public CoolBarDecoder(){
 		super();
 		addStructuralFeatureAndWriteMethod(ADD_METHOD_SF_NAME, ADD_METHOD_PREFIX);
 	}
@@ -40,7 +38,7 @@ public class TableDecoder extends CompositeDecoder {
 	 */
 	protected IJavaFeatureMapper getAppropriateFeatureMapper(String structuralFeature) {
 		 if (structuralFeature.equals(ADD_METHOD_SF_NAME))
-		    return new CompositeFeatureMapper();
+		    return new HardCodedFeatureMapper(ADD_METHOD_SF_NAME, "new");//$NON-NLS-1$
 		return super.getAppropriateFeatureMapper(structuralFeature);
 	}
 }

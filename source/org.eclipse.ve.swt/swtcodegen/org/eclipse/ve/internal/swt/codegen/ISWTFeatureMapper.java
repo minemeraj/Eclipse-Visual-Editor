@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ISWTFeatureMapper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-07-13 16:20:37 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-20 15:58:49 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -23,7 +23,7 @@ import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public interface ISWTFeatureMapper {
+public interface ISWTFeatureMapper extends IJavaFeatureMapper {
 	
 	public static String  COMPOSITE_BOUNDS_FEATURE_NAME = "bounds";
 	public static String  COMPOSITE_BOUNDS_NAME = "setBounds";

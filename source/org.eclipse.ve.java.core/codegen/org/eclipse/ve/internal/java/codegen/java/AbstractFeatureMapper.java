@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-20 15:58:42 $ 
  */
 import java.util.logging.Level;
 
@@ -154,7 +154,10 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 				// public field access, e.g., gridBagConstraints.gridx = 0 ;
 				if (((Assignment) e).getLeftHandSide() instanceof QualifiedName) {
 					return ((QualifiedName) ((Assignment) e).getLeftHandSide()).getName().getIdentifier();
-				} else if (((Assignment) e).getLeftHandSide() instanceof SimpleName) {
+				} else  if (((Assignment) e).getRightHandSide() instanceof ClassInstanceCreation) {
+					return "new" ; //$NON-NLS-1$
+				}
+				else if (((Assignment) e).getLeftHandSide() instanceof SimpleName) {
 					return ((SimpleName) ((Assignment) e).getLeftHandSide()).getIdentifier();
 				}
 			}
