@@ -14,7 +14,7 @@
   <event:AddMany xmi:version="2.0" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabFolderTreeEditPart"
-      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabFolderGraphicalEditPart:false">
+      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabFolderGraphicalEditPart:true">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tabfolder_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
