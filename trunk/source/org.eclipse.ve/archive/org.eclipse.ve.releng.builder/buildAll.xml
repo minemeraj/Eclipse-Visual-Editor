@@ -46,19 +46,13 @@
 		<!--this naming convention used by php scripts on download server-->
 		<property name="buildLabel" value="${buildType}-${buildId}-${timestamp}" />
 
-		<!--store the build label information in a file-->
-		<echo file="${buildDirectory}/label.properties" append="true" >
-		buildType=${buildType}
-		</echo>
-		<echo file="${buildDirectory}/label.properties" append="true" >
-		buildId=${buildId}
-		</echo>
-		<echo file="${buildDirectory}/label.properties" append="true" >
-		timestamp=${timestamp}
-		</echo>
-		<echo file="${buildDirectory}/label.properties" append="true" >
-		buildLabel=${buildLabel}
-		</echo>
+		<!--store the build label information in a propert file-->
+		<propertyfile file="${buildDirectory}/label.properties">
+			<entry key="buildType" value="${buildType}"/>
+			<entry key="buildId" value="${buildId}"/>
+			<entry key="timestamp" value="${timestamp}"/>
+			<entry key="buildLabel" value="${buildLabel}"/>
+		</propertyfile>
 	</target>
 
 	<target name="run" depends="init">
