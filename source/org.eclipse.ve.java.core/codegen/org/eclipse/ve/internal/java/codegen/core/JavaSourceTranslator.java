@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-18 20:35:22 $ 
+ *  $Revision: 1.13 $  $Date: 2004-03-18 22:52:34 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -58,8 +58,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class JavaSourceTranslator implements IDiagramSourceDecoder, IDiagramModelBuilder { 
 	
 
-
-JavaBeanModelBuilder    fJavaModelBldr = null ;         
+         
 IBeanDeclModel          fBeanModel ;
 IVEModelInstance   		fVEModel = null ;
 IWorkingCopyProvider    fWorkingCopy = null ;
@@ -70,6 +69,7 @@ IJVEStatus              fMsgRrenderer = null ;
 EditDomain 			    fEDomain = null ;
 boolean                 fdisconnected = true ;
 boolean					floadInProgress=false;
+boolean					fmodelLoaded=false;
 boolean					fparseError=false;
 ArrayList				fListeners = new ArrayList();
 
@@ -528,7 +528,7 @@ public EditDomain getEditDomain() {
 public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeGenException  {
     // loadModel is not synchronized as to
     // not block calls to isBusy(), pause() and such while the loadModel is going on
-    synchronized (this) {
+    synchronized (this) {     
 	  floadInProgress=true;	  	
 	   if (fVEModel != null) {
 		  if (fBeanModel!=null && !fdisconnected) {
@@ -542,7 +542,10 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 	fFile = input.getFile();		
 	decodeDocument(fFile, pm);
 	
-   floadInProgress=false;		  
+   synchronized (this){
+      floadInProgress=false;
+      fmodelLoaded=true;
+   }
 	
 	for (int i = 0; i < fListeners.size(); i++) {
 	     ((IBuilderListener)fListeners.get(i)).parsingPaused(fdisconnected);
@@ -757,14 +760,13 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 	
 	if (isReloadPending()) return;	
 			
-    fJavaModelBldr = new JavaBeanModelBuilder(fEDomain, fWorkingCopy,
+	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fWorkingCopy,
                                               fWorkingCopy.getFile().getLocation().toFile().toString(),null) ;              
     
-    fJavaModelBldr.setDiagram(fVEModel) ;
-	fBeanModel = fJavaModelBldr.build() ; 	
+	builder.setDiagram(fVEModel) ;
+	fBeanModel = builder.build() ; 	
 	fBeanModel.setSourceSynchronizer(fSrcSync) ;
-	fBeanModel.setFStatus(fMsgRrenderer) ;
-	fJavaModelBldr = null ;
+	fBeanModel.setFStatus(fMsgRrenderer) ;	
 	
 	if (isReloadPending()) return;	
 		
@@ -1100,7 +1102,7 @@ public synchronized void disconnect(boolean clearVCEModel) {
        fSrcSync.disconnect() ;
     }
 
-
+   fmodelLoaded=false;
    // clearModel(clearVCEModel) ;
     deCapitateModel();
         
@@ -1223,8 +1225,8 @@ public void setMsgRenderer (IJVEStatus mr) {
        fSrcSync.setStatus(mr) ;
 }
 
-public BeanSubclassComposition getModelRoot() {
-	if (fVEModel!=null)
+public synchronized BeanSubclassComposition getModelRoot() {
+	if (fVEModel!=null && fmodelLoaded)
 		 return fVEModel.getModelRoot();
 	else
 		return null;
