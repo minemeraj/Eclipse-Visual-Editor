@@ -26,7 +26,7 @@ public ShapeTagsPropertyEditor(Object source) {
 }
 public String getAsText() {
 
-	if ( fShapeIndex != -1 ) {
+	if ( fShapeIndex >= 0 && fShapeIndex < ShapeHelper.fShapeNames.length) {
 		return ShapeHelper.fShapeNames[fShapeIndex];
 	} else {
 		return "";
@@ -36,7 +36,7 @@ public String getAsText() {
 	
 public String getJavaInitializationString(){
 
-	if ( fShapeIndex != -1 ) {
+	if ( fShapeIndex >= 0 && fShapeIndex < ShapeHelper.fShapeNames.length ) {
 		return ShapeHelper.fInitStrings[fShapeIndex];
 	} else {
 		return "";
