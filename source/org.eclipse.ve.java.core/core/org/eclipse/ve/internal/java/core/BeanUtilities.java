@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-08 10:47:18 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -177,6 +177,7 @@ public class BeanUtilities {
 			return (IJavaInstance)featureValue;
 		} else {
 			IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(javaObject);
+			if(!beanProxyHost.isBeanProxyInstantiated()) beanProxyHost.instantiateBeanProxy();
 			return beanProxyHost.getBeanPropertyValue(feature);
 		}
 	}
