@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-18 23:46:42 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -491,7 +491,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		e.setDescription(getDescription());
 		e.setLabel(getLabel());
 		e.setSmallIcon(getSmallIcon());
-		e.setLargeIcon(getLargeIcon());
+		ImageDescriptor large = getLargeIcon();
+		e.setLargeIcon(large == null ? getSmallIcon() : large);
 		return e;		
 	}
 	
