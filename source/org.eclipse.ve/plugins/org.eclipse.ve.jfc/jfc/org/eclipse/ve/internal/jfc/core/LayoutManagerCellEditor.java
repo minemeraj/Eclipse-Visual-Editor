@@ -11,9 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-13 21:12:18 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-04 23:37:32 $ 
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
@@ -34,14 +39,12 @@ import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
  * user can pick one.
  */
 public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData {
+	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.jfc.core.LayoutManagerCellEditor";
+	public static final int CLASSNAMES_INDEX = 0;
+	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
 	
-	protected static String[] fItems = new String[]{
-		VisualMessages.getString("Layout.NullLayout") , VisualMessages.getString("Layout.BorderLayout") ,VisualMessages.getString("Layout.BoxLayoutX_AXIS"), VisualMessages.getString("Layout.BoxLayoutY_AXIS"), VisualMessages.getString("Layout.CardLayout"), VisualMessages.getString("Layout.FlowLayout"), VisualMessages.getString("Layout.GridBagLayout"), VisualMessages.getString("Layout.GridLayout") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-	};
-	protected static String[] fClassNames = new String[] {
-		"","java.awt.BorderLayout", "javax.swing.BoxLayoutX_Axis", "javax.swing.BoxLayoutY_Axis", "java.awt.CardLayout","java.awt.FlowLayout","java.awt.GridBagLayout","java.awt.GridLayout" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-	};
+	
 /**
  * This method shows a list of available layout manager classes from which the 
  * user can pick one.
@@ -49,7 +52,7 @@ public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements
  * to see all classes that implement a specific interface.
  */
 public LayoutManagerCellEditor(Composite aComposite){
-	super(aComposite,fItems);
+	super(aComposite, null);
 }
 /**
  * Return a MOF class that represents the constraint bean
@@ -57,16 +60,8 @@ public LayoutManagerCellEditor(Composite aComposite){
 protected Object doGetObject(int index) {
 	if (index == sNoSelection || index == 0)
 		return null;
-	String layoutManagerClassName = fClassNames[index];
+	String layoutManagerClassName = getLayoutManagerItems(fEditDomain)[CLASSNAMES_INDEX][index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
-	// If this is one of the BoxLayout's, we need force reflection
-	// on the actual BoxLayout so it will find these special dummy classes.
-	if (layoutManagerClassName.equals("javax.swing.BoxLayoutX_Axis") //$NON-NLS-1$
-		|| layoutManagerClassName.equals("javax.swing.BoxLayoutY_Axis")) { //$NON-NLS-1$
-		JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$
-		if (javaClass != null)
-			 ((JavaClass) javaClass).getEAnnotations();
-	}
 	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
 	ILayoutPolicyFactory factory =
 		BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger((EClassifier) javaClass, fEditDomain);
@@ -79,10 +74,11 @@ protected int doGetIndex(Object anObject){
 	if (anObject == null) {
 		return 0;
 	} else if (anObject instanceof IJavaObjectInstance) {
+		String [] classNames = getLayoutManagerItems(fEditDomain)[CLASSNAMES_INDEX];
 		String className = LayoutManagerLabelProvider.getQualifiedName((IJavaObjectInstance)anObject);
 		// Look for this class name in our known list 
-		for(int i=1 ; i<fClassNames.length ; i++){
-			if (className.equals(fClassNames[i])){
+		for(int i=1 ; i<classNames.length ; i++){
+			if (className.equals(classNames[i])){
 				return i;
 			}
 		}
@@ -101,11 +97,12 @@ public String getJavaInitializationString() {
 		return "new " + jv.getJavaType().getQualifiedName() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
-public static String getDisplayName(String className){
+public static String getDisplayName(EditDomain editDomain, String className){
 	String dispName = null;
-	for(int i=0;i<fClassNames.length;i++){
-		if(fClassNames[i].equals(className)){
-			dispName = fItems[i];
+	String [] [] layoutinfo = getLayoutManagerItems(editDomain);
+	for(int i=0;i<layoutinfo[CLASSNAMES_INDEX].length;i++){
+		if(layoutinfo[CLASSNAMES_INDEX][i].equals(className)){
+			dispName = layoutinfo[DISPLAYNAMES_INDEX][i];
 			break;
 		}
 	}
@@ -120,5 +117,59 @@ public String isCorrectObject(Object anObject){
 }
 public void setData(Object data){
 	fEditDomain = (EditDomain) data;
+	// populate the combo box items with the layout manager display names
+	setItems(getLayoutManagerItems(fEditDomain)[DISPLAYNAMES_INDEX]);
 }
+
+	/**
+	 * Get the AWT/Swing layout manager class names and display names from the annotations for the
+	 * AWT/Swing interface java.awt.LayoutManager (LayoutManager.override). Look for only those
+	 * annotations with a source value of "org.eclipse.ve.LayoutInfo"
+	 * 
+	 * Each annotation contains two key/value pairs: key =
+	 * org.eclipse.ve.internal.jfc.core.layoutManagerClass value = the actual layout manager class
+	 * name (e.g. java.awt.BorderLayout)
+	 * 
+	 * key = org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName value = the display name to
+	 * be one of the items in the combo box list (e.g. BorderLayout)
+	 * 
+	 * Populate the combo box items with the display names.
+	 */
+	public static String [][] getLayoutManagerItems(EditDomain editDomain) {
+	 // TODO - need to figure out how we NLS all the xmi override information for the layout manager display names
+		if (editDomain == null)
+			return null;
+		String[][] layoutManagerLists = (String[][]) editDomain.getData(EDITDOMAINKEY_ITEMS_LIST);
+		if (layoutManagerLists == null) {
+			ResourceSet rset = JavaEditDomainHelper.getResourceSet(editDomain);
+			JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("java.awt.LayoutManager", rset);
+			if (javaClass != null) {
+				List classNames = new ArrayList();
+				List displayNames = new ArrayList();
+				List annotations = ((JavaClass) javaClass).getEAnnotations();
+				for (int i = 0; i < annotations.size(); i++) {
+					if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) {
+						EMap details = ((EAnnotation) annotations.get(i)).getDetails();
+						String layoutClassName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerClass");
+						String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName");
+						if (layoutClassName != null && layoutDisplayName != null) {
+							classNames.add(layoutClassName);
+							displayNames.add(layoutDisplayName);
+						}
+					}
+				}
+				if (classNames.size() > 0) {
+					layoutManagerLists = new String [2][];
+					layoutManagerLists[CLASSNAMES_INDEX] = new String[classNames.size() + 1];
+					layoutManagerLists[CLASSNAMES_INDEX][0] = "";
+					layoutManagerLists[DISPLAYNAMES_INDEX]  = new String[displayNames.size() + 1];
+					layoutManagerLists[DISPLAYNAMES_INDEX][0] = "null";
+					System.arraycopy(classNames.toArray(new String [classNames.size()]), 0, layoutManagerLists[CLASSNAMES_INDEX], 1, classNames.size());
+					System.arraycopy(displayNames.toArray(new String [displayNames.size()]), 0, layoutManagerLists[DISPLAYNAMES_INDEX], 1, displayNames.size());
+					editDomain.setData(EDITDOMAINKEY_ITEMS_LIST, layoutManagerLists);
+				}
+			}
+		}
+		return layoutManagerLists;
+	}
 }
