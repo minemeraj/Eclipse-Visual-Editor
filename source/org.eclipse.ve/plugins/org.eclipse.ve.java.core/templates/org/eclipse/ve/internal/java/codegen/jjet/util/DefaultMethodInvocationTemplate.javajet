@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: DefaultMethodInvocationTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a method invocation expression
