@@ -18,9 +18,10 @@
       <update label="%updateSiteName" url="http://update.eclipse.org/updates"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.jem" version="0.5.0" match="equivalent"/>
-   </requires>
+   <!-- For now we will include jem feature. Future it will be a required once we figure out how to share with other project that wants it. -->
+   <includes
+         id="org.eclipse.jem"
+         version="0.5.0"/>
 
    <plugin
          id="org.eclipse.ve"
