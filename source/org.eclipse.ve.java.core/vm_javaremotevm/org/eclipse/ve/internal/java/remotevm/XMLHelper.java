@@ -11,26 +11,83 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: XMLHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-21 17:30:07 $ 
  */
 
 import java.beans.*;
 import java.io.*;
+import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class XMLHelper {
 
+	static boolean LOOKEDUP_DECODER;	
+	static Class XML_DECODER_CLASS;
+	static Method DECODER_READOBJECT_METHOD;
+	static Constructor DECODER_CONSTRUCTOR;
+	
+	static boolean LOOKEDUP_ENCODER;
+	static Class XML_ENCODER_CLASS;
+	static Method ENCODER_WRITEOBJECT_METHOD;	
+	static Method ENCODER_CLOSE_METHOD;
+	static Constructor ENCODER_CONSTRUCTOR;	
+
 public static Object getDecodedObject(String xmlString){
-	XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(xmlString.getBytes()));
-	Object ret = decoder.readObject();
-	return ret;
+	// Cache and lookup the java.beans.XMLDecoder class and the readObject() method
+	if (!LOOKEDUP_DECODER){
+		LOOKEDUP_DECODER = true;
+		try {
+			XML_DECODER_CLASS = Class.forName("java.beans.XMLDecoder");
+			DECODER_READOBJECT_METHOD = XML_DECODER_CLASS.getMethod("readObject",null);
+			DECODER_CONSTRUCTOR = XML_DECODER_CLASS.getConstructor(new Class[]{ByteArrayInputStream.class});
+		} catch (ClassNotFoundException e) {
+		} catch (NoSuchMethodException e) {		
+		}
+	}
+	
+	// Create a Decoder instance and invoke the readObject() method to evaluate the xmlString argument	
+	if (XML_DECODER_CLASS != null){	
+		try {
+			Object xmlDecoder = DECODER_CONSTRUCTOR.newInstance(new Object[]{new ByteArrayInputStream(xmlString.getBytes())});
+			return DECODER_READOBJECT_METHOD.invoke(xmlDecoder,null);
+		} catch (InstantiationException e) {			
+		} catch (IllegalArgumentException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
+		}
+	}
+	return null;
 }
 
 public static String getEncodedString(Object bean){
-	ByteArrayOutputStream stringCollecter = new ByteArrayOutputStream();
-	XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(stringCollecter));
-	encoder.writeObject(bean);
-	encoder.close();
-	return stringCollecter.toString();
+	
+	// Cache and lookup the java.beans.XMLEncoder class and the writeObject(Object javaBean) method
+	if (!LOOKEDUP_ENCODER){
+		LOOKEDUP_ENCODER = true;
+		try {
+			XML_ENCODER_CLASS = Class.forName("java.beans.XMLEncoder");
+			ENCODER_WRITEOBJECT_METHOD = XML_ENCODER_CLASS.getMethod("writeObject",new Class[] {Object.class});
+			ENCODER_CLOSE_METHOD = XML_ENCODER_CLASS.getMethod("close",null);			
+			ENCODER_CONSTRUCTOR = XML_ENCODER_CLASS.getConstructor(new Class[]{BufferedOutputStream.class});
+		} catch (ClassNotFoundException e) {
+		} catch (NoSuchMethodException e) {		
+		}
+	}
+	
+	// Create an Encoder instance and invoke the writeObject() method to encode the argument	
+	try{
+		ByteArrayOutputStream stringCollecter = new ByteArrayOutputStream();
+		Object encoder = ENCODER_CONSTRUCTOR.newInstance(new Object[]{new BufferedOutputStream(stringCollecter)}); 
+		ENCODER_WRITEOBJECT_METHOD.invoke(encoder,new Object[] {bean});
+		ENCODER_CLOSE_METHOD.invoke(encoder,null);
+		return stringCollecter.toString();
+	} catch (InstantiationException e) {			
+	} catch (IllegalArgumentException e) {
+	} catch (IllegalAccessException e) {
+	} catch (InvocationTargetException e) {
+	}
+	return null;
 }
 
 }
