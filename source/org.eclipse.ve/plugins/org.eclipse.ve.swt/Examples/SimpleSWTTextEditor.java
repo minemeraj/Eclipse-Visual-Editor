@@ -27,6 +27,7 @@ public class SimpleSWTTextEditor {
 	private Button button2 = null;
 
 	private boolean hasChanged = false;
+	private boolean isClosing = false;
 
 	private static final String title = "Simple Text Editor";
 
@@ -112,7 +113,10 @@ public class SimpleSWTTextEditor {
 		});
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
 			public void shellClosed(org.eclipse.swt.events.ShellEvent e) {
-				e.doit = doExit();
+				if (!isClosing)
+				{
+					e.doit = doExit();
+				}
 			}
 		});
 	}
@@ -174,6 +178,7 @@ public class SimpleSWTTextEditor {
 				return false;
 			}
 		}
+		isClosing = true;
 		sShell.close();
 		sShell.dispose();
 		return true;
