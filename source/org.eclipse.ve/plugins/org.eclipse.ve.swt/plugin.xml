@@ -7,7 +7,14 @@
    class="org.eclipse.ve.internal.swt.SwtPlugin">
 
    <runtime>
-      <library name="ve_swt.jar"/>
+      <library name="ve_swt.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.swt,org.eclipse.jem.internal"/>
+      </library>
+      <library name="swtcodegen.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.swt.codegen"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.ve.java.core"/>
