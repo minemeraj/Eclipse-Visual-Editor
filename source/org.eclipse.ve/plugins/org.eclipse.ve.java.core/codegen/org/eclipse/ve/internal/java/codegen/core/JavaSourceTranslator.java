@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.24 $  $Date: 2004-04-08 15:31:36 $ 
+ *  $Revision: 1.25 $  $Date: 2004-04-08 16:56:17 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -375,7 +375,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 					}
 
 					// only one updater can be touching the model at any time.
-					synchronized(SharedToLocalUpdater.class){
+					synchronized(JavaSourceTranslator.this){
 
 						// TODO Adapters will not react for GUI deltas !!!
 						if (fBeanModel!=null)
@@ -534,8 +534,8 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 
 		fFile = input.getFile();
 		try {
-			decodeDocument(fFile, pm);
-			synchronized (this) {
+			synchronized (this) {   // only one thread is to update the model				
+			    decodeDocument(fFile, pm);			
 				floadInProgress = false;
 				fmodelLoaded = true;
 			}
