@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.12 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.13 $  $Date: 2004-11-29 23:00:06 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -109,23 +109,27 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     protected boolean decode(String src) {
          if (src== null)  {
              // No Free Form Information
-         	 noAnnotationInSource();
-             return true ;
+         	 return noAnnotationInSource(false);
           }
     	  String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
           if (curAnnotation == null)  {
              // No Free Form Information
-          	 noAnnotationInSource();
-             return true ;
+          	 return noAnnotationInSource(false);
           }
                     
           JavaVEPlugin.log(fBeanpart.getUniqueName()+" Decoding FF annotation", Level.FINE) ;    //$NON-NLS-1$
           
           int[] args = FreeFormAnnotationTemplate.getAnnotationArgs(src,0) ;
           if (args == null) {
-          	// No Free Form Information
-          	noAnnotationInSource();
-          	return false ;
+          	// no location found in the source
+          	
+          	// is it because there is no VISUAL_CONTENT_TYPE	[hide from FF]
+          	// OR is it because there are no "x,y" mentioned 				[free-float on FF]
+          	if(src.indexOf(FreeFormAnnotationTemplate.VISUAL_CONTENT_TYPE)>-1){
+          		return noAnnotationInSource(true); // free-float on FF
+          	}else{
+          		return noAnnotationInSource(false); // hide from FF
+          	}
           }
           
 	      KeyedConstraintImpl c = (KeyedConstraintImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedConstraint());
