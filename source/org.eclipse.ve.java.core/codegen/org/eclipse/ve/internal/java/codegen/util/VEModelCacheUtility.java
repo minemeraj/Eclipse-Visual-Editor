@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.4 $  $Date: 2005-01-17 20:55:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-18 22:33:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -70,7 +70,7 @@ public class VEModelCacheUtility {
 	public static boolean isValidCache (IFile f) {
 		File dest = getCachedPath(f).toFile();		
 		if (/* dest.exists() && */dest.canRead()) {
-			if (dest.lastModified()>f.getFullPath().toFile().lastModified())
+			if (dest.lastModified()>f.getLocalTimeStamp())
 				return true;
 		}		
 	    return false;
