@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet.common.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: CompoundCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-10 20:05:09 $ 
  */
 
 import java.util.*;
@@ -112,7 +112,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an empty instance with the given result index.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 */
 	public CompoundCommand(int resultIndex) {
 		super();
@@ -122,7 +122,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an instance with the given result index and label.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 * @param label the label.
 	 */
 	public CompoundCommand(int resultIndex, String label) {
@@ -133,7 +133,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an instance with the given result index, label, and description.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 * @param label the label.
 	 * @param description the description.
 	 */
@@ -145,7 +145,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an instance with the given result index and list.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 * @param commandList the list of commands.
 	 */
 	public CompoundCommand(int resultIndex, List commandList) {
@@ -156,7 +156,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an instance with the given resultIndex, label, and list.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 * @param label the label.
 	 * @param commandList the list of commands.
 	 */
@@ -168,7 +168,7 @@ public class CompoundCommand extends AbstractCommand {
 
 	/**
 	 * Creates an instance with the given result index, label, description, and list.
-	 * @param resultIndex the {@link #resultIndex}.
+	 * @param resultIndex
 	 * @param label the label.
 	 * @param description the description.
 	 * @param commandList the list of commands.
