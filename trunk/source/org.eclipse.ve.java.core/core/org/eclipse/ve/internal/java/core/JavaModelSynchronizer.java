@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-18 17:55:53 $ 
  */
 
 import java.util.*;
@@ -292,8 +292,8 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(ElementChangedEvent)
 	 */
 	public void elementChanged(ElementChangedEvent event) {
-		if (!proxyDomain.getProxyFactoryRegistry().isValid())
-			return;	// Don't even bother, our factory is already terminated.
+		if (proxyDomain.getProxyFactoryRegistry() == null || !proxyDomain.getProxyFactoryRegistry().isValid())
+			return;	// Don't even bother, our factory is already terminated or we don't have one yet.
 		// We want to know when we start process all deltas, and then we end. At the end if
 		// the recycle flag is set, we will only do one recycle.
 		recycleVM = false;
