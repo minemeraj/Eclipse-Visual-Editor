@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-12 13:35:38 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-15 19:34:09 $ 
  */
 
 import java.util.*;
@@ -330,13 +330,18 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.
+    JavaElementInfo[] jdtMethods=null;
     if (fSync!=null) {
       Object lock = (fWCP.getDocument() instanceof ISynchronizable) ?
       		        ((ISynchronizable)fWCP.getDocument()).getLockObject() :
       		        fWCP.getDocument();
       synchronized(lock) {      	
         fSync.clearOutstandingWork();
-        fastCU = ParseJavaCode () ;
+        fastCU = ParseJavaCode () ;        
+        if (fCU!=null) 
+        	jdtMethods=CodeGenUtil.getMethodsInfo(fCU);
+        else
+        	jdtMethods=null ;
       }
     }
     else 
@@ -350,7 +355,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 		List  tryAgain = new ArrayList () ;
 	    
 	    // Start visiting our main type
-	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, tryAgain) ;
+	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain) ;
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -381,8 +386,10 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
    
 }
     
- protected void visitType(TypeDeclaration type, IBeanDeclModel model,  List tryAgain){
-	new TypeVisitor(type,model, tryAgain,false).visit()  ;
+ protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain){
+	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
+	v.setJDTMethods(mthds);
+	v.visit()  ;
 }
 	
 }

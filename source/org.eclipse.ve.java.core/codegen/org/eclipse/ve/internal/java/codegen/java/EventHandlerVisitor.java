@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-15 19:34:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventHandlerRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -72,26 +73,22 @@ public void visit()  {
 			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
-		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit(), fType.getSimpleName()), fModel);
+		JavaElementInfo[] cuMethods = getCUMethods(methods, CodeGenUtil.getMethodsInfo(fModel.getCompilationUnit(), fType.getSimpleName()), fModel);
 		if(cuMethods==null || cuMethods.length<1)
 			return;
 		// Compilation unit methods and jdom methods should match.
 		if (cuMethods.length != methods.length) 
 			throw new RuntimeException("methods length error") ; //$NON-NLS-1$
-		int i=0 ;
-		try {
+		int i=0 ;		
 			for (; i < methods.length ; i++){
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					 methods[i] instanceof MethodDeclaration) {
 					new EventMethodCallBackVisitor(methods[i],fModel,fType,((IMethod)cuMethods[i]).getHandleIdentifier(),
 								cuMethods[i].getSourceRange(),
-								cuMethods[i].getSource()).visit();
+								cuMethods[i].getContent()).visit();
 				}
-			}
-		}catch (JavaModelException e) {
-			JavaVEPlugin.log ("EventHandlerVisitor.visit() could not visit"+String.valueOf(methods[i].getName())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
-		}
+			}		
 	}
 }
 

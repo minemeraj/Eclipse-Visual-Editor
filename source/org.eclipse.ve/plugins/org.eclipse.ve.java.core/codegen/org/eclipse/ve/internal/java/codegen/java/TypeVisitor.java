@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
  */
 
 import java.util.*;
@@ -40,6 +40,7 @@ public class TypeVisitor extends SourceVisitor {
 	boolean forceJDOMUsage = false;
 	char[]	content = null;  // is set when JDOM is not set
 	Map  fInstanceDeclaredBeans = new HashMap() ;
+	JavaElementInfo[]	JDTMethods = null;
 	
 public TypeVisitor (TypeDeclaration node, IBeanDeclModel model, char [] content, String[] methodHandles, List reTryList, boolean forceJDOMUsage) {
 	this(node,model,reTryList,forceJDOMUsage) ;		
@@ -64,7 +65,7 @@ public TypeVisitor (CodeTypeRef tr, TypeDeclaration node, IBeanDeclModel model,L
  *  Build a JCMMethod array which corresponds to the parsed methods array
  *  @return  Array of IMethods
  */
-public static  IMethod[]  getCUMethods(MethodDeclaration aMethods[], IMethod[] elements, IBeanDeclModel model) {
+public static  JavaElementInfo[]  getCUMethods(MethodDeclaration aMethods[], JavaElementInfo[] elements, IBeanDeclModel model) {
 
 	// Assumes order is the same
 	ArrayList   methods = new ArrayList() ;
@@ -76,11 +77,11 @@ public static  IMethod[]  getCUMethods(MethodDeclaration aMethods[], IMethod[] e
 		// Deal with duplicate names
 		int dupCount = 0 ;
 		for (i=0; i<methods.size(); i++) {
-		    if (methods.get(i)!= null && ((IMethod)methods.get(i)).getElementName().equals(Name))
+		    if (methods.get(i)!= null && ((JavaElementInfo)methods.get(i)).getName().equals(Name))
 		      dupCount++ ;
 		}
 		for (j=Prev; j<elements.length; j++) {
-			if (Name.equals(elements[j].getElementName())) {
+			if (Name.equals(elements[j].getName())) {
 			    dupCount-- ;
 			    if (dupCount<0)
 			      break ;
@@ -97,7 +98,7 @@ public static  IMethod[]  getCUMethods(MethodDeclaration aMethods[], IMethod[] e
 	}
 	
 	
-	return (IMethod[]) methods.toArray(new IMethod[elements.length]) ;	
+	return (JavaElementInfo[]) methods.toArray(new JavaElementInfo[elements.length]) ;	
 }
 
 
@@ -194,7 +195,7 @@ public void visit()  {
 			JavaVEPlugin.log(e, Level.WARNING) ;
 		}
 	}else{
-		IMethod cuMethods[] = getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
+		JavaElementInfo cuMethods[] = getCUMethods(methods, JDTMethods, fModel);
 		if(cuMethods==null || cuMethods.length<1)
 			return;
 		// Compilation unit methods and jdom methods should match.
@@ -206,9 +207,9 @@ public void visit()  {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					methods[i] instanceof MethodDeclaration ) {
-					visitAMethod(methods[i],fModel,fReTryLater,fType,((IMethod)cuMethods[i]).getHandleIdentifier(),
+					visitAMethod(methods[i],fModel,fReTryLater,fType,((JavaElementInfo)cuMethods[i]).getHandle(),
 								cuMethods[i].getSourceRange(),
-								cuMethods[i].getSource()) ;
+								cuMethods[i].getContent()) ;
 				}
 			}
 		}catch (Exception e) {
@@ -233,6 +234,10 @@ protected ISourceRange getSourceRange(int start, int end){
 public String toString() {
 	
 	return super.toString();
+}
+
+public void setJDTMethods(JavaElementInfo[] methods) {
+	JDTMethods = methods;
 }
 
 }
