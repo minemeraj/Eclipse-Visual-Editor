@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-01 19:48:03 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-04 22:25:51 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.net.URL;
@@ -28,6 +28,8 @@ import org.eclipse.pde.internal.core.PluginModelManager;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
+
+import org.eclipse.ve.internal.jface.JFaceColorProxyRegistration;
 
 
 
@@ -62,7 +64,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public void contributeClasspaths(final IConfigurationContributionController controller) throws CoreException {
 		// Add the jar file with the supporting classes required for the JVE into the classpath
 		// In development model the file proxy.jars redirects this to the plugin development project
-		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
+		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "vm/jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
 		
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
  		  // Get the location of the swt dll in the workbench path and add it.
@@ -184,8 +186,6 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
 		// TODO the problem with this here is that it is hard-coded REM stuff. Need a better way to do this.
 		SWTREMProxyRegistration.initialize(registry);	// Set the registry up with SWT REM stuff.
-		// TODO add check here to only call this if this project has the correct JFace jars in its classpath
-		JFaceColorProxyRegistration.initialize(registry); // Prime the JFace ColorRegistry in remote VM
 		
 		// [70275] Need a marker if VM is less than 1.4.2 because of a bug with beaninfo.
 		if (javaProject != null) {

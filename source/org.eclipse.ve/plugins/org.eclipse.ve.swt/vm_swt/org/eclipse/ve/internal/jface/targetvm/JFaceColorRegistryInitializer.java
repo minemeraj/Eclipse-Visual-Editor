@@ -10,15 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorRegistryInitializer.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-01 19:48:03 $ 
+ *  $Revision: 1.1 $  $Date: 2005-04-04 22:25:51 $ 
  */
-package org.eclipse.ve.internal.swt.targetvm;
+package org.eclipse.ve.internal.jface.targetvm;
 
 import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
+
+import org.eclipse.ve.internal.swt.targetvm.Environment;
 
 /**
  * Initialize the JFace ColorRegistry with the JFacePreferences colors from the IDE.

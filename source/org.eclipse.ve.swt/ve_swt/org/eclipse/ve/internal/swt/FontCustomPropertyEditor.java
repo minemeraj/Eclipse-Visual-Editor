@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-02 02:05:42 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-04 22:25:51 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,12 +32,9 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class FontCustomPropertyEditor extends Composite {
 
@@ -108,6 +105,8 @@ public class FontCustomPropertyEditor extends Composite {
 	private List jfaceStylesList = null;
 	private EditDomain fEditDomain = null;
 	private Label initStringLabel = null;
+	private boolean lookupIsJFaceProject = true; // lookup JFace plugin only once
+	private boolean isJFaceProject = false;
 
 	// Used to perform comparisons on strings ignoring case.
 	public class StringIgnoreCaseComparator implements Comparator {
@@ -738,12 +737,15 @@ public class FontCustomPropertyEditor extends Composite {
 		});
 	}
 	/*
-	 * Return true if JFace classes are part of the resource set. 
+	 * Return true if the JFace plugin is part of this Java Project.
 	 * This is used to determine whether or not to add the JFace page to the property editor. 
 	 */
 	protected boolean isJFaceProject() {
-		JavaClass jfaceObjectClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.resource.JFaceResources", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
-		return jfaceObjectClass != null ? jfaceObjectClass.isExistingType() : false;
+		// Look this up only once and store the result in the field isJFaceProject
+		if (lookupIsJFaceProject) {
+			isJFaceProject = BeanSWTUtilities.isJFaceProject(fEditDomain);
+		}
+		return isJFaceProject;
 	}
 
 	/*
