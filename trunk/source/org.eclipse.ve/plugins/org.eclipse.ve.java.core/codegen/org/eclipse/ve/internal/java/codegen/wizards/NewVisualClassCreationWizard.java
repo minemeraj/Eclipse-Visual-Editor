@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.15 $  $Date: 2004-07-14 16:20:22 $ 
+ *  $Revision: 1.16 $  $Date: 2004-07-16 21:33:21 $ 
  */
 
 import java.io.IOException;
@@ -39,6 +39,7 @@ import org.eclipse.ve.internal.java.vce.templates.*;
 public class NewVisualClassCreationWizard extends NewElementWizard implements IExecutableExtension{
 	
 	private NewVisualClassWizardPage fPage;
+	private String superClassName = null;
 	private IVisualClassCreationSourceContributor contributor = null;
 	private String contributorBundleName = null;
 	public static final String VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY = "VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY"; //$NON-NLS-1$
@@ -307,16 +308,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		fPage = new NewVisualClassWizardPage();
 		addPage(fPage);
 		fPage.init(getSelection());
-//		if(superClassName!=null){
-//			fPage.setSuperClass(superClassName, false);
-//		}else{
-//			// TODO Set the defaults in the JavaVEPlugin instead of overhere - Eclipse style
-//			// Set the selection to what was used previously OR default if no previous 
-//			Preferences preferences = JavaVEPlugin.getPlugin().getPluginPreferences();
-//			if(!preferences.getDefaultString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY).equals(DEFAULT_SUPER_CLASS))
-//				preferences.setDefault(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, DEFAULT_SUPER_CLASS);
-//			fPage.setSuperClass(preferences.getString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY), true);
-//		}
+		if(superClassName != null)
+			fPage.setSuperClass(superClassName);
 	}
 	
 	protected void openResource(IResource resource) {
@@ -344,10 +337,16 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			}
 		}
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String,
+	 *      java.lang.Object)
 	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data instanceof String) {
+			superClassName = (String) data;
+		}
 	}
 	
 	/*
