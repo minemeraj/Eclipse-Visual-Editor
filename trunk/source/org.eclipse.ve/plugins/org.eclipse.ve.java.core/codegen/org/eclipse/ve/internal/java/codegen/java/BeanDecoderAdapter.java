@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.13 $  $Date: 2004-05-13 20:30:34 $ 
  */
 
 import java.util.*;
@@ -543,6 +543,8 @@ public final ICodeGenAdapter[] getSettingAdapters(EStructuralFeature sf) {
  * @return the Java Source Range of the method that initializes the bean.
  */
 public ICodeGenSourceRange getJavaSourceRange() throws CodeGenException {
+	
+
    
     CodeMethodRef mr = fBean.getInitMethod() ;
     if (mr != null)
@@ -575,8 +577,14 @@ public ICodeGenSourceRange getBDMSourceRange() throws CodeGenException {
 /**
  * @see org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter#getSelectionSourceRange()
  */
-public ICodeGenSourceRange getHighlightSourceRange()
-	throws CodeGenException {
+public ICodeGenSourceRange getHighlightSourceRange() throws CodeGenException {
+	
+	// First try and get the init expression's source range
+	ICodeGenAdapter[] adapters = getSettingAdapters(CodeGenUtil.getAllocationFeature(fBean.getEObject()));
+	if (adapters!=null && adapters.length>0)
+		return adapters[0].getJavaSourceRange();
+	
+	
 	CodeMethodRef mr = fBean.getInitMethod() ;
 	if (mr != null)
 	  return  mr.getHighlightSourceRange() ;

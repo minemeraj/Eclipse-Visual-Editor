@@ -10,11 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-29 21:06:36 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-13 20:30:34 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
@@ -36,8 +38,7 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	
 	public final static  String METHOD_PREFIX = "create";
 	
-	public final static  String[] ignoredFeatures = {
-	                                                  "allocation" };
+	public final static  String[] ignoredFeatures = {JavaInstantiation.ALLOCATION };
 	
 	public static final String MAIN_TEMPLATE_CLASS_NAME = "SWTMainMethodTemplate" ; //$NON-NLS-1$
 	public static final String MAIN_TEMPLATE_NAME = MAIN_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;

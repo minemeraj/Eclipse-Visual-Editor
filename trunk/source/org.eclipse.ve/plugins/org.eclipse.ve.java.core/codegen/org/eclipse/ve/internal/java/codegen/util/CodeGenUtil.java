@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.20 $  $Date: 2004-04-15 19:55:50 $ 
+ *  $Revision: 1.21 $  $Date: 2004-05-13 20:30:34 $ 
  */
 
 
@@ -30,8 +30,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -510,7 +509,7 @@ public static IJavaObjectInstance getCCconstraint(EObject constraintComponent) {
  * Get the initialization String Feature
  */
 public static EStructuralFeature getAllocationFeature(EObject target) {
-   return  target.eClass().getEStructuralFeature("allocation") ;       //$NON-NLS-1$
+   return  target.eClass().getEStructuralFeature(JavaInstantiation.ALLOCATION) ;       //$NON-NLS-1$
 }
 
 /**
