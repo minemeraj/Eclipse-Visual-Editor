@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-10 18:45:32 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-10 18:46:13 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -154,7 +154,6 @@ public class SWTLauncher implements ILauncher {
 		});
 		
 		Label label1 = new Label(shell, SWT.NONE);
-		//label1.setText("Select the Shell to launch");
 		label1.setText(VCELauncherMessages.getString("SWTLauncher.ChooseShell.SelectMessage")); //$NON-NLS-1$
 		GridData gd = new GridData();
 		gd.horizontalSpan = 2;
@@ -178,7 +177,6 @@ public class SWTLauncher implements ILauncher {
 		}
 		
 		Label label2 = new Label(shell, SWT.WRAP);
-		//label2.setText(MessageFormat.format("To avoid this choice, create a main() method in the {0} class that calls the create method of the correct Shell.", new Object[] {bean.getClass().getName()}));
 		label2.setText(MessageFormat.format(VCELauncherMessages.getString("SWTLauncher.ChooseShell.AddMainMessage"), new Object[] {bean.getClass().getName()})); //$NON-NLS-1$
 		gd = new GridData();
 		gd.horizontalSpan = 2;
