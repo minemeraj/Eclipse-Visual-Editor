@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-01 19:17:13 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -676,19 +676,34 @@ public class BDMMerger {
 			}else{
 				// Remove bean if type has changed
 				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());
-				boolean isThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
-				String mainType = isThisPart?CodeGenUtil.resolve(mainBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) : mainBean.getType();
-				String newType = isThisPart?CodeGenUtil.resolve(newBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) : newBean.getType();
+				String mainType;
+				String newType;
+				if(	mainBean.getSimpleName().equals(BeanPart.THIS_NAME) && 
+						mainBean.getModel().getTypeDecleration()!=null &&
+						mainBean.getModel().getTypeDecleration().getSuperclass()!=null)
+					mainType = CodeGenUtil.resolve(mainBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel());
+				else
+					mainType = mainBean.getType();
+				if(	newBean.getSimpleName().equals(BeanPart.THIS_NAME) &&
+						newBean.getModel().getTypeDecleration()!=null &&
+						newBean.getModel().getTypeDecleration().getSuperclass()!=null)
+					newType = CodeGenUtil.resolve(newBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) ;
+				else
+					newType = newBean.getType();
 				boolean typeChanged = !mainType.equals(newType) ;
 				if(typeChanged){
 					logFiner("Removing changed type bean "+ mainBean.getSimpleName());
 					removed &= removeDeletedBean( mainBean );
 				}else{
-					String mainMethodHandle = mainBean.getInitMethod().getMethodHandle();
-					String newMethodHandle = newBean.getInitMethod().getMethodHandle();
-					if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
-						logFiner("Removing changed init method bean "+mainBean.getSimpleName());
-						removed &= removeDeletedBean( mainBean );
+					CodeMethodRef mainMethod = mainBean.getInitMethod();
+					CodeMethodRef newMethod = newBean.getInitMethod();
+					if(mainMethod!=null && newMethod!=null){
+						String mainMethodHandle = mainMethod.getMethodHandle();
+						String newMethodHandle = newMethod.getMethodHandle();
+						if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
+							logFiner("Removing changed init method bean "+mainBean.getSimpleName());
+							removed &= removeDeletedBean( mainBean );
+						}
 					}
 				}
 			}
