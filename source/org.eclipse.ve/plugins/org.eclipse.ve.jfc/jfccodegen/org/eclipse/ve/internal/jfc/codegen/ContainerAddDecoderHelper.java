@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-02-21 22:51:22 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-01 22:18:01 $ 
  */
 
 import java.util.*;
@@ -575,8 +575,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 				}
 				
 				try {
-					if (fCC != null)
-						CodeGenUtil.propertyCleanup(fCC, CodeGenUtil.getConstraintFeature(fCC));
+					EObject oldConstraint = (EObject) (fCC != null ? fCC.eGet(CodeGenUtil.getConstraintFeature(fCC)) : null);
 	
 					int index = -1;
 					if (indexValueFound)
@@ -604,6 +603,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 						add(CC, fAddedPart, fbeanPart, index);
 					else
 						add(CC, fAddedInstance, fbeanPart, index, true);
+					CodeGenUtil.propertyCleanup(oldConstraint);
 				} catch (Exception e) {
 					throw new CodeGenException(e);
 				}

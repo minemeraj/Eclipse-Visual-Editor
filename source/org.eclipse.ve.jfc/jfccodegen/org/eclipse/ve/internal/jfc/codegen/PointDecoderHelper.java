@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-01 22:18:01 $ 
  */
 
 
@@ -71,9 +71,10 @@ protected boolean	addPointArg(boolean updateEMFmodel) throws CodeGenException {
             EObject target = fbeanPart.getEObject() ;
             EStructuralFeature sf = fFmapper.getFeature(null) ;
             
-            CodeGenUtil.propertyCleanup(target,sf) ;
+            EObject oldPoint = (EObject) target.eGet(sf);
             fbeanPart.getInitMethod().getCompMethod().getProperties().add(value) ;
-            target.eSet(sf,value)   ;  
+            target.eSet(sf,value);
+            CodeGenUtil.propertyCleanup(oldPoint);
 		}
 		else {
 			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Format: number of arguments is not 2",false) ; //$NON-NLS-1$
