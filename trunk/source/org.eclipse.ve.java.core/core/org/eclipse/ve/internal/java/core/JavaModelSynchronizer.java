@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-09 22:47:02 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-10 18:27:35 $ 
  */
 
 import java.util.Iterator;
@@ -30,21 +30,15 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	protected IBeanProxyDomain proxyDomain;
 	protected IJavaProject fProject; // The project this listener is opened on.
 	private boolean recycleVM = false;
-	private Runnable terminateRun;		
+	private Runnable terminateRun;	
+	private String ignoreTypeName;	// The name of the "this" class.
 
 	public JavaModelSynchronizer(IBeanProxyDomain proxyDomain, IJavaProject aProject, Runnable terminateRun) {
-		super();
+		super(ElementChangedEvent.POST_CHANGE);
 		this.proxyDomain = proxyDomain;
 		this.terminateRun = terminateRun;
 		
-		fProject = aProject;
-		
-		// We're really only interested in Post_Change, not the others, so we will
-		// remove ourself (since super ctor added ourself) and then add ourself
-		// back with only post change. (Post change is after everything has been
-		// reconciled and build).
-		JavaCore.removeElementChangedListener(this);
-		JavaCore.addElementChangedListener(this, ElementChangedEvent.POST_CHANGE);	
+		fProject = aProject;		
 	}
 	
 	/* (non-Javadoc)
@@ -98,7 +92,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 				// A file save had occurred. It doesn't matter if currently working copy or not.
 				// It means something has changed to the file on disk, but don't know what.
 				if ((delta.getFlags() & IJavaElementDelta.F_PRIMARY_RESOURCE) != 0) {
-					testForInnerClasses(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
+					testForRecycle(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
 				}						
 				
 				break;
@@ -109,13 +103,15 @@ public class JavaModelSynchronizer extends JavaModelListener {
 				// because there could be a rename which would be a different class.
 				// Currently the element is already deleted and there is no way to find the types in the unit to remove.
 				// So instead we ask factory to see if any registered that start with it plus for inner classes.
-				testForInnerClasses(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
+				testForRecycle(getFullNameFromElement(element));	//Including inner classes, we don't know if it was just them that changed or not at all. no way of knowing.
 				break;
 			}
 		}
 	}
 
-	protected void testForInnerClasses(String sourceName) {
+	protected void testForRecycle(String sourceName) {
+		if (sourceName.equals(ignoreTypeName))
+			return;	// Ignore this type name.
 		String sourceNameForInner = sourceName + '$';
 		IStandardBeanTypeProxyFactory btypeFactory = proxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory();				
 		Iterator itr = btypeFactory.registeredTypes().iterator();
@@ -138,7 +134,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 			// adapter because there could be a rename which would be a different class.
 			// Currently the element is already deleted and there is no way to find the types in the unit to remove.
 			// So instead we ask factory to remove all it any that start with it plus for inner classes.
-			testForInnerClasses(getFullNameFromElement(element));
+			testForRecycle(getFullNameFromElement(element));
 			return; // Since the classfile was removed we don't need to process the children (actually the children list will be empty
 		}
 		processChildren(element, delta);
@@ -221,6 +217,23 @@ public class JavaModelSynchronizer extends JavaModelListener {
 			recycleVM = false;
 			terminateRun.run();
 		}
+	}
+
+	/**
+	 * The fully qualified (for reflection (i.e. $ and .)) name of the type being monitored.
+	 * If this is set, then the listener will not cause the terminateRun to be executed if this name was found.
+	 * @param ignoreTypeName The ignoreTypeName to set.
+	 */
+	public void setIgnoreTypeName(String thisTypeName) {
+		this.ignoreTypeName = thisTypeName;
+	}
+
+	/**
+	 * @return Returns the ignoreTypeName. <code>null</code> if not set.
+	 * @see JavaModelSynchronizer#setIgnoreTypeName(String)
+	 */
+	public String getIgnoreTypeName() {
+		return ignoreTypeName;
 	}
 
 }

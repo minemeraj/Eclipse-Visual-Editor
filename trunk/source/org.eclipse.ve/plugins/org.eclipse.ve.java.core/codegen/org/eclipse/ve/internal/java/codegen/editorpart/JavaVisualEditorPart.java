@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.43 $  $Date: 2004-06-04 23:27:17 $ 
+ *  $Revision: 1.44 $  $Date: 2004-06-10 18:27:35 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -264,6 +264,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected Job setupJob = null; 
 	protected void loadModel(boolean resetVMRecycleCounter) {
+		if(!((IFileEditorInput) getEditorInput()).getFile().isAccessible())
+			return;	// File not there for some reason. Can't load. Leave alone. The next time the editor gets focus the text editor portion is smart enough to close down in this case.
 		if (resetVMRecycleCounter)
 			recycleCntr = 0;	// Reset the counter because we are a new load and ask for it to be reset.
 		setReloadEnablement(false);	// While reloading, don't want button to be pushed.
@@ -277,8 +279,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE")); //$NON-NLS-1$
 			setupJob.setPriority(Job.SHORT); // Make it slightly slower so that ui thread still active
 		}
-		// TODO Not quite happy with this. Need way to cancel and join any previous to be on safe side.
-		// This here will reschedule it to run again if one already running.
 		setupJob.schedule();	// Start asap.
 	}
 
@@ -1338,7 +1338,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (!initialized) {
 					initialize(new SubProgressMonitor(monitor, 100));
 				} else {
-					beanProxyAdapterFactory.setThisTypeName(null);	// Unset the this type since it could actually change after the load is done.					
+					beanProxyAdapterFactory.setThisTypeName(null);	// Unset the this type since it could actually change after the load is done.
+					modelSynchronizer.setIgnoreTypeName(null);	// Nothing to ignore at this time.
 					// Check to see if nature is still valid. If it is not, we need to reinitialize for it. OR it 
 					// could be we were moved to another project entirely.
 					BeaninfoNature nature = (BeaninfoNature) editDomain.getData(NATURE_KEY);
@@ -1383,7 +1384,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					ia.propagate();
 	
 					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
-					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.					
+					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
+					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
 					if (EcoreUtil.getExistingAdapter(
 							dd,
 							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)
