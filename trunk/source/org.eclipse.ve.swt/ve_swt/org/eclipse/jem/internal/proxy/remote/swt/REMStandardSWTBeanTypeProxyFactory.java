@@ -25,6 +25,6 @@ public IREMBeanTypeProxy getExtensionBeanTypeProxy(String className, Integer cla
 	else 
 		return null;
 }
-public void terminateFactory() {
+public void terminateFactory(boolean wait) {
 }
 }

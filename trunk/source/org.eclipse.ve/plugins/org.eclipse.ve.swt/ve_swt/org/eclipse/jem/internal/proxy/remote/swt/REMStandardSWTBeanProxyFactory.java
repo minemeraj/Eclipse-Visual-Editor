@@ -43,8 +43,7 @@ public IRectangleBeanProxy createBeanProxyWith(int x, int y, int width, int heig
 	}
 }
 
-public void terminateFactory() {
-	// TODO Auto-generated method stub
+public void terminateFactory(boolean wait) {
 } 
 
 }

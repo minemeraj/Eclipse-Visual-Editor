@@ -10,24 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-08 18:46:48 $ 
+ *  $Revision: 1.6 $  $Date: 2004-10-12 20:20:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import java.util.*;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.IElementChangedListener;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.ui.*;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
@@ -469,14 +462,20 @@ public class JavaVisualEditorVMController {
 	}
 
 	/**
-	 * The java model listener. It listens for changes to the classpaths of any project of interest.
+	 * The java model and resource change listener. It listens for changes to the classpaths of any project of interest.
 	 * If there are no projects of interest, the listener will be removed and thrown away. It is used
 	 * to determine whether to dispose and rebuild a spare or whether to close a spare and get rid of
 	 * a project info.
 	 * <p>
+	 * The resource change listener part listens for project pre-closing and pre-delete so
+	 * that the vm's for that project can be terminated. Need to be done separately from
+	 * the java model listener because the model listener receives the notification after
+	 * the delete has already been done, but the delete will fail because the remote vm
+	 * is holding onto things.
+	 * <p>
 	 * This must be accessed under sync(perProject) so that we don't cause collisions.
 	 */
-	protected static IElementChangedListener JAVA_MODEL_LISTENER;
+	protected static ChangeListener JAVA_MODEL_LISTENER;
 	
 	/**
 	 * Called by JavaVisualEditorPart to get the next registry that it needs.
@@ -573,6 +572,7 @@ public class JavaVisualEditorVMController {
 			
 			if (JAVA_MODEL_LISTENER != null) {
 				JavaCore.removeElementChangedListener(JAVA_MODEL_LISTENER);
+				ResourcesPlugin.getWorkspace().removeResourceChangeListener(JAVA_MODEL_LISTENER);
 				JAVA_MODEL_LISTENER = null;
 			}
 			
@@ -596,132 +596,157 @@ public class JavaVisualEditorVMController {
 		JavaVEPlugin.getPlugin().setJavaVMControllerDisposer(null);
 	}
 	
+	/*
+	 * Listener for both JavaModel and Resource Change.
+	 * [74714]
+	 * 
+	 * @since 1.0.2
+	 */
+	private static class ChangeListener extends JavaModelListener implements IResourceChangeListener {
+				
+		public ChangeListener() {
+			super(ElementChangedEvent.POST_CHANGE);
+		}
+		
+		protected IJavaProject getJavaProject() {
+			return null;	// We never use this here since we are handling all projects.
+		}
+
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+		 */
+		public void resourceChanged(IResourceChangeEvent e) {
+			// About to close or delete the project and it is ours, so we need to cleanup.
+			IProject project = (IProject) e.getResource();
+			processRemovedProject(project, true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
+			processChangedReferencedProject(project);
+		}
+
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#processJavaElementChanged(org.eclipse.jdt.core.IJavaProject, org.eclipse.jdt.core.IJavaElementDelta)
+		 */
+		protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
+			switch (delta.getKind()) {
+				case IJavaElementDelta.REMOVED:
+					processRemovedProject(element.getProject(), true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
+					processChangedReferencedProject(element.getProject());
+					break;
+				case IJavaElementDelta.ADDED:
+					processChangedReferencedProject(element.getProject());
+					break;
+				case IJavaElementDelta.CHANGED:
+					if ((delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
+						// Treat as a project removed.
+						processRemovedProject(element.getProject(), false);
+						processChangedReferencedProject(element.getProject());
+					} else if (isClasspathResourceChange(delta)) {
+						// This means this project's .classpath file was changed. This is a major
+						// change (though it could be simply attach source), so to be on the safe
+						// side process any referenced project like an add or remove. Plus the project
+						// itself.
+						processChangedProject(element.getProject());
+						processChangedReferencedProject(element.getProject());	
+					}
+					break;
+			}
+		}
+		
+		/**
+		 * Process the changed referenced project. This will see if any existing perProject info
+		 * references this project, and if it does, it will restart the spare for it. The change
+		 * could be because the project was added(or opened), removed(or closed), or its classpath
+		 * was changed. In those cases any projects that reference this project must have their
+		 * spares restarted (if they have one).
+		 *  
+		 * @param project
+		 * @return
+		 * 
+		 * @since 1.0.0
+		 */
+		protected void processChangedReferencedProject(IProject project) {
+			IPath projectPath = project.getFullPath();
+			synchronized(PER_PROJECT) {
+				if (!PER_PROJECT.isEmpty()) {
+					for (Iterator iter = PER_PROJECT.values().iterator(); iter.hasNext();) {
+						PerProject pp = (PerProject) iter.next();
+						// If this perproject is for this project, then don't bother because it is not a referenced change.
+						if (!pp.project.equals(project)) {
+							synchronized (pp) {
+								// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
+								// However, if we are creating one, cancel it. It may not need to be canceled, but we can't
+								// tell because we don't have the necessary info for it until it completes. But we can't wait
+								// for it to truly complete because we could get into a deadlock situation with the builder.
+								RegistryResult spare = pp.getExistingSpare(true);
+								if (spare == null || (spare.configInfo != null && spare.configInfo.getProjectPaths().containsKey(projectPath)))
+									pp.restartSpare();
+							}
+						}
+					} 
+				} 
+			}
+		}	
+		
+		/**
+		 * This processes the project itself. If a project is changed (classpath has been touched),
+		 * then we want to terminate the spare and restart it.
+		 * 
+		 * @param project
+		 * 
+		 * @since 1.0.0
+		 */
+		protected void processChangedProject(IProject project) {
+			synchronized (PER_PROJECT) {
+				PerProject pp = (PerProject) PER_PROJECT.get(project);	
+				if (pp != null) {
+					synchronized (pp) {
+						// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
+						// Cancel any being built too because we are going to restart it.
+						pp.getExistingSpare(true);
+						pp.restartSpare();
+					}
+				}
+			}
+		}
+		
+		/**
+		 * The project itself has been removed. We want to remove the perProject info for it and we
+		 * want to terminate the spare for it.
+		 * 
+		 * @param project
+		 * 
+		 * @since 1.0.0
+		 */
+		protected void processRemovedProject(IProject project, boolean wait) {
+			synchronized (PER_PROJECT) {
+				PerProject pp = (PerProject) PER_PROJECT.remove(project);	// Get rid of it.
+				if (pp != null) {
+					synchronized (pp) {
+						// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
+						RegistryResult spare = pp.getExistingSpare(true);
+						if (spare != null)
+							spare.registry.terminateRegistry(wait);
+					}
+				}
+				if (PER_PROJECT.isEmpty())
+					deactivate();	// We have no more projects, so let's deactivate and not waste resources.					
+			}
+		}			
+		
+	}
+	
 	/**
 	 * Add the java model listener to listen for project changes.
-	 * 
+	 * <p>
+	 * This must be called under sync(PER_PROJECT)
 	 * @since 1.0.0
 	 */
 	protected static void addJavaModelListener() {
-		// It is assumed that we are sync(perProject) at this point.
+		// It is assumed that we are sync(PER_PROJECT) at this point.
 		// Creating it actually adds it to listening.
-		JAVA_MODEL_LISTENER = new JavaModelListener(ElementChangedEvent.POST_CHANGE) {
-
-			protected IJavaProject getJavaProject() {
-				return null;	// We never use this here since we are handling all projects.
-			}
-
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#processJavaElementChanged(org.eclipse.jdt.core.IJavaProject, org.eclipse.jdt.core.IJavaElementDelta)
-			 */
-			protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
-				switch (delta.getKind()) {
-					case IJavaElementDelta.REMOVED:
-						processRemovedProject(element.getProject());
-						processChangedReferencedProject(element.getProject());
-						break;
-					case IJavaElementDelta.ADDED:
-						processChangedReferencedProject(element.getProject());
-						break;
-					case IJavaElementDelta.CHANGED:
-						if ((delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
-							// Treat as a project removed.
-							processRemovedProject(element.getProject());
-							processChangedReferencedProject(element.getProject());
-						} else if (isClasspathResourceChange(delta)) {
-							// This means this project's .classpath file was changed. This is a major
-							// change (though it could be simply attach source), so to be on the safe
-							// side process any referenced project like an add or remove. Plus the project
-							// itself.
-							processChangedProject(element.getProject());
-							processChangedReferencedProject(element.getProject());	
-						}
-						break;
-				}
-			}
-			
-			/**
-			 * Process the changed referenced project. This will see if any existing perProject info
-			 * references this project, and if it does, it will restart the spare for it. The change
-			 * could be because the project was added(or opened), removed(or closed), or its classpath
-			 * was changed. In those cases any projects that reference this project must have their
-			 * spares restarted (if they have one).
-			 *  
-			 * @param project
-			 * @return
-			 * 
-			 * @since 1.0.0
-			 */
-			protected void processChangedReferencedProject(IProject project) {
-				IPath projectPath = project.getFullPath();
-				synchronized(PER_PROJECT) {
-					if (!PER_PROJECT.isEmpty()) {
-						for (Iterator iter = PER_PROJECT.values().iterator(); iter.hasNext();) {
-							PerProject pp = (PerProject) iter.next();
-							// If this perproject is for this project, then don't bother because it is not a referenced change.
-							if (!pp.project.equals(project)) {
-								synchronized (pp) {
-									// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-									// However, if we are creating one, cancel it. It may not need to be canceled, but we can't
-									// tell because we don't have the necessary info for it until it completes. But we can't wait
-									// for it to truly complete because we could get into a deadlock situation with the builder.
-									RegistryResult spare = pp.getExistingSpare(true);
-									if (spare == null || (spare.configInfo != null && spare.configInfo.getProjectPaths().containsKey(projectPath)))
-										pp.restartSpare();
-								}
-							}
-						} 
-					} 
-				}
-			}	
-			
-			/**
-			 * This processes the project itself. If a project is changed (classpath has been touched),
-			 * then we want to terminate the spare and restart it.
-			 * 
-			 * @param project
-			 * 
-			 * @since 1.0.0
-			 */
-			protected void processChangedProject(IProject project) {
-				synchronized (PER_PROJECT) {
-					PerProject pp = (PerProject) PER_PROJECT.get(project);	
-					if (pp != null) {
-						synchronized (pp) {
-							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							// Cancel any being built too because we are going to restart it.
-							pp.getExistingSpare(true);
-							pp.restartSpare();
-						}
-					}
-				}
-			}
-			
-			/**
-			 * The project itself has been removed. We want to remove the perProject info for it and we
-			 * want to terminate the spare for it.
-			 * 
-			 * @param project
-			 * 
-			 * @since 1.0.0
-			 */
-			protected void processRemovedProject(IProject project) {
-				synchronized (PER_PROJECT) {
-					PerProject pp = (PerProject) PER_PROJECT.remove(project);	// Get rid of it.
-					if (pp != null) {
-						synchronized (pp) {
-							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							RegistryResult spare = pp.getExistingSpare(true);
-							if (spare != null)
-								spare.registry.terminateRegistry();
-						}
-					}
-					if (PER_PROJECT.isEmpty())
-						deactivate();	// We have no more projects, so let's deactivate and not waste resources.					
-				}
-			}			
-			
-		};
+		JAVA_MODEL_LISTENER = new ChangeListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(JAVA_MODEL_LISTENER, IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 	}
 	
 	/**
