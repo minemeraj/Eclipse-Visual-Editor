@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.18 $  $Date: 2005-03-17 20:35:53 $ 
  */
 
 import java.util.ArrayList;
@@ -123,7 +123,8 @@ public class JavaSourceSynchronizer implements ISynchronizable{
 				    updateStatus.setCollectingDeltas(true); 
 				}
 				else {
-					// nothing todo
+					updateStatus.setBottomUpProcessing(false);
+					// do nothing
 					return ;
 				}
 			}
@@ -273,6 +274,7 @@ public void stallProcessing() {
  */
 public synchronized void resumeProcessing() {
 	stalled=false;
+	updateStatus.setBottomUpProcessing(true);  
 	driveNewEvent(null);
 }
 
