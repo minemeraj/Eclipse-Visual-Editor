@@ -1,0 +1,66 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: LinkBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-03-23 22:07:20 $ 
+ */
+package org.eclipse.swt.widgets.beaninfo;
+
+import java.beans.BeanDescriptor;
+import java.beans.EventSetDescriptor;
+import java.beans.PropertyDescriptor;
+
+/**
+ * @since 1.1
+ */
+public class LinkBeanInfo extends IvjBeanInfo {
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
+	 */
+	public Class getBeanClass() {
+		return org.eclipse.swt.widgets.Link.class;
+	}
+	
+	public BeanDescriptor getBeanDescriptor() {
+		BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
+		SweetHelper.mergeSuperclassStyleBits(descriptor);
+		return descriptor;
+	}
+	/* (non-Javadoc)
+	 * @see java.beans.BeanInfo#getEventSetDescriptors()
+	 */
+	public EventSetDescriptor[] getEventSetDescriptors() {
+		return new EventSetDescriptor[] {
+				SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
+		};
+	}
+
+	/**
+	 * Return the property descriptors for this bean.
+	 * @return java.beans.PropertyDescriptor[]
+	 */
+	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+		try {
+			PropertyDescriptor aDescriptorList[] = {
+				// text
+				super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, LinkMessages.getString("textDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, LinkMessages.getString("textSD"), //$NON-NLS-1$
+				}
+				),
+			};
+			return aDescriptorList;
+		} catch (Throwable exception) {
+			handleException(exception);
+		};
+		return null;
+	}
+}

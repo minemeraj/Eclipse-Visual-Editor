@@ -92,6 +92,16 @@
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Dropdown.xmi#ToolItemDropdown_1">
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Dropdown"/>
       </cmpEntries>      
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry21" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry21obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Link"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Link"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry22" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/spinner_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry22obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Spinner"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Spinner"/>
+      </cmpEntries>
     </cmpGroups>    
   </palette:CategoryCmp>
   <palette:CategoryCmp xmi:id="swtCat1">
