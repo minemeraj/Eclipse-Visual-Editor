@@ -1,9 +1,17 @@
 package org.eclipse.ve.internal.jfc.core;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 /*
- * Licensed Material - Property of IBM 
- * (C) Copyright IBM Corp. 2003 - All Rights Reserved. 
- * US Government Users Restricted Rights - Use, duplication or disclosure 
- * restricted by GSA ADP Schedule Contract with IBM Corp. 
+ *  $RCSfile: ShowGridObjectActionDelegate.java,v $
+ *  $Revision: 1.2 $  $Date: 2004-03-26 16:35:58 $ 
  */
 
 import org.eclipse.gef.EditPart;
@@ -16,14 +24,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ShowGridAction;
 
-/**
- * @author pwalker
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
 public class ShowGridObjectActionDelegate implements IObjectActionDelegate {
 	protected ShowGridAction sgAction;
 	private EditPart fEditPart;
@@ -47,7 +47,7 @@ public class ShowGridObjectActionDelegate implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		fEditPart = null; // clear out previous selection
+		fEditPart = null;	// clear out previous selection
 		if (((IStructuredSelection) selection).size() != 1)
 			action.setEnabled(false);
 		else {
