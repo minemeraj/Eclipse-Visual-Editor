@@ -100,9 +100,7 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	public void setData(Object data) {
 		fEditDomain = (EditDomain) data;
 	}
-	/* (non-Javadoc)
-	 * @see com.ibm.etools.jbcf.IJBCFCellEditor#getJavaInitializationString()
-	 */
+
 	public String getJavaInitializationString() {
 		return initString;
 	}	

@@ -16,7 +16,7 @@ import org.eclipse.ve.internal.cde.core.VisualComponentSupport;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 /**
- * This is the IDE class that is the callback listener for com.ibm.etools.jbcf.visual.vm.ComponentListener
+ * This is the IDE class that is the callback listener for ComponentListener
  * that is running in the target VM
  * Implementors of IVisualComponentListeners can add themselves as listeners to this
  * and they will be notified when the component moves, resizes, or is hidden or shown
