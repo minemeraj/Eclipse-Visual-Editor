@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.24 $  $Date: 2004-09-01 17:36:42 $ 
  */
 
 import java.util.Iterator;
@@ -452,12 +452,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 
 		org.eclipse.emf.ecore.EStructuralFeature sf = fFmapper.getFeature(fExpr);
 		IJavaObjectInstance parent = (IJavaObjectInstance) fbeanPart.getEObject();
-		EObject setting = (EObject) parent.eGet(sf) ;
-		if (setting != null) {
-		  parent.eUnset(sf);
-		  cleanProperty(setting) ;
+		if (parent.eIsSet(sf)) {
+			EObject setting = (EObject) parent.eGet(sf) ;
+			parent.eUnset(sf);
+			cleanProperty(setting) ;
 		}
-		parent.eUnset(sf);
 	}
 
 	public String generate(Object[] noArgs) throws CodeGenException {
