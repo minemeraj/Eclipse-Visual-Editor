@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-20 13:30:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-21 19:34:38 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -77,13 +77,14 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	protected Button fDefaultLocaleButton;
 			
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+	protected Composite comp;
 	
 	/**
 	 * @see ILaunchConfigurationTab#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
 		
-		Composite comp = new Composite(parent, SWT.NONE);
+		comp = new Composite(parent, SWT.NONE);
 		setControl(comp);
 		GridLayout topLayout = new GridLayout();
 		comp.setLayout(topLayout);		
@@ -352,6 +353,9 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		} catch ( CoreException exc ) {
 			fLookAndFeelList.setSelection(0);
 		}
+		
+		// relayout to reflect the new look and feel list size
+		comp.layout();
 	}
 	
 	protected void updateProjectFromConfig(ILaunchConfiguration config) {
