@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2004-09-02 14:42:19 $ 
+ *  $Revision: 1.25 $  $Date: 2004-09-10 22:40:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -161,6 +161,24 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			public String resolveType(Name name) {
 				Resolved r = bdm.getResolver().resolveType(name);
 				return r != null ? r.getName() : null;
+			}
+			
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveThis()
+			 */
+			public PTExpression resolveThis() {
+				BeanPart bp = bdm.getABean(BeanPart.THIS_NAME);
+				if (bp != null) {
+					PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+					IJavaObjectInstance o = (IJavaObjectInstance) bp.getEObject();
+					if (ref != null && !ref.contains(o))
+						ref.add(o);
+					ptref.setObject(o);
+					return ptref;
+				} else {
+					return InstantiationFactory.eINSTANCE.createPTThisLiteral();
+				}
 			}
 			
 			/*
