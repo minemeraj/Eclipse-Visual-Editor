@@ -592,6 +592,7 @@ plugin.<br>
 <img style="border: 1px solid ; width: 465px; height: 502px;"
  alt="JarExport" src="images/index.9.jpg"><br>
 <br>
+<h3><a name="Testing_MyCustomPrompter"></a>Testing MyCustomPrompter</h3>
 <a name="Testing_as_a_JAR"></a>Having created the plugin you can now
 test it.&nbsp; To do this create an Eclipse launch configuration using
 the <span style="font-weight: bold;">Run </span>menu to bring up the
@@ -688,7 +689,7 @@ of the <span style="font-style: italic;">org.eclipse.ve.examples.customwidget
 </span>plugin.<br>
 </p>
 <blockquote> </blockquote>
-<pre><br>  &lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br><img
+<pre><br>  <a name="ContainerPageDefinition"></a>&lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br><img
  style="width: 24px; height: 13px;" alt="tag1" src="images/tag1.gif">         name="Custom Prompter"<br><img
  style="width: 24px; height: 13px;" alt="tag2" src="images/tag_2.gif">         class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"<br><img
  style="width: 24px; height: 13px;" alt="tag3" src="images/tag_3.gif">         id="org.eclipse.ve.example.PrompterContainer"&gt;<br>      &lt;/classpathContainerPage&gt;<br>   &lt;/extension&gt;  <br></pre>
@@ -761,7 +762,8 @@ extension point.&nbsp; <span style="font-style: italic;"></span><br>
 <pre> &lt;extension<br>         point="org.eclipse.ve.java.core.registrations"&gt;<br>      &lt;registration<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">       container="org.eclipse.ve.example.PrompterContainer"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">       description="Custom Prompter"&gt;<br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">     &lt;library runtime="customwidgets.jar"/&gt;<br>      &lt;/registration&gt;<br>   &lt;/extension&gt; <br></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">     &lt;<a
+ name="library_definition"></a>library runtime="customwidgets.jar"/&gt;<br>      &lt;/registration&gt;<br>   &lt;/extension&gt; <br></pre>
 The&nbsp; name of the container must match the id used when the
 classpath wizard page and container initializer were defined.&nbsp;
 This tutorial is using <img style="width: 24px; height: 13px;" alt=""
@@ -780,141 +782,379 @@ location of the jar is relative to the plugin itself, so if <span
  style="font-style: italic;">customwidgets.jar </span>were in a
 directory called <span style="font-style: italic;">jars </span>within
 the plugin then the entry would be runtime="jars/.customwidgets.jar".<br>
+<br>
+Having update the plugin.xml file to define the classpath container the
+next step is to test this.<br>
 <h2><a name="Using_a_classpath_container"></a>Using a classpath
 container<br>
 </h2>
-<p>If you launch the workspace you will be able to see/use this
-container :</p>
-<blockquote>
-  <p>Launch the workspace with an Eclipse Application configuration</p>
-  <blockquote>
-    <blockquote>
-      <p><img border="0" src="images/index.11.jpg"></p>
-    </blockquote>
-  </blockquote>
-</blockquote>
-<p>
-&nbsp;</p>
-<p>
-Create a new Java Project, and go to the the Build Path's Libraries
-configuration page. The Custom Prompter container should be available.</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.12.jpg" class="PictureStyle"></p>
-<p>
-&nbsp;</p>
-<p>
-If you click Next, you should see that it is configured as following</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <blockquote>
-        <p><img border="0" src="images/index.13.jpg"></p>
-      </blockquote>
-    </blockquote>
-  </blockquote>
-</blockquote>
-<p>
-Click Finish and OK to add the widget jar to your project.</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <blockquote>
-        <p><img border="0" src="images/index.14.jpg"></p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-      </blockquote>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<p>Launch the Eclipse Application workbench using the <span
+ style="font-weight: bold;">Run </span>menu to open the runtime
+environment in which the <span style="font-style: italic;">MyCustomPrompter
+</span>class can be tested.&nbsp; If you have previously done this and
+created a Java project with a build path entry pointing to the <span
+ style="font-style: italic;">customwidgets.jar</span> as described
+earlier remove the jar from the build path.&nbsp; Otherwise create a
+new Java project.<br>
+</p>
+<p>The next steps are the experience that a user of the plugin will
+take to configure a Java project to work with the <span
+ style="font-style: italic;">MyCustomPrompter </span>custom
+control.&nbsp; Open the properties for the Java project using the <span
+ style="font-weight: bold;">Properties </span>choice on the pop-up
+menu and select <span style="font-style: italic;">Java Build Path.</span><span
+ style="font-weight: bold;"><span style="font-style: italic;">&nbsp; </span></span>Select
+the <span style="font-style: italic;">Libraries </span>tab and choose
+the <span style="font-style: italic;">Add Library </span>button.&nbsp;
+This will bring up a list of all known Java containers which will
+include the <span style="font-style: italic;">Custom Prompter</span>
+as defined using the extension point
+org.eclipse.jdt.ui.classpathcontainerPage <a
+ href="#ContainerPageDefinition">earlier.</a> The figure below shows
+the Java build path for a project called <span
+ style="font-style: italic;">Test </span>and the Custom Prompter
+displayed in the <span style="font-style: italic;">l</span>list of
+available libraries opened from the <span style="font-style: italic;">Add
+Library </span>button<span style="font-style: italic;"><span
+ style="font-weight: bold;"><span style="font-style: italic;"><span
+ style="font-weight: bold;"><br>
+</span></span></span></span></p>
+<p><img style="width: 656px; height: 437px;" alt=""
+ src="images/CustomPrompterContainerPage.JPG"><br>
+<span style="font-style: italic;"><span style="font-weight: bold;"><span
+ style="font-style: italic;"><span style="font-weight: bold;"></span></span></span></span></p>
+<p class="PictureParagraph"></p>
+<p>Select the <span style="font-style: italic;">Custom Prompter </span>and
+press Next to view the wizard page <span style="font-style: italic;">org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage
+</span>defined <a href="#ContainerPageDefinition">earlier</a>.&nbsp;
+This is a generic example of a page and shows details of the jar that
+will be added by the page.&nbsp; For commercial quality plugins it is
+expected that this page however will be a specific to the particular
+plugin.&nbsp; <br>
+</p>
+Pressing Finish on the wizard page will configure the project (using
+the RegisteredClasspathcontainerInitializer defined earlier) to include
+the container <span style="font-style: italic;">RegisteredClasspathContainer
+</span>together with the id of<span style="font-style: italic;">
+org.eclipse.ve.examples.PrompterContainer.&nbsp; </span>Expanding the
+container in the project's build path will show that it points to the
+correct location for the customwidgets.jar as described in the <span
+ style="font-family: monospace;">&lt;library
+runtinme="customwidgets.jar"&gt;</span> plugin.xml tag described <a
+ href="#library_definition">earlier</a>.<br>
+<br>
+<img style="width: 267px; height: 138px;" alt=""
+ src="images/TestProjectBuildPath.JPG"><br>
+<br>
+<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> The figures above for configuring
+the project Test's build path to include the <span
+ style="font-style: italic;">Custom Prompter</span> container entry
+show two other containers, namely the <span style="font-style: italic;">JRE
+System library</span> and the <span style="font-style: italic;">Standard
+Widget Toolkit.</span>&nbsp;&nbsp; The JRE container will be present on
+the Java project by default when it is first created, however the SWT
+container will not be.&nbsp; This is a container defined by the plugin
+project <span style="font-style: italic;">org.eclipse.ve.swt</span>
+that enables the Visual Editor to work with the SWT.&nbsp; If you
+created the Test project in the step <a
+ href="#Testing_MyCustomPrompter">Testing the custom prompter</a>
+described earlier when you created the test class using the <span
+ style="font-style: italic;">New Visual Class Wizard</span><span
+ style="font-weight: bold;"><span style="font-style: italic;"><span
+ style="font-weight: bold;"> </span></span><span
+ style="font-weight: bold;"></span></span>and selected SWT application
+the wizard automatically added the SWT container to the project's build
+path as required.&nbsp; SWT support for the Visual Editor can be
+manually added by using the steps described above but selecting <span
+ style="font-style: italic;">Standard Widget Toolkiit </span>instead
+of <span style="font-style: italic;">Custom Prompter </span>on the<span
+ style="font-style: italic;"> Add Library </span>wizard page.&nbsp;
+Adding dependent containers (CustomPrompter requires SWT) is not
+something that is supported by the reference implementation of
+RegisteredClassPathContainer and it is expected that commercial quality
+plugins will provide their own container class with the required logic
+to ensure consistency of dependent containers in the user's build path.<br>
+<br>
+Having configured the Test project to use the <span
+ style="font-style: italic;">Custom Prompter</span> container you can
+now test it by creating an SWT Shell from the <span
+ style="font-style: italic;">New Visual Class Wizard </span>and
+dropping <span style="font-style: italic;">MyCustomPrompter </span>using
+the <span style="font-style: italic;">Choose Bean ... </span>palette
+entry.&nbsp; the next step is to configure the palette so that a new
+category called <span style="font-style: italic;">Custom </span>is
+added that has an entry for the <span style="font-style: italic;">MyCustomPrompter
+</span>class.<br>
+<br>
 <h2><a name="Adding_a_palette_category_for_our_widget">Adding a palette
-category for our widget</a></h2>
-The VE palette is defined with <a
- href="http://www.omg.org/technology/documents/formal/xmi.htm">XMI</a>.
-We are going to create a <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi?cvsroot=Tools_Project">customprompter.xmi</a>
-file and place it at the root of our plugin
-<blockquote>
-  <pre>&lt;xmi:XMI xmi:version="2.0" <br>  xmlns:xmi="http://www.omg.org/XMI" <br>  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;  <br>  &lt;palette:CategoryCmp xmi:id="swtCat0"&gt;<br>    &lt;<font
- color="#0000ff">categoryLabel</font> xsi:type="utility:ConstantString" <b><font
- color="#ff0000">string="Custom"</font></b>/&gt;<br>    &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br>    <br>      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" <font
- color="#0000ff">icon16Name</font>="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>        &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br>          <font
- color="#0000ff">creationClassURI</font><b><font color="#ff0000">=</font></b><font
- color="#ff0000">"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"</font>/&gt;<br>        &lt;<font
- color="#0000ff">entryLabel</font> xsi:type="utility:ConstantString" <b><font
- color="#ff0000">string="Prompter"</font></b>/&gt;<br>      &lt;/cmpEntries&gt; <br>      <br>    &lt;/cmpGroups&gt;<br>  &lt;/palette:CategoryCmp&gt;<br>&lt;/xmi:XMI&gt;<br></pre>
-</blockquote>
-<p>What this xmi file says is that we are creating a new category (a
-GEF palette drawer), with a "<font color="#ff0000">Custom</font>"
-label.&nbsp; This category will have a single entry with an icon, a
-label ("<font color="#ff0000">Prompter</font>"), and a class URI for
-our <i>MyCustomPrompter</i> class.</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">You will
-have&nbsp; to add the palette's icon to your project at the path
-designated above
+category for MyCustomPrompter</a><br>
+</h2>
+The visual editor's palette is described by an EMF model.&nbsp; EMF
+serializes to&nbsp; <a
+ href="http://www.omg.org/technology/documents/formal/xmi.htm">XMI</a>
+whih is an XML representation of a graph of EMF objects.&nbsp; Plugins
+can define their own XMI files that describe the categories to be added
+to the palette, the groups these belond to, and the actual entries
+themselves.&nbsp; For the org.eclipse.ve.examples.customwidgets plugin
+there will be a palette XMI file that describes the single category and
+class to add.<br>
+<br>
+Create a file called customprompter.xmi in the plugin and open it with
+a text editor.&nbsp; The data for the file is shown below and can be
+downloaded directly from <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi?cvsroot=Tools_Project">CVS</a>
+to avoid re-entry.<br>
+<br>
+<pre>  &lt;xmi:XMI xmi:version="2.0" <br>    xmlns:xmi="http://www.omg.org/XMI" <br>    xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>    xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;  <br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif">  &lt;palette:CategoryCmp&gt;<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">  &lt;categoryLabel xsi:type="utility:ConstantString" string="Custom"/&gt;<br>      &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br>    <br><img
+ style="width: 23px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif">      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>          &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">         creationClassURI<b>=</b>"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">       &lt;entryLabel xsi:type="utility:ConstantString" string="Prompter"/&gt;<br>        &lt;/cmpEntries&gt; <br>      <br>      &lt;/cmpGroups&gt;<br>    &lt;/palette:CategoryCmp&gt;<br>  &lt;/xmi:XMI&gt;</pre>
+The&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> &lt;palette:categoryCmp&gt; tag describes a
+palette category that has a label and groups, each group containing a
+number of entries.&nbsp; In the example for the tutorial the label is
+hard coded to the literal&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag_2.gif"> <span style="font-style: italic;">"Custom".&nbsp;
+</span><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62"> For a plugin that needed to
+support different language locales there is an EMF class
+utility:TranslatableString and examples of its usage can be found in
+the palette files for the plugin org.eclipse.ve.jfc.<br>
+A single group is defined for the Custom category.&nbsp; If multiple
+groups are defined the palette demarks these visually with a
+separator.&nbsp; The group has a single entry that defines the&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
+graphic, the qualified&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag_4.gif"> name of the class and the literal <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+string that is displayed on the palette entry.&nbsp; The&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
+graphic points to the URL of where the image is located, in this case
+the entry points to a file <span style="font-style: italic;">custom.gif
+</span>in the <span style="font-style: italic;">icons </span>directory
+of the plugin called <span style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
+</span>The graphic used&nbsp;<img style="width: 16px; height: 16px;"
+ alt="" src="images/custom.gif"> is available in <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project">CVS</a>
+and you will need to create a folder called <span
+ style="font-style: italic;">icons </span>in the plugin and copy it
+there.<br>
+<br>
 <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project">icons/custom.gif</a></p>
-<blockquote>
-  <blockquote>
-    <p><img border="0" src="images/index.15.jpg"></p>
-  </blockquote>
-</blockquote>
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project"></a><img
+ style="border: 1px solid ; width: 241px; height: 97px;" alt=""
+ src="images/IconsFolder.JPG"><br>
 <p>
-<img src="images/tip.gif" alt="Tip: " height="13" width="62">XMI files
-are quite verbose and easy to make syntax mistakes in. The best way to
-use them, is to take one that works, and change the areas the satisfy
-your needs.</p>
+<img src="images/tip.gif" alt="Tip: " height="13" width="62"> Because
+XMI files do not have anything to validate them at design time errors
+made in their syntax can easily be made that cause runtime problems
+that can be hard to trace and debug.&nbsp; The most straightforward way
+to write a Visual Editor XMI file is to copy an existing one that is
+similar to what you desire and then alter just the parts that need
+changing.<br>
+</p>
+<p>Having create the <span style="font-style: italic;">customprompter.xmi
+</span>file we need to enable the Visual Editor to use it.&nbsp; This
+is done by associating the palette file with a classpath container, in
+our case the Custom Prompter.&nbsp; <br>
+</p>
 <p>Now that we have our palette xmi file available, we need to
 contribute it to the Visual Editor.&nbsp; We do so by adding to the
-following extension in the <a
+following extension in the plugin's&nbsp; <a
  href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
-manifest:</p>
-<blockquote>
-  <pre>   &lt;extension<br>         point="org.eclipse.ve.java.core.contributors"&gt;<br>      &lt;palette<br>            <font
- color="#0000ff">container</font>="org.eclipse.ve.example.PrompterContainer"<br>            categories="<font
- color="#0000ff"><b>customprompter.xmi</b></font>"/&gt;<br>   &lt;/extension&gt;  			<br> </pre>
-</blockquote>
-<p>This extension say to the Visual Editor that when the
-PrompterContainer is on the classpath of the project, contribute the
-palette noted on the xmi file.</p>
-<hr>
-<p>Launch again the IDE, and create a Visual SWT Class (e.g., Shell)
-and look at the palette... MyCustomPrompter now be available (as you
-can see in the following figure):</p>
-<blockquote>
-  <p class="PictureParagraph"> <a name="Figure"> <img border="0"
- src="images/index.1.jpg" class="PictureStyle"></a></p>
-  <p>&nbsp;</p>
-</blockquote>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">Make
-sure to launch the workspace with the -clean option, as we have changed
-the manifest file.</p>
-<p>
-&nbsp;</p>
-<h2><a name="Using_an_ENUM_cell_editor">Using an ENUM cell editor</a></h2>
-<p>&nbsp;</p>
-<p>The MyCustomPrompter class has an <i>int</i> property named <i><b>type</b></i>
-with a <i>getType</i>() and <i>setType</i>() (see the <i>setType</i>
-method below).&nbsp; The <i>setType</i> method will only accept three
-integer values, 0, 1, and 2.<br>
-If you look at the previous <a href="#Figure">figure</a>,&nbsp; the
-Visual Editor will use (by default) an <i>int</i> cell editor for the
-type property.&nbsp; We would like in this tutorial to make the Visual
-Editor use an enum cell editor that will have a pull down with three
-options: Dots, More, and Open.</p>
-<p>
+manifest file.<br>
 </p>
-<pre>	public final static int DOTS = 0;<br>	public final static int MORE = 1;<br>	public final static int OPEN = 2;<br>	<br>		:<br>		:<br>    public void setType (int type) {<br>    	switch (type) {<br>    	   case DOTS: button.setText("...");<br>    	   	break;<br>    	   case MORE: button.setText("More");<br>    	   	break;<br>    	   case OPEN: button.setText("Open");<br>    	   	break;<br>    	   default:<br>    	    throw new IllegalArgumentException("Value " + type + " must be one of 0, 1 or 2");<br>    	}<br>    }<br></pre>
-<p>&nbsp;</p>
+<pre>  &lt;extension<br><img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif">    point="org.eclipse.ve.java.core.contributors"&gt;<br>    &lt;palette<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   container="org.eclipse.ve.example.PrompterContainer"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">   categories="<b>customprompter.xmi</b>"/&gt;<br>  &lt;/extension&gt;  	</pre>
+<p>The extension point used is&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> <span
+ style="font-style: italic;">org.eclipse.ve.java.core.contributors. </span>This
+has a &lt;palette&gt; child XML tag that points to the id of the&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">
+container whose inclusion in a project's build path causes the palette
+catgories defined in the&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag_3.gif"> categories tag to be included. The
+palette categories tag is relative to the root of the plugin project,
+for example If the palette XMI file is in a folder called <span
+ style="font-style: italic;">palette </span>then the entry would be <span
+ style="font-family: monospace;">categories="palette/customprompter.xmi".</span><br>
+</p>
+<p>When the Visual Editor starts it scans all of the project's build
+path entries and for any that are containers it looks to see whether
+there are any palette files.&nbsp; These are combined together to
+create the overall palette.<br>
+</p>
+<p>Advanced &gt;&gt; As well as describing palette entries directly it
+is possible to configure the Visual Editor to have an
+IConfigurationContribution that has the ability to manipulate both the
+-classpath of the Visual Editor's VM and the palette with more fine
+control.&nbsp; An example of where this is done is by SWT that has to
+add runtime packages such as DLLs or packages to the VM's arguments, or
+a plugin that might wish to remove some of the existing palette
+entriies (such as the JFC ones) for projects configured with their
+container present.<br>
+</p>
+<p>Advanced&gt;&gt; As well as defining containers to be the trigger
+point for Visual Editor custom behavior you can also use plugins by
+direct name.&nbsp; An example of where you might do this is if you were
+extending the Visual Editor to work with a set of classes that were
+containined in a specific plugin, so the user experience to enable a
+Java project would be to add a dependent plugin rather than a classpath
+container.&nbsp; An example of this might be something like a PDE type
+development environment for the actual end user.<br>
+</p>
+<h3>Testing the custom palette</h3>
+Having modified the manifest of the example plugin to include the
+plugin the next step is so test it.&nbsp; Do this by launching the
+Eclipse Application workbench and creating, or re-opening, a class
+MyShell that was created from the <span style="font-style: italic;">New
+Visual Class <span style="font-style: italic;">Wizard </span></span>as
+an SWT application.&nbsp; The Visual Editor should detect that the
+container with an id of <span style="font-style: italic;">org.eclipse.ve.example.PrompterContainer
+</span>is in the project's build path and include the palette
+categories contained in the <span style="font-style: italic;">custompalette.xmi
+</span>file.&nbsp; This is shown in the figure below where the Prompter
+palette entry has been selected and dragged out onto the Shell.&nbsp; <br>
+<br>
+<img style="width: 503px; height: 439px;" alt=""
+ src="images/CustomPalette.JPG"><br>
+<br>
+<img style="width: 63px; height: 13px;"
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: "> When you llaunch the Eclipse Application workspace use
+the -clean option, as each time the plugin.xml manifest file has
+changed we need to be sure the runtinme Eclipse environment clears its
+cache'd manifest details<br>
+<br>
+At this point in the tutorial you should have defined a classpath
+container that the user can configure a Java project with to include
+the jar containing the runtime code for the <span
+ style="font-style: italic;"><span style="font-style: italic;"><span
+ style="font-style: italic;">MyCustomPrompter </span></span></span>class.&nbsp;
+The extension point <span style="font-style: italic;">org.eclipse.ve.java.core.contributors
+</span>has been used to point to the location of a palette XMI file
+that contains a category with an entry for the class.<br>
+<br>
+The next steps are to configure the Visual Editor so that <span
+ style="font-style: italic;">MyCustomPrompter </span>has custom
+behavior over and above that it inherits by virtue of extending <span
+ style="font-style: italic;">org.eclipse.swt.widgets.Composite</span>.<br>
+<h2><a name="Using_an_ENUM_cell_editor">Enumerated values for a property</a></h2>
+<p><span style="font-family: monospace;">MyCustomPrompter </span>class
+has an <i>int</i> property named <i style="font-weight: bold;">type</i><span
+ style="font-weight: bold;">
+</span>with <i>getType</i>() and <i>setType</i>(int aType)
+methods.&nbsp; While the signature of <i>setType</i> allows ito accept
+any int, the class itself only works with one of the three values 0, 1,
+or 2 The definition of the the values is held in three static constants
+on the <span style="font-family: monospace;">MyPrompterClass</span>.<br>
+</p>
+<pre><span style="color: rgb(153, 51, 0);">public final static int</span> <span
+ style="font-style: italic; color: rgb(51, 51, 255);">DOTS </span>= 0;<br><span
+ style="color: rgb(153, 51, 0);">public final static int</span> <span
+ style="color: rgb(51, 51, 255); font-style: italic;">MORE </span><span
+ style="font-style: italic;">= </span>1;<br><span
+ style="color: rgb(153, 51, 0);">public final static int</span> <span
+ style="color: rgb(51, 51, 255); font-style: italic;">OPEN </span>= 2;<br></pre>
+<p>The significance of the three values is that they alter the button
+text for <span style="font-family: monospace;">MyCustomPrompter to </span>be
+either "...", "More", or "Open" respectively.&nbsp;&nbsp; The following
+code shows this for <span style="font-family: monospace;">MyCustomPrompter</span>'s
+<span style="font-family: monospace;">setType(int type)</span> method.<br>
+</p>
+<pre><span style="color: rgb(153, 0, 0);">public void</span> setType (<span
+ style="color: rgb(153, 0, 0);">int </span>type) {<br>  <span
+ style="color: rgb(153, 0, 0);">switch</span> (type) {<br>    <span
+ style="color: rgb(153, 0, 0);">case </span><span
+ style="font-style: italic; color: rgb(51, 51, 255);">DOTS</span>: button.setText(<span
+ style="color: rgb(51, 51, 255);">"..."</span>);<br>      <span
+ style="color: rgb(153, 0, 0);">break</span>;<br>    <span
+ style="color: rgb(153, 0, 0);">case </span><span
+ style="font-style: italic; color: rgb(51, 51, 255);">MORE</span>: button.setText(<span
+ style="color: rgb(51, 51, 255);">"More"</span>);<br>      <span
+ style="color: rgb(153, 0, 0);">break</span>;<br>    <span
+ style="color: rgb(153, 0, 0);">case </span><span
+ style="font-style: italic; color: rgb(51, 51, 255);">OPEN</span>: button.setText(<span
+ style="color: rgb(51, 51, 255);">"Open"</span>);<br>      <span
+ style="color: rgb(153, 0, 0);">break</span>;<br>    <span
+ style="color: rgb(153, 0, 0);">default</span>:<br>      <span
+ style="color: rgb(153, 0, 0);">throw new</span> IllegalArgumentException(<span
+ style="color: rgb(51, 51, 255);">"Value "</span> + type + <span
+ style="color: rgb(51, 51, 255);">" must be one of 0, 1 or 2"</span>);<br>  }<br>}</pre>
+<p>Whenever a class is selected in the Visual Editor graphical canvas
+or Java Beans tree viewer the Properties view will show its properties
+and their current values.&nbsp; The view can also be used to edit the
+property values, and the Visual Editor has a number of pre-defined
+editors associated with specific types.&nbsp; <span
+ style="font-style: italic;">int </span>properties for example have an
+editor that allows only valid <span style="font-style: italic;">int </span>values
+to be entered and by default the Visual Editor will use this whenever
+the <span style="font-style: italic;">type </span>property is
+selected based on its signature.<br>
+</p>
+<p>This step of the tutorial describes how to override the default
+behavior so that the <span style="font-style: italic;">type </span>property
+is edited using a drop down list of the three allowable values.&nbsp;
+Also, instead of the values 0, 1 and 2 being displayed as the current
+values the literals "Dots", "More" and "Open" will be used
+instead.&nbsp; This is described as an objective of the tutorial in the
+<a href="#Introduction">Introduction</a>.<br>
+</p>
+<p>To override the behavior of the <span style="font-style: italic;">type
+</span>property so that it has the desired behavior involves using a
+BeanInfo class.&nbsp; BeanInfo classes provide a way to describe a
+classes' design time behavior and art part of the <a
+ href="http://java.sun.com/products/javabeans/reference/api/index.html">JavaBeans
+specification</a>.&nbsp; The Visual Editor uses the JavaBeans
+specification whereever possible to define edit time behavior for a
+JavaBean.&nbsp; <br>
+</p>
+<p>The BeanInfo specification allows for a class with the same name as
+its Java peer to exist that describes the edit time behavior of the
+class.&nbsp; For example, the tutorial class is named <span
+ style="font-family: monospace;">MyCustomPrompter </span>so there
+would be a class <span style="font-family: monospace;">MyCustomPrompterBeanInfo
+</span>that implements the interface<span
+ style="font-family: monospace;"> java.beans.BeanInfo </span>associated
+with it.&nbsp; The simplest way to create this class is to put it in
+the same package as the class it describes (e.g. <span
+ style="font-family: monospace;">org.eclipse.ve.example.customwidget</span>)
+.&nbsp; Strictly speaking this isn't good physical separation of
+behaviors as the BeanInfo classes should be kept apart from the runtime
+in a separate package and separate jar so they don't become part of the
+end user's actual deployment configuration.&nbsp; The Visual Editor
+does support scenarios where the BeanInfo is in separate packages and
+separate jars, however for the purpose of this tutorial the class <span
+ style="font-family: monospace;">org.eclipse.ve.examples.customwidget.MyCustomPrompterBeanInfo</span>
+will be created that extends the abstract superclass <span
+ style="font-family: monospace;">java.beans.SimpleBeanInfo</span>.<br>
+</p>
+The full source code for the BeanInfo can be downloaded from<span
+ style="text-decoration: underline;"> </span><a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">CVS.</a>&nbsp;
+A BeanInfo class is responsible for describing the list of properties
+used by a tool such as the Visual Editor, and also their edit time
+behavior.&nbsp; This is done by specializing the method<span
+ style="font-family: monospace;"> PropertyDescriptor[]
+getPropertyDescriptors()</span>.<br>
 <p>To do so we will create a
 <a href="http://java.sun.com/products/javabeans/docs/spec.html">BeanInfo</a>
 class.&nbsp; BeanInfo provides a generic manner to describe a JavaBean
 in Java.&nbsp; <br>
 To denote that the type property is an enum, we used the following code
-in
-<a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">MyCustomPrompterBeanInfo.java</a></p>
+in<a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project"></a></p>
 <pre>	public PropertyDescriptor[] getPropertyDescriptors() {<br>		<br>		try {		<br>			PropertyDescriptor[] result = new PropertyDescriptor[2]; <br>		<br>			result[0] = new PropertyDescriptor("text",MyCustomPrompter.class);<br>			result[1] = new PropertyDescriptor("<b><font
  color="#0000ff">type</font></b>",MyCustomPrompter.class);<br>		<br>			result[1].setValue("<font
  color="#0000ff">enumerationValues</font>", new Object[] {<br>					"<font
