@@ -27,7 +27,7 @@
   2. <a href="http://java.sun.com/j2se/1.4/download.html">1.4 level JDK</a>.<br>
   3. (optional) 1.4 level JDK for generating javadoc when building Eclipse SDK 
   component only.(NOTE: Javadoc not yet available for VE)<br>
-  4. A 1.3 level Windows JRE for compile against.<br>
+  4. <a href="http://java.sun.com/j2se/1.3/download.html"> A 1.3 level Windows JRE</a> to compile against.<br>
   5. <a href="http://www.info-zip.org/pub/infozip/">Info-Zip zip and unzip</a><br>
   6. org.eclipse.releng.basebuilder and org.eclipse.ve.releng.builder from <a href="http://dev.eclipse.org/viewcvs/">dev.eclipse.org</a>.<br>
   <br>
@@ -262,7 +262,7 @@
   <a name="ex1"></a>Build Windows SDK component with javadoc generation on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=sdk 
-  -Djavacfailonerror=true -DjavacVerbose=false -DbuildDirectory=c:\mybuild\eclipse</b> 
+  -Dbootclasspath=C:\JRE131\lib\rt.jar -Djavacfailonerror=true -DjavacVerbose=false -DbuildDirectory=c:\mybuild\eclipse</b> 
   <br>
   <br>
   This builds a VE SDK in the directory c:\mybuild. &quot;-DjavaVerbose=false&quot; 
@@ -281,7 +281,7 @@
   from a previous SDK build on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=tests 
-  -DbuildDirectory=c:\builds\sdk\eclipse -Djavacfailonerror=true</b></p>
+  -Dbootclasspath=C:\JRE131\lib\rt.jar -DbuildDirectory=c:\builds\sdk\eclipse -Djavacfailonerror=true</b></p>
 <p></p>
 <p>This builds an the VE test plugins in the same directory where an SDK was previously 
   built. The build will fail if there are compile errors.<br>
@@ -291,7 +291,7 @@
   on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=examples 
-  -DbuildDirectory=c:\examples\eclipse -DbaseLocation=c:\eclipse -Dbaseos=win32 -Dbasews=win32 
+  -Dbootclasspath=C:\JRE131\lib\rt.jar -DbuildDirectory=c:\examples\eclipse -DbaseLocation=c:\eclipse -Dbaseos=win32 -Dbasews=win32 
   -Dbasearch=x86 -Djavacfailonerror=true</b></p>
 <p></p>
 <p>This builds VE examples in the directory c:\examples against a VE SDK installed 
