@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-21 22:12:02 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-12 15:58:26 $ 
  */
 
 
@@ -38,6 +38,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	
 	static String LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JavaBeansLauncher"; //$NON-NLS-1$
+	static String SWT_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.SWTLauncher"; //$NON-NLS-1$
 	static String PACK = " PACK"; //$NON-NLS-1$
 	static String LOCALE = "LOCALE"; //$NON-NLS-1$
 	static String APPLET_PARMS_NUMBER = "APPLET_PARMS_NUMBER"; //$NON-NLS-1$
@@ -89,8 +90,14 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 		System.arraycopy(remoteVMLocations, 0, newClassPath, 0, remoteVMLocations.length);
 		System.arraycopy(classpath,0,newClassPath,remoteVMLocations.length,classpath.length);
 		
+		VMRunnerConfiguration runConfig;
 		// Create VM config
-		VMRunnerConfiguration runConfig = new VMRunnerConfiguration(LAUNCHER_TYPE_NAME, newClassPath);
+		// TODO: remove swt
+		if (configuration.getAttribute("isSWT", false)) {
+			runConfig = new VMRunnerConfiguration(SWT_LAUNCHER_TYPE_NAME, newClassPath);
+		} else {
+			runConfig = new VMRunnerConfiguration(LAUNCHER_TYPE_NAME, newClassPath);
+		}
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
 		runConfig.setVMArguments(execArgs.getVMArgumentsArray());
 		runConfig.setWorkingDirectory(workingDirName);
@@ -120,33 +127,48 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 	}	
 public String getVMArguments(ILaunchConfiguration configuration, String javaBeanName) throws CoreException {
 	// First get any of the user requested ones.
-	String args = super.getVMArguments(configuration);
+	StringBuffer args = new StringBuffer(super.getVMArguments(configuration));
 	
 	// Now add in ours.
+	
+	// TODO: remove SWT hack
+	if (configuration.getAttribute("isSWT", false)) {
+		// Add in the SWT lib if the user hasn't added it already
+		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) {
+			String swtLib = ProxyPlugin.getPlugin().localizeFromPluginDescriptor(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.swt"), "$os$");
+			if (swtLib != null) {
+				// chop off the beginning / if there is one
+				if (swtLib.charAt(0) == '/') {
+					swtLib = swtLib.substring(1);
+				}
+				args.append(" -Djava.library.path=\"" + swtLib + "\"");
+			}
+		}
+	}
 	
 	// We always launch the program javaBeansLauncher on the target VM and we give it details about which JavaBean to test,
 	// which look and feel to use, etc... in arguments, e.g. to test the java.awt.Button the args would be
 	// java javaBeansLauncher  -Dvce.launcher.class=java.awt.Button 
 
 	// Put the name of the class to launch
-	args = args + " -Dvce.launcher.class=" + javaBeanName; //$NON-NLS-1$
+	args.append(" -Dvce.launcher.class=" + javaBeanName); //$NON-NLS-1$
 	// Set the look and feel to the one the user specified in the configuration
 	String lookAndFeelClass = configuration.getAttribute(VCEPreferences.SWING_LOOKANDFEEL, ""); //$NON-NLS-1$
 	if(lookAndFeelClass.equals("")){
 		lookAndFeelClass = VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.SWING_LOOKANDFEEL);		
 	}
 	if ( !lookAndFeelClass.equals("") ) { //$NON-NLS-1$
-		args = args + " -Dvce.launcher.lookandfeel=" + lookAndFeelClass; //$NON-NLS-1$
+		args.append(" -Dvce.launcher.lookandfeel=" + lookAndFeelClass); //$NON-NLS-1$
 	} 
 	String locale = configuration.getAttribute(LOCALE, ""); //$NON-NLS-1$
 	if ( !locale.equals("")) { //$NON-NLS-1$
-		args = args + " -Dlocale=" + locale; //$NON-NLS-1$
+		args.append(" -Dlocale=" + locale); //$NON-NLS-1$
 	}
 	
 	// Pass the size and whether to pack or not
 	boolean pack = configuration.getAttribute(PACK, false);
 	if ( pack ) {
-		args = args + " -Dpack=true"; //$NON-NLS-1$
+		args.append(" -Dpack=true"); //$NON-NLS-1$
 	}
 	// Pass the applet parameters
 	// These are passed as several strings -Dappletparmsnumber= is the total number of parms
@@ -155,15 +177,15 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	String numberOfAppletParmsString = configuration.getAttribute(APPLET_PARMS_NUMBER, ""); //$NON-NLS-1$
 	if ( !numberOfAppletParmsString.equals("") ) { //$NON-NLS-1$
 		int numberOfAppletParms = Integer.parseInt(numberOfAppletParmsString);
-		args = args + " -Dappletparmsnumber=" + numberOfAppletParmsString; //$NON-NLS-1$
+		args.append(" -Dappletparmsnumber=" + numberOfAppletParmsString); //$NON-NLS-1$
 		for ( int i=1 ; i <= numberOfAppletParms ; i++){
 			String name = configuration.getAttribute(APPLET_PARM_NAME+i, ""); //$NON-NLS-1$
-			args = args + " -Dappletparmname" + i + "=\"" + name + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			args.append(" -Dappletparmname" + i + "=\"" + name + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			String value = configuration.getAttribute(APPLET_PARM_VALUE+i, ""); //$NON-NLS-1$
-			args = args + " -Dappletparmvalue" + i + "=\"" + value + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			args.append(" -Dappletparmvalue" + i + "=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	};
-	
-	return args;
+		
+	return args.toString();
 }
 }
