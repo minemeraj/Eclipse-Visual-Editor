@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-29 19:54:27 $ 
+ *  $Revision: 1.10 $  $Date: 2004-07-02 00:32:45 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -73,7 +73,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     }
     
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
-        Rectangle constraint = (Rectangle) getAnnotationValue() ;
+        Object constraint =  getAnnotationValue() ;
         boolean isModelled = false;
         if(	fBeanpart!=null && 
             fBeanpart.getEObject()!=null && 
@@ -84,9 +84,19 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
             	isModelled = false;
         if(!isModelled || constraint!=null){
 	        FreeFormAnnotationTemplate fft = getFFtemplate() ;
-	        if (constraint != null) 
-	        	fft.setPosition(new Point(constraint.x,constraint.y)) ;
-	        fContent = fft.toString() ;
+	        if (constraint != null) { 
+	        	if (constraint instanceof Rectangle) {
+	        		Rectangle r = (Rectangle) constraint;
+	        	  fft.setPosition(new Point(r.x,r.y)) ;
+	        	}
+	        	else if (constraint instanceof Boolean) {
+	        	  // Free Form or not
+	        	  if (!((Boolean)constraint).booleanValue())
+	        	      fft.setPosition(null);
+	        	}
+	            fContent = fft.toString() ;
+	        }
+	        
         }else{
         	fContent = "";
         }
