@@ -11,25 +11,23 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-17 23:34:58 $ 
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EFactory;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
+import org.eclipse.ui.IActionFilter;
 
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
@@ -40,7 +38,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
  * Creation date: (11/10/00 11:55:27 AM)
  * @author: Peter Walker
  */
-public class NullLayoutPolicyHelper implements ILayoutPolicyHelper {
+public class NullLayoutPolicyHelper implements ILayoutPolicyHelper, IActionFilter {
 	
 	protected ContainerPolicy policy;
 	
@@ -188,4 +186,22 @@ protected Command createChangeConstraintCommand(IJavaObjectInstance child, NullC
 		return cb.getCommand();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+	 * Enable the Show/Hide Grid action on the Beans viewer depending on the layout EditPolicy
+	 * on the graphical viewer side.
+	 */
+	public boolean testAttribute(Object target, String name, String value) {
+		if (target instanceof EditPart) {
+			EditDomain ed = EditDomain.getEditDomain((EditPart) target);
+			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
+			if (viewer != null) {
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart) target).getModel());
+				if (ep != null && ep.getEditPolicy(EditPolicy.LAYOUT_ROLE) instanceof IActionFilter) {
+					return ((IActionFilter) ep.getEditPolicy(EditPolicy.LAYOUT_ROLE)).testAttribute(target, name, value);
+				}
+			}
+		}
+		return false;
+	}
 }
