@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -91,29 +91,6 @@ public class ExpressionDecoderAdapter implements ICodeGenAdapter {
 				|| fDecoder.getBeanPart().getModel().isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL)
 				|| fDecoder.getBeanPart().getModel().isStateSet(IBeanDeclModel.BDM_STATE_SNIPPET))
 				return;
-
-			String action = null;
-			switch (msg.getEventType()) {
-				case Notification.SET :
-					if (!CDEUtilities.isUnset(msg)) {
-						action = msg.isTouch() ? "TOUCH" : "SET"; //$NON-NLS-1$	//$NON-NLS-2$
-						break;
-					} // else flow into UNSET since really is unset.
-				case Notification.UNSET :
-					action = "UNSET"; //$NON-NLS-1$
-					break;
-				case Notification.ADD :
-					action = "ADD"; //$NON-NLS-1$
-					break;
-				case Notification.REMOVE :
-					action = "REMOVE"; //$NON-NLS-1$
-					break;
-				case Notification.REMOVING_ADAPTER :
-					action = "REMOVING_ADAPTER"; //$NON-NLS-1$
-					break;
-			}
-			JavaVEPlugin.log(this +" action= " + action, MsgLogger.LOG_FINEST); //$NON-NLS-1$
-			JavaVEPlugin.log("SourceRange =" + getJavaSourceRange(), MsgLogger.LOG_FINEST); //$NON-NLS-1$
 
 			switch (msg.getEventType()) {
 				case Notification.SET :

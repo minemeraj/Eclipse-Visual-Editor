@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
@@ -35,7 +35,6 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	protected IBeanDeclModel fBeanModel = null;
 	protected IDiagramModelInstance fCompositonModel = null;
 	protected BeanPart fbeanPart = null;
-	protected String fdebugString = null;
 	protected Object fPriority = null;
 
 	public AbstractExpressionDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance bldr, BeanPart part) {
@@ -44,8 +43,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		fExprRef.setDecoder(this);
 		fBeanModel = model;
 		fCompositonModel = bldr;
-		fbeanPart = part;
-		fdebugString = fExpr.toString();
+		fbeanPart = part;	
 	}
 
 	public AbstractExpressionDecoder() {
@@ -201,7 +199,6 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 			fExprRef.dispose();
 		}
 
-		fdebugString = result;
 		return result;
 	}
 
@@ -209,8 +206,6 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		fExprRef = expr;
 		fExpr = (Statement) expr.getExpression();
 		fExprRef.setDecoder(this);
-		if (fExpr != null)
-			fdebugString = fExpr.toString();
 		if (fhelper != null)
 			fhelper.setDecodingContent(fExpr);
 	}
@@ -237,7 +232,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	
 	protected void markExprAsDeleted() {
 		fExprRef.clearState();
-		fExprRef.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true); 
+		fExprRef.setState(CodeExpressionRef.STATE_DELETE, true); 
 	}
 	
 	/**
@@ -291,10 +286,9 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 			if (isImplicit(null))
 				return null;
 
-			fdebugString = fhelper.primRefreshFromComposition(expSig);
-			return fdebugString;
+			return fhelper.primRefreshFromComposition(expSig);
+
 		} else {
-			fdebugString = null;
 			return null;
 		}
 	}
@@ -302,9 +296,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	public void reflectMOFchange() {
 		fExprRef.setState(CodeExpressionRef.STATE_IN_SYNC, false);
 		//fExprRef.setState(fExprRef.getState()&~CodeExpressionRef.STATE_IN_SYNC) ;
-		if ((!fExprRef.isAnyStateSet())
-			|| fExprRef.isStateSet(CodeExpressionRef.STATE_NO_SRC)) // (fExprRef.getState() == CodeExpressionRef.STATE_NOT_EXISTANT)
-			return;
+		if (!fExprRef.isAnyStateSet()) return;
 		fExprRef.updateDocument(true);
 	}
 
@@ -346,8 +338,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		}
 		markExprAsDeleted();
 		fFeatureMapper = null;
-		fhelper = null;
-		fdebugString = null;
+		fhelper = null;		
 	}
 
 	public  void deleteFromComposition() {
@@ -370,7 +361,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	 * @return a string representation of the receiver
 	 */
 	public String toString() {
-		return super.toString() + ":" + fdebugString; //$NON-NLS-1$
+		return super.toString() + ":" + fExprRef.toString(); //$NON-NLS-1$
 	}
 
 	/**

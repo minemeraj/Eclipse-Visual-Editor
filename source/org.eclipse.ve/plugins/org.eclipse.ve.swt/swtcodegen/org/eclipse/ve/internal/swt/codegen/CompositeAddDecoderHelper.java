@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:43 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:46 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -362,5 +362,6 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			return null ;
 		}
 	}
+
 
 }

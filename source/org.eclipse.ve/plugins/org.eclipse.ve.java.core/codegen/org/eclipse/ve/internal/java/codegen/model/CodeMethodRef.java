@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-04 15:47:50 $ 
  */
 
 import java.util.*;
@@ -220,7 +220,7 @@ protected void resetExpressionPriorities(){
 		try{			
 			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
-				(!expression.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
+				(!expression.isStateSet(CodeExpressionRef.STATE_DELETE))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
 				 expression.setProprity(expression.primGetDecoder().determinePriority());
 			}else{
 				// TODO   Hard coding here is not scalable - we may have ivjFoo = getFrame().getContentPane() ; as init exp
@@ -239,7 +239,7 @@ protected void resetExpressionPriorities(){
 		try{			
 			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
-				(!expression.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
+				(!expression.isStateSet(CodeExpressionRef.STATE_DELETE))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
 				 expression.setProprity(expression.primGetDecoder().determinePriority());
 			}else{
 				// TODO  hard coding here is not scalable - we may have ivjFoo = getFrame().getContentPane() ; as init exp.
@@ -266,7 +266,7 @@ protected static List sortExpressionsByBeans(List newfExpressions){
 	Hashtable beanToExpHash = new Hashtable();
 	for(int count=0;count<newfExpressions.size();count++){
 		CodeExpressionRef exp = (CodeExpressionRef)newfExpressions.get(count);
-		if (exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) continue ;
+		if (exp.isStateSet(CodeExpressionRef.STATE_DELETE)) continue ;
 		
 		if(!beanToExpHash.containsKey(exp.getBean())){
 			beanToExpHash.put(exp.getBean(), new ArrayList());;
@@ -714,7 +714,7 @@ public String _debugExpressions() {
     while (itr.hasNext()) {
         CodeExpressionRef exp = (CodeExpressionRef)itr.next() ;
         sb.append(exp.toString()+"\n\"") ; //$NON-NLS-1$
-        if (!exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))
+        if (!exp.isStateSet(CodeExpressionRef.STATE_DELETE))
             sb.append(doc.substring(mOffset+exp.getOffset(),mOffset+exp.getOffset()+exp.getLen())) ;
         else
             sb.append("STATE_NOT_EXISTANT") ; //$NON-NLS-1$
@@ -803,7 +803,7 @@ public void updateExpressionsOffset(int offset, int delta) {
 	while (itr.hasNext()) {
 		CodeExpressionRef exp = (CodeExpressionRef) itr.next();
 		// If this expression has updated the document, skip it
-		if (exp.isStateSet(CodeExpressionRef.STATE_UPDATING_SOURCE) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))
+		if (exp.isStateSet(CodeExpressionRef.STATE_UPDATING_SOURCE) || exp.isStateSet(CodeExpressionRef.STATE_DELETE))
 			continue;
 		if (exp.getOffset() + getOffset() >= offset)
 			exp.setOffset(exp.getOffset() + delta);

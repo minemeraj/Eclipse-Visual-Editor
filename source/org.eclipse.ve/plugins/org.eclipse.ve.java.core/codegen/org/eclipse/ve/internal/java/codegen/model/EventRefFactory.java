@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventRefFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-04 15:47:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -114,7 +114,7 @@ public CodeEventRef getExistingExpression(Object[] args) {
 			exp.clearState();
 			exp.setState(CodeExpressionRef.STATE_EXIST, true);
 			exp.generateSource(fEi);
-			if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) //exp.getState() == exp.STATE_NOT_EXISTANT)
+			if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_DELETE)) //exp.getState() == exp.STATE_NOT_EXISTANT)
 				return null;
 
 			fExpr = exp;
