@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionParser.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-21 19:25:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -378,7 +378,7 @@ public class EventExpressionParser extends ExpressionParser {
 		
 		int index = end ;
 		while (index<buff.length()-1 && 
-		       (buff.charAt(index)==' ' || buff.charAt(index)=='\r' || buff.charAt(index)=='\r')) {		       
+		       (buff.charAt(index)==' ' || buff.charAt(index)=='\r' || buff.charAt(index)=='\n')) {		       
 		       index++ ;
 		}
 		if (index<buff.length()-1)
