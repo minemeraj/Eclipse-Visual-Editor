@@ -44,7 +44,9 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_TYPE,
 		SF_ROW_LAYOUT_WRAP,
 		
-		SF_TABLE_COLUMNS;
+		SF_TABLE_COLUMNS,
+		SF_TABFOLDER_ITEMS,
+		SF_TABITEM_CONTROL;
 		
 	public static final String
 		POINT_CLASS_NAME,
@@ -96,6 +98,7 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_WRAP = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/wrap");    //$NON-NLS-1$
 		
 		SF_TABLE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableColumns");    //$NON-NLS-1$
-
+		SF_TABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#TabFolder/items");	 //$NON-NLS-1$
+		SF_TABITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#TabItem/control");	 //$NON-NLS-1$
 	}
 }	
