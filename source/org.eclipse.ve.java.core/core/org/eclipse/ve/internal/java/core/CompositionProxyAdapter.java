@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-09 22:47:02 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-10 18:27:35 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -163,18 +163,6 @@ protected void releaseSetting(Object v) {
 	}
 }
 
-
-
-/**
- * About to be thrown away. Run disposeBeanProxy first to
- * make sure that any bean cleanup required is done.
- */
-protected void finalize() throws Throwable {
-	if (getTarget() != null) {
-		eAdapters().clear();
-		releaseBeanProxy();
-	}
-}
 /**
  * isAdaptorForType method comment.
  */

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-09 22:47:03 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-10 18:27:37 $ 
  */
 
 import java.util.Iterator;
@@ -72,7 +72,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 	public void releaseBeanProxy() {
 		// Need to release all of the components. This isn't being done in BeanProxyAdapter because
 		// the constraint components aren't bean proxies directly.
-		if (((JavaClass) getEObject().eClass()).getKind() != TypeKind.UNDEFINED_LITERAL) {
+		if ((isBeanProxyInstantiated() || getErrorStatus() == ERROR_SEVERE) && ((JavaClass) getEObject().eClass()).getKind() != TypeKind.UNDEFINED_LITERAL) {
 			if (getEObject().eIsSet(sfContainerComponents)) {
 				// TODO This really does nothing because the settings in the CC are shared settings and so are not
 				// released. Next release we need a general way of handling releasing shared settings.
