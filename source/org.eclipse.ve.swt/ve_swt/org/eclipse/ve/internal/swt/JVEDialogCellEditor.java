@@ -28,13 +28,11 @@ import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-
 import org.eclipse.ve.internal.java.core.*;
-
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
- * Cell editor for javax.swing.ImageIcon.
+ * Cell editor for SWT property editors.
  * @version 	1.0
  * @author
  */
@@ -55,20 +53,12 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	private Object createValue(Object value) {
 		// Get the string of the type class
 		String qualifiedClassName = value.getClass().getName();
-		
-		return BeanUtilities.createJavaObject(
-				qualifiedClassName, //$NON-NLS-1$
-				JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaInitializationString());
-// TODO uncomment the next 2 lines when parse trees are fully implemented
-//		// create the java object using a parse tree allocation
-//		return BeanUtilities.createJavaObject(qualifiedClassName, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
+		return BeanUtilities.createJavaObject(qualifiedClassName, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
 	}
 
 	/*
 	 * Create a Parse tree allocation from the initialization string returned from the property editor.
 	 * 
-	 * TODO Do NOT DELETE this method even though it's not used. Will be used in the createValue(Object value) method
-	 * 		once parse trees allocations are fully implemented.
 	 */
 	private JavaAllocation getJavaAllocation() {
 		ASTParser parser = ASTParser.newParser(AST.JLS2);
@@ -79,9 +69,22 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 		ASTNode ast = parser.createAST(null);
 		if (ast == null)
 			return null; // It didn't parse.
-
+	
+		ParseTreeCreationFromAST.Resolver res = new NoASTResolver() {
+			public PTExpression resolveName(Name name) {
+				PTExpression exp = null;
+				if (name instanceof QualifiedName &&
+						(name.getFullyQualifiedName().startsWith("org.eclipse.swt.SWT.") ||
+						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources."))) {
+					PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(((QualifiedName)name).getQualifier().getFullyQualifiedName());
+					exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, ((QualifiedName) name).getName().getIdentifier());
+					return exp;
+				}
+				return super.resolveName(name);			
+			}
+		};
 		ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-		alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) ast));
+		alloc.setExpression(new ParseTreeCreationFromAST(res).createExpression((Expression) ast));
 		return alloc;
 	}
 	
@@ -103,6 +106,9 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	}
 	public void setData(Object data) {
 		fEditDomain = (EditDomain) data;
+		// For property editors that need the EditDomain
+		if (chooser != null && chooser instanceof INeedData)
+			((INeedData) chooser).setData(data);
 	}
 
 	public String getJavaInitializationString() {
