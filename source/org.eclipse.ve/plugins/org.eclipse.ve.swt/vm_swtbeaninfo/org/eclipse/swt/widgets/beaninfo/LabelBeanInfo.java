@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,25 +36,25 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
-			{ "orientation" , "orientation" , Boolean.FALSE ,  new Object[] {
-			    "HORIZONTAL" , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) ,
-				"VERTICAL" , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				
+			{ "orientation" , LabelMessages.getString("LabelBeanInfo.StyleBits.Orientation.Value") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    LabelMessages.getString("LabelBeanInfo.StyleBits.Orientation.Value.Horizontal") , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) , //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Orientation.Value.Vertical") , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "textAlignment" , "textAlignment", Boolean.FALSE , new Object[] {
-				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					
-				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) ,
-				"CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				
+			{ "textAlignment" , LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Left") , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) , //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Center") , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "separator" , "separator", Boolean.FALSE , new Object[] {
-				"SEPARATOR" , "org.eclipse.swt.SWT.SEPARATOR" , new Integer(SWT.SEPARATOR)					
+			{ "separator" , LabelMessages.getString("LabelBeanInfo.StyleBits.Separator.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Separator.Value.Separator") , "org.eclipse.swt.SWT.SEPARATOR" , new Integer(SWT.SEPARATOR)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "shadow" , "shadow" , Boolean.FALSE , new Object[] {
-				"IN" , "org.eclipse.swt.SWT.SHADOW_IN" , new Integer(SWT.SHADOW_IN),
-				"OUT" , "org.eclipse.swt.SWT.SHADOW_OUT" , new Integer(SWT.SHADOW_OUT),
-				"NONE" , "org.eclipse.swt.SWT.SHADOW_NONE" , new Integer(SWT.SHADOW_NONE)
+			{ "shadow" , LabelMessages.getString("LabelBeanInfo.StyleBits.Shadow.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Shadow.Value.In") , "org.eclipse.swt.SWT.SHADOW_IN" , new Integer(SWT.SHADOW_IN), //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Shadow.Value.Out") , "org.eclipse.swt.SWT.SHADOW_OUT" , new Integer(SWT.SHADOW_OUT), //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Shadow.Value.None") , "org.eclipse.swt.SWT.SHADOW_NONE" , new Integer(SWT.SHADOW_NONE) //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "wrap" , "wrap", Boolean.FALSE , new Object[] {
-				"WRAP" , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					
+			{ "wrap" , LabelMessages.getString("LabelBeanInfo.StyleBits.Wrap.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				LabelMessages.getString("LabelBeanInfo.StyleBits.Wrap.Value.Wrap") , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,20 +37,20 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 		new Object[] [] {
-			{ "textAlignment" , "textAlignment" , Boolean.FALSE ,  new Object[] {
-			    "CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER) ,
-				"LEFT" , "org.eclipse.swt.SWT.LEFT" ,  new Integer(SWT.LEFT), 				
-				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) 
+			{ "textAlignment" , TextMessages.getString("TextBeanInfo.StyleBits.TextAlignment.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    TextMessages.getString("TextBeanInfo.StyleBits.TextAlignment.Value.Center") , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER) , //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.TextAlignment.Value.Left") , "org.eclipse.swt.SWT.LEFT" ,  new Integer(SWT.LEFT), 				 //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.TextAlignment.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT)  //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "readOnly" , "readOnly", Boolean.FALSE , new Object[] {
-				"READ_ONLY" , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					
+			{ "readOnly" , TextMessages.getString("TextBeanInfo.StyleBits.ReadOnly.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.ReadOnly.Value.ReadOnly") , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "lines" , "lines", Boolean.FALSE , new Object[] {
-				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
-				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
+			{ "lines" , TextMessages.getString("TextBeanInfo.StyleBits.Lines.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.Lines.Value.Single") , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.Lines.Value.Multi") , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },			
-			{ "wrap" , "wrap", Boolean.FALSE , new Object[] {
-				"WRAP" , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					
+			{ "wrap" , TextMessages.getString("TextBeanInfo.StyleBits.Wrap.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.Wrap.Value.Wrap") , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

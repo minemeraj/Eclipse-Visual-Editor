@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,11 +37,11 @@ public class ShellBeanInfo extends IvjBeanInfo {
 		descriptor.setValue(
 			SweetHelper.STYLE_BITS_ID,
 		    new Object[] [] {
-				{ "modality" , "modality" , Boolean.TRUE , new Object[] {
-				    "APPLICATION_MODAL" , "org.eclipse.swt.SWT.APPLICATION_MODAL" , new Integer(SWT.APPLICATION_MODAL) ,				
-				    "MODELESS" , "org.eclipse.swt.SWT.MODELESS" , new Integer(SWT.MODELESS) ,
-					"PRIMARY_MODAL" , "org.eclipse.swt.SWT.PRIMARY_MODAL" , new Integer(SWT.PRIMARY_MODAL),
-					"SYSTEM_MODAL" , "org.eclipse.swt.SWT.SYSTEM_MODAL" , new Integer(SWT.SYSTEM_MODAL)
+				{ "modality" , ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.ApplicationModal") , "org.eclipse.swt.SWT.APPLICATION_MODAL" , new Integer(SWT.APPLICATION_MODAL) ,				 //$NON-NLS-1$ //$NON-NLS-2$
+				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.Modeless") , "org.eclipse.swt.SWT.MODELESS" , new Integer(SWT.MODELESS) , //$NON-NLS-1$ //$NON-NLS-2$
+					ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.PrimaryModal") , "org.eclipse.swt.SWT.PRIMARY_MODAL" , new Integer(SWT.PRIMARY_MODAL), //$NON-NLS-1$ //$NON-NLS-2$
+					ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.SystemModal") , "org.eclipse.swt.SWT.SYSTEM_MODAL" , new Integer(SWT.SYSTEM_MODAL) //$NON-NLS-1$ //$NON-NLS-2$
 				} }
 			}
 		);

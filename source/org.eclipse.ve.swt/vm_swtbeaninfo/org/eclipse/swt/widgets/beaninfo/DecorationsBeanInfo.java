@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,28 +37,28 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
-			{ "trim" , "trim" , Boolean.FALSE , new Object[] {
-			    "SHELL_TRIM" , "org.eclipse.swt.SWT.SHELL_TRIM" , new Integer(SWT.SHELL_TRIM) ,				
-			    "DIALOG_TRIM" , "org.eclipse.swt.SWT.DIALOG_TRIM" , new Integer(SWT.DIALOG_TRIM) ,
-				"NO_TRIM" , "org.eclipse.swt.SWT.NO_TRIM" , new Integer(SWT.NO_TRIM)								
+			{ "trim" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Trim.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Trim.Value.ShellTrim") , "org.eclipse.swt.SWT.SHELL_TRIM" , new Integer(SWT.SHELL_TRIM) ,				 //$NON-NLS-1$ //$NON-NLS-2$
+			    DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Trim.Value.DialogTrim") , "org.eclipse.swt.SWT.DIALOG_TRIM" , new Integer(SWT.DIALOG_TRIM) , //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Trim.Value.NoTrim") , "org.eclipse.swt.SWT.NO_TRIM" , new Integer(SWT.NO_TRIM)								 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "on_top" , "on_top" , Boolean.FALSE , new Object[] {
-				"ON_TOP" , "org.eclipse.swt.SWT.ON_TOP" , new Integer(SWT.ON_TOP)				
+			{ "on_top" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.OnTop.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.OnTop.Value.OnTop") , "org.eclipse.swt.SWT.ON_TOP" , new Integer(SWT.ON_TOP)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,			
-			{ "close" , "close" , Boolean.TRUE , new Object[] {
-			    "CLOSE" , "org.eclipse.swt.SWT.CLOSE" , new Integer(SWT.CLOSE)				
+			{ "close" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Close.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Close.Value.Close") , "org.eclipse.swt.SWT.CLOSE" , new Integer(SWT.CLOSE)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "min" , "min" , Boolean.TRUE , new Object[] {
-				"MIN" , "org.eclipse.swt.SWT.MIN" , new Integer(SWT.MIN)				
+			{ "min" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Min.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Min.Value.Min") , "org.eclipse.swt.SWT.MIN" , new Integer(SWT.MIN)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "max" , "max" , Boolean.TRUE, new Object[] {
-				"MAX" , "org.eclipse.swt.SWT.MAX" , new Integer(SWT.MAX)				
+			{ "max" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Max.Name") , Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Max.Value.Max") , "org.eclipse.swt.SWT.MAX" , new Integer(SWT.MAX)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "resize" , "resize" , Boolean.TRUE, new Object[] {
-				"RESIZE" , "org.eclipse.swt.SWT.RESIZE" , new Integer(SWT.RESIZE)				
+			{ "resize" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Resize.Name") , Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Resize.Value.Resize") , "org.eclipse.swt.SWT.RESIZE" , new Integer(SWT.RESIZE)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "title" , "title" , Boolean.TRUE, new Object[] {
-				"TITLE" , "org.eclipse.swt.SWT.TITLE" , new Integer(SWT.TITLE)				
+			{ "title" , DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Title.Name") , Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				DecorationsMessages.getString("DecorationsBeanInfo.StyleBits.Title.Value.Title") , "org.eclipse.swt.SWT.TITLE" , new Integer(SWT.TITLE)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } 
 		}
 	);

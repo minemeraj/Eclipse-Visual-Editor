@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollBarBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,9 +37,9 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
-			{ "orientation" , "orientation" , Boolean.FALSE ,  new Object[] {
-			    "HORIZONTAL" , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) ,
-				"VERTICAL" , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				
+			{ "orientation" , ScrollBarMessages.getString("ScrollBarBeanInfo.StyleBits.Orientation.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    ScrollBarMessages.getString("ScrollBarBeanInfo.StyleBits.Orientation.Value.Horizontal") , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) , //$NON-NLS-1$ //$NON-NLS-2$
+				ScrollBarMessages.getString("ScrollBarBeanInfo.StyleBits.Orientation.Value.Vertical") , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				 //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

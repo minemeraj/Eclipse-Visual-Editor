@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -35,14 +35,14 @@ public class TreeBeanInfo extends IvjBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		"SWEET_STYLEBITS", //$NON-NLS-1$
 	    new Object[] [] {				
-			{ "style" , "style" , Boolean.FALSE , new Object[] {
-			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
+			{ "style" , TreeMessages.getString("TreeBeanInfo.StyleBits.Style.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    TreeMessages.getString("TreeBeanInfo.StyleBits.Style.Value.Check") , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK)  //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "selectionStyle" , "selectionStyle" , Boolean.FALSE , new Object[] {
-				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
-				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
+			{ "selectionStyle" , TreeMessages.getString("TreeBeanInfo.StyleBits.SelectionStyle.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TreeMessages.getString("TreeBeanInfo.StyleBits.SelectionStyle.Value.Single") , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				TreeMessages.getString("TreeBeanInfo.StyleBits.SelectionStyle.Value.Multi") , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} }		
 		}
 	);

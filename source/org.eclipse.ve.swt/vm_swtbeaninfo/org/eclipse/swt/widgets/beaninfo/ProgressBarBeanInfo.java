@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ProgressBarBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,15 +37,15 @@ public class ProgressBarBeanInfo extends IvjBeanInfo {
 		descriptor.setValue(
 			SweetHelper.STYLE_BITS_ID,
 		    new Object[] [] {
-				{ "smooth" , "smooth" , Boolean.FALSE ,  new Object[] {
-				    "SMOOTH" , "org.eclipse.swt.SWT.SMOOTH" , new Integer(SWT.SMOOTH)
+				{ "smooth" , ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Smooth.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				    ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Smooth.Value.Smooth") , "org.eclipse.swt.SWT.SMOOTH" , new Integer(SWT.SMOOTH) //$NON-NLS-1$ //$NON-NLS-2$
 				} },
-				{ "indeterminate", "indeterminate", Boolean.FALSE, new Object[] {
-					"INDETERMINATE" , "org.eclipse.swt.SWT.INDETERMINATE" ,  new Integer(SWT.INDETERMINATE)				
+				{ "indeterminate", ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Intermediate.Name"), Boolean.FALSE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+					ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Intermediate.Value.Intermediate") , "org.eclipse.swt.SWT.INDETERMINATE" ,  new Integer(SWT.INDETERMINATE)				 //$NON-NLS-1$ //$NON-NLS-2$
 				} } ,
-				{ "orientation" , "orientation" , Boolean.FALSE ,  new Object[] {
-				    "HORIZONTAL" , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL),
-					"VERTICAL" , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				
+				{ "orientation" , ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Orientation.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				    ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Orientation.Value.Horizontal") , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL), //$NON-NLS-1$ //$NON-NLS-2$
+					ProgressBarMessages.getString("ProgressBarBeanInfo.StyleBits.Orientation.Value.Vertical") , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				 //$NON-NLS-1$ //$NON-NLS-2$
 				} }
 			}
 		);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,8 +36,8 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
-			{ "border" , "border" , Boolean.FALSE , new Object[] {
-			    "BORDER" , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				
+			{ "border" , ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Value.Border") , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } 
 		}
 	);

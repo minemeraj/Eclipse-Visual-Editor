@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,11 +36,11 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {							
-			{ "horizontalScroll" , "horizontalScroll" , Boolean.FALSE , new Object[] {
-			    "H_SCROLL" , "org.eclipse.swt.SWT.H_SCROLL" , new Integer(SWT.H_SCROLL)				
+			{ "horizontalScroll" , ScrollableMessages.getString("ScrollableBeanInfo.StyleBits.HorizontalScroll.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    ScrollableMessages.getString("ScrollableBeanInfo.StyleBits.HorizontalScroll.Value.HScroll") , "org.eclipse.swt.SWT.H_SCROLL" , new Integer(SWT.H_SCROLL)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "verticalScroll" , "verticalScroll" , Boolean.FALSE , new Object[] {
-				"V_SCROLL" , "org.eclipse.swt.SWT.V_SCROLL" , new Integer(SWT.V_SCROLL)				
+			{ "verticalScroll" , ScrollableMessages.getString("ScrollableBeanInfo.StyleBits.VerticalScroll.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ScrollableMessages.getString("ScrollableBeanInfo.StyleBits.VerticalScroll.Value.VScroll") , "org.eclipse.swt.SWT.V_SCROLL" , new Integer(SWT.V_SCROLL)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

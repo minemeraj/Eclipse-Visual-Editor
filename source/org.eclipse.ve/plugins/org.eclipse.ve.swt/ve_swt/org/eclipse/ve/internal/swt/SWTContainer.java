@@ -20,15 +20,15 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	private IPath containerPath;	// path for container, NOT path for resolved entry
 	
 	private final static String[][] swtLibraries = new String[][] {
-			{ "org.eclipse.swt", "$ws$/swt.jar" }
+			{ "org.eclipse.swt", "$ws$/swt.jar" } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
 	private final static String[][] jfaceLibraries = new String[][] {
-			{ "org.eclipse.jface", "jface.jar" },
-			{ "org.eclipse.jface.text", "jfacetext.jar" },
-			{ "org.eclipse.core.runtime", "runtime.jar" },
-			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" },
-			{ "org.eclipse.osgi", "osgi.jar" }
+			{ "org.eclipse.jface", "jface.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.jface.text", "jfacetext.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.core.runtime", "runtime.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.osgi", "osgi.jar" } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
 	public SWTContainer(IPath containerPath){
@@ -67,7 +67,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	private boolean isJFace(IPath containerPath) {
 		// The first segment is the SWT_CONTAINER name
 		for (int i = 1; i < containerPath.segmentCount(); i++) {
-			if (containerPath.segment(i).equals("JFACE")) {
+			if (containerPath.segment(i).equals("JFACE")) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -79,7 +79,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	}
 
 	public String getDescription() {
-		return "Standard Widget Toolkit (SWT)";
+		return SWTMessages.getString("SWTContainer.Description"); //$NON-NLS-1$
 	}
 
 	public int getKind() {
