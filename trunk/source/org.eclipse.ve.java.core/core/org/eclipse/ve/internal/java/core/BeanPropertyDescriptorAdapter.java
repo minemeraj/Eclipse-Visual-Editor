@@ -12,10 +12,11 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.15 $  $Date: 2004-07-21 22:42:37 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +27,8 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
-import org.eclipse.jem.internal.beaninfo.*;
+import org.eclipse.jem.internal.beaninfo.FeatureAttributeValue;
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
@@ -34,8 +36,6 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEMessages;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
@@ -43,6 +43,7 @@ import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
 
 import org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider;
 
+import org.eclipse.ve.internal.propertysheet.DefaultWrapperedValidator;
 import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
 
 /**
@@ -173,9 +174,61 @@ public String[] getFilterFlags(){
 	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)target);
 	return (propertyDecorator != null && propertyDecorator.isExpert()) ? EXPERT_FILTER_FLAGS : null;
 }
-public ICellEditorValidator getValidator(){
+
+public ICellEditorValidator getValidator() {
+
+	// Step 1 - See if the base decorator on the feature has it.
+	BasePropertyDecorator decorator = getBaseDecorator();
+	if (decorator != null && !decorator.getCellEditorValidatorClassnames().isEmpty()) {
+		try {
+			ICellEditorValidator[] validators = null;
+			if (!decorator.getCellEditorValidatorClassnames().isEmpty()) {
+				validators = new ICellEditorValidator[decorator.getCellEditorValidatorClassnames().size()];
+				Iterator itr = decorator.getCellEditorValidatorClassnames().iterator();
+				for (int i = 0; itr.hasNext(); i++)
+					validators[i] = (ICellEditorValidator) CDEPlugin.createInstance(null, (String) itr.next());
+			}
+
+			return (validators.length == 1 ? validators[0] : new DefaultWrapperedValidator(validators));
+		} catch (Exception e) {
+			String msg =
+				MessageFormat.format(
+					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					new Object[] { decorator.getCellEditorValidatorClassnames()});
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
+		}
+	}
+
+	// Step 2 - If not on feature, then get it from the type, look for BasePropertyDecorator on the type.
+	BasePropertyDecorator bdec =
+		(BasePropertyDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(
+			((EStructuralFeature) target).getEType(),
+			BasePropertyDecorator.class,
+			DecoratorsPackage.eINSTANCE.getBasePropertyDecorator_CellEditorValidatorClassnames());
+	if (bdec != null && !bdec.getCellEditorValidatorClassnames().isEmpty()) {
+		try {
+			ICellEditorValidator[] validators = null;
+			if (!bdec.getCellEditorValidatorClassnames().isEmpty()) {
+				validators = new ICellEditorValidator[bdec.getCellEditorValidatorClassnames().size()];
+				Iterator itr = bdec.getCellEditorValidatorClassnames().iterator();
+				for (int i = 0; itr.hasNext(); i++)
+					validators[i] = (ICellEditorValidator) CDEPlugin.createInstance(null, (String) itr.next());
+			}
+
+			return (validators.length == 1 ? validators[0] : new DefaultWrapperedValidator(validators));
+		} catch (Exception e) {
+			String msg =
+				MessageFormat.format(
+					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					new Object[] { bdec.getCellEditorValidatorClassnames()});
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
+		}
+	}
+
 	return null;
 }
+
+
 public Object getHelpContextIds(){
 	return null;
 }
