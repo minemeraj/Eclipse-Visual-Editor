@@ -12,11 +12,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-08 14:49:46 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-08 21:25:26 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IStatus;
@@ -58,7 +57,8 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 	protected Class editorClass , labelProviderClass; // The editor class is cache'd to save repeated calculation - The instance however cannot be as this involves
 	private String editorClassNameAndData;
 	private String labelProviderClassNameAndData;
-	private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always	
+	private ILabelProvider labelProvider;
+	private boolean noLabelProviderExplicit = false;
 	
 public CellEditor createPropertyEditor(Composite parent){
 	
@@ -106,33 +106,30 @@ public CellEditor createPropertyEditor(Composite parent){
 			// that was arranged in a tiplicate repeating pattern of displayName, value, initString
 			// e.g. "On" , Boolean.TRUE , "Boolean.TRUE" , "Off" , Boolean.FALSE , "Boolean.FALSE"
 			// or	 "Vertical" , new Integer(0) , "java.awt.Scrollbar.HORIZONTAL" , "Horizontal" , new Integer(1) , "java.awt.Scrollbar.VERTICAL"
-			Iterator propertyAttributes = propertyDecorator.getAttributes().iterator();
-			while ( propertyAttributes.hasNext() ) {
-				FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyAttributes.next();
-				if (featureValue.getName().equals(ATTRIBUTE_NAME_ENUMERATIONVALUES)){
-					IArrayBeanProxy enums = null;
-					if (featureValue.isSetValueProxy())
-						enums = (IArrayBeanProxy) featureValue.getValueProxy();
-					else if (featureValue.eIsSet(BeaninfoPackage.eINSTANCE.getFeatureAttributeValue_Value())) {
-						IJavaObjectInstance enumsValue = (IJavaObjectInstance) featureValue.getValue();
-						if (enumsValue != null) {
-							// TODO Need a way of creating the proxy from the value . PRoblem
-							// is that this value is in a resourceset that has no access
-							// to BeanProxyHost, nor do we want it too because it would
-							// put the enums proxy into the wrong registry. Problem 
-							// is at this point in time we don't know what registry
-							// to use. Maybe if we could come up with a way of creating
-							// a proxy host without the adapter factory and using
-							// the registry of the beaninfo.
-						}
+			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
+			if (featureValue != null){
+				IArrayBeanProxy enums = null;
+				if (featureValue.isSetValueProxy())
+					enums = (IArrayBeanProxy) featureValue.getValueProxy();
+				else if (featureValue.isSetValue()) {
+					IJavaObjectInstance enumsValue = (IJavaObjectInstance) featureValue.getValue();
+					if (enumsValue != null) {
+						// TODO Need a way of creating the proxy from the value . PRoblem
+						// is that this value is in a resourceset that has no access
+						// to BeanProxyHost, nor do we want it too because it would
+						// put the enums proxy into the wrong registry. Problem 
+						// is at this point in time we don't know what registry
+						// to use. Maybe if we could come up with a way of creating
+						// a proxy host without the adapter factory and using
+						// the registry of the beaninfo.
 					}
-					
-					if (enums != null) {		
-						return new EnumeratedCellEditor(
-							parent,
-							enums,
-							(JavaHelpers) ((EStructuralFeature)target).getEType());
-					}
+				}
+				
+				if (enums != null) {		
+					return new EnumeratedCellEditor(
+						parent,
+						enums,
+						(JavaHelpers) ((EStructuralFeature)target).getEType());
 				}
 			}			
 		}
@@ -185,12 +182,16 @@ public Object getHelpContextIds(){
  */
 public ILabelProvider getLabelProvider(){
 	
-	if(labelProvider != null) return labelProvider;
+	if(labelProvider != null) 
+		return labelProvider;
+	else if (noLabelProviderExplicit)
+		return null;
 	
 	if ( labelProviderClass != null ) {
 		labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
 		return labelProvider;
 	} else if ("".equals(labelProviderClassNameAndData)) { //$NON-NLS-1$
+		noLabelProviderExplicit = true;
 		return null;	// Explicitly said no label provider
 	}
 		
@@ -222,20 +223,30 @@ public ILabelProvider getLabelProvider(){
 				// java.beans.PropertyEditorManager does not allow property editors to be de-registered
 				// Sun provide a number of defaults that we de-register by placing a placeholder 
 				// DummyPropertyEditor there that we must detect here
-				labelProvider = new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
-				return labelProvider;
+				return new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
 			}
 			// 3	-	Look for the enumeration values
-			Iterator propertyAttributes = propertyDecorator.getAttributes().iterator();			
-			while ( propertyAttributes.hasNext() ) {
-				FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyAttributes.next();
-				if (featureValue.getName().equals(ATTRIBUTE_NAME_ENUMERATIONVALUES)){
-					labelProvider = new EnumeratedLabelProvider(
-						(IArrayBeanProxy)featureValue.getValueProxy(),
-						(JavaHelpers) ((EStructuralFeature)target).getEType());
-					return labelProvider;
+			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
+			if (featureValue != null) {
+				if (featureValue.isSetValueProxy()) {
+					return labelProvider = new EnumeratedLabelProvider(
+							(IArrayBeanProxy)featureValue.getValueProxy(),
+							(JavaHelpers) ((EStructuralFeature)target).getEType());
+					
+				} else if (featureValue.isSetValue()) {
+					IJavaObjectInstance enumsValue = (IJavaObjectInstance) featureValue.getValue();
+					if (enumsValue != null) {
+						// TODO Need a way of creating the proxy from the value . PRoblem
+						// is that this value is in a resourceset that has no access
+						// to BeanProxyHost, nor do we want it too because it would
+						// put the enums proxy into the wrong registry. Problem 
+						// is at this point in time we don't know what registry
+						// to use. Maybe if we could come up with a way of creating
+						// a proxy host without the adapter factory and using
+						// the registry of the beaninfo.
+					}
 				}
-			}			
+			}
 		}			
 	}
 	
@@ -255,18 +266,16 @@ public ILabelProvider getLabelProvider(){
 	}	
 	
 	if ( labelProviderClass != null ) {
-		labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
-		return labelProvider;
+		return labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
 	} else {
 		// Step 5 - BeanCellRenderer will simply do toBeanString.
-		labelProvider = new BeanCellRenderer();
-		return labelProvider;
+		return labelProvider = new BeanCellRenderer();
 	}
 }
 public boolean isExpandable() {
 	// Step 1 - See if the feature decorator has it.
 	BasePropertyDecorator decorator = getBaseDecorator();
-	if (decorator != null && decorator.isSetEntryExpandable()) 
+	if (decorator != null && decorator.isSetEntryExpandable())
 		return decorator.isEntryExpandable();				
 			
 	// Step 2 - If not on feature, then get it from the type, look for BasePropertyDecorator.
