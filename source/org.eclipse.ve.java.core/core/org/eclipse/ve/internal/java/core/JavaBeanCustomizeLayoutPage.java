@@ -10,21 +10,20 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanCustomizeLayoutPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-02 17:52:12 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-09 14:09:17 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
  
 
 /**
@@ -47,9 +46,8 @@ public abstract class JavaBeanCustomizeLayoutPage extends CustomizeLayoutPage {
 				EditPart editPart = (EditPart)editparts.get(0);
 				if (editPart.getModel() instanceof IJavaObjectInstance) {
 					IJavaObjectInstance javaBean = (IJavaObjectInstance)editPart.getModel();
-					ILabelProvider provider = ClassDescriptorDecoratorPolicy.getPolicy(editPart).getLabelProvider(javaBean.eClass());
-					if ( provider != null && javaBean != null ) {
-						return provider.getText(javaBean);
+					if ( javaBean != null ) {
+						return BeanUtilities.getLabel(javaBean, EditDomain.getEditDomain(editPart));
 					}
 				}
 			}
