@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintComponentPropertySourceAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-19 20:23:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-19 22:11:19 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -172,10 +172,4 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 		if (componentPS != null)
 			componentPS.setPropertyValue(feature, val);
 	}	
-
-	public Object getEditableValue() {
-		createComponentPS();
-		return componentPS != null ? componentPS.getEditableValue() : super.getEditableValue();	// Think this is the correct value for constraint component as the editable value?
-	}
-
 }
