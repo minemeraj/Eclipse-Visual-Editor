@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-20 13:01:30 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-20 18:30:17 $ 
  */
 
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,10 +29,13 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
 
 public class PointDecoderHelper extends ExpressionDecoderHelper {
@@ -51,6 +55,8 @@ protected boolean	addPointArg() throws CodeGenException {
 	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null) throw new CodeGenException ("null EObject:"+fExpr) ;       //$NON-NLS-1$
 		
 	try {
+		if(!shouldCommit(((MethodInvocation)getExpression()).arguments()))
+			return true;
 		if (((MethodInvocation) getExpression()).arguments().size() == 2) {
 			fpointArgs = new int[2];
 			for (int i = 0; i < 2; i++)
@@ -76,6 +82,38 @@ protected boolean	addPointArg() throws CodeGenException {
 		throw new CodeGenException(e);
 	}
 	return true;
+}
+
+
+/**
+ * @param list
+ * @return
+ * 
+ * @since 1.0.0
+ */
+private boolean shouldCommit(List list) {
+	boolean shouldCommit = true;
+	if (list.size() == 2) {
+		int[] newPointArgs = new int[2];
+		for (int i = 0; i < 2; i++)
+			newPointArgs[i] = Integer.parseInt(list.get(i).toString());
+		
+        EObject target = fbeanPart.getEObject() ;
+        EStructuralFeature sf = fFmapper.getFeature(null) ;
+        if(target.eIsSet(sf)){
+        	Object currentValue = target.eGet(sf);
+        	if (currentValue instanceof IJavaObjectInstance) {
+				IJavaObjectInstance joi = (IJavaObjectInstance) currentValue;
+				IBeanProxy bProxy = BeanProxyUtilities.getBeanProxy(joi);
+				if (bProxy instanceof IPointBeanProxy) {
+					IPointBeanProxy pbProxy = (IPointBeanProxy) bProxy;
+					if(pbProxy.getX()==newPointArgs[0] && pbProxy.getY()==newPointArgs[1])
+						shouldCommit = false;
+				}
+			}
+        }
+	}
+	return shouldCommit;
 }
 
 

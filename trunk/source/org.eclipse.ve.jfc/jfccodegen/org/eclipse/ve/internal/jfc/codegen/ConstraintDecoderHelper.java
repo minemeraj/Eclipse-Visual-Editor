@@ -11,30 +11,34 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-20 13:01:30 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-20 18:30:17 $ 
  */
 
 
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Statement;
-
-import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
+import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 public class ConstraintDecoderHelper extends ExpressionDecoderHelper {
@@ -91,6 +95,8 @@ protected boolean	addConstraintFeature() throws CodeGenException {
 		
 	MethodInvocation exp = (MethodInvocation)getExpression();
 	try {
+		if(!shouldCommit(exp))
+			return true;
         if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_BOUND)) {
      	    // TODO  Need to deal with Rectangle arg
     	    if (exp.arguments().size() == 4)   {
@@ -150,6 +156,81 @@ protected boolean	addConstraintFeature() throws CodeGenException {
 	return true ;   
 }
 
+
+/**
+ * @param exp
+ * @return
+ * 
+ * @since 1.0.0
+ */
+	private boolean shouldCommit(MethodInvocation exp) {
+		boolean shouldCommit = true;
+		try{
+			if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_BOUND)) {
+				if (exp.arguments().size() == 4) {
+					int[] newConstraints = new int[4];
+					for (int i = 0; i < 4; i++)
+						newConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString());
+					EObject target = fbeanPart.getEObject();
+					EStructuralFeature sf = fFmapper.getFeature(null);
+					if(target.eIsSet(sf)){
+						Object currentValue = target.eGet(sf);
+						if (currentValue instanceof IJavaObjectInstance) {
+							IJavaObjectInstance joi = (IJavaObjectInstance) currentValue;
+							IBeanProxy bProxy = BeanProxyUtilities.getBeanProxy(joi);
+							if (bProxy instanceof IRectangleBeanProxy) {
+								IRectangleBeanProxy rectBeanProxy = (IRectangleBeanProxy) bProxy;
+								if(		newConstraints[0]==rectBeanProxy.getX() && 
+										newConstraints[1]==rectBeanProxy.getY() && 
+										newConstraints[2]==rectBeanProxy.getWidth() && 
+										newConstraints[3]==rectBeanProxy.getHeight())
+									shouldCommit=false;
+							}
+						}
+					}
+				}
+			} else if (fFmapper.getMethodName().equals(IJFCFeatureMapper.CONSTRAINT_SIZE)) {
+				if (exp.arguments().size() == 2) {
+					int[] newConstraints = new int[2];
+					for (int i = 0; i < 2; i++)
+						newConstraints[i] = Integer.parseInt(exp.arguments().get(i).toString());
+					EObject target = fbeanPart.getEObject();
+					EStructuralFeature sf = fFmapper.getFeature(null);
+					if(target.eIsSet(sf)){
+						Object currentValue = target.eGet(sf);
+						if (currentValue instanceof IJavaObjectInstance) {
+							IJavaObjectInstance joi = (IJavaObjectInstance) currentValue;
+							IBeanProxy bProxy = BeanProxyUtilities.getBeanProxy(joi);
+							if (bProxy instanceof IDimensionBeanProxy) {
+								IDimensionBeanProxy sizeBeanProxy = (IDimensionBeanProxy) bProxy;
+								if(		newConstraints[0]==sizeBeanProxy.getWidth() && 
+										newConstraints[1]==sizeBeanProxy.getHeight()) 
+									shouldCommit=false;
+							}
+						}
+					}
+				}
+			} else
+			if ((exp.arguments().size() == 1) && (exp.arguments().get(0) instanceof StringLiteral)) {
+				// TODO Havent found a case where this is true - but leaving it here for the time being
+				String newConstraint = "\""+exp.arguments().get(0).toString()+"\"";
+				EObject target = fbeanPart.getEObject();
+				EStructuralFeature sf = fFmapper.getFeature(null);
+				if(target.eIsSet(sf)){
+					Object currentValue = target.eGet(sf);
+					if(currentValue!=null && currentValue instanceof IJavaObjectInstance){
+						IJavaObjectInstance joi = (IJavaObjectInstance) currentValue;
+						String currentConstraint = CodeGenUtil.getInitString(joi, fbeanPart.getModel(), null);
+						if(newConstraint.equals(currentConstraint))
+							shouldCommit = false;
+					}
+				}
+			}
+		}catch(Exception e){
+			JavaVEPlugin.log(e, Level.FINER);
+		}
+		return shouldCommit;
+}
 
 /**
  *  Get the args part of the expression
