@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.83 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.84 $  $Date: 2005-02-17 23:05:47 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -190,14 +190,34 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private static final String JVE_STEP = "JVE";  //$NON-NLS-1$
 	public static final String SETUP_STEP = "Setup JVE"; //$NON-NLS-1$
 	public final static boolean DO_TIMER_TESTS = Boolean.valueOf(Platform.getDebugOption(JavaVEPlugin.getPlugin().getBundle().getSymbolicName() + "/debug/vetimetrace")).booleanValue(); //$NON-NLS-1$;
+	// This is a workaround for the fact that background jobs compete for CPU during bring up
+	public final static int BRING_UP_PRIORITY_BUMP = 1;
+	
 	
 	public JavaVisualEditorPart() {
+		bumpUIPriority(true, Thread.currentThread());
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 		if (DO_TIMER_TESTS) {
 			System.out.println(""); //$NON-NLS-1$
 			TimerTests.basicTest.testState(true);
 			TimerTests.basicTest.startStep(JVE_STEP);
 		}
+	}
+	private static int uiThreadPriority = -1;
+	private static Thread uiThread = null;
+	private void bumpUIPriority(boolean up, Thread ui) {
+		// First time around this method must be called from the ui thread		
+		if (uiThread==null) {
+		  	  if (ui==null)
+		  	  	 return;
+		  	  uiThread = ui;
+			  uiThreadPriority=ui.getPriority();
+		}			
+		if (up)
+			uiThread.setPriority(uiThreadPriority+BRING_UP_PRIORITY_BUMP);
+		else
+			uiThread.setPriority(uiThreadPriority);
+			
 	}
 	
 	/* (non-Javadoc)
@@ -835,6 +855,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				noLoadPrompt(e);
 				throw e;
 			}
+			finally {
+				bumpUIPriority(false,null);
+			}
 		}
 	}
 	
@@ -1296,9 +1319,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 					proxyFactoryRegistry.terminateRegistry();			
 				}
-				
-				try {
-
+					
+				try {					
 					JavaVisualEditorVMController.RegistryResult regResult = JavaVisualEditorVMController.getRegistry(file);
 					
 					// Everything is all set up. Now let's see if we need to rebuild the palette.
@@ -1518,8 +1540,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		
 		
-		protected IStatus run(IProgressMonitor monitor) {			
-			try {
+		protected IStatus run(IProgressMonitor monitor) {
+			int curPriority = Thread.currentThread().getPriority();
+			try {				
+				Thread.currentThread().setPriority(curPriority+BRING_UP_PRIORITY_BUMP);
 				if (DO_TIMER_TESTS)
 					TimerTests.basicTest.testState(true);
 				TimerTests.basicTest.startStep(SETUP_STEP);
@@ -1642,6 +1666,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 									initializeViewers();
 							}
 						});
+					else
+						bumpUIPriority(false,null);
 				} else {
 					// We didn't get a model for some reason, so just bring down the load controller, the parse error flag should already be set.
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
@@ -1659,6 +1685,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				setLoadIsPending(false);
 				canceled();
 				return (x instanceof CoreException) ? ((CoreException) x).getStatus() : Status.CANCEL_STATUS;
+			}
+			finally {
+				Thread.currentThread().setPriority(curPriority);
 			}
 			
 			if (rebuildPalette && !monitor.isCanceled()) {
@@ -1719,6 +1748,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			if (registryCreateJob != null) {
 				while (true) {
 					try {
+						bumpUIPriority(false,null);
 						registryCreateJob.join(); // Need to join up so that we don't have hanging out there.
 						break;
 					} catch (InterruptedException e) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.58 $  $Date: 2005-02-16 22:05:57 $ 
+ *  $Revision: 1.59 $  $Date: 2005-02-17 23:05:47 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1112,7 +1112,8 @@ public synchronized void disconnect(boolean clearVCEModel) {
     fdisconnected=true ;
     fireProcessingPause(fdisconnected);
     fireStatusChanged(fPauseSig);
-    ReverseParserJob.cancelJobs(fFile);
+    if (fFile!=null)
+      ReverseParserJob.cancelJobs(fFile);
 }
 
 /**
