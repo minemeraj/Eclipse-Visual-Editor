@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-03-18 18:46:51 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-01 22:18:01 $ 
  */
 
 
@@ -61,11 +61,12 @@ public static void addRectangleFeatureValue (MemberContainer pOwner, EObject tar
   value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+RECTANGLE_CLASS+"("+ //$NON-NLS-1$ //$NON-NLS-2$
                                         Integer.toString(args[0]) +   "," + Integer.toString(args[1]) + "," + //$NON-NLS-1$ //$NON-NLS-2$
                                         Integer.toString(args[2])+"," + Integer.toString(args[3])+")"));	//$NON-NLS-1$ //$NON-NLS-2$
-  CodeGenUtil.propertyCleanup(target,sf) ;                                        
+  EObject oldRect = (EObject) target.eGet(sf);                                        
   // Set the scope                                
   pOwner.getProperties().add(value) ;
   // Set the property                                        
-  target.eSet(sf,value);    
+  target.eSet(sf,value);
+  CodeGenUtil.propertyCleanup(oldRect);
 }
 
 /**
@@ -79,11 +80,12 @@ public static void addDimensionFeatureValue (MemberContainer pOwner, EObject tar
   value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+DIMENSION_CLASS+"("+Integer.toString(args[0])+ //$NON-NLS-1$ //$NON-NLS-2$
                                 ","+Integer.toString(args[1])+")"));	//$NON-NLS-1$ //$NON-NLS-2$
                                 
-  CodeGenUtil.propertyCleanup(target,sf) ;
+  EObject oldDim = (EObject) target.eGet(sf);
   // Set the scope                                
   pOwner.getProperties().add(value) ;
   // Set the property
-  target.eSet(sf,value);    
+  target.eSet(sf,value);
+  CodeGenUtil.propertyCleanup(oldDim);
 }
 
 /**
