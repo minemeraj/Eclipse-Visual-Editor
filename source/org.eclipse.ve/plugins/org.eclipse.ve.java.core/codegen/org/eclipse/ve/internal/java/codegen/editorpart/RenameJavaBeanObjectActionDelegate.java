@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-19 20:39:12 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-29 21:38:37 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -158,7 +158,7 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 				}
 			});
 
-			setTitle(RefactoringMessages.getString("RefactoringGroup.rename_field_title")); //$NON-NLS-1$
+			setTitle(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.FieldNaming.Title")); //$NON-NLS-1$
 			titleImage = JavaPluginImages.DESC_WIZBAN_REFACTOR_FIELD.createImage(parentComposite.getDisplay());
 			setTitleImage(titleImage);
 			setMessage(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.Message")); //$NON-NLS-1$
