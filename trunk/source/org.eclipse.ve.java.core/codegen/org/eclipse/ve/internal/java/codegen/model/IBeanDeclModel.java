@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.10 $  $Date: 2005-01-20 22:05:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
-public interface IBeanDeclModel {
+public interface IBeanDeclModel extends IScannerFactory{
 	
 	public final  int           BDM_STATE_DOWN            		= 0x01 ;	
 	public final  int           BDM_STATE_UP_AND_RUNNING  		= 0x02 ;

@@ -12,12 +12,13 @@ package org.eclipse.ve.internal.java.codegen.util;
 
 import java.awt.Point;
 
-import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.compiler.*;
+
+import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-20 22:05:24 $ 
  */
 /**
  * @version 	1.0
@@ -188,12 +189,12 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
      * 
      * @since 1.0.0
      */
-    protected static int getCommentLineEnd(String src, int start){
+    protected static int getCommentLineEnd(String src, int start, IScannerFactory scannerFactory){
     	int endOfCommentLine = -1;
         try {
         	int jveAnnotationStart = getSigOnSameLine(start, src, ANNOTATION_SIG); 
 			if(jveAnnotationStart>-1){ // If JVE annotation
-				IScanner scanner = ToolFactory.createScanner(true, true, false, true);
+				IScanner scanner = scannerFactory.getScanner(true, true, true);
 				scanner.setSource(src.substring(jveAnnotationStart).toCharArray());
 				int token = scanner.getNextToken();
 				boolean endFound = false;
@@ -243,9 +244,9 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
      * @param start
      * @return the EXACT index of the end of the annotation
      */
-    public static int getAnnotationEnd (String src, int start) {
+    public static int getAnnotationEnd (String src, int start, IScannerFactory scannerFactory) {
     	try {
-    		int endOfCommentLine = getCommentLineEnd(src, start);
+    		int endOfCommentLine = getCommentLineEnd(src, start, scannerFactory);
     		return endOfCommentLine ;
     	}catch (Throwable t) {
     		return -1 ;
@@ -261,14 +262,14 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
      * @param src
      * @return
      */
-    public static String getCurrentAnnotation (String src) {
+    public static String getCurrentAnnotation (String src, IScannerFactory scannerFactory) {
        
        // TODO  Works with a single annotation on a line
        
        
        int start = getAnnotationStart(src) ;
        if (start < 0) return null ;
-       int end = getAnnotationEnd(src,start) ;
+       int end = getAnnotationEnd(src,start, scannerFactory) ;
        if (end<0) end = src.lastIndexOf(ANNOTATION_SEPERATOR); 
        if (end<0)
        	   return null ;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.15 $  $Date: 2005-01-13 21:02:40 $ 
+ *  $Revision: 1.16 $  $Date: 2005-01-20 22:05:20 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -63,7 +63,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 		}
 		if (f == null) 
 			return false ;
-        ExpressionParser p = new ExpressionParser(f);
+        ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
         String comment = p.getComment();
         // when absolutely no comment is present (handcoded), we should 
         // just allow the component to show up on the FF
@@ -111,7 +111,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
              // No Free Form Information
          	 return noAnnotationInSource(false);
           }
-    	  String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
+    	  String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel()) ;
           if (curAnnotation == null)  {
              // No Free Form Information
           	 return noAnnotationInSource(false);
@@ -158,7 +158,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
         fBeanpart.setFieldDeclHandle(f.getHandleIdentifier()) ;
         try {
          
-          ExpressionParser p = new ExpressionParser(f);
+          ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
           String src = p.getComment();
           return decode(src) ;                    
         }
@@ -182,7 +182,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 				return;
 
 			try {
-				ExpressionParser p = new ExpressionParser(f);
+				ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
 				int srcStart = p.getCodeOff();
 				int srcLen = p.getCodeLen();
 				String src = fBeanpart.getModel().getDocumentBuffer().getContents().substring(srcStart + srcLen + 1);
@@ -191,7 +191,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 
 				// We want to keep start withing the range of the def., so that the JModel will pick up the comment
 				start = srcStart + srcLen + 1; // ;'s are not part of the <CodeOff, CodeOff+CodeLen>
-				String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src);
+				String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel());
 				if (curAnnotation == null) {
 					// Brand New Anotation 
 					newSrc = generate(null, null);
@@ -213,7 +213,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 						JavaVEPlugin.log(fBeanpart.getUniqueName() + " Updating FF annotation", Level.FINE); //$NON-NLS-1$
 					int s = FreeFormAnnotationTemplate.getAnnotationStart(src);
 					s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
-					int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s);
+					int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s, fBeanpart.getModel());
 					newSrc = generate(null, null);
 					if (newSrc != null && newSrc.length() > 0)
 						newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
