@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.30 $  $Date: 2004-06-09 14:38:03 $ 
+ *  $Revision: 1.31 $  $Date: 2004-06-21 16:23:34 $ 
  */
 
 import java.util.*;
@@ -275,7 +275,7 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 
 //	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getQualifiedName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Assume imports will be created by the init expression
-	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getName(), INSTANCE_VAR_DEFAULT_COMMENT);
+	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getSimpleName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Create it as the last field
 	ft.setSeperator(fBeanModel.getLineSeperator());
 	setFreeFormAnnotation(ft, bp);

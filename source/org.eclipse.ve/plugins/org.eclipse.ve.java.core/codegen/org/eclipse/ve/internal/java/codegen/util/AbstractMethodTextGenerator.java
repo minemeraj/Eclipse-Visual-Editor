@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.12 $  $Date: 2004-06-21 16:23:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -114,7 +114,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		IJavaObjectInstance obj = (IJavaObjectInstance)fComponent ;		
 		setBeanInitString(CodeGenUtil.getInitString(obj, fModel, imports));	
 		if (imports!=null)
-			setInitBeanType(obj.getJavaType().getName());
+			setInitBeanType(obj.getJavaType().getSimpleName());
 				
 		return getMethodTemplate().generateMethod(getInfo()) ;				
 	}
