@@ -1,6 +1,6 @@
 
-	<category-def label="VE {buildid}" name="{buildid}Cat">
+	<category-def label="VE/JEM {buildid}" name="{buildid}Cat">
 		<description>
-			This category contains the various features in development of the {buildid} build of VE SDK.
+			This category contains the various features in development of the {buildid} build of VE SDK and JEM SDK.
 		</description>
 	</category-def>
