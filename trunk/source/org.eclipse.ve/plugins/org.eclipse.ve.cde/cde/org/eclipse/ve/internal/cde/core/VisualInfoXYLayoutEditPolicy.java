@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-09 20:31:37 $ 
  */
 
 import java.util.Iterator;
@@ -408,7 +408,8 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		}
 		
 		private void queueRefreshFromEditPart(final Object constraint) {
-			CDEUtilities.displayExec(getHost().getViewer().getControl().getDisplay(), new Runnable() {
+			if (getHost() != null)
+				CDEUtilities.displayExec(getHost(), new Runnable() {
 				public void run() {
 					if (!deactivated)
 						refreshFromEditPart(getHost(), constraint);
