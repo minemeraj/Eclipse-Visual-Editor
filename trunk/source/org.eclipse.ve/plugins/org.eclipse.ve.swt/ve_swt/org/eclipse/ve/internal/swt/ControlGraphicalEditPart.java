@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:34 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-04-22 10:17:33 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -167,7 +167,6 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			public void componentHidden() {
 			}
 			public void componentMoved(int x, int y) {
-				System.out.println("Component moved");
 			}
 			public void componentRefreshed() {
 				// For the initial resize get the bounds and treat this as a resize
