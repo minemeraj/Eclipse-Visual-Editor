@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-09-09 14:35:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:56 $ 
  */
 
 import java.util.List;
@@ -58,7 +58,9 @@ protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	    init instanceof CastExpression || 
 	    init instanceof MethodInvocation) {
 	    // Decleration and initialization
-	    new ExpressionVisitor(fMethod,stmt,fModel,fReTryLater).visit();
+		ExpressionVisitor v = new ExpressionVisitor(fMethod,stmt,fModel,fReTryLater);
+		v.setProgressMonitor(getProgressMonitor());
+		v.visit();
 	}		
 }	
 		
@@ -155,13 +157,18 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
       // Synchronized
       else if (stmt instanceof SynchronizedStatement) 
           processSynchStatement ((SynchronizedStatement)stmt) ;
-      else if (stmt instanceof ReturnStatement)
-          new ReturnStmtVisitor(fMethod,(ReturnStatement)stmt,fModel,fReTryLater).visit();
+      else if (stmt instanceof ReturnStatement){
+      	ReturnStmtVisitor visitor = new ReturnStmtVisitor(fMethod,(ReturnStatement)stmt,fModel,fReTryLater);
+      	visitor.setProgressMonitor(getProgressMonitor());
+      	visitor.visit();
+      }
 
       // Handle an Expression          
-      else if (stmt instanceof ExpressionStatement) 
-          new ExpressionVisitor(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater).visit();
-      else
+      else if (stmt instanceof ExpressionStatement) {
+      	ExpressionVisitor v = new ExpressionVisitor(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater);
+      	v.setProgressMonitor(getProgressMonitor());
+      	v.visit();
+      }else
          JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, Level.FINE) ; //$NON-NLS-1$
 }	
 	
@@ -184,7 +191,7 @@ public MethodVisitor (MethodDeclaration node, IBeanDeclModel model,List reTryLis
  
 public void visit() {
 	
-	
+	getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()");
 	// Check to see if we have a special JCMMethod Visitor to use instead this one.
 	IOverideMethodVisitRule overideRule = (IOverideMethodVisitRule) CodeGenUtil.getEditorStyle(fModel).getRule(IOverideMethodVisitRule.RULE_ID) ;
 	if (overideRule != null) {
@@ -212,6 +219,7 @@ public void visit() {
 		// Will have to pass it on later on
 		JavaVEPlugin.log (e, Level.WARNING) ;
 	}
+	getProgressMonitor().worked(100);
 }
 
 public String toString() {

@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-11-16 18:52:58 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.*;
@@ -42,6 +44,7 @@ public class EventsParser {
 	HashMap						faddListeners = new HashMap() ;
 	MethodDeclaration 			domMethods[] ;
 	JavaElementInfo				cuMethods[] ;
+	IProgressMonitor 			progressMonitor;
 	
 	
 	public EventsParser(IBeanDeclModel m, CompilationUnit dom) {
@@ -109,8 +112,10 @@ public class EventsParser {
 				}
 				catch (JavaModelException e) {}
 				}
-				if (v != null)
-				   v.visit() ;
+				if (v != null){
+					v.setProgressMonitor(getProgressMonitor());
+ 				    v.visit() ;
+				}
 	        }
 		}
 	}
@@ -125,5 +130,24 @@ public class EventsParser {
 			   analyze(b, (JavaClass)h) ;
 		}
 		
+	}
+
+	/**
+	 * @return Returns the progressMonitor.
+	 * 
+	 * @since 1.0.2
+	 */
+	public IProgressMonitor getProgressMonitor() {
+		if(progressMonitor==null)
+			progressMonitor = new NullProgressMonitor();
+		return progressMonitor;
+	}
+	/**
+	 * @param progressMonitor The progressMonitor to set.
+	 * 
+	 * @since 1.0.2
+	 */
+	public void setProgressMonitor(IProgressMonitor progressMonitor) {
+		this.progressMonitor = progressMonitor;
 	}
 }

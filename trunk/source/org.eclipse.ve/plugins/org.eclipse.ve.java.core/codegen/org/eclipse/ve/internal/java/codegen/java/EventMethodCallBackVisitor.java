@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodCallBackVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-11-16 18:52:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -83,7 +83,9 @@ protected boolean processCondition(Expression condition, IfStatement stmt) {
 					// A e.getSource() method call on an if statement, check the target
 					BeanPart bp = getBeanPart(ee.getRightOperand());
 					if (bp != null) {
-						new EventCallBackExpressionVisitor(bp, fMethod, stmt, fModel).visit();
+						EventCallBackExpressionVisitor v = new EventCallBackExpressionVisitor(bp, fMethod, stmt, fModel);
+						v.setProgressMonitor(getProgressMonitor());
+						v.visit();
 						return true;
 					}
 				}

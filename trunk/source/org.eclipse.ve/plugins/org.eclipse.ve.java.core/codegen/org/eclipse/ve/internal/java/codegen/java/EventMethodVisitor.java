@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-11-16 18:52:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -124,6 +124,7 @@ public class EventMethodVisitor extends MethodVisitor {
 				return;
 			}
 			if (newVisitor != null)
+				newVisitor.setProgressMonitor(getProgressMonitor());
 				newVisitor.visit();
 		}
 
@@ -143,7 +144,9 @@ public class EventMethodVisitor extends MethodVisitor {
 			MethodInvocation ms = (MethodInvocation) stmt.getExpression();
 			if (mref != null) {
 				if (mref.getMethodName().equals(ms.getName().getIdentifier())) {
-					new EventExpressionVisitor(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom).visit();
+					EventExpressionVisitor v = new EventExpressionVisitor(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom);
+					v.setProgressMonitor(getProgressMonitor());
+					v.visit();
 				}
 			}
 		}
@@ -151,7 +154,9 @@ public class EventMethodVisitor extends MethodVisitor {
 		          stmt.getExpression() instanceof ThisExpression) {
 			// ivjBean.addXXX()
 			if (fBean.getSimpleName().equals(stmt.getExpression().toString())) {
-				new EventExpressionVisitor(fBean, fMethod, (Statement) stmt.getParent(), fModel, fESigs, fastDom).visit();
+				EventExpressionVisitor v = new EventExpressionVisitor(fBean, fMethod, (Statement) stmt.getParent(), fModel, fESigs, fastDom);
+				v.setProgressMonitor(getProgressMonitor());
+				v.visit();
 			}
 		}
 		

@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-11-16 18:52:56 $ 
  */
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.*;
 
@@ -96,8 +97,10 @@ protected void updateModelPositions(CompilationUnit decl){
 	}
 }
 
-protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain){
-	new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true).visit()  ;
+protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor pm){
+	TypeVisitor visitor = new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true);
+	visitor.setProgressMonitor(pm);
+	visitor.visit()  ;
 }
 
 
@@ -111,8 +114,8 @@ protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElemen
  *
  * @see org.eclipse.ve.internal.java.codegen.java.JavaBeanModelBuilder#ParseJavaCode()
  */
-protected CompilationUnit ParseJavaCode() throws CodeGenException {
-	CompilationUnit cu = super.ParseJavaCode();
+protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenException {
+	CompilationUnit cu = super.ParseJavaCode(pm);
 	updateModelPositions(cu);
 	return cu;
 }

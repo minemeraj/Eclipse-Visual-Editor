@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:58 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.*;
-
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
@@ -113,7 +112,7 @@ protected void processAMessageSend() {
  *  Go for it
  */
 public void visit(){
-	
+	getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()"+" : "+fExpression.getCodeContent());
 	if (fExpression.getExprStmt() instanceof ExpressionStatement &&
 	    ((ExpressionStatement)fExpression.getExprStmt()).getExpression() instanceof MethodInvocation)
 	   processAMessageSend () ;

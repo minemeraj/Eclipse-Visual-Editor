@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.8 $  $Date: 2004-09-09 14:35:29 $ 
+ *  $Revision: 1.9 $  $Date: 2004-11-16 18:52:58 $ 
  */
 
 import java.util.*;
@@ -132,6 +132,7 @@ public void addFieldToMap(BeanPart bp, String method) {
 protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
 	String mName = method.getName().getIdentifier();
 	MethodVisitor v = new MethodVisitor(method,model,reTryList,typeRef,methodHandle,	range,content) ;
+	v.setProgressMonitor(getProgressMonitor());
 	// Check to see if the rule gave us an init method up front
 	if (fInstanceDeclaredBeans.get(mName) != null) {
 		Iterator itr = ((List)fInstanceDeclaredBeans.get(mName)).iterator() ;
@@ -143,6 +144,7 @@ protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List 
 
 public void visit()  {
 	// First look a instance variables 
+	getProgressMonitor().subTask(fType.getSimpleName());
 	FieldDeclaration[] fields = fType.getTypeDecl().getFields();
 	IInstanceVariableRule instVarRule = (IInstanceVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IInstanceVariableRule.RULE_ID) ;
 	if (fields != null) 

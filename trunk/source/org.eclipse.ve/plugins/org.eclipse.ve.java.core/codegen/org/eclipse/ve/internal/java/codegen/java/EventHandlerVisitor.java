@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventHandlerVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-11-16 18:52:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -37,7 +37,7 @@ public EventHandlerVisitor (TypeDeclaration node, IBeanDeclModel model, boolean 
 }
 
 public void visit()  {
-
+	getProgressMonitor().subTask(fType.getSimpleName());
 	MethodDeclaration[] methods = fType.getTypeDecl().getMethods();
 	if (forceJDOMUsage) {
 //TODO.. have not done anything for snippet here... need to verify
@@ -61,10 +61,11 @@ public void visit()  {
 					// the declaration Source starts, and the declaration source ends are 
 					// being modified. This is due to inconsistency between JDOM and JDT.
 //					
-					new EventMethodCallBackVisitor( methods[i], fModel, fType, thisMethodHandle, // null,
+					EventMethodCallBackVisitor v = new EventMethodCallBackVisitor( methods[i], fModel, fType, thisMethodHandle, // null,
 								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()),
-						         String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength())).  
-								 visit();								 
+						         String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()));
+					v.setProgressMonitor(getProgressMonitor());  
+					v.visit();								 
 				}
 			}
 		}catch(Exception e){
@@ -82,9 +83,11 @@ public void visit()  {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
 					 methods[i] instanceof MethodDeclaration) {
-					new EventMethodCallBackVisitor(methods[i],fModel,fType,cuMethods[i].getHandle(),
+					EventMethodCallBackVisitor v = new EventMethodCallBackVisitor(methods[i],fModel,fType,cuMethods[i].getHandle(),
 								cuMethods[i].getSourceRange(),
-								cuMethods[i].getContent()).visit();
+								cuMethods[i].getContent());
+					v.setProgressMonitor(getProgressMonitor());
+					v.visit();
 				}
 			}		
 	}
