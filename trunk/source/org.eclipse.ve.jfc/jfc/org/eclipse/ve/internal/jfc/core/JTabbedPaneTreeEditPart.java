@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-08-27 15:34:49 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-10-27 17:37:13 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.*;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -78,6 +77,15 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	public void activate() {
 		((EObject) getModel()).eAdapters().add(containerAdapter);
+		// We need add a listener to dispose of the special decorator used for the 
+		// JTabbedPane's children when the child is removed.
+		addEditPartListener(new EditPartListener.Stub() {
+
+			public void removingChild(EditPart editpart, int index) {
+				if (((ComponentTreeEditPart)editpart).getLabelDecorator() != null)
+					((ComponentTreeEditPart)editpart).getLabelDecorator().dispose();
+			}
+		});
 		super.activate();
 	}
 
@@ -90,7 +98,7 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		EditPart ep = super.createChildEditPart(model);
 		setPropertySource((ComponentTreeEditPart) ep, (EObject) model);
 		// keep the following for the future so we can show the tab title in the beans viewer.
-		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator());
+		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator((EObject)model));
 		return ep;
 	}
 

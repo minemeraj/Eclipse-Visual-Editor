@@ -1,4 +1,5 @@
 package org.eclipse.ve.internal.jfc.core;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,33 +12,90 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-10-27 17:37:13 $ 
  */
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.util.ListenerList;
+import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.*;
+
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 /**
  * @author pwalker
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ * Label decorator for the children of a JTabbedPane. In this case although Eclipse would rather use one decorator for all the children, there is one
+ * decorator created for each of the children. Also note that from a user perspective it looks like we are setting the tab title for the Swing
+ * component child but the tab title is a property of the poofed up wrappered component JTabComponent which encapsulates all the extra properties
+ * needed in the addTab method for a JTabbedPane.
  */
 public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabelDecorator {
+
 	protected EReference sfTabTitle, sfTabComponent, sfTabs;
+
+	private ListenerList listeners = new ListenerList(1);
+
+	private Adapter tabcomponentAdapter;
+
+	protected EObject tabComponent;
+
+	public JTabbedPaneChildTreeLabelDecorator(EObject model) {
+		initializeSFs(model);
+		tabComponent = InverseMaintenanceAdapter.getFirstReferencedBy(model, sfTabComponent);
+		if (tabComponent != null)
+			tabComponent.eAdapters().add(getTabComponentAdapter());
+	}
+
+	private Adapter getTabComponentAdapter() {
+		if (tabcomponentAdapter == null) {
+			tabcomponentAdapter = new Adapter() {
+
+				public void notifyChanged(Notification notification) {
+					if (notification.getFeature() == sfTabTitle)
+						fireLabelProviderChanged();
+				}
+
+				public Notifier getTarget() {
+					return null;
+				}
+
+				public void setTarget(Notifier newTarget) {
+				}
+
+				public boolean isAdapterForType(Object type) {
+					return false;
+				}
+			};
+		}
+		return tabcomponentAdapter;
+	}
+
+	protected void fireLabelProviderChanged() {
+		Object[] listeners = this.listeners.getListeners();
+		final LabelProviderChangedEvent labelProviderChangeEvent = new LabelProviderChangedEvent(this);
+		for (int i = 0; i < listeners.length; ++i) {
+			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
+			Platform.run(new SafeRunnable() {
+
+				public void run() {
+					l.labelProviderChanged(labelProviderChangeEvent);
+				}
+			});
+		}
+	}
 
 	public void initializeSFs(EObject component) {
 		ResourceSet rset = component.eResource().getResourceSet();
@@ -48,6 +106,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 		if (sfTabs == null)
 			sfTabs = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABBEDPANE_TABS);
 	}
+
 	/**
 	 * @see org.eclipse.jface.viewers.ILabelDecorator#decorateImage(Image, Object)
 	 */
@@ -64,18 +123,16 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 		if (!(element instanceof IJavaObjectInstance))
 			return element.toString();
 		IJavaObjectInstance component = (IJavaObjectInstance) element;
-		initializeSFs((EObject) component);
-		EObject tabComponent = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) component, sfTabComponent);
 		if (tabComponent != null) {
-			// See whether the component is in severe error.  If so then don't include it here
-			if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component).getErrorStatus()
-				!= IBeanProxyHost.ERROR_SEVERE) {
+			// See whether the component is in severe error. If so then don't include it here
+			if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
 				IJavaObjectInstance tabTitle = (IJavaObjectInstance) tabComponent.eGet(sfTabTitle);
 				if (tabTitle != null) {
 					// We know the constraints value should be a bean so we can use its toString to get the string value
 					String title = BeanProxyUtilities.getBeanProxy(tabTitle).toBeanString();
 					if (title != null)
-						text = MessageFormat.format(VisualMessages.getString("JTabbedPaneChildTreeLabelDecorator.Tab.Title"), new Object[] {text, title}); //$NON-NLS-1$
+						text = MessageFormat.format(
+								VisualMessages.getString("JTabbedPaneChildTreeLabelDecorator.Tab.Title"), new Object[] { text, title}); //$NON-NLS-1$
 				}
 			}
 		}
@@ -86,12 +143,15 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener) {
+		listeners.add(listener);
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
+		if (tabComponent != null)
+			tabComponent.eAdapters().remove(getTabComponentAdapter());
 	}
 
 	/**
@@ -105,6 +165,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(ILabelProviderListener)
 	 */
 	public void removeListener(ILabelProviderListener listener) {
+		listeners.remove(listener);
 	}
 
 }
