@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.14 $  $Date: 2004-05-26 08:44:17 $ 
+ *  $Revision: 1.15 $  $Date: 2004-05-26 14:44:51 $ 
  */
 
 import java.util.*;
@@ -217,15 +217,9 @@ public class BeanUtilities {
 				IJavaInstance javaComponent = (IJavaObjectInstance) component;
 				JavaHelpers componentType= javaComponent.getJavaType();
 				if ( javaClass.isAssignableFrom(componentType)) {
-					objects.add(component);	
-					// The label used for the icon is the same one used by the JavaBeans tree view
-					ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentType);
-					if ( labelProvider != null ) {
-						labels.add(labelProvider.getText(component));		
-					} else { 
-						// If no label provider exists use the toString of the target VM JavaBean itself
-						labels.add(BeanProxyUtilities.getBeanProxy(javaComponent).toBeanString()); 
-					}
+					objects.add(component);
+					String label = BeanUtilities.getLabel(javaComponent,editDomain);
+					labels.add(label);
 				}
 			}
 		}
@@ -242,6 +236,24 @@ public class BeanUtilities {
 					break;
 				}
 			}		
+		}
+	}
+
+	/**
+	 * @param componentType
+	 * @param editDomain
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static String getLabel(IJavaInstance component, EditDomain editDomain) {
+		// The label used for the icon is the same one used by the JavaBeans tree view
+		ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(component.eClass());
+		if ( labelProvider != null ) {
+			return labelProvider.getText(component);		
+		} else { 
+			// If no label provider exists use the toString of the target VM JavaBean itself
+			return BeanProxyUtilities.getBeanProxy(component).toBeanString(); 
 		}
 	}	
 }

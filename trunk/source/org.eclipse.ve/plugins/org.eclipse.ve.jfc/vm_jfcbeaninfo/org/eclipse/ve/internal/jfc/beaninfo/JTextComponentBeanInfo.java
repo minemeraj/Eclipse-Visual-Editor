@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:33 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-26 14:44:56 $ 
  */
 
 import java.beans.*;
@@ -841,7 +841,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JTextComponentMessages.getString("document.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("document.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE
+	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 			// editable
