@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.24 $  $Date: 2004-10-27 20:42:03 $ 
+ *  $Revision: 1.25 $  $Date: 2005-01-21 15:18:42 $ 
  */
 
 import java.util.*;
@@ -35,6 +35,7 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.emf.FeatureValueProvider;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
@@ -540,26 +541,20 @@ protected void fireClearedError(ErrorType e){
 protected void applyAllSettings() {
 	
 	// Now apply all of the feature settings.
-	// For the moment, apply in same order as in MOF object. This could cause some problems
-	// later, but we attack that then.
-	EObject eTarget = getEObject();
-	Iterator features = eTarget.eClass().getEAllStructuralFeatures().iterator();
-	while (features.hasNext()) {
-		EStructuralFeature sf = (EStructuralFeature) features.next();
-		if (eTarget.eIsSet(sf)) {
-			if (sf.isMany()) {
-				appliedList(sf,(List)eTarget.eGet(sf), Notification.NO_INDEX, true);	// Test validity because we are applying all.
+	JavaObjectInstance eTarget = (JavaObjectInstance) getTarget();
+	
+	eTarget.visitSetFeatures(new FeatureValueProvider.Visitor(){
+		public void isSet(EStructuralFeature feature, Object value) {
+			if(feature.isMany()){
+				appliedList(feature,(List)value, Notification.NO_INDEX, true);	// Test validity because we are applying all.
 			} else {
-				// Do not apply the value if it is in error
-				if (isValidFeature(sf)){
-					applied(sf,eTarget.eGet(sf), Notification.NO_INDEX);			
-				} 	
+				// 	Do not apply the value if it is in error
+				if (isValidFeature(feature)){
+					applied(feature,value, Notification.NO_INDEX);			
+				} 					
 			}
 		}
-	}
-	// Validate all errors
-//	getBeanValidator().reset();	
-//	getBeanValidator().validateAll();
+	});
 }
 
 /*
