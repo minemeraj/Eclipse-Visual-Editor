@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: YesNoListChooseBeanContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-05 18:14:26 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-15 19:11:50 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -95,11 +95,31 @@ public class YesNoListChooseBeanContributor implements IChooseBeanContributor {
 						IType baseClass = getJavaProject().findType(types[c], types[c+1]);
 						if(baseClass!=null){
 							ITypeHierarchy th = baseClass.newTypeHierarchy(getJavaProject(), null);
-							IType[] subTypes = th.getAllSubtypes(baseClass);
+							IType[] subTypes = null;
+							if(baseClass.isClass()){
+								subTypes = th.getAllSubtypes(baseClass);
+							} else if (baseClass.isInterface()){
+								// Get all implementors
+								subTypes = th.getAllSubtypes(baseClass);
+								for (int stc = 0; stc < subTypes.length; stc++) {
+									subTypesList.add(subTypes[stc].getFullyQualifiedName());
+								}																
+								// Some of these will be hierarchy roots themselves								
+								// So collect all the classes that extend them
+								for (int i = 0; i < subTypes.length; i++) {
+									IType[] implementors = th.getAllSubtypes(subTypes[i]);
+									if(subTypes[i].getFullyQualifiedName().equals("javax.swing.AbstractAction")){
+										Object a = subTypes[i];
+									}
+									for (int stc = 0; stc < implementors.length; stc++) {
+										subTypesList.add(implementors[stc].getFullyQualifiedName());
+									}																	
+								}
+							}
 							subTypesList.add(baseClass.getFullyQualifiedName());
 							for (int stc = 0; stc < subTypes.length; stc++) {
 								subTypesList.add(subTypes[stc].getFullyQualifiedName());
-							}
+							}								
 						}
 					} catch (JavaModelException e) {
 						JavaVEPlugin.log(e, Level.WARNING);
