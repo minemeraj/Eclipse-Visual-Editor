@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-23 23:12:41 $ 
+ *  $Revision: 1.2 $  $Date: 2005-03-09 21:44:35 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -31,7 +31,6 @@ import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
  * <p>
  * It is stored in the  domain for usage. The key stored in this interface can be used to retrieve it
  * from the domain.
- * 
  * @since 1.1.0
  */
 public abstract class ModelChangeController {
@@ -63,6 +62,8 @@ public abstract class ModelChangeController {
     private List phases = new ArrayList();
 
     protected String holdMsg;
+    
+    protected Display display;	// If this is not null, then it means the at end runnables must be executed on the UI thread.
 
     protected int holdState = READY_STATE; // State the controller is in with
                                            // respect to being able to process
@@ -113,6 +114,25 @@ public abstract class ModelChangeController {
     }
 
     /**
+     * Default ctor.
+     * 
+     * 
+     * @since 1.1.0
+     */
+    public ModelChangeController() {
+    }
+    
+    /**
+     * Create with a display. This means that the execAtEnd's runnable must be executed on the UI thread.
+     * @param display
+     * 
+     * @since 1.1.0
+     */
+    public ModelChangeController(Display display) {
+    	this.display = display;
+    }
+
+    /**
      * Call this method with a runnable. The runnable will do the actual update
      * of the model. This method will make sure that the updates are blocked
      * correctly to the text editor, for instance.
@@ -153,7 +173,7 @@ public abstract class ModelChangeController {
     }
 
     /**
-     * Answet the root property sheet entry. This is used for model changes result of {@link ModelChangeController#doModelChanges(Runnable, boolean)} call
+     * Answer the root property sheet entry. This is used for model changes result of {@link ModelChangeController#doModelChanges(Runnable, boolean)} call
      * if the updatePS parameter is <code>true</code>.  
      * @return root property sheet entry or <code>null</code> if none.
      * 
@@ -240,19 +260,44 @@ public abstract class ModelChangeController {
 
     /**
      * Tell the change controller that a transaction has ended. An optional phase key
-     * can be given
+     * can be given.
+     *  * <p>
+     * <b>NOTE:</b>If there are no more phases and this is the end of all nested transactions, the execAtEnd
+     * runnables will be executed. However, these are required to be run on the UI thread, so transactionEnded
+     * will call Display.syncExec() in this case. Therefor it is very important that any callers that are not
+     * on the UI thread know about the possibility of this and so they must make sure that a syncExec at this
+     * point in their code will not cause a deadlock. This could happen in the case that the UI thread is
+     * waiting on something and the display thread is not being processed, and it is waiting for something
+     * from this thread. 
+     *
      * @param phase the optional phase key of the transaction being ended. If that phase isn't active (i.e. begin done on it) then 
      * the call is ignored and the transaction is not ended. If <code>null</code> then the transaction counter is always deactivated.
      * @since 1.0.2
      */
-    public synchronized void transactionEnded(Object phase) {
-        if (phase == null || phases.remove(phase)) {
-            compoundChangeCount--;
-            if (compoundChangeCount <= 0) {
-            	compoundChangeCount = 0;
-            	phases.clear();	// Can't have any phases waiting, and if we did, then there is a nesting problem, so just clear the list.
-                executeAsyncRunnables();
-            }
+    public void transactionEnded(Object phase) {
+    	boolean executeRunnables = false;
+        synchronized (this) {
+			if (phase == null || phases.remove(phase)) {
+				compoundChangeCount--;
+				if (compoundChangeCount <= 0) {
+					compoundChangeCount = 0;
+					phases.clear(); // Can't have any phases waiting, and if we did, then there is a nesting problem, so just clear the list.
+					executeRunnables = uniqueRunnables != null && !uniqueRunnables.isEmpty();
+				}
+			}
+		}
+        if (executeRunnables) {
+        	// This must be done outside of the synchronized because it would be possible that 
+        	// UI thread is trying to do something with the model controller at the same time, 
+        	// and so it would be locked. That would prevent the executeAsyncRunnables from running.
+        	if (display != null)
+        		display.syncExec(new Runnable() {
+					public void run() {
+						executeAsyncRunnables();
+					}
+				});
+        	else
+        		executeAsyncRunnables();
         }
     }
 
@@ -283,10 +328,6 @@ public abstract class ModelChangeController {
         	Platform.run(sr);
         }
         
-        // The unique runnables are not executed from the map
-        // they are run from the List because things must be done in request
-        // order so the
-        // map is just a way of ensuring uniqueness
         if (uniqueRunnables != null)
         	uniqueRunnables.clear();
     }
@@ -300,7 +341,7 @@ public abstract class ModelChangeController {
 
     /**
      * Execute the runnable after the change controller has finished all running
-     * transactions
+     * transactions. If constructed with a display, then these will be executed on the display thread.
      * 
      * @since 1.0.2
      */
@@ -309,6 +350,8 @@ public abstract class ModelChangeController {
     }
 
     /**
+     * Execute at the end, but do not queue up more than the first runnable with the given once key.
+     * If constructed with a display, then these will be executed on the display thread.
      * @param runnable
      * @param once -
      *            only do the runnable once per key
@@ -328,9 +371,13 @@ public abstract class ModelChangeController {
     }
 
     /**
+     * Execute at the end, but do not queue up more than the first runnable with the given once key.
+     * Do not queue up if excludingPhase is currently one of the current phases.
+     * If constructed with a display, then these will be executed on the display thread.
+
      * @param runnable
      * @param once
-     * @param phase
+     * @param excludingPhase
      *            to omit Run the runnable, once and only once for the 2nd
      *            argument key, and do not run it if the currently executing
      *            phase is occuring
@@ -346,9 +393,12 @@ public abstract class ModelChangeController {
     }
 
     /**
+     * Execute at the end, but do not queue up more than the first runnable with the given once key.
+     * Do not queue up if any of the excludingPhase's are currently one of the current phases.
+     * If constructed with a display, then these will be executed on the display thread.
      * @param runnable
      * @param once
-     * @param phases run except if any these phases are in progress. May be <code>null</code> if no excluding phases.
+     * @param excludingPhases run except if any these phases are in progress. May be <code>null</code> if no excluding phases.
      *            
      * 
      * @since 1.0.2

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorModelChangeController.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.8 $  $Date: 2005-03-09 21:45:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -35,7 +35,8 @@ class JavaVisualEditorModelChangeController extends ModelChangeController {
     private JavaVisualEditorPart part;
     private IDiagramModelBuilder modelBuilder;
 
-    public JavaVisualEditorModelChangeController(JavaVisualEditorPart part,IDiagramModelBuilder modelBuilder) {
+    public JavaVisualEditorModelChangeController(JavaVisualEditorPart part,IDiagramModelBuilder modelBuilder, Display display) {
+    	super(display);
         this.modelBuilder = modelBuilder;
         this.part = part;
     }
