@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.11 $ $Date: 2004-09-10 22:40:33 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.12 $ $Date: 2004-10-28 21:24:59 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -59,49 +59,7 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 						throws ThrowableProxy, RunnableException {
 					try {
 						IBeanProxy shellProxy = beanProxyAdapterBeanProxyAllocation(allocation);
-						// Position the shell off screen for the moment
-						// TODO this needs to be done properly so that the
-						// location can be set in the model and ignored
-						// likewise for the visibility
-						Point offscreen = BeanSWTUtilities
-								.getOffScreenLocation();
-						IIntegerBeanProxy intXBeanProxy = displayProxy
-								.getProxyFactoryRegistry()
-								.getBeanProxyFactory().createBeanProxyWith(
-										offscreen.x);
-						IIntegerBeanProxy intYBeanProxy = displayProxy
-								.getProxyFactoryRegistry()
-								.getBeanProxyFactory().createBeanProxyWith(
-										offscreen.y);
-						IMethodProxy setlocationMethodProxy = shellProxy
-								.getTypeProxy()
-								.getMethodProxy(
-										"setLocation", new String[] { "int", "int" }); //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
-						setlocationMethodProxy
-								.invoke(shellProxy, new IBeanProxy[] {
-										intXBeanProxy, intYBeanProxy });
-						IBeanTypeProxy listenerType = displayProxy
-								.getProxyFactoryRegistry()
-								.getBeanTypeProxyFactory()
-								.getBeanTypeProxy(
-										"org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener"); //$NON-NLS-1$
-						if (listenerType != null) {
-							IBeanProxy shellListenerBean = listenerType
-									.newInstance();
-							IMethodProxy addShellListenerMethodProxy = shellProxy
-									.getTypeProxy()
-									.getMethodProxy(
-											"addShellListener", new String[] { "org.eclipse.swt.events.ShellListener" }); //$NON-NLS-1$  //$NON-NLS-2$
-							if (shellListenerBean != null
-									&& addShellListenerMethodProxy != null) {
-								addShellListenerMethodProxy.invoke(shellProxy,
-										new IBeanProxy[] { shellListenerBean });
-							}
-						}
-
-						IMethodProxy openMethodProxy = shellProxy
-								.getTypeProxy().getMethodProxy("open"); //$NON-NLS-1$
-						openMethodProxy.invoke(shellProxy);
+						finishAllocation(displayProxy, shellProxy);
 						return shellProxy;
 					} catch (AllocationException e) {
 						throw new RunnableException(e);
@@ -117,6 +75,28 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 			// into the cause.
 		}
 	}
+	
+	protected IBeanProxy basicInitializationStringAllocation(final String aString, final IBeanTypeProxy targetClass) throws IAllocationProcesser.AllocationException {
+		try {
+			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+					try {
+						IBeanProxy shellProxy = ShellProxyAdapter.super.beanProxyAdapterInitializationStringAllocation(aString, targetClass);
+						finishAllocation(displayProxy, shellProxy);
+						return shellProxy;
+					} catch (AllocationException e) {
+						throw new RunnableException(e);
+					}
+				}
+			});
+			return (IBeanProxy) result;
+		} catch (ThrowableProxy e) {
+			throw new AllocationException(e);
+		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+			throw (AllocationException) e.getCause();
+		}
+	}
+	
 
 	protected void primInstantiateBeanProxy() {
 		super.primInstantiateBeanProxy();
@@ -154,5 +134,59 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 				});
 			}
 		}
+	}
+
+	/**
+	 * Finish the allocation (i.e. put it in right place).
+	 * @param displayProxy
+	 * @param shellProxy
+	 * @throws ThrowableProxy
+	 * 
+	 * @since 1.0.2
+	 */
+	protected void finishAllocation(IBeanProxy displayProxy, IBeanProxy shellProxy) throws ThrowableProxy {
+		// Position the shell off screen for the moment
+		// TODO this needs to be done properly so that the
+		// location can be set in the model and ignored
+		// likewise for the visibility
+		Point offscreen = BeanSWTUtilities
+				.getOffScreenLocation();
+		IIntegerBeanProxy intXBeanProxy = displayProxy
+				.getProxyFactoryRegistry()
+				.getBeanProxyFactory().createBeanProxyWith(
+						offscreen.x);
+		IIntegerBeanProxy intYBeanProxy = displayProxy
+				.getProxyFactoryRegistry()
+				.getBeanProxyFactory().createBeanProxyWith(
+						offscreen.y);
+		IMethodProxy setlocationMethodProxy = shellProxy
+				.getTypeProxy()
+				.getMethodProxy(
+						"setLocation", new String[] { "int", "int" }); //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
+		setlocationMethodProxy
+				.invoke(shellProxy, new IBeanProxy[] {
+						intXBeanProxy, intYBeanProxy });
+		IBeanTypeProxy listenerType = displayProxy
+				.getProxyFactoryRegistry()
+				.getBeanTypeProxyFactory()
+				.getBeanTypeProxy(
+						"org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener"); //$NON-NLS-1$
+		if (listenerType != null) {
+			IBeanProxy shellListenerBean = listenerType
+					.newInstance();
+			IMethodProxy addShellListenerMethodProxy = shellProxy
+					.getTypeProxy()
+					.getMethodProxy(
+							"addShellListener", new String[] { "org.eclipse.swt.events.ShellListener" }); //$NON-NLS-1$  //$NON-NLS-2$
+			if (shellListenerBean != null
+					&& addShellListenerMethodProxy != null) {
+				addShellListenerMethodProxy.invoke(shellProxy,
+						new IBeanProxy[] { shellListenerBean });
+			}
+		}
+
+		IMethodProxy openMethodProxy = shellProxy
+				.getTypeProxy().getMethodProxy("open"); //$NON-NLS-1$
+		openMethodProxy.invoke(shellProxy);
 	}
 }

@@ -61,6 +61,10 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		return super.beanProxyAllocation(allocation);
 	}
 	
+	protected IBeanProxy beanProxyAdapterInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException {
+		return super.basicInitializationStringAllocation(aString, targetClass);
+	}
+	
 	/*
 	 * The initString is evaluated using a static method on the Environment target VM class
 	 * that ensures it is evaluated on the Display thread

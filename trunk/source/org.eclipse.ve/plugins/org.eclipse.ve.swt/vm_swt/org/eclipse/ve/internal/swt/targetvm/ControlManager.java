@@ -40,15 +40,19 @@ public abstract class ControlManager implements ICallback , ControlListener {
 		fCallbackID = callbackID;
 	}
 	
+	protected boolean isValidControl(Control control) {
+		return control != null && !control.isDisposed();
+	}
+	
 	public void setControl(final Control aControl) {
 		final boolean[] queue = new boolean[1];
 		Environment.getDisplay().syncExec(new Runnable() {
 			public void run() {
-				if (fControl != null) {
+				if (isValidControl(fControl)) {
 					fControl.removeControlListener(ControlManager.this);
 				}
 				fControl = aControl;
-				if (fControl != null) {
+				if (isValidControl(fControl)) {
 					fControl.addControlListener(ControlManager.this);
 					// Queue up a refresh to get the bounds, even if not yet showing, get something at least.
 					queue[0] = true;	
@@ -120,11 +124,11 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getBounds(){
 		final Rectangle[] bounds = new Rectangle[1];
-		if (fControl != null) {
+		if (isValidControl(fControl)) {
 			Environment.getDisplay().syncExec(new Runnable() {
 
 				public void run() {
-					if (fControl != null) {
+					if (isValidControl(fControl)) {
 						bounds[0] = fControl.getBounds();
 						if (fControl.getParent() != null) {
 							Point parentClientOrigin = getClientOrigin(fControl.getParent());
@@ -142,11 +146,11 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getClientBox(){
 		final Rectangle[] clientBox = new Rectangle[1];
-		if (fControl != null) {
+		if (isValidControl(fControl)) {
 			Environment.getDisplay().syncExec(new Runnable() {
 
 				public void run() {
-					if (fControl != null) {
+					if (isValidControl(fControl)) {
 						clientBox[0] = ((Composite) fControl).getClientArea();
 						// The width and height are good, but the location of the client area is always 0,0 and not expressed
 						// as relative to the bounds of the composite itself
@@ -177,11 +181,11 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	private Point getOverallLocation(){
 		
  		final Point[] location = new Point[1];
- 		if (fControl != null) {
+ 		if (isValidControl(fControl)) {
 			Environment.getDisplay().syncExec(new Runnable() {
 
 				public void run() {
-					if (fControl != null) {
+					if (isValidControl(fControl)) {
 						// If the control has no parent then just return its location
 						if (fControl.getParent() == null) {
 							location[0] = fControl.getLocation();
@@ -201,11 +205,11 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	public abstract IImageCapture getImageCapturer();
 	
 	public void captureImage(){
-		if (fControl != null) {
+		if (isValidControl(fControl)) {
 			Environment.getDisplay().syncExec(new Runnable() {
 
 				public void run() {
-					if (fControl != null) {
+					if (isValidControl(fControl)) {
 						DataOutputStream os = null;
 						Image image = null;
 						try {
