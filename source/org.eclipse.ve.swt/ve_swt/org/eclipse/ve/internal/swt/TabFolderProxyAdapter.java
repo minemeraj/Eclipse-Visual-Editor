@@ -10,11 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-10 21:26:19 $ 
+ *  $Revision: 1.2 $  $Date: 2004-09-01 16:58:58 $ 
  */
 package org.eclipse.ve.internal.swt;
-
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
