@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanSelector.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-11 19:23:24 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:33:16 $ 
  */
 
 import java.util.logging.Level;
 
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.palette.SelectionCreationToolEntry;
