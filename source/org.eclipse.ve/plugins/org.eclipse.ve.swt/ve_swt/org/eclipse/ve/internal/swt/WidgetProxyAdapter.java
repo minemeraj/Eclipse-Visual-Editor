@@ -48,6 +48,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 	}	
 	
 	public void releaseBeanProxy() {
+		style = -1;	// Uncache the style bit
 		if(isBeanProxyInstantiated()){
 			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
@@ -62,7 +63,8 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 	}
 	// Replace this with code that listens to the expression being applied to the allocation - JRW
 	public void hackRefresh(){
-		reinstantiateBeanProxy();
+		releaseBeanProxy();	
+		instantiateBeanProxy();
 	}
 
 	/**
