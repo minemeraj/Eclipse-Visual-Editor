@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-29 19:53:16 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -172,20 +172,22 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			return false;
 		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
 		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource);
-		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_PARSE)>-1)
+		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_INFO_DECL)>-1)
 			return true;
 		return false;
 	}
 	
 	/**
-	 * Return whether the meta information //@jve 'parse' is present for the field declaration
-	 * Should be very similar to hasMetaInformation(VariableDeclarationStatement varDecl, String astSource)
+	 * Return whether the passed in declaration's annotation has the text 'decl-index=' inside it. If this 
+	 * text is present, then the declaration should be of interest for VE. This method should have the same
+	 * behavior as isDeclarationParseable(VariableDeclarationStatement)
+	 * 
 	 * @param field 
 	 * @return
-	 * 
+	 * @see #isDeclarationParseable(VariableDeclarationStatement)
 	 * @since 1.0.0
 	 */
-	public static boolean hasMetaInformation(FieldDeclaration field) {
+	public static boolean isDeclarationParseable(FieldDeclaration field) {
 		try{
 			ASTNode node = field;
 			while(node!=null && !(node instanceof CompilationUnit))
@@ -231,15 +233,16 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 	}
 	
 	/**
-	 * Return whether the meta information //@jve 'parse' is present for the field declaration.
-	 * Should be very similar to hasMetaInformation(FieldDeclaration field, String astSource).
+	 * Return whether the passed in declaration's annotation has the text 'decl-index=' inside it. If this 
+	 * text is present, then the declaration should be of interest for VE. This method should have the same
+	 * behavior as isDeclarationParseable(VariableDeclarationStatement)
 	 * 
 	 * @param field 
 	 * @return
-	 * 
+	 * @see #isDeclarationParseable(FieldDeclaration)
 	 * @since 1.0.0
 	 */
-	public static boolean hasMetaInformation(VariableDeclarationStatement varDecl) {
+	public static boolean isDeclarationParseable(VariableDeclarationStatement varDecl) {
 		try{
 			ASTNode node = varDecl;
 			while(node!=null && !(node instanceof CompilationUnit))
@@ -288,7 +291,15 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		return false;
 	}
 	
-	
+	public static boolean isBeanVisible(String commentSource){
+		if(commentSource==null)
+			return true;
+		int index = commentSource.indexOf(FreeFormAnnotationTemplate.ANNOTATION_SIG, 0) ;
+		if(index<0)
+			return true;
+		index = commentSource.indexOf(FreeFormAnnotationTemplate.VISUAL_CONTENT_TYPE, index) ;
+		return index>-1;
+	}
   
   protected IAnnotationDecoder fDecoder=null ;
 

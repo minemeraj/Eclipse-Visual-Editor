@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-18 16:23:34 $ 
+ *  $Revision: 1.19 $  $Date: 2004-06-29 19:53:48 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -175,10 +175,17 @@ public class BDMMerger {
 			if(bsc.getThisPart()==null || !bsc.getThisPart().equals(bp.getEObject()))
 				bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
 		}else 
-			if( bp.getContainer()==null && 
-				bp.isInstanceVar() && 
-				!bsc.getComponents().contains(bp.getEObject()))
-			bsc.getComponents().add(bp.getEObject()) ; 
+			if(bp.getContainer()==null && bp.isInstanceVar()){
+				 if(bp.getFFDecoder().isVisualOnFreeform()){
+				 	// should be on the FF
+				 	if(!bsc.getComponents().contains(bp.getEObject()))
+				 		bsc.getComponents().add(bp.getEObject()) ;
+				 }else{
+				 	// should NOT be on the FF
+				 	if(bsc.getComponents().contains(bp.getEObject()))
+				 		bsc.getComponents().remove(bp.getEObject()) ;
+				 }
+			}
 	}
 	
 	protected boolean removeMethodRef(final CodeMethodRef m){
