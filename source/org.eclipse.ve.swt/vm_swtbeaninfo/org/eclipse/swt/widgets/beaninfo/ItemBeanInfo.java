@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class ItemBeanInfoX extends IvjBeanInfo {
+public class ItemBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle ItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.item");  //$NON-NLS-1$
 

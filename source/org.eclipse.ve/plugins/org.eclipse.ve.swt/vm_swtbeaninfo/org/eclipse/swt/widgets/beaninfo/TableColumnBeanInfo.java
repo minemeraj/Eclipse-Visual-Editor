@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class TableColumnBeanInfoX extends IvjBeanInfo {
+public class TableColumnBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle TableColumnMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.tablecolumn");  //$NON-NLS-1$
 

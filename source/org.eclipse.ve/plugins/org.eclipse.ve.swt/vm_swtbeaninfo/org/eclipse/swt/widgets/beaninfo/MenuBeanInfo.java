@@ -11,7 +11,7 @@ import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
 
-public class MenuBeanInfoX extends IvjBeanInfo {
+public class MenuBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle MenuMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.menu");  //$NON-NLS-1$
 

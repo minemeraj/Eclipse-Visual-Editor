@@ -11,7 +11,7 @@ import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
 
-public class CoolItemBeanInfoX extends IvjBeanInfo {
+public class CoolItemBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle CoolItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.coolitem");  //$NON-NLS-1$
 

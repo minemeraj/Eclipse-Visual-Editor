@@ -57,8 +57,6 @@
           creationClassURI="java:/org.eclipse.swt.widgets#Scale"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Scale"/>
       </cmpEntries>
-    </cmpGroups> 
-    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group2">
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry10" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry10obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Table"/>
@@ -102,6 +100,16 @@
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry12obj"
           creationClassURI="java:/org.eclipse.swt.widgets#TabFolder"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TabFolder"/>
+      </cmpEntries>    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
+          creationClassURI="java:/org.eclipse.swt.widgets#ToolBar"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolBar"/>
+      </cmpEntries>    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
+          creationClassURI="java:/org.eclipse.swt.widgets#CoolBar"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="CoolBar"/>
       </cmpEntries>    
     </cmpGroups> 
   </palette:CategoryCmp>

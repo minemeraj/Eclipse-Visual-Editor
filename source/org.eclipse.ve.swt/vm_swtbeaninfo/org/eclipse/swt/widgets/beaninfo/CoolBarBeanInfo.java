@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class CoolBarBeanInfoX extends IvjBeanInfo {
+public class CoolBarBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle CoolBarMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.coolbar");  //$NON-NLS-1$
 
