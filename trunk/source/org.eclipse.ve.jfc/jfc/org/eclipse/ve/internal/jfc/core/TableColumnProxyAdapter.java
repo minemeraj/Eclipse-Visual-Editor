@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-24 17:56:08 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-07 20:34:58 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -29,7 +29,7 @@ import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 public class TableColumnProxyAdapter extends BeanProxyAdapter {
 
 	
-	protected EStructuralFeature sfModelIndex, sfHeaderValue;
+	protected EStructuralFeature sfModelIndex, sfHeaderValue, sfPreferredWidth;
 	protected EReference sfTableColumns;
 	protected IMethodProxy resetHeaderValueProxy;
 	
@@ -38,7 +38,9 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
 		sfModelIndex = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_MODELINDEX);		
 		sfHeaderValue = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_HEADERVALUE);
+		sfPreferredWidth = JavaInstantiation.getReference(rset, JFCConstants.SF_TABLECOLUMN_PREFERREDWIDTH);
 		sfTableColumns = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABLE_COLUMNS);
+		
 	}
 	
 	/**
@@ -46,7 +48,6 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 * refresh.
 	 */
 	public void validateBeanProxy() {
-	
 		EObject table = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(),sfTableColumns);
 		// If we are on the freeform then container will not be an instance of table
 		if (table != null) {
@@ -60,8 +61,13 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(EStructuralFeature, Object, int)
 	 */
 	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		super.applied(sf, newValue, position);		
-		modelIndexChanged(sf);
+		super.applied(sf, newValue, position);	
+		if (sf == sfPreferredWidth) {
+			// The width of the column changed, so update the table's image
+			validateBeanProxy();
+		} else {
+			modelIndexChanged(sf);
+		}
 	}
 
 	protected void modelIndexChanged(EStructuralFeature sf) {

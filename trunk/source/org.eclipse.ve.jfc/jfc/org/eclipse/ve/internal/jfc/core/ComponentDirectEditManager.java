@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDirectEditManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-07 20:34:58 $ 
  */
 
 import org.eclipse.draw2d.IFigure;
@@ -37,7 +37,7 @@ public class ComponentDirectEditManager extends DirectEditManager {
 	private EStructuralFeature sfProperty;
 
 	public ComponentDirectEditManager(
-		ComponentGraphicalEditPart source,
+		GraphicalEditPart source,
 		Class editorType,
 		CellEditorLocator locator,
 		EStructuralFeature property) {

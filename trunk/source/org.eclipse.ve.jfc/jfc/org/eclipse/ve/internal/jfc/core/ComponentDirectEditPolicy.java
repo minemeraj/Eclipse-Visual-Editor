@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDirectEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-07 20:34:58 $ 
  */
 
 import org.eclipse.gef.commands.Command;
@@ -35,7 +35,7 @@ public class ComponentDirectEditPolicy
 			RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 			IJavaObjectInstance component = (IJavaObjectInstance) getHost().getModel();
 			IJavaObjectInstance stringObject = BeanUtilities.createString(component.eResource().getResourceSet(), newText);
-			cb.applyAttributeSetting(component, ((ComponentGraphicalEditPart)getHost()).getSfDirectEditProperty(), stringObject);
+			cb.applyAttributeSetting(component, ((IDirectEditableEditPart)getHost()).getSfDirectEditProperty(), stringObject);
 			return cb.getCommand();
 		}
 

@@ -11,22 +11,28 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-07 20:34:58 $ 
  */
 
 
-import org.eclipse.emf.ecore.EStructuralFeature;
+import java.util.List;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.commands.Command;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * Container Edit Policy for Bean Compositions.
  */
-public class JTableContainerPolicy extends JavaContainerPolicy {
+public class JTableContainerPolicy extends VisualContainerPolicy {
 	
 	EStructuralFeature sfAutoCreateColumns;
 	
@@ -50,5 +56,20 @@ public class JTableContainerPolicy extends JavaContainerPolicy {
 		}
 		return false;
 	}
+	
+	public Command getAddCommand(List children, Object positionBeforeChild) {
+		return super.getAddCommand(children, positionBeforeChild);
+	}
+	
+	public Command getCreateCommand(Object child, Object positionBeforeChild) {
+		return getCreateCommand(child, positionBeforeChild, containmentSF);
+	}
 
+	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
+		return getCreateCommand(childComponent, position);
+	}
+	
+	public Command getAddCommand(List componentConstraints, List childrenComponents, Object position) {
+		return getAddCommand(childrenComponents, position);
+	}
 }
