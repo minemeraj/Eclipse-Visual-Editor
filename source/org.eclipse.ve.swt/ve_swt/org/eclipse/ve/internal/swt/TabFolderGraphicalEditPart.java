@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-19 19:56:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-20 20:53:28 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -85,8 +86,15 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-
+	
 		public void run() {
+			if (isActive()) {
+				if (fSelectedItem != null) {
+					EditPart currentPage = getEditPartFromModel(fSelectedItem);
+					setPageVisible(currentPage, false);
+				}
+				// Then show the newly selected page
+				refreshChildren();
 				List children = getChildren();
 				int s = children.size();
 				for (int i = 0; i < s; i++) {
@@ -94,8 +102,12 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 					if (ep instanceof ControlGraphicalEditPart)
 						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
 				}
+				EditPart page = getEditPartFromModel(fSelectedItem);
+				setPageVisible(page, true);
+				pageSelected(page);
+			}
 		}
-
+	
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
 				queueExec(TabFolderGraphicalEditPart.this);
@@ -147,6 +159,22 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_TABFOLDER_ITEMS);
 		sf_tabItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_TABITEM_CONTROL);
+	}
+
+	/*
+	 * Model children is the items feature. However, this returns the TabItems, but we want to return instead the controls themselves. They
+	 * are the "model" that gets sent to the createChild and control edit part.
+	 */
+	protected List getModelChildren() {
+		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
+		ArrayList children = new ArrayList(tabitems.size());
+		Iterator itr = tabitems.iterator();
+		while (itr.hasNext()) {
+			EObject tabitem = (EObject) itr.next();
+			// Get the component out of the JTabComponent
+			children.add(tabitem.eGet(sf_tabItemControl));
+		}
+		return children;
 	}
 
 	protected void setListener(EditPartListener listener) {
