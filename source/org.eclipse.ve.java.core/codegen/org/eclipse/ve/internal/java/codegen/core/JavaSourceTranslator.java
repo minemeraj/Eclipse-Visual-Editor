@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-17 13:46:40 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -960,6 +960,25 @@ public synchronized boolean pause()  {
        	((IBuilderListener)fListeners.get(i)).parsingPaused(true); 	
     }
     return true;
+}
+
+/**
+ * @deprecated
+ */
+public void pauseRoundTripping(boolean flag){
+	if (flag) {
+		pause();
+		fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_PAUSE,true) ;
+	}
+	else{
+		IFileEditorInput in = new org.eclipse.ui.part.FileEditorInput(fFile);
+		try {
+			loadModel(in, null);
+			fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_PAUSE,false) ;
+		} catch (CodeGenException e) {			
+			e.printStackTrace();
+		}
+    }
 }
 
 /**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.13 $  $Date: 2004-03-17 13:46:40 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -1536,7 +1536,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			try {
 				fPauseProcessing++;
-				//modelBuilder.pauseRoundTripping(flag);
+				modelBuilder.pauseRoundTripping(flag);
 			} catch (Throwable t) {
 				JavaVEPlugin.log(t);
 			} finally {
