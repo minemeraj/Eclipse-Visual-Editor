@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.31 $  $Date: 2005-03-23 17:21:01 $ 
+ *  $Revision: 1.32 $  $Date: 2005-04-01 21:00:25 $ 
  */
 
 
@@ -150,13 +150,14 @@ public static void addConstraintString(
 	throws Exception {
 
 	IJavaInstance value = null;
-	CodeGenUtil.propertyCleanup(target, sf);
+	EObject oldConstraint = (EObject) target.eGet(sf);
 	if (initVal != null) {
 		value = createInstance("java.lang.String", cm); //$NON-NLS-1$
 		value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initVal));
 		pOwner.getProperties().add(value);
 	}
 	target.eSet(sf, value);
+	CodeGenUtil.propertyCleanup(oldConstraint);
 }
 /**
  * Add a generic constraint to a target object 
@@ -792,18 +793,18 @@ public static MethodGeneratorFactory getMethodTextFactory (org.eclipse.ve.intern
 
 
 /**
- * If the target has a setting on the given sf, and the setting is owned by the properties MemberContainer
- * remove it.
+ * Clean up a specific property.
+ * @param property if this is a "property" of a member container, it will be removed from the member container. If can be null.
+ * @return <code>true</code> if it was removed.
+ * 
+ * @since 1.1.0
  */
-public static boolean propertyCleanup(EObject target, EStructuralFeature sf) { 
-   if (target.eIsSet(sf)) {
-   	 EObject p = (EObject) target.eGet(sf) ;
-   	 if (p!=null && p.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
-   	     ((MemberContainer) p.eContainer()).getProperties().remove(p);
-   	     return true;
-   	 }
-   }
-   return false;
+public static boolean propertyCleanup(EObject property) {
+  	 if (property!=null && property.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
+  	     ((MemberContainer) property.eContainer()).getProperties().remove(property);
+  	     return true;
+  	 } else
+  	 	return false;
 }
 
 public static void logParsingError(String exp, String method, String msg, boolean event) {
