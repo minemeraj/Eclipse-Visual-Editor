@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.49 $  $Date: 2005-01-13 21:02:40 $ 
+ *  $Revision: 1.50 $  $Date: 2005-01-19 17:59:16 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -771,6 +771,11 @@ void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenExcepti
 	   bsc.getComponents().add(bp.getEObject()) ; 
 }
 
+
+protected boolean isDown() {
+	return (fdisconnected || (fVEModel!=null && fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)));
+}
+
 /**
  *  Given the BeanDOM, build the Composition Model
  */
@@ -793,7 +798,8 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		Iterator itr = fBeanModel.getBeans().iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
 		while (itr.hasNext()) {
-			
+			if (isDown())
+				return;
 		    BeanPart bean = (BeanPart) itr.next() ;
 			Collection expressions = new ArrayList(bean.getRefExpressions()) ;
 			expressions.addAll((Collection)bean.getRefEventExpressions()) ;
@@ -826,7 +832,8 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		}
 		expProgressMonitor.done();
 		expProgressMonitor = null;
-		
+		if (isDown())
+			return ;
 		// Clean up
 		itr = badExprssions.iterator() ;
 		while (itr.hasNext()) {
@@ -844,7 +851,8 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	      // Model
 	      itr = fBeanModel.getBeans().iterator() ;
 		  while (itr.hasNext()) {
-		  			 		  	
+		  	 if (isDown())
+				return ;		 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	         bean.getBadExpressions().clear();
 	       
@@ -924,7 +932,7 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 		floadInProgress = false ;
 		throw e;
     }
-    finally {
+    finally {    	
 		floadInProgress = false ;
 		fSrcSync.getLockMgr().setGUIReadonly(false);		
 	}
@@ -948,7 +956,7 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
     if (fVEModel.isFromCache()) {
     	// Model is already constructed from cache, we can let
     	// the GUI bulding go, and build the BDM and such in the background.
-    	Job reverseParseJobe = new ReverseParserJob() {
+    	Job job = new ReverseParserJob() {
 			protected IStatus doRun(IProgressMonitor monitor) {
 				try {	
 					synchronized (fWorkingCopy.getDocLock()) {
@@ -957,19 +965,30 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
 					  reverseParse(monitor);
 					}
 				} catch (Exception e) {
-					fireParseError(true);
-					return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, "",e);
+					if (!isDown()) {
+						fireParseError(true);
+						String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+						return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, msg ,e);
+				    }
 				}
 				return Status.OK_STATUS;
 			}
 		};    		  
-		reverseParseJobe.schedule();
+		job.schedule();
 		fmodelLoaded=true;
     	return false ;    
     }
     else {
 		try {					
 			reverseParse(pm);
+			// Create a cache in the background
+			Job job = new ReverseParserJob() {
+				protected IStatus doRun(IProgressMonitor monitor) {
+					doSave(monitor);
+					return Status.OK_STATUS;
+				}
+			};
+			job.schedule();
 		} catch (Exception e) {
 			fireParseError(true);
 		}
@@ -1171,6 +1190,7 @@ public synchronized void disconnect(boolean clearVCEModel) {
     fdisconnected=true ;
     fireProcessingPause(fdisconnected);
     fireStatusChanged(fPauseSig);
+    ReverseParserJob.cancelJobs();
 }
 
 /**
