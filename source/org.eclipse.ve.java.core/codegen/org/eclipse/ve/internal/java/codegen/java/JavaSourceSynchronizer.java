@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-23 19:55:52 $ 
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Preferences;
@@ -24,8 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
-import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
+import org.eclipse.ve.internal.java.codegen.core.*;
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -33,21 +33,26 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaSourceSynchronizer {
 
-
  public final static		int NO_OF_UPDATE_WORKERS = 2 ;
  public final static		int DEFAULT_SYNC_DELAY = 500 ;
  public       static		int L2R_DELAY_FACTOR = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_L2R_FACTOR  ;  // Extra Delay if only L2R deltas
-	
+ public final static 	String RELOAD_HANDLE = "Reload Request";
+ 
  private                Object fSyncPoint;
  private                BackgroundThread fThread;	
  private int            fDelay= DEFAULT_SYNC_DELAY ;
  IWorkingCopyProvider    fWorkingCopyProvider  ;
- volatile Vector        fList = new Vector () ;
  Display                 fDisplay = null ;
- IBackGroundWorkStrategy fSharedUpdatingLocalStrategy  = null;                        
  WorkerPool              fStrategyWorkers = new WorkerPool(NO_OF_UPDATE_WORKERS) ;
- Hashtable               fSharedUpdatingLocalMonitor = new Hashtable() ,
-                         fLocalUpdatingSharedMonitor = new Hashtable() ;
+ ICodegenLockManager     lockManager = null;
+ /**
+  * documentEventList 
+  * Contains from 0..n document events in increasing time
+  * Document events are added to the end (n) 
+  */
+ private List documentEventList = null;
+ List notifierList = null;
+ CancelMonitor previousWorkerCancelMonitor = null;
  
  DocListener       		fDocListener = null ;
  
@@ -128,30 +133,12 @@ public class JavaSourceSynchronizer {
 		}
 		
 		/**
-		 * Scan the List to see if there are elements that are not Left to Right 
-		 * work items.
-		 */
-		boolean isL2ROnly() {
-			if (fList == null || fList.isEmpty())
-				return true;
-			synchronized (fList) {
-				Iterator itr = fList.iterator();
-				while (itr.hasNext()) {
-					if (!(itr.next() instanceof SynchronizerWorkItem))
-						return false;
-				}
-			}
-			return true ;
-		}
-		
-		/**
 		 * The periodic activity. Wait until there is something in the
 		 * queue managing the changes applied to the text viewer. Remove the
 		 * first change from the queue and process it.
 		 */
 		public void run() {
 			while (!fCanceled) {
-												
 				synchronized (fSyncPoint) {
 					try {
 						if (!fgoNow)
@@ -167,7 +154,7 @@ public class JavaSourceSynchronizer {
 				// Want to update the status asap.												
 				synchronized (this) {			
 				 if (fStatus != null) {
-				 	if (fList.isEmpty() &&
+				 	if (documentEventList.isEmpty() && notifierList.isEmpty() &&
 				 	    (fStrategyWorkers.getAvailWorkers() == fStrategyWorkers.getNoOfWorkers())) {
 				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,false) ;
 				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,false) ;
@@ -181,7 +168,7 @@ public class JavaSourceSynchronizer {
 				}	
 				
 				// isL2ROnly aquires the lock on fList... we may cause a deadlock.
-				if (fDelayFactor>0 && isL2ROnly())
+				if (fDelayFactor>0)// && isL2ROnly())
 				    continue ;
 				    
 				fDelayFactor = L2R_DELAY_FACTOR ;
@@ -200,7 +187,8 @@ public class JavaSourceSynchronizer {
 				process();
 				synchronized (this) {
 					// Work Element may have been added between the process and now.
-					fIsDirty= fList.size() > 0 ;
+					// 
+					fIsDirty = fIsDirty || notifierList.size() > 0 ;
 					fgoNow = fgoNow && fIsDirty;
 				}
 				
@@ -238,69 +226,29 @@ public class JavaSourceSynchronizer {
 	 *  
 	 */
 	class DocListener implements IDocumentListener {
+		/**
+		 * Document is about to be changed - set the GUI to be in read only.
+		 *  
+		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
 		
-		List prev = null ;
-		DocumentEvent prevEvent = null ;
-		long          prevEventTime = System.currentTimeMillis() ;
-				        
-				private boolean isRepeatedKey(DocumentEvent event,boolean update) {
-					long curTime = System.currentTimeMillis() ;
-					boolean result = false ;
-					
-					if (prevEvent!=null)  {
-		            	int delta = event.getOffset()-prevEvent.getOffset()  ;
-		            	if (delta>=0 && delta <=2 && curTime-prevEventTime<450)
-		            	   result = true ;
-		            	   fThread.reset() ;
-					}
-					if (update)
-					  prevEventTime = curTime ;				  
-					return result ;
-				}
-				public void documentAboutToBeChanged(DocumentEvent event){	
-					try{
-						if (isRepeatedKey(event,false))  return ;
-						if (fStatus!=null)
-						   fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,true) ;
-						
-						prev = SynchronizerWorkItem.getWorkItemList(event,fWorkingCopyProvider.getWorkingCopy(true),true,true) ;
-						if (prev.size()>100)
-						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+prev.size(), //$NON-NLS-1$
-						                 Level.WARNING) ;
-					}catch(Throwable e){
-						JavaVEPlugin.log("Not processing documentAboutToBeChanged(DocumentEvent) due to exception.",Level.WARNING); //$NON-NLS-1$
-						JavaVEPlugin.log(e,Level.WARNING);
-					}
-				}
-				public void documentChanged(DocumentEvent event){
-					try{
-	                    if (isRepeatedKey(event,true)) {
-							prevEvent = event ;
-							return ;
-						}
-						prevEvent = event ;
-						
-						List elements = SynchronizerWorkItem.refreshWorkItemList(prev,event,fWorkingCopyProvider.getWorkingCopy(true),true,false) ;
-						if (elements.size()>100)
-						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+elements.size(), //$NON-NLS-1$
-						                 Level.WARNING) ;
-						prev = null ;
-						// There is a delta change,  if we are already in the process of reloading from scratch,
-						// put on the list that we need a "newer" reload from sctrach action, which will force the current
-						// running reload from stractch to stop
-						if (fStatus.isStatusSet(IJVEStatus.JVE_CODEGEN_STATUS_RELOAD_PENDING)|| fStatus.isStatusSet(IJVEStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS)) {
-							fStatus.setReloadPending(true) ;
-							appendReloadRequest(elements);
-						}else{
-							updateLocalFromShared(elements);
-						}
-					}catch(Throwable e){
-						JavaVEPlugin.log("Not processing documentChanged(DocumentEvent) due to exception.",Level.WARNING); //$NON-NLS-1$
-						JavaVEPlugin.log(e,Level.WARNING);
-					}
-				}
+		public void documentAboutToBeChanged(DocumentEvent event) {
+			// We dont need to busy wait becuase updates in the code should never happen when 
+			// GUI to source changes are being performed. We will be here only when no Top-Down
+			// changes are being performed.
+			lockManager.setGUIReadonly(true);  
+		}
 
-			}
+		/**
+		 *  
+		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
+		public void documentChanged(final DocumentEvent event) {
+			documentEventList.add(event);
+			fsrcTranslator.fireSnippetProcessing(true);
+			fThread.reset();
+		}
+	}
 			
 	/**
 	 * Adds an WorkItem with the RELOAD_HANDLE in the Local to Shared updater.
@@ -308,13 +256,9 @@ public class JavaSourceSynchronizer {
 	 * @param additionalRequests  A set of additional requests which should be added prior to the RELOAD_HANDLE. 
 	 * Could be set to null if only RELOAD_HANDLE required. 
 	 */
-	public void appendReloadRequest(List additionalRequests){
-		SynchronizerWorkItem wi = new SynchronizerWorkItem(SynchronizerWorkItem.RELOAD_HANDLE,true) ;
-		List elements = new ArrayList() ;
-		if(additionalRequests!=null && additionalRequests.size()>0)
-			elements.addAll(additionalRequests);
-		elements.add(wi);
-		updateLocalFromShared(elements);
+	public void appendReloadRequest(){
+		documentEventList.add(RELOAD_HANDLE);
+		fThread.reset();
 	}
 	
 	class  CancelMonitor implements ICancelMonitor {
@@ -364,14 +308,14 @@ public class JavaSourceSynchronizer {
         fsrcTranslator = st ;
         // May or may not have one		
 		fDisplay = Display.getCurrent() ;
+		
+		lockManager = new CodegenLockManager();
+		documentEventList = new ArrayList();
+		notifierList = new ArrayList();
+		
 		install () ;
 	}
 	
-	public void setSharedUpdatingLocalStrategy(IBackGroundWorkStrategy strategy) {
-		fSharedUpdatingLocalStrategy = strategy ;		
-	}
-	
-    
 	/**
 	 * Start the background thread, and add this synchroniser as 
 	 * the listener to the Shared document provider.
@@ -401,13 +345,12 @@ public class JavaSourceSynchronizer {
 		return fDisplay ;
 	}
 	
-	private void driveStrategy(List workElements, Hashtable monitors, IBackGroundWorkStrategy strategy) throws InterruptedException {
-		if (workElements.isEmpty()) return ;
+	private void driveStrategy(List allDocEvents, IBackGroundWorkStrategy strategy) throws InterruptedException {
+		if (allDocEvents.isEmpty()) return ;
 		
 		if (fStatus!=null) {
 		   fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,true) ;
-		   if (fSharedUpdatingLocalStrategy == strategy)
-		      fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,true) ;		  
+	      fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,true) ;		  
 		}
 		
 		if (strategy == null) {
@@ -415,73 +358,54 @@ public class JavaSourceSynchronizer {
 			return ;
 		}
 		
-		Iterator itr = workElements.iterator() ;
+		if(previousWorkerCancelMonitor!=null && !previousWorkerCancelMonitor.isCanceled())
+			previousWorkerCancelMonitor.setCancel(true);
+		
 		CancelMonitor newMon = new CancelMonitor() ;
-		while (itr.hasNext()) {
-			SynchronizerWorkItem wi = (SynchronizerWorkItem) itr.next() ;
-		    CancelMonitor m = (CancelMonitor) monitors.get(wi.getChangedElementHandle()) ;
-		    if (m != null) {
-		      // TODO fixMe() ;
-		      m.setCancel(false) ;		     // do not want to get collision error
-		    }
-		    monitors.put(wi.getChangedElementHandle(),newMon) ;
-		}
-			
 		StrategyWorker w = fStrategyWorkers.grabWorker() ;		  	
-		w.assignStrategy(strategy,workElements.toArray(new SynchronizerWorkItem[workElements.size()]),
-		  	           fDocListener, getDisplay(),
-		  	           newMon) ;		  								
+		w.assignStrategy(strategy,lockManager, allDocEvents, 
+		  	           fWorkingCopyProvider.getWorkingCopy(true), getDisplay(), newMon) ;
+		  	           
+		previousWorkerCancelMonitor = newMon;
 	}
 	
 	/**	 
 	 */
 	private void process() {
 		
-		// TODO Collision Logic needed
-		while (fList.size()>0) {
-		  final ArrayList LocalToSharedDelta = new ArrayList () ;
-		  final ArrayList SharedToLocalDelta = new ArrayList () ;
-		  final ArrayList NotificationList = new ArrayList() ;		  
-		  
-		  synchronized (fList) {
-		  	if (fList.size()>0) 
-		  	 for (int i=fList.size()-1; i>=0; i--) {
-		  	   // TODO Need a generic interface for work items
-		  	   if( fList.get(i) instanceof SynchronizerWorkItem){
-		  	   	  SynchronizerWorkItem we = (SynchronizerWorkItem) fList.get(i);
-		  	   	  if(we.isSharedToLocalUpdate())
-		  	   		SharedToLocalDelta.add(fList.remove(i));
-		  	   	  else
-		  	   		LocalToSharedDelta.add(fList.remove(i));
-		  	   }
-		  	   else if(fList.get(i) instanceof NotifierElement) {
-		  	       NotificationList.add(fList.remove(i)) ;		  	       
-		  	   }
-		  	 }		      
-		  }	
-		  
-		  try {			   
-		   // left -> right
-		   driveStrategy(SharedToLocalDelta,fSharedUpdatingLocalMonitor,fSharedUpdatingLocalStrategy) ;
-		   if (fStrategyWorkers != null && !NotificationList.isEmpty())
-		      fStrategyWorkers.waitForAllWorkersToComplete() ;
-		   
-		   for (int i = NotificationList.size()-1; -1 < i; i--) {
-		    try {
-		     NotifierElement elm = (NotifierElement) NotificationList.get(i) ;
-             elm.getListener().markerProcessed(elm.getMarker()) ;
-		    }
-		    catch (Throwable t) {
-		        org.eclipse.ve.internal.java.core.JavaVEPlugin.log(t) ;
-		    }
-            
-           }
-		   
-		  }
-		  catch (InterruptedException e) {}
-		 
+		if(documentEventList.size()>0){
+			try {
+				// Drive source to GUI update stratergy
+				if(!lockManager.isThreadScheduled()){
+					lockManager.setThreadScheduled(true);
+					driveStrategy( documentEventList, fsrcTranslator.createSharedToLocalUpdater()) ;
+				}
+			}catch(InterruptedException ie){}
 		}
-		    
+
+		// TODO Collision Logic needed
+		while (notifierList.size() > 0) {
+			final ArrayList NotificationList = new ArrayList();
+			synchronized (notifierList) {
+				if (notifierList.size() > 0)
+					for (int i = notifierList.size() - 1; i >= 0; i--) {
+						NotificationList.add(notifierList.remove(i));
+					}
+			}
+
+			try {
+				if (fStrategyWorkers != null && !NotificationList.isEmpty())
+					fStrategyWorkers.waitForAllWorkersToComplete();
+				for (int i = NotificationList.size() - 1; i>-1; i--) {
+					try {
+						NotifierElement elm = (NotifierElement) NotificationList.get(i);
+						elm.getListener().markerProcessed(elm.getMarker());
+					} catch (Throwable t) {
+						org.eclipse.ve.internal.java.core.JavaVEPlugin.log(t);
+					}
+				}
+			} catch (InterruptedException e) {}
+		}
 	}
 	
 	/**
@@ -492,8 +416,8 @@ public class JavaSourceSynchronizer {
 	    if (listener == null || fThread == null) return ;
 	    
 	    NotifierElement elm = new NotifierElement(listener,marker,immediate) ;    
-	    synchronized (fList) {
-	        fList.add(elm) ;	        
+	    synchronized (notifierList) {
+	        notifierList.add(elm) ;	        
 	    }
 	    if (immediate)
 	      fThread.goNow() ;
@@ -501,79 +425,6 @@ public class JavaSourceSynchronizer {
 	      fThread.reset() ;	    
 	}
 	
-	/**
-	 *  
-	 */
-	 public void updateSharedFromLocal(String elementHandle) {
-	 	synchronized (fList) {
-	 		SynchronizerWorkItem we = new SynchronizerWorkItem(elementHandle, false);
-	 		Enumeration e = fList.elements() ;	 		
-	 		SynchronizerWorkItem oldElement = null ;                		 		
-	 		while (e.hasMoreElements()) {
-                   Object o = e.nextElement() ;
-                   if (!(o instanceof SynchronizerWorkItem)) continue ;
-                	SynchronizerWorkItem w = (SynchronizerWorkItem) o ;                	
-                	if (w.isSharedToLocalUpdate() == we.isSharedToLocalUpdate() &&
-                	    w.getChangedElementHandle().equals(we.getChangedElementHandle())) {
-                	    oldElement = w ;
-                	    break ;
-                	}
-            }
-            if (oldElement != null) {
-//JavaVEPlugin.log("Sync.updateSharedFromLocal: Replacing "+oldElement) ;
-                fList.remove(oldElement) ;
-            }	 		
-	 		fList.add(we);
-//JavaVEPlugin.log("Sync.updateSharedFromLocal: "+elementHandle+" - "+fList.size()) ;		 				 			 		
-	 	}
-	 	fThread.reset() ;	 	
-	 }
-	
-	 public void updateLocalFromShared(SynchronizerWorkItem we){
-	 	if (we == null) {
-	 		return ;
-	 	}
-	 	synchronized (fList) {	 		
-                Enumeration e = fList.elements() ;
-                SynchronizerWorkItem oldElement = null ;
-                while (e.hasMoreElements()) {
-                   Object o = e.nextElement() ;
-                   if (!(o instanceof SynchronizerWorkItem)) continue ;
-                   SynchronizerWorkItem w = (SynchronizerWorkItem) o ;      
-                	
-                	if (w.isEquivalent(we)) {
-                	    oldElement = w ;
-                	    break ;
-                	}
-                }
-                if (oldElement != null) {
-                   // This is a continuing change, remember the original content
-//JavaVEPlugin.log("Sync.updateLocalFromShared: Replacing "+oldElement) ;
-                   fList.remove(oldElement) ;
-                   if (oldElement.getChangedElementHandle().equals(SynchronizerWorkItem.RELOAD_HANDLE))
-                      fStatus.setReloadPending(false) ;  // decrement the reload count counter.
-                   else
-                      we.setChangeElementPrevContent(oldElement.getChangeElementPrevContent()) ;
-                }
-	 			fList.add(we);
-                fsrcTranslator.fireSnippetProcessing(true) ;
-//JavaVEPlugin.log("Sync.updateLocalFromShared: "+ we+" - "+fList.size()) ;	 		 		
-	 	}
-	 	fThread.reset() ;	 	
-	 }
-	 
-	 public void updateLocalFromShared(List workElements){
-	 	if (workElements == null || workElements.isEmpty()) return ;
-	 	synchronized (fList) {
-	 		Iterator itr = workElements.iterator() ;
-	 		while (itr.hasNext()) {
-	 			updateLocalFromShared((SynchronizerWorkItem)itr.next()) ;
-	 		}
-	 	}
-	 }
-	 
-	 	 
-	 
 	/**
 	 * Tells the reconciler how long it should collect text changes before
 	 * it activates the appropriate reconciling strategies.
@@ -605,16 +456,8 @@ public class JavaSourceSynchronizer {
     
     public boolean isWorkQueued() {        
         boolean result = false ;
-        synchronized (fList) {
-            Iterator itr = fList.iterator() ;
-            while (itr.hasNext()) {
-                Object element = itr.next() ;
-                if (element instanceof SynchronizerWorkItem) {
-                    result = true ;
-                    break ;
-                }                
-            }
-        }
+		if(documentEventList.size()>0)
+			result=true;
         return result ;
     }
     
@@ -643,17 +486,16 @@ public class JavaSourceSynchronizer {
             fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
             fDocListener = null ;
         }
-        synchronized (fList) {
-			for (int i=0; i<fList.size(); i++) {
-			  if(fList.get(i) instanceof NotifierElement) {
-			  	NotifierElement elm = (NotifierElement) fList.get(i) ;
-			  	try {
-					elm.getListener().markerProcessed(elm.getMarker()) ;
-			  	}
-			  	catch (Throwable e) {}
-			  }
-			}		      
-        	fList.clear() ;   
+        synchronized (notifierList) {
+        	for (int i=0; i<notifierList.size(); i++) {
+        		NotifierElement elm = (NotifierElement) notifierList.get(i) ;
+        		if( elm != null )
+        			try {
+        			elm.getListener().markerProcessed(elm.getMarker()) ;
+        		}
+        		catch (Throwable e) {}
+        	}		      
+        	notifierList.clear() ;   
         }
     }	
     

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:30 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-23 19:55:30 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -27,7 +27,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -42,7 +45,8 @@ import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.java.rules.*;
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -89,147 +93,27 @@ String fUri;
    *  a change in the local document.
    */	
   class  SharedToLocalUpdater implements IBackGroundWorkStrategy {
-  	ICancelMonitor    fMonitor = null ;
-  	IDocumentListener fDocListener = null ;
-  	int               fCollisionCount = 0 ;
+  	ICompilationUnit fWorkingCopy = null ;
+  	int fEventsProcessedCount = 0; // Counts the # of times the lockManager.setGUIRO(false) should be called
   	  	  	
   	boolean          fHold = false ;
   	String            fHoldMsg = null ;
   	int          	  fSetHold = 0 ;
+  	Display fDisplay = null; 
+  	boolean reloadRequired = false ;
   	
-  	final int DELTA_SKIP 			= 1 ;
-  	final int DELTA_PARSE_ERROR 	= 2 ;
-  	final int DELTA_BDM_CHANGE 	= 3 ;
-  	final int DELTA_COMPLEX_DELTA	= 4 ;
-  	
+  	// Gatther all the JDT information we can get in takeCurrentSnapshot()
+  	protected String currentSource = null ;
+  	protected int[] importStarts;
+  	protected int[] importEnds;
+  	protected int[] fieldStarts;
+  	protected int[] fieldEnds;
+  	protected int[] methodStarts;
+  	protected int[] methodEnds;
+  	protected String[] methodHandles;
+  	protected String[] fieldHandles;
   	
   	/**
-	 * Check to see if the non method delta is important 
-	 */
-	private int getDeltaStatus (Object[] items) {
-
-		if (items == null || items.length==0) return DELTA_SKIP ;
-		
-		// Skip changes to document areas that are not resolved - no need
-		// to add them to the local document
-		for (int i = 0; i < items.length; i++) {
-
-			if (SynchronizerWorkItem.INSTANCE_ANNOTATION_HANDLE.equals(((SynchronizerWorkItem) items[i]).getChangedElementHandle())
-				|| SynchronizerWorkItem.THIS_ANNOTATION_HANDLE.equals(((SynchronizerWorkItem) items[i]).getChangedElementHandle()))
-				return DELTA_COMPLEX_DELTA;
-			if (SynchronizerWorkItem.RELOAD_HANDLE.equals(((SynchronizerWorkItem) items[i]).getChangedElementHandle())
-				/* ||
-					     SynchronizerWorkItem.CLASS_IMPLEMENT_EXTENDS_HANDLE.equals(((SynchronizerWorkItem) items[i]).getChangedElementHandle())) */
-				)
-				// ** At this time changes to the extends/implements does not refelect in the JavaModel.. so
-				//    no reason to reaload		     
-				return DELTA_BDM_CHANGE;
-		    if (isEventProcessingNeeded(((SynchronizerWorkItem) items[i])))
-		      return DELTA_COMPLEX_DELTA ;
-		    // Package changes are major events - BDM could be changed in subtle ways
-		    if(((SynchronizerWorkItem)items[i]).isPackage())
-		    	return DELTA_BDM_CHANGE;
-		}
-
-		// Take a closer look, and see if new fields, or new initMetod were added
-		// Note that this will pick up changes to imports.
-		JavaBeanModelBuilder modelBldr =
-			new JavaBeanShadowModelBuilder(fEDomain,CodeGenUtil.getRefWorkingCopyProvider(fWorkingCopy.getWorkingCopy(false)), fWorkingCopy.getFile().getLocation().toFile().toString(), null);
-		modelBldr.setDiagram(fCompositionModel);
-		IBeanDeclModel bdm = null;
-		try {
-			bdm = modelBldr.build();
-		}
-		catch (Exception e) {
-			// Syntax error
-			return DELTA_PARSE_ERROR;
-		}
-		if (fBeanModel == null || !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING) || fBeanModel.getBeans().size() != bdm.getBeans().size())
-			return DELTA_BDM_CHANGE;
-
-		ArrayList beanList = new ArrayList();
-		for (int i = 0; i < fBeanModel.getBeans().size(); i++) {
-			BeanPart b = (BeanPart) bdm.getBeans().get(i);
-			BeanPart oB = fBeanModel.getABean(b.getUniqueName());
-			if (oB != null && oB.getFieldDeclHandle() != null) // Internal Beans do not have IField
-				beanList.add(oB.getFieldDeclHandle());
-			// If components have changed 
-			if (oB == null || !oB.isEquivalent(b))
-				return DELTA_BDM_CHANGE;
-			// Has init method changed
-			if ((b.getInitMethod() == null && oB.getInitMethod() != null) || (b.getInitMethod() != null && oB.getInitMethod() == null))
-				return DELTA_BDM_CHANGE;
-			if (b.getInitMethod() != null)
-				if (!oB.getInitMethod().getMethodHandle().equals(b.getInitMethod().getMethodHandle()))
-					return DELTA_BDM_CHANGE;
-		}
-		for (int i = 0; i < items.length; i++) {
-			SynchronizerWorkItem elm = (SynchronizerWorkItem) items[i];
-			if (elm.isField() && beanList.contains(elm.getChangedElementHandle()))
-				return DELTA_BDM_CHANGE;
-		}
-		// Even though we compared BDMs, arguments (like Color) are not compared, and may need changes
-		for (int i = 0; i < items.length; i++) {
-			SynchronizerWorkItem elm = (SynchronizerWorkItem) items[i];
-			if (elm.isImport()){
-				ITypeResolver sharedResolver = fBeanModel;
-				final CodegenTypeResolver localCodegenResolver = new CodegenTypeResolver(CodeGenUtil.getMainType(fWorkingCopy.getWorkingCopy(true)));
-				ITypeResolver localResolver = new ITypeResolver() {
-					public String resolve(String unresolved) {
-						return localCodegenResolver.resolveTypeComplex(unresolved);
-					}
-					public String resolveType(String unresolved) {
-						return localCodegenResolver.resolveTypeComplex(unresolved,true);
-					}					
-					public String resolveThis() {
-						return localCodegenResolver.resolveTypeComplex(CodeGenUtil.getMainType(fWorkingCopy.getWorkingCopy(true)).getElementName());
-					}
-				};
-				List mainBeans = fBeanModel.getBeans();
-				List deltaBeans = bdm.getBeans();
-				if(mainBeans==null || deltaBeans==null || deltaBeans.size()!=mainBeans.size())
-					continue;
-				for(int bc=0;bc<deltaBeans.size();bc++){
-					BeanPart delBean = (BeanPart) deltaBeans.get(bc);
-					BeanPart mainBean = fBeanModel.getABean(delBean.getUniqueName());
-					if(delBean==null || mainBean==null)
-						continue; // maybe some bean was not instantiable - and hence was removed from the model.
-					List delExps = new ArrayList();
-					delExps.addAll(delBean.getRefExpressions());
-					delExps.addAll(delBean.getBadExpressions());
-					List mainExps = new ArrayList();
-					mainExps.addAll(mainBean.getRefExpressions());
-					mainExps.addAll(mainBean.getBadExpressions());
-					if(delExps.size()!=mainExps.size())
-						return DELTA_BDM_CHANGE;
-					List nonCommonExpressions = new ArrayList();
-					nonCommonExpressions.addAll(mainExps);
-					nonCommonExpressions.addAll(delExps);
-					for(int edc=0;edc<delExps.size();edc++){
-						CodeExpressionRef de = (CodeExpressionRef) delExps.get(edc);
-						for(int emc=0;emc<mainExps.size();emc++){
-							CodeExpressionRef me = (CodeExpressionRef) mainExps.get(emc);
-							try {
-								if(me.isEquivalent(de)>-1){
-									nonCommonExpressions.remove(me);
-									nonCommonExpressions.remove(de);
-									if(me.isEquivalentChanged(localResolver, de, sharedResolver))
-										return DELTA_BDM_CHANGE;
-								}
-							} catch (CodeGenException e) {
-								JavaVEPlugin.log(e, Level.WARNING);
-							}
-						}
-					}
-					if(nonCommonExpressions.size()>0)
-						return DELTA_BDM_CHANGE;
-				}
-			}
-		}
-		return DELTA_SKIP;
-	}  	
-	
-	/**
   	 *  ReLoad the BDM model from stratch
   	 */
   	private synchronized void Reload(Display disp,ICancelMonitor monitor) {
@@ -238,13 +122,12 @@ String fUri;
 			// If there are any commands which are being processed, append a reload handle into the queue
 			// and exit the Reload process. The commands need to get executed, else there will be cases where
 			// commands will get lost becuase some previous command resulted in the Reload mechanism kicking in.
-			fSrcSync.appendReloadRequest(null);
+			fSrcSync.appendReloadRequest();
 			return ;
 		}
   				
   	    try {
   			Object lock = fBeanModel== null ? new Object() : fBeanModel.getDocumentLock() ;  			  
-  			fCollisionCount=0 ;
   			synchronized (lock) {
   					  if (fMsgRrenderer.setReloadPending(false) == false) // No more pending, go for it
 			             reloadFromScratch(disp,monitor) ;	                               		           
@@ -257,204 +140,290 @@ String fUri;
   		}      
  	}
   	
-  	protected boolean isEventProcessingNeeded(SynchronizerWorkItem item) {
-  		if (fBeanModel == null) return true ;
-  		
-  		if (item.isMethod()) {
-			IEventProcessingRule rule = (IEventProcessingRule) CodeGenUtil.getEditorStyle(fBeanModel).getRule(IEventProcessingRule.RULE_ID) ;
-  			Iterator itr = fBeanModel.getTypeRef().getMethods() ;
-  			while (itr.hasNext()) {
-				CodeMethodRef m = (CodeMethodRef) itr.next();
-				if (m.getMethodHandle().equals(item.getChangedElementHandle()))
-				   return rule.isEventInitMethodSigniture(m.getMethodName()) ;
+  	/**
+  	 * Takes the snapshots of constructors and ordinary methods. No CLINIT and Synthetic
+  	 * type methods will be recorded, as they are not needed. Snapshot includes method
+  	 * handles, their start and end positions
+  	 * 
+  	 * @param primaryType
+  	 * @throws JavaModelException
+  	 * 
+  	 * @since 1.0.0
+  	 */
+  	protected void takeMethodsSnapshot(final IType primaryType) throws JavaModelException{
+  		if(primaryType==null)
+  			return ;
+  		List pureSourceMethods = new ArrayList() ;
+  		IMethod[] methods = primaryType.getMethods() ;
+  		if(methods!=null){
+  			for (int mc = 0; mc < methods.length; mc++) {
+  				// Ignore transient methods, as they are generated by compiler 
+  				// and are found only in binary types
+				if(Flags.isTransient(methods[mc].getFlags()))
+					continue ;
+				// Ignore CLInit methods, as they are not required for model parsing (Java Model Builder)
+				// and also multiple static{} declarations in code result in only ONE CLInit method in AST, and none in JDT
+				// CLINIT methods are not returned for source types - since we are taking snapshots 
+				// of source types, we dont have to worry about them.
+				
+				// Ignore constructors as there is nothing useful as of now in constructors
+				// TODO - Consider the case for having expressions in constructors
+				if(methods[mc].isConstructor())
+					continue ;
+				
+				pureSourceMethods.add(methods[mc]) ;
 			}
   		}
-  		else if (item.isInnerClass()) return true ;
-  		
-  		return false ;
+  		methodHandles = new String[pureSourceMethods.size()] ;
+  		methodStarts = new int[pureSourceMethods.size()] ;
+  		methodEnds = new int[pureSourceMethods.size()] ;
+  		if(pureSourceMethods.size()>0){
+  			int count = 0 ;
+  			for (Iterator iter = pureSourceMethods.iterator(); iter.hasNext(); count++) {
+				IMethod method = (IMethod) iter.next();
+				methodHandles[count] = method.getHandleIdentifier() ;
+				ISourceRange sr = method.getSourceRange() ;
+				methodStarts[count] = sr.getOffset() ;
+				methodEnds[count] = sr.getOffset() + sr.getLength() ;
+			}
+  		}
   	}
   	
-  	/**
-  	 * 
-  	 * Determine if a change is bounded to the content of a single method, and does not
-  	 * involves a changed to an inner class (which may requite a multi method analysis for style 2 events)
-  	 *  
-  	 * @param items   Work items that are to be processed
-  	 * @return true if we should drive a delta update
-  	 *          false imply that a reLoad or Skip should be considered.
-  	 */
-	protected boolean performDeltaUpdate(SynchronizerWorkItem[] items) {
-
-		if (items.length >= 0 && fBeanModel != null && 
-		    fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING)) {
-
-			boolean deltaUpdate = true;
-			// Perform a delta update only if a BDM exists and the delta spans a 
-			// single method content change
-			for (int i = 0; i < items.length; i++) {
-				if (!(items[i].isMethod()
-					&& items[i].getChangedIndex() >= 0
-					&& items[i].getSourceCode() != null
-					&& !items[i].getChangedElementHandle().equals(SynchronizerWorkItem.THIS_ANNOTATION_HANDLE)
-					&& !items[i].getChangedElementHandle().equals(SynchronizerWorkItem.RELOAD_HANDLE)
-					&& !isEventProcessingNeeded(items[i]))) {
-					deltaUpdate = false;
-					break;
-				}
+  	protected void takeFieldSnapshot(final IType primaryType) throws JavaModelException{
+  		if(primaryType==null)
+  			return ;
+  		List pureSourceFields = new ArrayList() ;
+  		IField[] fields = primaryType.getFields() ;
+  		if(fields!=null){
+  			for (int fc = 0; fc < fields.length; fc++) {
+				if(Flags.isTransient(fields[fc].getFlags()))
+					continue ;
+				pureSourceFields.add(fields[fc]) ;
 			}
-			return deltaUpdate;
-		}
-		else
-			return false;
-	}
+  		}
+		fieldHandles = new String[fields.length] ;
+		fieldStarts = new int[fields.length] ;
+		fieldEnds = new int[fields.length] ;
+		if(pureSourceFields.size()>0){
+			int count = 0 ;
+			for (Iterator iter = pureSourceFields.iterator(); iter.hasNext();) {
+				IField field = (IField) iter.next();
+				fieldHandles[count] = field.getHandleIdentifier() ;
+				ISourceRange sr = field.getSourceRange() ;
+				fieldStarts[count] = sr.getOffset() ;
+				fieldEnds[count] = sr.getOffset() + sr.getLength() ;
+			}
+  		}
+  	}
   	
-  	public void run(Display disp, IDocumentListener docListener,
-  	                Object[] items,
-  	                ICancelMonitor monitor) {
-  		fMonitor = monitor ;
-  		fDocListener = docListener ;
+  	protected void takeImportSnapshot(final ICompilationUnit cu) throws JavaModelException{
+  		if(cu==null)
+  			return ;
+  		IImportDeclaration[] imports = cu.getImports() ; 
+  		if(imports!=null){
+  			importEnds = new int[imports.length] ;
+  			importStarts = new int[imports.length] ;
+  			for (int ic = 0; ic < imports.length; ic++) {
+  				ISourceRange sr = imports[ic].getSourceRange() ; 
+  				importStarts[ic] = sr.getOffset() ; 
+  				importEnds[ic] = sr.getOffset() + sr.getLength() ;
+  			}
+  		}
+  	}
+  	
+  	protected void takeCurrentSnapshot(final ICodegenLockManager lockManager, final List allEvents, final ICompilationUnit workingCopy){
+  		currentSource = null ;
+  		importEnds = new int[0] ;
+  		importStarts = new int[0] ;
+  		fieldEnds = new int[0] ;
+  		fieldStarts = new int[0] ;
+  		methodEnds = new int[0] ;
+  		methodStarts = new int[0] ;
+  		methodHandles = new String[0] ;
+  		fieldHandles = new String[0];
   		
-  		if (items == null || items.length == 0) return ;
-  		  		  		
-  		  
-		if (performDeltaUpdate ((SynchronizerWorkItem[])items)) {
-			// Delta Merge
-			for (int i = 0; i < items.length; i++) {
+  		if(allEvents!=null && allEvents.size()>0){
+  			synchronized(((DocumentEvent)allEvents.get(0)).getDocument()){
+  				if(allEvents.contains(JavaSourceSynchronizer.RELOAD_HANDLE)){
+  					// Reload request
+  					fEventsProcessedCount = allEvents.size()-1;
+  					allEvents.clear();
+  				}else{
+  					fEventsProcessedCount = allEvents.size();
+  					allEvents.clear();
+  					lockManager.setThreadScheduled(false);
+  					try {
+  						currentSource = workingCopy.getBuffer().getContents();
+  						
+  						IType primaryType = workingCopy.findPrimaryType() ;
+  						
+  						// Record JDT methods
+  						takeMethodsSnapshot(primaryType) ;
+  						
+  						// Record JDT fields
+  						takeFieldSnapshot(primaryType) ;
+  						
+  						// Record JDT imports
+  						takeImportSnapshot(workingCopy) ;
+  					} catch (JavaModelException e) {
+  						JavaVEPlugin.log(e);
+  					}
+  				}
+  			}
+  		}
+  	}
+  	
+  	protected CompilationUnit parse(String source){
+  		return AST.parseCompilationUnit(source.toCharArray());
+  	}
+  	
+  	protected boolean containsParseErrors(CompilationUnit cuAST){
+  		IProblem[] parseProblems = cuAST.getProblems();
+  		boolean parseErrors = false;
+  		for (int i = 0; i < parseProblems.length; i++) {
+			if(parseProblems[i].isError())
+				parseErrors = true;
+		}
+		return parseErrors;
+  	}
+  	
+  	protected synchronized void handleNonParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  		fBeanModel.refreshMethods();
+  	}
+  	
+  	protected void merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ){
+  		BDMMerger merger = new BDMMerger(mainModel, newModel, true, fDisplay);
+  		try{
+  			if(!merger.merge())
+  				Reload(fDisplay, m);
+  		}catch( Throwable t) {
+  			JavaVEPlugin.log("Merge failed : "+t.getMessage(), Level.WARNING);
+  			Reload(fDisplay, m);
+  		}
+  	}
+  	
+  	/*
+  	 * This method should return the method handles of all methods 
+  	 * in the compilation unit in the exact same order that the TypeVisitor
+  	 * would visit the method declarations
+  	 */
+  	protected String[] getAllMethodHandles(ICompilationUnit cu){
+  		if(cu!=null && cu.findPrimaryType()!=null){
+  			try {
+				IMethod[] methods = cu.findPrimaryType().getMethods() ;
+				String[] methodHandles = new String[methods==null ? 0 : methods.length];
+				for (int methodC = 0; methods!=null && methodC < methods.length; methodC++) {
+					methodHandles[methodC] = methods[methodC].getHandleIdentifier() ;
+				}
+				return methodHandles ;
+			} catch (JavaModelException e) {
+				JavaVEPlugin.log(e) ;
+			}
+  		}
+  		return new String[0] ;
+  	}
+  	
+  	protected synchronized void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  		JavaBeanModelBuilder modelBldr =
+			new CodeSnippetModelBuilder(fEDomain, currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy);
+		modelBldr.setDiagram(fCompositionModel);
+		IBeanDeclModel bdm = null;
+		try {
+			bdm = modelBldr.build();
+		} catch (Exception e) {
+			JavaVEPlugin.log(e) ;
+		}
+		if(bdm!=null)
+			merge(fBeanModel, bdm, cancelMonitor);
+ 	}
+  	
+	public void run(
+			Display disp,
+			ICompilationUnit workingCopy,
+			ICodegenLockManager lockManager,
+			List allDocEvents,
+			ICancelMonitor monitor) {
+
+			fWorkingCopy = workingCopy;
+			fDisplay = disp;
+
+			if (monitor != null && monitor.isCanceled())
+				return;
+
+			IModelChangeController controller = (IModelChangeController) fEDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+			try {
+				synchronized (controller) {
+					// It is possible that multi work elements stagger, and we do not want
+					// a later work element, to cache, an UnRestored state.
+					if (fSetHold++ == 0) {
+						fHoldMsg = controller.getHoldMsg();
+						fHold = controller.isHoldChanges();
+					}
+					controller.setHoldChanges(true, null);
+				}
+
 				if (monitor != null && monitor.isCanceled())
 					return;
 
-				final SynchronizerWorkItem we = (SynchronizerWorkItem) items[i];
-				
-				IModelChangeController controller = (IModelChangeController) fEDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);				    
-				try {
-					we.refreshContents(fWorkingCopy.getWorkingCopy(true));
-					CodeSnippetTranslator translator =
-						new CodeSnippetTranslator(
-							we.getSourceCode(),
-							we.getPackageName(),
-							we.getExtends(),
-							we.getImplements(),
-							we.getImports(),
-							we.getFields(),
-							we.getMethods(),
-							monitor,
-							we.getCompilationUnit(),
-							we.getMethodsHandles(),
-							we.getMethodSkeletons(),
-							we.getInnerTypeHandles(),
-							we.getInnerTypeSkeletons(),
-							we.getChangedIndex(),
-							we.isMethod());
-					synchronized (controller) {
-						// It is possible that multi work elements stagger, and we do not want
-						// a later work element, to cache, an UnRestored state.
-						if (fSetHold++==0) {
-						  fHoldMsg = controller.getHoldMsg();
-						  fHold = controller.isHoldChanges();						  
-						}
-						controller.setHoldChanges(true, null);
-				    }
-					Object lock = fBeanModel == null ? new Object() : fBeanModel.getDocumentLock();
-					synchronized (lock) {
-						if (monitor != null && monitor.isCanceled())
-							return;
+				fEventsProcessedCount = 0;
+				reloadRequired = false;
+				takeCurrentSnapshot(lockManager, allDocEvents, workingCopy);
+				if (reloadRequired) {
+					Reload(fDisplay, monitor);
+				} else {
+					if (currentSource == null)
+						return;
 
-						translator.setDiagram(fCompositionModel);
-						final ICodeDelta delta =
-							translator.generateCodeDelta(
-								fBeanModel,
-								we.getChangedElementHandle(),
-								we.getMethodSources()[we.getChangedIndex()]);
-						if (monitor != null && monitor.isCanceled())
-							return;
+					if (monitor != null && monitor.isCanceled())
+						return;
 
-						// TODO Adapters will not react for GUI deltas !!!
-						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
-						if (delta == null || delta.getDeltaMethod() == null)
-							JavaVEPlugin.log("NOT Driving a delta merge: DeltaMethod==NULL", Level.FINEST); //$NON-NLS-1$
-						else
-							JavaVEPlugin.log("Driving a delta merge: " + delta.getDeltaMethod(), Level.FINEST); //$NON-NLS-1$
-						if (fBeanModel != null && delta != null && delta.getDeltaMethod() != null) {
-							// Display thread
-							disp.syncExec(new Runnable() {
-								public void run() {
-									try {
-										CodeSnippetMergelet merglet =
-											new CodeSnippetMergelet(
-												delta,
-												we.getChangedElementContent(),
-												we.getChangedElementHandle(),
-												we.isMethod());
-										if (merglet.updateBDM(fBeanModel)) {
-											fireUpdateNotification();
-										}
-									}
-									catch (Throwable t) {
-										JavaVEPlugin.log(t, Level.WARNING);
-									}
-								}
-							});
-						}
-						if (fTransientErrorManager != null) {
-							fTransientErrorManager.handleSharedToLocalChanges(fBeanModel, translator.getErrorsInCodeDelta(), monitor);
-						}
-						// We tried to apply the delta.  Check to see if we need
-						// to reload from stratch - delta failure (e.g., method became an init, or not any more
-						// and init method 		           		          
-						if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
-							fTransientErrorManager.handleSharedToLocalChanges(fBeanModel, translator.getErrorsInCodeDelta(), monitor);
-							// Note that we still hold the lock. We can cause a dead lock if we try to Reload here.
-							// Reload(disp, monitor);							
-						}
-						else {
-							// If expressions removed beans from their container
-							// we need to add them to the FF
-							refreshFreeFrom(disp);
-							fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
+					CompilationUnit ast = parse(currentSource);
+
+					if (monitor != null && monitor.isCanceled())
+						return;
+
+					// TODO Adapters will not react for GUI deltas !!!
+					fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
+
+					if (containsParseErrors(ast)) {
+						handleNonParseable(ast, fWorkingCopy, monitor);
+					} else {
+						handleParseable(ast, fWorkingCopy, monitor);
+					}
+
+					if (monitor != null && monitor.isCanceled())
+						return;
+
+					if (fEventsProcessedCount > 0) {
+						for (int i = 0; i < fEventsProcessedCount; i++) {
+							lockManager.setGUIReadonly(false);
 						}
 					}
+
+					if (monitor != null && monitor.isCanceled())
+						return;
+
+					fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
+
 					if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
 						Reload(disp, monitor);
-						break ;
 					}
 				}
-				catch (Throwable e) {
-					JavaVEPlugin.log(e, Level.FINE);
-					// Reload from scratch will re-set the state of the BDM 		      	
-					Reload(disp, monitor);
-					break ;
-				}
-				finally {
-					if (fBeanModel != null)
-						fireSnippetProcessing(false);
-					synchronized (controller) {
-						   if (--fSetHold<=0) {
-				             controller.setHoldChanges(fHold,fHoldMsg) ;
-				             fSetHold = 0  ;
-						   }
+			} catch (Throwable e) {
+				JavaVEPlugin.log(e, Level.FINE);
+				// Reload from scratch will re-set the state of the BDM
+				Reload(disp, monitor);
+			} finally {
+				if (fBeanModel != null)
+					fireSnippetProcessing(false);
+				synchronized (controller) {
+					if (--fSetHold <= 0) {
+						controller.setHoldChanges(fHold, fHoldMsg);
+						fSetHold = 0;
 					}
 				}
 			}
 		}
-  		else {  // It is not a method delta
-  		  try {  		  	
-  			switch (getDeltaStatus(items)) {
-  				case DELTA_SKIP: JavaVEPlugin.log(":) Skipping Unresolved Work Element Handle",Level.FINEST) ;  //$NON-NLS-1$
-  				                  break ;
-  				case DELTA_COMPLEX_DELTA:
-  				case DELTA_BDM_CHANGE:
-  				case DELTA_PARSE_ERROR:  				   
-  			                      Reload(disp,monitor) ;
-  			}
-  		  }
-  		  catch (Throwable t) {
-  		  	JavaVEPlugin.log(t,Level.WARNING) ;
-  		  }
-          finally {
-                 fireSnippetProcessing(false) ;        
-          }  			
-  		}
-  	}	
   }
   
 /**
@@ -1218,7 +1187,6 @@ public synchronized void reConnect(IFile file) {
        
     if (fSrcSync == null) {
 	   fSrcSync = new JavaSourceSynchronizer(fWorkingCopy,this) ;
-	   fSrcSync.setSharedUpdatingLocalStrategy(new SharedToLocalUpdater()) ;
 	   fSrcSync.setDelay(fSrcSyncDelay) ;
 	   fSrcSync.setStatus(fMsgRrenderer) ;
     }
@@ -1266,7 +1234,6 @@ public synchronized void disconnect(boolean clearVCEModel) {
 public synchronized void dispose() {
 	
 	if (fSrcSync != null) {
-		fSrcSync.setSharedUpdatingLocalStrategy(null) ;
 		commit();
 		fSrcSync.uninstall() ;
 		fSrcSync = null ;
@@ -1429,7 +1396,14 @@ public synchronized boolean isModelLoaded() {
 	return fModelLoaded;
 }
 
-
+/*
+ * Each background thread will be running his own snapshot update. Since multiple
+ * threads could be running at the same time, a new updater for each thread is 
+ * required.
+ */
+public IBackGroundWorkStrategy createSharedToLocalUpdater(){
+	return new SharedToLocalUpdater();
+}
 
 private Object loadLock = new Object();
 	/* (non-Javadoc)

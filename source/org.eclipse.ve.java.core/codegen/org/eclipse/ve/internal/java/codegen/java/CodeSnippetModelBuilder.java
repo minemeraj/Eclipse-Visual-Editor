@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-23 19:55:52 $ 
  */
 
 import java.util.List;
@@ -23,6 +23,7 @@ import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.BasicCompilationUnit;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -70,16 +71,16 @@ public CompilationUnitDeclaration getModelFromParser(
 	return decl;
 }
 
-/** 
- * Now the JDOM has different offsets and lengths, so 
- * set them to how we like.
- * Ex: When you have multiple comment blocks prefixing 
- * the method declaration, then the JDOM takes only the 
- * last comment block, whereas JDT takes in all the 
- * multiple comment blocks. Since the BDM is based on
- * the JDT, we adjust the JDOM's offsets.
- */
-protected void updateModelPositions(CompilationUnitDeclaration decl){
+/**
+ * JDT and old AST differ in the way they look at things like comments of elements etc.
+ * Hence have to adjust the AST such that it reflects the JDT - since the BDM is based 
+ * off the JDT. 
+ * Examples of such behaviour are when you have two comment blocks before a method -
+ * AST says only the bottomost comment block belongs to the method, while JDT says all
+ * comment blocks belong to that method.   
+ * 
+ * @param decl
+ */protected void updateModelPositions(CompilationUnitDeclaration decl){
 	TypeDeclaration type = decl.types[0];
 	FieldDeclaration[] decls = type.fields;
 	AbstractMethodDeclaration[] methods = type.methods;
@@ -91,16 +92,14 @@ protected void updateModelPositions(CompilationUnitDeclaration decl){
 		}
 	}
 	if(methods!=null && methodStarts!=null){
-		int count = 0;
-		for(int mc=1;mc<methods.length;mc++){
-			if(methods[mc].isConstructor())
-				continue;
-			if(methods[mc].isClinit())
-				continue;
-			if(methods[mc]!=null){
-				methods[mc].declarationSourceStart=methodStarts[count];
-				methods[mc].declarationSourceEnd=methodEnds[count];
-				count++;
+		int usefulMethodIndex = 0;
+		for(int mc=0;mc<methods.length;mc++){
+			if(	methods[mc]!=null && 
+					// Since Methods are the only things we care about
+					methods[mc] instanceof MethodDeclaration) {
+				methods[mc].declarationSourceStart=methodStarts[usefulMethodIndex];
+				methods[mc].declarationSourceEnd=methodEnds[usefulMethodIndex];
+				usefulMethodIndex++;
 			}
 		}
 	}

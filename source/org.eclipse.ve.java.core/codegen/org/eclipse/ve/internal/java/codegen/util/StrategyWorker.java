@@ -11,14 +11,16 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: StrategyWorker.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-23 19:56:12 $ 
  */
 
+import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -38,11 +40,11 @@ public class StrategyWorker implements Runnable{
   
   private IBackGroundWorkStrategy fStrategy = null ;
   private ICancelMonitor          fMonitor = null ;
-  private Object[]                fworkItems = null ;
   private Display                 fdisplay = null ;
-  private IDocumentListener       fdocListener = null ;
-
-
+  private ICompilationUnit       fWorkingCopy = null ;
+  private ICodegenLockManager fLockManager = null;
+  private List fAllEvents = null;
+  
   /**
    * the thread running this object
    */
@@ -63,18 +65,21 @@ public class StrategyWorker implements Runnable{
   public StrategyWorker (WorkerPool pool) {
 	fPool = pool;
   }  
+  
   /**
    * Assigns a connection to this worker and signals it to perform it.
    * @param connection the connection to be performed.
    */
-  public synchronized void assignStrategy(IBackGroundWorkStrategy strat, Object[] items, IDocumentListener docListener, Display disp, ICancelMonitor monitor) {
+  public synchronized void assignStrategy(IBackGroundWorkStrategy strat, ICodegenLockManager lockManager, List allDocEvents, ICompilationUnit workingCopy, Display disp, ICancelMonitor monitor) {
   	fStrategy = strat ;
   	fMonitor = monitor ;
-  	fworkItems = items ;
+  	fAllEvents = allDocEvents ;
+  	fLockManager = lockManager;
   	fdisplay = disp ;
-  	fdocListener = docListener ;
-	notify();
-  }  
+  	fWorkingCopy = workingCopy;
+  	notify();
+  }
+  
   void cancel() {
   	fCancel = true;
   }  
@@ -107,7 +112,7 @@ public void run () {
 
   	  JavaVEPlugin.log ("StrategyWorker running: "+fStrategy.getClass().getName(), Level.FINE) ; //$NON-NLS-1$
   	  if (fMonitor == null || !fMonitor.isCanceled()) {
-  	     fStrategy.run(fdisplay,fdocListener, fworkItems,fMonitor) ;  	     	  	   
+  	  	fStrategy.run(fdisplay,fWorkingCopy, fLockManager, fAllEvents, fMonitor) ;  	     	  	   
   	  }
   	  
     } 
@@ -119,8 +124,10 @@ public void run () {
     	catch (Throwable tt) {}
     }
     finally {
-    	fStrategy = null ;  	
-  	fworkItems = null;     	
+    	fStrategy = null ;
+    	fWorkingCopy = null ;
+    	fAllEvents = null;
+    	fLockManager = null;  	
     	if (fMonitor != null)
     	   fMonitor.setCompleted() ;
     	fMonitor = null ;

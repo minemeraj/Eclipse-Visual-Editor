@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.10 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.11 $  $Date: 2004-02-23 19:56:12 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -41,7 +41,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class BeanPart {
     
     public final static String         THIS_NAME = "this" ; //$NON-NLS-1$
-    public final static String		 THIS_HANDLE = SynchronizerWorkItem.THIS_ANNOTATION_HANDLE;
+    public final static String		 THIS_HANDLE = "_this_Annotation_handle";
 	
 	String 	fName = null ;
 	String	fUniqueName = null ;
@@ -474,10 +474,11 @@ public void setEObject (EObject obj) {
 protected void setType(String fType){	
 	// The BeanSubClassComposition pseodo bean part as an empty type
     if (getModel() != null && fType !=null && !fType.equals("")) { //$NON-NLS-1$
+    	// TODO No need to check for compilation unit - resolver should return unresolved if unable to resolve
     	if(getModel().getCompilationUnit()!=null){
 		  //IType t = CodeGenUtil.getMainType(getModel().getCompilationUnit()) ;
 		  //String rt = CodeGenUtil.resolveTypeComplex(t,fType) ;
-		  String rt = getModel().resolve(fType);
+		String rt = getModel().resolve(fType);
 		  if(rt!=null)
 		  	this.fType = rt;
 		  else
