@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.23 $  $Date: 2004-09-03 22:03:53 $ 
+ *  $Revision: 1.24 $  $Date: 2004-09-09 16:19:27 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -437,11 +437,9 @@ public class BDMMerger {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected boolean updateRegularAndEventExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
-		List allMainBPExpressions = new ArrayList(mainBeanPart.getRefExpressions()) ;
-		List allUpdateBPExpressions = new ArrayList(updatedBeanPart.getRefExpressions()) ;
-		allMainBPExpressions.addAll(mainBeanPart.getRefEventExpressions()) ;
-		allUpdateBPExpressions.addAll(updatedBeanPart.getRefEventExpressions()) ;
+	protected boolean updateEventExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
+		List allMainBPExpressions = new ArrayList(mainBeanPart.getRefEventExpressions()) ;
+		List allUpdateBPExpressions = new ArrayList(updatedBeanPart.getRefEventExpressions()) ;
 		return processExpressions(allMainBPExpressions, allUpdateBPExpressions) ;
 	}
 	
@@ -464,7 +462,7 @@ public class BDMMerger {
 		updateReturnMethod(mainBeanPart, updatedBeanPart);
 		boolean update = updateCallBackExpressions(mainBeanPart, updatedBeanPart);
 		update = update && updateParentExpressions(mainBeanPart, updatedBeanPart);
-		update = update && updateRegularAndEventExpressions(mainBeanPart, updatedBeanPart);
+		update = update && updateEventExpressions(mainBeanPart, updatedBeanPart);
 		return update ;
 	}
 
@@ -551,11 +549,11 @@ public class BDMMerger {
 		List mainExpTobeProcessed = new ArrayList(mainExpressions);
 		List updatedExpTobeProcessed = new ArrayList(updatedExpressions);
 		
-		for(int mainExpCount = 0; mainExpCount < mainExpTobeProcessed.size(); mainExpCount++ ){
-			CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(mainExpCount);
+		for (int updatedExpCount = 0 ; updatedExpCount < updatedExpTobeProcessed.size(); updatedExpCount++) {
+			CodeExpressionRef updExp = (CodeExpressionRef) updatedExpTobeProcessed.get(updatedExpCount);
 			boolean equivalentExpFound = false ;
-			for (int updatedExpCount = 0 ; updatedExpCount < updatedExpTobeProcessed.size(); updatedExpCount++) {
-				CodeExpressionRef updExp = (CodeExpressionRef) updatedExpTobeProcessed.get(updatedExpCount);
+			for(int mainExpCount = 0; mainExpCount < mainExpTobeProcessed.size(); mainExpCount++ ){
+				CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(mainExpCount);
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 					int equivalency = -1;
 					try {
@@ -574,43 +572,44 @@ public class BDMMerger {
 			}
 			if(!equivalentExpFound){
 				// No Equivalent expression was found 
-				mainExpTobeProcessed.remove(mainExpTobeProcessed.indexOf(mainExp)) ;
-				mainExpCount -- ;
-				// Now there are cases where expressions are added to the beanpart after parsing and 
-				// during decoding (ex: createTable() - which is added to the Shell beanpart, during the 
-				// decoding of the constructor for Table). Such expressions are generally stored in the 
-				// beanpart's parent expressions list - so check the parent expressions of all bean parts 
-				// to determine if anyone will be adding this expression to the Shell beanpart later on.
-				CodeExpressionRef parentExpression = null;
-				Iterator newBeansItr = newModel.getBeans().iterator();
-				while (newBeansItr.hasNext() && parentExpression==null) {
-					BeanPart newBean = (BeanPart) newBeansItr.next();
-					List newBPParentExps = newBean.getParentExpressons();
-					if(newBPParentExps!=null && newBPParentExps.size()>0){
-						for(int ec=0;ec<newBPParentExps.size();ec++){
-							CodeExpressionRef newParentExp = (CodeExpressionRef) newBPParentExps.get(ec);
-							String mainExpMethodName = mainExp.getMethodNameContent();
-							String mainExpInMethod = mainExp.getMethod()==null?null:mainExp.getMethod().getMethodName();
-							String newExpInMethod = newParentExp.getMethod()==null?null:newParentExp.getMethod().getMethodName();
-							if(mainExpMethodName!=null && mainExpMethodName.equals(newParentExp.getMethodNameContent()) &&
-									mainExpInMethod!=null && newExpInMethod!=null && mainExpInMethod.equals(newExpInMethod)){
-								parentExpression = newParentExp;
-								break;
-							}
+				// Now add the newly added expressions
+				updatedExpTobeProcessed.remove(updatedExpTobeProcessed.indexOf(updExp));
+				updatedExpCount--;
+				processed = processed && addNewExpression(updExp);
+			}
+		}
+
+		// Now remove the old main expressions
+		for (int delExpCount = 0; delExpCount < mainExpTobeProcessed.size(); delExpCount++) {
+			CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(delExpCount);
+			// Now there are cases where expressions are added to the beanpart after parsing and 
+			// during decoding (ex: createTable() - which is added to the Shell beanpart, during the 
+			// decoding of the constructor for Table). Such expressions are generally stored in the 
+			// beanpart's parent expressions list - so check the parent expressions of all bean parts 
+			// to determine if anyone will be adding this expression to the Shell beanpart later on.
+			CodeExpressionRef parentExpression = null;
+			Iterator newBeansItr = newModel.getBeans().iterator();
+			while (newBeansItr.hasNext() && parentExpression==null) {
+				BeanPart newBean = (BeanPart) newBeansItr.next();
+				List newBPParentExps = newBean.getParentExpressons();
+				if(newBPParentExps!=null && newBPParentExps.size()>0){
+					for(int ec=0;ec<newBPParentExps.size();ec++){
+						CodeExpressionRef newParentExp = (CodeExpressionRef) newBPParentExps.get(ec);
+						String mainExpMethodName = mainExp.getMethodNameContent();
+						String mainExpInMethod = mainExp.getMethod()==null?null:mainExp.getMethod().getMethodName();
+						String newExpInMethod = newParentExp.getMethod()==null?null:newParentExp.getMethod().getMethodName();
+						if(mainExpMethodName!=null && mainExpMethodName.equals(newParentExp.getMethodNameContent()) &&
+								mainExpInMethod!=null && newExpInMethod!=null && mainExpInMethod.equals(newExpInMethod)){
+							parentExpression = newParentExp;
+							break;
 						}
 					}
 				}
-				if(parentExpression==null)
-					removeDeletedExpression(mainExp);
-				else
-					processEquivalentExpressions(mainExp, parentExpression, 1);
 			}
-		}
-		
-		// Now add the newly added expressions
-		for (int newExpCount = 0; newExpCount < updatedExpTobeProcessed.size(); newExpCount++) {
-			CodeExpressionRef exp = (CodeExpressionRef) updatedExpTobeProcessed.get(newExpCount);
-			processed = processed && addNewExpression(exp);
+			if(parentExpression==null)
+				removeDeletedExpression(mainExp);
+			else
+				processEquivalentExpressions(mainExp, parentExpression, 1);
 		}
 		return processed;
 	}
@@ -766,6 +765,7 @@ public class BDMMerger {
 		mainModelBeans = orderBeansToMerge(mainModelBeans);
 		// Update changed bean parts
 		Iterator mainModelBeansItr = mainModelBeans.iterator();
+		// Update all beans EXCEPT the regular expressions - they need to be done in order of expressions in method
 		while (mainModelBeansItr.hasNext()) {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBP = (BeanPart) mainModelBeansItr.next();
@@ -780,7 +780,83 @@ public class BDMMerger {
 				JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING);
 			}
 		}
+		
+		merge = merge && updateBeanPartRegularExpressions();
 		return merge;
+	}
+
+	protected void orderBeanPartExpressions(BeanPart bp, List orderedList){
+		if(bp==null || bp.getRefExpressions()==null)
+			return;
+		Iterator bpExpItr = bp.getRefExpressions().iterator();
+		while (bpExpItr.hasNext()) {
+			CodeExpressionRef bpExp = (CodeExpressionRef) bpExpItr.next();
+			int index=0;
+			for(index=0;index<orderedList.size();index++){
+				CodeExpressionRef orderedExp = (CodeExpressionRef) orderedList.get(index);
+				if(orderedExp.getOffset()>bpExp.getOffset())
+					break;
+			}
+			if(index<orderedList.size())
+				orderedList.add(index, bpExp);
+			else
+				orderedList.add(bpExp);
+		}
+	}
+	
+	/**
+	 * Now regular expressions of all beans are merged in. This special merge process is needed 
+	 * to preserve the order of expressions between beans which are in the same method. 
+	 * This is important in the case of layout constraints where the constraint needs all its 
+	 * properties set, before it is set as the constraint. Else the UI is not reflected correctly.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateBeanPartRegularExpressions(){
+		boolean update = true;
+		// Update the regular expressions of all beans
+		HashMap beansInMethodMap = new HashMap();
+		Iterator mainModelBeansItr = mainModel.getBeans().iterator();
+		while (mainModelBeansItr.hasNext()) {
+			BeanPart bp = (BeanPart) mainModelBeansItr.next();
+			String key = "null";
+			if(bp.getInitMethod()!=null && bp.getInitMethod().getMethodHandle()!=null)
+				key = bp.getInitMethod().getMethodHandle();
+			if(!beansInMethodMap.containsKey(key))
+				beansInMethodMap.put(key, new ArrayList());
+			List list = (List) beansInMethodMap.get(key);
+			list.add(bp);
+		}
+		
+		// Now merge the regular expressions, where expressions belong to a particular method
+		Iterator methodHandleItr = beansInMethodMap.keySet().iterator();
+		while (methodHandleItr.hasNext()) {
+			List orderedMainExpressions = new ArrayList();
+			List orderedUpdatedExpressions = new ArrayList();
+			String key = (String) methodHandleItr.next();
+			List beans = (List) beansInMethodMap.get(key);
+			Iterator mainBeansItr = beans.iterator();
+			// TODO - no need to order for null handles maybe?
+			while (mainBeansItr.hasNext()) {
+				BeanPart mainBP = (BeanPart) mainBeansItr.next();
+				if(mainBP.getModel()==null)
+					continue;
+				BeanPart updateBP ;
+				if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
+
+					// Order the bean expressions
+					orderBeanPartExpressions(mainBP, orderedMainExpressions);
+					orderBeanPartExpressions(updateBP, orderedUpdatedExpressions);
+					
+				}else{
+					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING);
+				}
+			}
+			update = update && processExpressions(orderedMainExpressions, orderedUpdatedExpressions);
+		}
+		return update;
 	}
 	
 	/**
