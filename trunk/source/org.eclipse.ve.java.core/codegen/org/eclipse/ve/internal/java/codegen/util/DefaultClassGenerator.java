@@ -11,6 +11,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
+/*
+*  $RCSfile: DefaultClassGenerator.java,v $
+*  $Revision: 1.2 $
+*/
+
+
 package org.eclipse.ve.internal.java.codegen.util;
 
 import org.eclipse.core.runtime.CoreException;
@@ -36,6 +43,15 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 	String ftmplName;
 	String fpluginName;
 	
+	
+	/**
+	 * 
+	 * @param className		name of class to generate  e.g., 			"MyGeneratedClass"
+	 * @param pkgName		pkg. to place the generated class in e.g.,	"my.package"
+	 * @param pluginName	plugin where the JJet template is located	"torg.eclipse.ve.jfc"
+	 * @param tmplDirectory	directory where the template is located		"templates/com/ibm/jjet"
+	 * @param tmplName		template file name (assume .javajet extension)	"MyGeneratedClassTemplate"
+	 */
 	public DefaultClassGenerator(String className, String pkgName, String pluginName, String tmplDirectory, String tmplName) {
 		super(className, pkgName);	
 		ftmplName=tmplName;
@@ -79,13 +95,20 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 			ICompilationUnit cu = pkg.createCompilationUnit(fClassName+".java",getTemplteContent(),true,monitor);
 			if (fFormatTemplate) {
 				ICompilationUnit wc = cu.getWorkingCopy(monitor);
-				if (PreferenceConstants.getPreferenceStore().getBoolean(
-						PreferenceConstants.CODEGEN_ADD_COMMENTS)) {
+				if (PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEGEN_ADD_COMMENTS)) {
 					// Add Type default comments
 					try {
 						String comment = CodeGeneration.getTypeComment(cu, cu
 								.getAllTypes()[0].getElementName(), fNL);
-						wc.getBuffer().replace(0, 0, comment);
+
+						if (wc.getPackageDeclarations().length>0) {
+						 // The type template will generate the package header
+						 ISourceRange sr = (ISourceRange) wc.getPackageDeclarations()[0].getSourceRange() ;
+						 wc.getBuffer().replace(sr.getOffset(),sr.getLength(),"");
+						}						
+						String content = CodeGeneration.getCompilationUnitContent(wc,comment,wc.getSource(), fNL );						
+						wc.getBuffer().setContents(content);
+						
 					} catch (CoreException e1) {
 					}
 				}
