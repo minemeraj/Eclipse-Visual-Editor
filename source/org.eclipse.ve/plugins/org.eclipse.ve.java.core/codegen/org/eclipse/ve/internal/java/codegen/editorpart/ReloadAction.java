@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:39:30 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-04 23:27:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -110,7 +110,7 @@ public class ReloadAction extends Action {
 	 */
 	public void parseError(boolean error) {
 		if (error) {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR")); //$NON-NLS-1$
+			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR_")); //$NON-NLS-1$
 			setText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
 			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif")); //$NON-NLS-1$
 			setChecked(true);

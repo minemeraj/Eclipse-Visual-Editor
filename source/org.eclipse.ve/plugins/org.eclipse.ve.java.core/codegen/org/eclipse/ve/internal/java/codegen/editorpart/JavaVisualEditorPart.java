@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.42 $  $Date: 2004-06-03 14:39:30 $ 
+ *  $Revision: 1.43 $  $Date: 2004-06-04 23:27:17 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -181,7 +181,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (!proj.hasNature(JavaCore.NATURE_ID))
 					throw new PartInitException(
 						MessageFormat.format(
-							CodegenEditorPartMessages.getString("JavaVisualEditor.notJavaProject"), //$NON-NLS-1$
+							CodegenEditorPartMessages.getString("JavaVisualEditor.notJavaProject_EXC_"), //$NON-NLS-1$
 							new Object[] { proj.getName(), input.getName()}));
 			} catch (CoreException e) {
 				throw new PartInitException(e.getStatus());
