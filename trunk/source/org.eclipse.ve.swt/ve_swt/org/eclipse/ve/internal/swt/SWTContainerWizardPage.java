@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 public class SWTContainerWizardPage extends WizardPage implements IClasspathContainerPage {
 	
 	private IClasspathEntry fClassPathEntry;
+	private Button includeJFaceButton = null;
 	
 	public SWTContainerWizardPage() {
 		super("Standard Widget Toolkit (SWT)");
@@ -32,12 +33,21 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 		useBuildLocation.setText("Use \"org.eclipse.swt\" project in the build path");
 		useBuildLocation.setEnabled(false);
 		
+		includeJFaceButton = new Button(c, SWT.CHECK);
+		includeJFaceButton.setText("Include support for JFace library");
+		
+		
 		setControl(c);
 		
 	}	
 	
 	public boolean finish(){
-		Path path = new Path("SWT_CONTAINER");
+		Path path;
+		if (includeJFaceButton != null && includeJFaceButton.getSelection()) {
+			path = new Path("SWT_CONTAINER/JFACE");
+		} else {
+			path = new Path("SWT_CONTAINER");
+		}
 		setSelection(JavaCore.newContainerEntry(path));			
 		return true;
 	}
