@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 18:14:26 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 22:11:01 $ 
  */
 
 import java.util.*;
@@ -126,10 +126,11 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 					IConfigurationElement celm = configElms[cc];
 					try {
 						IChooseBeanContributor contributor = (IChooseBeanContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
-						if(contributor!=null)
-							contributorList.add(contributor);
+						contributorList.add(contributor);
 					} catch (CoreException e) {
-						JavaVEPlugin.log(e, Level.FINEST);
+						JavaVEPlugin.log(e, Level.FINE);
+					} catch (ClassCastException e) {
+						JavaVEPlugin.log(e, Level.FINE);
 					}
 				}
 			}
