@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-08-27 15:34:48 $
+ * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-10-19 18:22:06 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -29,9 +29,13 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
@@ -57,7 +61,9 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 	protected JTabbedPaneProxyAdapter tabbedpaneAdapter;
 
 	protected EReference sfTabs, sfComponent;
-
+	protected final static String JTABBEDPANE_SELECTED_PAGE_STATE_KEY = "JTabbedPane.selected.page.state.key"; //$NON-NLS-1$
+	public static final String JTABBEDPANE_THIS_PART = "JTabbedPane_THIS_PART"; //$NON-NLS-1$
+	
 	public JTabbedPaneGraphicalEditPart(Object model) {
 		super(model);
 	}
@@ -114,14 +120,21 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
 		List children = getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			EditPart page = (EditPart) children.get(i);
-			addPageListenerToChildren(page);
-			if (i == 0) {
-				setPageVisible(page, true);
-				pageSelected((EditPart) getChildren().get(0));
-			} else {
-				setPageVisible(page, false);
+		if (!children.isEmpty()) {
+			// In case there was a reload, get the last selected page and set it.
+			EditPart lastSelectedPage = getLastSelectedPage();
+			if (lastSelectedPage == null)
+				// By default pick the first page
+				lastSelectedPage = (EditPart) children.get(0);
+			for (int i = 0; i < children.size(); i++) {
+				EditPart page = (EditPart) children.get(i);
+				addPageListenerToChildren(page);
+				if (page == lastSelectedPage) {
+					setPageVisible(page, true);
+					pageSelected(page);
+				} else {
+					setPageVisible(page, false);
+				}
 			}
 		}
 	}
@@ -134,6 +147,8 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 	}
 
 	public void deactivate() {
+		// Store the last selected page in case we do a reload we can restore it
+		setLastSelectedPage();
 		Iterator children = getChildren().iterator();
 		while (children.hasNext())
 			removePageListenerFromChildren((EditPart) children.next());
@@ -339,4 +354,69 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 			childEP.setPropertySource(null);
 	}
 
+	/**
+	 * Somewhat of a hack here to persist the state of a which 
+	 * page of the JTabbedPane was last selected so we can switch
+	 * to this page if a reload from scratch occurs.
+	 * Store the info in a HashMap in the EditDomain using the annotation name 
+	 * of the JTabbedPane as the key and the annotation name of the selected page
+	 * as the value.
+	 */
+	protected void setLastSelectedPage() {
+		if (fSelectedPage == null)
+			return;
+		EditDomain domain = EditDomain.getEditDomain(this);
+		HashMap selectedPageStateData = (HashMap) domain.getData(JTABBEDPANE_SELECTED_PAGE_STATE_KEY);
+		if (selectedPageStateData == null)
+			selectedPageStateData = new HashMap(2);
+		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
+		Annotation ann = policy.getAnnotation(getModel());
+		if (ann != null) {
+			String key = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			// If no annotation name, the tabbed pane must be the root part... use special name.
+			if (key == null)
+				key = JTABBEDPANE_THIS_PART;
+			// Now get the annotation name of the current page
+			ann = policy.getAnnotation(fSelectedPage);
+			if (ann != null) {
+				String value = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				if (value != null) {
+					selectedPageStateData.put(key, value);
+					domain.setData(JTABBEDPANE_SELECTED_PAGE_STATE_KEY, selectedPageStateData);
+				}
+			}
+		}
+	}
+	protected EditPart getLastSelectedPage() {
+		EditDomain domain = EditDomain.getEditDomain(this);
+		HashMap selectedPageStateData = (HashMap) domain.getData(JTABBEDPANE_SELECTED_PAGE_STATE_KEY);
+		if (selectedPageStateData == null)
+			return null;
+		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
+		Annotation ann = policy.getAnnotation(getModel());
+		if (ann != null) {
+			String key = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			// If no annotation name, the tabbed pane must be the root part... use special name.
+			if (key == null)
+				key = JTABBEDPANE_THIS_PART;
+			String selectedPageName = (String) selectedPageStateData.get(key);
+			if (selectedPageName != null) {
+			// Look through the tabbed pane's children to find the corresponding editpart that matches this annotation name
+				List children = getChildren();
+				for (Iterator iter = children.iterator(); iter.hasNext();) {
+					EditPart ep = (EditPart) iter.next();
+					ann = policy.getAnnotation(ep.getModel());
+					if (ann != null) {
+						String value = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+						if (value.equals(selectedPageName))
+							return ep;
+					}
+				}
+				// Hmmm... there was an element in the edit domain for this tabbed pane but no child found
+				// to match this annotation name. Remove the key in order to clean it up.
+				selectedPageStateData.remove(key);
+			}
+		}
+		return null;
+	}
 }
