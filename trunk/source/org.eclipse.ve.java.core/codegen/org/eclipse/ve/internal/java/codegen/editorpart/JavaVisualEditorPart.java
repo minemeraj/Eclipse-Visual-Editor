@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.13 $  $Date: 2004-03-17 13:46:40 $ 
+ *  $Revision: 1.14 $  $Date: 2004-03-18 16:22:47 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -635,7 +635,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
 	}
 	public void refreshTextPage() {
-		if (xmlTextPage != null && modelBuilder != null) {
+		if (xmlTextPage != null && modelBuilder != null && modelBuilder.getModelRoot() != null) {
 			if (modelBuilder.getModelRoot().eResource() != null) {
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {
