@@ -11,10 +11,10 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
@@ -34,7 +34,7 @@ public class JSplitPaneDecoder extends AbstractCompositionalDecoder {
 		{ SPLITPANE_LEFT_METHOD, SPLITPANE_RIGHT_METHOD, SPLITPANE_TOP_METHOD, SPLITPANE_BOTTOM_METHOD };
 	protected static final String[] structuralFeatures = { "leftComponent", "rightComponent", "topComponent", "bottomComponent" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	public JSplitPaneDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+	public JSplitPaneDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 		super(expr, model, cm, part, structuralFeatures, writeMethods);
 	}
 

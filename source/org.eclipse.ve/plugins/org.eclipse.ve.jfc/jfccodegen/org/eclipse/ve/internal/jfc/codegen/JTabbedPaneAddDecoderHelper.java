@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-16 20:56:05 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -90,7 +90,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	protected EClass getRootClass() {
 		if (fRootObj != null)
 			return fRootObj.eClass();
-		IDiagramModelInstance cm = fbeanPart.getModel().getCompositionModel();
+		IVEModelInstance cm = fbeanPart.getModel().getCompositionModel();
 		EClass rootClass = (EClass) cm.getModelResourceSet().getEObject(ROOT_NAME, true);
 		return rootClass;
 	}

@@ -11,12 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IAnnotationDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -36,8 +36,8 @@ public interface IAnnotationDecoder {
 
    public void setBeanModel(IBeanDeclModel model) ;
    public IBeanDeclModel getBeanModel() ;   
-   public void setCompositionModel(IDiagramModelInstance cm) ;
-   public IDiagramModelInstance getCompositionModel()  ;   
+   public void setCompositionModel(IVEModelInstance cm) ;
+   public IVEModelInstance getCompositionModel()  ;   
    public void setBeanPart(BeanPart part) ;
    public BeanPart getBeanPart() ;
    public boolean isDeleted() throws CodeGenException  ;

@@ -11,10 +11,10 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JScrollPaneDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
@@ -26,7 +26,7 @@ public class JScrollPaneDecoder extends AbstractCompositionalDecoder {
 	protected static final String[] writeMethods = { SCROLLPANE_VIEWPORT_METHOD };
 	protected static final String[] structuralFeatures = { "viewportView" }; //$NON-NLS-1$
 
-	public JScrollPaneDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+	public JScrollPaneDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 		super(expr, model, cm, part, structuralFeatures, writeMethods);
 	}
 

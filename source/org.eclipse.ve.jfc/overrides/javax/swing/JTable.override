@@ -19,12 +19,14 @@
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTableDecoder"/>        
   </event:AddMany>
-  <event:Add  featureName="eStructuralFeatures">
+  <event:AddMany  featureName="eStructuralFeatures">
+    <addedEObjects xsi:type="ecore:EReference" name="autoCreateColumnsFromModel" eType="org.eclipse.jem.java:JavaDataType java:/#boolean"/>    
+    <addedEObjects xsi:type="ecore:EReference" name="model" eType="org.eclipse.jem.java:JavaClass java:/javax.swing.table#TableModel"/>    
     <addedEObjects xsi:type="ecore:EReference" name="columns" eType="org.eclipse.jem.java:JavaClass java:/javax.swing.table#TableColumn"
         upperBound="-1">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           hidden="true"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
     </addedEObjects>
-  </event:Add>
+  </event:AddMany>
 </xmi:XMI>

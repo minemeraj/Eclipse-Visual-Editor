@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 
@@ -31,7 +31,7 @@ import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -51,7 +51,7 @@ public ConstraintDecoderHelper(BeanPart bean, Statement exp,  IJavaFeatureMapper
  * Add a Rectangle constraint on a target object - for none free formed objects
  * Constraints should hold x, y, width, and height, in that order.
  */
-public static void addRectangleFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
+public static void addRectangleFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IVEModelInstance cm) throws Exception {
   if (args.length != 4) throw new RuntimeException ("Invalid Args") ;  //$NON-NLS-1$
   
   IJavaInstance value = CodeGenUtil.createInstance(RECTANGLE_CLASS,cm) ;	 //$NON-NLS-1$
@@ -69,7 +69,7 @@ public static void addRectangleFeatureValue (MemberContainer pOwner, EObject tar
  * Add a Dimension constraint on a target object - for free form objects
  * Constraints should hold with and height, in that order.
  */
-public static void addDimensionFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IDiagramModelInstance cm) throws Exception {
+public static void addDimensionFeatureValue (MemberContainer pOwner, EObject target,int args[], EStructuralFeature sf, IVEModelInstance cm) throws Exception {
   if (args.length != 2) throw new RuntimeException ("Invalid args") ; //$NON-NLS-1$
   
   IJavaInstance value = CodeGenUtil.createInstance(DIMENSION_CLASS,cm) ;	 //$NON-NLS-1$

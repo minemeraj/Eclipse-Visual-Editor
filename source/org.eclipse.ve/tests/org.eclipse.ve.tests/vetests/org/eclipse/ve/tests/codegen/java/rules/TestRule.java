@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-09 00:07:14 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-16 20:55:53 $ 
  */
 
 import java.util.*;
@@ -27,7 +27,7 @@ import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -39,7 +39,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	static ResourceSet utilityRS = null;
 	static HashMap internalsCache = null;
 
-	protected List getUtilityClasses(IDiagramModelInstance di) {
+	protected List getUtilityClasses(IVEModelInstance di) {
 		if (utilityRS != null && utilityRS.equals(di.getModelResourceSet()))
 			return utilityClasses;
 
@@ -62,7 +62,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		return name;
 	}
 	
-	protected boolean ignoreVariable(Type type, List fragments, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean ignoreVariable(Type type, List fragments, ITypeResolver resolver, IVEModelInstance di) {
 
 		//  Need to filter arrays, 
 		//
@@ -117,7 +117,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isUtilityVariable(Type type, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean isUtilityVariable(Type type, ITypeResolver resolver, IVEModelInstance di) {
 		// TODO Need to support arrays etc.
 
 		// This will also clear the internalsCache
@@ -172,14 +172,14 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.FieldDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
 	 */
-	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) {
 		return ignoreVariable(field.getType(), field.fragments(), resolver, di);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IMethodVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.VariableDeclarationStatement, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
 	 */
-	public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver, IDiagramModelInstance di) {
+	public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver, IVEModelInstance di) {
 		return ignoreVariable(localField.getType(), localField.fragments(), resolver, di);
 	}
 

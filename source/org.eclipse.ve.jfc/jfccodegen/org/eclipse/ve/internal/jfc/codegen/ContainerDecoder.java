@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-10 23:37:16 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 import java.util.Iterator;
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
@@ -39,7 +39,7 @@ protected final static  String LAYOUT_FEATURE = "layout" ; //$NON-NLS-1$
  *  May need to augment it with other features in the future
  */
 
-public ContainerDecoder (CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
+public ContainerDecoder (CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
 }
 

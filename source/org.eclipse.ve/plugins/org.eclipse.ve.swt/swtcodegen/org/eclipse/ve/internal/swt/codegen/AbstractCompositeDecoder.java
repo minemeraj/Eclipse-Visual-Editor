@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:56:10 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -38,7 +38,7 @@ public abstract class AbstractCompositeDecoder extends ObjectDecoder {
 	public AbstractCompositeDecoder(
 			CodeExpressionRef expr,
 			IBeanDeclModel model,
-			IDiagramModelInstance cm,
+			IVEModelInstance cm,
 			BeanPart part,
 			String[] structualFeatures,
 			String[] writeMethodNames) {

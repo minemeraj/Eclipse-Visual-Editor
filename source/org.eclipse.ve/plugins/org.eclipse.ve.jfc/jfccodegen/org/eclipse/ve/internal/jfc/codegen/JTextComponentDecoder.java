@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-05 19:20:32 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-16 20:56:05 $ 
  */
 
 import java.util.Iterator;
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -53,7 +53,7 @@ public class JTextComponentDecoder extends AbstractCompositionalDecoder {
 	public JTextComponentDecoder(
 		CodeExpressionRef expr,
 		IBeanDeclModel model,
-		IDiagramModelInstance cm,
+		IVEModelInstance cm,
 		BeanPart part) {
 		super(expr, model, cm, part, structualFeatures, writeMethodNames);
 	}

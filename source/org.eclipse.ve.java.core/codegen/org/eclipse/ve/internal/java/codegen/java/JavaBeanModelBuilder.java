@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.util.*;
@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -53,7 +53,7 @@ public class JavaBeanModelBuilder {
   IBeanDeclModel 				fModel = null ; 
   ICompilationUnit				fCU = null ;
   IWorkingCopyProvider          fWCP = null ;
-  IDiagramModelInstance         fDiagram  = null ;
+  IVEModelInstance         fDiagram  = null ;
   EditDomain					fDomain = null ;
 	
 public JavaBeanModelBuilder(EditDomain d, String fileName, char[][] packageName) {
@@ -63,7 +63,7 @@ public JavaBeanModelBuilder(EditDomain d, String fileName, char[][] packageName)
 
 }
 
-public void setDiagram(IDiagramModelInstance diag) {
+public void setDiagram(IVEModelInstance diag) {
     fDiagram = diag ;
 }
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.util.*;
@@ -26,7 +26,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -49,10 +49,13 @@ public interface IBeanDeclModel extends ITypeResolver{
 	public BeanPart getBeanReturned(String methodName) ;
 	public TypeDeclaration getTypeDecleration()  ;
 	public void setTypeDecleration(TypeDeclaration decl)  ;
-	public IDiagramModelInstance getCompositionModel() ;
-	public void setCompositionModel(IDiagramModelInstance cm) ;	
+	public IVEModelInstance getCompositionModel() ;
+	public void setCompositionModel(IVEModelInstance cm) ;	
 	public ICompilationUnit getCompilationUnit() ;
-	public IBuffer getDocumentBuffer() ;	
+	public IBuffer getDocumentBuffer() ;
+	/**
+	 * @deprecated
+	 */
 	public Object getDocumentLock() ;	
 	public void addMethodInitializingABean (CodeMethodRef methodRef) ;
 	public CodeMethodRef getMethodInitializingABean (String methodHandle) ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.util.*;
@@ -27,7 +27,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -53,7 +53,7 @@ public class BeanDeclModel implements IBeanDeclModel {
 //  The following will suport a working copy for the working copy
 //	ICompilationUnit			fworkingWC = null ;					// Will be used as a temporary working copy for the working copy	
 	JavaSourceSynchronizer      fSrcSync = null ;
-	IDiagramModelInstance		fCompositionModel = null ;
+	IVEModelInstance		fCompositionModel = null ;
 	String                      fLineSeperator = null ;
 	int                         fState = BDM_STATE_DOWN ;
 	ICodeGenStatus				fStatus = null ;
@@ -302,10 +302,10 @@ public void setTypeRef (CodeTypeRef tr) {
 }
 
 
-public IDiagramModelInstance getCompositionModel() {
+public IVEModelInstance getCompositionModel() {
 	return fCompositionModel ;
 }
-public void setCompositionModel(IDiagramModelInstance cm) {
+public void setCompositionModel(IVEModelInstance cm) {
     
     if (cm == null)
       if (fCompositionModel == null) return ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.util.ArrayList;
@@ -511,6 +511,10 @@ public class JavaSourceSynchronizer {
  */
 public void setStatus(ICodeGenStatus fStatus) {
 	this.fStatus = fStatus;
+}
+
+public ICodegenLockManager getLockMgr() {
+	return lockManager;
 }
 
 }

@@ -11,49 +11,51 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 21:13:41 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.java.codegen.java.ISourceTranslatorListener;
+import org.eclipse.ve.internal.cdm.Diagram;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
+import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.ISynchronizerListener;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 
 /**
- *   A VCE Compostion Model Builder provides an interface to an object
+ *   A JVE Compostion Model Builder provides an interface to an object
  *   that creates or store a composition model from/to an input file.  
  */
-public interface IDiagramModelBuilder extends IDiagramModelInstance {
+public interface IDiagramModelBuilder  {
 	
+
+	/**
+	 * A call to this API will reParse/reCreate a new JVE model
+	 * 
+	 * @param file to parse
+	 * @param pm  
+	 * @since 1.0.0
+	 */
+	public void loadModel(IFileEditorInput file, IProgressMonitor pm) throws CodeGenException ;
 	
-	// Add Transient error listeners
-	public void addTransientErrorListener(ITransientErrorListener listener);
-	// Initialize a new Resource Set for a new file
-	public void setInputResource(IFile file) throws CodeGenException ;
-	// Create a new Composition model from the input file
-	public void     loadModel (IProgressMonitor pm) throws CodeGenException ;  			
-      // Save the model  
-	public void	  saveModel  (IProgressMonitor pm) throws CodeGenException ; 
+	public BeanSubclassComposition getModelRoot() ;
+	public Diagram getDiagram();
 	
-	// Is the model loaded? NOTE: This is under synchronization, so be careful of deadlocks.
-	public boolean isModelLoaded();
-	
-	// Get the Load lock. Need to lock this on a NON-UI thread before calling loadModel/decodemodel ON UI Thread.
-	public Object getLoadLock();
-	
-	// Disconnect, and bring down all threads/resources used by the builder
+
+	/**
+	 * If buttom up processing is about to, or is in progress a true
+	 * will be returned
+	 */
+	public boolean isBusy();
+	/**
+	 * Editor is about to shut down - cleanup
+	 */
 	public void dispose() ;
-	// Disconnect from external resources (e.g., Java Working Copy)
-	// if clearModel is true, the VCE model will be cleared
-	public void disconnect(boolean clearModel) ;  
-	// Will re-load a previously disconnected model.
-	public void reconnect(IFileEditorInput input, IProgressMonitor pm) throws CodeGenException ;
+ 
 	
     /**
      * Denotes that a compound operation is completed.  This
@@ -63,12 +65,7 @@ public interface IDiagramModelBuilder extends IDiagramModelInstance {
      * This operation is synchroneous.
      */
     public void commit() ;
-    /**
-     * Async. version of commitAndFlush
-     * 
-     * @param listener implements the call back
-     * @param marker is an optional origin designator for the call back.
-     * 
+    /** 
      * @deprecated  use commit()
      */
     public void commitAndFlush(ISynchronizerListener listener, String marker) ;
@@ -81,18 +78,47 @@ public interface IDiagramModelBuilder extends IDiagramModelInstance {
 			
 	
 	/**
-	 * @param listener for Source Deocder events
-	 */	
-	public void addTranslatorListener (ISourceTranslatorListener listener) ;
-	
-	public void removeTranslatorListener (ISourceTranslatorListener listener) ;
-
-	// Remove Transient error listeners
-	public void removeTransientErrorListener(ITransientErrorListener listener);
-    
+	 * @deprecated
+	 */    
     public void setMsgRenderer (IJVEStatus mr) ;
-    public void setEditDomain (EditDomain d) ;
-    public void pauseRoundTripping(boolean flag) throws CodeGenException ;
+	/**
+	 * Disconnect, and stop synchronization
+	 * .. leave the JVE model intact
+	 */    
+    public boolean pause() ;
+    
+    /**
+     * A diagram model builder listener can register for the following
+     * notifications
+     */
+    public interface IBuilderListener {
+    	/**
+    	 * Parsing status had changed, and the msg
+    	 * should be placed on the status bar
+    	 */
+    	void statusChanged (String msg);
+    	/**
+    	 * Can not perform snippet update; a reload is needed
+    	 */
+		void reloadIsNeeded(boolean flag);
+		/**
+		 * Change status from/to can code be parsed 
+		 */
+		void parsingStatus (boolean error);  
+		/**
+		 * Builder parsing was paused 
+		 */
+		void parsingPaused(boolean paused) ;
+		/**
+		 * Buttom up has updated the model
+		 */
+		void modelUpdated() ;
+    }    
+    public void addIBuilderListener(IBuilderListener l);
+    public void removeIBuilderListener(IBuilderListener l);
+    
+    
+    
 }
 
 

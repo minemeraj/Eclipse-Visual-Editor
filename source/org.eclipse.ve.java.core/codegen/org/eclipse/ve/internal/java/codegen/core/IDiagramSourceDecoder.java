@@ -11,17 +11,14 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramSourceDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 21:13:41 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
-import org.eclipse.ve.internal.java.codegen.java.ISourceTranslatorListener;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**
@@ -33,16 +30,9 @@ public interface IDiagramSourceDecoder {
 
 	public final static String JAVAExt =   "java" ;     // JAVA file ; //$NON-NLS-1$
 	
-	// Add Transient error listeners
-	public void addTransientErrorListener(ITransientErrorListener listener);
-	
-	// Remove Transient error listeners
-	public void removeTransientErrorListener(ITransientErrorListener listener);
 
     // Decode the imput source
-	public void	decodeDocument (IDiagramModelInstance cm, String uri, IFile sourceFile, IProgressMonitor pm) throws CodeGenException ;
-	// Save a document 
-	public void		saveDocument (IProgressMonitor pm) throws CodeGenException ;
+	public void	decodeDocument (IFile sourceFile, IProgressMonitor pm) throws CodeGenException ;
 	
 	// What file extention does this decoder works with
 	public String  getFileExt() ;
@@ -55,22 +45,17 @@ public interface IDiagramSourceDecoder {
 	 */
 	public void setSynchronizerSyncDelay(int delay) ;
 	
-	/**
-	 * @param listener for Source Deocder events
-	 */	
-	public void addTranslatorListener (ISourceTranslatorListener listener) ;
-	
-	public void removeTranslatorListener (ISourceTranslatorListener listener) ;
-    
+
+    /**
+     * @deprecated
+     */
     public void setMsgRenderer (IJVEStatus mr)  ;
     
     // Disconnect from external resources (e.g., Java Working Copy)
 	// if clearModel is true, the VCE model will be cleared
 	public void disconnect(boolean clearModel) ;  
 	// Will re-load a previously disconnected model.
-	public void reconnect(IFileEditorInput input,IProgressMonitor pm) throws CodeGenException;
-	public void setEditDomain (EditDomain d) ;
-	public void pauseRoundTripping(boolean flag) throws CodeGenException ;
+	public void reconnect(IFileEditorInput input,IProgressMonitor pm) throws CodeGenException;		
 	
 }
 

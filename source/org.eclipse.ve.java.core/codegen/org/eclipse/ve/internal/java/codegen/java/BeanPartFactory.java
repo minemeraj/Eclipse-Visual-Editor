@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.18 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.19 $  $Date: 2004-03-16 20:55:58 $ 
  */
 
 import java.util.*;
@@ -33,7 +33,7 @@ import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescripto
 
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -48,13 +48,13 @@ public class BeanPartFactory  {
 	public final String[]       INSTANCE_VAR_DEFAULT_COMMENT = {"Generated"} ; //$NON-NLS-1$
 			
 	IBeanDeclModel            fBeanModel ;
-	IDiagramModelInstance     fCompositionModel ;
+	IVEModelInstance     fCompositionModel ;
 	List                      fTotalGeneratedList = new ArrayList() ;
 	private IInstanceVariableCreationRule fRule = null ;
 		
 	
 
-public BeanPartFactory (IBeanDeclModel bmodel,IDiagramModelInstance cmodel) {
+public BeanPartFactory (IBeanDeclModel bmodel,IVEModelInstance cmodel) {
 	fBeanModel = bmodel ;
 	fCompositionModel = cmodel ;
 }

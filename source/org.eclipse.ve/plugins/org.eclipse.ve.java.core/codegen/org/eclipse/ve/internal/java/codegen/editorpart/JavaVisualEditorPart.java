@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-04 16:04:27 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -205,7 +205,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));
 		editDomain.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);		
 				
-		modelBuilder = new JavaSourceTranslator();
+		modelBuilder = new JavaSourceTranslator(editDomain);
 
 		// Create the common actions
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
@@ -603,7 +603,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * NOTE: Must be careful of no deadlocks, so quick in and out and no further locks.
 	 */
 	protected synchronized void initializeViewers() {
-		if (primaryViewer != null && modelBuilder.isModelLoaded()) {
+		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			if (d != null) {
 				editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
@@ -636,10 +636,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	public void refreshTextPage() {
 		if (xmlTextPage != null && modelBuilder != null) {
-			if (modelBuilder.getModelResource() != null) {
+			if (modelBuilder.getModelRoot().eResource() != null) {
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {
-					modelBuilder.getModelResource().save(os, XML_TEXT_OPTIONS);
+					modelBuilder.getModelRoot().eResource().save(os, XML_TEXT_OPTIONS);
 					xmlTextPage.setText(os.toString());
 				} catch (Exception e) {
 					JavaVEPlugin.log(e, Level.WARNING);
@@ -1536,7 +1536,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			try {
 				fPauseProcessing++;
-				modelBuilder.pauseRoundTripping(flag);
+				//modelBuilder.pauseRoundTripping(flag);
 			} catch (Throwable t) {
 				JavaVEPlugin.log(t);
 			} finally {
@@ -1614,7 +1614,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 //					TimerStep.instance().writeCounters2(50);			
 				statusController.setReloadPending(true);
 				try {
-					synchronized (modelBuilder.getLoadLock()) {
+					
 						// TODO move back off thread
 						// Currently there are other reloads from Gili's side that can occur at the same time,
 						// but happen on the GUI thread. So push this off to GUI too. Don't like it because it
@@ -1626,9 +1626,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
 								try {
-									statusController.setReloadPending(false);									
-									modelBuilder.setInputResource(((IFileEditorInput) getEditorInput()).getFile());
-									modelBuilder.loadModel(null);
+									statusController.setReloadPending(false);		
+									modelBuilder.loadModel((IFileEditorInput) getEditorInput(), null);
 //									if (doTimer) {
 //										TimerStep.instance().writeCounters2(51);	//TODO Remove doTimer variable too when getting rid of TimerStep.			
 //										TimerStep.instance().writeCounters2(101);	//TODO Remove doTimer variable too when getting rid of TimerStep.			
@@ -1667,7 +1666,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							dd.eAdapters().add(a);
 							a.initBeanProxy();
 						}
-					}					
+										
 
 					initializeViewers();
 				} finally {					
@@ -1702,8 +1701,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// all outstanding callbacks are called from the Synchronizer.
 			modelBuilder.commit() ;
 			initializeEditDomain();
-			modelBuilder.setMsgRenderer(statusController);
-			modelBuilder.setEditDomain(editDomain);
+			modelBuilder.setMsgRenderer(statusController);			
 			modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
 
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
@@ -1737,7 +1735,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// When the user types into a java editor the model is changed incrementally
 			// We need to know when this happens so we can drive a refresh on the property sheet
 			// AND refresh the text viewer.
-			modelBuilder.addTranslatorListener(new ISourceTranslatorListener() {
+			modelBuilder.addIBuilderListener(new IDiagramModelBuilder.IBuilderListener() {
 				public void modelUpdated() {
 					if (rootPropertySheetEntry != null) {
 						// Horrid kludge: The model could be reloaded from scratch at this point,
@@ -1768,12 +1766,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 					refreshTextPage();	// Because model has been updated.
 				}
-			
-				public void snippetProcessingStart() {
-				}
-			
-				public void snippetProcessingCompleted() {
-				}
+
+		    	public void statusChanged (String msg){}
+				public void reloadIsNeeded(boolean flag){}
+				public void parsingStatus (boolean error){}  
+				public void parsingPaused(boolean paused) {}
 			});
 			
 			if (rebuildPalette) {
@@ -2248,7 +2245,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			getSelectionSynchronizer().addViewer(getViewer());
 			getViewer().setEditPartFactory(new DefaultTreeEditPartFactory(ClassDescriptorDecoratorPolicy.getPolicy(editDomain)));
 						
-			getViewer().setContents(new SubclassCompositionComponentsTreeEditPart(modelBuilder.isModelLoaded() ? modelBuilder.getModelRoot() : null));			
+			getViewer().setContents(new SubclassCompositionComponentsTreeEditPart(modelBuilder.getModelRoot()!=null ? modelBuilder.getModelRoot() : null));			
 			
 			Control control = getViewer().getControl();
 			

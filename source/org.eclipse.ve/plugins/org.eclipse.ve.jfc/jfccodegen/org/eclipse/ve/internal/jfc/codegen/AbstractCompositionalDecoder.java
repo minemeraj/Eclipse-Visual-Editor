@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositionalDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:56:05 $ 
  */
 import java.util.List;
 
@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
@@ -32,7 +32,7 @@ public abstract class AbstractCompositionalDecoder extends ContainerDecoder {
 	public AbstractCompositionalDecoder(
 		CodeExpressionRef expr,
 		IBeanDeclModel model,
-		IDiagramModelInstance cm,
+		IVEModelInstance cm,
 		BeanPart part,
 		String[] structualFeatures,
 		String[] writeMethodNames) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IInstanceVariableCreationRule.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IType;
 
 import org.eclipse.ve.internal.cde.rules.IRule;
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
+import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 
 /**
@@ -30,7 +30,7 @@ public interface IInstanceVariableCreationRule extends IRule {
 	public static final String RULE_ID = "ruleInstanceVariableCreation"; //$NON-NLS-1$
 	public static final String DEFAULT_VAR_PREFIX = "ivj"; //$NON-NLS-1$
 
-	public String getInstanceVariableName(EObject obj, IType currentType, IDiagramModelInstance cm, IBeanDeclModel bdm);
+	public String getInstanceVariableName(EObject obj, IType currentType, IVEModelInstance cm, IBeanDeclModel bdm);
 	/**
 	 * Get a valid name for the given object based upon the given base name. If the base name is the same as the 
 	 * current name, a new name will be returned. So don't call this except with a base that is different then
@@ -63,7 +63,7 @@ public interface IInstanceVariableCreationRule extends IRule {
 	
 	public String getValidInstanceVariableName(ResourceSet rs, EObject obj, String base, IType currentType, IBeanDeclModel bdm);	
 	public String getInstanceVariableMethodName(EObject obj, String InstanceName, IType currentType, IBeanDeclModel bdm);
-	public boolean isLocalDecleration(EObject obj, IType currentType, IDiagramModelInstance cm);
-	public boolean isGenerateAMethod(EObject obj, IType currentType, IDiagramModelInstance cm);
+	public boolean isLocalDecleration(EObject obj, IType currentType, IVEModelInstance cm);
+	public boolean isGenerateAMethod(EObject obj, IType currentType, IVEModelInstance cm);
 
 }

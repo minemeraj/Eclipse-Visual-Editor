@@ -10,10 +10,11 @@ package org.eclipse.ve.internal.java.codegen.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: IDiagramModelInstance.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $RCSfile: IVEModelInstance.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-16 20:55:59 $ 
  */
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,7 +26,7 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 /**
  *  A place holder of a Composition Model
  */
-public interface IDiagramModelInstance {
+public interface IVEModelInstance {
 	
 		
 	
@@ -45,6 +46,10 @@ public interface IDiagramModelInstance {
 	public EObject	createEmptyComposition() 	throws CodeGenException ;	 
 	
 	public Diagram getDiagram() ;
+	
+	public String getURI() ;
+	
+	public IFile getFile() ;
 	
 	
 
