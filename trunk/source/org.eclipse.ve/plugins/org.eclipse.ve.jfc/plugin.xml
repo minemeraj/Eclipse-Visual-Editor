@@ -86,7 +86,7 @@
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.java.core.editorpart.settextaction.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.editorpart.settextaction.popup.object">
          <filter
                name="BEANTYPE"
                value="java.awt.Component">
@@ -104,7 +104,7 @@
 <!-- Add a popup to edit the label property -->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.java.core.editorpart.setlabelaction.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.editorpart.setlabelaction.popup.object">
          <filter
                name="BEANTYPE"
                value="java.awt.Component">
@@ -122,7 +122,7 @@
 <!-- Add a popup to edit the title property -->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.java.core.editorpart.settitleaction.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.editorpart.settitleaction.popup.object">
          <filter
                name="BEANTYPE"
                value="java.awt.Component">
@@ -143,7 +143,7 @@
 	-->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.cde.core.showgridaction.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.showgridaction.popup.object">
          <filter
                name="BEANTYPE"
                value="java.awt.Container">
@@ -155,12 +155,12 @@
          <action
                label="%PopupMenus.ShowGridAction.Label  Show Grid"
                class="org.eclipse.ve.internal.cde.core.ShowGridObjectActionDelegate"
-               id="org.eclipse.ve.internal.cde.core.showgridaction">
+               id="org.eclipse.ve.internal.jfc.core.showgridaction">
          </action>
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.cde.core.hidegridaction.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.hidegridaction.popup.object">
          <filter
                name="BEANTYPE"
                value="java.awt.Container">
@@ -172,13 +172,13 @@
          <action
                label="%PopupMenus.HideGridAction.Label  Hide Grid"
                class="org.eclipse.ve.internal.cde.core.ShowGridObjectActionDelegate"
-               id="org.eclipse.ve.internal.cde.core.hidegridaction">
+               id="org.eclipse.ve.internal.jfc.core.hidegridaction">
          </action>
       </objectContribution>
 <!-- Add Create Content Pane action for RootPaneContainers. -->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.java.core.editorpart.contentpane.popup.object">
+            id="org.eclipse.ve.internal.jfc.core.editorpart.contentpane.popup.object">
          <visibility>
             <objectState
                   name="BEANTYPE"
