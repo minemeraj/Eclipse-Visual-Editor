@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.20 $  $Date: 2004-04-02 00:11:35 $ 
+ *  $Revision: 1.21 $  $Date: 2004-04-02 16:34:43 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -203,59 +203,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		ClassDescriptorDecoratorPolicy.setClassDescriptorDecorator(editDomain, policy);	
 		
 		modelBuilder = new JavaSourceTranslator(editDomain);
-// TODO GET RID of this when Gili no longer needs one.
-modelBuilder.setMsgRenderer(new IJVEStatus() {
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#showMsg(java.lang.String, int)
-	 */
-	public void showMsg(String msg, int kind) {
-		// TODO Auto-generated method stub
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#addStatusListener(org.eclipse.ve.internal.java.codegen.core.IJVEStatusChangeListener)
-	 */
-	public void addStatusListener(IJVEStatusChangeListener sl) {
-		// TODO Auto-generated method stub
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#removeStatusListener(org.eclipse.ve.internal.java.codegen.core.IJVEStatusChangeListener)
-	 */
-	public void removeStatusListener(IJVEStatusChangeListener sl) {
-		// TODO Auto-generated method stub
-	}
-	int status;
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#setStatus(int, boolean)
-	 */
-	public void setStatus(int flag, boolean state) {
-		if (state) {
-			status |= flag;
-		} else {
-			status &= ~flag;
-		}
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#getState()
-	 */
-	public int getState() {
-		// TODO Auto-generated method stub
-		return status;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#isStatusSet(int)
-	 */
-	public boolean isStatusSet(int state) {
-		// TODO Auto-generated method stub
-		return (status & state) != 0;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#setReloadPending(boolean)
-	 */
-	public boolean setReloadPending(boolean flag) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-});
 
 		modelChangeController = new JavaVisualEditorModelChangeController(this, modelBuilder);
 		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));

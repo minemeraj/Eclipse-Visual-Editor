@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-30 14:42:55 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-02 16:34:43 $ 
  */
 
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.ve.internal.java.codegen.core.*;
-import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -57,7 +56,6 @@ public class JavaSourceSynchronizer {
  DocListener       		fDocListener = null ;
  
  JavaSourceTranslator    fsrcTranslator = null ;  // Hack, need to provide interface.
- ICodeGenStatus			 fStatus = null ;
  int					 fDelayFactor = L2R_DELAY_FACTOR ;
 
 		
@@ -150,19 +148,8 @@ public class JavaSourceSynchronizer {
 					break;
 				
 				fDelayFactor-- ;
-					
-				// Want to update the status asap.												
-				synchronized (this) {			
-				 if (fStatus != null) {
-				 	if (documentEventList.isEmpty() && notifierList.isEmpty() &&
-				 	    (fStrategyWorkers.getAvailWorkers() == fStrategyWorkers.getNoOfWorkers())) {
-				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,false) ;
-				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,false) ;
-				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,false) ;
-				 	    	fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_SOURCE,false) ;				 	   				 	    
-				 	    }
-				 	    
-				 }						
+															
+				synchronized (this) {							
 				 if (!fIsDirty && !fgoNow)
 					 continue;							 
 				}	
@@ -348,10 +335,7 @@ public class JavaSourceSynchronizer {
 	private void driveStrategy(List allDocEvents, IBackGroundWorkStrategy strategy) throws InterruptedException {
 		if (allDocEvents.isEmpty()) return ;
 		
-		if (fStatus!=null) {
-		   fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,true) ;
-	      fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,true) ;		  
-		}
+		fsrcTranslator.fireStatusChanged("Synchronizing") ;  
 		
 		if (strategy == null) {
 			JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$
@@ -481,11 +465,11 @@ public class JavaSourceSynchronizer {
     	}
     }
     
-    public synchronized void disconnect() {
+    public synchronized void disconnect() {    	
         if (fDocListener != null) {
             fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
             fDocListener = null ;
-        }
+        }        
         synchronized (notifierList) {
         	for (int i=0; i<notifierList.size(); i++) {
         		NotifierElement elm = (NotifierElement) notifierList.get(i) ;
@@ -497,6 +481,7 @@ public class JavaSourceSynchronizer {
         	}		      
         	notifierList.clear() ;   
         }
+        clearOutstandingWork();
     }	
     
     public synchronized void connect() {
@@ -505,13 +490,16 @@ public class JavaSourceSynchronizer {
           fWorkingCopyProvider.getDocument().addDocumentListener(fDocListener) ;        
         }
     }
-/**
- * Sets the fStatus.
- * @param fStatus The fStatus to set
- */
-public void setStatus(ICodeGenStatus fStatus) {
-	this.fStatus = fStatus;
-}
+    
+    /**
+     * This method will clear outstanding Events, and cancel
+     * a worker thread
+     */
+    protected void clearOutstandingWork() {
+    	documentEventList.clear();
+    	if(previousWorkerCancelMonitor!=null && !previousWorkerCancelMonitor.isCanceled())
+			previousWorkerCancelMonitor.setCancel(true);		    
+    }
 
 public ICodegenLockManager getLockMgr() {
 	return lockManager;

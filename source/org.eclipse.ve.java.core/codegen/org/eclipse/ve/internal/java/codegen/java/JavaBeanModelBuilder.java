@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-02 16:34:43 $ 
  */
 
 import java.util.*;
@@ -53,8 +53,9 @@ public class JavaBeanModelBuilder {
   IBeanDeclModel 				fModel = null ; 
   ICompilationUnit				fCU = null ;
   IWorkingCopyProvider          fWCP = null ;
-  IVEModelInstance         fDiagram  = null ;
+  IVEModelInstance         		fDiagram  = null ;
   EditDomain					fDomain = null ;
+  JavaSourceSynchronizer		fSync = null;
 	
 public JavaBeanModelBuilder(EditDomain d, String fileName, char[][] packageName) {
   	this.fFileName = fileName ;
@@ -71,10 +72,11 @@ public void setDiagram(IVEModelInstance diag) {
 /**
  *  
  */
-public JavaBeanModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String filePath, char[][] packageName) {
+public JavaBeanModelBuilder(EditDomain d, JavaSourceSynchronizer sync, IWorkingCopyProvider wcp, String filePath, char[][] packageName) {
 	this (d,filePath,packageName) ;
   	fCU = wcp.getWorkingCopy(false) ;
   	fWCP = wcp ;
+  	fSync=sync;
 }
 
 
@@ -315,7 +317,14 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 
 
     // Build a AST DOM
-    fastCU = ParseJavaCode () ;    
+    // We do not want the document to change while we take a snippet of it.
+    if (fSync!=null)
+      synchronized(fWCP.getDocument()) {
+        fSync.clearOutstandingWork();
+        fastCU = ParseJavaCode () ;
+      }
+    else 
+    	fastCU = ParseJavaCode () ;
 	CreateBeanDeclModel() ;
 	setLineSeperator() ;
 	  

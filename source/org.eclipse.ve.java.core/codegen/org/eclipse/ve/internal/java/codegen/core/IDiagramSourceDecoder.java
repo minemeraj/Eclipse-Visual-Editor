@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramSourceDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-02 16:34:23 $ 
  */
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**
@@ -44,13 +43,7 @@ public interface IDiagramSourceDecoder {
 	 *         value less than JavaSourceSynchronizer.DEFAULT_SYNC_DELAY will be ignored.
 	 */
 	public void setSynchronizerSyncDelay(int delay) ;
-	
-
-    /**
-     * @deprecated
-     */
-    public void setMsgRenderer (IJVEStatus mr)  ;
-    
+	    
     // Disconnect from external resources (e.g., Java Working Copy)
 	// if clearModel is true, the VCE model will be cleared
 	public void disconnect(boolean clearModel) ;  

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.16 $  $Date: 2004-03-31 20:47:47 $ 
+ *  $Revision: 1.17 $  $Date: 2004-04-02 16:34:43 $ 
  */
 
 
@@ -681,11 +681,12 @@ public static Annotation addAnnotation(EObject obj) {
  *   This is a workaround to touch obj, up the container stack, so that the proxy adapter
  *   forces an invalidate on the VM.
  */
-public static void snoozeAlarm(EObject obj, ResourceSet rs) {
+public static void snoozeAlarm(EObject obj, ResourceSet rs, HashMap history) {
 	
 	// Should be in the model
     if (obj != null && obj.eContainer() != null) {
     	// This adapter will maintain all references but no the container
+    	history.put(obj, obj);
 		InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(obj, InverseMaintenanceAdapter.ADAPTER_KEY);
 		if (ai != null) {
 			EReference[] refs = ai.getFeatures();
@@ -705,7 +706,8 @@ public static void snoozeAlarm(EObject obj, ResourceSet rs) {
 						else {
 							parent.eSet(sf, obj) ;
 						}
-						snoozeAlarm(parent,rs) ;	
+						if (history.get(parent) == null)
+						    snoozeAlarm(parent,rs, history) ;	
 					}
 				}
 			}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-02 16:37:44 $ 
  */
 
 
@@ -22,7 +22,6 @@ import org.eclipse.ve.internal.cdm.Diagram;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
-import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.ISynchronizerListener;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -115,11 +114,6 @@ public interface IDiagramModelBuilder  {
 	public void setSynchronizerSyncDelay(int delay) ;
 			
 	
-	/**
-	 * @deprecated
-	 */    
-    public void setMsgRenderer (IJVEStatus mr) ;
-
     /**
 	 * Disconnect, and stop synchronization
 	 * .. leave the JVE model intact
@@ -199,11 +193,7 @@ public interface IDiagramModelBuilder  {
      */
     public void removeIBuilderListener(IBuilderListener l);
     
-    /**
-     * @deprecated
-     */
-    public void pauseRoundTripping(boolean flag);
-    
+
     
     
 }

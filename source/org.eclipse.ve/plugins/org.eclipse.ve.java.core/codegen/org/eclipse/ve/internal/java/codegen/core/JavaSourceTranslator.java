@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.17 $  $Date: 2004-04-02 00:11:10 $ 
+ *  $Revision: 1.18 $  $Date: 2004-04-02 16:34:23 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -44,7 +43,6 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.CodegenEditorPartMessages;
-import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule;
@@ -65,7 +63,6 @@ IWorkingCopyProvider    fWorkingCopy = null ;
 JavaSourceSynchronizer  fSrcSync = null ;
 int						fSrcSyncDelay = JavaSourceSynchronizer.DEFAULT_SYNC_DELAY ;
 IFile                   fFile = null ;
-IJVEStatus              fMsgRrenderer = null ;
 EditDomain 			    fEDomain = null ;
 boolean                 fdisconnected = true ;
 boolean					floadInProgress=false;
@@ -79,9 +76,6 @@ public static int       fCommitAndFlushNestGuard = 0 ;
 
 
 IDiagramSourceDecoder fSourceDecoder = null;
-IJVEStatus fMsgRenderer = null;
-
-
 
 
   /**
@@ -95,8 +89,7 @@ IJVEStatus fMsgRenderer = null;
   	boolean          fHold = false ;
   	String            fHoldMsg = null ;
   	int          	  fSetHold = 0 ;
-  	Display fDisplay = null; 
-  	boolean reloadRequired = false ;
+  	Display fDisplay = null;  
   	
   	// Gatther all the JDT information we can get in takeCurrentSnapshot()
   	protected String currentSource = null ;
@@ -118,11 +111,9 @@ IJVEStatus fMsgRenderer = null;
   		// CodeGen should have been marked as busy before it starts processing
 		if(controller!=null && controller.inTransaction())
 		    throw new RuntimeException("should not be here") ;
-		    
-  	    for (int i = 0; i < fListeners.size(); i++) {
-       		((IBuilderListener)fListeners.get(i)).reloadIsNeeded();
-	
-	    }
+
+		fireReloadIsNeeded();
+ 
  	}
   	
   	
@@ -218,7 +209,7 @@ IJVEStatus fMsgRenderer = null;
   		}
   	}
   	
-  	protected void takeCurrentSnapshot(final ICodegenLockManager lockManager, final List allEvents, final ICompilationUnit workingCopy){
+  	protected boolean takeCurrentSnapshot(final ICodegenLockManager lockManager, final List allEvents, final ICompilationUnit workingCopy){
   		currentSource = null ;
   		importEnds = new int[0] ;
   		importStarts = new int[0] ;
@@ -235,6 +226,7 @@ IJVEStatus fMsgRenderer = null;
   					// Reload request
   					fEventsProcessedCount = allEvents.size()-1;
   					allEvents.clear();
+  					return true;
   				}else{
   					fEventsProcessedCount = allEvents.size();
   					allEvents.clear();
@@ -255,9 +247,10 @@ IJVEStatus fMsgRenderer = null;
   					} catch (JavaModelException e) {
   						JavaVEPlugin.log(e);
   					}
-  				}
-  			}
+  				}  				
+  			}  			
   		}
+  		return false;
   	}
   	
   	protected CompilationUnit parse(String source){
@@ -335,33 +328,54 @@ IJVEStatus fMsgRenderer = null;
 
 			fWorkingCopy = workingCopy;
 			fDisplay = disp;
+			
+			fireSnippetProcessing(true);
 
-			if (monitor != null && monitor.isCanceled())
+			if (monitor != null && monitor.isCanceled()) {
+				if (fBeanModel != null)
+					fireSnippetProcessing(false);
+				lockManager.setThreadScheduled(false);
 				return;
+			}
 
 			try {
-				if (monitor != null && monitor.isCanceled())
+				if (monitor != null && monitor.isCanceled()) {
+					if (fBeanModel != null)
+						fireSnippetProcessing(false);
+					lockManager.setThreadScheduled(false);
 					return;
+				}
 
 				fEventsProcessedCount = 0;
-				reloadRequired = false;
-				takeCurrentSnapshot(lockManager, allDocEvents, workingCopy);
+				
+				boolean reloadRequired = fBeanModel == null || 
+				                         takeCurrentSnapshot(lockManager, allDocEvents, workingCopy);
+				if (fBeanModel==null) {
+					// we are doing reload from scratch 
+					allDocEvents.clear();
+				    lockManager.setThreadScheduled(false);
+				}
 				if (reloadRequired) {
 					Reload(fDisplay, monitor);
 				} else {
-					if (currentSource == null)
+					if (currentSource == null || monitor != null && monitor.isCanceled()) {
+						if (fBeanModel != null)
+							fireSnippetProcessing(false);
+						
 						return;
-
-					if (monitor != null && monitor.isCanceled())
-						return;
-
+					}
+					
 					CompilationUnit ast = parse(currentSource);
 
-					if (monitor != null && monitor.isCanceled())
+					if (monitor != null && monitor.isCanceled()) {
+						if (fBeanModel != null)
+							fireSnippetProcessing(false);
 						return;
+					}
 
 					// TODO Adapters will not react for GUI deltas !!!
-					fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
+					if (fBeanModel!=null)
+					  fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
 
 					if (containsParseErrors(ast)) {
 						handleNonParseable(ast, fWorkingCopy, monitor);
@@ -372,8 +386,11 @@ IJVEStatus fMsgRenderer = null;
 
 					}
 
-					if (monitor != null && monitor.isCanceled())
+					if (monitor != null && monitor.isCanceled()) {
+						if (fBeanModel != null)
+							fireSnippetProcessing(false);
 						return;
+					}
 
 					if (fEventsProcessedCount > 0) {
 						for (int i = 0; i < fEventsProcessedCount; i++) {
@@ -382,12 +399,13 @@ IJVEStatus fMsgRenderer = null;
 					}
 					
 					//TODO: we need to only notify if the VE model was updated
-					for (int i = 0; i < fListeners.size(); i++) {
-					   ((IDiagramModelBuilder.IBuilderListener)fListeners.get(i)).modelUpdated();						
-					}
+					fireModelChanged();
 
-					if (monitor != null && monitor.isCanceled())
+					if (monitor != null && monitor.isCanceled()) {
+						if (fBeanModel != null)
+							fireSnippetProcessing(false);
 						return;
+					}
 
 					fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
 
@@ -525,9 +543,8 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 				}
 			}
 		}
-		for (int i = 0; i < fListeners.size(); i++) {
-			((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD"));
-		}
+		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD"));
+
 		fFile = input.getFile();
 		try {
 			decodeDocument(fFile, pm);
@@ -535,13 +552,12 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 				floadInProgress = false;
 				fmodelLoaded = true;
 			}
-			for (int i = 0; i < fListeners.size(); i++) {
-				((IBuilderListener) fListeners.get(i)).parsingPaused(fdisconnected);
-				((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
-			}
+			fireProcessingPause(fdisconnected);
+			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
 		} catch (CodeGenSyntaxError e) {
 			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.
 		}
+		fireParseError(false);
 		
 		pm.done();
 }
@@ -651,7 +667,6 @@ void	buildCompositionModel() throws CodeGenException {
 		Iterator itr = fBeanModel.getBeans().iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
 		while (itr.hasNext()) {
-			if (isReloadPending()) return ;
 			
 		    BeanPart bean = (BeanPart) itr.next() ;
 			Collection expressions = new ArrayList(bean.getRefExpressions()) ;
@@ -691,9 +706,7 @@ void	buildCompositionModel() throws CodeGenException {
 	      // Model
 	      itr = fBeanModel.getBeans().iterator() ;
 		  while (itr.hasNext()) {
-		  	
-		  	if (isReloadPending()) return ;
-		  	
+		  			 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	       
 		   // if a bean was added to a container, the decoder will reflect this in the BeamModel
@@ -717,7 +730,6 @@ void	buildCompositionModel() throws CodeGenException {
 //	          		comp.getComponents().add(bean.getEObject()) ;	          		
 //	       		}
 //	       		
-	       		if (isReloadPending()) return ;
 				if (bean.isInstanceVar()  || bean.getSimpleName().equals(BeanPart.THIS_NAME))
 					try {
 						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
@@ -742,39 +754,25 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 	if (sourceFile == null || !sourceFile.exists()) 
 	    throw new CodeGenException("Invalid Source File") ;	 //$NON-NLS-1$
 	
-    fMsgRrenderer.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,true) ;
-	fMsgRrenderer.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,true) ;
-	fMsgRrenderer.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,true) ;
-	
+
 	
     reConnect(sourceFile) ;    	
 		
-	// TODO Need to dispose the working copy at some point
-	
-	if (isReloadPending()) return;	
 			
-	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fWorkingCopy,
+	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
                                               fWorkingCopy.getFile().getLocation().toFile().toString(),null) ;              
     
 	builder.setDiagram(fVEModel) ;
 	fBeanModel = builder.build() ; 	
-	fBeanModel.setSourceSynchronizer(fSrcSync) ;
-	fBeanModel.setFStatus(fMsgRrenderer) ;	
-	
-	if (isReloadPending()) return;	
+	fBeanModel.setSourceSynchronizer(fSrcSync) ;	
 		
-	
 	try {		
-	  buildCompositionModel() ;
-	  fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,false) ;
+	  buildCompositionModel() ;	 
 	}
 	catch (Exception e) {
 		JavaVEPlugin.log (e, Level.SEVERE) ; //$NON-NLS-1$
 	}
-	
-	fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_SYNCHING,false) ;
-	fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,false) ;	
-		
+			
 	return;
 }
 
@@ -879,71 +877,8 @@ public String  getFileExt() {
 	return JAVAExt; 
 }
 
-protected void setHoldGUIChanges(boolean flag, String msg) {
-	IModelChangeController controller = (IModelChangeController) fEDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-	controller.setHoldChanges(flag, msg) ;
-	fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_PARSE_ERRROR,flag) ;
-}
 
-/**
- * @deprecated
- */
-public void reloadFromScratch(Display disp, ICancelMonitor monitor) throws CodeGenException {
-	
-	
-	if (fFile==null)
-	  fFile = fWorkingCopy.getFile() ; 
-	  
-	if (fFile == null) throw new CodeGenException ("No Resource") ; //$NON-NLS-1$
-	
-	try {
-		// Do not clear the VCE model - may not be on the UI thread.
-		if (monitor != null && monitor.isCanceled())
-			return;
 
-		
-			disp.syncExec(new Runnable() {
-				public void run() {
-					try {
-						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, true);
-						JavaVEPlugin.log("*** Reloading", Level.FINE); //$NON-NLS-1$
-						disconnect(false); // clear the BDM, but do not dispose of local Doc, and Synch.
-
-						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_SYNCHING, true);
-						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_OUTOFSYNC, true);
-						fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL, true);
-						setHoldGUIChanges(false, null);
-						clearModel(true);
-						try {						
-							decodeDocument(fFile, null);
-						}
-						catch (CodeGenException e) {
-							if (e instanceof CodeGenSyntaxError) throw e ;							
-						}
-						if (fMsgRrenderer != null)
-							fMsgRrenderer.showMsg(null, IJVEStatus.NORMAL_MSG);
-						setHoldGUIChanges(false, null);
-					} catch (Throwable t) {
-						if (fMsgRrenderer != null)
-							fMsgRrenderer.showMsg(t.getMessage(), IJVEStatus.ERROR_MSG);
-
-						Level severity = Level.WARNING;
-						if (t instanceof CodeGenException)
-							severity = Level.FINE;
-						if (t instanceof CodeGenSyntaxError)
-							JavaVEPlugin.log(t.toString(), severity);
-						else
-							JavaVEPlugin.log(t, severity);
-						setHoldGUIChanges(true, t.getMessage());						
-					}
-				}
-			});
-		
-	}
-	finally {
-		fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, false);
-	}
-}
 
 public synchronized boolean pause()  {
 
@@ -952,29 +887,8 @@ public synchronized boolean pause()  {
 
 	if (fdisconnected) return true;     
     disconnect(false) ;
-    for (int i = 0; i < fListeners.size(); i++) {
-       	((IBuilderListener)fListeners.get(i)).parsingPaused(true); 	
-    }
+    fireProcessingPause(true);
     return true;
-}
-
-/**
- * @deprecated
- */
-public void pauseRoundTripping(boolean flag){
-	if (flag) {
-		pause();
-		fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_PAUSE,true) ;
-	}
-	else{
-		IFileEditorInput in = new org.eclipse.ui.part.FileEditorInput(fFile);
-		try {
-			loadModel(in, null);
-			fMsgRrenderer.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_PAUSE,false) ;
-		} catch (CodeGenException e) {			
-			e.printStackTrace();
-		}
-    }
 }
 
 /**
@@ -996,59 +910,6 @@ private void deCapitateModel() {
 	fVEModel=null;
 }
 
-/**
- * This will clear the BDM, and optionaly the VCE model
- * @deprecate call deCapitateModel()
- */
-private   void clearModel(boolean clearJVEModel) {
-	 
-	try {
-	if (fVEModel != null && fVEModel.getModelResource()!=null) {
-        EObject root = fVEModel.getModelRoot() ;
-        if (root != null) {
-             ICodeGenAdapter a = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(root,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
-             while  (a != null) {
-                root.eAdapters().remove(a);
-                a = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(root,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
-             }
-        }    
-    }
-       
-   if (fBeanModel != null) { 
-        fBeanModel.dispose() ;        
-        fBeanModel = null ;        
-   }
-   
-   
-   if (clearJVEModel == true && fVEModel != null && fVEModel.getModelRoot()!=null) {
-      org.eclipse.ve.internal.jcm.BeanSubclassComposition comp = fVEModel.getModelRoot() ;
-      // TODO Deal with multiple diagrams
-	  
-	  if (comp.getComponents().size()>0)
-	     comp.getComponents().clear() ;
-	  if (comp.eIsSet(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()))
-	     comp.eUnset(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()) ;
-	  if (comp.getDiagrams().size()>0) {
-	     Diagram d = (Diagram) comp.getDiagrams().get(0) ;
-	     if (d.getVisualInfos().size()>0)                             
-	        d.getVisualInfos().clear() ;
-	  }
-	  if (comp.getAnnotations().size()>0)
-	     comp.getAnnotations().clear() ;
-	  if (comp.getMethods().size()>0)
-	     comp.getMethods().clear() ;
-	  if (comp.getMembers().size()>0)
-	     comp.getMembers().clear() ;
-	  if (comp.getListenerTypes().size() > 0)
-	     comp.getListenerTypes().clear() ;
-	     
-   }
-	}
-	catch (Exception e) {
-		JavaVEPlugin.log(e,Level.WARNING) ;
-	}
-}
-
 public synchronized void reConnect(IFile file) {
 	// clearModel(true) ;
 	deCapitateModel();
@@ -1062,7 +923,6 @@ public synchronized void reConnect(IFile file) {
     if (fSrcSync == null) {
 	   fSrcSync = new JavaSourceSynchronizer(fWorkingCopy,this) ;
 	   fSrcSync.setDelay(fSrcSyncDelay) ;
-	   fSrcSync.setStatus(fMsgRrenderer) ;
     }
     else if(fdisconnected)
        fSrcSync.connect() ;
@@ -1105,11 +965,8 @@ public synchronized void disconnect(boolean clearVCEModel) {
     fSrcSync = null;
     
     fdisconnected=true ;
-    for (int i = 0; i < fListeners.size(); i++) {
-       ((IBuilderListener)fListeners.get(i)).parsingPaused(fdisconnected);
-	   ((IBuilderListener)fListeners.get(i)).statusChanged(fPauseSig);	
-	}
-
+    fireProcessingPause(fdisconnected);
+    fireStatusChanged(fPauseSig);
 }
 
 /**
@@ -1134,24 +991,6 @@ public synchronized void dispose() {
 	   fWorkingCopy.dispose() ;
 	
 	fWorkingCopy = null ;
-}
-
-public boolean isReloadPending() {
-	if (fMsgRrenderer.isStatusSet(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_PENDING)) return true ;
-	
-	Display display = Display.getCurrent();          
-    if (display != null) {
-    	boolean run = true;
-    	while (run) {
-    		try {
-				run = display.readAndDispatch();
-    		} catch (Exception e) {
-    			JavaVEPlugin.log(e);
-    		}
-    	}
-    	if (fMsgRrenderer.isStatusSet(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_PENDING)) return true ;
-    }
-    return false ;    	 	
 }
 
 
@@ -1218,15 +1057,6 @@ public void setSynchronizerSyncDelay(int delay) {
       fSrcSync.setDelay(fSrcSyncDelay) ;
 }
 
-
-
-
-public void setMsgRenderer (IJVEStatus mr) {
-    fMsgRrenderer = mr ;
-    if (fSrcSync != null)
-       fSrcSync.setStatus(mr) ;
-}
-
 public synchronized BeanSubclassComposition getModelRoot() {
 	if (fVEModel!=null && fmodelLoaded)
 		 return fVEModel.getModelRoot();
@@ -1271,23 +1101,46 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	
 	public void fireSnippetProcessing(boolean flag) {
 	    String msg;
-	    if (flag) {
+	    if (fparseError)
+	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR");
+	    else
+	      if (flag) {
 	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
+	      }
+	      else {
+	        msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
 	    }
-	    else {
-	       msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
-	    }
-	    for (int i = 0; i < fListeners.size(); i++) {
-	   		((IBuilderListener)fListeners.get(i)).statusChanged(msg);	
-		}
+	    fireStatusChanged(msg);
 	}
 	
 	protected void fireParseError(boolean error) {
-		fparseError=error;
+		fparseError=error;		
+		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
-       		((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
 	    }
+	}
+	
+	protected void fireReloadIsNeeded() {
+ 	    for (int i = 0; i < fListeners.size(); i++) {
+       		((IBuilderListener)fListeners.get(i)).reloadIsNeeded();	
+	    }
+	}
+	protected void fireModelChanged() {
+		for (int i = 0; i < fListeners.size(); i++) {
+			   ((IDiagramModelBuilder.IBuilderListener)fListeners.get(i)).modelUpdated();						
+		}
+	}
+	
+	public void fireStatusChanged (String msg) {
+		for (int i = 0; i < fListeners.size(); i++) {
+			((IBuilderListener) fListeners.get(i)).statusChanged(msg);
+		}
+	}
+	protected void fireProcessingPause(boolean flag) {
+		for (int i = 0; i < fListeners.size(); i++) {
+			((IBuilderListener) fListeners.get(i)).parsingPaused(flag);		
+		}
 	}
 	
 

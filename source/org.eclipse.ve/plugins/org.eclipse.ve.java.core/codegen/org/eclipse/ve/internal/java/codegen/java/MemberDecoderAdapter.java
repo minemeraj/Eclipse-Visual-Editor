@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-02 16:34:43 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -29,7 +29,6 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -69,7 +68,7 @@ protected boolean ignoreMsg(Notification msg) {
 		|| fbeanModel.isStateSet(IBeanDeclModel.BDM_STATE_SNIPPET)
 		|| !fbeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING)
 		|| ((msg.getFeature() instanceof EStructuralFeature) && ((EStructuralFeature) msg.getFeature()).isTransient())
-		|| fbeanModel.getFStatus().isStatusSet(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_PENDING))
+		)
 		return true;
 
 	return false;
