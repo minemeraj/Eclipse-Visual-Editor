@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHostAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:46 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.Iterator;
@@ -275,9 +275,9 @@ public class FreeFormComponentsHostAdapter extends AdapterImpl {
 		if ( sfComponentBounds == null )
 			sfComponentBounds = JavaInstantiation.getSFeature(rset, JFCConstants.SF_COMPONENT_BOUNDS);
 		if ( classComponent == null ) 
-			classComponent = (EClass) Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
+			classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
 		if ( classJComponent == null )
-			classJComponent = (EClass) Utilities.getJavaClass("javax.swing.JComponent", rset); //$NON-NLS-1$
+			classJComponent = Utilities.getJavaClass("javax.swing.JComponent", rset); //$NON-NLS-1$
 	}
 	
 	public void notifyChanged(Notification msg) {

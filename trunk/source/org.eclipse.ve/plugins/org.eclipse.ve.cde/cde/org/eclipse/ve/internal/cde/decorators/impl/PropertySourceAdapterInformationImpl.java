@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertySourceAdapterInformationImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:11:58 $ 
  */
 import java.util.Collection;
 
@@ -226,13 +226,34 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
+	
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return eIsSetGen(eFeature);
+		}
+	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
+	public boolean eIsSetGen(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__EANNOTATIONS:
 				return eAnnotations != null && !eAnnotations.isEmpty();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JComponentBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -117,7 +117,6 @@ public java.beans.EventSetDescriptor[] getEventSetDescriptors() {
 	try {
 		EventSetDescriptor aDescriptorList[] = {
 			ancestorEventSetDescriptor(),
-			propertyChangeEventSetDescriptor(),
 			vetoableChangeEventSetDescriptor()
 		};
 		return aDescriptorList;
@@ -169,27 +168,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] { 
 	      			java.awt.Rectangle.class 
 	      		}	    		
-		  	),
-		  	// contains(int,int)
-			super.createMethodDescriptor(getBeanClass(), "contains",  //$NON-NLS-1$
-				new Object[] {
-	   				DISPLAYNAME, JComponentMessages.getString("contains(int,int).Name"), //$NON-NLS-1$
-	      			SHORTDESCRIPTION, JComponentMessages.getString("contains(int,int).Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("x", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JComponentMessages.getString("contains(int,int).x.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "x coordinate of point",
-	      			}),
-	      			createParameterDescriptor("y", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JComponentMessages.getString("contains(int,int).y.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "y coordinate of point",
-	      			})		
-	      		},
-	      		new Class[] { 
-	      			int.class,
-	      			int.class
-	      		}   		
 		  	),
 		  	// createToolTip()
 			super.createMethodDescriptor(getBeanClass(),"createToolTip",  //$NON-NLS-1$
@@ -738,15 +716,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}	    		
 		  	),
-		  	// isFocusTraversable()
-		  	super.createMethodDescriptor(getBeanClass(),"isFocusTraversable",  //$NON-NLS-1$
-				new Object[] {
-	   				DISPLAYNAME, JComponentMessages.getString("isFocusTraversable().Name"), //$NON-NLS-1$
-	      			SHORTDESCRIPTION, JComponentMessages.getString("isFocusTraversable().Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}	    		
-		  	),
 		  	// isManagingFocus()
 		  	super.createMethodDescriptor(getBeanClass(),"isManagingFocus",  //$NON-NLS-1$
 				new Object[] {
@@ -793,23 +762,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}	    		
-		  	),
-		  	// paint(Graphics)
-		  	super.createMethodDescriptor(getBeanClass(),"paint",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComponentMessages.getString("paint(Graphics).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Paint the component",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("g", new Object[] { //$NON-NLS-1$
-	   				DISPLAYNAME, JComponentMessages.getString("paint(Graphics).graphics.Name"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "Graphics Context for painting",
-	      			})
-	      		},
-	      		new Class[] { 
-	      			java.awt.Graphics.class 
-	      		}	    		
 		  	),
 		  	// paintImmediately(Rectangle)
 		  	super.createMethodDescriptor(getBeanClass(),"paintImmediately",  //$NON-NLS-1$
@@ -1016,22 +968,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.border.Border.class 
 	      		}	    		
 		  	),
-		  	// setBounds(Rectangle)
-		  	super.createMethodDescriptor(getBeanClass(),"setBounds",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComponentMessages.getString("setBounds(Rectangle).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Move and resize the component",
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("r", new Object[] { //$NON-NLS-1$
-	   				DISPLAYNAME, JComponentMessages.getString("setBounds(Rectangle).rectangle.Name"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "Bounding rectangle",
-	      			})
-	      		},
-	      		new Class[] { 
-	      			java.awt.Rectangle.class
-	      		}	    		
-		  	),
+
 		  	// setDebugGraphicsOptions(int)
 		  	super.createMethodDescriptor(getBeanClass(),"setDebugGraphicsOptions",  //$NON-NLS-1$
 				new Object[] {
@@ -1218,23 +1155,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			boolean.class 
 	      		}	    		
 		  	),		  	
-		  	// setVisible(boolean)
-		  	super.createMethodDescriptor(getBeanClass(),"setVisible",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComponentMessages.getString("setVisible(boolean).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE to make visible",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("aFlag", new Object[] { //$NON-NLS-1$
-	   				DISPLAYNAME, JComponentMessages.getString("setVisible(boolean).aFlag.Name"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "TRUE to make visible",
-	      			})
-	      		},
-	      		new Class[] { 
-	      			boolean.class
-	      		}	    		
-		  	),
 		  	// unregisterKeyboardAction(KeyStroke)
 		  	super.createMethodDescriptor(getBeanClass(),"unregisterKeyboardAction",  //$NON-NLS-1$
 				new Object[] {
@@ -1250,23 +1170,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		},
 	      		new Class[] { 
 	      			javax.swing.KeyStroke.class
-	      		}	    		
-		  	),
-		  	// update(Graphics)
-		  	super.createMethodDescriptor(getBeanClass(),"update",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComponentMessages.getString("update(Graphics).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Update the component",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("g", new Object[] { //$NON-NLS-1$
-	   				DISPLAYNAME, JComponentMessages.getString("update(Graphics).graphics.Name"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "Graphics Context for painting",
-	      			})
-	      		},
-	      		new Class[] { 
-	      			java.awt.Graphics.class 
 	      		}	    		
 		  	),
 		  	// updateUI()
@@ -1382,13 +1285,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		SHORTDESCRIPTION, JComponentMessages.getString("focusTraversable.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
-	    	// graphics
-			super.createPropertyDescriptor(getBeanClass(),"graphics", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, JComponentMessages.getString("graphics.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JComponentMessages.getString("graphics.Desc"), //$NON-NLS-1$
-	      		EXPERT, Boolean.TRUE
-	    		}
-	    	),
 	    	// height
 			super.createPropertyDescriptor(getBeanClass(),"height", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JComponentMessages.getString("height.Name"), //$NON-NLS-1$
@@ -1465,7 +1361,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	// preferredSize
 			super.createPropertyDescriptor(getBeanClass(),"preferredSize", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JComponentMessages.getString("preferredSize.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JComponentMessages.getString("preferredSize.Desc") //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JComponentMessages.getString("preferredSize.Desc"), //$NON-NLS-1$
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// registeredKeyStrokes
@@ -1559,40 +1456,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		handleException(exception);
 	};
 	return null;
-}
-/**
- * Gets the componentevent set descriptor.
- * @return java.beans.EventSetDescriptor
- */
-public EventSetDescriptor propertyChangeEventSetDescriptor() {
-	EventSetDescriptor aDescriptor = null;
-	Class[] paramTypes = { java.beans.PropertyChangeEvent.class };
-	MethodDescriptor aDescriptorList[] = {
-			super.createMethodDescriptor(java.beans.PropertyChangeListener.class,
-				"propertyChange",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JComponentMessages.getString("propertyChange.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JComponentMessages.getString("propertyChange.Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("propertyChangeEvent", new Object[] { //$NON-NLS-1$
-	   				DISPLAYNAME, JComponentMessages.getString("propertyChange.propertyChangeEvent.Name"), //$NON-NLS-1$
-	      			// SHORTDESCRIPTION, "property changed event",
-	      			}
-	      		)
-	      	},
-	      	paramTypes
-		  	)
-		};	
-		aDescriptor = super.createEventSetDescriptor(getBeanClass(),
-						"propertyChange", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, JComponentMessages.getString("propertyChangeEvents.Name"), //$NON-NLS-1$
-	      				SHORTDESCRIPTION, JComponentMessages.getString("propertyChangeEvents.Desc"), //$NON-NLS-1$
-	      			}, 
-						aDescriptorList, java.beans.PropertyChangeListener.class,
-						"addPropertyChangeListener", "removePropertyChangeListener"); //$NON-NLS-1$ //$NON-NLS-2$
-
-	return aDescriptor;
 }
 /**
  * Gets the componentevent set descriptor.

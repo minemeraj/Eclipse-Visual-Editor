@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ScrollPaneContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class ScrollPaneContainerPolicy extends ContainerPolicy {
 
 	public ScrollPaneContainerPolicy(EditDomain domain) {
 		super(domain);
-		classComponent = (JavaClass) Utilities.getJavaClass("java.awt.Component", JavaEditDomainHelper.getResourceSet(domain));	//$NON-NLS-1$
+		classComponent = Utilities.getJavaClass("java.awt.Component", JavaEditDomainHelper.getResourceSet(domain));	//$NON-NLS-1$
 	}
 
 	/*

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridLayoutSwitcher.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:13 $ 
  */
 import java.util.Collections;
 import java.util.List;
@@ -71,10 +71,10 @@ public Command getCommand(EStructuralFeature sf, IJavaObjectInstance newManager)
 	
 	ApplyAttributeSettingCommand setRowsCmd = new ApplyAttributeSettingCommand();
 	setRowsCmd.setTarget(newManager);
-	JavaClass GRID_LAYOUT = (JavaClass)Utilities.getJavaClass("java.awt.GridLayout",rset); //$NON-NLS-1$
+	JavaClass GRID_LAYOUT = Utilities.getJavaClass("java.awt.GridLayout",rset); //$NON-NLS-1$
 	EStructuralFeature SF_ROWS = GRID_LAYOUT.getEStructuralFeature("rows"); //$NON-NLS-1$
 	setRowsCmd.setAttribute(SF_ROWS);
-	Object rowsSetting = BeanUtilities.createJavaObject((JavaHelpers) Utilities.getJavaClass("int", rset), rset, String.valueOf(rows)); //$NON-NLS-1$
+	Object rowsSetting = BeanUtilities.createJavaObject(Utilities.getJavaType("int", rset), rset, String.valueOf(rows)); //$NON-NLS-1$
 	setRowsCmd.setAttributeSettingValue(rowsSetting);
 	// Now create the commands to remove the constraints from the children and apply 
 	// the layout manager to the container.

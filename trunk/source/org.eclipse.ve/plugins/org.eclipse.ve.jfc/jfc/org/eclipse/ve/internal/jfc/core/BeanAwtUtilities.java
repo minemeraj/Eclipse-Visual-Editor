@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.15 $  $Date: 2004-11-24 17:08:41 $ 
+ *  $Revision: 1.16 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.List;
@@ -421,7 +421,7 @@ public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanP
 	
 }
 private static ILayoutPolicyFactory getDefaultLayoutPolicyFactory(EClassifier layoutManagerClass){
-	if (((JavaClass) Utilities.getJavaClass("java.awt.LayoutManager2", layoutManagerClass.eResource().getResourceSet())).isAssignableFrom(layoutManagerClass)) //$NON-NLS-1$
+	if ((Utilities.getJavaClass("java.awt.LayoutManager2", layoutManagerClass.eResource().getResourceSet())).isAssignableFrom(layoutManagerClass)) //$NON-NLS-1$
 		return new UnknownLayout2PolicyFactory();
 	else
 		return new UnknownLayoutPolicyFactory();

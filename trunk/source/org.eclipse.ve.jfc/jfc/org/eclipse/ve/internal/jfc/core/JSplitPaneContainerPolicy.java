@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:13 $ 
  */
 
 import java.util.*;
@@ -70,7 +70,7 @@ public class JSplitPaneContainerPolicy extends AbstractJavaContainerPolicy {
 		sf_constraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
 		sf_constraintConstraint = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_CONSTRAINT);
 		sf_containerComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);
-		classComponent = (JavaClass) Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
+		classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
 	}
 	/**
 	 * Determine which components have been set in the Splitpane

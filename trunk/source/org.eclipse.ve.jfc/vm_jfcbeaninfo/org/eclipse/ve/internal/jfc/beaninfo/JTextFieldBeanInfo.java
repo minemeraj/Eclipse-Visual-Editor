@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTextFieldBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -111,26 +111,6 @@ public java.awt.Image getIcon(int kind) {
 public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	try {
 		MethodDescriptor aDescriptorList[] = {
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextFieldMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessibility context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// getActions()
-			super.createMethodDescriptor(getBeanClass(),"getActions",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextFieldMessages.getString("getActions().Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JTextFieldMessages.getString("getActions().Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// getColumns()
 			super.createMethodDescriptor(getBeanClass(),"getColumns",  //$NON-NLS-1$
 				new Object[] {
@@ -210,23 +190,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			int.class
 	      		}		    		
 		  	),
-		  	// setFont(Font)
-			super.createMethodDescriptor(getBeanClass(),"setFont",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextFieldMessages.getString("setFont(Font).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Set the font",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("font", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JTextFieldMessages.getString("setFont(Font).font.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "Font",
-	      				})
-	      		},
-	      		new Class[] {
-	      			java.awt.Font.class
-	      		}		    		
-		  	),
 		  	// setHorizontalAlignment(int)
 			super.createMethodDescriptor(getBeanClass(),"setHorizontalAlignment",  //$NON-NLS-1$
 				new Object[] {
@@ -296,36 +259,16 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
-			// accessibleContext
-			super.createPropertyDescriptor(getBeanClass(),"accessibleContext", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextFieldMessages.getString("acessibleContext.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextFieldMessages.getString("acessibleContext.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE,
-	      	OBSCURE, Boolean.TRUE
-	    		}
-	    	),
 	    	// actionCommand
 			super.createPropertyDescriptor(getBeanClass(),"actionCommand", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextFieldMessages.getString("actionCommand.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextFieldMessages.getString("actionCommand.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
-			// actions
-			super.createPropertyDescriptor(getBeanClass(),"actions", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextFieldMessages.getString("actions.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextFieldMessages.getString("actions.Desc"), //$NON-NLS-1$
-	    		}
-	    	),
 	    	// columns
 			super.createPropertyDescriptor(getBeanClass(),"columns", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextFieldMessages.getString("columns.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextFieldMessages.getString("columns.Desc"), //$NON-NLS-1$
-	    		}
-	    	),
-	    	// font
-			super.createPropertyDescriptor(getBeanClass(),"font", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextFieldMessages.getString("font.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextFieldMessages.getString("font.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
 	    	// horizontalAlignment
@@ -346,12 +289,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      			"javax.swing.JTextField.TRAILING" //$NON-NLS-1$	      			
 	    		}
 	    	}
-	    	),
-	    	// preferredSize
-			super.createPropertyDescriptor(getBeanClass(),"preferredSize", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextFieldMessages.getString("preferredSize.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextFieldMessages.getString("preferredSize.Desc"), //$NON-NLS-1$
-	    		}
 	    	),
 	    	// scrollOffset
 			super.createPropertyDescriptor(getBeanClass(),"scrollOffset", new Object[] { //$NON-NLS-1$

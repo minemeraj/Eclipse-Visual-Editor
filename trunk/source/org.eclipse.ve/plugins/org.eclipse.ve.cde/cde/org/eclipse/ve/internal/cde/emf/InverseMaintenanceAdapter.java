@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-01-25 15:11:28 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-04 23:11:58 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -557,9 +557,8 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	public final void propagate() {
 		if (isPropagated())
 			return;
-		if (getTarget() instanceof EObject && ((EObject) getTarget()).eResource() != null) {
+		if (getTarget() instanceof EObject && ((EObject) getTarget()).eResource() != null)
 			primPropagate();
-		}
 	}
 	
 	/*

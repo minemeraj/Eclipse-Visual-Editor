@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.23 $  $Date: 2004-09-10 21:03:24 $ 
+ *  $Revision: 1.24 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.util.*;
@@ -422,7 +422,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 					String realFQN = type.getFullyQualifiedName('$');
 					// If there is a prototype factory use this to create the default instance
 					PrototypeFactory prototypeFactory = null;
-					EClass eClass = (EClass) Utilities.getJavaClass(realFQN, resourceSet);					
+					EClass eClass = Utilities.getJavaClass(realFQN, resourceSet);					
 					try {
 						
 						ClassDescriptorDecorator decorator =
@@ -552,7 +552,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				// implementing "org.eclipse.ve.internal.PrototypeFactory" that can create the EMF model for this
 				// If such a decorator exists then the selection is assumed to be valid
 				if(resourceSet!=null){
-					EClass selectedEMFClass = (EClass) Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
+					EClass selectedEMFClass = Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
 					ClassDescriptorDecorator decorator =
 						(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
 							selectedEMFClass,

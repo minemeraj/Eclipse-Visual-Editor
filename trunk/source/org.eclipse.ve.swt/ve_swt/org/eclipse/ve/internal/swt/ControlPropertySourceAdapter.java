@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:35:50 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-04 23:12:05 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			compositeJavaObjectInstance = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
 					getEObject(),
 					JavaInstantiation.getReference(
-							(JavaClass) Utilities.getJavaClass("org.eclipse.swt.widgets.Composite",getEObject().eResource().getResourceSet()),
+							Utilities.getJavaClass("org.eclipse.swt.widgets.Composite",getEObject().eResource().getResourceSet()),
 							SWTConstants.SF_COMPOSITE_CONTROLS));
 		}
 		

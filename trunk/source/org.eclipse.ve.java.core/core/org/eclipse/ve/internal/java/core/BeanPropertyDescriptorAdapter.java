@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-01-07 20:51:41 $ 
+ *  $Revision: 1.19 $  $Date: 2005-02-04 23:12:03 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -27,11 +27,9 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
-import org.eclipse.jem.internal.beaninfo.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.util.logger.proxy.Logger;
@@ -118,29 +116,10 @@ public CellEditor createPropertyEditor(Composite parent){
 			// or	 "Vertical" , new Integer(0) , "java.awt.Scrollbar.HORIZONTAL" , "Horizontal" , new Integer(1) , "java.awt.Scrollbar.VERTICAL"
 			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
 			if (featureValue != null){
-				IArrayBeanProxy enums = null;
-				if (featureValue.isSetValueProxy())
-					enums = (IArrayBeanProxy) featureValue.getValueProxy();
-				else if (featureValue.isSetValue()) {
-					IJavaObjectInstance enumsValue = (IJavaObjectInstance) featureValue.getValue();
-					if (enumsValue != null) {
-						// TODO Need a way of creating the proxy from the value . PRoblem
-						// is that this value is in a resourceset that has no access
-						// to BeanProxyHost, nor do we want it too because it would
-						// put the enums proxy into the wrong registry. Problem 
-						// is at this point in time we don't know what registry
-						// to use. Maybe if we could come up with a way of creating
-						// a proxy host without the adapter factory and using
-						// the registry of the beaninfo.
-					}
-				}
-				
-				if (enums != null) {		
-					return new BeanPropertyEnumeratedCellEditor(
-						parent,
-						enums,
-						(JavaHelpers) ((EStructuralFeature)target).getEType());
-				}
+				return new BeanPropertyEnumeratedCellEditor(
+					parent,
+					(Object[]) featureValue.getValue(),
+					(JavaHelpers) ((EStructuralFeature)target).getEType());
 			}			
 		}
 	}
@@ -297,24 +276,9 @@ public ILabelProvider getLabelProvider(){
 			// 3	-	Look for the enumeration values
 			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
 			if (featureValue != null) {
-				if (featureValue.isSetValueProxy()) {
-					return labelProvider = new EnumeratedLabelProvider(
-							(IArrayBeanProxy)featureValue.getValueProxy(),
+				return labelProvider = new EnumeratedLabelProvider(
+							(Object[])featureValue.getValue(),
 							(JavaHelpers) ((EStructuralFeature)target).getEType());
-					
-				} else if (featureValue.isSetValue()) {
-					IJavaObjectInstance enumsValue = (IJavaObjectInstance) featureValue.getValue();
-					if (enumsValue != null) {
-						// TODO Need a way of creating the proxy from the value . PRoblem
-						// is that this value is in a resourceset that has no access
-						// to BeanProxyHost, nor do we want it too because it would
-						// put the enums proxy into the wrong registry. Problem 
-						// is at this point in time we don't know what registry
-						// to use. Maybe if we could come up with a way of creating
-						// a proxy host without the adapter factory and using
-						// the registry of the beaninfo.
-					}
-				}
 			}
 		}			
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.27 $  $Date: 2005-01-31 19:20:29 $ 
+ *  $Revision: 1.28 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.util.*;
@@ -333,8 +333,6 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
 protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) throws ThrowableProxy {
 
 	if (propDecor != null) {
-		if (propDecor.needIntrospection())
-			throw new ReinstantiationNeeded();	// We need to reinstantiate. That will then cause re-introspection to occur.
 		 if (propDecor.getWriteMethod() != null) {
 			BeanProxyUtilities.writeBeanFeature(propDecor , getBeanProxy() , settingBeanProxy);	
 			return;

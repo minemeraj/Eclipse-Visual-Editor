@@ -11,19 +11,14 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-09-06 11:12:07 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:03 $ 
  */
 
 import java.util.*;
-import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractEditPart;
@@ -111,7 +106,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 			// We must NOT use the one defined on the class as for some classes, e.g. Component it
 			// has a lot of behavior that relies on the live JavaBean being present
 			IJavaInstance javaModel = (IJavaInstance)model;
-			JavaHelpers awtComponentClass = Utilities.getJavaClass("java.awt.Component",javaModel.eResource().getResourceSet());
+			JavaHelpers awtComponentClass = Utilities.getJavaType("java.awt.Component",javaModel.eResource().getResourceSet());
 			// This is a hack because the trap to no use the defined edit part for Component must not be generalized
 			// A better fix would be that the edit part is more robust and can deal with no bean proxy there
 			if(modelBeanProxy == null || (awtComponentClass.isAssignableFrom(javaModel.eClass()) && modelBeanProxy.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)){

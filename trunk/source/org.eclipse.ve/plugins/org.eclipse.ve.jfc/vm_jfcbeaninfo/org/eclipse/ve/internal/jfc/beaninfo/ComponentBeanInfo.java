@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ComponentBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.awt.dnd.DropTarget;
@@ -262,12 +262,12 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		SHORTDESCRIPTION, rescomponent.getString("contains(int,int)SD"), //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("x", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("xParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "x coordinate of point",
 	      			}
 	      		),
-	      		createParameterDescriptor("arg2", new Object[] {//$NON-NLS-1$
+	      		createParameterDescriptor("y", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("yParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "y coordinate of point",
 	      			})	      		
@@ -368,6 +368,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 			super.createMethodDescriptor(getBeanClass(), "getAlignmentX", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "getAlignmentX()",  //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 	      		// SHORTDESCRIPTION, "Get alignment along x-axis",
 	    		}, 
 	    		new ParameterDescriptor[] {},
@@ -377,6 +378,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 			super.createMethodDescriptor(getBeanClass(), "getAlignmentY", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "getAlignmentY()",  //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 	      		// SHORTDESCRIPTION, "Get alignment along y-axis",
 	    		}, 
 	    		new ParameterDescriptor[] {},
@@ -417,12 +419,12 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		// SHORTDESCRIPTION, "Get the component at point",
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("x", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("xParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "x coordinate of point",
 	      			}
 	      		),
-	      		createParameterDescriptor("arg2", new Object[] {//$NON-NLS-1$
+	      		createParameterDescriptor("y", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("yParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "y coordinate of point",
 	      			})	      		
@@ -439,7 +441,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		// SHORTDESCRIPTION, "Get the component at point",
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("point", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("pointParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "Point",
 	      			})      		
@@ -694,12 +696,12 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		// SHORTDESCRIPTION, "Print listing of component to stream",
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("out", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("outParm"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "Writer to print to",
 	      			}
 	      		),
-	      		createParameterDescriptor("arg2", new Object[] {//$NON-NLS-1$
+	      		createParameterDescriptor("indent", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("indentDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "number of spaces to indent",
 	      			})	      		
@@ -725,10 +727,11 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 			super.createMethodDescriptor(getBeanClass(), "paint", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "paint(Graphics)",  //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 	      		// SHORTDESCRIPTION, "Paint this component",
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("graphics", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("GraphicsParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "the graphics context to use",
 	      			}
@@ -915,7 +918,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		SHORTDESCRIPTION, rescomponent.getString("setBounds(Rectangle)SD"), //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("rect", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("rectangleParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "The bounding rectangle",
 	      			})	      				      		
@@ -948,7 +951,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		SHORTDESCRIPTION, rescomponent.getString("setEnabled(boolean)SD"), //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("enabled", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("booleanParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "true to enable",
 	      			}),		      				      		
@@ -960,11 +963,11 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 			// setFont(Font)
 			super.createMethodDescriptor(getBeanClass(), "setFont", //$NON-NLS-1$
 				new Object[] {
-	   			DISPLAYNAME, "setFont(Font)",  //$NON-NLS-1$
+	   			DISPLAYNAME, "setFont",  //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "set the Font",
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("font", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("fontParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "Font to set to",
 	      			}),		      				      		
@@ -1103,7 +1106,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		SHORTDESCRIPTION, rescomponent.getString("setVisible(boolean)SD"), //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("visible", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("booleanParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "true to show",
 	      			}),		      				      		
@@ -1129,9 +1132,10 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, "update(Graphics)",  //$NON-NLS-1$
 	      		SHORTDESCRIPTION, rescomponent.getString("update(Graphics)SD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("arg1", new Object[] {//$NON-NLS-1$
+	    			createParameterDescriptor("graphics", new Object[] {//$NON-NLS-1$
 	   				DISPLAYNAME, rescomponent.getString("graphicParmDN"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "the graphics context to use",
 	      			})	      		
@@ -1241,7 +1245,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, rescomponent.getString("enabledSD"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE,
 	      	BOUND, Boolean.TRUE,
-
 	    		}
 	    	),
 			// focusTraversable

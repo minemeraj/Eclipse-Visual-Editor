@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -299,20 +299,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 					}),
 				},
 				new Class[] { int.class }
-			),
-			// toString
-			super.createMethodDescriptor(getBeanClass(),
-				"toString",  //$NON-NLS-1$
-				new Object[] {
-					//DISPLAYNAME, BorderLayoutMessages.getString("BorderLayout.MthdDesc.toString.Name"), //$NON-NLS-1$
-					//SHORTDESCRIPTION, BorderLayoutMessages.getString("BorderLayout.MthdDesc.toString.Desc"), //$NON-NLS-1$
-					PREFERRED, Boolean.TRUE,
-					EXPERT, Boolean.FALSE,
-					OBSCURE, Boolean.FALSE,
-				},
-				new ParameterDescriptor[] {
-				},
-				new Class[] {  }
 			),
 		};
 		return aDescriptorList;

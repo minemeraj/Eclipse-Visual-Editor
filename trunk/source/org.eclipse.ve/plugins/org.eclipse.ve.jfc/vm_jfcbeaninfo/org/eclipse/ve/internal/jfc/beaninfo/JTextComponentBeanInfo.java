@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTextComponentBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2004-09-03 14:32:22 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -150,17 +150,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, JTextComponentMessages.getString("cut().Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JTextComponentMessages.getString("cut().Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextComponentMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessibility context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -350,24 +339,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, JTextComponentMessages.getString("isEditable.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JTextComponentMessages.getString("isEditable.Desc")	    		},  //$NON-NLS-1$
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isFocusTraversable
-			super.createMethodDescriptor(getBeanClass(),"isFocusTraversable",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextComponentMessages.getString("isFocusTraversable.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JTextComponentMessages.getString("isFocusTraversable.Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
-		  	// isOpaque
-			super.createMethodDescriptor(getBeanClass(),"isOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextComponentMessages.getString("isOpaque.Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE if the combo box is opaque"
-	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
@@ -633,23 +604,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      			javax.swing.text.Keymap.class
 	      		}		    		
 		  	),
-		  	// setOpaque(boolean)
-			super.createMethodDescriptor(getBeanClass(),"setOpaque",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextComponentMessages.getString("setOpaque(boolean).Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "TRUE if text field is opaque",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("bool", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JTextComponentMessages.getString("setOpaque(boolean).aBool.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "TRUE if opaque",
-	      				})
-	      		},
-	      		new Class[] {
-	      			boolean.class
-	      		}		    		
-		  	),
 		  	// setSelectedTextColor(Color)
 			super.createMethodDescriptor(getBeanClass(),"setSelectedTextColor",  //$NON-NLS-1$
 				new Object[] {
@@ -749,17 +703,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			javax.swing.plaf.TextUI.class
 	      		}		    		
-		  	),
-		  	// updateUI()
-			super.createMethodDescriptor(getBeanClass(),"updateUI",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JTextComponentMessages.getString("updateUI().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "update the UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
 		  	),
 		  	// write(Writer)
 			super.createMethodDescriptor(getBeanClass(),"write",  //$NON-NLS-1$
@@ -920,13 +863,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JTextComponentMessages.getString("margin.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("margin.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	EXPERT, Boolean.TRUE
-	    		}
-	    	),
-			// opaque
-			super.createPropertyDescriptor(getBeanClass(),"opaque", new Object[] { //$NON-NLS-1$
-	      	DISPLAYNAME, JTextComponentMessages.getString("opaque.Name"), //$NON-NLS-1$
-	      	SHORTDESCRIPTION, JTextComponentMessages.getString("opaque.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuItemBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -19,44 +19,6 @@ import java.beans.*;
 public class JMenuItemBeanInfo extends IvjBeanInfo {
 		
 private static java.util.ResourceBundle JMenuItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.jmenuitem");  //$NON-NLS-1$
-private static java.util.ResourceBundle resAbstractButton = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.abstractbutton");  //$NON-NLS-1$
-
-/**
- * Gets the actionevent set descriptor.
- * @return java.beans.EventSetDescriptor
- */
-public java.beans.EventSetDescriptor actionEventSetDescriptor() {
-	EventSetDescriptor aDescriptor = null;
-	Class[] paramTypes = { java.awt.event.ActionEvent.class };
-	MethodDescriptor aDescriptorList[] = {
-			super.createMethodDescriptor(java.awt.event.ActionListener.class,
-				"actionPerformed",  //$NON-NLS-1$
-				new Object[] {
-				DISPLAYNAME, resAbstractButton.getString("MthdDesc.ActionPerformed.Name"), //$NON-NLS-1$
-				SHORTDESCRIPTION, resAbstractButton.getString("MthdDesc.ActionPerformed.Desc"), //$NON-NLS-1$
-				PREFERRED, Boolean.TRUE
-				}, 
-				new ParameterDescriptor[] {
-					createParameterDescriptor("actionEvent", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, resAbstractButton.getString("ParamDesc.ActionPerformed.actionEvent.Name"), //$NON-NLS-1$
-					// SHORTDESCRIPTION, "Event on clicking the button",
-					}
-				)
-			},
-			paramTypes
-			)
-		};	
-		aDescriptor = super.createEventSetDescriptor(getBeanClass(),
-						"action", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, resAbstractButton.getString("EventSetDesc.ActionPerformed.Action.name"), //$NON-NLS-1$
-						SHORTDESCRIPTION, resAbstractButton.getString("EventSetDesc.ActionPerformed.Action.Desc"), //$NON-NLS-1$
-						INDEFAULTEVENTSET, Boolean.TRUE,
-						}, 
-						aDescriptorList, java.awt.event.ActionListener.class,
-						"addActionListener", "removeActionListener"); //$NON-NLS-1$ //$NON-NLS-2$
-
-	return aDescriptor;
-}
 
 /**
  * Gets the menudragmouseevent set descriptor.
@@ -210,7 +172,6 @@ public EventSetDescriptor menuKeyEventSetDescriptor() {
 public java.beans.EventSetDescriptor[] getEventSetDescriptors() {
 	try {
 		EventSetDescriptor aDescriptorList[] = {
-			actionEventSetDescriptor(),
 			menuDragMouseEventSetDescriptor(),
 			menuKeyEventSetDescriptor(),
 		};
@@ -261,17 +222,6 @@ public java.awt.Image getIcon(int kind) {
 public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	try {
 		MethodDescriptor aDescriptorList[] = {
-		  	// getAccessibleContext()
-			super.createMethodDescriptor(getBeanClass(),"getAccessibleContext",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuItemMessages.getString("getAccessibleContext().Name"), //$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the accessible context",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      		new Class[] {}		    		
-		  	),
 		  	// getAccelerator()
 			super.createMethodDescriptor(getBeanClass(),"getAccelerator",  //$NON-NLS-1$
 				new Object[] {
@@ -324,22 +274,6 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		boolean.class 
 	      	}	    		
 		  	),
-		  	// setEnabled(boolean)
-			super.createMethodDescriptor(getBeanClass(),"setEnabled",  //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, JMenuItemMessages.getString("setEnabled(boolean).Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JMenuItemMessages.getString("setEnabled(boolean).Desc"), //$NON-NLS-1$
-	    		}, 
-	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("b", new Object[] { //$NON-NLS-1$
-	   					DISPLAYNAME, JMenuItemMessages.getString("setEnabled(boolean).aBool.Name"), //$NON-NLS-1$
-	      				// SHORTDESCRIPTION, "TRUE to enable",
-	      				})
-	      		},
-	      		new Class[] {
-	      			boolean.class
-	      		}		    		
-		  	)
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

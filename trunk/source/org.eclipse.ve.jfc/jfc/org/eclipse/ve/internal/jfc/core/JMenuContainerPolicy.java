@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2004-11-24 17:08:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-04 23:12:13 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -42,9 +42,9 @@ public class JMenuContainerPolicy extends JavaContainerPolicy {
 	public JMenuContainerPolicy(EditDomain domain) {
 		super(null, domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
-		classComponent = (JavaClass) Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
-		classAction = (JavaClass) Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
-		classString = (JavaClass) Utilities.getJavaClass("java.lang.String", rset); //$NON-NLS-1$
+		classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
+		classAction = Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
+		classString = Utilities.getJavaClass("java.lang.String", rset); //$NON-NLS-1$
 	}
 
 	protected boolean isValidChild(Object component, EStructuralFeature containmentSF) {

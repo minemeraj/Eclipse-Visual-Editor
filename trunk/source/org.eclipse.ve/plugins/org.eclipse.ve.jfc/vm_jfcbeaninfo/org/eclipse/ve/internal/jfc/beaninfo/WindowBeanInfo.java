@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-04 23:12:12 $ 
  */
 
 import java.beans.*;
@@ -108,31 +108,12 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      	new Class[] {}		    		
 		  	),
-		  	// getToolkit()
-			super.createMethodDescriptor(getBeanClass(),"getToolkit", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "getToolkit()",//$NON-NLS-1$
-	      		// SHORTDESCRIPTION, "Get the window toolkit",
-	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      	new Class[] {}		    		
-		  	),
 			// getWarningString()
 			super.createMethodDescriptor(getBeanClass(),"getWarningString", //$NON-NLS-1$
 				new Object[] {
 	   			DISPLAYNAME, "getWarningString()",//$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Get the security warning string",
 	      		EXPERT, Boolean.TRUE
-	    		}, 
-	    		new ParameterDescriptor[] {},
-	      	new Class[] {}		    		
-		  	),
-		  	// isShowing()
-			super.createMethodDescriptor(getBeanClass(),"isShowing", //$NON-NLS-1$
-				new Object[] {
-	   			DISPLAYNAME, "isShowing()",//$NON-NLS-1$
-	      		SHORTDESCRIPTION, reswindow.getString("isShowing()SD"), //$NON-NLS-1$
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      	new Class[] {}		    		
@@ -195,20 +176,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
-	    	// locale
-			super.createPropertyDescriptor(getBeanClass(),"locale", new Object[] {//$NON-NLS-1$
-			DISPLAYNAME, reswindow.getString("localeDN"),				 //$NON-NLS-1$
-	      	SHORTDESCRIPTION, reswindow.getString("localeSD"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
-	    		}
-	    	),
-	    	// toolkit
-			super.createPropertyDescriptor(getBeanClass(),"toolkit", new Object[] {//$NON-NLS-1$
-			DISPLAYNAME, reswindow.getString("toolkitDN"),				 //$NON-NLS-1$
-	      	SHORTDESCRIPTION, reswindow.getString("toolkitSD"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
-	    		}
-	    	)
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
