@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.utility.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-11 16:03:28 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 16:13:43 $ 
  */
 import java.net.*;
 import java.util.*;
@@ -122,7 +122,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 								// The plugin descriptor can't get the fragments directly. We will go to the 
 								// plugin, from there get the bundle, and ask it. (This will only work with legacy plugins. OSGi plugins do not show in list).
 								try {
-									Bundle[] fragments = desc.getPlugin().getBundle().getFragments();
+									Bundle[] fragments = Platform.getFragments(desc.getPlugin().getBundle());
 									// See if there are any fragments
 									if (fragments != null)
 										for (int j = 0; j < fragments.length; j++) {

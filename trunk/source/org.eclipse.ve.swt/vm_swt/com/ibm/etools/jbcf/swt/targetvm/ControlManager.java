@@ -32,9 +32,8 @@ public class ControlManager implements ICallback , ControlListener {
 	}
 	
 	public void setControl(final Control aControl) {
-
 		final boolean[] queue = new boolean[1];
-		Environment.display.syncExec(new Runnable() {
+		Environment.getDisplay().syncExec(new Runnable() {
 			public void run() {
 				if (fControl != null) {
 					fControl.removeControlListener(ControlManager.this);
@@ -59,7 +58,7 @@ public class ControlManager implements ICallback , ControlListener {
 	 */
 	private void queueRefresh() {
 
-		Environment.display.syncExec(new Runnable() {
+		Environment.getDisplay().syncExec(new Runnable() {
 			public void run() {
 				// Wait for the display thread to be empty of all sync runnables				
 			}
@@ -112,7 +111,7 @@ public class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getBounds(){
 		final Rectangle[] bounds = new Rectangle[1];
-		Environment.display.syncExec(new Runnable(){
+		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
 				bounds[0] = fControl.getBounds();
 				if(fControl.getParent() != null){
@@ -129,7 +128,7 @@ public class ControlManager implements ICallback , ControlListener {
 	 */
 	public Rectangle getClientBox(){
 		final Rectangle[] clientBox = new Rectangle[1];
-		Environment.display.syncExec(new Runnable(){
+		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
 				clientBox[0] = ((Composite)fControl).getClientArea();
 				// The width and height are good, but the location of the client area is always 0,0 and not expressed
@@ -159,7 +158,7 @@ public class ControlManager implements ICallback , ControlListener {
 	private Point getOverallLocation(){
 		
  		final Point[] location = new Point[1];
-		Environment.display.syncExec(new Runnable(){
+ 		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
 				// If the control has no parent then just return its location
 				if(fControl.getParent() == null){
@@ -175,7 +174,7 @@ public class ControlManager implements ICallback , ControlListener {
 		return location[0];	
 	}
 	public void captureImage(){
-		Environment.display.syncExec(new Runnable(){
+		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
 				try{
 					final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID,0));

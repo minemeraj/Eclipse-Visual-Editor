@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-04 16:13:57 $ 
  */
 import java.util.*;
 
@@ -34,7 +34,6 @@ import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 /**
  * ViewObject for the awt Container.

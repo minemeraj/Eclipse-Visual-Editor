@@ -59,7 +59,6 @@
          point="org.eclipse.ve.java.core.registrations">
       <library
             container="SWT_CONTAINER"
-            contributor="org.eclipse.ve.internal.swt.SWTConfigurationContributor"
             palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi">
       </library>
    </extension>
