@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.15 $  $Date: 2004-10-15 22:46:02 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
@@ -31,6 +32,7 @@ import org.eclipse.ui.IEditorSite;
 
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.VisualInfo;
+import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
@@ -619,7 +621,12 @@ JavaVEPlugin.log("SourceRange ="+getJavaSourceRange(), Level.FINE) ;	 //$NON-NLS
 						msg.getNotifier() instanceof AnnotationEMF)
 				renameField(msg);
 			}
-        case Notification.MOVE:        
+        case Notification.MOVE:  
+        if (msg.getNewValue() instanceof BasicEMap.Entry) {
+        	// No point to notify the decocder if not a constraint key 
+        	if (!((BasicEMap.Entry)msg.getNewValue()).getKey().equals(CDMModelConstants.VISUAL_CONSTRAINT_KEY))
+        		return ;
+        }
 	    fDecoder.reflectMOFchange() ;		     
 	    break ;      	
       }
