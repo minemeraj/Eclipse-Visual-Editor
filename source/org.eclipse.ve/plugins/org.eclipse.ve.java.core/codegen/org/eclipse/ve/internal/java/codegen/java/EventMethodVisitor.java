@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-04 22:59:52 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-18 18:26:45 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -61,7 +61,8 @@ public class EventMethodVisitor extends MethodVisitor {
 		boolean useDefault = true ;
 		for (int i=0; i<fESigs.size(); i++) {
 		  try {
-		    if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
+		  	EventSetDecorator dec = (EventSetDecorator)fESigs.get(i);
+		    if (dec.getAddListenerMethod() !=null && dec.getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
 		    	useDefault = false ;
 		    	break ;
 		    }	
