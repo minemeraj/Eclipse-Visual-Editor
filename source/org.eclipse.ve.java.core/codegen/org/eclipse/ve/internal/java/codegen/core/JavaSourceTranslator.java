@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.44 $  $Date: 2004-11-16 22:40:03 $ 
+ *  $Revision: 1.45 $  $Date: 2004-11-22 22:23:18 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.temp.VETimerTests;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -49,7 +50,6 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.VETimerTests;
 
 
 
@@ -776,7 +776,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL,true) ;
 	
 	try{
-		VETimerTests.basicTest.startStep("Create IJavaObject Instances", "Decoding");
+		VETimerTests.basicTest.startStep("Create IJavaObject Instances");
 		// Before handle expressions, make sure all BeanPart s have instances
 		createJavaInstances(new SubProgressMonitor(pm, 10)) ;
 		VETimerTests.basicTest.stopStep("Create IJavaObject Instances");
@@ -910,7 +910,7 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
     reConnect(sourceFile) ;    	
 		
 			
-    VETimerTests.basicTest.startStep("Parsing", VETimerTests.CURRENT_PARENT_ID);			
+    VETimerTests.basicTest.startStep("Parsing");			
 	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
                                               fWorkingCopy.getFile().getLocation().toFile().toString(),null,new SubProgressMonitor(pm, 40, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK)) ;              
     
@@ -919,7 +919,7 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 	fBeanModel.setSourceSynchronizer(fSrcSync) ;	
 	VETimerTests.basicTest.stopStep("Parsing");
 	
-	VETimerTests.basicTest.startStep("Decoding", VETimerTests.CURRENT_PARENT_ID);
+	VETimerTests.basicTest.startStep("Decoding");
 	try {		
 	  buildCompositionModel(pm) ;	 
 	}
@@ -1067,7 +1067,7 @@ private void deCapitateModel() {
 
 public synchronized void reConnect(IFile file) {
 	// clearModel(true) ;
-	VETimerTests.basicTest.startStep("WorkingCopy connection", VETimerTests.CURRENT_PARENT_ID);
+	VETimerTests.basicTest.startStep("WorkingCopy connection");
 	deCapitateModel();
 	fVEModel = new VEModelInstance(file,fEDomain);
 	if (fWorkingCopy == null) {
