@@ -213,6 +213,44 @@
                id="org.eclipse.ve.internal.jfc.core.settitleaction">
          </action>
       </objectContribution>
+<!-- 
+	 Edit policy constribution example
+	 Show and Hide grid on null layout policy
+	-->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.jfc.core.showgridaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Container">
+         </filter>
+         <filter
+               name="EDITPOLICY#showgrid"
+               value="false">
+         </filter>
+         <action
+               label="%PopupMenus.ShowGridAction.Label  Show Grid"
+               class="org.eclipse.ve.internal.jfc.core.ShowGridObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.showgridaction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.jfc.core.hidegridaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Container">
+         </filter>
+         <filter
+               name="EDITPOLICY#showgrid"
+               value="true">
+         </filter>
+         <action
+               label="%PopupMenus.HideGridAction.Label  Hide Grid"
+               class="org.eclipse.ve.internal.jfc.core.ShowGridObjectActionDelegate"
+               id="org.eclipse.ve.internal.jfc.core.hidegridaction">
+         </action>
+      </objectContribution>
 <!-- Add Create Content Pane action for RootPaneContainers. -->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
