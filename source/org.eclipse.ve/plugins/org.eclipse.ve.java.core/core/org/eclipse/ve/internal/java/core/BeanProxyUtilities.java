@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-08 11:45:37 $ 
  */
 
 import java.util.List;
@@ -199,9 +199,9 @@ public class BeanProxyUtilities {
 
 		Method method = aPropertyDecorator.getWriteMethod();
 		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
-		IInvokable setFeatureInvokable = getInvokable(method, registry);
-		setFeatureInvokable.invoke(aSource, aValue);
-
+		IMethodProxy setFeatureMethodProxy = getMethodProxy(method, registry);
+		setFeatureMethodProxy.invoke(aSource, aValue);
+		
 	}
 	/** 
 	 * Helper to set a field
@@ -249,8 +249,8 @@ public class BeanProxyUtilities {
 			return null;
 		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
 		// Now get the invokable and invoke it.
-		IInvokable getFeatureInvokable = getInvokable(method, registry);
-		return getFeatureInvokable.invoke(aSource);
+		IMethodProxy getMethodProxy = getMethodProxy(method, registry);
+		return getMethodProxy.invoke(aSource);
 	}
 	/**
 	 *	Return the method proxy from the method in the same registry as the source

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-08 11:52:37 $ 
  */
 
 import java.util.logging.Level;
@@ -38,6 +38,8 @@ public class ComponentManager implements ICallback {
 	protected VisualComponentSupport vcSupport = new VisualComponentSupport();
 	protected IBeanProxy fComponentManagerProxy;
 	protected IBeanProxy fComponentBeanProxy;
+	private Point fLastSignalledLocation;
+	private Dimension fLastSignalledSize;
 	
 public void addComponentListener(IVisualComponentListener aListener){
 	vcSupport.addComponentListener(aListener);
@@ -85,6 +87,9 @@ public Object calledBack(int msgID, Object parm){
 			componentShown();
 			break;
 		case Common.CL_REFRESHED :
+			Object[] bounds = (Object[]) parm; 
+			fLastSignalledLocation = new Point(((Integer)bounds[0]).intValue(),((Integer)bounds[1]).intValue());
+			fLastSignalledSize = new Dimension(((Integer)bounds[2]).intValue(),((Integer)bounds[3]).intValue());
 			fireComponentRefresh();
 			break;
 	}
@@ -115,9 +120,11 @@ public Object calledBack(int msgID, Object[] parms){
 	return null;
 }
 protected void componentResized(int width, int height){
+	fLastSignalledSize = new Dimension(width,height);
 	vcSupport.fireComponentResized(width, height);
 }
 protected void componentMoved(int x, int y){
+	fLastSignalledLocation = new Point(x,y);
 	vcSupport.fireComponentMoved(x, y);
 }
 protected void componentHidden(){
@@ -146,13 +153,33 @@ public void dispose(){
 }
 
 public Rectangle getBounds() {
-	return new Rectangle(getLocation(), getSize());
+
+	if(fLastSignalledLocation != null && fLastSignalledSize != null){
+		return new Rectangle(fLastSignalledLocation.x,fLastSignalledLocation.y,fLastSignalledSize.width,fLastSignalledSize.height);
+	}
+	
+	try {
+		IArrayBeanProxy boundsProxy = BeanAwtUtilities.invoke_get_Bounds_Manager(fComponentManagerProxy);
+		return new Rectangle(
+				((IIntegerBeanProxy) boundsProxy.get(0)).intValue(), 
+				((IIntegerBeanProxy) boundsProxy.get(1)).intValue(),
+				((IIntegerBeanProxy) boundsProxy.get(2)).intValue(),
+				((IIntegerBeanProxy) boundsProxy.get(3)).intValue());
+	} catch (ThrowableProxy e) {
+		return new Rectangle();
+	}
+	
 }
 
 /**
  * Return the location relative to our parent component
  */
 public Point getLocation() {
+	
+	if(fLastSignalledLocation != null){
+		return fLastSignalledLocation;
+	}
+	
 	try {
 		IArrayBeanProxy locProxy = BeanAwtUtilities.invoke_get_Location_Manager(fComponentManagerProxy);
 		return new Point(((IIntegerBeanProxy) locProxy.get(0)).intValue(), ((IIntegerBeanProxy) locProxy.get(1)).intValue());
@@ -162,7 +189,37 @@ public Point getLocation() {
 }
 
 public Dimension getSize() {
+	
+	if(fLastSignalledSize != null){
+		return fLastSignalledSize;
+	}
+	
 	IDimensionBeanProxy sizeProxy = BeanAwtUtilities.invoke_getSize(fComponentBeanProxy);
 	return new Dimension(sizeProxy.getWidth(),sizeProxy.getHeight());
+}
+/**
+ * @param visualComponentBeanProxy for the Component itself
+ * @param parentContainerBeanProxy for the relative parent container
+ */
+public void setComponentAndParent(IBeanProxy aComponentBeanProxy, IBeanProxy parentContainerBeanProxy) {
+	
+//	 Deregister any listening from the previous non null component bean proxy
+	if ( fComponentBeanProxy != null )
+		BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, null);
+		
+	fComponentBeanProxy = aComponentBeanProxy;
+	if ( fComponentBeanProxy != null ) {
+		try {
+			if (fComponentManagerProxy == null) {
+				IBeanTypeProxy componentManagerType = fComponentBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager"); //$NON-NLS-1$
+				fComponentManagerProxy = componentManagerType.newInstance();
+				aComponentBeanProxy.getProxyFactoryRegistry().getCallbackRegistry().registerCallback(fComponentManagerProxy,this);
+				BeanAwtUtilities.invoke_set_ComponentAndParentBean_Manager(fComponentManagerProxy,aComponentBeanProxy,parentContainerBeanProxy);				
+			}
+		} catch (ThrowableProxy e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}		
+	}
+	
 }
 }
