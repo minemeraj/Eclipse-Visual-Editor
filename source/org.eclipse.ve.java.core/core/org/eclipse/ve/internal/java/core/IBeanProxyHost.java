@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyHost.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-28 22:15:55 $ 
  */
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -153,4 +154,9 @@ public IBeanProxyDomain getBeanProxyDomain();
  * A child wishes to be re-created. It determined that it can't do it itself.
  */
 public void reinstantiateChild(IBeanProxyHost aChildProxyHost);
+
+int getErrorStatus();
+
+public List getErrors();
+
 }
