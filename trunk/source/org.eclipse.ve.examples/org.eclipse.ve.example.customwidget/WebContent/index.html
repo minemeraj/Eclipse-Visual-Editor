@@ -58,7 +58,8 @@ a number of touch points that can be used to achieve this.<br>
 Joe Winchester, IBM<br>
 Dave Orme, db4objects</b></p>
 <p><font size="1">
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March 22, 2005<!--webbot bot="Timestamp" endspan i-checksum="16963" --></font></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March
+22, 2005<!--webbot bot="Timestamp" endspan i-checksum="16963" --></font></p>
 <hr width="100%">
 <h1>Table of Contents</h1>
 <ul>
@@ -510,7 +511,6 @@ Eclipse.<br>
 <p>The completed plugin can be obtained separately as described in the
 section <a href="#A_complete_example">A complete example</a><br>
 </p>
-<p></p>
 <h2><a name="Creating_the_Plugin">Creating the Plugin</a></h2>
 <p>This section describes how to build the plugin <span
  style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
@@ -523,22 +523,38 @@ projects to use the custom widget jar that is included in this plugin <a
 </p>
 <p>To create the plugin select open the New Project wizard using the
 menu options <span style="font-weight: bold;">File &gt; New &gt;
-Project </span>and choose Plug-in Project. as shown in Figure 1.<br>
+Project </span>and choose Plug-in Project as shown below<br>
 </p>
-<p><img style="width: 207px; height: 65px;" alt="PluginProjectWizard"
- src="images/PluginProjectWizard.JPG"><br>
+<p><img style="border: 1px solid ; width: 207px; height: 65px;"
+ alt="PluginProjectWizard" src="images/PluginProjectWizard.JPG"><br>
 </p>
-<p><br>
-On the first page of the creation wizard name the plugin <i>org.eclipse.ve.example.customwidget</i>,
+<p>On the first page of the creation wizard name the plugin <i>org.eclipse.ve.example.customwidget</i>,
 select 3.1
 as the target version and select the check box <span
  style="font-style: italic;">Create an OSGi bundle
 manifest.&nbsp;&nbsp; </span>Press <span style="font-style: italic;">Next
 </span>to bring up the <span style="font-style: italic;">Plug-in-Content
 </span>page and enter a plugin name such as <span
- style="font-style: italic;">Customwidget VE Example Plug-in </span>in
+ style="font-style: italic;">Customwidget VE Example Plugin </span>in
 the <span style="font-style: italic;">Plugin-In Name </span>text
-field.&nbsp; Press <span style="font-style: italic;">Finish </span>to
+field and set the name of runtime library to <span
+ style="font-style: italic;">customwidgetplugin.jar</span>.&nbsp; <br>
+</p>
+<p><img style="border: 1px solid ; width: 499px; height: 252px;" alt=""
+ src="images/CreatePluginWizard.JPG"><br>
+</p>
+<p><img src="images/note.gif" alt="Note: " height="13" width="62"> The
+reason the default suggested
+runtime library name of <span style="font-style: italic;">customwidget</span><span
+ style="font-style: italic;"><span style="font-style: italic;">.jar </span></span>is
+renamed to <span style="font-style: italic;">customwidgetplugin.jar </span>is
+to distinguish the jar file used by the workbench code for the plugin
+from the name that will be given to the runtime jar containing the
+custom widget.&nbsp; This is covered in the section <a
+ href="#Different_jars_and_packages">Different jars and packages for
+workbench and widget code</a><br>
+</p>
+<p>Press <span style="font-style: italic;">Finish </span>to
 have the PDE generate the stub plugin.&nbsp; The workbench might then
 ask you to switch to the PDE perspective which you can answer <span
  style="font-style: italic;">Yes </span>to.&nbsp; The plugin manifest
@@ -569,14 +585,16 @@ editor is:<br>
   <li>org.eclipse.jem</li>
   <li>org.eclipse.jem.proxy</li>
   <li>org.eclipse.ve.cde</li>
-  <li>org.eclipse.ve.swt</li>
+  <li><img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif">org.eclipse.ve.swt</li>
   <li>org.eclipse.ve.propertysheet</li>
   <li>org.eclipse.gef</li>
   <li>org.eclipse.emf.ecore<br>
   </li>
 </ul>
-<p><img src="images/note.gif" alt="Note: " height="13" width="62"> The
-pre-requisite plugin
+The
+pre-requisite plugin&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif">
 org.eclipse.ve.swt is not necessarily required by everyone extending
 the visual editor.&nbsp; It contains the code that enables the visual
 editor to work with the SWT and because <span
@@ -586,8 +604,8 @@ plugin was for a JFC toolkit such as AWT or Swing you would not
 necessarily include <span style="font-style: italic;">org.eclipse.ve.swt
 </span>in your list of dependencies but instead would use <span
  style="font-style: italic;">org.eclipse.ve.jfc.&nbsp; </span>If your
-plugin was for an entirely new widget toolkit you might include neither.<br>
-</p>
+plugin was for an entirely new widget toolkit you might include
+neither.
 <p>To set up the list of required plugins select the <span
  style="font-style: italic;">Dependencies </span>tab on the plugin
 editor, select the <span style="font-style: italic;">Add ... </span>button
@@ -1029,7 +1047,6 @@ Library </span>button<span style="font-style: italic;"><span
  src="images/CustomPrompterContainerPage.JPG"><br>
 <span style="font-style: italic;"><span style="font-weight: bold;"><span
  style="font-style: italic;"><span style="font-weight: bold;"></span></span></span></span></p>
-<p class="PictureParagraph"></p>
 <p>Select the <span style="font-style: italic;">Custom Prompter </span>and
 press Next to view the wizard page <span style="font-style: italic;">org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage
 </span>defined <a href="#ContainerPageDefinition">earlier</a>.&nbsp;
@@ -1149,9 +1166,7 @@ and you will need to create a folder called <span
  style="font-style: italic;">icons </span>in the plugin and copy it
 there.<br>
 <br>
-<a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/?cvsroot=Tools_Project"></a><img
- style="border: 1px solid ; width: 241px; height: 97px;" alt=""
+<img style="border: 1px solid ; width: 241px; height: 97px;" alt=""
  src="images/IconsFolder.JPG"><br>
 <p>
 <img src="images/tip.gif" alt="Tip: " height="13" width="62"> Because
@@ -1235,7 +1250,7 @@ categories contained in the <span style="font-style: italic;">custompalette.xmi
 </span>file.&nbsp; This is shown in the figure below where the Prompter
 palette entry has been selected and dragged out onto the Shell.&nbsp; <br>
 <br>
-<img style="width: 503px; height: 439px;" alt=""
+<img style="border: 1px solid ; width: 503px; height: 439px;" alt=""
  src="images/CustomPalette.JPG"><br>
 <br>
 <img style="width: 63px; height: 13px;" src="images/note.gif"
@@ -1270,12 +1285,12 @@ any int, the class itself only works with one of the three values 0, 1,
 or 2 The definition of the the values is held in three static constants
 on the <span style="font-family: monospace;">MyPrompterClass</span>.<br>
 </p>
-<pre><span style="color: rgb(153, 51, 0);">public final static int</span> <span
+<pre><span style="color: rgb(153, 0, 0);">public final static int</span> <span
  style="font-style: italic; color: rgb(51, 51, 255);">DOTS </span>= 0;<br><span
- style="color: rgb(153, 51, 0);">public final static int</span> <span
+ style="color: rgb(153, 0, 0);">public final static int</span> <span
  style="color: rgb(51, 51, 255); font-style: italic;">MORE </span><span
  style="font-style: italic;">= </span>1;<br><span
- style="color: rgb(153, 51, 0);">public final static int</span> <span
+ style="color: rgb(153, 0, 0);">public final static int</span> <span
  style="color: rgb(51, 51, 255); font-style: italic;">OPEN </span>= 2;<br></pre>
 <p>The significance of the three values is that they alter the button
 text for <span style="font-family: monospace;">MyCustomPrompter to </span>be
@@ -1293,13 +1308,13 @@ code shows this for <span style="font-family: monospace;">MyCustomPrompter</span
  style="color: rgb(153, 0, 0);">case </span><span
  style="font-style: italic; color: rgb(51, 51, 255);">MORE</span>: button.setText(<span
  style="color: rgb(51, 51, 255);">"More"</span>);<br>      <span
- style="color: rgb(153, 0, 0);">break</span>;<br>    <span
- style="color: rgb(153, 0, 0);">case </span><span
+ style="color: rgb(153, 0, 0);">break</span>;<br>   <span
+ style="color: rgb(153, 0, 0);"> case </span><span
  style="font-style: italic; color: rgb(51, 51, 255);">OPEN</span>: button.setText(<span
  style="color: rgb(51, 51, 255);">"Open"</span>);<br>      <span
  style="color: rgb(153, 0, 0);">break</span>;<br>    <span
- style="color: rgb(153, 0, 0);">default</span>:<br>      <span
- style="color: rgb(153, 0, 0);">throw new</span> IllegalArgumentException(<span
+ style="color: rgb(153, 0, 0);">default</span>:<br>     <span
+ style="color: rgb(153, 0, 0);"> throw new</span> IllegalArgumentException(<span
  style="color: rgb(51, 51, 255);">"Value "</span> + type + <span
  style="color: rgb(51, 51, 255);">" must be one of 0, 1 or 2"</span>);<br>  }<br>}</pre>
 <p>Whenever a class is selected in the Visual Editor graphical canvas
@@ -1622,7 +1637,6 @@ for its contents are held within the plugin folder structure.&nbsp; The
 code below shows the extension used for the plugin.xml for the <span
  style="font-style: italic;">org.eclipse.ve.examples.customwidget </span>example
 in this tutorial.</p>
-<p></p>
 <pre>    &lt;extension<br>         point="org.eclipse.jem.beaninfo.registrations"&gt;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">      &lt;registration container="org.eclipse.ve.example.PrompterContainer"&gt;<br>         &lt;override<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">         package="org.eclipse.ve.example.customwidget.prompter"<br><img
@@ -1685,7 +1699,6 @@ edit parts for the graphical editor or the Java Beans tree view.<span
  style="color: rgb(255, 0, 0);"><br>
 <br>
 </span></p>
-<p></p>
 <h2><a name="Creating_A_SWT_cell_editor">Custom cell editing for the <span
  style="font-style: italic;">text </span>property</a></h2>
 <p>Because <span style="font-family: monospace;">MyCustomPrompterBeanInfo
@@ -1889,7 +1902,7 @@ instance of&nbsp;<img style="width: 24px; height: 13px;" alt=""
 LabelCellEditor is the class
 org.eclipse.ve.examples.customwidget.LabelDialogContent.&nbsp; This is
 available in CVS <a
- href="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
+ href="../src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
 and extends <span style="font-family: monospace;">org.eclipse.swt.Composite</span>
 and was built using the Visual Editor.&nbsp; This has the methods
 public setString(String aString) to set the current value of the
@@ -2026,7 +2039,6 @@ ensure that it displays the current value of the <span
  style="font-style: italic;">text </span>property<span
  style="font-family: monospace;"><br>
 </span></p>
-<p></p>
 <p><img style="border: 1px solid ; width: 239px; height: 37px;" alt=""
  src="images/TextCurrentValue.JPG"><br>
 </p>
@@ -2358,15 +2370,21 @@ Properties view can render correctly the value of the <span
  style="font-style: italic;">.&nbsp; </span><span
  style="font-style: italic;"></span><br>
 <pre><img style="width: 24px; height: 13px;" alt=""
- src="images/tag1.gif"> protected String stringValue = <span
+ src="images/tag1.gif"><span style="color: rgb(153, 0, 0);"> protected</span> String stringValue = <span
  style="color: rgb(51, 51, 255);">""</span>;<br><span
- style="color: rgb(0, 153, 0);">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ...</span><br>    protected void doSetValue(Object value) {<br>      if (value != null){<br>        IStringBeanProxy stringBeanProxy =<img
+ style="color: rgb(0, 153, 0);">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ...</span><br>    <span
+ style="color: rgb(153, 0, 0);">protected void </span>doSetValue(Object value) {<br>      <span
+ style="color: rgb(153, 0, 0);">if</span> (value != <span
+ style="color: rgb(153, 0, 0);">null</span>){<br>        IStringBeanProxy stringBeanProxy =<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"> (IStringBeanProxy) BeanProxyUtilities.getBeanProxy(<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">(IJavaInstance) value);<br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     stringValue = stringBeanProxy.stringValue();<br>      }<br>      super.doSetValue(value);<br>    }<br><span
- style="color: rgb(0, 153, 0);">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ...</span><br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> protected void updateContents(Object value) {<br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">   super.updateContents(stringValue);<br>    }<br></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     stringValue = stringBeanProxy.stringValue();<br>      }<br>      <span
+ style="color: rgb(153, 0, 0);">super</span>.doSetValue(value);<br>    }<br><span
+ style="color: rgb(0, 153, 0);">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ...</span><br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> <span
+ style="color: rgb(153, 0, 0);">protected void</span> updateContents(Object value) {<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">   <span
+ style="color: rgb(153, 0, 0);">super</span>.updateContents(stringValue);<br>    }<br></pre>
 <p>A String instance varialble&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> is
 created to store the value of the <span style="font-style: italic;">text
@@ -2499,20 +2517,15 @@ the black the new lines to add)<br>
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);"></span><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag1.gif"></span><span
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span><span
  style="color: rgb(153, 153, 153);">     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);">                                xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_2.gif"> &lt;event:Add featureName="eAnnotations"&gt;<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_3.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_4.gif">     graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>      &lt;/addedEObjects&gt; <br>    &lt;/event:Add&gt;<br>    <br><span
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"> &lt;event:Add featureName="eAnnotations"&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>      &lt;/addedEObjects&gt; <br>    &lt;/event:Add&gt;<br>    <br><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);">                        &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
@@ -2684,20 +2697,17 @@ generation subsystem.<br>
 Text Property</span> to the line of Java code generated for the
 setText(String aString) method of the <span style="font-style: italic;">text
 </span>property.</p>
-<p></p>
 <pre><span style="font-family: monospace;"><span
  style="color: rgb(153, 0, 0);">private void</span> createMyCustomPrompter() {</span><br
- style="font-family: monospace;">
-<span style="font-family: monospace;">&nbsp; myCustomPrompter = <span
+ style="font-family: monospace;"><br><span
+ style="font-family: monospace;">&nbsp; myCustomPrompter = <span
  style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell, SWT.<span
  style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span>
 <span style="font-family: monospace;"></span><span
  style="font-family: monospace;">&nbsp; myCustomPrompter.setText(<span
  style="color: rgb(51, 51, 255);">"Text value"</span>); <span
- style="color: rgb(0, 153, 0);">// Prompter Text Property </span></span>
-<span style="font-family: monospace;">}<br>
-</span></pre>
-<p></p>
+ style="color: rgb(0, 153, 0);">// Prompter Text Property </span></span><br><span
+ style="font-family: monospace;">}<br><br></span></pre>
 <p>The class created to do this is <span
  style="font-family: monospace;">org.eclipse.ve.examples.customwidget.CustomPrompterDecoderHelper</span>.&nbsp;&nbsp;
 This is declared in the <span style="font-style: italic;">MyCustomPrompter.override
@@ -2714,28 +2724,22 @@ This is declared in the <span style="font-style: italic;">MyCustomPrompter.overr
  style="color: rgb(153, 153, 153);"></span><span
  style="color: rgb(153, 153, 153);">                        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_3.gif"></span><span
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"></span><span
  style="color: rgb(153, 153, 153);"> </span>  xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
  style="color: rgb(153, 153, 153);"><br
  style="color: rgb(153, 153, 153);"></span><span
  style="color: rgb(153, 153, 153);">                        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>     <span
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>     <span
  style="color: rgb(153, 153, 153);"> &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);">                                graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);">                        &lt;/addedEObjects&gt; </span><br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_2.gif">   &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass"<img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_4.gif">source="codegen.CodeGenHelperClass"<br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_5.gif">     expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   <br><img
- style="width: 24px; height: 13px;" alt=""
- src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br>    <br><span
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass"<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">source="codegen.CodeGenHelperClass"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">     expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   <br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br>    <br><span
  style="color: rgb(153, 153, 153);">                &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);">                        &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
@@ -2776,7 +2780,7 @@ pluginName/qualifiedClassName.<br>
 </p>
 <p><font face="Arial">The
 <a
- href="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
+ href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
 is responsible for determining which decoder helper is associated with
 which property.&nbsp; The superclass
 ~org.eclipse.ve.internal.swt.codegen.SWTControlDecoder is used as this
