@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="decorators"
+    nsURI="http:///org/eclipse/ve/internal/cde/decorators.ecore" nsPrefix="org.eclipse.ve.internal.cde.decorators">
+  <eClassifiers xsi:type="ecore:EClass" name="BasePropertyDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+    <eAttributes name="cellEditorValidatorClassnames" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        upperBound="-1"/>
+    <eAttributes name="labelProviderClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        unsettable="true"/>
+    <eAttributes name="cellEditorClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        unsettable="true"/>
+    <eAttributes name="nullInvalid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true"/>
+    <eAttributes name="entryExpandable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertySourceAdapterInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+    <eAttributes name="propertySourceAdapterClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        unsettable="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorDecorator" eSuperTypes="#//FeatureDescriptorDecorator #//BasePropertyDecorator">
+    <eAttributes name="designtimeProperty" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true"/>
+    <eAttributes name="alwaysIncompatible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+    <eAttributes name="adapter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eAttributes name="propertyDescriptorClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureDescriptorDecorator" abstract="true"
+      eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+    <eOperations name="isFiltered" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eParameters name="flag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eReferences name="categoryString" eType="ecore:EClass utility.ecore#//AbstractString"/>
+    <eReferences name="filterFlagStrings" eType="ecore:EClass utility.ecore#//AbstractString"
+        upperBound="-1"/>
+    <eReferences name="displayNameString" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+    <eReferences name="descriptionString" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+    <eAttributes name="hidden" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eAttributes name="helpContextIdsString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        upperBound="-1"/>
+    <eAttributes name="preferred" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassDescriptorDecorator" eSuperTypes="#//FeatureDescriptorDecorator ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
+    <eReferences name="graphic" eType="ecore:EClass utility.ecore#//Graphic" containment="true"/>
+    <eAttributes name="customizerClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="treeViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="graphViewClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="modelAdapterClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="defaultPalette" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="labelProviderClassname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="palette"
+    nsURI="http:///org/eclipse/ve/internal/cde/palette.ecore" nsPrefix="org.eclipse.ve.internal.cde.palette">
+  <eClassifiers xsi:type="ecore:EClass" name="Palette" abstract="true" eSuperTypes="#//Container">
+    <eReferences name="paletteLabel" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Category" abstract="true" eSuperTypes="#//Container">
+    <eReferences name="categoryLabel" eType="ecore:EClass utility.ecore#//AbstractString"
+        lowerBound="1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Group" abstract="true" eSuperTypes="#//Container">
+    <eReferences name="groupLabel" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Entry" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject #//ICDEPaletteEntry">
+    <eReferences name="entryLabel" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+    <eReferences name="entryShortDescription" eType="ecore:EClass utility.ecore#//AbstractString"
+        containment="true"/>
+    <eAttributes name="icon16Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="icon32Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="defaultEntry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ToolEntry" eSuperTypes="#//AbstractToolEntry">
+    <eAttributes name="toolClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreationToolEntry" abstract="true" eSuperTypes="#//AbstractToolEntry">
+    <eOperations name="createFactory" eType="#//CreationFactory"/>
+    <eOperations name="setFactory">
+      <eParameters name="factory" eType="#//CreationFactory"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractToolEntry" abstract="true" eSuperTypes="#//Entry"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PaletteRef" eSuperTypes="#//Palette">
+    <eReferences name="refControlGroup" eType="#//Group"/>
+    <eReferences name="refCategories" eType="#//Category" upperBound="-1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PaletteCmp" eSuperTypes="#//Palette">
+    <eReferences name="cmpCategories" eType="#//Category" upperBound="-1" containment="true"/>
+    <eReferences name="cmpControlGroup" eType="#//Group" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoryRef" eSuperTypes="#//Category">
+    <eReferences name="refGroups" eType="#//Group" upperBound="-1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoryCmp" eSuperTypes="#//Category">
+    <eReferences name="cmpGroups" eType="#//Group" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupCmp" eSuperTypes="#//Group">
+    <eReferences name="cmpEntries" eType="#//Entry" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupRef" eSuperTypes="#//Group">
+    <eReferences name="refEntries" eType="#//Entry" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="CreationFactory" instanceClassName="org.eclipse.gef.requests.CreationFactory"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject #//ICDEPaletteEntry"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EMFCreationToolEntry" eSuperTypes="#//CreationToolEntry">
+    <eAttributes name="creationClassURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EMFPrototypeToolEntry" eSuperTypes="#//CreationToolEntry">
+    <eAttributes name="prototypeURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotatedCreationEntry" eSuperTypes="#//AbstractToolEntry">
+    <eReferences name="objectCreationEntry" eType="#//CreationToolEntry" lowerBound="1"
+        containment="true"/>
+    <eReferences name="values" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionCreationToolEntry" eSuperTypes="#//CreationToolEntry">
+    <eAttributes name="selectorClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ICDEPaletteEntry" instanceClassName="org.eclipse.ve.internal.cde.palette.ICDEPaletteEntry"
+      abstract="true" interface="true"/>
+</ecore:EPackage>

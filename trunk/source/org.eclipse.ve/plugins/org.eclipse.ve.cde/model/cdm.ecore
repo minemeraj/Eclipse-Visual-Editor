@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cdm"
+    nsURI="http:///org/eclipse/ve/internal/cdm.ecore" nsPrefix="org.eclipse.ve.internal.cdm">
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
+    <eReferences name="diagrams" eType="#//Diagram" upperBound="-1" containment="true"
+        eOpposite="#//Diagram/diagramData"/>
+    <eReferences name="annotations" eType="#//Annotation" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Diagram" eSuperTypes="#//KeyedValueHolder">
+    <eReferences name="diagramData" eType="#//DiagramData" transient="true" eOpposite="#//DiagramData/diagrams"/>
+    <eReferences name="visualInfos" eType="#//VisualInfo" upperBound="-1" eOpposite="#//VisualInfo/diagram"/>
+    <eReferences name="figures" eType="#//DiagramFigure" upperBound="-1" containment="true"/>
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=" "/>
+    <eAttributes name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VisualInfo" eSuperTypes="#//KeyedValueHolder">
+    <eReferences name="diagram" eType="#//Diagram" lowerBound="1" eOpposite="#//Diagram/visualInfos"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedValueHolder" abstract="true">
+    <eReferences name="keyedValues" eType="#//MapEntry" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedLocation" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="value" eType="#//ViewPoint"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedSize" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="value" eType="#//ViewDimension"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedConstraint" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="value" eType="#//ViewRectangle"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ViewDimension" instanceClassName="org.eclipse.ve.internal.cdm.model.Dimension"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ViewPoint" instanceClassName="org.eclipse.ve.internal.cdm.model.Point"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ViewRectangle" instanceClassName="org.eclipse.ve.internal.cdm.model.Rectangle"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Annotation" abstract="true" eSuperTypes="#//KeyedValueHolder">
+    <eOperations name="getVisualInfo" eType="#//VisualInfo">
+      <eParameters name="aDiagram" eType="#//Diagram"/>
+    </eOperations>
+    <eReferences name="visualInfos" eType="#//VisualInfo" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedPoints" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="value" eType="#//ViewPoint" upperBound="-1"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotationEMF" eSuperTypes="#//Annotation">
+    <eReferences name="annotates" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotationGeneric" eSuperTypes="#//Annotation">
+    <eAttributes name="annotatesID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        unsettable="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramFigure" eSuperTypes="#//KeyedValueHolder">
+    <eReferences name="childFigures" eType="#//DiagramFigure" upperBound="-1" containment="true"/>
+    <eAttributes name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedGeneric" instanceClassName="java.util.Map$Entry">
+    <eReferences name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        containment="true"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedInteger" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MapEntry" instanceClassName="java.util.Map$Entry"
+      abstract="true" interface="true">
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedDynamic" instanceClassName="java.util.Map$Entry">
+    <eAttributes name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        volatile="true" transient="true"/>
+    <eAttributes name="value" eType="ecore:EDataType ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EJavaObject"
+        volatile="true" transient="true" unsettable="true"/>
+  </eClassifiers>
+</ecore:EPackage>

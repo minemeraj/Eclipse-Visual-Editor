@@ -1,0 +1,117 @@
+package org.eclipse.ve.internal.cde.decorators;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: PropertyDescriptorDecorator.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ */
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Property Descriptor Decorator</b></em>'.
+ * This is the decorator for a StructuralFeature to supply the information for editing this property.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isDesigntimeProperty <em>Designtime Property</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isAlwaysIncompatible <em>Always Incompatible</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator()
+ * @model 
+ * @generated
+ */
+public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator, BasePropertyDecorator {
+
+
+	/**
+	 * Returns the value of the '<em><b>Designtime Property</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Designtime Property</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Designtime Property</em>' attribute.
+	 * @see #isSetDesigntimeProperty()
+	 * @see #unsetDesigntimeProperty()
+	 * @see #setDesigntimeProperty(boolean)
+	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator_DesigntimeProperty()
+	 * @model unsettable="true"
+	 * @generated
+	 */
+	boolean isDesigntimeProperty();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isDesigntimeProperty <em>Designtime Property</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Designtime Property</em>' attribute.
+	 * @see #isSetDesigntimeProperty()
+	 * @see #unsetDesigntimeProperty()
+	 * @see #isDesigntimeProperty()
+	 * @generated
+	 */
+	void setDesigntimeProperty(boolean value);
+
+	/**
+	 * Unsets the value of the '{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isDesigntimeProperty <em>Designtime Property</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSetDesigntimeProperty()
+	 * @see #isDesigntimeProperty()
+	 * @see #setDesigntimeProperty(boolean)
+	 * @generated
+	 */
+	void unsetDesigntimeProperty();
+
+	/**
+	 * Returns whether the value of the '{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isDesigntimeProperty <em>Designtime Property</em>}' attribute is set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return whether the value of the '<em>Designtime Property</em>' attribute is set.
+	 * @see #unsetDesigntimeProperty()
+	 * @see #isDesigntimeProperty()
+	 * @see #setDesigntimeProperty(boolean)
+	 * @generated
+	 */
+	boolean isSetDesigntimeProperty();
+
+	/**
+	 * Returns the value of the '<em><b>Always Incompatible</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Always Incompatible</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Always Incompatible</em>' attribute.
+	 * @see #setAlwaysIncompatible(boolean)
+	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator_AlwaysIncompatible()
+	 * @model 
+	 * @generated
+	 */
+	boolean isAlwaysIncompatible();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator#isAlwaysIncompatible <em>Always Incompatible</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Always Incompatible</em>' attribute.
+	 * @see #isAlwaysIncompatible()
+	 * @generated
+	 */
+	void setAlwaysIncompatible(boolean value);
+
+}

@@ -1,0 +1,61 @@
+package org.eclipse.ve.internal.cde.emf;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: EMFCreationFactory.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ */
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.gef.requests.CreationFactory;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
+/**
+ * Creation factory for EMF objects. It is given the EClass itself.
+ * This is useful when there are small set of EClasses that will always be loaded.
+ * If there are large set of classes in the palette and not all are to be loaded at 
+ * the start, then use EMFClassCreationFactory. Then the eclass won't be loaded until needed.
+ */
+public class EMFCreationFactory implements CreationFactory {
+	protected EClass fClass;
+
+	public EMFCreationFactory(EClass aClass) {
+		setObjectType(aClass);
+	}
+
+	public void setObjectType(EClass aClass) {
+		fClass = aClass;
+	}
+
+	/**
+	 * getNewObject method comment. 
+	 */
+	public Object getNewObject() {
+		if (fClass == null)
+			return null;
+		try {
+			return fClass.getEPackage().getEFactoryInstance().create(fClass);
+		} catch (Exception e) {
+			Status st = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, "", e); //$NON-NLS-1$
+			CDEPlugin.getPlugin().getLog().log(st);
+		}
+		return null;
+	}
+
+	public Object getObjectType() {
+
+		return fClass;
+
+	}
+
+}

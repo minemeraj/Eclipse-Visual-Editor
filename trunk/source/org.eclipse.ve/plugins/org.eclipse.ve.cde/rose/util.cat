@@ -1,0 +1,670 @@
+
+(object Petal
+    version    	45
+    _written   	"Rose 7.6.0109.2314"
+    charSet    	0)
+
+(object Class_Category "utility"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "org.eclipse.ve.internal.cde")))
+    quid       	"39EF131E01ED"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "AbstractString"
+	    quid       	"39EF148B02BA"
+	    abstract   	TRUE)
+	(object Class "ConstantString"
+	    quid       	"39EF14D301D7"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"39EF15A801A1"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "string"
+		    quid       	"39EF14E502E1"
+		    type       	"String"
+		    initv      	" "
+		    exportControl 	"Public"
+		    Containment 	"By Value")))
+	(object Class "ResourceBundle"
+	    quid       	"3AE5C8E501F2"
+	    abstract   	TRUE)
+	(object Class "URLResourceBundle"
+	    quid       	"3AE5C93202B1"
+	    documentation 	
+|A bundle url is of the form:
+|
+|...directory...
+|
+|For example:
+|
+|platform:/plugin/pluginname/nls/
+|
+|This will look in the plugin directory "nls/" in the plugin "pluginname".
+|
+|NOTE: If this is a directory then the URL MUST end with '/' or it won't work, it will think "nls" is a file and not a directory.
+|
+|There can be more than one if they are to be searched in order.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3AE5C94A0201"
+		    supplier   	"Logical View::utility::ResourceBundle"
+		    quidu      	"3AE5C8E501F2"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "bundleName"
+		    quid       	"3AE5D0800237"
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "bundleURLs"
+		    quid       	"3AE5D0B201FD"
+		    documentation 	"The URL's to use to search for the bundle. If there is more, then they will be searched in order for the bundle (or bundles if this is locale specific override type bundle)."
+		    stereotype 	"0..*"
+		    type       	"String"
+		    exportControl 	"Public")))
+	(object Class "Graphic"
+	    quid       	"39FDB19703B6"
+	    documentation 	"A Graphic. This is an Abstract class. Subclasses of it will return an IImage."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3E39BE0A02AD"
+		    stereotype 	"extend"
+		    supplier   	"Logical View::ecore::EObject"
+		    quidu      	"3C4F1C860123")
+		(object Inheritance_Relationship
+		    quid       	"3E39BE2902A8"
+		    supplier   	"Logical View::utility::IGraphic"
+		    quidu      	"3E39BDF500B8"))
+	    abstract   	TRUE)
+	(object Class "GIFFileGraphic"
+	    quid       	"39FDB1A6021D"
+	    documentation 	"This class caches the Image from a resource name of a gif file."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"39FDB1B50124"
+		    supplier   	"Logical View::utility::Graphic"
+		    quidu      	"39FDB19703B6"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "resourceName"
+		    quid       	"39FDB39700B9"
+		    documentation 	
+|This is the resource name of the gif file. It is of the form of a URL. This means that to access GIF's within a plugin, use the format of "platform:/plugin/PLUGINID/GIFILENAME".
+		    
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")))
+	(object Class "TranslatableString"
+	    quid       	"39EF15B00239"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"39EF17AB02F6"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "key"
+		    quid       	"39EF178D0018"
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")))
+	(object Class "IGraphic"
+	    quid       	"3E39BDF500B8"
+	    stereotype 	"Interface"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "org.eclipse.ve.internal.cde.emf.IGraphic"
+		    quid       	"3E39BE1A00D9"
+		    stereotype 	"javaclass")))
+	(object Association "$UNNAMED$0"
+	    quid       	"3AE5DE990088"
+	    roles      	(list role_list
+		(object Role "bundle"
+		    quid       	"3AE5DE9B004F"
+		    label      	"bundle"
+		    supplier   	"Logical View::utility::ResourceBundle"
+		    quidu      	"3AE5C8E501F2"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Reference"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$1"
+		    quid       	"3AE5DE9B0059"
+		    supplier   	"Logical View::utility::TranslatableString"
+		    quidu      	"39EF15B00239"))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "gefutil"
+	    quid       	"39EF13EE03C3"
+	    title      	"gefutil"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	95
+	    origin_y   	890
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::utility::AbstractString" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(896, 112)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(755, 63)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	282
+			justify    	0
+			label      	"AbstractString")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39EF148B02BA"
+		    width      	300
+		    height     	122
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::utility::ConstantString" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(512, 464)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(352, 369)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	320
+			justify    	0
+			label      	"ConstantString")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39EF14D301D7"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(352, 425)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	327)
+		    width      	338
+		    height     	212
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritTreeView "" @3
+		    location   	(896, 280)
+		    line_color 	3342489
+		    fill_color 	13434879
+		    supplier   	@1
+		    vertices   	(list Points
+			(896, 280)
+			(896, 173)))
+		(object InheritView "" @4
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"39EF15A801A1"
+		    client     	@2
+		    supplier   	@1
+		    line_style 	3
+		    origin_attachment 	(610, 358)
+		    terminal_attachment 	(610, 280)
+		    drawSupplier 	@3)
+		(object ClassView "Class" "Logical View::utility::URLResourceBundle" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1936, 1008)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(1660, 913)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	552
+			justify    	0
+			label      	"URLResourceBundle")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3AE5C93202B1"
+		    compartment 	(object Compartment
+			Parent_View 	@5
+			location   	(1660, 969)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	550)
+		    width      	570
+		    height     	212
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::utility::ResourceBundle" @6
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1936, 512)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(1763, 463)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	346
+			justify    	0
+			label      	"ResourceBundle")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3AE5C8E501F2"
+		    width      	364
+		    height     	122
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @7
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3AE5C94A0201"
+		    client     	@5
+		    supplier   	@6
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::utility::TranslatableString" @8
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1216, 512)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@8
+			location   	(1043, 439)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	346
+			justify    	0
+			label      	"TranslatableString")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39EF15B00239"
+		    compartment 	(object Compartment
+			Parent_View 	@8
+			location   	(1043, 495)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	240)
+		    width      	364
+		    height     	168
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @9
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"39EF17AB02F6"
+		    client     	@8
+		    supplier   	@1
+		    line_style 	3
+		    origin_attachment 	(1215, 428)
+		    terminal_attachment 	(1215, 280)
+		    drawSupplier 	@3)
+		(object AssociationViewNew "$UNNAMED$0" @10
+		    location   	(1575, 512)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3AE5DE990088"
+		    roleview_list 	(list RoleViews
+			(object RoleView "bundle" @11
+			    Parent_View 	@10
+			    location   	(359, 0)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @12
+				Parent_View 	@11
+				location   	(1669, 472)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	138
+				justify    	0
+				label      	"+bundle"
+				pctDist    	0.533708
+				height     	41
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3AE5DE9B004F"
+			    client     	@10
+			    supplier   	@6
+			    line_style 	0
+			    label      	(object SegLabel @13
+				Parent_View 	@11
+				location   	(1670, 566)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.539326
+				height     	54
+				orientation 	1))
+			(object RoleView "$UNNAMED$1" @14
+			    Parent_View 	@10
+			    location   	(359, 0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3AE5DE9B0059"
+			    client     	@10
+			    supplier   	@8
+			    line_style 	0)))
+		(object ClassView "Class" "Logical View::utility::Graphic" @15
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(512, 1824)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@15
+			location   	(426, 1775)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	172
+			justify    	0
+			label      	"Graphic")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39FDB19703B6"
+		    width      	190
+		    height     	122
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::utility::GIFFileGraphic" @16
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(512, 2240)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@16
+			location   	(293, 2167)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	438
+			justify    	0
+			label      	"GIFFileGraphic")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39FDB1A6021D"
+		    compartment 	(object Compartment
+			Parent_View 	@16
+			location   	(293, 2223)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	437)
+		    width      	456
+		    height     	168
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @17
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"39FDB1B50124"
+		    client     	@16
+		    supplier   	@15
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::utility::IGraphic" @18
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1248, 1504)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@18
+			location   	(763, 1431)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	970
+			justify    	0
+			label      	"IGraphic")
+		    icon       	"Interface"
+		    icon_style 	"None"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3E39BDF500B8"
+		    compartment 	(object Compartment
+			Parent_View 	@18
+			location   	(763, 1487)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	2
+			max_width  	967)
+		    width      	988
+		    height     	168
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::ecore::EObject" @19
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(352, 1472)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@19
+			location   	(263, 1403)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	178
+			justify    	0
+			label      	"EObject")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3C4F1C860123"
+		    width      	196
+		    height     	160
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @20
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	(object SegLabel @21
+			Parent_View 	@20
+			location   	(488, 1672)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	10
+			anchor_loc 	1
+			nlines     	1
+			max_width  	450
+			justify    	0
+			label      	"<<extend>>"
+			pctDist    	0.346824
+			height     	42
+			orientation 	1)
+		    line_color 	3342489
+		    quidu      	"3E39BE0A02AD"
+		    client     	@15
+		    supplier   	@19
+		    line_style 	0)
+		(object InheritView "" @22
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3E39BE2902A8"
+		    client     	@15
+		    supplier   	@18
+		    line_style 	0)))))
