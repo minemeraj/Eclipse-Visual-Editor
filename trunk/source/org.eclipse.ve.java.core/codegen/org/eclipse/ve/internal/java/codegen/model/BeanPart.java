@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.13 $  $Date: 2004-04-01 00:51:21 $ 
+ *  $Revision: 1.14 $  $Date: 2004-04-01 15:37:13 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -42,7 +42,6 @@ public class BeanPart {
     public final static String		 THIS_HANDLE = "_this_Annotation_handle";
 	
 	String 	fName = null ;
-	String	fUniqueName = null ;
 	String 	fType ;
 	ASTNode 		fFieldDecl = null ;
 	ArrayList		fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
@@ -329,15 +328,16 @@ protected String primGetUniqueName() {
 }
 
 public String getUniqueName() {
-	if (fUniqueName != null) return fUniqueName ;
 	String base = primGetUniqueName() ;
 	String name = base ;
 	int i = 0 ;
-	while (fModel.getABean(name) != null) {		
-		name = base + Integer.toString(++i) ;
+	while (fModel.getABean(name) != null) {
+		if(!fModel.getABean(name).equals(this))
+			name = base + Integer.toString(++i) ; // If other bean is present with name, change our unique name
+		else
+			break;
 	}
-	fUniqueName = name ;
-	return fUniqueName ;
+	return name;
 }
 
 /**
