@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-25 15:46:05 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-25 18:16:18 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,6 +29,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
@@ -93,7 +94,7 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	protected void createLayoutEditPolicy() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new CoolBarLayoutEditPolicy(this));
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DefaultLayoutEditPolicy(new CoolBarContainerPolicy(EditDomain.getEditDomain(this))));
 	}
 
 	protected void setPropertySource(ControlGraphicalEditPart childEP, EObject child) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-23 22:25:07 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-25 18:16:18 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -76,14 +76,14 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getCreateCommand(java.lang.Object, java.lang.Object)
 	 */
 	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		return super.getCreateCommand(child, positionBeforeChild).chain(getCreateTabItemCommand(child));
+		return super.getCreateCommand(child, positionBeforeChild).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
 	}
 
 	/*
 	 * Create the command to create the parse tree allocation for the TabItem, the command to set the child as the 'control' property setting of the
 	 * TabItem, and the command to set the TabItem as a child of the TabFolder.
 	 */
-	private Command getCreateTabItemCommand(final Object child) {
+	private Command getCreateTabItemCommand(final Object child, final EObject positionBeforeChild) {
 		Command setTabItemCommand = new CommandWrapper() {
 
 			protected boolean prepare() {
@@ -91,6 +91,10 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 			}
 
 			public void execute() {
+				EObject positionBeforeItem = null;
+				if (positionBeforeChild != null)
+					positionBeforeItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
+							positionBeforeChild);
 				IJavaObjectInstance tabItem = (IJavaObjectInstance) visualsFact.create(classTabItem);
 				PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
 				ic.setType(tabItem.getJavaType().getJavaName());
@@ -109,7 +113,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 				tabItem.setAllocation(alloc);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 				cb.applyAttributeSetting((EObject) tabItem, sf_tabItemControl, child);
-				cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem);
+				cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeItem);
 				command = cb.getCommand();
 				command.execute();
 			}
@@ -173,8 +177,8 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 
 			public void execute() {
 				// First get the TabItem of the positionBeforeChild
-				EObject positionBeforeTab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
-						positionBeforeChild);
+				EObject positionBeforeTab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems,
+						sf_tabItemControl, positionBeforeChild);
 				// Process throught the list and cancel/apply each TabItem before the positional TabItem
 				for (int i = 0; i < children.size(); i++) {
 					EObject child = (EObject) children.get(i);
