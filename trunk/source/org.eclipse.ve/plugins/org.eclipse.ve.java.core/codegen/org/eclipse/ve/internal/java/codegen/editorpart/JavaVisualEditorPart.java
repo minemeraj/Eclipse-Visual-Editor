@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.30 $  $Date: 2004-04-27 21:35:21 $ 
+ *  $Revision: 1.31 $  $Date: 2004-04-28 20:19:51 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -244,7 +244,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelBuilder.pause();
 			}
 			public void reload() {
-				loadModel();
+				loadModel(true);
 			}
 		}));
 			
@@ -257,11 +257,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		// The input has changed.
 		super.doSetInput(input);
-		loadModel();
+		loadModel(true);
 	}
 	
 	protected Job setupJob = null; 
-	protected void loadModel() {
+	protected void loadModel(boolean resetVMRecycleCounter) {
+		if (resetVMRecycleCounter)
+			recycleCntr = 0;	// Reset the counter because we are a new load and ask for it to be reset.
 		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
 		rla.setEnabled(false);	// While reloading, don't want button to be pushed.
 		
@@ -977,9 +979,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private int recycleCntr = 0; // A counter to handle pre-mature terminations. We don't want to keep recycling if it keeps going down.
 	private boolean restartVMNeeded = false;
 
+	/*
+	 * Restart the vm. This will not reset the recycle vm counter. That is because these are implicit restarts. Not
+	 * explicit reload requests. Explicit reload requests will go directly through loadModel(true).
+	 */
 	private void restartVM() {
 		restartVMNeeded = false;
-		loadModel();
+		loadModel(false);
 	}
 
 	protected SelectionSynchronizer getSelectionSynchronizer() {
@@ -1401,7 +1407,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void reloadIsNeeded(){
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							loadModel();
+							loadModel(true);
 						}
 					});
 				}
