@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultScannerFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-01-20 22:05:24 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-03 23:29:54 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -37,6 +37,11 @@ public class DefaultScannerFactory implements IScannerFactory {
 		((PublicScanner)fScanner).tokenizeComments = tokenizeComments;
 		((PublicScanner)fScanner).tokenizeWhiteSpace = tokenizeWhiteSpace;
 		((PublicScanner)fScanner).recordLineSeparator = recordLineSeparator;
+		// temporary fix for PublicScanner not cleaning up internals - this should be removed 
+		// once JDT defect 84398 is fixed
+		int lineEndsSize = ((PublicScanner)fScanner).lineEnds.length;
+		for (int i = 0; i < lineEndsSize; i++) 
+			((PublicScanner)fScanner).lineEnds[i]=0;
 		return fScanner;
 	}
 
