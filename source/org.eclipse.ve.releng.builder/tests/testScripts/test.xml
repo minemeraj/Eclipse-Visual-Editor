@@ -36,7 +36,7 @@
     	</exec>
 	
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq VE-runtime-*.zip -d ${install}/eclipse"/>
+			<arg line="-o -qq VE-runtime-*.zip -d ${install}"/>
     	</exec>
     	
 		<exec dir="." executable="unzip">
