@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.17 $ $Date: 2005-02-23 23:19:40 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.18 $ $Date: 2005-03-22 22:11:00 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -140,6 +140,42 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 			});
 		}
 		return style;
+	}
+
+	/* 
+	 * Do the whole setting on the UI thread - 
+	 *	Though applying the value takes place on the UI thread (WidgetProxyAdapter.primApplyBeanFeature()),
+	 * the evaluation of the arguments does not. Because of this if some argument is dependent on the UI
+	 * thread, it fails (ex: button1.setText(>>button2.getText()<<);) Hence wrapper the whole setting of the
+	 * feature to be on the UI thread.
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void applied(final EStructuralFeature sf, final Object newValue, final int position) {
+		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				WidgetProxyAdapter.super.applied(sf, newValue, position); // We letting the settings go through
+				return null;
+			}
+		});
+	}
+
+	/* 
+	 * Do the whole cancelling on the UI thread - 
+	 *	Though cancelling the value takes place on the UI thread (WidgetProxyAdapter.primApplyBeanFeature()),
+	 * the evaluation of the arguments does not. Because of this if some argument is dependent on the UI
+	 * thread, it fails (ex: button1.setText(>>button2.getText()<<);) Hence wrapper the whole cancelling of the
+	 * feature to be on the UI thread.
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void canceled(final EStructuralFeature sf, final Object oldValue, final int position) {
+		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				WidgetProxyAdapter.super.canceled(sf, oldValue, position);
+				return null;
+			}
+		});
 	}
 
 }
