@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-04 22:59:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -60,10 +60,15 @@ public class EventMethodVisitor extends MethodVisitor {
 		fastDom = dom ;
 		boolean useDefault = true ;
 		for (int i=0; i<fESigs.size(); i++) {
+		  try {
 		    if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
 		    	useDefault = false ;
 		    	break ;
-		    }		   		    
+		    }	
+		  }
+		  catch (Exception e) {
+		  	JavaVEPlugin.log(e);
+		  }
 		}
 		if (useDefault) fPrefixConstraint = fDefaultPrefix ;
 	}
