@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-20 15:58:49 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-20 16:39:41 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -26,7 +26,7 @@ import org.eclipse.ve.internal.swt.SWTConstants;
  */
 public class CoolBarDecoder extends CompositeDecoder {
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
-	protected final static String ADD_METHOD_SF_NAME = SWTConstants.SF_COOLBAR_ITEMS.lastSegment();
+	protected final static String ADD_METHOD_SF_NAME = URItoFeature(SWTConstants.SF_COOLBAR_ITEMS);
 
 	public CoolBarDecoder(){
 		super();
