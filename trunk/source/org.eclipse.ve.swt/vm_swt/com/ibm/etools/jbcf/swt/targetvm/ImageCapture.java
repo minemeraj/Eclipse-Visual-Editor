@@ -54,6 +54,8 @@ public class ImageCapture {
 	public Image getImage(Control aControl){
 		
 		Rectangle rect = aControl.getBounds ();
+		if (rect.width <= 0 || rect.height <= 0)
+			return new Image(aControl.getDisplay(), 1, 1);	// TODO we are getting invalid rect for some reason. Figure out why later.
 		Image image = new Image (aControl.getDisplay(), rect.width, rect.height);
 		int WM_PRINT = 0x0317;
 		int WM_PRINTCLIENT = 0x0318;		
