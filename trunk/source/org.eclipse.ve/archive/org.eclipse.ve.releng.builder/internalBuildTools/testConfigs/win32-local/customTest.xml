@@ -11,5 +11,29 @@
 		<copy file="${testBase}/eclipse-SDK.zip" todir="${executionDir}" />
 	</target>
 
+	<target name="testurl">
+		<property file="${testBase}/${zipname}.properties"/>
+		<condition property="sameurl">
+			<and>
+				<isset property="downurl"/>
+				<equals arg1="${downurl}" arg2="${eclipseLinuxGTKZipURL}"/>
+			</and>
+		</condition>
+	</target>
+				
+	<target name="outofdate" unless="sameurl" depends="testurl">	
+		<delete>
+			<fileset dir="${testBase}">
+			    <include name="${zipname}"/>
+			</fileset>
+		</delete>
+	</target>
+		
+	<target name="download" depends="outofdate">
+		<get src="${eclipseLinuxGTKZipURL}" dest="${testBase}/${zipname}" usetimestamp="true"/>
+		<propertyfile file="${testBase}/${zipname}.properties">
+			<entry key="downurl" value="${eclipseWin32ZipURL}"/>
+		</propertyfile>
+	</target>
 	<target name="noDefault"/>
 </project>
