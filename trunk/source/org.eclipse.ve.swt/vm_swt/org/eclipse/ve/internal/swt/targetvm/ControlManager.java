@@ -199,16 +199,12 @@ public abstract class ControlManager implements ICallback , ControlListener {
 					final ImageData imageData = image.getImageData();
 					image.dispose();
 					image = null;
-					byte[] data = imageData.data;					
-					final int[] pixels = new int[data.length];
-					for(int i = 0; i < data.length; i++){
-						pixels[i] = data[i];
-					}
+					final byte[] data = imageData.data;					
 					// Send the length back to the IDE which is the total length and then width and height
 					fServer.doCallback(new ICallbackRunnable(){
 						public Object run(ICallbackHandler handler) throws CommandException{
 							return handler.callbackWithParms(fCallbackID,IMAGE_INITIAL_LENGTH,
-								new Object[]{new Integer(pixels.length), new Integer(imageData.width), new Integer(imageData.height)});
+								new Object[]{new Integer(data.length), new Integer(imageData.width), new Integer(imageData.height)});
 						}
 					});
 					// Send back the masks used by the image so the IDE can reconstitute it correctly
@@ -224,8 +220,8 @@ public abstract class ControlManager implements ICallback , ControlListener {
 						}
 					});
 					// Send back all of the image data
-					for (int i = 0; i < pixels.length; i++) {
-						outputStream.write( pixels[i]);		
+					for (int i = 0; i < data.length; i++) {
+						outputStream.write( (int) data[i]);		
 					}
 
 					outputStream.close();

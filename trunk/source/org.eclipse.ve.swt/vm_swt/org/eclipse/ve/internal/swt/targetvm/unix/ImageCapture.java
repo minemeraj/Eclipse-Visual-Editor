@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2004-10-14 18:51:47 $ 
+ *  $Revision: 1.5 $  $Date: 2004-10-26 23:20:22 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -294,9 +294,12 @@ public class ImageCapture implements IImageCapture{
 		int ic = includeChildren?1:0;
 		Map map = new HashMap();
 		changeObscured(control, map, false);
-		Image image = getImageOfControl(control, ic);
-		changeObscured(control, map, true);
-		map.clear();
+		Image image = null;
+		try {
+			image = getImageOfControl(control, ic);
+		} finally {
+			changeObscured(control, map, true);
+		}
 		return image;
 	}
 
