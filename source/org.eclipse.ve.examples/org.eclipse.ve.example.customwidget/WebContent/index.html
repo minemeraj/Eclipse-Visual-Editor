@@ -2068,7 +2068,8 @@ JVM.&nbsp;&nbsp;&nbsp; This proxy is an instance of <span
  style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.IBeanProxy</span>
 and is able to perform tasks such as remote method&nbsp; invocation on
 the actual target VM instance. <br>
-The API for this is modelled on the the java.lang.reflect API however,
+The API for this is modelled on the the<span
+ style="font-family: monospace;"> java.lang.reflect</span> API however,
 unlike the reflection API which performs dynamic invocation within a
 single JVM, the bean proxy mechanism works between the Eclipse
 workbench's JVM where the proxies are, and Visual Editor's target JVM
@@ -2157,7 +2158,7 @@ initArgs)</span><br>
 </table>
 <p>To locate instances of <span style="font-family: monospace;">IBeanProxy
 </span>(from which method and constructor proxies can be retrieved)
-uses a factory that is held on a proxy factory registry.&nbsp; The
+a factory is used that is held on a proxy factory registry.&nbsp; The
 registry is used to create and cache instances of <span
  style="font-family: monospace;">IBeanTypeProxy</span>, and can be
 located through a helper method which retrieves it from the GEF edit
@@ -2186,23 +2187,25 @@ the target VM.<br>
 <span style="font-family: monospace;">IBeanProxy </span>for the
 java.io.File can be created by locating the the correct <span
  style="font-family: monospace;">IConstructorProxy </span>and calling
-newInstance(IBeanProxy[]) with the correct arguments. <br>
+<span style="font-family: monospace;">newInstance(IBeanProxy[])</span>
+with the correct arguments.<br>
 </p>
-<pre>IBeanTypeProxy stringBeanTypeProxy = aProxyFactoryRegistry.getBeanTypeProxy(<span
- style="color: rgb(51, 51, 255);">"java.lang.String"</span>);<br>IBeanProxy fooStringBeanProxy = aProxyFactoryRegistry.getBeanProxyFactory().createBeanProxyWith(<span
+<pre>IBeanProxy fooStringBeanProxy = aProxyFactoryRegistry.getBeanProxyFactory().createBeanProxyWith(<span
  style="color: rgb(51, 51, 255);">"C:\temp\foo.txt"</span>);<br>IConstructorProxy fileConstructorProxy = javaIOFileBeanTypeProxy.getConstructorProxy(<span
  style="color: rgb(51, 51, 255);">"java.lang.String"</span>);<br>IBeanProxy fileProxy = fileConstructorProxy.newInstance(fooStringBeanProxy);<br></pre>
 <p>In addition to locating the IConstructorProxy and invoking as shown
 above there is a shorthand way of creating a bean proxy with a specific
 Java initialization string.&nbsp; This is with the method
-newInstance(String javaInitializationString) on IBeanTypeProxy.&nbsp;
+<span style="font-family: monospace;">newInstance(String
+javaInitializationString) </span>on <span
+ style="font-family: monospace;">IBeanTypeProxy</span>.&nbsp;
 Using this the above code can be shortened to <br>
 </p>
 <pre>IBeanProxy fileProxy = javaIOFileBeanTypeProxy.newInstance(<span
  style="color: rgb(51, 51, 255);">"C:\temp\foo.txt"</span>);<br></pre>
 <p>The Visual Editor's model for the Java class being visually is an
-EMF graph of IJavaInstance objects. The API method <span
- style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.BeanProxyUtilities.getBeanProxy(IJavaInstance
+EMF graph of <span style="font-family: monospace;">IJavaInstance </span>objects.
+The API method <span style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.BeanProxyUtilities.getBeanProxy(IJavaInstance
 aJavaInstance)</span> exists to obtain the bean proxy fom a Visual
 Editor EMF object.&nbsp; These are some more examples of the API for
 working with bean proxies.<br>
@@ -2517,32 +2520,32 @@ the black the new lines to add)<br>
 <pre><span style="color: rgb(192, 192, 192);">   <span
  style="color: rgb(153, 153, 153);"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
+ style="color: rgb(153, 153, 153);">    &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);"></span><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span><span
- style="color: rgb(153, 153, 153);">     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"</span><br
+ style="color: rgb(153, 153, 153);">  xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><img
+ style="color: rgb(153, 153, 153);">     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"> &lt;event:Add featureName="eAnnotations"&gt;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>      &lt;/addedEObjects&gt; <br>    &lt;/event:Add&gt;<br>    <br><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
+ style="color: rgb(153, 153, 153);">      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
+ style="color: rgb(153, 153, 153);">        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                        cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
+ style="color: rgb(153, 153, 153);">          cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;/addedEObjects&gt;</span><br
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                &lt;/event:Add&gt;   </span><br
+ style="color: rgb(153, 153, 153);">    &lt;/event:Add&gt;   </span><br
  style="color: rgb(153, 153, 153);"><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">        &lt;/xmi:XMI&gt;                                                                                                                                                                                                             &lt;/xmi:XMI&gt;</span></pre>
+ style="color: rgb(153, 153, 153);">  &lt;/xmi:XMI&gt;                                                                                                                                                                                                             &lt;/xmi:XMI&gt;</span></pre>
 <p>To specify that <span style="font-family: monospace;">BasePropertyDecorator
 </span>as annotating the <span style="font-style: italic;">type </span>structural
 feature (as was done for the CustomLabelEditor earlier) an&nbsp;<img
@@ -2720,44 +2723,44 @@ This is declared in the <span style="font-style: italic;">MyCustomPrompter.overr
 </span>so the Visual Editor uses it.<br>
 </p>
 <pre><span style="color: rgb(192, 192, 192);"><span
- style="color: rgb(153, 153, 153);"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
+ style="color: rgb(153, 153, 153);">   &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
+ style="color: rgb(153, 153, 153);">   &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
  style="color: rgb(153, 153, 153);"><span
  style="color: rgb(153, 153, 153);"></span><span
  style="color: rgb(153, 153, 153);"></span><span
- style="color: rgb(153, 153, 153);">                        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
+ style="color: rgb(153, 153, 153);">    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"></span><span
- style="color: rgb(153, 153, 153);"> </span>  xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
+ style="color: rgb(153, 153, 153);"> </span>xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
  style="color: rgb(153, 153, 153);"><br
  style="color: rgb(153, 153, 153);"></span><span
- style="color: rgb(153, 153, 153);">                        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
+ style="color: rgb(153, 153, 153);">    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>     <span
  style="color: rgb(153, 153, 153);"> &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><br
+ style="color: rgb(153, 153, 153);">        graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;/addedEObjects&gt; </span><br><img
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt; </span><br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass"<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">source="codegen.CodeGenHelperClass"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">     expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   <br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br>    <br><span
- style="color: rgb(153, 153, 153);">                &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
+ style="color: rgb(153, 153, 153);">    &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
+ style="color: rgb(153, 153, 153);">      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
+ style="color: rgb(153, 153, 153);">        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                        cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
+ style="color: rgb(153, 153, 153);">          cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;/addedEObjects&gt;</span><br
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt;</span><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                &lt;/event:Add&gt;   </span><br
+ style="color: rgb(153, 153, 153);">    &lt;/event:Add&gt;   </span><br
  style="color: rgb(153, 153, 153);"><br
  style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">        &lt;/xmi:XMI&gt;</span></pre>
+ style="color: rgb(153, 153, 153);">  &lt;/xmi:XMI&gt;</span></pre>
 <span style="color: rgb(192, 192, 192);"> </span><span
  style="color: rgb(153, 153, 153);"> </span>
 <p>Earlier when just the single ClassDecriptorDecorator was added as an
