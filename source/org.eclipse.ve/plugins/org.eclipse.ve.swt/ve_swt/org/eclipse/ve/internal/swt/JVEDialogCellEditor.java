@@ -10,13 +10,17 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IFileEditorInput;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.workbench.utility.NoASTResolver;
+import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -45,15 +49,38 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	 * Create an instance of the MOF BeanType with string specified
 	 */
 	private Object createValue(Object value) {
-		
 		// Get the string of the type class
-		String qualifiedClassName = value.getClass().getName();		
-	
+		String qualifiedClassName = value.getClass().getName();
+		
 		return BeanUtilities.createJavaObject(
-			qualifiedClassName, //$NON-NLS-1$
-			JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaInitializationString());
+				qualifiedClassName, //$NON-NLS-1$
+				JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaInitializationString());
+// TODO uncomment the next 2 lines when parse trees are fully implemented
+//		// create the java object using a parse tree allocation
+//		return BeanUtilities.createJavaObject(qualifiedClassName, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
 	}
 
+	/*
+	 * Create a Parse tree allocation from the initialization string returned from the property editor.
+	 * 
+	 * TODO Do NOT DELETE this method even though it's not used. Will be used in the createValue(Object value) method
+	 * 		once parse trees allocations are fully implemented.
+	 */
+	private JavaAllocation getJavaAllocation() {
+		ASTParser parser = ASTParser.newParser(AST.JLS2);
+		String initString = getJavaInitializationString();
+		parser.setSource(initString.toCharArray());
+		parser.setSourceRange(0, initString.length());
+		parser.setKind(ASTParser.K_EXPRESSION);
+		ASTNode ast = parser.createAST(null);
+		if (ast == null)
+			return null; // It didn't parse.
+
+		ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+		alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) ast));
+		return alloc;
+	}
+	
 	public Object openDialogBox(Control cellEditorWindow) {
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();	
 		chooser.setValue(aValue);

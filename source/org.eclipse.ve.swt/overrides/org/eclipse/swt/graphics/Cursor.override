@@ -10,6 +10,7 @@
     xmlns:event="event.xmi"
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+      labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CursorJavaClassLabelProvider"
       cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.JVEDialogCellEditor:org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CursorPropertyEditor">
   </addedEObjects>
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ResourceProxyAdapter"/>  
