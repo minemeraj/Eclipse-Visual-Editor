@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.35 $  $Date: 2004-05-18 18:15:15 $ 
+ *  $Revision: 1.36 $  $Date: 2004-05-20 13:17:41 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -100,6 +100,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	protected int[] methodEnds;
   	protected String[] methodHandles;
   	protected String[] fieldHandles;
+  	protected List changedHandles = new ArrayList();
   	
   	/**
   	 *  ReLoad the BDM model from stratch
@@ -247,9 +248,6 @@ IDiagramSourceDecoder fSourceDecoder = null;
   					allEvents.clear();
   					return true;
   				}else{
-  					fEventsProcessedCount = allEvents.size();
-  					allEvents.clear();
-  					lockManager.setThreadScheduled(false);
   					try {
   				  		workingCopy.reconcile(false, false, null, null);
  						currentSource = workingCopy.getBuffer().getContents();
@@ -264,8 +262,14 @@ IDiagramSourceDecoder fSourceDecoder = null;
   						
   						// Record JDT imports
   						takeImportSnapshot(workingCopy) ;
+  						
+  						recordChanges(allEvents, workingCopy);
   					} catch (JavaModelException e) {
   						JavaVEPlugin.log(e);
+  					} finally {
+  	  					fEventsProcessedCount = allEvents.size();
+  	  					allEvents.clear();
+  	  					lockManager.setThreadScheduled(false);
   					}
   				}  				
   			}  			
@@ -273,7 +277,69 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		return false;
   	}
   	
-  	protected CompilationUnit parse(String source){
+  	/**
+	 * @param allEvents
+	 * @param workingCopy
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void recordChanges(List allEvents, ICompilationUnit workingCopy) {
+		changedHandles.clear();
+		// if a revert was performed, there will be only one doc event 
+		// containing all the source - pointless to check for specific changes
+		if(allEvents.size()==1){
+			try {
+				DocumentEvent de = ((DocumentEvent)allEvents.get(0));
+				if(	de.getText().length()==workingCopy.getSourceRange().getLength())
+					return;
+			} catch (JavaModelException e) {}
+		}
+		
+		// since the doc events were snapshots, we need to figure
+		// out where these changes are in the present document. 
+		// hence need to figure out the new location/offsets of the doc events.
+		int[][] fromToDiff = new int[allEvents.size()][3];
+		for (int ec = 0; ec < allEvents.size(); ec++) {
+			DocumentEvent de = (DocumentEvent) allEvents.get(ec);
+			int deFrom = de.getOffset();
+			int deTo = de.getOffset() + de.getLength();
+			int deDiff = (de.getText()==null?0:de.getText().length()) - de.getLength();
+			fromToDiff[ec][0] = deFrom;
+			fromToDiff[ec][1] = deTo;
+			fromToDiff[ec][2] = deDiff;
+			for (int pec = 0; pec < ec; pec++) {
+				int pdeFrom = fromToDiff[pec][0];
+				int pdeTo = fromToDiff[pec][1];
+				if(deFrom > pdeTo){
+					// de is completely below the previous de - no change 
+				}else if(	(deTo <= pdeFrom) || // de is completely above prev de - prev de gets effected
+						(deTo>pdeFrom && deTo<pdeTo)) { // de is intersecting with the prev de -
+					fromToDiff[pec][0] += fromToDiff[ec][2];
+					fromToDiff[pec][1] += fromToDiff[ec][2];
+				}
+			}
+		}
+		for (int ec = 0; ec < fromToDiff.length; ec++) {
+			int effectiveFrom = fromToDiff[ec][0];
+			int effectiveTo = fromToDiff[ec][1] + fromToDiff[ec][2];
+			if(effectiveFrom==effectiveTo)
+				effectiveTo++;
+			for (int posC = effectiveFrom; posC < effectiveTo; posC++) {
+				IJavaElement element = null;
+				try {
+					element = workingCopy.getElementAt(posC);
+				} catch (JavaModelException e) {}
+				if(element!=null){
+					String elementHandle = element.getHandleIdentifier();
+					if(elementHandle!=null && !changedHandles.contains(elementHandle)){
+						changedHandles.add(elementHandle);
+					}
+				}
+			}
+		}
+	}
+
+	protected CompilationUnit parse(String source){
    		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
 		parser.setSource(source.toCharArray());
 		return (CompilationUnit) parser.createAST(null);
@@ -316,7 +382,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	 * @since 1.0.0
   	 */
   	protected boolean merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ) throws CodeGenException {
-  		BDMMerger merger = new BDMMerger(mainModel, newModel, true, fDisplay);
+  		BDMMerger merger = new BDMMerger(mainModel, newModel, changedHandles);
   		return merger.merge();
    	}
   	
