@@ -1,0 +1,24 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: ShellSourceTemplate.javajet,v $
+ *  $Revision: 1.1 $ $Date: 2004-06-28 23:15:59 $
+ */
+%>
+<%@ jet 
+	skeleton="VisualClassSourceWizardSkeleton.java" 
+	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
+	class="ShellSourceGenerator" %>
+	
+public class <%=typeName%> {
+
+	private org.eclipse.swt.widgets.Shell sShell = null;
+	
+	/**
+	 * This method initializes sShell
+	 */
+	private void createSShell() {
+		sShell = new org.eclipse.swt.widgets.Shell();		   
+		sShell.setSize(new org.eclipse.swt.graphics.Point(300,200));
+	}
+}

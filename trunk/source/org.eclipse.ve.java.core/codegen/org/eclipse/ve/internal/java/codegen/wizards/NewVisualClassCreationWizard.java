@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.12 $  $Date: 2004-06-03 14:39:30 $ 
+ *  $Revision: 1.13 $  $Date: 2004-06-28 23:15:59 $ 
  */
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @param monitor
 	 */
 	protected void updateContributor(String className, IProgressMonitor monitor){
-		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "newsource"); //$NON-NLS-1$
+		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "newStyleComponent"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
 		IType superClass = null;
 		try {
@@ -77,7 +77,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					try {
 						String typeName = celm.getAttribute("type"); //$NON-NLS-1$
 						if(superClass.getFullyQualifiedName().equals(typeName)){
-							contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
+							contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
 							if(contributor!=null){
 								contributorBundleName = extensions[ec].getNamespace();
 							}
@@ -291,10 +291,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		IVisualClassCreationSourceGenerator gen = getGeneratorInstance(contributor.getTemplateLocation());
 		try {
 			ICompilationUnit originalCU = type1.getCompilationUnit(); 
-			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName);
+			NewVisualClassWizardPage page = (NewVisualClassWizardPage) fPage;
+			
+			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName, page.getArgumentMatrix());
 			ICompilationUnit workingCopy = (ICompilationUnit) originalCU.getWorkingCopy(null) ;
 			workingCopy.getBuffer().setContents(src);
 			workingCopy.reconcile(true, null);
+			
 			CodeFormatter formatter = contributor.needsFormatting()?ToolFactory.createCodeFormatter(null):null;
 			merge(originalCU, workingCopy, formatter, monitor);
 			workingCopy.discardWorkingCopy();
@@ -308,21 +311,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 */
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		// Store the changed default super class name if one was not specified.
-		if(superClassName==null && fPage.getSuperClass()!=null){
-			String sc = fPage.getSuperClass();
-			boolean found = false;
-			NewVisualClassWizardPage page = (NewVisualClassWizardPage) fPage;
-			for(int i=0;i<page.AWTButtonClasses.length && !found;i++)
-			   if(page.AWTButtonClasses[i].equals(sc))
-				   found = true;
-			for(int i=0;i<page.swingButtonClasses.length && !found;i++)
-			   if(page.swingButtonClasses[i].equals(sc))
-				   found = true;
-			if(found)
-			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, fPage.getSuperClass());
-			else
-			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, "java.lang.Object"); //$NON-NLS-1$
-		}
+
+		JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, fPage.getSuperClass());
 		fPage.createType(monitor); // use the full progress monitor
 		
 		updateContributor(fPage.getSuperClass(), monitor);
@@ -392,7 +382,9 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		if(res){
 			ICompilationUnit cu= fPage.getCreatedType().getCompilationUnit();
 			if (cu.isWorkingCopy())
-				cu = (ICompilationUnit) cu.getOriginal(cu);
+			    cu = (ICompilationUnit) cu.getPrimaryElement();
+				//pmuldoon: removed deprecated call with getPrimaryElement
+				//pmuldoon: old was: cu = (ICompilationUnit) cu.getOriginal(cu);
 			if (cu != null) {
 				IResource resource= cu.getResource();
 				selectAndReveal(resource);

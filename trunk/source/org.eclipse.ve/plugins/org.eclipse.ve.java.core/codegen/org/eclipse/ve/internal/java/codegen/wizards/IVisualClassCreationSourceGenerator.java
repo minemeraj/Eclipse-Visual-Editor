@@ -5,6 +5,9 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
+
+import java.util.HashMap;
+
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -17,11 +20,11 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualClassCreationSourceGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-28 23:15:59 $ 
  */
 
 /**
- * @author sri
+ * @author sri, pmuldoon
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
@@ -32,8 +35,17 @@ public interface IVisualClassCreationSourceGenerator {
 	 * It is upto the implementor to generate source as per
 	 * its requirement.
 	 * 
+	 * 
 	 * @param defaultGeneratedType
 	 * @return
 	 */
-	public String generateSource(String typeName, String superClassName);
+    // pmuldoon: Added hashmap constants, and argumentMatrix argument
+    public static final String CREATE_MAIN = "createMain";
+    
+    public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors";
+    
+    public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract";
+    
+    public String generateSource(String typeName, String superClassName,
+            HashMap argumentMatrix);
 }

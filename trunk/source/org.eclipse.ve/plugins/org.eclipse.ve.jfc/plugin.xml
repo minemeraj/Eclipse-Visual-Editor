@@ -449,4 +449,64 @@
       </contributor>
    </extension>
 
+<!-- Contribute to the New Visual wizard to populate the Style tree -->
+
+   <extension
+		point="org.eclipse.ve.java.core.newStyleComponent">
+		<category
+			name="Swing"
+			id="org.eclipse.ve.jfc.swing.cat"
+			priority="200"
+			defaultExpand="true">>
+		</category>
+			<visualElement
+				name="Frame"
+				category="org.eclipse.ve.jfc.swing.cat"
+				type="javax.swing.JFrame"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Panel"
+				category="org.eclipse.ve.jfc.swing.cat"
+				type="javax.swing.JPanel"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Applet"
+				category="org.eclipse.ve.jfc.swing.cat"
+				type="javax.swing.JApplet"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Dialog"
+				category="org.eclipse.ve.jfc.swing.cat"
+				type="javax.swing.JDialog"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor">
+			</visualElement>
+		<category
+			name="AWT"
+			id="org.eclipse.ve.jfc.awt.cat"
+			priority="300"
+			defaultExpand="false">>
+		</category>
+			<visualElement
+				name="Frame"
+				category="org.eclipse.ve.jfc.awt.cat"
+				type="java.awt.Frame"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Panel"
+				category="org.eclipse.ve.jfc.awt.cat"
+				type="java.awt.Panel"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ComponentSetSizeSourceContributor">
+			</visualElement>
+			<visualElement
+				name="Dialog"
+				category="org.eclipse.ve.jfc.awt.cat"
+				type="java.awt.Dialog"
+				contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.WindowDialogSourceContributor">
+			</visualElement>
+   </extension>
+
 </plugin>
