@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.31 $  $Date: 2004-04-28 20:19:51 $ 
+ *  $Revision: 1.32 $  $Date: 2004-04-29 20:32:39 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -238,7 +238,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		graphicalActionRegistry.registerAction(new CustomizeJavaBeanAction(this, editDomain));
 		
 		// Create the pause/reload action.
-		graphicalActionRegistry.registerAction(new ReloadAction(new ReloadAction.IReloadCallback() {
+		
+		ReloadAction.IReloadCallback reloadCallback = new ReloadAction.IReloadCallback() {
 			public void pause() {
 				modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
 				modelBuilder.pause();
@@ -246,7 +247,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			public void reload() {
 				loadModel(true);
 			}
-		}));
+		};
+		
+		graphicalActionRegistry.registerAction(new ReloadAction(reloadCallback));
+		graphicalActionRegistry.registerAction(new ReloadNowAction(reloadCallback));
 			
 		super.init(site, input);
 	}
@@ -264,8 +268,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void loadModel(boolean resetVMRecycleCounter) {
 		if (resetVMRecycleCounter)
 			recycleCntr = 0;	// Reset the counter because we are a new load and ask for it to be reset.
-		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
-		rla.setEnabled(false);	// While reloading, don't want button to be pushed.
+		setReloadEnablement(false);	// While reloading, don't want button to be pushed.
 		
 		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// Don't allow updates..
 		
@@ -279,6 +282,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// TODO Not quite happy with this. Need way to cancel and join any previous to be on safe side.
 		// This here will reschedule it to run again if one already running.
 		setupJob.schedule();	// Start asap.
+	}
+
+	private void setReloadEnablement(boolean enabled) {
+		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
+		rla.setEnabled(enabled);
+		ReloadNowAction rlna = (ReloadNowAction) graphicalActionRegistry.getAction(ReloadNowAction.RELOADNOW_ACTION_ID);
+		rlna.setEnabled(enabled);
 	}
 
 	private BeanSubclassComposition currentSetRoot;
@@ -677,8 +687,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
 				}
 				loadingFigureController.showLoadingFigure(false);
-				ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID); // Now it can be enabled.
-				rla.setEnabled(true);
+				setReloadEnablement(true);
 				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
@@ -706,8 +715,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					
 					loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
 					processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
-					ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
-					rla.setEnabled(true);	// Because it was disabled.							
+					setReloadEnablement(true);	// Because it was disabled.							
 					
 					String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
 					String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
@@ -1310,8 +1318,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
-							ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
-							rla.setEnabled(true);	// Because it was disabled.														
+							setReloadEnablement(true);	// Because it was disabled.														
 						}
 					});	
 					return Status.CANCEL_STATUS;
