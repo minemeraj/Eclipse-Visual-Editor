@@ -42,13 +42,13 @@ set methods of hidden properties will still be parsed by the code generator
 and will be applied to the live beans.</p>
 <p>When a property is hidden it
 is still used by code parsing, but it will not be included in any other visual
-editor view or feature. VisualAge for Java allowed a property
-to be excluded from the Properties view, but was still available for other
-functions. For example, making connections by making it design time  <var class="varname">false</var>.
+editor view or feature. VisualAge for Java allowed a property to be excluded
+from the Properties view, but was still available for other functions. For
+example, making connections by making it design time <var class="varname">false</var>.
 Although the visual editor for Java does not have connection capability, the
 concept of design time properties is carried forward. To make a property design
-time false, an attribute value should be set with the key of  <tt class="sysout">ivjDesignTimeProperty</tt>,
-and the value of  <tt class="sysout">Boolean.FALSE. </tt></p>
+time false, an attribute value should be set with the key of <tt class="sysout">ivjDesignTimeProperty</tt>,
+and the value of  <tt class="sysout">Boolean.FALSE.</tt></p>
 <p>For
 example, if a BeanInfo class is being written for the class MyJavaBean that
 has a name property (from a public void setName(String) and public String
@@ -79,14 +79,14 @@ Integer(myclasses.CompassPoint.WEST),"myclasses.CompassPoint.WEST"
     return result;
 }</pre>
 <p>When a property is selected in the Properties view, an editor
-is created in the Value column where you can specify a new value. To
-calculate the editor for a property, the java.beans.PropertyDescriptor is
-queried for a property editor. If an associated property editor is found,
-then it is used. Otherwise, one is located that is defined to work with the
-property type. You cannot affect the list of pre-defined property editors
-for a type. If a java.beans.PropertyEditor is found in the property descriptor
-or found for the property type, then the Properties view will attempt to determine
-the type of editor to create. The rules used are:</p>
+is created in the Value column where you can specify a new value. To calculate
+the editor for a property, the java.beans.PropertyDescriptor is queried for
+a property editor. If an associated property editor is found, then it is used.
+Otherwise, one is located that is defined to work with the property type.
+You cannot affect the list of pre-defined property editors for a type. If
+a java.beans.PropertyEditor is found in the property descriptor or found for
+the property type, then the Properties view will attempt to determine the
+type of editor to create. The rules used are:</p>
 <ol><li>If the method  <tt class="sysout">public boolean supportsCustomEdit()</tt> returns
  <tt class="sysout">true</tt>, then a dialog editor is created. The dialog
 button launches the editor returned from the method public Component getCustomEditor().
@@ -124,15 +124,15 @@ JRE class <tt class="sysout">java.beans.SimpleBeanInfo</tt>, then the
 method is not abstract and will be inherited to return '???'. You must remember
 to specialize it correctly.</p>
 <p>In addition to using the public String[]
-getTags() method on a property descriptor to get a list, there is
-a shorter way of specifying a list of values. An attribute value is created
-with the key of  <tt class="sysout">enumerationValues</tt>, a value that
-is an array of triplicate entries of the displayName in the list, the value
-itself, and the initializationString. As an example, consider a property called
- <var class="varname">direction</var> that is typed to  <tt class="sysout">int</tt> and
-can be assigned values of 0,1, 2 and 3. These are references to static fields
-NORTH, EAST, SOUTH, and WEST on the class  <tt class="sysout">myclasses.CompassPoint</tt>.
-The property descriptor could be written as follows:</p>
+getTags() method on a property descriptor to get a list, there is a shorter
+way of specifying a list of values. An attribute value is created with the
+key of  <tt class="sysout">enumerationValues</tt>, a value that is an
+array of triplicate entries of the displayName in the list, the value itself,
+and the initializationString. As an example, consider a property called  <var class="varname">direction</var> that
+is typed to  <tt class="sysout">int</tt> and can be assigned values of
+0,1, 2 and 3. These are references to static fields NORTH, EAST, SOUTH, and
+WEST on the class  <tt class="sysout">myclasses.CompassPoint</tt>. The
+property descriptor could be written as follows:</p>
 <pre>public PropertyDescriptor[] getPropertyDescriptors() {
     PropertyDescriptor[] result = new PropertyDescriptor[1];
     try{
