@@ -11,11 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-05 19:20:32 $ 
  */
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -23,7 +23,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
 /**
@@ -67,8 +68,8 @@ public class JTableDecoder extends AbstractCompositionalDecoder {
 		return new JFCNoConstraintAddDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
 	}
 
-	public Vector getChildren(IJavaObjectInstance component) {
-		Vector kids = super.getChildren(component);
+	public List getChildren(IJavaObjectInstance component) {
+		List kids = super.getChildren(component);
 		for (int sfc = 0; sfc < structuralFeatures.length; sfc++) { // Is SF containing children present?
 			if (structuralFeatures[sfc].length() < 1)
 				continue;

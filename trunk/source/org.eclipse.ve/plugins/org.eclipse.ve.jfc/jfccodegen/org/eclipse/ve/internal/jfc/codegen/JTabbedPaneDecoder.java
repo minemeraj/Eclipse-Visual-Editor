@@ -11,11 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-05 19:20:32 $ 
  */
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -71,8 +71,8 @@ public class JTabbedPaneDecoder extends AbstractCompositionalDecoder {
 		return new JTabbedPaneAddDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
 	}
 
-	public Vector getChildren(IJavaObjectInstance component) {
-		Vector kids = super.getChildren(component);
+	public List getChildren(IJavaObjectInstance component) {
+		List kids = super.getChildren(component);
 		for (int sfc = 0; sfc < structuralFeatures.length; sfc++) { // Is SF containing children present?
 			if (structuralFeatures[sfc].length() < 1)
 				continue;
