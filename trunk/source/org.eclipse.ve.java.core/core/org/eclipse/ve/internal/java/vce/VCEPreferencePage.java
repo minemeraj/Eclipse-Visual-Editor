@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-06 21:21:12 $ 
  */
 
 import java.util.ArrayList;
@@ -77,8 +77,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Text fSourceToJavaBeansTimeLabel;
 	protected Group sourceSyncGrp;
 
-	protected Image fJavaBeansToSourceImage;
-	protected Image fSourceToJavaBeansImage;
 	protected Image fJavaBeansViewImage;
 	protected Image fPropertiesViewImage;
 
@@ -170,19 +168,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		text.setLayoutData(data);
 		return text;
 	}
-	public Image getJavaBeansToSourceImage() {
 
-		if (fJavaBeansToSourceImage == null) {
-			fJavaBeansToSourceImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/gui2src.gif"); //$NON-NLS-1$
-		}
-		return fJavaBeansToSourceImage;
-	}
-	public Image getSourceToJavaBeansImage() {
-		if (fSourceToJavaBeansImage == null) {
-			fSourceToJavaBeansImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/src2gui.gif"); //$NON-NLS-1$		
-		}
-		return fSourceToJavaBeansImage;
-	}
 	protected Control createContents(Composite parent) {
 
 		// The contents area is divided into notebooks to make best use of real estate
@@ -431,11 +417,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			}
 		};
 
-		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.Source_Synchronization_Delay"), 6); //$NON-NLS-1$
+		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.Source_Synchronization_Delay"), 5); //$NON-NLS-1$
 		// The group is 5 wide.
 
-		// For JavaBeansToSource show an image of the up arrow, then the label, text and spacers
-		createLabel(sourceSyncGrp, null, getJavaBeansToSourceImage());
+		// For JavaBeansToSource show the label, text and spacers
 		createLabel(sourceSyncGrp, VCEMessages.getString("PreferencePage.CodeGen.JavaBeansToSource"), null); //$NON-NLS-1$
 		sourceSyncDelayText = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
 		sourceSyncDelayText.setTextLimit(9);
@@ -443,9 +428,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		createLabel(sourceSyncGrp, "", null); //$NON-NLS-1$
 		createLabel(sourceSyncGrp, "", null); //$NON-NLS-1$	
 
-		// The JavaBeansToSource are 6 wide in the group
-		// First the down arrow, then the label, then a * and the text box
-		createLabel(sourceSyncGrp, null, getSourceToJavaBeansImage());
+		// The JavaBeansToSource are 5 wide in the group
+		// First the label, then a * and the text box
 		createLabel(sourceSyncGrp, VCEMessages.getString("PreferencePage.CodeGen.SourceToJavaBeans"), null); //$NON-NLS-1$
 		fSourceToJavaBeansTimeLabel = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
 		fSourceToJavaBeansTimeLabel.setEditable(false);
@@ -936,10 +920,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			fJavaBeansViewImage.dispose();
 		if (fPropertiesViewImage != null)
 			fPropertiesViewImage.dispose();
-		if (fJavaBeansToSourceImage != null)
-			fJavaBeansToSourceImage.dispose();
-		if (fSourceToJavaBeansImage != null)
-			fSourceToJavaBeansImage.dispose();
 
 	}
 
