@@ -16,8 +16,7 @@ import java.io.IOException;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.proxy.common.*;
 
@@ -270,4 +269,6 @@ public abstract class ControlManager implements ICallback , ControlListener {
 			});
 		}
 	}
+	
+	public abstract void addShellListener(Shell shell);
 }

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.12 $ $Date: 2004-10-28 21:24:59 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.13 $ $Date: 2004-11-02 22:00:15 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -166,27 +166,26 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 		setlocationMethodProxy
 				.invoke(shellProxy, new IBeanProxy[] {
 						intXBeanProxy, intYBeanProxy });
-		IBeanTypeProxy listenerType = displayProxy
-				.getProxyFactoryRegistry()
-				.getBeanTypeProxyFactory()
-				.getBeanTypeProxy(
-						"org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener"); //$NON-NLS-1$
-		if (listenerType != null) {
-			IBeanProxy shellListenerBean = listenerType
-					.newInstance();
-			IMethodProxy addShellListenerMethodProxy = shellProxy
-					.getTypeProxy()
-					.getMethodProxy(
-							"addShellListener", new String[] { "org.eclipse.swt.events.ShellListener" }); //$NON-NLS-1$  //$NON-NLS-2$
-			if (shellListenerBean != null
-					&& addShellListenerMethodProxy != null) {
-				addShellListenerMethodProxy.invoke(shellProxy,
-						new IBeanProxy[] { shellListenerBean });
-			}
-		}
 
 		IMethodProxy openMethodProxy = shellProxy
 				.getTypeProxy().getMethodProxy("open"); //$NON-NLS-1$
 		openMethodProxy.invoke(shellProxy);
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#setupBeanProxy(org.eclipse.jem.internal.proxy.core.IBeanProxy)
+	 */
+	protected void setupBeanProxy(IBeanProxy beanProxy) {
+		super.setupBeanProxy(beanProxy);
+		IMethodProxy addShellListenerMethodProxy = 	fControlManager
+					.fControlManagerProxy
+					.getTypeProxy()
+					.getMethodProxy(
+						"addShellListener", new String[] { "org.eclipse.swt.widgets.Shell" }); //$NON-NLS-1$  //$NON-NLS-2$
+		if(addShellListenerMethodProxy != null) {
+			addShellListenerMethodProxy.invokeCatchThrowableExceptions(
+					fControlManager.fControlManagerProxy,
+					new IBeanProxy[] { beanProxy });
+		}
+	}
+
 }
