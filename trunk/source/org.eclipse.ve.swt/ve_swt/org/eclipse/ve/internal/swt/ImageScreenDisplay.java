@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageScreenDisplay.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-19 17:05:43 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-16 14:54:13 $ 
  */
 import java.util.ArrayList;
 
@@ -214,7 +214,11 @@ public class ImageScreenDisplay extends Canvas {
 		if (verticalIndexVisible(index) || horizontalIndexVisible(index)) {
 			getDisplay().asyncExec(new Runnable() {
 				public void run() {
+					try{
 					setupImages();
+					}
+					catch(SWTException e){						
+					}
 				}
 			});
 		}

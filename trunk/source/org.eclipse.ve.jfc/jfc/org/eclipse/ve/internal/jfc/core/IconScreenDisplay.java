@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IconScreenDisplay.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-16 14:54:14 $ 
  */
 import java.util.ArrayList;
 
@@ -214,7 +214,11 @@ public class IconScreenDisplay extends Canvas {
 		if (verticalIndexVisible(index) || horizontalIndexVisible(index)) {
 			getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					setupImages();
+					try{
+					  setupImages();
+					}
+					catch(SWTException e){						
+					}
 				}
 			});
 		}
