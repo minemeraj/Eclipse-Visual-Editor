@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintComponentPropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-19 22:11:19 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-30 23:26:13 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -155,8 +155,10 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	 * If one of ours, send it on up, else send it to the component.
 	 */
 	public void resetPropertyValue(Object feature) {
-		if (feature == sfConstraintConstraint)
+		if (feature == sfConstraintConstraint){
 			super.resetPropertyValue(feature);
+			return;
+		}
 		createComponentPS();
 		if (componentPS != null)
 			componentPS.resetPropertyValue(feature);
@@ -166,8 +168,10 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	 * If one of ours, send it on up, else send it to the component.
 	 */
 	public void setPropertyValue(Object feature, Object val)  {
-		if (feature == sfConstraintConstraint)
+		if (feature == sfConstraintConstraint) {
 			super.setPropertyValue(feature, val);
+			return;
+		}
 		createComponentPS();
 		if (componentPS != null)
 			componentPS.setPropertyValue(feature, val);
