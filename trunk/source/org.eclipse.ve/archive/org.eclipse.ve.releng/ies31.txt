@@ -1,0 +1,2 @@
+VE-SDK-N20050303.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/N-N20050303-200503030942/ | | | sdk | ve
+VE-runtime-N20050303.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/N-N20050303-200503030942/ | | | runtime | ve
