@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-28 21:54:07 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -278,7 +278,7 @@ protected void setElement (Notification msg) {
 			
 			// The old Adapter was unable to handle it due to Codegen reasons, 
 			// Hence remove the expression and let a new one get created.
-			d.delete() ;
+			d.deleteFromSrc() ;
 			exp.dispose() ;		
 			oldAdapterTookNotification = false;
 		}
@@ -558,7 +558,7 @@ protected void addElement (Notification msg) {
 	if (oldAdapter != null) {
 		IExpressionDecoder d = oldAdapter.getDecoder();
 		CodeExpressionRef e = d.getExprRef();
-		d.delete();
+		d.deleteFromSrc();
 		e.dispose();
 		oldAdapter = null;
 	}

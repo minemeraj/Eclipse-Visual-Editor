@@ -11,11 +11,11 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 23:13:34 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
  */
 
 
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -114,7 +114,7 @@ protected void initialDecoderHelper() {
 /**
  *  Get the first level descendents
  */
-public Vector getChildren(IJavaObjectInstance component) {
+public List getChildren(IJavaObjectInstance component) {
 	// Vanilla Components has no specific children
       return super.getChildren(component) ; 	
 }

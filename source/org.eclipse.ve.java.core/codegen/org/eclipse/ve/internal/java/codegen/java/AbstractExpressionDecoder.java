@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
@@ -229,14 +229,19 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	public void setBeanPart(BeanPart part) {
 		fbeanPart = part;
 	}
-
+	
+	
+	protected void markExprAsDeleted() {
+		fExprRef.clearState();
+		fExprRef.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true); 
+	}
+	
 	/**
 	 *  Mark as delete, And Remove from document
 	 */
-	public void delete() {
+	public void deleteFromSrc() {
 		fhelper.unadaptToCompositionModel();
-		fExprRef.clearAllFlags();
-		fExprRef.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true); //fExprRef.primSetState(CodeExpressionRef.STATE_NOT_EXISTANT) ;
+		markExprAsDeleted();
 		fExprRef.updateDocument(true);
 	}
 
@@ -246,14 +251,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	 */
 	public boolean isDeleted() {
 		boolean result = false;
-		// Some attributes should not be reflected in Java source, and hence
-		// be considered as deleted (e.g., constraint of a layout manager).
-		//	if (MethodTextGenerator.isNotToBeCodedAttribute(fFeatureMapper.getFeature(null),fbeanPart.getRefObject()))
-		//	   result = true ;
-		if (!result)
-			result = getHelper().primIsDeleted();
+
+		result = getHelper().primIsDeleted();
 		if (result == true)
-			fhelper.unadaptToCompositionModel();
+			fhelper.unadaptToCompositionModel();  // Should not be needed, but just in case ...
 		return result;
 	}
 
@@ -331,16 +332,22 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		return fbeanPart;
 	}
 
-	public synchronized void dispose() {
-		if (fhelper != null)
-			fhelper.unadaptToCompositionModel();
+	public  void dispose() {		
+		if (fhelper != null){
+			if (!isDeleted()) {
+				deleteFromComposition() ;
+			}
+			else
+			    fhelper.unadaptToCompositionModel();
+		}
+		markExprAsDeleted();
 		fFeatureMapper = null;
 		fhelper = null;
 		fdebugString = null;
 	}
 
-	public synchronized void deleteFromComposition() {
-		fhelper.delete();
+	public  void deleteFromComposition() {
+		fhelper.removeFromModel();
 	}
 
 	public Object[] getArgsHandles(Statement expr) throws CodeGenException {

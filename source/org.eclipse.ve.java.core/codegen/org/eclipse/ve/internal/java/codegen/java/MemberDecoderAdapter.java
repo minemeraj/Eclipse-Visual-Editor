@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 import java.util.*;
 
@@ -89,8 +89,7 @@ protected void  createBeanInstance(IJavaObjectInstance obj) throws CodeGenExcept
     }
     
     BeanPartFactory bgen = new BeanPartFactory(fbeanModel,fbeanModel.getCompositionModel()) ;
-    try {
-      fbeanModel.aboutTochangeDoc();
+    try {      
       bgen.createFromJVEModel(obj,fbeanModel.getCompilationUnit()) ;
     }
     catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
@@ -205,7 +204,7 @@ protected void processPromotionIfNeeded(Notification msg) {
 							if (addedInstances[0] != msg.getNewValue())
 							   continue ;
 						}
-						d.delete() ;
+						d.deleteFromSrc() ;
 						expList[j].dispose() ;
 						BeanDecoderAdapter bAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(bp.getEObject(), ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 						// ReCreate this feature in code			                                                

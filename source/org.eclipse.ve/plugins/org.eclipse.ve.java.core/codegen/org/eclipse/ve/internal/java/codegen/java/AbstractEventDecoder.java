@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -197,16 +197,33 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 		return null;
 	}
 
+	
+	protected void markExprAsDeleted() {
+		fEventRef.clearState();
+		fEventRef.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true); 
+	}
+	
 	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#delete()
+	 *  Mark as delete, And Remove from document
 	 */
-	public void delete() {}
+	public void deleteFromSrc() {
+		fhelper.unadaptToCompositionModel();
+		markExprAsDeleted();
+		fEventRef.updateDocument(true);
+	}
 
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#dispose()
-	 */
-	public void dispose() {}
-
+	public  void dispose() {		
+		if (fhelper != null){
+			if (!isDeleted()) {
+				deleteFromComposition() ;
+			}
+			else
+				fhelper.unadaptToCompositionModel();
+		}
+		markExprAsDeleted();		
+		fhelper = null;
+		fdebugString = null;
+	}
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#reflectMOFchange()
 	 */
@@ -221,7 +238,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#deleteFromComposition()
 	 */
 	public void deleteFromComposition() {
-		fhelper.delete();
+		fhelper.removeFromModel();
 	}
 
 	/**
@@ -253,7 +270,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 				IEventDecoderHelper d = createDecoderHelper(fExpr) ;
 				if (!d.getClass().isInstance(fhelper)) {
 					// Clean up, and reset the helper 
-					fhelper.delete() ;
+					fhelper.removeFromModel() ;
 					fhelper=d ;
 				}
 			}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -220,8 +220,7 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
                  		// Change in a "new" statement we can not refresh at this point
                  		fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true) ;
                  		return false ;
-                 	}                   
-        	       oExp.deleteFromComposition() ;
+                 	}                           	       
         	       oExp.dispose() ;
         	       updated = true ;
                  }

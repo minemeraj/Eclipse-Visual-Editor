@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationEMFImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:26 $ 
  */
 import java.util.Collection;
 import java.util.List;
@@ -162,7 +162,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 			return null;	// This shouldn't occur
 		Annotation oldAnnotation = a.getParentAnnotation();
 		a.setParentAnnotation(null);
-		if (((NotifierImpl) annotates).eNotificationRequired()) {
+		if (((InternalEObject) annotates).eNotificationRequired()) {
 			if (msgs == null) msgs = new NotificationChainImpl(4);
 			msgs.add(new ENotificationImpl((InternalEObject) annotates, Notification.SET, CDMPackage.eINSTANCE.getEObject_ParentAnnotation(), oldAnnotation, null));
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.10 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.11 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -421,7 +421,7 @@ protected JCMMethod getInitializingMethod(IJavaObjectInstance component) {
 public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
 			
-      
+	  fBeanModel.aboutTochangeDoc();
       IType cuType = CodeGenUtil.getMainType(cu) ;
       String varName = getVarRule().getInstanceVariableName(component,cuType,fCompositionModel,fBeanModel) ;    
     
@@ -511,6 +511,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
  */
 public void removeBeanPart (BeanPart bean) {
 	
+	fBeanModel.aboutTochangeDoc();
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
 	if (bean.isInstanceVar()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
@@ -595,7 +596,7 @@ public void removeBeanPart (BeanPart bean) {
 	while (itr != null && itr.hasNext()) {
 		CodeExpressionRef e = (CodeExpressionRef) itr.next();
 		//e.primSetState(e.STATE_NOT_EXISTANT) ;
-		e.clearAllFlags();
+		e.clearState();
 		e.setState(CodeExpressionRef.STATE_NOT_EXISTANT, true);
 		deleteList.add(e);
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
  */
 import java.util.*;
 
@@ -180,7 +180,7 @@ public void setInstanceVar(boolean flag) {
 /**
  *   Add a method where the bean is created
  */
-public synchronized void addInitMethod(CodeMethodRef methodRef) {	
+public  void addInitMethod(CodeMethodRef methodRef) {	
 	if (!fBeanInitMethods.contains(methodRef))
 	   fBeanInitMethods.add(methodRef) ;
 	if (fModel != null) {
@@ -193,7 +193,7 @@ public synchronized void addInitMethod(CodeMethodRef methodRef) {
 /**
  *   Add a method where the bean is created
  */
-public synchronized void addEventInitMethod(CodeMethodRef methodRef) {
+public  void addEventInitMethod(CodeMethodRef methodRef) {
 	if (!fEventInitMethods.contains(methodRef)) {
 		if (methodRef == getInitMethod()) // Make the initMethod the default EventInitMethod
 		  fEventInitMethods.add(0,methodRef) ;
@@ -202,15 +202,15 @@ public synchronized void addEventInitMethod(CodeMethodRef methodRef) {
 	}
 }
 
-public synchronized void removeInitMethod (CodeMethodRef m) {
+public  void removeInitMethod (CodeMethodRef m) {
 	fBeanInitMethods.remove(m) ;
 }
 
-public synchronized void removeEventInitMethod (CodeMethodRef m) {
+public  void removeEventInitMethod (CodeMethodRef m) {
 	fEventInitMethods.remove(m) ;
 }
 
-public synchronized void removeReturnMethod (CodeMethodRef m) {
+public  void removeReturnMethod (CodeMethodRef m) {
 	fBeanReturnMethods.remove(m) ;
 }
 /**
@@ -247,7 +247,7 @@ public CodeMethodRef getReturnedMethod() {
 /**
  *   Add a method where the bean instance is returned
  */
-public synchronized void addReturnMethod(CodeMethodRef methodRef) {
+public  void addReturnMethod(CodeMethodRef methodRef) {
 	if (!fBeanReturnMethods.contains(methodRef))
 	   fBeanReturnMethods.add(methodRef) ;
 	if (fModel != null)
@@ -264,7 +264,7 @@ public synchronized void addReturnMethod(CodeMethodRef methodRef) {
 /**
  * Add a method where a bean's setXX() method is called
  */
-public synchronized void addRefExpression(CodeExpressionRef exp) {
+public  void addRefExpression(CodeExpressionRef exp) {
 	if (!fBeanRefExpressions.contains(exp))
 	   fBeanRefExpressions.add(exp) ;
 }
@@ -272,7 +272,7 @@ public synchronized void addRefExpression(CodeExpressionRef exp) {
 /**
  * Add a method where a bean's setXX() method is called
  */
-public synchronized void addEventExpression(CodeEventRef exp) {
+public  void addEventExpression(CodeEventRef exp) {
 	if (!fBeanEventExpressions.contains(exp))
 	   fBeanEventExpressions.add(exp) ;
 }
@@ -280,26 +280,26 @@ public synchronized void addEventExpression(CodeEventRef exp) {
 /**
  * Add a method where a bean's setXX() method is called
  */
-public synchronized void addCallBackExpression(CodeCallBackRef exp) {
+public  void addCallBackExpression(CodeCallBackRef exp) {
 	if (!fCallBackExpressions.contains(exp))
 	   fCallBackExpressions.add(exp) ;
 }
 
-public synchronized void removeCallBackExpression(CodeCallBackRef exp) {
+public  void removeCallBackExpression(CodeCallBackRef exp) {
 	   fCallBackExpressions.remove(exp) ;
 }
 
 /**
  * Remove a method where a bean's setXX() method is called
  */
-public synchronized void removeRefExpression(CodeExpressionRef exp) {
+public  void removeRefExpression(CodeExpressionRef exp) {
 	fBeanRefExpressions.remove(exp) ;
 }
 
 /**
  * Remove a method where a bean's setXX() method is called
  */
-public synchronized void removeEventExpression(CodeEventRef exp) {
+public  void removeEventExpression(CodeEventRef exp) {
 	fBeanEventExpressions.remove(exp) ;
 }
 
@@ -494,7 +494,7 @@ public final BeanPart[] getBackRefs() {
 }
 
 /**
- *
+ *  
  */
 public void addBackRef (BeanPart bean, EReference sf) {
 	
@@ -528,6 +528,7 @@ public void removeBackRef (BeanPart bean, boolean updateFF) {
 }
 public void removeBackRef (EObject bean, boolean updateFF) {
 
+	if (fModel==null) return ;
     BeanPart bp = fModel.getABean(bean) ;
     if (bp != null)		
 	    fbackReferences.remove(bean) ;
@@ -567,7 +568,7 @@ public void setModel(IBeanDeclModel model) {
     if (fModel != null && model != null && fModel.equals(model)) 
        return ;  // No need to set the type and resolve
 	fModel = model ;
-	if(fType!=null)
+	if(fType!=null && model!=null)
 		setType(getType()) ; // Refresh Type
     if (getFieldDeclHandle() == null && model!=null) {
     	IField f = CodeGenUtil.getFieldByName(getSimpleName(),model.getCompilationUnit()) ;
@@ -601,9 +602,13 @@ public BeanPart getProxy() {
 
 
 
-public synchronized void dispose() {
+public  void dispose() {
 
     IBeanDeclModel model = fModel ;
+    
+    if (fFFDecoder!=null)
+    	fFFDecoder.dispose() ;
+    fFFDecoder=null;
 	if (fModel != null)
 	  fModel.removeBean(this) ;	
 	CodeMethodRef m = getInitMethod() ;
@@ -656,7 +661,7 @@ public synchronized void dispose() {
 	fBeanRefExpressions.clear() ;
 	fBeanEventExpressions.clear() ;
 	fBeanReturnMethods.clear() ;
-	fbackReferences = null ;
+	fbackReferences.clear();
 	fChildren.clear() ;
 	if (fEObject != null) {
 	  ICodeGenAdapter a = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(fEObject,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
@@ -811,7 +816,8 @@ public   void removeFromJVEModel()  {
 		m.getCompMethod().getInitializes().remove(getEObject()) ;
 		if (m.equals(getReturnedMethod())) 
 		   m.getCompMethod().setReturn(null) ;
-	}
+	}	
+	getModel().getCompositionModel().getModelRoot().getComponents().remove(getEObject());
 	setIsInJVEModel(false) ;
 }
 

@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:42 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
@@ -300,4 +301,24 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		return new Object[0] ;
 	}	
 
+	/**
+	 * 
+	 * In the case that the expression associated with this helper is disposed, the
+	 * decode will require this helper to remove the child from the model completely 
+	 * as to not to leave an orphaned child in the model
+	 * 
+	 * @since 1.0.0
+	 */
+	public void removeChildFromModel() {
+		if (fAddedPart != null)
+			 fAddedPart.dispose();	 
+		else if (fAddedInstance != null) {
+			if (fAddedInstance.eContainer() != null) {
+				if (fAddedInstance.eContainingFeature().isMany())
+				    ((EList)fAddedInstance.eContainer().eGet(fAddedInstance.eContainingFeature())).remove(fAddedInstance) ;
+				else
+					fAddedInstance.eContainer().eUnset(fAddedInstance.eContainingFeature());
+			}
+		}
+	}
 }

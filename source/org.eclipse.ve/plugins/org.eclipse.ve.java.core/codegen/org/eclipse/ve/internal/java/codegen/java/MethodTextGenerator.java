@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.9 $  $Date: 2004-01-28 22:39:44 $ 
+ *  $Revision: 1.10 $  $Date: 2004-01-30 23:19:36 $ 
  */
 
 import java.util.*;
@@ -312,8 +312,7 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
 //        fMethodRef.removeExpressionRef((CodeExpressionRef)shadowExprList.get(i)) ;
 
     // Init Expression will use the method's content
-    method.setContent(template.getPrefix()+template.getPostfix()) ;
-    createInitExpression(bp) ;
+    method.setContent(template.getPrefix()+template.getPostfix()) ;   
 //    
 //    // Add back the internal expressions, if any 
 //    for (int i=0; i<shadowExprList.size(); i++) {

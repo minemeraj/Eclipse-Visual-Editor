@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,7 +44,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 
 	public abstract boolean decode() throws CodeGenException;
 	public abstract String generate(Object[] args) throws CodeGenException;
-	public abstract void delete();
+	public abstract void removeFromModel();
 
 	/**
 	 *  If the current value in mof is not the same as we last decoded,

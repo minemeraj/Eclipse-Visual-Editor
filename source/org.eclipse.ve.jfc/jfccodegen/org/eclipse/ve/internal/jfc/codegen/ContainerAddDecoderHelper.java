@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:30 $ 
  */
 
 import java.util.*;
@@ -525,7 +525,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			return false;
 	}
 
-	public void delete() {
+	public void removeFromModel() {
 		unadaptToCompositionModel();
 
 		IJavaObjectInstance parent = (IJavaObjectInstance) fbeanPart.getEObject();

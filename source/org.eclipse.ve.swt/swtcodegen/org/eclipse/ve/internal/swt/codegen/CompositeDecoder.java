@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 00:47:08 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:42 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -68,5 +68,16 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#dispose()
+	 * If this expression is disposed because it is removed from the source,
+	 * we will remove the SWT orphaned child from the model
+	 */
+	public void dispose() {
+        IExpressionDecoderHelper helper = fhelper ;
+		super.dispose();
+		if (helper instanceof CompositeAddDecoderHelper)
+			((CompositeAddDecoderHelper)helper).removeChildFromModel() ;
+	}
 
 }

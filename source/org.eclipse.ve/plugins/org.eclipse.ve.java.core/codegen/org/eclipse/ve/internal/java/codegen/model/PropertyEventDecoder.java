@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -111,9 +111,9 @@ public class PropertyEventDecoder implements IPropertyEventDecoder {
 
 
 	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.ICallbackDecoder#delete()
+	 * @see org.eclipse.ve.internal.java.codegen.java.ICallbackDecoder#deleteFromSrc()
 	 */
-	public void delete() {
+	public void deleteFromSrc() {
 		fdeleted = true ;
 		reflectMOFchange() ;
 	}
