@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-19 15:37:06 $ 
+ *  $Revision: 1.12 $  $Date: 2004-07-30 15:20:08 $ 
  */
 
 import java.util.ArrayList;
@@ -592,8 +592,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		for (int i = 0; i < lnfs.length; i++) {
 			// TODO: Hack to remove the Windows L&F from Linux (Sun bug 4843282)
 			if (lnfs[i].getClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel") && //$NON-NLS-1$
-			System.getProperty("os.name").equals("Linux")) //$NON-NLS-1$ //$NON-NLS-2$
-				continue; //$NON-NLS-1$ //$NON-NLS-2$
+					!Platform.getOS().equals(Platform.OS_WIN32))
+				continue;
 
 			tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setText(0, lnfs[i].getName());

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.9 $  $Date: 2004-07-30 15:20:08 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +26,7 @@ import javax.swing.UIManager;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
@@ -343,7 +344,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		for ( int i = 0; i < lnfs.length; i++ ) {
 			// TODO: Hack to remove the Windows L&F from Linux (Sun bug 4843282)
 			if (lnfs[i].getClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel") && //$NON-NLS-1$
-			System.getProperty("os.name").equals("Linux"))  //$NON-NLS-1$ //$NON-NLS-2$
+					!Platform.getOS().equals(Platform.OS_WIN32))
 				continue; 
 			
 		    fLookAndFeelList.add(lnfs[i].getName());

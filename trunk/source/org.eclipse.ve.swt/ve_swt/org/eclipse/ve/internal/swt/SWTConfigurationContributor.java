@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-02 15:57:25 $ 
+ *  $Revision: 1.9 $  $Date: 2004-07-30 15:20:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.util.HashMap;
@@ -51,6 +51,11 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		// Get the location of the swt dll in the workbench path and add it.
 		// we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
 		controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		
+		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
+		if(Platform.WS_GTK.equals(Platform.getWS())){
+			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		}
 	}
 
 	/* (non-Javadoc)
