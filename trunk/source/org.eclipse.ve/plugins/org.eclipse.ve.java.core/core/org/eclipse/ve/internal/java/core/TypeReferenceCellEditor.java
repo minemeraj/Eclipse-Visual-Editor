@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-17 12:23:39 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-19 12:20:47 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -91,17 +91,19 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		if(chooseBean.open()==Window.OK){
 			Object[] results = chooseBean.getResult();
 			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];
-			// Add this to the BeanSubclassComposition
-			Command addToBeanCompositionCmd = ((VCEChildRule)editDomain.getRuleRegistry().getRule(IChildRule.RULE_ID)).preCreateChild(
-				editDomain,
-				beanComposition,
-				newJavaInstance,
-				JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components());
-			addToBeanCompositionCmd.execute();
+			// Use the JavaContainer policy to get all the right command generated
+			JavaContainerPolicy editPolicy = new JavaContainerPolicy(
+					JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components(),
+					editDomain);
+			editPolicy.setContainer(beanComposition);
+			Command createCommand = editPolicy.getCreateCommand(newJavaInstance,null);
+			createCommand.execute();
+
 			// Create an annotation for it right now so it gets onto the free form
-			AnnotationEMF emfAnnotation = CDMFactory.eINSTANCE.createAnnotationEMF();
-			emfAnnotation.setAnnotates(newJavaInstance);
-			beanComposition.getAnnotations().add(emfAnnotation);
+//			AnnotationEMF emfAnnotation = CDMFactory.eINSTANCE.createAnnotationEMF();
+//			emfAnnotation.setAnnotates(newJavaInstance);
+//			beanComposition.getAnnotations().add(emfAnnotation);
+			
 			return newJavaInstance;
 		}
 		return null;
@@ -129,6 +131,10 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		});
 		return combo;
 	}
+	public boolean isActivated() {
+		return combo.isVisible();
+	}
+	
 	protected void valueChanged(boolean oldValidState, boolean newValidState, Object newValue) {
 		super.valueChanged(oldValidState, newValidState);
 		if (newValidState)

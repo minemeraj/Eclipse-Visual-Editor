@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-18 16:24:11 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-19 12:20:47 $ 
  */
 
 import java.util.*;
@@ -371,8 +371,10 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 									eClass,
 									ClassDescriptorDecorator.class,
 									PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-						String prototypeFactoryName = (String)decorator.getKeyedValues().get(PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-						prototypeFactory = (PrototypeFactory) CDEPlugin.createInstance(null,prototypeFactoryName);
+						if(decorator.getKeyedValues() != null){
+							String prototypeFactoryName = (String)decorator.getKeyedValues().get(PrototypeFactory.PROTOTYPE_FACTORY_KEY);
+							prototypeFactory = (PrototypeFactory) CDEPlugin.createInstance(null,prototypeFactoryName);
+						}
 					} catch (Exception e) {
 						JavaVEPlugin.getPlugin().getLogger().log(Level.WARNING,e);
 					}
