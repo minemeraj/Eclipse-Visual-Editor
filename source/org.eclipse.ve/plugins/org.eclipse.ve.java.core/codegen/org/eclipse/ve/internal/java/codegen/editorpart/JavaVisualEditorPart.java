@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.54 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.55 $  $Date: 2004-08-10 17:54:35 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -75,6 +75,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.*;
 
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -1428,7 +1429,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						protected boolean subShouldPropagate(
 							EReference ref,
 							Object newValue) {
-							return !(newValue instanceof Diagram); // On the base BeanComposition, don't propagate into Diagram references.
+							return !(newValue instanceof JavaAllocation) && !(newValue instanceof Diagram); // On the base BeanComposition, don't propagate into Diagram references or JavaAllocations.
+						}
+						
+						protected boolean subShouldReference(EReference ref, Object newValue) {
+							return !(newValue instanceof EClassifier);	// Never reference into the EClass structure
 						}
 					};
 					dd.eAdapters().add(ia);
