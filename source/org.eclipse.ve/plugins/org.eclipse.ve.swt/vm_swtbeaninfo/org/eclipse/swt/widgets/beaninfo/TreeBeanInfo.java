@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-16 12:38:15 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -35,7 +35,7 @@ public class TreeBeanInfo extends IvjBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
-		"SWEET_STYLEBITS", //$NON-NLS-1$
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {				
 			{ "style" , TreeMessages.getString("TreeBeanInfo.StyleBits.Style.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 			    TreeMessages.getString("TreeBeanInfo.StyleBits.Style.Value.Check") , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK)  //$NON-NLS-1$ //$NON-NLS-2$
