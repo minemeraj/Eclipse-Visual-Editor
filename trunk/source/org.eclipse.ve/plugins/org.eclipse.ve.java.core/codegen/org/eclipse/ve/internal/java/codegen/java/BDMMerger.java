@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-01 19:17:13 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-01 21:11:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.swt.widgets.Display;
@@ -59,11 +60,11 @@ public class BDMMerger {
 	public boolean merge() throws CodeGenException{
 		boolean merged = true;
 		if( mainModel != null && newModel != null ){
-			merged &= removeDeletedBeans() ;
-			merged &= removeDeletedMethods() ;
-			merged &= addNewBeans() ;
-			merged &= mergeAllBeans() ;
-			merged &= updateFreeForm() ;
+			merged = merged && removeDeletedBeans() ;
+			merged = merged && removeDeletedMethods() ;
+			merged = merged && addNewBeans() ;
+			merged = merged && mergeAllBeans() ;
+			merged = merged && updateFreeForm() ;
 		}
 		return merged ;
 	}
@@ -678,22 +679,37 @@ public class BDMMerger {
 				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());
 				String mainType;
 				String newType;
-				if(	mainBean.getSimpleName().equals(BeanPart.THIS_NAME) && 
-						mainBean.getModel().getTypeDecleration()!=null &&
-						mainBean.getModel().getTypeDecleration().getSuperclass()!=null)
-					mainType = CodeGenUtil.resolve(mainBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel());
+				boolean isMainBeanThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
+				boolean isNewBeanThisPart = newBean.getSimpleName().equals(BeanPart.THIS_NAME);
+				Name mainBeanExtendsName = (isMainBeanThisPart && mainBean.getModel().getTypeDecleration()!=null) ? mainBean.getModel().getTypeDecleration().getSuperclass() : null;
+				Name newBeanExtendsName = (isNewBeanThisPart && newBean.getModel().getTypeDecleration()!=null) ? newBean.getModel().getTypeDecleration().getSuperclass() : null;
+				if(isMainBeanThisPart && mainBeanExtendsName!=null)
+					mainType = CodeGenUtil.resolve(mainBeanExtendsName, mainBean.getModel());
 				else
 					mainType = mainBean.getType();
-				if(	newBean.getSimpleName().equals(BeanPart.THIS_NAME) &&
-						newBean.getModel().getTypeDecleration()!=null &&
-						newBean.getModel().getTypeDecleration().getSuperclass()!=null)
-					newType = CodeGenUtil.resolve(newBean.getModel().getTypeDecleration().getSuperclass(),mainBean.getModel()) ;
+				if(isNewBeanThisPart && newBeanExtendsName!=null)
+					newType = CodeGenUtil.resolve(newBeanExtendsName, mainBean.getModel()) ;
 				else
 					newType = newBean.getType();
 				boolean typeChanged = !mainType.equals(newType) ;
 				if(typeChanged){
-					logFiner("Removing changed type bean "+ mainBean.getSimpleName());
-					removed &= removeDeletedBean( mainBean );
+					// Type has changed 
+					// If extends has been removed, remove the bean
+					// If extends there, then reload from scratch
+					if(isMainBeanThisPart){
+						if(newBeanExtendsName==null){
+							// extends has been removed - just delete the this bean
+							logFiner("Removing THIS bean ");
+							removed &= removeDeletedBean( mainBean );
+						}else{
+							// extends is present - do a RLFS
+							logFiner("This part's type has changed - will need to reload");
+							return false;
+						}
+					}else{
+						logFiner("Removing changed type bean "+ mainBean.getSimpleName());
+						removed &= removeDeletedBean( mainBean );
+					}
 				}else{
 					CodeMethodRef mainMethod = mainBean.getInitMethod();
 					CodeMethodRef newMethod = newBean.getInitMethod();
