@@ -1,10 +1,12 @@
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.ui.plugin.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.resources.*;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -22,6 +24,7 @@ public class SwtPlugin extends AbstractUIPlugin {
 		super(descriptor);
 		plugin = this;
 		try {
+			// TODO This bundle doesn't exist anywhere!!! Nor should it be com.ibm.etools...!!
 			resourceBundle= ResourceBundle.getBundle("com.ibm.etools.jbcf.swt.SwtPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
