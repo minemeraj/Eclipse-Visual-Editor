@@ -15,104 +15,98 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author pmuldoon
- *
- * Category Model for the Style Tree in the 
- * New Visual Class Wizard
+ * 
+ * Category Model for the Style Tree in the New Visual Class Wizard
  */
 
 public class CategoryModel {
 
-    private List treeElements;
+	private List treeElements;
 
-    protected CategoryModel parent;
+	protected CategoryModel parent;
 
-    private String id;
+	private IConfigurationElement configElement;
 
-    private String name;
+	public CategoryModel() {
+		treeElements = new ArrayList();
+	}
 
-    private int priority;
+	public CategoryModel(IConfigurationElement configElement) {
+		this();
+		this.configElement = configElement;
+	}
 
-    private boolean defaultExpanded;
+	protected void addVisualElement(VisualElementModel element) {
+		element.parent = this;
+		treeElements.add(element);
+	}
 
-    public CategoryModel() {
-        treeElements = new ArrayList();
-    }
+	public void removeVisualElement(VisualElementModel element) {
+		treeElements.remove(element);
+	}
 
-    public CategoryModel(String name, String id, String priority,
-            String defaultExpanded) {
-        this();
-        this.name = name;
-        this.id = id;
-        if (priority == null)
-            this.priority = 10000;
-        else
-            try {
-                this.priority = Integer.parseInt(priority);
-            } catch (NumberFormatException nx) {
-                this.priority = 10000;
-                JavaVEPlugin.log(nx, Level.FINEST);
-            }
-        this.defaultExpanded = true;
-        if (defaultExpanded != null)
-            if (defaultExpanded.equalsIgnoreCase("false"))
-                this.defaultExpanded = false;
-    }
+	protected void addStyle(CategoryModel element) {
+		element.parent = this;
+		treeElements.add(element);
+	}
 
-    protected void addVisualElement(VisualElementModel element) {
-        element.parent = this;
-        treeElements.add(element);
-    }
+	public void removeStyle(CategoryModel set) {
+		treeElements.remove(set);
+	}
 
-    public void removeVisualElement(VisualElementModel element) {
-        treeElements.remove(element);
-    }
+	public String getName() {
+		if (configElement != null)
+			return configElement.getAttribute("name");
+		return null;
+	}
 
-    protected void addStyle(CategoryModel element) {
-        element.parent = this;
-        treeElements.add(element);
-    }
+	public String getId() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("id");
+		return null;
+	}
 
-    public void removeStyle(CategoryModel set) {
-        treeElements.remove(set);
-    }
+	public Object getParent() {
+		return parent;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public int getPriority() {
+		if (configElement != null) {
+			String priority = configElement.getAttributeAsIs("priority");
+			if (priority != null) {
+				try {
+					return Integer.parseInt(priority);
+				} catch (NumberFormatException nx) {
+					JavaVEPlugin.log(nx, Level.FINEST);
+					return 10000;
+				}
+			}
+		}
+		return 10000;
+	}
 
-    public String getId() {
-        return this.id;
-    }
+	public boolean getDefaultExpand() {
+		String defaultExpand = configElement.getAttributeAsIs("defaultExpand");
+		if (defaultExpand != null)
+			return (defaultExpand.equalsIgnoreCase("true")) ? true : false;
+		return true;
+	}
 
-    public Object getParent() {
-        return parent;
-    }
+	public Object[] getChildren() {
+		if (treeElements.size() > 0)
+			return treeElements.toArray();
+		return new Object[0];
+	}
 
-    public int getPriority() {
-        return this.priority;
-    }
-
-    public boolean getDefaultExpand() {
-        return this.defaultExpanded;
-    }
-
-    public Object[] getChildren() {
-        if (treeElements.size() > 0)
-            return treeElements.toArray();
-        return new Object[0];
-    }
-
-    public Object[] getStyles() {
-        return treeElements.toArray();
-    }
+	public Object[] getStyles() {
+		return treeElements.toArray();
+	}
 
 }
-
-
-  
-    
 

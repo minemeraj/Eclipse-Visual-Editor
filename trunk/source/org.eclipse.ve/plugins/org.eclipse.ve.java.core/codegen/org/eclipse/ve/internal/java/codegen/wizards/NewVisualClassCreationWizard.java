@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.14 $  $Date: 2004-07-09 22:52:01 $ 
+ *  $Revision: 1.15 $  $Date: 2004-07-14 16:20:22 $ 
  */
 
 import java.io.IOException;
@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
-import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
@@ -39,12 +38,10 @@ import org.eclipse.ve.internal.java.vce.templates.*;
  */
 public class NewVisualClassCreationWizard extends NewElementWizard implements IExecutableExtension{
 	
-	private NewClassWizardPage fPage;
-	private String superClassName = null;
+	private NewVisualClassWizardPage fPage;
 	private IVisualClassCreationSourceContributor contributor = null;
 	private String contributorBundleName = null;
-	public static final String VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY = "VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY"; //$NON-NLS-1$
-	private static String DEFAULT_SUPER_CLASS = "javax.swing.JFrame"; //$NON-NLS-1$
+	public static final String VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY = "VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY"; //$NON-NLS-1$
 	public static String NEWLINE =  System.getProperty("line.separator") ; //$NON-NLS-1$
 
 	public NewVisualClassCreationWizard() {
@@ -56,39 +53,21 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	
 	/**
 	 * Sets the contributor who will be providing for the source of the input className
+	 * 
 	 * @param className
 	 * @param monitor
 	 */
-	protected void updateContributor(String className, IProgressMonitor monitor) {
-		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),
-				"newStyleComponent"); //$NON-NLS-1$
-		IExtension[] extensions = exp.getExtensions();
-		IType superClass = null;
-		try {
-			superClass = fPage.getPackageFragmentRoot().getJavaProject().findType(className);
-		} catch (JavaModelException e2) {
-			JavaVEPlugin.log(e2, Level.FINEST);
-		}
-		if (extensions != null && extensions.length > 0 && superClass != null) {
-			boolean contributorFound = false;
-			for (int ec = 0; ec < extensions.length && !contributorFound; ec++) {
-				IConfigurationElement[] configElms = extensions[ec].getConfigurationElements();
-				for (int cc = 0; cc < configElms.length && !contributorFound; cc++) {
-					IConfigurationElement celm = configElms[cc];
-					try {
-						String typeName = celm.getAttribute("type"); //$NON-NLS-1$
-						if (superClass.getFullyQualifiedName().equals(typeName)) {
-							if (celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0) {
-								contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
-								if (contributor != null) {
-									contributorBundleName = extensions[ec].getNamespace();
-								}
-								contributorFound = true;
-							}
-						}
-					} catch (CoreException e) {
-						JavaVEPlugin.log(e, Level.FINEST);
+	protected void updateContributor(VisualElementModel elementModel, IProgressMonitor monitor) {
+		if (elementModel != null && elementModel.getConfigElement() != null) {
+			IConfigurationElement celm = elementModel.getConfigElement();
+			if ((celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0)) {
+				try {
+					contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
+					if (contributor != null) {
+						contributorBundleName = elementModel.getContributorBundleName();
 					}
+				} catch (CoreException e) {
+					JavaVEPlugin.log(e, Level.FINEST);
 				}
 			}
 		}
@@ -313,12 +292,12 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#finishPage(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		// Store the changed default super class name if one was not specified.
-
-		JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, fPage.getSuperClass());
+		// Store the selected VisualElementModel if one is selected.
+		if (fPage.getSelectedElement() != null)
+			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, getSelectedElementStringValue(fPage.getSelectedElement()));
 		fPage.createType(monitor); // use the full progress monitor
 		
-		updateContributor(fPage.getSuperClass(), monitor);
+		updateContributor(fPage.getSelectedElement(), monitor);
 		if(contributor!=null){
 			applyContributor(fPage.getCreatedType(), fPage.getSuperClass(), monitor);
 		}
@@ -328,16 +307,16 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		fPage = new NewVisualClassWizardPage();
 		addPage(fPage);
 		fPage.init(getSelection());
-		if(superClassName!=null){
-			fPage.setSuperClass(superClassName, false);
-		}else{
-			// TODO Set the defaults in the JavaVEPlugin instead of overhere - Eclipse style
-			// Set the selection to what was used previously OR default if no previous 
-			Preferences preferences = JavaVEPlugin.getPlugin().getPluginPreferences();
-			if(!preferences.getDefaultString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY).equals(DEFAULT_SUPER_CLASS))
-				preferences.setDefault(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, DEFAULT_SUPER_CLASS);
-			fPage.setSuperClass(preferences.getString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY), true);
-		}
+//		if(superClassName!=null){
+//			fPage.setSuperClass(superClassName, false);
+//		}else{
+//			// TODO Set the defaults in the JavaVEPlugin instead of overhere - Eclipse style
+//			// Set the selection to what was used previously OR default if no previous 
+//			Preferences preferences = JavaVEPlugin.getPlugin().getPluginPreferences();
+//			if(!preferences.getDefaultString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY).equals(DEFAULT_SUPER_CLASS))
+//				preferences.setDefault(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY, DEFAULT_SUPER_CLASS);
+//			fPage.setSuperClass(preferences.getString(VISUAL_CLASS_WIZARD_SUPER_CLASS_KEY), true);
+//		}
 	}
 	
 	protected void openResource(IResource resource) {
@@ -368,16 +347,12 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
 	 */
-	public void setInitializationData(
-		IConfigurationElement config,
-		String propertyName,
-		Object data)
-		throws CoreException {
-		if(data instanceof String){
-			superClassName = (String)data;		
-		}
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 	}
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
 	 */
 	public boolean performFinish() {
@@ -395,5 +370,11 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			}
 		}
 		return res;
+	}
+	protected String getSelectedElementStringValue (VisualElementModel vem) {
+		if (vem != null) {
+			return vem.getCategory() + "-" + vem.getName() + "-" + fPage.getSuperClass(); 
+		}
+		return "";
 	}
 }

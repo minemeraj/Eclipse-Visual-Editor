@@ -11,41 +11,62 @@ package org.eclipse.ve.internal.java.codegen.wizards
  *******************************************************************************/
 ;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+
 /**
  * @author pmuldoon
- *
+ * 
  * Visual Element Object Model for New Visual Class Wizard
  */
 public class VisualElementModel {
 
-    public CategoryModel parent;
+	/**
+	 * @return Returns the configElement.
+	 */
+	public IConfigurationElement getConfigElement() {
+		return configElement;
+	}
 
-    protected String name;
+	public CategoryModel parent;
 
-    protected String superclass;
+	private IConfigurationElement configElement;
 
-    protected String codeContributor;
+	public VisualElementModel(IConfigurationElement configElement) {
+		this.configElement = configElement;
+	}
 
-    public VisualElementModel(String name, String superclass,
-            String codeContributor) {
-        this.name = name;
-        this.superclass = superclass;
-        this.codeContributor = codeContributor;
-    }
+	public String getName() {
+		if (configElement != null)
+			return configElement.getAttribute("name");
+		return null;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public String getSuperClass() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("type");
+		return null;
+	}
 
-    public String getSuperClass() {
-        return this.superclass;
-    }
+	public String getCategory() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("category");
+		return null;
+	}
 
-    public String getCodeContributor() {
-        return this.codeContributor;
-    }
+	public Object getParent() {
+		return parent;
+	}
 
-    public Object getParent() {
-        return parent;
-    }
+	/**
+	 * @return Returns the contributorBundleName.
+	 */
+	public String getContributorBundleName() {
+		if (configElement != null)
+			return configElement.getDeclaringExtension().getNamespace();
+		return null;
+	}
+
+	public String toString() {
+		return "category: " + getCategory() + ", name: " + getName() + ", type: " + getSuperClass();
+	}
 }
