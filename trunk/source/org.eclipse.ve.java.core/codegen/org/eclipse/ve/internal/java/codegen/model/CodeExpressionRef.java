@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.24 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.25 $  $Date: 2004-05-14 21:45:42 $ 
  */
 
 
@@ -396,9 +396,11 @@ public  void refreshFromComposition() throws CodeGenException {
 	    return ;	
 	if (fDecoder.isDeleted()) {
 		boolean isSrc = isStateSet(STATE_NO_SRC);
+		boolean isMaster = isStateSet(STATE_MASTER);
 		clearState();
 		setState(STATE_DELETE, true) ;
 		setState(STATE_NO_SRC,isSrc);
+		setState(STATE_MASTER, isMaster);
 		setContent((ExpressionParser) null) ;
 		return ;
 	}
@@ -553,6 +555,11 @@ public  void updateDocument(boolean updateSharedDoc) {
 
 	if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
+		if (isStateSet(STATE_MASTER)) {
+			CodeExpressionRef master = getMasterExpression();
+			master.setState(STATE_IN_SYNC,false);
+			master.updateDocument(true);
+		}
 		dispose() ;
 	}	
 }
