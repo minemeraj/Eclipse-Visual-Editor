@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IVEContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.2 $  $Date: 2004-11-02 19:13:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -21,6 +21,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 /**
  * Contributor to the Java Visual Editor
  * Note: This is still very experimental. This will change as we enable customization.
+ * 
+ * @deprecated Use IVEContributor1 instead. This interface will be removed in VE 1.1
+ * 
+ * @see org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor1
  * @since 1.0.0
  */
 public interface IVEContributor {

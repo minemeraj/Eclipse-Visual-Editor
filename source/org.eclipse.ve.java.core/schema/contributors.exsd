@@ -8,7 +8,7 @@
       <documentation>
          This extension point is used to supply configuration contributors for the Java Visual Editor. You can supply a contributor for a specific classpath container or for a plugin.
 &lt;p&gt;
-The way contributors work is that when a proxy vm for an editor is started or restarted, it goes through the classpath of the project and finds the visible containers (IClasspathContainer). If the container implements IVEContributor, it will be called as a contributor. Then all of the visible container ids and plugin ids will be used to look into this extension point, and if found, the contributor will be created and asked to contribute.
+The way contributors work is that when a proxy vm for an editor is started or restarted, it goes through the classpath of the project and finds the visible containers (IClasspathContainer). If the container implements IVEContributor1, it will be called as a contributor. Then all of the visible container ids and plugin ids will be used to look into this extension point, and if found, the contributor will be created and asked to contribute.
 &lt;p&gt;
 The extensions will be called in plugin order. In other words if plugin A depends on plugin B, the contribution in plugin A will not be called before the contribution in plugin B.
 &lt;p&gt;
@@ -72,10 +72,10 @@ Both container and plugin can be specified, but at least one of them must be spe
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  the class that implements this contributor. The class must implement IVEContributor.
+                  the class that implements this contributor. The class must implement IVEContributor1.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor1"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -176,7 +176,7 @@ This will use the xmi file &quot;palette/myOtherCats.xmi&quot; for both the cont
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         The &lt;samp&gt;class&lt;/samp&gt; attribute must be a fully-qualified class that implements the &lt;samp&gt;org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor&lt;/samp&gt; interface.
+         The &lt;samp&gt;class&lt;/samp&gt; attribute must be a fully-qualified class that implements the &lt;samp&gt;org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor1&lt;/samp&gt; interface.
       </documentation>
    </annotation>
 
