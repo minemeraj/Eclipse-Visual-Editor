@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.11 $  $Date: 2005-01-05 22:13:35 $ 
  */
 
 
@@ -52,7 +52,7 @@ public class VCEPreferences {
     
     
     // The following are run time options
-    public static final String DEBUG_CONSOLE_ECHO   = "/debug/consolelog" ; // Dump all logs to console //$NON-NLS-1$
+    public static final String DEBUG_CONSOLE_ECHO   = "/debug/logtrace" ; // Dump all logs to console //$NON-NLS-1$
     public static final String DEBUG_XMITEXT_OPTION = "/debug/xmltext" ;    // Provide the XMI text option  //$NON-NLS-1$
     public static final String DEBUG_LIVEWINDOW_OPTION = "/debug/livewindow" ; // Provide the Live Window option  //$NON-NLS-1$
     
