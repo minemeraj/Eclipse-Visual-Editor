@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTextFieldBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -364,7 +364,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"action", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextFieldMessages.getString("action.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextFieldMessages.getString("action.Desc"), //$NON-NLS-1$
-			EXPERT, Boolean.TRUE
+			EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	    		}
 	    	),
 		};

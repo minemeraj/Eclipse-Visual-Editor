@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: AbstractButtonBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -915,7 +915,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.model.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.Model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
+	      	//PREFERRED, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
@@ -1009,11 +1009,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),		
 	    	// ui
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.ui.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.ui.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
+	      	//PREFERRED, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),

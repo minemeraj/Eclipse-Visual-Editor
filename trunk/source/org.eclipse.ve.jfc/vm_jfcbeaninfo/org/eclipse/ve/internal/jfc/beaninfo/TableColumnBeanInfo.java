@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: TableColumnBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.7 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -358,7 +358,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, TableColumnMessages.getString("cellEditor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("cellEditor.Desc"), //$NON-NLS-1$
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-	      	EXPERT, Boolean.TRUE
+	      	EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	    		}
 	    	),
 			// cellRenderer

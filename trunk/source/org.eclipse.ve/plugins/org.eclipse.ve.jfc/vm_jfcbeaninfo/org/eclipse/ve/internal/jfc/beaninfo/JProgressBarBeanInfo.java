@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JProgressBarBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -391,14 +391,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	super.createPropertyDescriptor(getBeanClass(),"model", new Object[]{ //$NON-NLS-1$
 	    		DISPLAYNAME, JProgressBarMessages.getString("model.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JProgressBarMessages.getString("model.Desc"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// ui
-	    	super.createPropertyDescriptor(getBeanClass(),"uI", new Object[]{ //$NON-NLS-1$
+	    	super.createPropertyDescriptor(getBeanClass(),"UI", new Object[]{ //$NON-NLS-1$
 	    		DISPLAYNAME, JProgressBarMessages.getString("ui.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JProgressBarMessages.getString("ui.Desc"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 		};

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JComboBoxBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -701,6 +701,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, JComboBoxMessages.getString("editor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("editor.Dec"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
@@ -755,7 +756,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, JComboBoxMessages.getString("model.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
+	      	EXPERT, Boolean.TRUE,
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
@@ -777,7 +778,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"renderer", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, JComboBoxMessages.getString("renderer.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("renderer.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE,	      	
+	      	EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
@@ -807,14 +809,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"action", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, JComboBoxMessages.getString("action.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("action.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE	      	
+	      	EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	    		}
 	    	),
-	    	// action
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	    	// UI
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, JComboBoxMessages.getString("ui.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("ui.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE	      	
+	      	EXPERT, Boolean.TRUE,	      	
+			BOUND, Boolean.TRUE
 	    		}
 	    	),
 		};

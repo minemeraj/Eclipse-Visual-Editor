@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTextComponentBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.8 $  $Date: 2004-09-03 14:32:22 $ 
  */
 
 import java.beans.*;
@@ -981,10 +981,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),
 	    	// ui
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextComponentMessages.getString("ui.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("ui.Desc"), //$NON-NLS-1$
-			EXPERT, Boolean.TRUE
+			EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 	    		}
 	    	),
 		};

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ComponentBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.awt.dnd.DropTarget;
@@ -1391,9 +1391,10 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"dropTarget", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, rescomponent.getString("PropDesc.DropTarget.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, rescomponent.getString("PropDesc.DropTarget.Desc"), //$NON-NLS-1$
-	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
-	      	EXPERT, Boolean.TRUE
+	      	//BOUND, Boolean.TRUE,
+	      	//PREFERRED, Boolean.TRUE,
+	      	//EXPERT, Boolean.TRUE
+			HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 		};

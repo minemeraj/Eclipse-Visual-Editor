@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JFileChooserBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -963,11 +963,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.accessibleContext.Desc"), //$NON-NLS-1$
 			}
 			),
+			//TODO: potentially useful when visible, but leads to confusing UI
 			// accessory
 			super.createPropertyDescriptor(getBeanClass(),"accessory", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.accessory.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.accessory.Desc"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
+				HIDDEN, Boolean.TRUE,
 			}
 			),
 			// approveButtonMnemonic

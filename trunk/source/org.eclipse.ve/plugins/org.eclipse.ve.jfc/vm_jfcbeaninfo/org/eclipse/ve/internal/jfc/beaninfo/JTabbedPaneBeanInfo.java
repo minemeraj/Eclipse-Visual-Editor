@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTabbedPaneBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -732,7 +732,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JTabbedPaneMessages.getString("model.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JTabbedPaneMessages.getString("model.Desc"), //$NON-NLS-1$
 	      		BOUND, Boolean.TRUE,
-	      		PREFERRED, Boolean.TRUE,
 	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
 				EXPERT, Boolean.TRUE
 	    		}
@@ -741,9 +740,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selectedComponent", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JTabbedPaneMessages.getString("selectedComponent.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JTabbedPaneMessages.getString("selectedComponent.Desc"), //$NON-NLS-1$
-	      		PREFERRED, Boolean.TRUE,
-	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+	      		DESIGNTIMEPROPERTY, Boolean.FALSE
+				//EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// selectedIndex
@@ -786,11 +784,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),
 			// ui
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JTabbedPaneMessages.getString("ui.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JTabbedPaneMessages.getString("ui.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE	      	
+	      		BOUND, Boolean.TRUE	      	
 	    		}
 	    	),
 		};

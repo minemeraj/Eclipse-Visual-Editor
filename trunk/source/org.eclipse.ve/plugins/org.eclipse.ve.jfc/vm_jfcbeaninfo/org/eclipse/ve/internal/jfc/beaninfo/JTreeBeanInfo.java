@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTreeBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -1579,7 +1579,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, resJTreeBundle.getString("model.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
 	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 			EXPERT, Boolean.TRUE
 	    		}
@@ -1713,10 +1712,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),
 			// ui
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, resJTreeBundle.getString("ui.Name"), //$NON-NLS-1$
 			SHORTDESCRIPTION, resJTreeBundle.getString("ui.Desc"), //$NON-NLS-1$
-			EXPERT, Boolean.TRUE
+			EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE
 			     }
 			 ),
 		};

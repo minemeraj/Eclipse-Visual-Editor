@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JComponentBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -1401,7 +1401,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JComponentMessages.getString("inputVerifier.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("inputVerifier.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		//HIDDEN, Boolean.TRUE
+	      		BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// insets
@@ -1549,7 +1549,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"transferHandler", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JComponentMessages.getString("transferHandler.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("transferHandler.Desc"), //$NON-NLS-1$
-	      		EXPERT, Boolean.TRUE
+	      		EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	)	
 		};

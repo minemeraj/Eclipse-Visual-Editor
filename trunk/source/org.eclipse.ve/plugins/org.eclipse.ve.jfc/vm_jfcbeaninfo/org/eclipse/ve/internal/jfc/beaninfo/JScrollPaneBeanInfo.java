@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JScrollPaneBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -427,6 +427,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("columnHeader.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("columnHeader.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
@@ -443,7 +444,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("horizontalScrollBar.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("horizontalScrollBar.Desc"), //$NON-NLS-1$
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// horizontalScrollBarPolicy
@@ -480,6 +482,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("rowHeader.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				
 	    		}
 	    	),
 			// rowHeaderView
@@ -487,7 +490,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("rowHeaderView.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("rowHeaderView.Desc"), //$NON-NLS-1$
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),	    	
 	    	// validateRoot
@@ -502,7 +506,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("verticalScrollBar.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("verticalScrollBar.Desc"), //$NON-NLS-1$
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// verticalScrollBarPolicy
@@ -525,7 +530,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("viewport.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("viewport.Desc"), //$NON-NLS-1$
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 	    	// viewportBorder
@@ -543,11 +549,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),
 	    	// ui
-			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("ui.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("ui.Desc"), //$NON-NLS-1$
 		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
+				EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	    		}
 	    	),
 		};

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: FrameBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.ParameterDescriptor;
@@ -219,7 +219,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	super.createPropertyDescriptor(getBeanClass(),"menuBar", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, resframe.getString("menuBarDN"),		    	 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resframe.getString("menuBarSD"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE,
+	      	//EXPERT, Boolean.TRUE,
+			HIDDEN, Boolean.TRUE //UI support for AWT menu bar poor
 	    		}
 	    	),
 			// resizable

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ContainerBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.awt.FocusTraversalPolicy;
@@ -699,7 +699,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, rescontainer.getString("PropDesc.focusTraversalPolicy.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, rescontainer.getString("PropDesc.focusTraversalPolicy.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	PREFERRED, Boolean.TRUE,
+	      	//PREFERRED, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JDesktopPaneBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-09-03 14:32:23 $ 
  */
 
 import java.beans.*;
@@ -221,17 +221,19 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	),
+			//TODO: hidden as code sets selected frame prior to frames being added
 			super.createPropertyDescriptor(getBeanClass(),"selectedFrame", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JDesktopMessages.getString("selectedFrame.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("selectedFrame.Desc"), //$NON-NLS-1$
-      		    EXPERT, Boolean.TRUE,
-	      		//HIDDEN, Boolean.TRUE
+      		    //EXPERT, Boolean.TRUE,
+	      		HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JDesktopMessages.getString("UI.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("UI.Desc"), //$NON-NLS-1$
       		    EXPERT, Boolean.TRUE,
+				BOUND, Boolean.TRUE
 	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	)	    	
