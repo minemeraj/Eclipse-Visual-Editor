@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-20 16:23:41 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-20 16:39:41 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -27,8 +27,10 @@ import org.eclipse.ve.internal.swt.SWTConstants;
 public class TabFolderDecoder extends CompositeDecoder {
 	
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
-	protected final static String ADD_METHOD_SF_NAME = SWTConstants.SF_TABFOLDER_ITEMS.fragment().substring(SWTConstants.SF_TABFOLDER_ITEMS.fragment().lastIndexOf('/')+1);
+	protected final static String ADD_METHOD_SF_NAME = URItoFeature(SWTConstants.SF_TABFOLDER_ITEMS);
 
+	
+	
 	public TabFolderDecoder(){
 		super();
 		addStructuralFeatureAndWriteMethod(ADD_METHOD_SF_NAME, ADD_METHOD_PREFIX);
