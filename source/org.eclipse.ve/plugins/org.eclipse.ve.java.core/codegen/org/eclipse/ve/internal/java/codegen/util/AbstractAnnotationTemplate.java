@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationTemplate.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-14 19:53:17 $ 
  */
 /**
  * @version 	1.0
@@ -22,9 +22,8 @@ public abstract class AbstractAnnotationTemplate {
 	
 	
 final public static String ANNOTATION_SIG 	=	"@jve:" ; //$NON-NLS-1$
-// No Support, yet for multi line def, so just stick it here
-final public static String VISUAL_INFO_TYPE	=	"visual-info  decl-index=0" ; //$NON-NLS-1$
-
+// TODO No Support, yet for multi line def, so just stick it here
+final public static String VISUAL_INFO_TYPE	=	"decl-index=0" ; //$NON-NLS-1$
 
 
 	
@@ -33,7 +32,7 @@ final public static String VISUAL_INFO_TYPE	=	"visual-info  decl-index=0" ; //$N
 	int    fIndent=2 ;
 	String fSeperator = System.getProperty("line.separator") ; //$NON-NLS-1$
 	String fAnnotationType = "none" ; //$NON-NLS-1$
-	String fContent = ""; //$NON-NLS-1$
+	String fContent = null; 
 
 
 public AbstractAnnotationTemplate (String annotationType) {
@@ -45,10 +44,12 @@ public void setIndent(int i) { fIndent = i; } ;
 public void setSeperator (String sep) { fSeperator = sep ; }
 public void setContent (String c) { fContent = c ; }
 public void setAnnotationType (String t) { fAnnotationType = t ; }
-
-
-
-
+protected String getContent(){
+	if(fContent==null)
+		return determineContent();
+	return fContent;
+}
+protected abstract String determineContent();
 
 	
 public String toString () {
@@ -60,8 +61,7 @@ public String toString () {
     st.append(ANNOTATION_SIG) ;
     st.append(fAnnotationType) ;
     st.append(ExpressionTemplate.SPACE) ;
-    
-    st.append(fContent) ;
+    st.append(getContent()) ;
     
     //st.append(fSeperator) ;
     

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IInstanceVariableCreationRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-14 19:54:05 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,7 +28,6 @@ import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 public interface IInstanceVariableCreationRule extends IRule {
 
 	public static final String RULE_ID = "ruleInstanceVariableCreation"; //$NON-NLS-1$
-	public static final String DEFAULT_VAR_PREFIX = "ivj"; //$NON-NLS-1$
 
 	public String getInstanceVariableName(EObject obj, IType currentType, IVEModelInstance cm, IBeanDeclModel bdm);
 	/**

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-02 19:46:32 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-14 19:55:38 $ 
  */
 
 import java.util.logging.Level;
@@ -177,6 +177,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
               
               
               int commentStart = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
+              commentStart = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, commentStart);
               if (commentStart <0)
                  len = 0 ;                    
               else
@@ -188,6 +189,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
               JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
               newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
+              s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
               len = end+1 ;                
           }

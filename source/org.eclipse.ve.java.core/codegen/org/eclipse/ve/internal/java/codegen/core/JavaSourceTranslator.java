@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.33 $  $Date: 2004-05-12 11:39:40 $ 
+ *  $Revision: 1.34 $  $Date: 2004-05-14 19:58:43 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -773,17 +773,13 @@ void	buildCompositionModel() throws CodeGenException {
 //	          		comp.getComponents().add(bean.getEObject()) ;	          		
 //	       		}
 //	       		
-				if (bean.isInstanceVar()  || bean.getSimpleName().equals(BeanPart.THIS_NAME)){
-					try {
-						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
-						bean.getFFDecoder().decode();
-					}
-					finally {
-						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
-					}
-				}else{
-					bean.getFFDecoder();
-				}
+			try {
+				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
+				if(bean.getFFDecoder()!=null)
+					bean.getFFDecoder().decode();
+			} finally {
+				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
+			}
 //	   	   }
 		}
 	}finally{

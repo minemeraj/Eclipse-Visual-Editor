@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-20 13:29:03 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-14 19:52:42 $ 
  */
 
 import java.util.ArrayList;
@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import javax.swing.UIManager;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -38,8 +36,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.*;
+
 import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
 
 public class VCEPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -66,17 +66,16 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Button showSplitPaneGEFPaletteButton;
 	protected Button generateExpressionComment;
 	protected Table stylesTable;
+	protected Text objectPrefixText;
 	protected StackLayout stylesContributorAreaLayout;
 	protected Composite styleContributorArea;
 	//    protected Button requireIVJforComponents ;
-	protected Button requireIVJforNonComponents;
 	protected Button generateTryCatchBlock;
-	protected Text sourceSyncDelayText;
 	protected Text sourceToVisual;
-	protected Text fSourceToJavaBeansTotalTimeLabel;
-	protected Text fSourceToJavaBeansTimeLabel;
 	protected Group sourceSyncGrp;
 
+	protected Image fJavaBeansToSourceImage;
+	protected Image fSourceToJavaBeansImage;
 	protected Image fJavaBeansViewImage;
 	protected Image fPropertiesViewImage;
 
@@ -87,6 +86,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private TableItem currentLookAndFeelItem;
 
 	private String fStyleID = null;
+	private String defaultPrefix = null;
 
 	protected Label createLabel(Composite group, String aLabelString, Image aLabelImage) {
 		Label label = new Label(group, SWT.LEFT);
@@ -168,7 +168,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		text.setLayoutData(data);
 		return text;
 	}
-
 	protected Control createContents(Composite parent) {
 
 		// The contents area is divided into notebooks to make best use of real estate
@@ -220,7 +219,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		openPropertiesViewIfRequired = createCheckBox(openComposite, VCEMessages.getString("PreferencePage.OpenView.Properties"), 0); //$NON-NLS-1$
 		try {
-			fPropertiesViewImage = CDEPlugin.getImageFromPlugin(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.ui").getPlugin(), "icons/full/eview16/prop_ps.gif");	//$NON-NLS-1$
+			fPropertiesViewImage = CDEPlugin.getImageFromPlugin(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.ui").getPlugin(), "icons/full/cview16/prop_ps.gif");	//$NON-NLS-1$ //$NON-NLS-2$
 		} catch (CoreException e1) {
 		} 
 		createLabel(openComposite, null, fPropertiesViewImage);
@@ -404,11 +403,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		generateExpressionComment = createCheckBox(codeGenGroup_Gen, VCEMessages.getString("PreferencePage.NewExpressionCommentPrompt"), 0); //$NON-NLS-1$
 		generateTryCatchBlock = createCheckBox(codeGenGroup_Gen, VCEMessages.getString("PreferencePage.GenerateTryCatchBlock"), 0); //$NON-NLS-1$
 
-		Group codeGenGroup_Parsing = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.ParsingParsing_Filters_2"), 1); //$NON-NLS-1$
-
-		//    requireIVJforComponents = createCheckBox(codeGenGroup_Parsing,VCEMessages.getString("PreferencePage.CodeGen.ParsingRequire_prefix_of___ivj___for_AWT/Swing_component_field_names_3"),0);   //$NON-NLS-1$
-		requireIVJforNonComponents = createCheckBox(codeGenGroup_Parsing, VCEMessages.getString("PreferencePage.CodeGen.ParsingRequire_prefix_of___ivj___for_objects_other_than_AWT/Swing_component_field_names_4"), 0); //$NON-NLS-1$
-
 		// Create a listener to see when the values in text boxes changes so we can trigger revalidation
 		ModifyListener modifyListener = new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -417,33 +411,24 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			}
 		};
 
-		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.Source_Synchronization_Delay"), 5); //$NON-NLS-1$
+		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.Source_Synchronization_Delay"), 6); //$NON-NLS-1$
 		// The group is 5 wide.
 
-		// For JavaBeansToSource show the label, text and spacers
-		createLabel(sourceSyncGrp, VCEMessages.getString("PreferencePage.CodeGen.JavaBeansToSource"), null); //$NON-NLS-1$
-		sourceSyncDelayText = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
-		sourceSyncDelayText.setTextLimit(9);
-		createLabel(sourceSyncGrp, "", null); //$NON-NLS-1$
-		createLabel(sourceSyncGrp, "", null); //$NON-NLS-1$
-		createLabel(sourceSyncGrp, "", null); //$NON-NLS-1$	
-
-		// The JavaBeansToSource are 5 wide in the group
-		// First the label, then a * and the text box
+		// The JavaBeansToSource are 6 wide in the group
 		createLabel(sourceSyncGrp, VCEMessages.getString("PreferencePage.CodeGen.SourceToJavaBeans"), null); //$NON-NLS-1$
-		fSourceToJavaBeansTimeLabel = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
-		fSourceToJavaBeansTimeLabel.setEditable(false);
-		createLabel(sourceSyncGrp, "*", null); //$NON-NLS-1$
-		sourceToVisual = createText(sourceSyncGrp, 2, 1); //$NON-NLS-1$
+		sourceToVisual = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
 		sourceToVisual.addModifyListener(modifyListener);
-		sourceToVisual.setTextLimit(1);
-		fSourceToJavaBeansTotalTimeLabel = createText(sourceSyncGrp, 14, 1); //$NON-NLS-1$
-		fSourceToJavaBeansTotalTimeLabel.setEditable(false);
+		sourceToVisual.setTextLimit(9);
+		
+		Group codeGenGroup_Prefix = createGroup(codeGenComposite, VCEMessages.getString("VCEPreferencePage.DefaultPrefix.Desc"), 2); //$NON-NLS-1$
+		codeGenGroup_Prefix.setLayout(new GridLayout(3, false));
+		
+		objectPrefixText = createLabelText(codeGenGroup_Prefix, VCEMessages.getString("VCEPreferencePage.DefaultPrefix.GroupTitle"), 20); //$NON-NLS-1$
 
-		sourceSyncDelayText.addModifyListener(modifyListener);
-
+		Label spacer = new Label(codeGenGroup_Prefix, SWT.NONE);
+		spacer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
-
+	
 	protected Table createTable(Composite parent, int Style, String[] headers) {
 		final Table result = new Table(parent, Style);
 		TableLayout tl = new TableLayout();
@@ -631,8 +616,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		for (int i = 0; i < lnfs.length; i++) {
 			// TODO: Hack to remove the Windows L&F from Linux (Sun bug 4843282)
 			if (lnfs[i].getClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel") && //$NON-NLS-1$
-			System.getProperty("os.name").equals("Linux"))  //$NON-NLS-1$ //$NON-NLS-2$
-				continue; 
+			System.getProperty("os.name").equals("Linux")) //$NON-NLS-1$ //$NON-NLS-2$
+				continue; //$NON-NLS-1$ //$NON-NLS-2$
 
 			tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setText(0, lnfs[i].getName());
@@ -659,7 +644,42 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore = VCEPreferences.getPlugin().getPluginPreferences();
 		return fStore;
 	}
-
+	
+	/**
+	 * Returns in the format {{classname, prefix},{classname,prefix},..}
+	 * 
+	 * @param Pass in the value stored in the store
+	 * @return 
+	 * 
+	 * @since 1.0.0
+	 */
+	public static String loadDefaultPrefix(boolean loadDefault){
+		String storeEntry = loadDefault ?
+				VCEPreferences.getPlugin().getPluginPreferences().getDefaultString(VCEPreferences.VE_DEFAULT_PREFIX_KEY):
+				VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.VE_DEFAULT_PREFIX_KEY);
+		return storeEntry;
+	}
+	
+	/**
+	 * Stores the passed in prefixes into the store
+	 * 
+	 * @param prefixes in the format {{classname, prefix},{classname,prefix},..}
+	 * 
+	 * @since 1.0.0
+	 */
+	public static void storeDefaultPrefix(String prefix){
+		VCEPreferences.getPlugin().getPluginPreferences().setValue(VCEPreferences.VE_DEFAULT_PREFIX_KEY, prefix);
+	}
+	
+	protected void initalizeDefaultPrefix(boolean withDefaults){
+		defaultPrefix = loadDefaultPrefix(withDefaults);
+		objectPrefixText.setText(defaultPrefix);
+	}
+	
+	protected String getDefaultPrefix(){
+		return objectPrefixText.getText();
+	}
+	
 	protected void initializeGUIControlsFromStore() {
 
 		getStore();
@@ -696,6 +716,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 				}
 			}
 		}
+		
+		initalizeDefaultPrefix(false);
 
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
@@ -716,46 +738,23 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		generateTryCatchBlock.setSelection(fStore.getBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
 		showNotebookGEFPaletteButton.setSelection(fStore.getBoolean(VCEPreferences.NOTEBOOK_SHOW_GEF_PALETTE));
 		showSplitPaneGEFPaletteButton.setSelection(fStore.getBoolean(VCEPreferences.SPLITPANE_SHOW_GEF_PALETTE));
-		sourceSyncDelayText.setText(fStore.getString(VCEPreferences.SOURCE_SYNC_DELAY));
-		sourceToVisual.setText(fStore.getString(VCEPreferences.SOURCE_DELAY_FACTOR));
+		sourceToVisual.setText(fStore.getString(VCEPreferences.SOURCE_SYNC_DELAY));
 		calculateTotalSourceToVisualTime();
-		requireIVJforNonComponents.setSelection(true);
-		requireIVJforNonComponents.setEnabled(false);
-
 	}
 	protected void validateFields() {
 		// Validate that the sourceSyncDelayText is an integer greater than the default of 500ms
 		boolean isValid = true;
 		try {
-			int val = Integer.parseInt(sourceSyncDelayText.getText());
+			int val = Integer.parseInt(sourceToVisual.getText());
 			if (val < VCEPreferences.DEFAULT_SYNC_DELAY) {
 				isValid = false;
 				setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMinimum")); //$NON-NLS-1$
-				fSourceToJavaBeansTotalTimeLabel.setText("="); //$NON-NLS-1$
 				setValid(false);
 			}
 		} catch (NumberFormatException ex) {
 			isValid = false;
 			setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMustBeInteger")); //$NON-NLS-1$
 			setValid(false);
-			fSourceToJavaBeansTotalTimeLabel.setText("="); //$NON-NLS-1$
-		}
-		// If we are valid check that the sourceToVisual delay factor is an integer between 1 and 9
-		if (isValid) {
-			try {
-				int val = Integer.parseInt(sourceToVisual.getText());
-				if (val < 1 || val > 9) {
-					isValid = false;
-					setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeValidRange")); //$NON-NLS-1$
-					fSourceToJavaBeansTotalTimeLabel.setText("="); //$NON-NLS-1$
-					setValid(false);
-				}
-			} catch (NumberFormatException ex) {
-				isValid = false;
-				setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeValidRange")); //$NON-NLS-1$
-				fSourceToJavaBeansTotalTimeLabel.setText("="); //$NON-NLS-1$
-				setValid(false);
-			}
 		}
 		// If we got no errors then clear the error message and refresh the total source to visual time
 		if (isValid) {
@@ -772,25 +771,12 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	}
 	protected boolean calculateTotalSourceToVisualTime() {
 		try {
-			int javaBeansToSourceDelayTime = Integer.parseInt(sourceSyncDelayText.getText());
-			int increaseFactorForSourceToJavaBeans = Integer.parseInt(sourceToVisual.getText());
-			Integer total = new Integer(javaBeansToSourceDelayTime * increaseFactorForSourceToJavaBeans); //$NON-NLS-1$
-			// I can find no way of seeing whether the result has overflowed or not.  Therefore do a division to see whether the
-			// answer is correct
-			if (total.intValue() / increaseFactorForSourceToJavaBeans == javaBeansToSourceDelayTime) {
-				fSourceToJavaBeansTotalTimeLabel.setText("= " + total); //$NON-NLS-1$
-				fSourceToJavaBeansTimeLabel.setText(Integer.toString(javaBeansToSourceDelayTime));
-				// Because we have change the contents of the label its size needs updating as its preferred size has changed
-				// A layout on its container will force the layout to occur
-				sourceSyncGrp.layout();
-				return true;
-			} else {
-				// For the error to show grab the one used by the property sheet to show an invalid integer
+			int total = Integer.parseInt(sourceToVisual.getText());
+			if(total<0 || total>Integer.MAX_VALUE){
 				setErrorMessage(PropertysheetMessages.getString(PropertysheetMessages.NOT_INTEGER));
-				fSourceToJavaBeansTotalTimeLabel.setText("= " + total); //$NON-NLS-1$
-				sourceSyncGrp.layout();
 				return false;
 			}
+			return true;
 		} catch (NumberFormatException exc) {
 			// This should not occur because the number have already been validated
 			return false;
@@ -840,11 +826,13 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		fStore.setValue(VCEPreferences.GENERATE_COMMENT, generateExpressionComment.getSelection());
 		fStore.setValue(VCEPreferences.GENERATE_TRY_CATCH_BLOCK, generateTryCatchBlock.getSelection());
-		fStore.setValue(VCEPreferences.SOURCE_SYNC_DELAY, Integer.parseInt(sourceSyncDelayText.getText()));
-		fStore.setValue(VCEPreferences.SOURCE_DELAY_FACTOR, Integer.parseInt(sourceToVisual.getText()));
+		fStore.setValue(VCEPreferences.SOURCE_SYNC_DELAY, Integer.parseInt(sourceToVisual.getText()));
+		fStore.setValue(VCEPreferences.SOURCE_DELAY_FACTOR, VCEPreferences.DEFAULT_L2R_FACTOR);
 		//	fStore.setValue(VCEPreferences.REQUIRE_IVJ_COMPONENTS,requireIVJforComponents.getSelection()) ;
 
 		fStore.setValue(VCEPreferences.JVE_PATTERN_STYLE_ID, fStyleID);
+		
+		storeDefaultPrefix(getDefaultPrefix());
 
 		saveContributorSettings();
 		
@@ -895,8 +883,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		generateTryCatchBlock.setSelection(store.getDefaultBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
 		splitRadioButton.setSelection(!store.getDefaultBoolean(VCEPreferences.NOTEBOOK_PAGE));
 		showSplitPaneGEFPaletteButton.setSelection(store.getDefaultBoolean(VCEPreferences.SPLITPANE_SHOW_GEF_PALETTE));
-		sourceSyncDelayText.setText(Integer.toString(VCEPreferences.DEFAULT_SYNC_DELAY));
-		sourceToVisual.setText(Integer.toString(VCEPreferences.DEFAULT_L2R_FACTOR));
+		sourceToVisual.setText(Integer.toString(VCEPreferences.DEFAULT_SYNC_DELAY));
+		initalizeDefaultPrefix(true);
 
 		// Having set the radio button for the split pane versus notebook to the default
 		// We need to make sure that the check boxes for whether the palette should be shown or not
@@ -920,6 +908,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			fJavaBeansViewImage.dispose();
 		if (fPropertiesViewImage != null)
 			fPropertiesViewImage.dispose();
+		if (fJavaBeansToSourceImage != null)
+			fJavaBeansToSourceImage.dispose();
+		if (fSourceToJavaBeansImage != null)
+			fSourceToJavaBeansImage.dispose();
 
 	}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-15 19:42:20 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-14 19:55:38 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
@@ -172,6 +172,22 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     		vi.eAdapters().remove(adapter) ;    
     	vi.getKeyedValues().removeKey(fAnnotationKey);
     }
+    
+    protected void noAnnotationInSource() {
+    	if (fAnnotationKey == null || fBeanpart == null) return ; 
+
+    	Annotation a = CodeGenUtil.getAnnotation(fBeanpart.getEObject()) ;
+    	if (a == null) return ;
+    	
+    	VisualInfo vi = a.getVisualInfo(fCompositionModel.getDiagram()) ;
+    	if (vi == null)  return ;    	    
+    	ICodeGenAdapter adapter = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(a, ICodeGenAdapter.JVE_CODEGEN_ANNOTATION_ADAPTER) ;
+    	if (adapter != null) 
+    		vi.eAdapters().remove(adapter) ;
+    	vi.getKeyedValues().removeKey(fAnnotationKey);
+    	a.getVisualInfos().remove(vi);
+    }
+    
     /*
      * @see IAnnotationDecoder#dispose()
      */

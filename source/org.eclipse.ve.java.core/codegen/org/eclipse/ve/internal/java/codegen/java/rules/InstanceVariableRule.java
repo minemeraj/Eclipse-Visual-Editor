@@ -11,83 +11,58 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-14 19:54:05 $ 
  */
 
-import java.util.*;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class InstanceVariableRule implements IInstanceVariableRule, IMethodVariableRule {
 
-	static List utilityClasses = null;
-	static ResourceSet utilityRS = null;
-	static HashMap internalsCache = null;
+	static HashMap modelledBeansCache = new HashMap(200);
 
 	String fInitMethod = null;
 	boolean fInitMethodSet = false;
 
-	protected List getUtilityClasses(IVEModelInstance di) {
-		if (utilityRS != null && utilityRS.equals(di.getModelResourceSet()))
-			return utilityClasses;
-
-		utilityClasses = new ArrayList();
-		utilityRS = di.getModelResourceSet();
-		internalsCache = null;
-		for (int i = 0; i < InstanceVariableCreationRule.internalTypes.length; i++) {
-			EClassifier iClass;
-			try {
-				iClass = JavaRefFactory.eINSTANCE.reflectType(InstanceVariableCreationRule.internalTypes[i], di.getModelResourceSet());
-			} catch (Exception e) {
-				continue;
-			}
-			utilityClasses.add(iClass);
-		}
-		return utilityClasses;	
-	}
 	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
-		if (isUtilityVariable(field.getType(), resolver, di))
+		if (isModelled(field.getType(), resolver, di))
+			return false;
+		if (!ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di))
 			return false;
 		//TODO: support multi declerations
-		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
+		return !AnnotationDecoderAdapter.hasMetaInformation(field);
 	}
 	
 	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IVEModelInstance di) {
 		//TODO:  Need to filter arrays, 
 		//
-		if (isUtilityVariable(stmt.getType(), resolver, di))
+		if (isModelled(stmt.getType(), resolver, di))
+			return false;
+		if (!ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di))
 			return false;
 		//TODO: support multi declerations
-		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
+		return !AnnotationDecoderAdapter.hasMetaInformation(stmt);
 	}
 	
-	
 	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
-
-		
 		try {
-						
 			String name = decl.getName().getIdentifier();
-			if (name.startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
+			if (name.startsWith(InstanceVariableCreationRule.getDefaultPrefix(di.getModelResourceSet()))) {
 				// Ignore VCE connections
 				if (name.startsWith("ivjConn")) //$NON-NLS-1$
 					return true;
@@ -100,29 +75,22 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 
 					if (type.startsWith("Ivj"))
 						return true; // ignore IvjEventHandler and such //$NON-NLS-1$
-					return false;
 				}
-			} else {
-				String type = resolveType(tp, resolver);
-				if (type == null)
-					return true;
-				String t = type.indexOf("$") >= 0 ? type.substring(type.indexOf("$") + 1) : type; //$NON-NLS-1$ //$NON-NLS-2$
-				if (t.startsWith("Ivj"))
-					return true; // ignore IvjEventHandler and such //$NON-NLS-1$
-
-				ResourceSet rs = di.getModelResourceSet();
-				EClassifier meta = JavaRefFactory.eINSTANCE.reflectType(type, rs);
-
-				String pre = InstanceVariableCreationRule.getPrefix(meta, rs);
-				if (pre == null || pre.length() == 0)
-					return false;
+				return false;
+			} 
+			
+			String type = resolveType(tp, resolver);
+			if (type == null)
 				return true;
-			}
+			String t = type.indexOf("$") >= 0 ? type.substring(type.indexOf("$") + 1) : type; //$NON-NLS-1$ //$NON-NLS-2$
+			if (t.startsWith("Ivj"))
+				return true; // ignore IvjEventHandler and such //$NON-NLS-1$
+
+			return true;
 		} catch (Throwable t) {
 			return true;
 		}
 	}
-
 	
 	protected String resolveType(Type t, ITypeResolver resolver) {		
 		if (t instanceof SimpleType) {
@@ -135,15 +103,12 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isUtilityVariable(Type tp, ITypeResolver resolver, IVEModelInstance di) {
-
-		// This will also clear the internalsCache
-		List utilClasses = getUtilityClasses(di);
+	protected boolean isModelled(Type tp, ITypeResolver resolver, IVEModelInstance di) {
 
 		// Try to bypass resolving, and isAssignableFrom
-		if (internalsCache == null)
-			internalsCache = new HashMap(200);
-		Boolean internal = (Boolean) internalsCache.get(resolveType(tp, resolver));
+		if (modelledBeansCache == null)
+			modelledBeansCache = new HashMap(200);
+		Boolean internal = (Boolean) modelledBeansCache.get(resolveType(tp, resolver));
 		if (internal != null)
 			return internal.booleanValue();
 
@@ -153,23 +118,18 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			return false;
 		try {
 			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(t, di.getModelResourceSet());
-			for (Iterator iterator = utilClasses.iterator(); iterator.hasNext();) {
-				JavaClass uc = (JavaClass) iterator.next();
-				if (uc.isAssignableFrom(iClass)) {
-					internalsCache.put(resolveType(tp,resolver), Boolean.TRUE);
-					return true;
-				}
-			}
+			boolean result = InstanceVariableCreationRule.isModelled(iClass, iClass.eResource().getResourceSet());
+			modelledBeansCache.put(resolveType(tp,resolver), new Boolean(result));
+			return result;
 		} catch (Exception e) {
 			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
 		}
 
-		internalsCache.put(resolveType(tp,resolver), Boolean.FALSE);
+		modelledBeansCache.put(resolveType(tp,resolver), Boolean.FALSE);
 		return false;
 	}
 	public static void clearCache() {
-		utilityRS = null;
-		utilityClasses = null;
+		modelledBeansCache.clear();
 	}
 
 	/* (non-Javadoc)

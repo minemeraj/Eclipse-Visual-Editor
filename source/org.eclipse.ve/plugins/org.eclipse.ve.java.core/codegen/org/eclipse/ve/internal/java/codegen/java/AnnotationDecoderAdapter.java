@@ -11,12 +11,10 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-15 22:18:29 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-14 19:55:38 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.CoreException;
@@ -39,10 +37,7 @@ import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescripto
 
 import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -167,6 +162,133 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			return methodNameAST;
 		}
 	}
+	
+	protected static boolean isValidMetaComment(LineComment comment, String source){
+		if(	comment==null || 
+				source==null || 
+				source.length()<1 || 
+				comment.getStartPosition()<0 || 
+				(comment.getStartPosition()+comment.getLength())>source.length())
+			return false;
+		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
+		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource);
+		if(annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_PARSE)>-1)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Return whether the meta information //@jve 'parse' is present for the field declaration
+	 * Should be very similar to hasMetaInformation(VariableDeclarationStatement varDecl, String astSource)
+	 * @param field 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static boolean hasMetaInformation(FieldDeclaration field) {
+		try{
+			ASTNode node = field;
+			while(node!=null && !(node instanceof CompilationUnit))
+				node = node.getParent();
+			String astSource = null;
+			if (node instanceof CompilationUnit) {
+				CompilationUnit cuNode = (CompilationUnit) node;
+				Object val = cuNode.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
+				if (val instanceof String) 
+					astSource = (String) val;
+			}
+			if(node!=null){
+				CompilationUnit cuNode = (CompilationUnit) node;
+				int fieldLineNumber = cuNode.lineNumber(field.getStartPosition());
+				List comments = ((CompilationUnit)node).getCommentList();
+				for (int cc = 0; cc < comments.size(); cc++) {
+					if (comments.get(cc) instanceof LineComment){ 
+						LineComment lineComment = (LineComment) comments.get(cc);
+						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
+						if(commentLine==fieldLineNumber){
+							return isValidMetaComment(lineComment, astSource);
+						}
+						if(commentLine==fieldLineNumber+1){
+							if(isValidMetaComment(lineComment, astSource)){
+								// This line comment is in the next line - check to see that no 
+								// other field declarations are present in that line.
+								FieldDeclaration[] fields = ((TypeDeclaration)cuNode.types().get(0)).getFields();
+								for (int fc = 0; fc < fields.length; fc++) {
+									if(	!fields[fc].equals(field) &&
+											cuNode.lineNumber(fields[fc].getStartPosition())==fieldLineNumber+1)
+										return false;
+								}
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}catch(Throwable e){
+			JavaVEPlugin.log(e, Level.FINE);
+		}
+		return false;
+	}
+	
+	/**
+	 * Return whether the meta information //@jve 'parse' is present for the field declaration.
+	 * Should be very similar to hasMetaInformation(FieldDeclaration field, String astSource).
+	 * 
+	 * @param field 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static boolean hasMetaInformation(VariableDeclarationStatement varDecl) {
+		try{
+			ASTNode node = varDecl;
+			while(node!=null && !(node instanceof CompilationUnit))
+				node = node.getParent();
+			String astSource = null;
+			if (node instanceof CompilationUnit) {
+				CompilationUnit cuNode = (CompilationUnit) node;
+				Object val = cuNode.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
+				if (val instanceof String) 
+					astSource = (String) val;
+			}
+			if(node!=null){
+				CompilationUnit cuNode = (CompilationUnit) node;
+				int fieldLineNumber = cuNode.lineNumber(varDecl.getStartPosition());
+				List comments = ((CompilationUnit)node).getCommentList();
+				for (int cc = 0; cc < comments.size(); cc++) {
+					if (comments.get(cc) instanceof LineComment){ 
+						LineComment lineComment = (LineComment) comments.get(cc);
+						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
+						if(commentLine==fieldLineNumber){
+							return isValidMetaComment(lineComment, astSource);
+						}
+						if(commentLine==fieldLineNumber+1){
+							if(isValidMetaComment(lineComment, astSource)){
+								// This line comment is in the next line - check to see that no 
+								// other field declarations are present in that line.
+								if (varDecl.getParent() instanceof Block) {
+									Block block = (Block) varDecl.getParent();
+									for(int sc=0;sc<block.statements().size();sc++){
+										Statement stmt = (Statement) block.statements().get(sc);
+										if(	!stmt.equals(varDecl) &&
+												cuNode.lineNumber(stmt.getStartPosition())==fieldLineNumber+1)
+											return false;
+									}
+									return true;
+								}
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}catch(Throwable e){
+			JavaVEPlugin.log(e, Level.FINE);
+		}
+		return false;
+	}
+	
+	
   
   protected IAnnotationDecoder fDecoder=null ;
 
@@ -274,7 +396,6 @@ protected Object[] getInitMethodNameAndParamNames(ICompilationUnit cu, BeanPart 
 }
 
 protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChangedBP, final String newFieldName, final IMethod bpRetMethod){
-	final IEditorSite es = nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite();
 	final String oldVarName = nameChangedBP.getSimpleName();
 	Object[] ret;
 	if(nameChangedBP.isInstanceVar()){
@@ -373,11 +494,9 @@ protected void performGlobalRename(BeanPart nameChangedBP, final IField bpField,
 								(IField) bpField,
 								newFieldName,
 								RenameSupport.UPDATE_GETTER_METHOD
-									| RenameSupport.UPDATE_JAVADOC_COMMENTS
+									| RenameSupport.UPDATE_TEXTUAL_MATCHES
 									| RenameSupport.UPDATE_REFERENCES
-									| RenameSupport.UPDATE_REGULAR_COMMENTS
-									| RenameSupport.UPDATE_SETTER_METHOD
-									| RenameSupport.UPDATE_STRING_LITERALS);
+									| RenameSupport.UPDATE_SETTER_METHOD);
 					rename.perform(es.getShell(), es.getWorkbenchWindow());
 				} catch (CoreException e) {
 					JavaVEPlugin.log(e, Level.WARNING);

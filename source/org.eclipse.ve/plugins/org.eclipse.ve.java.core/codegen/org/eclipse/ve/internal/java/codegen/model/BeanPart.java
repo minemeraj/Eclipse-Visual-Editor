@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.17 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.18 $  $Date: 2004-05-14 19:53:38 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -98,7 +98,10 @@ public FreeFormAnnoationDecoder getFFDecoder() {
        if (getSimpleName().equals(THIS_NAME)) 
           fFFDecoder = new FreeFormThisAnnotationDecoder(this) ;
        else
-          fFFDecoder = new FreeFormAnnoationDecoder(this) ;
+          if(isInstanceVar())
+          	fFFDecoder = new FreeFormAnnoationDecoder(this) ;
+          else
+          	fFFDecoder = new FreeFormInnerVariableAnnotationDecoder(this);
        newDecoder = true ;
     }
     

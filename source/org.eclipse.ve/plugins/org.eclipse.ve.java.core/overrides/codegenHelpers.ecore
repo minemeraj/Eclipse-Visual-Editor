@@ -8,6 +8,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/expDecoder" name="expDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/eventDecoder" name="eventDecoder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/methodGenerator" name="methodGenerator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/visual" name="visual" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" xmi:id="CodeGenHelperClass/modelled" name="modelled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
 </ecore:EPackage>

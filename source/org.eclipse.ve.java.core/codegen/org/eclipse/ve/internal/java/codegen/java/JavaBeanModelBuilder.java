@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-15 19:34:09 $ 
+ *  $Revision: 1.13 $  $Date: 2004-05-14 19:55:38 $ 
  */
 
 import java.util.*;
@@ -43,7 +43,8 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 
 public class JavaBeanModelBuilder {
-	
+
+	public static final String ASTNODE_SOURCE_PROPERTY = "org.eclipse.ve.codegen.source";
   
   String     fFileName = null ;     //  Java Source 
   char[]    fFileContent = null ;
@@ -112,6 +113,7 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 	//       to compile all of this, but rather bits of pieaces of this
 	
 	try {
+		String sourceBeingParsed = null;
 		CompilationUnit result;
 		if (fCU!=null) {
 			if (fCU.isConsistent()) {
@@ -123,15 +125,27 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 				// AST will only be returned if need to reconcile
 			   result = fCU.reconcile(true,false,null,null);	
 			}
+			try{
+				sourceBeingParsed = fCU.getSource();
+			}catch(JavaModelException jme){
+				JavaVEPlugin.log(jme, Level.WARNING);
+			}
 		}
 		else {
 		  ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
 		
 			fFileContent = getFileContents();
+			sourceBeingParsed = new String(fFileContent);
 			parser.setSource(fFileContent);		
 		    result = (CompilationUnit) parser.createAST(null);
 		}
-		   		
+		
+		// The cu AST node now has the property called 'org.eclipse.ve.codegen.source' 
+		// (ASTNODE_SOURCE_PROPERTY) on it which contains the source of the entire 
+		// file. AST nodes which want the content should go to the cu node, get the 
+		// value of this property and get the sources.
+		if(result!=null)
+			result.setProperty(ASTNODE_SOURCE_PROPERTY, sourceBeingParsed);
 		
 		IProblem[]	problems = result.getProblems();
 		if (problems!=null) {

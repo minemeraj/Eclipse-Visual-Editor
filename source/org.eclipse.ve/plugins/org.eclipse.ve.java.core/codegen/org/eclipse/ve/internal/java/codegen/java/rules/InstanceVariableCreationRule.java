@@ -11,76 +11,43 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-14 19:54:05 $ 
  */
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.JCMMethod;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderFactory;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class InstanceVariableCreationRule implements IInstanceVariableCreationRule {
 
-	// The following types will not use the ivj Prefix, and will not use a declaration JCMMethod.
-	public static final String[] internalTypes = { "java.awt.GridBagConstraints", //$NON-NLS-1$
-		"java.awt.LayoutManager", //$NON-NLS-1$
-		"javax.swing.text.Caret" }; //$NON-NLS-1$
-	public static ArrayList internalHelpers = null;
 	private static ResourceSet fRS = null;
-	public static final String[] internalPrefix = { "cons", //$NON-NLS-1$
-		"lay", //$NON-NLS-1$
-		"caret" }; //$NON-NLS-1$
+	private static String fDefaultPrefix = null;
+	
 	public static int internalIndex = 1;
 	public static Preferences fPrefStore = null;
-	public static List VisualCompoentns = new ArrayList() ;
-
-	private static List getMetaTypes(ResourceSet rs) {
-
-		if (fRS != null && fRS.equals(rs))
-			return internalHelpers;
-
-		ArrayList a = new ArrayList();
-		JavaVEPlugin.log("InstanceVariableCreationRule: loading cache", Level.FINE); //$NON-NLS-1$
-		for (int i = 0; i < internalTypes.length; i++) {
-			JavaHelpers sType = JavaRefFactory.eINSTANCE.reflectType(internalTypes[i], rs);
-			if (sType == null)
-				throw new IllegalArgumentException("Invalid Type"); //$NON-NLS-1$
-			a.add(sType);
-		}
-		internalHelpers = a;
-
-		VisualCompoentns.clear();
-		VisualCompoentns.add(JavaRefFactory.eINSTANCE.reflectType("java.awt.Component", rs)); //$NON-NLS-1$
-		VisualCompoentns.add(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Widget", rs)); //$NON-NLS-1$
-
-		fRS = rs;
-		return internalHelpers;
-	}
+	//public static List VisualCompoentns = new ArrayList() ;
 
 	/**
 	 * It the type is/extends any element in internalTypes, than it should be an internally
@@ -88,46 +55,75 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	 * should not be internal. 
 	 */
 	private boolean isInternalType(EObject obj, ResourceSet rs) {
-
-		EClassifier meta = (EClassifier) ((IJavaInstance) obj).getJavaType();
 		boolean result = false;
-		for (int i = 0; i < internalTypes.length; i++)
-			if (((JavaHelpers) (getMetaTypes(rs).get(i))).isAssignableFrom(meta)) {
-				result = true;
-			}
-		if (result) {
-			EObject parent = obj.eContainer();
-			if (parent instanceof BeanSubclassComposition)
-				result = false;
-		}
+		EObject parent = obj.eContainer();
+		if (parent instanceof BeanSubclassComposition)
+			result = false;
+		else if(parent instanceof JCMMethod)
+			result = true;
 		return result;
-
 	}
-
-	public static boolean usePrefix(EClassifier meta, ResourceSet rs) {
-		if (rs == null || meta == null)
-			return true;
-		for (int i = 0; i < VisualCompoentns.size(); i++) {
-			JavaHelpers h = (JavaHelpers) VisualCompoentns.get(i);
-			if (h.isAssignableFrom(meta)) return false ;
+	/**
+	 * 
+	 * @param aClass
+	 * @param sf
+	 * @return  The default boolean value for that class and structural feature
+	 * 
+	 * @since 1.0.0
+	 */
+	public static boolean getDefaultBooleanValue(EClassifier aClass, EStructuralFeature sf){
+		EAnnotation decr = ClassDecoratorFeatureAccess.getDecoratorWithFeature(aClass, "codegen.CodeGenHelperClass", sf);
+		if(decr!=null){
+			Boolean visual = (Boolean) decr.eGet(sf);
+			if(visual!=null)
+				return visual.booleanValue();
 		}
-		return true;
+		return false;
 	}
 
+	private static EStructuralFeature getStructuralFeatureNamed(String name, ResourceSet rs){
+		EClass cgHelperClass = (EClass) rs.getEObject(ExpressionDecoderFactory.URIcodeGenHelperClass, true) ; 
+	   	EStructuralFeature sf = cgHelperClass.getEStructuralFeature(name) ; 
+	   	return sf;
+	}
+
+	protected static void loadPrefixPreferences(ResourceSet rs){
+		if(fRS!=null && fRS.equals(rs))
+			return ;
+		if(fDefaultPrefix==null)
+			fDefaultPrefix = VCEPreferencePage.loadDefaultPrefix(false);
+		fRS = rs;
+	}
+	
+	/**
+	 * Determines if this class is to be modelled or not
+	 * This value is set via the overrides mechanism
+	 *   
+	 * @param aClass
+	 * @return  If this bean is to be modelled or not
+	 * 
+	 * @since 1.0.0
+	 */
+	public static boolean isModelled(EClassifier aClass, ResourceSet rs){
+		if (rs == null || aClass == null)
+			return false;
+		return getDefaultBooleanValue(aClass, getStructuralFeatureNamed("modelled", rs));
+	}
+	
+	public static String getDefaultPrefix(ResourceSet rs){
+		loadPrefixPreferences(rs);
+		return fDefaultPrefix;
+	}
+	
 	/**
 	 * Get the default prefix name for a given object type.
 	 */
 	public static String getPrefix(EClassifier meta, ResourceSet rs) {
-
-		for (int i = 0; i < internalTypes.length; i++)
-			if (((JavaHelpers) (getMetaTypes(rs).get(i))).isAssignableFrom(meta)) {
-				return internalPrefix[i];
-			}
-
-		if (usePrefix(meta, rs))
-			return DEFAULT_VAR_PREFIX;
+		loadPrefixPreferences(rs);
+		if(isModelled(meta, rs))
+			return "";
 		else
-			return ""; //$NON-NLS-1$
+			return getDefaultPrefix(rs);
 	}
 
 	public static String addPrefix(String pre, String name) {
@@ -160,9 +156,10 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 				name = name.substring(name.lastIndexOf('.') + 1);
 
 			name = CDEUtilities.lowCaseFirstCharacter(name);
+			// Since we are creating the name, better make it valid. If name already 
+			// existed then leave it alone (dropped from choosebean dialog)
+			name = getValidInstanceVariableName(obj, name, currentType, bdm);
 		}
-
-		name = getValidInstanceVariableName(obj, name, currentType, bdm);
 
 		if (a == null) {
 			// We don't have an annotation. We must have an annotation if we have an instance variable. Otherwise the model will be inconsistent.
@@ -246,22 +243,9 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		return fPrefStore;
 	}
 
-	/**
-	 * Returns the fComponentMeta.
-	 * @return JavaHelpers
-	 */
-	public static List getVisualComponents(ResourceSet rs) {
-
-		if (fRS != null && fRS.equals(rs))
-			return VisualCompoentns;
-		getMetaTypes(rs);
-		return VisualCompoentns;
-	}
-
 	public static void clearCache() {
 		fRS = null;
-		internalHelpers = null;
-		VisualCompoentns.clear();
+		fDefaultPrefix = null;
 	}
 
 	/**
