@@ -79,7 +79,7 @@
 		 		 		 $aDropDirectory.closedir();
 		 		 		 // Read the count file
 		 		 		 $countFile = "drops/".$anEntry."/files.count";
-		 		 		 $indexFile = "drops/".$anEntry."/index.php";
+		 		 		 $indexFile = "drops/".$anEntry."/index.html";
 		 		 		 if (file_exists($countFile) && file_exists($indexFile)) {
 		 		 		 		 $anArray = file($countFile);
 		 

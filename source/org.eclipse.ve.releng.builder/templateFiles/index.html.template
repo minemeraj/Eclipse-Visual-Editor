@@ -26,20 +26,35 @@
     <td align=LEFT valign=TOP colspan="3" bgcolor="#0080C0"><b><font face="Arial,Helvetica" color="#FFFFFF">Requirements</font></b></td>
   </tr>
 </table>
-<ul>
-  <li>Eclipse build @eclipseBuildID@: (<a href="@eclipseURL@/index.php">build page</a>) (<A
-		href="@eclipseZipURL@">zip download</A>)</li>
-	<LI>EMF build @emfBuildID@: (<A href="@emfURL@">build page</A>) (<A
-		href="@emfZipURL@">zip download</A>)</LI>
-	<LI>GEF Build @gefBuildID@: (<A href="@gefURL@/index.php">build page</A>) (<A
-		href="@gefZipURL@">zip download</A>)</LI>
-</ul> 
+<P>These are the prerequisites to install the Visual Editor. They must be downloaded and installed before the Visual Editor can be installed.</P>
+<TABLE>
+	<TBODY>
+		<TR>
+			<TD>Eclipse build @eclipseBuildID@:</TD>
+			<TD>(<A href="@eclipseURL@/index.php">build page</A>) (<A
+				href="@eclipseZipURL@">download zip</A>)</TD>
+		</TR>
+		<TR>
+			<TD>EMF build @emfBuildID@:</TD>
+			<TD>(<A href="@emfURL@">build page</A>) (<A href="@emfZipURL@">download zip</A>)</TD>
+		</TR>
+		<TR>
+			<TD>GEF Build @gefBuildID@:</TD>
+			<TD>(<A href="@gefURL@/index.php">build page</A>) (<A
+				href="@gefZipURL@">download zip</A>)</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<br>
+
 <table border=0 cellspacing=5 cellpadding=2 width="100%" >
   <tr> 
     <td align=LEFT valign=TOP colspan="3" bgcolor="#0080C0"><b><font face="Arial,Helvetica" color="#FFFFFF"> 
       Visual Editor Runtime </font></b></td>
   </tr>
-</table>
+	<TR>
+		<TD align="LEFT" valign="TOP" colspan="3">This download is the normal Visual Editor installation. It contains only the runtime files. There is no source or developer files. It is to be used for the normal customer installation of the Visual Editor.</TD>
+	</TR></table>
 <table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
   <tr> 
     <td align=RIGHT valign=TOP width="7%"> 
@@ -59,7 +74,9 @@
         
     <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">SDK</font></b></td>
       </tr>
-    </table>
+	<TR>
+		<TD align="LEFT" valign="TOP" colspan="3">This download is the developer's SDK. It contains source and documentation for developers that want to extend the Visual Editor.</TD>
+	</TR></table>
     <table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="100%" bordercolor="#999999" >
   <tr> 
     <td align=RIGHT valign=TOP width="7%"> 
@@ -80,7 +97,9 @@
   <tr> 
     <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">Examples </font></b></td>
   </tr>
-</table>
+	<TR>
+		<TD align="LEFT" valign="TOP" colspan="3">This download contains the examples for the Visual Editor. It includes source. (At this time they aren't useful).</TD>
+	</TR></table>
 <table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
   <tr> 
     <td align=RIGHT valign=TOP width="7%"> 
@@ -99,7 +118,9 @@
   <tr> 
     <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">JUnit Plugin Tests and Automated Testing Framework</font></b></td>
   </tr>
-</table>
+	<TR>
+		<TD align="LEFT" valign="TOP" colspan="3">This download contains the JUnit tests for testing the Visual Editor. It would be used by developers of the Visual Editor project itself.</TD>
+	</TR></table>
 <table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
   <tr> 
     <td align=RIGHT valign=TOP width="7%"> 
