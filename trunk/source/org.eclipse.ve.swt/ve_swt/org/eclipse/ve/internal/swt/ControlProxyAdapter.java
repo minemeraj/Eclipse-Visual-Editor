@@ -348,6 +348,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public void setParentProxyHost(IControlProxyHost adapter) {
 		parentProxyAdapter = adapter;
+		if (fControlManager != null)
+			fControlManager.setControlParentBeanProxy(parentProxyAdapter != null ? parentProxyAdapter.getVisualControlBeanProxy() : null);
 	}
 
 	/* (non-Javadoc)
@@ -415,5 +417,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public IControlProxyHost getParentProxyHost() {
 		return parentProxyAdapter;
+	}
+
+	public IBeanProxy getVisualControlBeanProxy() {
+		return getBeanProxy();
 	}
 }
