@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.15 $  $Date: 2004-04-19 22:12:51 $ 
+ *  $Revision: 1.16 $  $Date: 2004-04-22 20:51:31 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -27,6 +27,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.VisualInfo;
+
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
@@ -672,6 +674,8 @@ public  void dispose() {
     fFFDecoder=null;
 	if (fModel != null)
 	  fModel.removeBean(this) ;	
+	else
+		System.out.println(this);
 	// TODO: This should not work on the child relationship... need to work 
 	//       on the inverse adapter instead
 	for (int i = 0; i < fbackReferences.size(); i++) {
@@ -850,37 +854,24 @@ public   void addToJVEModel() throws CodeGenException {
 public   void removeFromJVEModel()  {
 	
 	if (!isInJVEModel() || getEObject()==null || isProxy() || getModel() == null || getModel().isStateSet(IBeanDeclModel.BDM_STATE_SNIPPET)) return ;
-	
-	BeanSubclassComposition bsc = getModel().getCompositionModel().getModelRoot() ;	
-	boolean thisPart = false ;
-		
-	if (getSimpleName().equals(THIS_NAME)) {
-	    thisPart = true ;
+
+	EObject bean = getEObject();
+	// Remove from whomever physically owns this bean.
+	EcoreUtil.remove(bean);
+
+	// Now remove any still existing pointers to it since it is going away.
+	InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(bean, InverseMaintenanceAdapter.ADAPTER_KEY);
+	if (ai != null) {
+		EReference[] refs = ai.getFeatures();
+		for (int i = 0; i < refs.length; i++) {
+			EReference ref = refs[i];
+			EObject[] srcs = ai.getReferencedBy(ref);
+			for (int j = 0; j < srcs.length; j++) {
+				EcoreUtil.remove(srcs[j], ref, bean);	
+			}
+		}
 	}
-	
-	CodeMethodRef m = getInitMethod() ;
-	
-	// Need to figure out who owns this bean part,
-	// Instance variables are owned/scoped by the composition
-	if (thisPart) {
-	    bsc.setThisPart(null) ;	           	           		
-	}else if (isInstanceVar()) {
-		//  Composition is the owner		
-		bsc.getMembers().remove(getEObject()) ;
-	}
-	else {
-		// We better have an initMethod
-		if (m != null)
-	        m.getCompMethod().getMembers().remove(getEObject()) ;
-	}
-	
-	// Hook/Set up the JVE model method if needed
-	if (m != null) {
-		m.getCompMethod().getInitializes().remove(getEObject()) ;
-		if (m.equals(getReturnedMethod())) 
-		   m.getCompMethod().setReturn(null) ;
-	}	
-	getModel().getCompositionModel().getModelRoot().getComponents().remove(getEObject());
+
 	setIsInJVEModel(false) ;
 }
 

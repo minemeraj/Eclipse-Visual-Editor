@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.21 $  $Date: 2004-04-05 03:38:38 $ 
+ *  $Revision: 1.22 $  $Date: 2004-04-22 20:51:31 $ 
  */
 
 import java.util.*;
@@ -539,6 +539,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
  *         being an instance variable.
  *  
  */
+//TODO need to reUse the dispose() here, rather to duplicate this logic
 public void removeBeanPart (BeanPart bean) {
 	boolean jdtChangesMade = false ; // MethodRef offsets not being updated - hence check.
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
@@ -654,18 +655,13 @@ public void removeBeanPart (BeanPart bean) {
 	
 	
 
-    if (mr != null)
-	   bean.removeInitMethod(mr) ;
+    
 	
 	if (shouldMethodBeRemoved) {
 	  fBeanModel.removeMethodRef(mr) ;	
 	  mr.dispose() ;		
 	}
-    fBeanModel.removeBean(bean) ;    		 	
-    // Remove associated Decode Adapters
-    // We do not call dispose here, as the bean was removed from the model already
-    bean.setEObject(null) ;	
-    bean.setIsInJVEModel(false) ;
+    bean.dispose();
 }
 
 public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
