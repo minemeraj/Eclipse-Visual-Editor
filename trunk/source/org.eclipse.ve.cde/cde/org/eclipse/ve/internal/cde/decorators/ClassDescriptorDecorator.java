@@ -11,8 +11,9 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: ClassDescriptorDecorator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-01-31 19:18:12 $ 
  */
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ve.internal.cde.utility.Graphic;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 
@@ -252,5 +253,10 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @generated
 	 */
   void setGraphic(Graphic value);
+
+	/**
+	 * @return LabelProvider
+	 */
+	ILabelProvider getLabelProvider();
 
 } // ClassDescriptorDecorator

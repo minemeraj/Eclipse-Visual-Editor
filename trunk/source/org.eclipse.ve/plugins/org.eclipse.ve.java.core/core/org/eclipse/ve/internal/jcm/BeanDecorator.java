@@ -11,11 +11,14 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanDecorator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-31 19:21:13 $ 
  */
 
-import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 /**
  * <!-- begin-user-doc -->
@@ -175,5 +178,13 @@ public interface BeanDecorator extends EAnnotation, KeyedValueHolder{
 	 * @generated
 	 */
 	boolean isSetBeanReturn();
+
+	/**
+	 * Return the BeanProxyAdapter for the Notifier.  
+	 * @param adaptable is an IJavaInstance being wrapped by the result
+	 * @param domaim is the IBeanProxyDomain 
+	 * @return an IBeanProxyHost
+	 */
+	IBeanProxyHost createBeanProxy(Notifier adaptable, IBeanProxyDomain domain);
 
 } // BeanDecorator

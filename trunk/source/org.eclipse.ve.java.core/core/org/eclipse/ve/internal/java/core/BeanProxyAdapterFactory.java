@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-31 19:20:49 $ 
  */
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
@@ -106,35 +106,12 @@ public class BeanProxyAdapterFactory
 				(EClassifier) bean.getJavaType(),
 				BeanDecorator.class,
 				getBeanProxyClassNameFeature());
-		String adapterClassName = decr != null ? decr.getBeanProxyClassName() : null;
-
-		if (adapterClassName != null) {
-			Class adapterClass = null;
-			try {
-				// If the class is not the default we need to load it using the correct
-				// class lodaed.  CDEPlugin can do this for us but if the name is BeanProxyAdapter or PrimitiveBeanProxyAdapter we can
-				// just get the default class faster with a .class reference here
-				if (adapterClassName.equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanProxyAdapter")) //$NON-NLS-1$
-					adapter = new BeanProxyAdapter(this);
-				else if (adapterClassName.equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter")) //$NON-NLS-1$
-					adapter = new PrimitiveProxyAdapter(this);
-				else
-					adapterClass = CDEPlugin.getClassFromString(adapterClassName);
-			} catch (ClassNotFoundException e) {
-				adapterClass = null;
-				JavaVEPlugin.log(e, Level.WARNING);
-			}
-			if (adapterClass != null)
-				try {
-					// There must be a constructor that takes an argument with the IBeanProxyDomain.
-					Constructor constructor = adapterClass.getConstructor(new Class[] { IBeanProxyDomain.class });
-					adapter = (Adapter) constructor.newInstance(new Object[] { this });
-				} catch (Exception e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-				}
+		
+		if(decr == null){
+			return new BeanProxyAdapter(this);
+		} else {
+			return decr.createBeanProxy(adaptable, this);
 		}
-
-		return adapter != null ? adapter : new BeanProxyAdapter(this);
 	}
 
 	public boolean isFactoryForType(Object key) {

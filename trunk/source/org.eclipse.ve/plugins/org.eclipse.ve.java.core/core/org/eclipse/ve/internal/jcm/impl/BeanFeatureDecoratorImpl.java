@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-31 19:21:50 $ 
  */
 
 import java.util.Collection;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -31,10 +32,13 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
+import org.eclipse.ve.internal.java.core.IBeanProxyFeatureMediator;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -538,6 +542,23 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	public EObject eObjectForURIFragmentSegment(String uriFragmentSegment) {
 		EObject eo = KeyedValueHolderHelper.eObjectForURIFragmentSegment(this, uriFragmentSegment);
 		return eo == KeyedValueHolderHelper.NOT_KEYED_VALUES_FRAGMENT ? super.eObjectForURIFragmentSegment(uriFragmentSegment) : eo;
+	}
+	
+	private Class beanProxyMediatorClass;
+	/** 
+	 * @return IBeanProxyFeatureMediator 
+	 * This is cached for performance
+	 */
+	public IBeanProxyFeatureMediator getBeanProxyMediator() {
+		try {		
+			if(beanProxyMediatorClass == null){
+				beanProxyMediatorClass = CDEPlugin.getClassFromString(getBeanProxyMediatorName());
+			}
+			return (IBeanProxyFeatureMediator) beanProxyMediatorClass.newInstance();
+		} catch ( Exception exc ) {
+			JavaVEPlugin.log(exc, Level.WARNING);							
+		}
+		return null;
 	}	
 
 } //BeanFeatureDecoratorImpl

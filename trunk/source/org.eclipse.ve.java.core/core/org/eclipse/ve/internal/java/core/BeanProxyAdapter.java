@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.26 $  $Date: 2005-01-25 15:11:29 $ 
+ *  $Revision: 1.27 $  $Date: 2005-01-31 19:20:29 $ 
  */
 
 import java.util.*;
@@ -280,16 +280,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 }
 
 protected IBeanProxyFeatureMediator getFeatureMediator(BeanFeatureDecorator featureDecor) {
-	String beanProxyFeatureMediatorName = featureDecor.getBeanProxyMediatorName();	
-	if ( beanProxyFeatureMediatorName != null ) {
-		try {
-			Class mediatorClass = CDEPlugin.getClassFromString(beanProxyFeatureMediatorName);
-			return (IBeanProxyFeatureMediator)mediatorClass.newInstance();
-		} catch ( Exception exc ) {
-			JavaVEPlugin.log(exc, Level.WARNING);
-		}
-	}
-	return null;		
+	return featureDecor.getBeanProxyMediator();
 }
 
 /**
