@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.17 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.18 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.util.Iterator;
@@ -219,7 +219,7 @@ public CodeExpressionRef getExistingExpressionRef(Object[] args) {
  */
 private Statement getInitExpression(String src) {
 		
-	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+	ASTParser parser = ASTParser.newParser(AST.JLS2);
 	parser.setSource(src.toCharArray());
 	CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 	Statement Stmt = null;	
@@ -364,7 +364,7 @@ public static ICodeGenSourceRange getOffsetForFirstExpression (IMethod m) {
     CodeGenSourceRange sr=null ; 
     try {
         // No need to resolve anyting, just parse this thing
-    	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+    	ASTParser parser = ASTParser.newParser(AST.JLS2);
     	parser.setSource(m.getCompilationUnit());
     	CompilationUnit jDom = (CompilationUnit) parser.createAST(null);
 		Message[] errors = jDom.getMessages() ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-16 21:56:49 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import org.eclipse.core.resources.IResource;
@@ -76,14 +76,5 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 			fPluginName = element.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
 			fExampleClassName = (String) object;
 		}			
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getSchedulingRule()
-	 */
-	protected ISchedulingRule getSchedulingRule() {
-		if(fPage!=null)
-			return fPage.getModifiedResource();
-		return super.getSchedulingRule();
 	}
 }

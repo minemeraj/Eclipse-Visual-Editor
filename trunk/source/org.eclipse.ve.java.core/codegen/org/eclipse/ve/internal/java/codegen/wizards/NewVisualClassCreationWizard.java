@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-16 21:56:49 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.io.IOException;
@@ -395,15 +395,4 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			superClassName = (String)data;		
 		}
 	}
-
-	/*(non-Javadoc)
-	 *
-	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getSchedulingRule()
-	 */
-	protected ISchedulingRule getSchedulingRule() {
-		if(fPage!=null)
-			return fPage.getModifiedResource();
-		return null;
-	}
-	
 }

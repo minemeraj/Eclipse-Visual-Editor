@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.13 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.14 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.util.*;
@@ -117,13 +117,13 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 		CompilationUnit result;
 		if (fCU!=null) {
 			if (fCU.isConsistent()) {
-				ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(fCU);
 				result = (CompilationUnit) parser.createAST(null);
 			}
 			else {
 				// AST will only be returned if need to reconcile
-			   result = fCU.reconcile(true,false,null,null);	
+			   result = fCU.reconcile(AST.JLS2, false, null, null);	
 			}
 			try{
 				sourceBeingParsed = fCU.getSource();
@@ -132,7 +132,7 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 			}
 		}
 		else {
-		  ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		  ASTParser parser = ASTParser.newParser(AST.JLS2);
 		
 			fFileContent = getFileContents();
 			sourceBeingParsed = new String(fFileContent);

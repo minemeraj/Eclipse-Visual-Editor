@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.2 $
+*  $Revision: 1.3 $
 */
 
 
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.core.internal.dom.rewrite.CodeFormatterUtil;
+import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.formatter.DefaultCodeFormatter;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.PreferenceConstants;

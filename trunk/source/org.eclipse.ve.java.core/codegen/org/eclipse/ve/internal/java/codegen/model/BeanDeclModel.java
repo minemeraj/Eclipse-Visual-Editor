@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-07 22:48:31 $ 
+ *  $Revision: 1.12 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.util.*;
@@ -690,7 +690,7 @@ public void updateBeanNameChange(BeanPart bp) {
 	public void refreshMethods () {
 		try {
 			if (!getCompilationUnit().isConsistent()) 
-				   getCompilationUnit().reconcile(false, false, null, null) ;
+				   getCompilationUnit().reconcile(ICompilationUnit.NO_AST, false, null, null) ;
 		}
 		catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(getCompilationUnit());

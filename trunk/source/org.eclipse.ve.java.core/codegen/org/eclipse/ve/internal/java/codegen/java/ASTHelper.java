@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ASTHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-12 18:25:44 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.util.*;
@@ -205,7 +205,7 @@ public static class VariableValueVisitor
 }
 
 public static String resolveVariavleValue(SimpleName variable, int location, String entireCode){
-	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+	ASTParser parser = ASTParser.newParser(AST.JLS2);
 	parser.setSource(entireCode.toCharArray());
 	CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
