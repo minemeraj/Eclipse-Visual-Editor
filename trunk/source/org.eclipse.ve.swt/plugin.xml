@@ -168,6 +168,24 @@
                id="org.eclipse.ve.internal.swt.hidegridaction">
          </action>
       </objectContribution>
+   	 <!-- 
+	 	Change Parent on a Shell widget
+	 -->
+     <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.swt.changeparentaction.popup.object">
+         <visibility>
+            <objectState
+                  name="BEANTYPE"
+                  value="org.eclipse.swt.widgets.Shell">
+            </objectState>
+         </visibility>
+         <action
+               label="%PopupMenus.ChangeParentAction.Label  Change Parent..."
+               class="org.eclipse.ve.internal.swt.ChangeParentShellObjectActionDelegate"
+               id="org.eclipse.ve.internal.swt.changeparentaction">
+         </action>
+      </objectContribution>
    </extension> 
 
 <!-- Contribute to the ChooseBean dialog to allow dropping of SWT widgets -->
