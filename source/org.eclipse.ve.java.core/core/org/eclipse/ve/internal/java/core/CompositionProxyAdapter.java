@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.9 $  $Date: 2004-11-16 22:40:03 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -113,26 +113,26 @@ public void initBeanProxy() {
 	// TODO Should Only instantiate this and components, but we may not be a BeanSubclassComposition. Need a better
 	// way of handling this.
 	if (getTarget() instanceof BeanSubclassComposition) {
-		TimerTests.basicTest.startStep("this init", TimerTests.CURRENT_PARENT_ID);
-		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, "this init");
-		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, "this init");
+		VETimerTests.basicTest.startStep("Init BeanSubclassComposition", TimerTests.CURRENT_PARENT_ID);
+//		VETimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, "this init");
+//		VETimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, "this init");
 		initSetting(((BeanSubclassComposition) getTarget()).getThisPart());
-		TimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
-		TimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
-		TimerTests.basicTest.stopStep("this init");
+//		VETimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
+//		VETimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
+		VETimerTests.basicTest.stopStep("Init BeanSubclassComposition");
 	}
 
 	// Next run the components.
 	List components = ((BeanComposition) getTarget()).getComponents();
 	for (int i = 0; i < components.size(); i++) {
 		String step = "init#"+i;
-		TimerTests.basicTest.startStep(step, TimerTests.CURRENT_PARENT_ID);
-		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, step);
-		TimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, step);
+		VETimerTests.basicTest.startStep(step, TimerTests.CURRENT_PARENT_ID);
+//		VETimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_STEP, step);
+//		VETimerTests.basicTest.startCumulativeStep(REMConnection.INVOKE_METHOD_STEP, step);
 		initSetting(components.get(i));
-		TimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
-		TimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
-		TimerTests.basicTest.stopStep(step);
+//		VETimerTests.basicTest.stopStep(REMConnection.INVOKE_METHOD_STEP);
+//		VETimerTests.basicTest.stopStep(REMConnection.INVOKE_STEP);
+		VETimerTests.basicTest.stopStep(step);
 	}
 }
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.16 $  $Date: 2004-11-16 18:52:56 $ 
+ *  $Revision: 1.17 $  $Date: 2004-11-16 22:40:03 $ 
  */
 
 import java.util.*;
@@ -30,7 +30,7 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
+import org.eclipse.ve.internal.java.core.VETimerTests;
 
 
 
@@ -115,7 +115,8 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 	//       Also, from this level we have no control on the parser options.
 	//       we may consider to turn off some errors ... as we are not interested in
 	//       to compile all of this, but rather bits of pieaces of this
-	
+
+	VETimerTests.basicTest.startStep("AST creation", "Parse");	
 	try {
 		String sourceBeingParsed = null;
 		CompilationUnit result;
@@ -160,6 +161,7 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 				}
 			}
 		}
+		VETimerTests.basicTest.stopStep("AST creation");
 		return result ;
 	} catch (CodeGenSyntaxError e) {
 		throw e;	// Pass it on, don't log it twice.
@@ -313,6 +315,7 @@ protected List getInnerTypes() {
 }
 
 protected  void analyzeEvents() {
+	VETimerTests.basicTest.startStep("Parse Events", "Parse");
 	fMonitor.subTask("Analyzing events");
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
@@ -337,8 +340,7 @@ protected  void analyzeEvents() {
 			break ;
 		}
 	  }
-	
-	
+	  VETimerTests.basicTest.stopStep("Parse Events");
 }
 
 /**
@@ -379,6 +381,7 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    
 	    // Start visiting our main type
 	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
+	    VETimerTests.basicTest.startStep("Parse expressions", "Parse");
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -386,7 +389,8 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 	    	visitor.setNoRetry() ;
 	    	visitor.visit() ;
 	    }
-	    
+	    VETimerTests.basicTest.stopStep("Parse expressions");
+
 	    analyzeEvents() ;
 	    fMonitor.worked(100);
 	    
@@ -432,10 +436,12 @@ private int determineWorkAmount() {
 }
 
 protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor){
+	VETimerTests.basicTest.startStep("Creating Instance Var. BeanParts", "Parse");
  	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
 	v.setJDTMethods(mthds);
 	v.setProgressMonitor(monitor);
 	v.visit()  ;
+	VETimerTests.basicTest.stopStep("Creating Instance Var. BeanParts");
 }
 
 }
