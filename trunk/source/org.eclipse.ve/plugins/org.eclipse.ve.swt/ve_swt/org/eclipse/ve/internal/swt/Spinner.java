@@ -147,6 +147,7 @@ public class Spinner extends Composite {
 			 */ 
 			commandInProcess = true;
 			notifyListeners(SWT.Modify, new Event());
+			commandInProcess = false;			
 		} catch (NumberFormatException ex) {
 			setTextField();
 		}
