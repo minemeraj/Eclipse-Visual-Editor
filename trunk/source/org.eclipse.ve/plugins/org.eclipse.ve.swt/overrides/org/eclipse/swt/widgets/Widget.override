@@ -12,4 +12,8 @@
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetProxyAdapter"/>
   <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
       methodGenerator="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTNoArgNoReturnMethodTextGenerator"/>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.prototypefactory"
+        value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetPrototypeFactory"/>
+  </addedEObjects>
 </event:AddMany>

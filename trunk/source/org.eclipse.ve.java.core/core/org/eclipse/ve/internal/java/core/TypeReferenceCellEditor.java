@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-15 19:11:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-17 12:23:39 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -62,7 +62,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 
 	CCombo combo;
 	private EditDomain editDomain;
-	private String className;
+	private String qualifiedClassName;
 	protected BeanSubclassComposition beanComposition; // The top level object ( the free form )
 	protected List javaObjects; // Store the java objects on the free form that match the search class
 	protected List javaObjectLabels;
@@ -72,16 +72,22 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	public TypeReferenceCellEditor(Composite parent){
 		super(parent);
 	}
+	public TypeReferenceCellEditor(Composite parent, String aQualifiedClassName){
+		this(parent);
+		qualifiedClassName = aQualifiedClassName;
+		
+	}
 	
 	protected Object openDialogBox(Control cellEditorWindow) {
+		String[] packageAndClassName = BeanUtilities.getPackageAndUnqualifiedClassName(qualifiedClassName); 
 		// TODO Auto-generated method stub
 		ChooseBeanDialog chooseBean = new ChooseBeanDialog(
 				cellEditorWindow.getShell(),
 				editDomain,
-				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor("javax.swing.Action","javax.swing", "Action")},
+				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor(qualifiedClassName,packageAndClassName[0],packageAndClassName[1])},
 				-1,
 				false);				
-
+		chooseBean.setFilter("*");
 		if(chooseBean.open()==Window.OK){
 			Object[] results = chooseBean.getResult();
 			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];
@@ -143,7 +149,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		javaObjectLabels = new ArrayList();
 		Iterator components = beanComposition.getMembers().iterator();
 		// To do comparisons that allow for inheritance we need to find the EMF JavaClass that represents the class we are searching for
-		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(className,firstSource.eResource().getResourceSet());
+		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(qualifiedClassName,firstSource.eResource().getResourceSet());
 		while(components.hasNext()){
 			Object component = components.next();
 			if ( component instanceof IJavaObjectInstance ) { // We might have non java components 
@@ -177,7 +183,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	public void setInitializationData(IConfigurationElement element, String data, Object object){
 		// Use this to set the class name passed in
 		if ( object instanceof String ) {
-			className = (String)object;
+			qualifiedClassName = (String)object;
 		}
 	}	
 	

@@ -13,11 +13,5 @@
           cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor"/>
     </addedEObjects>
    </event:Add>    
-   <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="action" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider"
-          cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.TypeReferenceCellEditor:javax.swing.Action"/>
-     </addedEObjects>
-  </event:Add>
+  
 </xmi:XMI>

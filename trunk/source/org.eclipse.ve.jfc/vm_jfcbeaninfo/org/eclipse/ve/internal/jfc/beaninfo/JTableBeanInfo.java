@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:33 $ 
  */
 
 import java.beans.*;
@@ -1421,8 +1421,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	super.createPropertyDescriptor(getBeanClass(),"columnModel", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, resJTable.getString("columnModel.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("columnModel.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY , Boolean.FALSE,
-	      	EXPERT, Boolean.TRUE
+			DESIGNTIMEPROPERTY, Boolean.FALSE,
 	      		}   
 	    	),
 	    	// columnSelectionAllowed
@@ -1484,7 +1483,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, resJTable.getString("model.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("Model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY , Boolean.FALSE,
 	      	PREFERRED, Boolean.TRUE,
 	    		}
 	    	),

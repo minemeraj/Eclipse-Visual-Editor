@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-17 12:23:39 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -120,6 +120,24 @@ public class BeanUtilities {
 		}
 
 	}
+	
+	public static String[] getPackageAndUnqualifiedClassName(String aQualifiedClassName) {
+		
+		int indexOfLastPeriod = aQualifiedClassName.lastIndexOf('.');
+		if(indexOfLastPeriod >= 0){
+			return new String[] {
+				aQualifiedClassName.substring(0,indexOfLastPeriod),
+				aQualifiedClassName.substring(indexOfLastPeriod+1)
+			};
+		} else {
+			return new String[] {
+			    null,
+				aQualifiedClassName
+			};
+		}
+	}
+	
+	
 	/**
 	 * Answer whether or not this is the class being composed
 	 */
