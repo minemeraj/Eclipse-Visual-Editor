@@ -15,7 +15,7 @@ public REMStandardSWTBeanProxyFactory(ProxyFactoryRegistry factory) {
 
 public IPointBeanProxy createPointBeanProxyWith(int x, int y) {
 	try {
-		return (IPointBeanProxy) fBeanTypeFactory.getBeanTypeProxy("org.eclipse.swt.graphics.Point").newInstance("new org.eclipse.swt.graphics("+x+","+y+")"); //$NON-NLS-1$ //$NON-NLS-2$
+		return (IPointBeanProxy) fBeanTypeFactory.getBeanTypeProxy("org.eclipse.swt.graphics.Point").newInstance("new org.eclipse.swt.graphics.Point("+x+","+y+")"); //$NON-NLS-1$ //$NON-NLS-2$
 	} catch (ThrowableProxy e) {
 		return null;
 	} catch (InstantiationException e) {
@@ -25,7 +25,7 @@ public IPointBeanProxy createPointBeanProxyWith(int x, int y) {
 
 public IRectangleBeanProxy createBeanProxyWith(int x, int y, int width, int height) {
 	try {
-		return (IRectangleBeanProxy) fBeanTypeFactory.getBeanTypeProxy("org.eclipse.swt.graphics.Rectangle").newInstance("new org.eclipse.swt.graphics("+x+","+y+","+width+","+height+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return (IRectangleBeanProxy) fBeanTypeFactory.getBeanTypeProxy("org.eclipse.swt.graphics.Rectangle").newInstance("new org.eclipse.swt.graphics.Rectangle("+x+","+y+","+width+","+height+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	} catch (ThrowableProxy e) {
 		return null;
 	} catch (InstantiationException e) {
