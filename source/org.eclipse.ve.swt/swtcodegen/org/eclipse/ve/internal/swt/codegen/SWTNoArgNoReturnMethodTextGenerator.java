@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTNoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 17:38:02 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -27,7 +27,6 @@ import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
 
-import org.eclipse.ve.internal.swt.TemporaryPTE;
  
 /**
  * This method generator will add the parent argument when initializing 
@@ -65,14 +64,18 @@ public class SWTNoArgNoReturnMethodTextGenerator extends NoArgNoReturnMethodText
 			ParseTreeAllocation pt = (ParseTreeAllocation) alloc ;
 			PTExpression exp =  pt.getExpression() ;
 			// TODO: this is a temporary hack until we model emf referenced PTEs
-			if (exp instanceof TemporaryPTE) {
-				TemporaryPTE t = (TemporaryPTE) exp ;
-				IJavaObjectInstance parent = t.getParent() ;
-				String flags = t.getFlags() ;
-				BeanPart b = fModel.getABean(parent) ;
-				setBeanInitArgs(new String[] {b.getSimpleName(),flags}) ;
-				// TemporaryPTE is not a valid emf object.
-				((IJavaObjectInstance)fComponent).eUnset(obj.eClass().getEStructuralFeature("allocation")) ;
+			if (exp instanceof PTClassInstanceCreation) {
+				PTClassInstanceCreation t = (PTClassInstanceCreation) exp ;
+				PTExpression arg0 = (PTExpression)t.getArguments().get(0) ;
+				if (arg0 instanceof PTInstanceReference) {
+					IJavaObjectInstance parent =  ((PTInstanceReference)arg0).getObject() ;
+					PTExpression arg1 = (PTExpression) t.getArguments().get(1) ;
+					if (arg1 instanceof PTName) {
+						String flags = ((PTName)arg1).getName() ;
+						BeanPart b = fModel.getABean(parent) ;
+						setBeanInitArgs(new String[] {b.getSimpleName(),flags}) ;						
+					}
+				}
 			}			
 		}
 		return template.generateMethod(getInfo()) ;				
