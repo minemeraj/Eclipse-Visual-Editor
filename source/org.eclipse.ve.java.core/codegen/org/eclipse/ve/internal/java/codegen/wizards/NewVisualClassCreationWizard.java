@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.23 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.24 $  $Date: 2005-04-04 22:19:22 $ 
  */
 
 import java.io.IOException;
@@ -336,25 +336,28 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		}
 	}
 	
-	public static void updateProjectClassPath(String pluginId, String container, IJavaProject project, IProgressMonitor monitor){
-			if (project != null) {
-				Map containers = new HashMap(), plugins = new HashMap();
-				try {
+	public static void updateProjectClassPath(String pluginId, String container, IJavaProject project, IProgressMonitor monitor) {
+		if (project != null) {
+			try {
+				if (!ProxyPlugin.isPDEProject(project)) { // Don't do anything if this is a plugin project
+					Map containers = new HashMap(), plugins = new HashMap();
 					ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-					if (!((container != null && containers.get(container) == Boolean.TRUE) || (pluginId != null && plugins.get(pluginId) == Boolean.TRUE))) {
+					if (!((container != null && containers.get(container) == Boolean.TRUE))) {
 						if (container != null && plugins.isEmpty()) {
 							// TODO If we are a plugin project, we should add the plugin... not the container.
 							// For now just add the container to the project so the class will compile correctly
 							IClasspathEntry[] cp = project.getRawClasspath();
-							IClasspathEntry [] newcp = new IClasspathEntry [cp.length + 1];
+							IClasspathEntry[] newcp = new IClasspathEntry[cp.length + 1];
 							System.arraycopy(cp, 0, newcp, 0, cp.length);
 							newcp[cp.length] = JavaCore.newContainerEntry(new Path(container));
 							project.setRawClasspath(newcp, new SubProgressMonitor(monitor, 100));
 						}
 					}
-				} catch (JavaModelException e) {
 				}
+			} catch (JavaModelException e) {
+			} catch (CoreException e) {
 			}
+		}
 	}
 	
 	public void addPages() {
