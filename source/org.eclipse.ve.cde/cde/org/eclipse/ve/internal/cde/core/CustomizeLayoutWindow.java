@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:20 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-18 18:17:07 $ 
  */
 
 import java.util.ArrayList;
@@ -25,15 +25,17 @@ import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.gef.EditPartViewer;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IEditorPart;
 
@@ -135,17 +137,23 @@ public class CustomizeLayoutWindow extends Window {
 		
 		// Create the no Layout page
 		noLayoutPage = new Composite(layoutPage, SWT.NONE);
-		noLayoutPage.setLayout(new RowLayout());
-		Label noLayoutLabel = new Label(noLayoutPage, SWT.NONE);
+		noLayoutPage.setLayout(new GridLayout());
+		Label noLayoutLabel = new Label(noLayoutPage, SWT.WRAP);
 		noLayoutLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noLayoutText"));
+		GridData gd = new GridData();
+		gd.widthHint = 200;
+		noLayoutLabel.setLayoutData(gd);
 		layoutPageLayout.topControl = noLayoutPage;
 		layoutPage.layout();
 		
 		// Create the no Component page
 		noComponentPage = new Composite(componentPage, SWT.NONE);
-		noComponentPage.setLayout(new RowLayout());
-		Label noComponentLabel = new Label(noComponentPage, SWT.NONE);
+		noComponentPage.setLayout(new GridLayout());
+		Label noComponentLabel = new Label(noComponentPage, SWT.WRAP);
 		noComponentLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noComponentText"));
+		gd = new GridData();
+		gd.widthHint = 200;
+		noComponentLabel.setLayoutData(gd);
 		componentPageLayout.topControl = noComponentPage;
 		componentPage.layout();
 		
