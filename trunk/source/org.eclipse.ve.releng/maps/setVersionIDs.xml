@@ -10,6 +10,7 @@
 	<property name="org.eclipse.jem-v" value="${id}"/>
 	<property name="org.eclipse.jem.beaninfo-v" value="${id}"/>
 	<property name="org.eclipse.jem.ui-v" value="${id}"/>	
+	<property name="org.eclipse.jem.util-v" value="${id}"/>
 	<property name="org.eclipse.jem.proxy-v" value="${id}"/>
 	<property name="org.eclipse.jem.tests-v" value="${id}"/>
 	<property name="org.eclipse.jem.tests-feature-v" value="${id}"/>
@@ -36,6 +37,7 @@
 			<filter token="org.eclipse.jem" value="${org.eclipse.jem-v}"/>
 			<filter token="org.eclipse.jem.beaninfo" value="${org.eclipse.jem.beaninfo-v}"/>
 			<filter token="org.eclipse.jem.ui" value="${org.eclipse.jem.ui-v}"/>
+			<filter token="org.eclipse.jem.util" value="${org.eclipse.jem.util-v}"/>
 			<filter token="org.eclipse.jem.proxy" value="${org.eclipse.jem.proxy-v}"/>
 			<filter token="org.eclipse.jem.tests" value="${org.eclipse.jem.tests-v}"/>
 			<filter token="org.eclipse.jem.tests-feature" value="${org.eclipse.jem.tests-feature-v}"/>
@@ -65,6 +67,7 @@
 	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}" property="org.eclipse.jem-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}" property="org.eclipse.jem.beaninfo-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.ui" versionName="${id}" property="org.eclipse.jem.ui-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.util" versionName="${id}" property="org.eclipse.jem.util-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.proxy" versionName="${id}" property="org.eclipse.jem.proxy-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.tests" versionName="${id}" property="org.eclipse.jem.tests-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.jem.tests-feature" versionName="${id}" property="org.eclipse.jem.tests-feature-v"/>

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.17 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.18 $  $Date: 2005-01-07 20:51:41 $ 
  */
 
 import java.util.Map;
@@ -25,13 +25,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.util.logger.proxy.Logger;
+import org.eclipse.jem.util.logger.proxyrender.EclipseLogger;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
-import com.ibm.wtp.common.logger.proxy.Logger;
-import com.ibm.wtp.logger.proxyrender.EclipseLogger;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.73 $  $Date: 2005-01-05 20:17:44 $ 
+ *  $Revision: 1.74 $  $Date: 2005-01-07 20:51:41 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -82,6 +82,8 @@ import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.internal.temp.VETimerTests;
+import org.eclipse.jem.util.PerformanceMonitorUtil;
+import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
@@ -108,8 +110,6 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
-import com.ibm.wtp.common.util.PerformanceMonitorUtil;
-import com.ibm.wtp.emf.workbench.plugin.EMFWorkbenchPlugin;
 
 
 /**
@@ -937,7 +937,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				} else
 					return false;	// invalid
 			}
-			URI catsURI = URI.createURI(EMFWorkbenchPlugin.PLATFORM_PROTOCOL+":/"+EMFWorkbenchPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat); //$NON-NLS-1$
+			URI catsURI = URI.createURI(JEMUtilPlugin.PLATFORM_PROTOCOL+":/"+JEMUtilPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat); //$NON-NLS-1$
 			Resource res = rset.getResource(catsURI, true);
 			List cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
 			if (cats.isEmpty())
