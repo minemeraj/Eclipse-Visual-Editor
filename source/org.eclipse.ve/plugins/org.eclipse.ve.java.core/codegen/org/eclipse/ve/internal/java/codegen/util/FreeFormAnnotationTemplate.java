@@ -18,7 +18,7 @@ import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-03-07 22:54:31 $ 
  */
 /**
  * @version 	1.0
@@ -275,25 +275,6 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
        	   return null ;
                     
        return src.substring(start,end+1) ;
-                            
-       
-//    	Scanner scanner = new Scanner() ;
-//    	scanner.setSourceBuffer(src.toCharArray()) ;
-//    	scanner.recordLineSeparator = true ;
-//    	scanner.tokenizeWhiteSpace = true ;
-//    	scanner.tokenizeComments = true ;
-//    	
-//    	int token ;
-//    	String result=null ;
-//    	try {
-//    	 token = scanner.getNextToken() ;
-//    	 while (token != scanner.TokenNameCOMMENT_LINE && token != scanner.TokenNameEOF) {
-//    	       token = scanner.getNextToken() ;
-//    	 }
-//    	}
-//    	catch (InvalidInputException e) {}
-//    	return result ;
-    	
     }
     
     static public  String getAnnotationPrefix() {
