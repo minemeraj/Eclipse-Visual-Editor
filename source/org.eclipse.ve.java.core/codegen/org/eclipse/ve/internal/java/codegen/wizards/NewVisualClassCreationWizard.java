@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.20 $  $Date: 2004-09-08 22:38:50 $ 
+ *  $Revision: 1.21 $  $Date: 2004-11-12 19:45:12 $ 
  */
 
 import java.io.IOException;
@@ -330,6 +330,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			String pluginId = elementModel.getPluginId();
 			String container = elementModel.getContainer();
 			IJavaProject project = fPage.getPackageFragment().getJavaProject();
+			updateProjectClassPath(pluginId, container, project, monitor);
+		} finally {
+			monitor.done();
+		}
+	}
+	
+	public static void updateProjectClassPath(String pluginId, String container, IJavaProject project, IProgressMonitor monitor){
 			if (project != null) {
 				Map containers = new HashMap(), plugins = new HashMap();
 				try {
@@ -345,14 +352,11 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 							project.setRawClasspath(newcp, new SubProgressMonitor(monitor, 100));
 						}
 					}
-
 				} catch (JavaModelException e) {
 				}
 			}
-		} finally {
-			monitor.done();
-		}
 	}
+	
 	public void addPages() {
 		fPage = new NewVisualClassWizardPage();
 		addPage(fPage);
