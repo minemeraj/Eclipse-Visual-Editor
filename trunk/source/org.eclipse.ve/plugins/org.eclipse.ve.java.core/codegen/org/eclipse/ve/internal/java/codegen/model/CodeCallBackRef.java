@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -70,7 +70,7 @@ public synchronized boolean decodeExpression() throws CodeGenException {
 	if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
 		return true;
 
-	if (isStateSet(STATE_NO_OP))
+	if (isStateSet(STATE_NO_MODEL))
 		return true;
 
 	if (getEventDecoder() != null) // this may not aloways have a decoder (snippet)
@@ -101,7 +101,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 		   return ;
 		}
 
-	if(isStateSet(STATE_NO_OP))     //((fState & STATE_NO_OP) > 0)
+	if(isStateSet(STATE_NO_MODEL))     //((fState & STATE_NO_OP) > 0)
 		return ;	
 	
 	if (fDecoder == null) throw new CodeGenException ("No Decoder") ; //$NON-NLS-1$

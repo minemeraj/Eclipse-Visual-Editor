@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -229,7 +229,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 */
 	public void reflectMOFchange() {
 		fEventRef.setState(CodeExpressionRef.STATE_IN_SYNC, false); 
-		if((!fEventRef.isAnyStateSet()) || fEventRef.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))  
+		if((!fEventRef.isAnyStateSet()) || fEventRef.isStateSet(CodeExpressionRef.STATE_NO_SRC))  
 		   return ;
 		fEventRef.updateDocument(true) ;
 	}

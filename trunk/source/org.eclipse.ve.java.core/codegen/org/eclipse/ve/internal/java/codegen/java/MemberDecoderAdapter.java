@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
  */
 import java.util.*;
 
@@ -36,6 +36,13 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 
+/**
+ * This is a generic Membership adapter.  
+ * As is, it is designed to deal with additons to methods
+ * 
+ * @author Gili Mendel
+ * @since 0.5.0
+ */
 public class MemberDecoderAdapter extends AdapterImpl implements ICodeGenAdapter {
 	
 	public final static Class JVE_MEMBER_ADAPTER = MemberDecoderAdapter.class;  // Any Code Gen Adapter
@@ -193,7 +200,7 @@ protected void processPromotionIfNeeded(Notification msg) {
 				// Now look for a decoder for this SF.
 				CodeExpressionRef[] expList = (CodeExpressionRef[]) bp.getRefExpressions().toArray(new CodeExpressionRef[bp.getRefExpressions().size()]);
 				for (int j = 0; j < expList.length; j++) {
-					if (expList[j].isStateSet(CodeExpressionRef.STATE_NO_OP) || !expList[j].isStateSet(CodeExpressionRef.STATE_EXIST))
+					if (expList[j].isStateSet(CodeExpressionRef.STATE_NO_MODEL) || !expList[j].isStateSet(CodeExpressionRef.STATE_EXIST))
 						continue;
 
 					IExpressionDecoder d = expList[j].getExpDecoder();

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
@@ -97,7 +97,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
 
 		// Make sure we could resolve the proper PD/SF           		
-		if (fFeatureMapper.getFeature(fExpr) == null && !fExprRef.isStateSet(CodeExpressionRef.STATE_NO_OP)) {
+		if (fFeatureMapper.getFeature(fExpr) == null && !fExprRef.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
 			CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Feature " + fFeatureMapper.getMethodName() + " not recognized.", false); //$NON-NLS-1$ //$NON-NLS-2$	   
 			return false;
 		}
@@ -180,6 +180,11 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 			result = fhelper.generate(args);
 		} catch (CodeGenException e) {
 		}
+		
+		if (fExprRef.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+			fhelper.adaptToCompositionModel(this);
+			return result ;
+		}
 
 		if (result == null && !(fhelper instanceof SimpleAttributeDecoderHelper)) {
 			// Specialized decoder may not be applicable, try a vanilla one
@@ -188,8 +193,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 			result = fhelper.generate(args);
 		}
 
-		if (result != null) {
-			//fExprRef.setState(fExprRef.getState() | CodeExpressionRef.STATE_EXIST | CodeExpressionRef.STATE_IN_SYNC) ;
+		if (result != null) {			
 			fExprRef.setState(CodeExpressionRef.STATE_EXIST, true);
 			fExprRef.setState(CodeExpressionRef.STATE_IN_SYNC, true);
 			fhelper.adaptToCompositionModel(this);
@@ -299,7 +303,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		fExprRef.setState(CodeExpressionRef.STATE_IN_SYNC, false);
 		//fExprRef.setState(fExprRef.getState()&~CodeExpressionRef.STATE_IN_SYNC) ;
 		if ((!fExprRef.isAnyStateSet())
-			|| fExprRef.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) // (fExprRef.getState() == CodeExpressionRef.STATE_NOT_EXISTANT)
+			|| fExprRef.isStateSet(CodeExpressionRef.STATE_NO_SRC)) // (fExprRef.getState() == CodeExpressionRef.STATE_NOT_EXISTANT)
 			return;
 		fExprRef.updateDocument(true);
 	}

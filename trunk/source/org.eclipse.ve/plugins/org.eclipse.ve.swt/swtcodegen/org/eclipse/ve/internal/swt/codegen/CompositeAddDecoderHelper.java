@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:42 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -25,7 +25,12 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -53,7 +58,6 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	
 	public CompositeAddDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner) {
 		super(bean, exp, fm, owner);
-		// TODO Auto-generated constructor stub
 	}
 
 	protected EObject add(EObject toAdd, BeanPart target, int index) {
@@ -321,4 +325,42 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			}
 		}
 	}
+	/**
+	 * If the child is declared in the same method as the parent, no
+	 * need to call the child's creation method
+	 * 
+	 * @return true if an explicit call is required
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean isInvocationCallNeeded() {
+		IJavaObjectInstance obj ;
+		if (fAddedPart!=null)
+			 obj = (IJavaObjectInstance)fAddedPart.getEObject();
+		else
+			 obj = (IJavaObjectInstance)fAddedInstance;
+		
+		EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy(obj,JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		if (cRef == null) return false;
+		EObject pRef = InverseMaintenanceAdapter.getFirstReferencedBy(fbeanPart.getEObject(),JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		return (!cRef.equals(pRef));
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#generateSrc()
+	 */
+	protected String generateSrc() {
+
+		if (isInvocationCallNeeded()) {
+			// Generate method call
+		  IMethodInvocationGenerator iGen = new DefaultMethodInvocationGenerator() ;				
+		  return iGen.generateMethodInvocation(fAddedPart.getInitMethod().getMethodName()) ;
+		}
+		else {
+			// This feature has no src.
+			fOwner.getExprRef().setNoSrcExpression();
+			return null ;
+		}
+	}
+
 }

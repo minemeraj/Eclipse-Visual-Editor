@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:40 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -433,5 +433,15 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	protected EStructuralFeature getRootComponentSF() {
 		return getRootClass().getEStructuralFeature(COMPONENT_ATTR_NAME);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#generateSrc()
+	 */
+	protected String generateSrc() throws CodeGenException {
+		ExpressionTemplate exp = getExpressionTemplate();
+		return exp.toString();
+	}
+	
+	
 
 }

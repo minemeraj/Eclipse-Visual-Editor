@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.10 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.11 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.*;
@@ -180,7 +180,7 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 
 CodeExpressionRef createInitExpression(BeanPart bean) {
 	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
-	return eg.createInitExpression() ;
+	return eg.parseInitExpression() ;
 }
 
 

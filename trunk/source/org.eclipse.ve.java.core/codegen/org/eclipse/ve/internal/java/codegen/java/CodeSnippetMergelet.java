@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.*;
@@ -131,7 +131,7 @@ private CodeExpressionRef createNewExpression(CodeExpressionRef e, CodeMethodRef
     if (b == null) throw new CodeGenException("No Bean Part") ; //$NON-NLS-1$
     ExpressionRefFactory gen = new ExpressionRefFactory(b,null) ;
     CodeExpressionRef newe = gen.createFromSource(e,m) ;
-    newe.setState(CodeExpressionRef.STATE_NO_OP, e.isStateSet(CodeExpressionRef.STATE_NO_OP));
+    newe.setState(CodeExpressionRef.STATE_NO_MODEL, e.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
     newe.setState(CodeExpressionRef.STATE_INIT_EXPR, e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR));
     if (decode) {
        if (!newe.decodeExpression()) {
@@ -150,7 +150,7 @@ private CodeEventRef createNewEventExpression(CodeEventRef e, CodeMethodRef m, b
 	BeanPart b = getOriginal(e.getBean()) ;
 	if (b == null) throw new CodeGenException("No Bean Part") ; //$NON-NLS-1$
 	CodeEventRef newe = new CodeEventRef(m, b);
-	newe.setState(CodeExpressionRef.STATE_NO_OP, e.isStateSet(CodeExpressionRef.STATE_NO_OP));
+	newe.setState(CodeExpressionRef.STATE_NO_MODEL, e.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
 	newe.setState(CodeExpressionRef.STATE_INIT_EXPR, e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR));
 	newe.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true); //fExpr.getState() | fExpr.STATE_SRC_LOC_FIXED) ;
 	newe.setExpression(e.getExpression()) ;
@@ -232,9 +232,9 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
                  		fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true) ;
                  		return false ;
                    }
-                   CodeExpressionRef newExp = createNewExpression(dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_OP));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
+                   CodeExpressionRef newExp = createNewExpression(dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
         	       if(newExp==null && dExp instanceof CodeEventRef)
-        	       	   newExp = createNewEventExpression((CodeEventRef)dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_OP));
+        	       	   newExp = createNewEventExpression((CodeEventRef)dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
         	       updated = true ;
                  }
                  catch (CodeGenException e) {} ; // Do not create dup expressions

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  *  An Object Decoder will only work on Simple Attributes
  */
 public class ObjectDecoder extends AbstractExpressionDecoder {
-    
+     
 
 public ObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
@@ -45,6 +45,12 @@ public ObjectDecoder() {
 	super () ;
 }
 
+public static EStructuralFeature getAllocationFeature (IJavaObjectInstance obj) {
+	if (obj != null) {
+		return obj.eClass().getEStructuralFeature(AllocationFeatureMapper.ALLOCATION_FEATURE) ;
+	}
+	return null ;
+}
 
 protected void initialFeatureMapper(){	
 	   // Use a Simple Attribute Mapper
@@ -52,14 +58,21 @@ protected void initialFeatureMapper(){
 }
 
 protected void initialFeatureMapper(EStructuralFeature sf) {
-         fFeatureMapper = new PropertyFeatureMapper() ;
-         fFeatureMapper.setFeature(sf) ;
+	if (sf.equals(getAllocationFeature((IJavaObjectInstance)fbeanPart.getEObject()))){
+		fFeatureMapper = new AllocationFeatureMapper() ;
+	}
+	else {
+         fFeatureMapper = new PropertyFeatureMapper() ;        
+	}
+	fFeatureMapper.setFeature(sf) ;
 }
 
 
 protected void initialDecoderHelper() {
 	// Bind an Attribute Mapper
-    if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance)fbeanPart.getEObject(), false))  {
+	if (fFeatureMapper.getFeature(null).equals(getAllocationFeature((IJavaObjectInstance)fbeanPart.getEObject())))
+		fhelper = new ConstructorDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
+	else if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance)fbeanPart.getEObject(), false))  {
         JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for "+fFeatureMapper.getFeature(null), //$NON-NLS-1$
         MsgLogger.LOG_FINE) ;
         fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);

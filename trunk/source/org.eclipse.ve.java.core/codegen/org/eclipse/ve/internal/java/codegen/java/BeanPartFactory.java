@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.11 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.12 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.*;
@@ -161,45 +161,69 @@ protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor,
 	return sibling;
 }
 
-protected void createInitExpression (BeanPart b) {
+
+/**
+ *  Init expression was already created with the method template,
+ *  This method will parse and add a CodeExpRef to the BDM
+ */
+protected void parseInitExpression (BeanPart b) {
 	ExpressionRefFactory f = new ExpressionRefFactory(b, null) ;
-	f.createInitExpression() ;
+	CodeExpressionRef exp = f.parseInitExpression() ;
+	exp.setState(CodeExpressionRef.STATE_INIT_EXPR,true);
+}
+
+/**
+ *  This method will use the allocation feature to generate
+ *  a new init expression from the model
+ */
+protected CodeExpressionRef createInitExpression(BeanPart bp, IJavaObjectInstance component) throws CodeGenException {
+    // Use the allocation feature to generate from the model
+	ExpressionRefFactory f = new ExpressionRefFactory(bp,ObjectDecoder.getAllocationFeature(component));
+	CodeExpressionRef exp = f.createFromJVEModel(null) ;
+	exp.setState(CodeExpressionRef.STATE_INIT_EXPR,true);
+	exp.insertContentToDocument();
+    return exp;
 }
 
 protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, CodeMethodRef mref, String methodName,  ICompilationUnit cu) throws CodeGenException {
 
-      if (!mref.isGenerationRequired()) return ;
+ IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component, fBeanModel);
 
-      IType cuType = CodeGenUtil.getMainType(cu) ;
+		if (!mref.isGenerationRequired()) {
+			// Init method is already there, just create the constructor
+			fBeanModel.refreshMethods(); // If we created a field offset may have changed
+			createInitExpression(bp, component);
+			// Generate the rest of the expressions in the case that component has been set
+			// with features already
+			mgen.generateExpressionsContent();
+		} else {
 
-      IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel) ;
-	  String newMSrc = mgen.generateMethod(mref,methodName, bp.getSimpleName()) ;
-		    
-      IMethod newMethod=null ;
-      // Create it as the last method 
-      try {           	                        	
-      	// Offsets will be updated with a call to refreshMethods on mref
-        newMethod = cuType.createMethod(newMSrc,getSiblingForNewMEthod(cuType, false, false),false,null) ;            
-        mref.setMethodHandle(newMethod.getHandleIdentifier()) ;       
-        mref.setContent(newMethod.getSource()) ;
-//        if (newMSrc.length() != newMethod.getSource().length()) {
-//             System.out.println ("JavaSourceTranslator.processAComponent(): newMethodSource("+newMSrc.length()+") JDOM("+newMethod.getSource().length()+")") ;
-//        }
-        fBeanModel.addMethodInitializingABean(mref) ;          
-     }
-     catch (JavaModelException e) {
-    	 JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-    	 throw new CodeGenException(e) ;
-     }    
-    // template also created the init expression; e.g., new Foo()
-    createInitExpression(bp) ;
-    JavaVEPlugin.log("Adding JCMMethod: \n"+newMSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$    
-    CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;  
-    // Workaround, as the create method may create a method which include other comments,etc.
-    fixOffsetsIfNeeded(newMethod,mref) ;
-    mref.setGenerationRequired(false) ;
-    mgen.generateExpressionsContent();
-}
+			IType cuType = CodeGenUtil.getMainType(cu);
+			String newMSrc = mgen.generateMethod(mref, methodName, bp.getSimpleName());
+
+			IMethod newMethod = null;
+			// Create it as the last method
+			try {
+				// Offsets will be updated with a call to refreshMethods on mref
+				newMethod = cuType.createMethod(newMSrc, getSiblingForNewMEthod(cuType, false, false), false, null);
+				mref.setMethodHandle(newMethod.getHandleIdentifier());
+				mref.setContent(newMethod.getSource());
+				fBeanModel.addMethodInitializingABean(mref);
+			} catch (JavaModelException e) {
+				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+				throw new CodeGenException(e);
+			}
+			// template also created the init expression; e.g., new Foo()
+			parseInitExpression(bp);
+			JavaVEPlugin.log("Adding JCMMethod: \n" + newMSrc + "\n", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$    
+			CodeGenUtil.refreshMethodOffsets(cuType, fBeanModel);
+			// Workaround, as the create method may create a method which include other
+			// comments,etc.
+			fixOffsetsIfNeeded(newMethod, mref);
+			mref.setGenerationRequired(false);
+			mgen.generateExpressionsContent();
+		}
+	}
 
 /**
  * Generates an instance variable decleration.
@@ -477,8 +501,8 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
              ma.setMethodRef(mref) ;
          }
          bp.addInitMethod(mref) ;
-         if (m.getInitializes().contains(component))
-           bp.addReturnMethod(mref) ;
+         if (m.getReturn() != null && m.getReturn().equals(component))
+           bp.addReturnMethod(mref) ;         
          generateInitMethod(bp, component, mref, methodName, cu) ;
       }
       else if (thisPart) {
