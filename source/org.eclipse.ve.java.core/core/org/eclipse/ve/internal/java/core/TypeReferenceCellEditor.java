@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-15 00:08:40 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -20,6 +20,7 @@ import java.util.*;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -88,8 +89,16 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 					JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components(),
 					editDomain);
 			editPolicy.setContainer(beanComposition);
+			
+			CompoundCommand createAndSetVisualCommand = new CompoundCommand("Create instance and set visual command");
+			
 			Command createCommand = editPolicy.getCreateCommand(newJavaInstance,null);
-			editDomain.getCommandStack().execute(createCommand);
+			createAndSetVisualCommand.add(createCommand);
+			
+			Command visualInfoCommand = BeanUtilities.getSetEmptyVisualContraintsCommand(newJavaInstance, false, editDomain);
+			createAndSetVisualCommand.add(visualInfoCommand);
+			
+			editDomain.getCommandStack().execute(createAndSetVisualCommand);
 			
 			return newJavaInstance;
 		}
