@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.22 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.23 $  $Date: 2004-09-01 21:58:30 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -733,7 +733,7 @@ public  void dispose() {
 	    a = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(fEObject,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
 	  }
 	}	
-	if (!fModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
+	if (isInJVEModel() && !model.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
 	   removeFromJVEModel() ;
 	fModel = null ;
 	fEObject = null ;	
