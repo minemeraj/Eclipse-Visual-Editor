@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2005-02-16 00:36:16 $ 
+ *  $Revision: 1.32 $  $Date: 2005-04-01 20:59:43 $ 
  */
 
 import java.util.Iterator;
@@ -100,8 +100,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		
 
         EClassifier argType = null ;
-        String newInitString = null;
+        String newInitString = NULL_STRING;
         IJavaInstance newPropInstance = null;
+        
         if (fFmapper.isFieldFeature()) {
             EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
             if (sf == null) throw new CodeGenException("Invalid SF"); //$NON-NLS-1$
@@ -110,6 +111,8 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
                newPropInstance = createPropertyInstance(((Assignment)getExpression()).getRightHandSide(), argType);
             else
                newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(sf);
+            if (newPropInstance!=null)
+                newInitString = ((Assignment)getExpression()).getRightHandSide().toString();
         }
         else {
             // Regular setter JCMMethod
@@ -122,14 +125,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		    if (updateEMFModel)
 		    	newPropInstance = createPropertyInstance((Expression)argExpr.get(0), argType);
 	        else
-	            newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));		    
+	            newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));
+		    if (newPropInstance!=null)
+                newInitString = ((Expression)argExpr.get(0)).toString();
         }
-        
-	    if (newPropInstance!=null)
-	        newInitString = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
-	    else
-	    	newInitString = NULL_STRING;
-	    
+        	    
 	    
 	    if (!updateEMFModel) {
 	    	fPropInstance = newPropInstance;
@@ -157,7 +157,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		fPropInstance = newPropInstance;
 		fInitString = newInitString;
 
-        CodeGenUtil.propertyCleanup(target,sf) ;
+        EObject oldSetting = (EObject) target.eGet(sf);
 		if (fPropInstance == null) {
 			target.eSet(sf,null) ;
 		}
@@ -166,6 +166,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	      	fbeanPart.getInitMethod().getCompMethod().getProperties().add(fPropInstance) ;
 			target.eSet(sf,fPropInstance) ;			            
 		}
+		CodeGenUtil.propertyCleanup(oldSetting);
 		return true;
 	}
 
