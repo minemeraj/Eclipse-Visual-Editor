@@ -26,11 +26,11 @@ REM ****************************************************************
 if x%1==x goto run
 if x%1==x-mapVersionTag set mapVersionTag=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-vm set vm=%2 && shift && shift && goto processcmdlineargs
-if x%1==x-bc set bootclasspath="-Dbootclasspath=%2" && shift && shift && goto processcmdlineargs
+if x%1==x-bc set bootclasspath=-Dbootclasspath=%2 && shift && shift && goto processcmdlineargs
 set buildType=%1 && shift && goto processcmdlineargs
 
 :run
-%vm% -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml %bootclasspath% -DmapVersionTag=%mapBersionTag% -DbuildType=%buildType%
+%vm% -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml %bootclasspath% -DmapVersionTag=%mapVersionTag% -DbuildType=%buildType%
 goto end
 
 :usage
