@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-16 20:29:43 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-18 16:23:35 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -40,6 +40,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	BeanPart fParent = null ;
 	protected String constructorSF = null;
+	protected CodeExpressionRef childExp = null; // Expression to which this is the master
 
 	/**
 	 * @param bean
@@ -121,20 +122,29 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			}			
 		}
 		// Add a control feature
-		controlList.add(index, fbeanPart.getEObject());
-				
-		// Create a pseudo expression for the parent (no add(Foo) in SWT)
-		// This will drive the creation of a decoder with controls, and will
-		// establish the parent/child relationship in the BDM
-		ExpressionRefFactory eGen = new ExpressionRefFactory(fParent, sf);		
-		try {
-			CodeExpressionRef newExpr = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
-			// The z order for the "control" feature 
-			// will be base on this constructor
-			newExpr.setMasterExpression(exp);
-		} catch (CodeGenException e) {
-			JavaVEPlugin.log(e);
-		}		
+		if(controlList.contains(fbeanPart.getEObject())){
+			if(controlList.indexOf(fbeanPart.getEObject())!=index){
+				controlList.remove(fbeanPart.getEObject());
+				controlList.add(index, fbeanPart.getEObject());
+			}
+		}else{
+			controlList.add(index, fbeanPart.getEObject());
+		}
+		
+		if(childExp==null){
+			// Create a pseudo expression for the parent (no add(Foo) in SWT)
+			// This will drive the creation of a decoder with controls, and will
+			// establish the parent/child relationship in the BDM
+			ExpressionRefFactory eGen = new ExpressionRefFactory(fParent, sf);		
+			try {
+				childExp = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
+				// The z order for the "control" feature 
+				// will be base on this constructor
+				childExp.setMasterExpression(exp);
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e);
+			}
+		}
 	}
 
 	/* (non-Javadoc)

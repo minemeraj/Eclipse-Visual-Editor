@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-18 16:23:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -435,7 +435,7 @@ public class BDMMerger {
 		switch(equivalencyLevel){
 			case 0:
 				logFiner("Updating changed expression "+newExp.getCodeContent());
-				if(!mainExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+				if(!mainExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)){
 					if(mainExp.getOffset()!=newExp.getOffset())
 						mainExp.setOffset(newExp.getOffset());
 					mainExp.refreshFromJOM(newExp);
