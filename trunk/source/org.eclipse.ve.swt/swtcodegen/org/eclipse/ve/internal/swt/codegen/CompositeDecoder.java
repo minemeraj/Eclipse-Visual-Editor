@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-16 20:56:10 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-02 22:20:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -44,14 +44,11 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	
 	protected boolean isCreateMethod(String prefix, EStructuralFeature sf) {
 		
-		return true ;
+		return  !sf.getName().equals(AllocationFeatureMapper.ALLOCATION_FEATURE);
 	}
 
 	protected IExpressionDecoderHelper getAppropriateDecoderHelper(String structuralFeature) {
-		
-		if (structuralFeature.equals(AllocationFeatureMapper.ALLOCATION_FEATURE))
-			return new SWTConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-		
+				
 		EStructuralFeature sf = fbeanPart.getEObject().eClass().getEStructuralFeature(structuralFeature);
 		if (sf != null && isCreateMethod(ADD_METHOD_PREFIX, sf))
 			return new CompositeAddDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
