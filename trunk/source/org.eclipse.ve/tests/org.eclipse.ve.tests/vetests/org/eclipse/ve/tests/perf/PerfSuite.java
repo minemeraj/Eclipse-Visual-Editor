@@ -11,7 +11,6 @@
 package org.eclipse.ve.tests.perf;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
 import java.util.*;
 
 import junit.extensions.TestSetup;
@@ -43,13 +42,15 @@ import org.eclipse.ve.tests.VETestsPlugin;
  * @since 1.0.0
  */
 public class PerfSuite extends TestSetup {
+
 	private static final boolean RECREATE_TESTDATA_PROJECT = true;
-	private static final boolean DELETE_TESTDATA_PROJECT = true;	
+
+	private static final boolean DELETE_TESTDATA_PROJECT = true;
 
 	public static PerfSuite instance;
 
 	// Test cases to be include in the suite
-	private static final Class testsList[] = { Scenario179.class };
+	private static final Class testsList[] = { Scenario179.class};
 
 	public static final String TESTDATA_PROJECT = "PerformanceTest";
 
@@ -90,12 +91,9 @@ public class PerfSuite extends TestSetup {
 			System.out.println("-- Initializing the performance test data --"); //$NON-NLS-1$
 			oldAutoBuildingState = JavaProjectUtil.setAutoBuild(true);
 			String[] zipPaths = new String[1];
-			zipPaths[0] = Platform.asLocalURL(
-					VETestsPlugin.getPlugin().getBundle().getEntry(
-							"resources/testdata/" + TESTDATA_PROJECT
-									+ ".zip")).getFile();
-			IProject[] projects = JavaProjectUtil.importProjects(
-					new String[] { TESTDATA_PROJECT }, zipPaths);
+			zipPaths[0] = Platform.asLocalURL(VETestsPlugin.getPlugin().getBundle().getEntry("resources/testdata/" + TESTDATA_PROJECT + ".zip"))
+					.getFile();
+			IProject[] projects = JavaProjectUtil.importProjects(new String[] { TESTDATA_PROJECT}, zipPaths);
 			assertNotNull(projects[0]);
 			JavaProjectUtil.waitForAutoBuild();
 			System.out.println("-- Data initialized --"); //$NON-NLS-1$
@@ -104,19 +102,17 @@ public class PerfSuite extends TestSetup {
 
 		disablePromptOnExit();
 		disableStartupPlugins();
-		enableActivities("org.eclipse.categories.javaCategory");		
+		enableActivities("org.eclipse.categories.javaCategory");
 	}
 
 	protected void disablePromptOnExit() {
-		IDEWorkbenchPlugin.getDefault().getPluginPreferences().setValue(
-				IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW, false);
+		IDEWorkbenchPlugin.getDefault().getPluginPreferences().setValue(IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW, false);
 		IDEWorkbenchPlugin.getDefault().savePluginPreferences();
 	}
 
 	protected void disableStartupPlugins() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(
-				PlatformUI.PLUGIN_ID, IWorkbenchConstants.PL_STARTUP);
+		IExtensionPoint point = registry.getExtensionPoint(PlatformUI.PLUGIN_ID, IWorkbenchConstants.PL_STARTUP);
 		IExtension[] extensions = point.getExtensions();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < extensions.length; ++i) {
@@ -124,36 +120,28 @@ public class PerfSuite extends TestSetup {
 			sb.append(extension.getNamespace());
 			sb.append(";");
 		}
-		WorkbenchPlugin.getDefault().getPluginPreferences().setValue(
-				IPreferenceConstants.PLUGINS_NOT_ACTIVATED_ON_STARTUP,
-				sb.toString());
+		WorkbenchPlugin.getDefault().getPluginPreferences().setValue(IPreferenceConstants.PLUGINS_NOT_ACTIVATED_ON_STARTUP, sb.toString());
 	}
 
 	protected void enableActivities(String categoryId) {
-		WorkbenchPlugin.getDefault().getPluginPreferences().setValue(
-				IPreferenceConstants.SHOULD_PROMPT_FOR_ENABLEMENT, false);
+		WorkbenchPlugin.getDefault().getPluginPreferences().setValue(IPreferenceConstants.SHOULD_PROMPT_FOR_ENABLEMENT, false);
 		WorkbenchPlugin.getDefault().savePluginPreferences();
 		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchActivitySupport activitySupport = workbench
-				.getActivitySupport();
-		Set activityBindings = activitySupport.getActivityManager()
-				.getCategory(categoryId).getCategoryActivityBindings();
+		IWorkbenchActivitySupport activitySupport = workbench.getActivitySupport();
+		Set activityBindings = activitySupport.getActivityManager().getCategory(categoryId).getCategoryActivityBindings();
 		Set activityIds = new HashSet();
 		for (Iterator it = activityBindings.iterator(); it.hasNext();)
-			activityIds.add(((ICategoryActivityBinding) it.next())
-					.getActivityId());
+			activityIds.add(((ICategoryActivityBinding) it.next()).getActivityId());
 		activitySupport.setEnabledActivityIds(activityIds);
 	}
 
-	protected void joinAutoBuild() throws InterruptedException,
-			InvocationTargetException {
+	protected void joinAutoBuild() throws InterruptedException, InvocationTargetException {
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
 		dialog.run(true, false, new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
-					Platform.getJobManager().join(
-							ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+					Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
@@ -164,18 +152,18 @@ public class PerfSuite extends TestSetup {
 	protected void tearDown() throws Exception {
 		if (DELETE_TESTDATA_PROJECT) {
 			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+
 				public void run(IProgressMonitor monitor) throws CoreException {
-					JavaProjectUtil.deleteProject(JavaProjectUtil
-							.getProject(TESTDATA_PROJECT));
+					JavaProjectUtil.deleteProject(JavaProjectUtil.getProject(TESTDATA_PROJECT));
 				}
 			}, ResourcesPlugin.getWorkspace().getRoot(), 0, null);
 		}
 		JavaProjectUtil.setAutoBuild(oldAutoBuildingState);
 
 		joinAutoBuild();
-//		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
-//			System.out.println("-- uploaded successfully -- ");
-//		}
+		//		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
+		//			System.out.println("-- uploaded successfully -- ");
+		//		}
 		System.out.println("-- performance suite complete --");
 	}
 
@@ -201,6 +189,7 @@ public class PerfSuite extends TestSetup {
 	static public void waitFor(long timeToWait) {
 		final long _timeToWait = timeToWait;
 		Display.getDefault().syncExec(new Runnable() {
+
 			public void run() {
 				long start = System.currentTimeMillis();
 				long progress = System.currentTimeMillis() + 10000;
@@ -217,7 +206,7 @@ public class PerfSuite extends TestSetup {
 	}
 
 	static public void waitFor(int step, long timeout) {
-	PerformanceListener pl = new PerformanceListener(step);
+		PerformanceListener pl = new PerformanceListener(step);
 		PerformanceMonitorUtil.getMonitor().addPerformanceListener(pl);
 		long end = System.currentTimeMillis() + timeout;
 		while (!pl.done && timeout != 0 && end > System.currentTimeMillis()) {
@@ -226,8 +215,8 @@ public class PerfSuite extends TestSetup {
 		PerformanceMonitorUtil.getMonitor().removePerformanceListener(pl);
 	}
 
-	static public class PerformanceListener implements
-			PerformanceMonitorUtil.PerformanceListener {
+	static public class PerformanceListener implements PerformanceMonitorUtil.PerformanceListener {
+
 		public boolean done = false;
 
 		public int step = 0;
