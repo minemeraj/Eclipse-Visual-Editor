@@ -135,18 +135,21 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	
 	public void childValidated(ControlProxyAdapter childProxy) {
 		// Hold up layout processing if we are executing a HoldProcessingCommand
-        if (!holding()) {
-            // We are the top with no parents, do a layout() on us
-            invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-
-                public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-                    // Call the layout() method
-                    return layoutMethodProxy().invoke(getBeanProxy());
-                }
-            });
-            if (imSupport != null) refreshImage();
-            if (parentProxyAdapter != null) super.childValidated(childProxy);
-        }
+	    if (!holding()) {
+	        // We are the top with no parents, do a layout() on us
+	        invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+	
+	            public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+	            	// Not sure why the bean proxy is null here but need to check for it
+	            	if (getBeanProxy() != null)
+	            		// Call the layout() method
+	            		return layoutMethodProxy().invoke(getBeanProxy());
+	            	return null;
+	            }
+	        });
+	        if (imSupport != null) refreshImage();
+	        if (parentProxyAdapter != null) super.childValidated(childProxy);
+	    }
 	}	
 	private int holdCount = 0;
 	
