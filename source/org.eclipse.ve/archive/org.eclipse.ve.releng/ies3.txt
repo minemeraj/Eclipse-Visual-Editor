@@ -1,2 +1,2 @@
-VE-SDK-1.0.1.1.zip=http://download.eclipse.org/tools/ve/downloads/drops/R-1.0.1.1-200410221351/ | | | sdk | ve
-VE-runtime-1.0.1.1.zip=http://download.eclipse.org/tools/ve/downloads/drops/R-1.0.1.1-200410221351/ | | | runtime | ve
+VE-SDK-1.0.2.zip=http://download.eclipse.org/tools/ve/downloads/drops/M-1.0.2-200412082132/ | | | sdk | ve
+VE-runtime-1.0.2.zip=http://download.eclipse.org/tools/ve/downloads/drops/M-1.0.2-200412082132/ | | | runtime | ve
