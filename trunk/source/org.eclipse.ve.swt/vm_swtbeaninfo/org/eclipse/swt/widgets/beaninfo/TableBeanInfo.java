@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-03 14:45:34 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-15 22:16:27 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -35,7 +35,7 @@ public class TableBeanInfo extends IvjBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
-		"SWEET_STYLEBITS", //$NON-NLS-1$
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {				
 			{ "style" , TableMessages.getString("TableBeanInfo.StyleBits.Style.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 			    TableMessages.getString("TableBeanInfo.StyleBits.Style.Value.Check") , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK)  //$NON-NLS-1$ //$NON-NLS-2$
