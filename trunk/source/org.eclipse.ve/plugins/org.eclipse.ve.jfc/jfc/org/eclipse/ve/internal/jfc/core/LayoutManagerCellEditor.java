@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.14 $  $Date: 2005-03-16 21:11:57 $ 
  */
 
 import java.util.ArrayList;
@@ -182,8 +182,14 @@ public void setData(Object data){
 			if (sfConstraintComponent.getEContainingClass().isInstance(sources[0])) {
 				// if the source is the ConstraintComponent, get the constraint's component. This is who the layout will be applied to.
 				container = (IJavaObjectInstance) ((EObject)sources[0]).eGet(sfConstraintComponent);
-			} else
-				container = null;
+			} else {
+				// if the EObject is not a ComponentConstraint - check for JTabComponent
+				EStructuralFeature sfTabComponent = JavaInstantiation.getReference(JavaEditDomainHelper.getResourceSet(fEditDomain), JFCConstants.SF_JTABCOMPONENT_COMPONENT);
+				if(sfTabComponent.getEContainingClass().isInstance(sources[0])){
+					container = (IJavaObjectInstance) ((EObject)sources[0]).eGet(sfTabComponent);
+				}else
+					container = null;
+			}
 		} else
 			container = null;
 	}
