@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-17 19:32:37 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-27 18:49:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -162,6 +162,9 @@ public class JavaVisualEditorVMController {
 						BeaninfoNature.getRuntime(getProject()).getConfigurationContributor(), jcmCont};
 
 				ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(getProject(), vmName, contribs, monitor);
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				
 				registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true); // Want to maintain list of not found types so we know when those
 																				   // types have been added.
 				processNewRegistry(registry, contributeInfo[0]);
@@ -297,6 +300,8 @@ public class JavaVisualEditorVMController {
 				try {
 					createJob.join();
 					IStatus status = createJob.getResult();
+					if (status == null)
+						return Status.OK_STATUS;	// Job never ran treat as ok.
 					if (!status.isOK()) {
 						synchronized (createJob) {
 							createJob = null; // Clear it out so that next request will try again. We don't want to permanently lock out spare creations.
@@ -333,10 +338,10 @@ public class JavaVisualEditorVMController {
 					if (spare != null) {
 						spare.registry.terminateRegistry();
 						spare = null;
-						startJob(START_JOB_DELAY);
 					}
 				}
 			}
+			startJob(START_JOB_DELAY);
 		}
 		
 		/**
@@ -352,7 +357,7 @@ public class JavaVisualEditorVMController {
 			IStatus status = waitForJob(); // Wait for any outstanding job.
 			// If bad status but not cancel, then no spare. If cancel, slight possibility of a spare 
 			// depending on when it was canceled.
-			if (!status.isOK() && status.getCode() != IStatus.CANCEL)
+			if (!status.isOK() && status.getSeverity() != IStatus.CANCEL)
 				return null;
 			if (createJob != null) {
 				synchronized (createJob) {
@@ -653,8 +658,11 @@ public class JavaVisualEditorVMController {
 							if (!pp.project.equals(project)) {
 								synchronized (pp) {
 									// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-									RegistryResult spare = pp.getExistingSpare(false);
-									if (spare != null && spare.configInfo != null && spare.configInfo.getProjectPaths().containsKey(projectPath))
+									// However, if we are creating one, cancel it. It may not need to be canceled, but we can't
+									// tell because we don't have the necessary info for it until it completes. But we can't wait
+									// for it to truly complete because we could get into a deadlock situation with the builder.
+									RegistryResult spare = pp.getExistingSpare(true);
+									if (spare == null || (spare.configInfo != null && spare.configInfo.getProjectPaths().containsKey(projectPath)))
 										pp.restartSpare();
 								}
 							}
@@ -677,9 +685,9 @@ public class JavaVisualEditorVMController {
 					if (pp != null) {
 						synchronized (pp) {
 							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							RegistryResult spare = pp.getExistingSpare(false);
-							if (spare != null)
-								pp.restartSpare();
+							// Cancel any being built too because we are going to restart it.
+							pp.getExistingSpare(true);
+							pp.restartSpare();
 						}
 					}
 				}
@@ -786,8 +794,10 @@ public class JavaVisualEditorVMController {
 									} else {
 										RegistryResult rr = pp.getExistingSpare(true); // This will force the current job to complete if there is one.									
 										if (removeIt = pp.lastActivity <= clearCount) {
-											// Terminate the registry now
-											rr.registry.terminateRegistry();
+											if (rr != null) {
+												// Terminate the registry now
+												rr.registry.terminateRegistry();
+											}
 										}
 									}
 									if (removeIt)
