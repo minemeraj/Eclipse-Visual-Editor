@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-07 18:34:12 $ 
  */
  
 import java.text.MessageFormat;
@@ -23,10 +23,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.ParseTreeAllocationInstantiationVisitor;
+import org.eclipse.jem.internal.instantiation.base.ParseTreeAllocationInstantiationVisitor.ProcessingException;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.initParser.tree.IExpressionConstants.NoExpressionValueException;
-import org.eclipse.jem.workbench.utility.ParseTreeAllocationInstantiationVisitor;
-import org.eclipse.jem.workbench.utility.ParseTreeAllocationInstantiationVisitor.ProcessingException;
 
 /**
  * The basic allocation processer. It handles the basic allocations.
