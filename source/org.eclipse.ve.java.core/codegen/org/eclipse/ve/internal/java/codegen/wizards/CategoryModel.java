@@ -10,7 +10,10 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  * Contributors:
  *     Red Hat, Inc. - 1.0 implementation
  *******************************************************************************/
-
+/*
+ *  $RCSfile: CategoryModel.java,v $
+ *  $Revision: 1.4 $  $Date: 2004-07-30 16:38:18 $ 
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

@@ -9,7 +9,10 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  * Contributors:
  *     Red Hat, Inc. - 1.0 implementation
  *******************************************************************************/
-
+/*
+ *  $RCSfile: VisualElementModel.java,v $
+ *  $Revision: 1.5 $  $Date: 2004-07-30 16:38:18 $ 
+ */
 import org.eclipse.core.runtime.IConfigurationElement;
 
 /**
