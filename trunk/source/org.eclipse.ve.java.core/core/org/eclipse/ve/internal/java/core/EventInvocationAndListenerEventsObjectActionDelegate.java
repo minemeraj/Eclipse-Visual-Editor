@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventInvocationAndListenerEventsObjectActionDelegate.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-22 13:41:21 $ 
  */
 
 import java.util.Iterator;
@@ -75,7 +75,7 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 				public void widgetSelected(final SelectionEvent e) {
 					// TODO This should be a command.
 					EditDomain domain = EditDomain.getEditDomain(editPart);
-					((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).run(new Runnable() {
+					((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 						public void run() {									
 							// The data is the method proxy of the event to be added to the existing listener
 							PropertyDecorator propDecor = (PropertyDecorator)e.widget.getData(); 
@@ -135,7 +135,7 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 					public void widgetSelected(final SelectionEvent e) {
 						// TODO This should be a command.
 						EditDomain domain = EditDomain.getEditDomain(editPart);
-						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).run(new Runnable() {
+						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 							public void run() {									
 								// The data is the method proxy of the event to be added to the existing listener
 								MethodProxy methodProxy = (MethodProxy) e.widget.getData();
