@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-28 00:47:03 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +26,7 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;

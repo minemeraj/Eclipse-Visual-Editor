@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MethodGeneratorFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-23 22:53:28 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 00:47:03 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -30,6 +30,7 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.util.*;
 
 
 

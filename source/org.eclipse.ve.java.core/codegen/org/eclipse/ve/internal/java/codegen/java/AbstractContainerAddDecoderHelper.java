@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 00:47:03 $ 
  */
 
 import java.util.ArrayList;
@@ -323,12 +323,14 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			fbeanPart.addChild(fAddedPart);
 			fAddedPart.addBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));
 		}
-		//   fAddedConstraintInstance = CodeGenUtil.getCCconstraint(CC) ;
+		
 
 		primRefreshArguments();
 
-		ExpressionTemplate exp = getExpressionTemplate();
-		fExprSig = exp.toString();
+		IMethodInvocationGenerator iGen = new DefaultMethodInvocationGenerator() ;
+		
+		
+		fExprSig = iGen.generateMethodInvocation(fAddedPart.getInitMethod().getMethodName()) ;
 		return fExprSig;
 	}
 

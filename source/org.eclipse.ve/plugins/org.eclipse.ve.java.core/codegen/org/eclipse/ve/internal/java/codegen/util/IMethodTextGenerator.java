@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-27 01:12:06 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
  */
-package org.eclipse.ve.internal.java.codegen.java;
+package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.List;
 
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
  
 /**
  * @author Gili Mendel

@@ -12,7 +12,7 @@
 
 package org.eclipse.ve.internal.swt.codegen.jjet.util;
 
-import org.eclipse.ve.internal.java.codegen.java.AbstractMethodTextGenerator;
+import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
 
 /*********************************************************************

@@ -2,10 +2,10 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: NoArgNoReturnMethodTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
- // This Method is expected to generate a create method for a Shell object
+ // This Method is expected to generate a method skelaton with not returns and no arguments
  // see AbstractMethodTextGenerator.MethodInfo for more information regarding the info structure
   
 %><%@ jet skeleton="MethodSkelaton.java" 
