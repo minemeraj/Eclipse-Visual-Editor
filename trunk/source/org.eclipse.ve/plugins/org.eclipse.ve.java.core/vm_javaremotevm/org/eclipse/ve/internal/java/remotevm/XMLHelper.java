@@ -11,14 +11,11 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: XMLHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-21 17:30:07 $ 
+ *  $Revision: 1.3 $  $Date: 2003-11-21 23:14:01 $ 
  */
 
-import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class XMLHelper {
 
