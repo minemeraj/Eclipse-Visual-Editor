@@ -61,15 +61,28 @@ public Command getCreateChildCommand(Object childComponent, Object constraint, O
  * Return a command to create the child with the constraints set correctly
  */
 public Command getCreateChildCommand(Object childComponent, Object parent, Object constraint, Object position) {
-	
 	Command createContributionCmd = policy.getCreateCommand(childComponent, position);
 	if (createContributionCmd == null || !createContributionCmd.canExecute())
 		return UnexecutableCommand.INSTANCE;	// It can't be created
-			
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint) constraint));
-	command.append(createContributionCmd);
 
+	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
+	NullConstraint new_constraint = (NullConstraint) constraint;
+	//check if this child has the contsraint already set
+		Rectangle bounds = new Rectangle();
+		IJavaObjectInstance child = (IJavaObjectInstance) childComponent;
+		EStructuralFeature boundsSF = JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS);
+		if(child.eClass().getEStructuralFeature(boundsSF.getName())!=null){
+	   	  IJavaObjectInstance existing_constraint = (IJavaObjectInstance) child.eGet(JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS));
+		  if (existing_constraint != null) {
+			 IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
+			 IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
+			 bounds =  new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
+			 new_constraint = new NullConstraint(bounds,true,false);
+		  }
+		}
+	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, new_constraint));
+	//command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint)constraint));
+	command.append(createContributionCmd);
 	return command.unwrap();
 }
 
@@ -98,23 +111,7 @@ protected void cancelConstraints(CommandBuilder cb, List children) {
  * Return a List with a constraint for each child.
  */
 public List getDefaultConstraint(List children) {
-	Iterator itr = children.iterator();
-	ArrayList constraints = new ArrayList(children.size());
-	Rectangle bounds = new Rectangle();
-	while(itr.hasNext()) {
-		IJavaObjectInstance child = (IJavaObjectInstance) itr.next();
-		IJavaObjectInstance constraint = (IJavaObjectInstance) child.eGet(JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS));
-		if (constraint != null) {
-			IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
-			IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
-			bounds =  new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
-		}else{
-			bounds = new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
-		}
-		constraints.add(new NullConstraint((bounds), true, true));
-	}
-	//return Collections.nCopies(children.size(), new NullConstraint(new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1), true, true));
-	return constraints;
+	return Collections.nCopies(children.size(), new NullConstraint(new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1), true, true));
 }
 
 public Command getChangeConstraintCommand(List children, List constraints) {
@@ -152,4 +149,7 @@ protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyF
 	}
 	return getFieldMethodProxy;
 }
+
+
+
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-07 12:46:42 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-10 21:23:59 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,17 +19,14 @@ import java.util.List;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
-
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * 
@@ -117,9 +114,7 @@ public void setContainerPolicy(VisualContainerPolicy policy) {
  * The child is the Control itself
  */
 public Command getChangeConstraintCommand(List children, List constraints) {
-	
-	// TODO Need to figure out what we do here - JRW
-	return UnexecutableCommand.INSTANCE;
+	return NoOpCommand.INSTANCE;
 }
 
 	
