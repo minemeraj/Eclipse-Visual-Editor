@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-07 12:46:42 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 15:57:27 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,15 +28,11 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.ui.IActionFilter;
 
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
-import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;

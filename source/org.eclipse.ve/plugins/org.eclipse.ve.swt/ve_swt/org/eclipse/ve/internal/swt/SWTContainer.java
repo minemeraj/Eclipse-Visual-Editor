@@ -25,9 +25,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private final static String[][] jfaceLibraries = new String[][] {
 			{ "org.eclipse.jface", "jface.jar" },
-			{ "org.eclipse.core.runtime", "runtime.jar" },
-			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" },
-			{ "org.eclipse.osgi", "osgi.jar" }			
+			{ "org.eclipse.core.runtime", "runtime.jar" },			
 	};
 	
 	public SWTContainer(IPath containerPath){
@@ -45,7 +43,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			int i;
 			for (i = 0; i < swtLibraries.length; i++) {
 				Path path = new Path(swtLibraries[i][1]);
-				URL location = Platform.getPlugin(swtLibraries[i][0]).find(path);
+				URL location = Platform.find(Platform.getBundle(swtLibraries[i][0]), path);
 				path = new Path(Platform.resolve(location).getFile());
 				fClasspathEntries[i] = JavaCore.newLibraryEntry(path, null, null);	
 			}
@@ -53,7 +51,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			if (isJFace) {
 				for (int j = 0; j < jfaceLibraries.length; j++) {
 					Path path = new Path(jfaceLibraries[j][1]);
-					URL location = Platform.getPlugin(jfaceLibraries[j][0]).find(path);
+					URL location = Platform.find(Platform.getBundle(jfaceLibraries[j][0]), path);
 					path = new Path(Platform.resolve(location).getFile());
 					fClasspathEntries[j + i] = JavaCore.newLibraryEntry(path, null, null);
 				}
