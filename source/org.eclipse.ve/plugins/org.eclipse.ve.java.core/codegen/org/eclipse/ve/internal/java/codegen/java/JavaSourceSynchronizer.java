@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-02 16:34:43 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-07 14:40:32 $ 
  */
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class JavaSourceSynchronizer {
  IWorkingCopyProvider    fWorkingCopyProvider  ;
  Display                 fDisplay = null ;
  WorkerPool              fStrategyWorkers = new WorkerPool(NO_OF_UPDATE_WORKERS) ;
- ICodegenLockManager     lockManager = null;
+ CodegenLockManager     lockManager = null;
  /**
   * documentEventList 
   * Contains from 0..n document events in increasing time
@@ -51,7 +51,6 @@ public class JavaSourceSynchronizer {
   */
  private List documentEventList = null;
  List notifierList = null;
- CancelMonitor previousWorkerCancelMonitor = null;
  
  DocListener       		fDocListener = null ;
  
@@ -342,15 +341,10 @@ public class JavaSourceSynchronizer {
 			return ;
 		}
 		
-		if(previousWorkerCancelMonitor!=null && !previousWorkerCancelMonitor.isCanceled())
-			previousWorkerCancelMonitor.setCancel(true);
-		
 		CancelMonitor newMon = new CancelMonitor() ;
 		StrategyWorker w = fStrategyWorkers.grabWorker() ;		  	
 		w.assignStrategy(strategy,lockManager, allDocEvents, 
 		  	           fWorkingCopyProvider.getWorkingCopy(true), getDisplay(), newMon) ;
-		  	           
-		previousWorkerCancelMonitor = newMon;
 	}
 	
 	/**	 
@@ -497,8 +491,7 @@ public class JavaSourceSynchronizer {
      */
     protected void clearOutstandingWork() {
     	documentEventList.clear();
-    	if(previousWorkerCancelMonitor!=null && !previousWorkerCancelMonitor.isCanceled())
-			previousWorkerCancelMonitor.setCancel(true);		    
+    	lockManager.resetGUIReadOnly();
     }
 
 public ICodegenLockManager getLockMgr() {

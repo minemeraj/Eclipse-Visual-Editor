@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.22 $  $Date: 2004-04-05 03:38:38 $ 
+ *  $Revision: 1.23 $  $Date: 2004-04-07 14:40:32 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -209,6 +209,15 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		}
   	}
   	
+  	protected void allSnapshotEventsProcessed(ICodegenLockManager lockManager){
+		if (fEventsProcessedCount > 0) {
+			for (int i = 0; i < fEventsProcessedCount; i++) {
+				lockManager.setGUIReadonly(false);
+			}
+			fEventsProcessedCount = 0;
+		}
+  	}
+  	
   	protected boolean takeCurrentSnapshot(final ICodegenLockManager lockManager, final List allEvents, final ICompilationUnit workingCopy){
   		currentSource = null ;
   		importEnds = new int[0] ;
@@ -269,7 +278,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		return parseErrors;
   	}
   	
-  	protected synchronized void handleNonParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  	protected void handleNonParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
   		fBeanModel.refreshMethods();
   	}
   	
@@ -305,7 +314,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		return new String[0] ;
   	}
   	
-  	protected synchronized void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  	protected void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
   		JavaBeanModelBuilder modelBldr =
 			new CodeSnippetModelBuilder(fEDomain, currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy);
 		modelBldr.setDiagram(fVEModel);
@@ -369,44 +378,29 @@ IDiagramSourceDecoder fSourceDecoder = null;
 						return;
 					}
 
-					// TODO Adapters will not react for GUI deltas !!!
-					if (fBeanModel!=null)
-					  fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
+					// only one updater can be touching the model at any time.
+					synchronized(SharedToLocalUpdater.class){
 
-					if (containsParseErrors(ast)) {
-						handleNonParseable(ast, fWorkingCopy, monitor);
-						fireParseError(true);
-					} else {
-						handleParseable(ast, fWorkingCopy, monitor);
-						fireParseError(false);
-
-					}
-
-					if (monitor != null && monitor.isCanceled()) {
-						if (fBeanModel != null)
-							fireSnippetProcessing(false);
-						return;
-					}
-
-					if (fEventsProcessedCount > 0) {
-						for (int i = 0; i < fEventsProcessedCount; i++) {
-							lockManager.setGUIReadonly(false);
+						// TODO Adapters will not react for GUI deltas !!!
+						if (fBeanModel!=null)
+							fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
+						
+						if (containsParseErrors(ast)) {
+							handleNonParseable(ast, fWorkingCopy, monitor);
+							fireParseError(true);
+						} else {
+							handleParseable(ast, fWorkingCopy, monitor);
+							fireParseError(false);
 						}
-					}
-					
-					//TODO: we need to only notify if the VE model was updated
-					fireModelChanged();
 
-					if (monitor != null && monitor.isCanceled()) {
-						if (fBeanModel != null)
-							fireSnippetProcessing(false);
-						return;
-					}
-
-					fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
-
-					if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
-						Reload(disp, monitor);
+						//TODO: we need to only notify if the VE model was updated
+						fireModelChanged();
+	
+						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
+	
+						if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+							Reload(disp, monitor);
+						}
 					}
 				}
 			} catch (Throwable e) {
@@ -414,6 +408,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 				// Reload from scratch will re-set the state of the BDM
 				Reload(disp, monitor);
 			} finally {
+				allSnapshotEventsProcessed(lockManager);
 				if (fBeanModel != null)
 					fireSnippetProcessing(false);
 			}
