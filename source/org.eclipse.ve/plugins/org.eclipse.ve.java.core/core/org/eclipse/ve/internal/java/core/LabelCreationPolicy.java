@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LabelCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.1 $  $Date: 2004-04-23 16:28:10 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -34,6 +34,7 @@ import org.eclipse.jem.internal.proxy.core.*;
 public class LabelCreationPolicy implements EMFCreationTool.CreationPolicy , IExecutableExtension {
 	
 	protected String fLabelKey = "Label"; //$NON-NLS-1$
+	protected String fPropertyKey = "text"; //$NON-NLS-1$
 	
 public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
 	
@@ -55,11 +56,11 @@ public Command getCommand(Command aCommand, final EditDomain domain, final Creat
 				if ( existingLabelProxy == null || ((IStringBeanProxy)existingLabelProxy).stringValue().trim().equals("")) { //$NON-NLS-1$
 					// Thew new label will be "Label".  This is held externally
 					// The key to use is LabelPolicy.text.xxx where xxx is a piece of inializationData
-					String labelString = VisualMessages.getString("LabelPolicy.text." + fLabelKey); //$NON-NLS-1$
+					String labelString = JavaMessages.getString("LabelPolicy.text." + fLabelKey); //$NON-NLS-1$
 					EObject refNewObject = (EObject)newObject;
 					ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
 					IJavaInstance newLabel = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + labelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					EStructuralFeature sf_label = refNewObject.eClass().getEStructuralFeature("text"); //$NON-NLS-1$
+					EStructuralFeature sf_label = refNewObject.eClass().getEStructuralFeature(fPropertyKey); //$NON-NLS-1$
 					RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 					cb.applyAttributeSetting((EObject) newObject, sf_label, newLabel);
 					command = cb.getCommand();
@@ -80,7 +81,14 @@ public Command getCommand(Command aCommand, final EditDomain domain, final Creat
 	}
 }
 public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
-	fLabelKey = (String)initData;
+	String s = (String)initData;
+	int index = s.indexOf(",");
+	if (index >= 0) {
+		fLabelKey = s.substring(0, index);
+		fPropertyKey = s.substring(index+1);
+	} else {
+		fLabelKey = s;
+	}
 }
     /**
      * @see CreationPolicy#getDefaultSuperString(EClass)
