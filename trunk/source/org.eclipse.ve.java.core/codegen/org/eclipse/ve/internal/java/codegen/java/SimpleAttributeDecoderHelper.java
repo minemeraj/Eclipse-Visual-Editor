@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2004-06-07 20:12:36 $ 
+ *  $Revision: 1.19 $  $Date: 2004-06-07 20:36:47 $ 
  */
 
 import java.util.Iterator;
@@ -310,16 +310,17 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
 		Object currentValue = target.eGet(sf);
-		if(currentValue!=null && newPropInstance!=null){
-			String currentClassName = currentValue.getClass().getName();
-			String newClassName = newPropInstance.getClass().getName();
-			if(currentClassName.equals(newClassName) && currentValue instanceof IJavaInstance){
-				IJavaInstance currentInstance = (IJavaInstance) currentValue;
-				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
-				String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
-				if(newInitString1.equals(currentInitString))
-					return true; 
-			}
+		boolean currentValueSet = target.eIsSet(sf);
+		if(currentValueSet){
+				if(currentValue==null && newPropInstance==null)
+					return true;
+				if(currentValue!=null && newPropInstance!=null){
+					IJavaInstance currentInstance = (IJavaInstance) currentValue;
+					String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
+					String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
+					if(newInitString1.equals(currentInitString))
+						return true; 
+				}
 		}
 		
 		fPropInstance = newPropInstance;
