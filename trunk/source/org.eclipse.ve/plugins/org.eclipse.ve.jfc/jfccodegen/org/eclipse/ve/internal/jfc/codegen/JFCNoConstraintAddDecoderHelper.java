@@ -11,18 +11,15 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-21 22:51:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-18 18:36:02 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.compiler.ast.MessageSend;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
-
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -101,7 +98,7 @@ protected EObject add(BeanPart toAdd, BeanPart target, int index) {
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAddedPart(MessageSend)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAddedPart(MethodInvocation)
 	 */
 protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 	// TODO  Need to deal with multiple arguments, and nesting
