@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.20 $  $Date: 2004-04-02 20:11:08 $ 
+ *  $Revision: 1.21 $  $Date: 2004-04-02 22:20:48 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -348,13 +348,9 @@ IDiagramSourceDecoder fSourceDecoder = null;
 
 				fEventsProcessedCount = 0;
 				
-				boolean reloadRequired = fBeanModel == null || 
-				                         takeCurrentSnapshot(lockManager, allDocEvents, workingCopy);
-				if (fBeanModel==null) {
-					// we are doing reload from scratch 
-					allDocEvents.clear();
-				    lockManager.setThreadScheduled(false);
-				}
+				// We have to call takeCurrentSnapShot to clear events properly
+				boolean reloadRequired = takeCurrentSnapshot(lockManager, allDocEvents, workingCopy) ;
+				        reloadRequired |= fBeanModel == null ;
 				if (reloadRequired) {
 					Reload(fDisplay, monitor);
 				} else {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:56:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-02 22:20:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
  * @author Gili Mendel
  * @since 1.0.0
  */
-public abstract class AbstractCompositeDecoder extends ObjectDecoder {
+public abstract class AbstractCompositeDecoder extends SWTControlDecoder {
 
 	
 	protected String[] structuralFeatures;
