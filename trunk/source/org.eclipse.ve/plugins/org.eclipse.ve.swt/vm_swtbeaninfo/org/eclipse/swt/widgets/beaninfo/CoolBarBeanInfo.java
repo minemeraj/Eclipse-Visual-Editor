@@ -48,7 +48,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			// items
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, CoolBarMessages.getString("itemsDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("itemsSD"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("itemsSD"),//$NON-NLS-1$ 
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// locked
