@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SweetHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class SweetHelper {
 	
-	public static final String SWEET_STYLEBITS = "SWEET_STYLEBITS";
+	public static final String STYLE_BITS_ID = "org.eclipse.ve.sweet.stylebits";
 /**
  * Combine all of the style bits from the descriptor's classes superclass into the descriptor
  * This is used in most cases of Control
@@ -35,7 +35,7 @@ public static void mergeSuperclassStyleBits(BeanDescriptor descriptor){
 	Class superclass = descriptor.getBeanClass().getSuperclass();
 	try {
 		BeanInfo superclassBeanInfo = Introspector.getBeanInfo(superclass,superclass.getSuperclass());
-		while(superclassBeanInfo.getBeanDescriptor().getValue(SWEET_STYLEBITS) == null){
+		while(superclassBeanInfo.getBeanDescriptor().getValue(STYLE_BITS_ID) == null){
 			superclassBeanInfo = Introspector.getBeanInfo(superclass.getSuperclass(),superclass.getSuperclass().getSuperclass()); 			 
 		}
 		mergeStyleBits(styleBitsMap,superclassBeanInfo);
@@ -58,12 +58,12 @@ private static void setStyleBits(BeanDescriptor descriptor, Map styleBitsMap) {
  		System.arraycopy(nameInitStringValues,0,newStyleBits[index],1,3);
 		index++;
 	}
-	descriptor.setValue(SWEET_STYLEBITS,newStyleBits);	
+	descriptor.setValue(STYLE_BITS_ID,newStyleBits);	
 }
 
 
 private static void mergeStyleBits(Map styleBitsMap, BeanInfo superclassBeanInfo) {
-	Object[][] superclassStyleBits = (Object[][])superclassBeanInfo.getBeanDescriptor().getValue(SWEET_STYLEBITS);
+	Object[][] superclassStyleBits = (Object[][])superclassBeanInfo.getBeanDescriptor().getValue(STYLE_BITS_ID);
 	if(superclassStyleBits == null) {
 		return;
 	}	
@@ -83,7 +83,7 @@ private static void mergeStyleBits(Map styleBitsMap, BeanInfo superclassBeanInfo
 }
 
 private static Map getStyleBitsMap(BeanDescriptor descriptor) {
-	Object[] [] currentStyleBits = (Object[][])descriptor.getValue(SWEET_STYLEBITS);
+	Object[] [] currentStyleBits = (Object[][])descriptor.getValue(STYLE_BITS_ID);
 	Map styleBitsMap = new HashMap(currentStyleBits.length + 5);
 	for (int i = 0; i < currentStyleBits.length; i++) {
 		styleBitsMap.put(currentStyleBits[i][0], new Object[] { currentStyleBits[i][1] , currentStyleBits[i][2] , currentStyleBits [i][3]});

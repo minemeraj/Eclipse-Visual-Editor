@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -29,7 +29,7 @@ public class ControlBeanInfo extends SimpleBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(Control.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
 			{ "border" , "border" , Boolean.FALSE , new Object[] {
 			    "BORDER" , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				

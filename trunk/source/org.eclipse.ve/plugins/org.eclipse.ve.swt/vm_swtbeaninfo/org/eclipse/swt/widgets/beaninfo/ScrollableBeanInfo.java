@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -29,7 +29,7 @@ public class ScrollableBeanInfo extends SimpleBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(Scrollable.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {							
 			{ "horizontalScroll" , "horizontalScroll" , Boolean.FALSE , new Object[] {
 			    "H_SCROLL" , "org.eclipse.swt.SWT.H_SCROLL" , new Integer(SWT.H_SCROLL)				
@@ -39,7 +39,6 @@ public BeanDescriptor getBeanDescriptor() {
 			} }
 		}
 	);
-	// Do not inherit from Composite otherwise we will pick up things like noMergePaintEvents and noBackground
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-10 21:28:24 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -47,7 +47,10 @@ import org.eclipse.ve.internal.propertysheet.EToolsPropertyDescriptor;
  */
 public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	
-	private static String[] EXPERT_FILTER_FLAGS = new String[] {IPropertySheetEntry.FILTER_ID_EXPERT};	
+	private static String[] EXPERT_FILTER_FLAGS = new String[] {IPropertySheetEntry.FILTER_ID_EXPERT};
+	private static final Object SWEET_STYLE_ID = "org.eclipse.ve.sweet.stylebits";
+	private static final String SWT_TYPE_ID = "org.eclipse.swt.SWT.";
+	private static final String NONE = "NONE";
 	
 	class StyleBitPropertyID{
 		String propertyName;
@@ -85,7 +88,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			if(fUnqualifiedInitStrings == null){
 				fUnqualifiedInitStrings = new String[fInitStrings.length];
 				for (int i = 0; i < fInitStrings.length; i++) {
-					if(fInitStrings[i].startsWith("org.eclipse.swt.SWT.")){
+					if(fInitStrings[i].startsWith(SWT_TYPE_ID)){
 						// Take out the leading "org.eclipse.swt."
 						fUnqualifiedInitStrings[i] = fInitStrings[i].substring(20);
 					} else {
@@ -203,7 +206,7 @@ public static class SweetStyleBits{
 }
 public static Map getStyleDetails(BeanDecorator beanDecorator){
 
-	FeatureAttributeValue value = (FeatureAttributeValue) beanDecorator.getAttributes().get("SWEET_STYLEBITS");
+	FeatureAttributeValue value = (FeatureAttributeValue) beanDecorator.getAttributes().get(SWEET_STYLE_ID);
 	// If the value has been previously calculated it is cached so return it
 	if(value != null && value.isSetValueJava()) return (Map)value.getValueJava();
 	// otherwise derive it from the target values
@@ -263,7 +266,6 @@ private WidgetProxyAdapter getWidgetProxyAdapter(){
 }
 
 public Object getPropertyValue(Object descriptorID) {
-	// check = 50331656
 	if(descriptorID instanceof EStructuralFeature) {
 		return super.getPropertyValue(descriptorID);
 	} else if(descriptorID instanceof StyleBitPropertyID) {
@@ -285,8 +287,18 @@ public Object getPropertyValue(Object descriptorID) {
 public boolean isPropertySet(Object descriptorID) {
 	if(descriptorID instanceof EStructuralFeature){
 		return super.isPropertySet(descriptorID);
+	} else if (descriptorID instanceof StyleBitPropertyID) {
+		int currentValue = ((Integer)getPropertyValue(descriptorID)).intValue();
+		// If the current property value is -1 then this means it is the "UNSET" value from a single value'd property and by definition must be not set
+		if(currentValue == -1) return false;
+		// The explicit style is obtained by parsing the actual initString style bit to see which were set on
+		int explicitStyle = getWidgetProxyAdapter().getExplicitStyle();
+		// The current value is the one set on the actual target VM
+
+		// If the explicit style bitAND the current value is 1 then it is set
+		return (currentValue & explicitStyle) != 0;
 	} else {
-		return false; // TODO
+		return false;
 	}
 }
 
@@ -334,7 +346,7 @@ public void setPropertyValue(Object feature, Object val) {
 					// The field name is in the same family as the one already set
 					if(unset) {
 						// When we are down to the last property replace it with the value of NONE
-						fieldAccess.setField("NONE");
+						fieldAccess.setField(NONE);
 					} else {
 						fieldAccess.setField(propertyID.getInitString(val));
 					}
@@ -366,44 +378,16 @@ public void setPropertyValue(Object feature, Object val) {
 				if(unset){
 					// Scan the arguments to find which one is the set value of the one we are unsetting
 					String setInitString = propertyID.fInitStrings[0];
-					if(setInitString.startsWith("org.eclipse.swt.SWT.")) setInitString = setInitString.substring(20);
+					if(setInitString.startsWith(SWT_TYPE_ID)) setInitString = setInitString.substring(20);
 					if( leftStyle.getField().equals(setInitString)){
-						// The LHS needs to be removed
-						// How we manipulate the infix depends on how many style bits it includes
-						if(inFix.getExtendedOperands().size() == 0){
-							// If it has no extended operands all that is left is the right one, so it becomes a PTFieldAccess							
-							classInstanceCreation.getArguments().remove(1);
-							classInstanceCreation.getArguments().add(inFix.getRightOperand());
-						} else {
-							// The right becomes the left
-							inFix.setLeftOperand(inFix.getRightOperand());
-							// The first operand becomes the right onw
-							inFix.setRightOperand((PTExpression) inFix.getExtendedOperands().get(0));
-							if(inFix.getExtendedOperands().size() == 1) {
-								// If there is a single operand just remove it as we have made it the new right one
-								inFix.getExtendedOperands().clear();
-							} else {
-								// Shuffle all operands down one
-								// TODO
-							} 							
-						}
+						inFix.setLeftOperand(null);
+						classInstanceCreation.getArguments().remove(1);
+						classInstanceCreation.getArguments().add(inFix.asCompressedExpression());
 						// The RHS needs to be removed						
 					} else if( rightStyle.getField().equals(setInitString)){
-						if(inFix.getExtendedOperands().size() == 0){
-							// If it has no extended operands all that is left is the left one, so it becomes a PTFieldAccess							
-							classInstanceCreation.getArguments().remove(1);
-							classInstanceCreation.getArguments().add(inFix.getLeftOperand());
-						} else {
-							// The first operand becomes the right onw
-							inFix.setRightOperand((PTExpression) inFix.getExtendedOperands().get(0));
-							if(inFix.getExtendedOperands().size() == 1) {
-								// If there is a single operand just remove it as we have made it the new right one
-								inFix.getExtendedOperands().clear();
-							} else {
-								// Shuffle all operands down one
-								// TODO
-							}
-						}
+						inFix.setRightOperand(null);
+						classInstanceCreation.getArguments().remove(1);
+						classInstanceCreation.getArguments().add(inFix.asCompressedExpression());						
 					} else {
 						// The bit being unset must be an extended operand - Find it and remove it						
 						int index = 0;
@@ -459,12 +443,12 @@ public void setPropertyValue(Object feature, Object val) {
  */
 private boolean isSameStyleFamily(String existingInitString, StyleBitPropertyID propertyID){
 	// Trim the field name
-	if(existingInitString.startsWith("org.eclipse.swt.SWT.")){
+	if(existingInitString.startsWith(SWT_TYPE_ID)){
 		// Copy everything after "org.eclipse.swt." which is 
 		existingInitString = existingInitString.substring(20);
 	}
 	// NONE is always replaced
-	if(existingInitString.equals("NONE")) return true;
+	if(existingInitString.equals(NONE)) return true;
 	// Iterate over the style bits to see if any of them are in the same family
 	return propertyID.includeInitString(existingInitString);
 }

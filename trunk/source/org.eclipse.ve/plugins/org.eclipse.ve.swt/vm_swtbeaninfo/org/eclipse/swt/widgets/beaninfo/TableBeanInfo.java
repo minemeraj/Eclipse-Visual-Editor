@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -46,7 +46,7 @@ public BeanDescriptor getBeanDescriptor() {
 			} }			
 		}
 	);
-	SweetHelper.mergeStyleBits(descriptor, new Class[] {Control.class});
+	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
 	

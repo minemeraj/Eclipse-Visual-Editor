@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -28,7 +28,8 @@ public class DecorationsBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(Decorations.class);
-	descriptor.setValue("SWEET_STYLEBITS",
+	descriptor.setValue(
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
 			{ "trim" , "trim" , Boolean.FALSE , new Object[] {
 			    "SHELL_TRIM" , "org.eclipse.swt.SWT.SHELL_TRIM" , new Integer(SWT.SHELL_TRIM) ,				
