@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenLockManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-30 14:42:55 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-02 16:34:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -52,7 +52,7 @@ public class CodegenLockManager implements ICodegenLockManager {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager#isThreadScheduled()
 	 */
-	public boolean isThreadScheduled() {
+	public synchronized boolean isThreadScheduled() {
 		return threadScheduled;
 	}
 

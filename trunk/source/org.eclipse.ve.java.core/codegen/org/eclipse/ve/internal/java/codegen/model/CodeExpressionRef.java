@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.17 $  $Date: 2004-04-01 21:35:50 $ 
+ *  $Revision: 1.18 $  $Date: 2004-04-02 16:34:43 $ 
  */
 
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -458,7 +459,7 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 	    setOffset(off) ;
 	    
 	    // Model is in update mode already here
-	    CodeGenUtil.snoozeAlarm(fBean.getEObject(),fBean.getModel().getCompositionModel().getModelResourceSet()) ;
+	    CodeGenUtil.snoozeAlarm(fBean.getEObject(),fBean.getModel().getCompositionModel().getModelResourceSet(), new HashMap()) ;
 	    
 	    
 	}catch(Exception e){
