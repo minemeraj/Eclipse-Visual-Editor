@@ -498,6 +498,14 @@ public class GridLayoutHelper {
 						}
 					}
 				}
+				if (c == 0) break;
+				totalHeight = 0;
+				for (int i=0; i<rowCount; i++) {
+					totalHeight += heights [i];
+				}
+				delta = (availableHeight - totalHeight) / c;
+				remainder = (availableHeight - totalHeight) % c;
+				last = -1;
 			}
 		}
 	}
