@@ -11,6 +11,7 @@
 package org.eclipse.ve.internal.swt.targetvm;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -187,14 +188,17 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	public void captureImage(){
 		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
+				DataOutputStream os = null;
+				Image image = null;
 				try{
 					final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID,0));
 					//----					
 					IImageCapture grabber = getImageCapturer();
 					//----
-					Image image = grabber.getImage(fControl,true);
+					image = grabber.getImage(fControl,true);
 					final ImageData imageData = image.getImageData();
 					image.dispose();
+					image = null;
 					byte[] data = imageData.data;					
 					final int[] pixels = new int[data.length];
 					for(int i = 0; i < data.length; i++){
@@ -225,6 +229,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 					}
 
 					outputStream.close();
+					os = null;
 					fServer.doCallback(new ICallbackRunnable(){
 						public Object run(ICallbackHandler handler) throws CommandException{
 							return handler.callbackWithParms(fCallbackID,IMAGE_FINISHED,null);
@@ -232,6 +237,15 @@ public abstract class ControlManager implements ICallback , ControlListener {
 					});
 				} catch (Exception exc){
 					exc.printStackTrace();	
+				} finally {
+					if (image != null)
+						image.dispose();
+					if (os != null)
+						try {
+							os.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 				}
 			}
 		});
