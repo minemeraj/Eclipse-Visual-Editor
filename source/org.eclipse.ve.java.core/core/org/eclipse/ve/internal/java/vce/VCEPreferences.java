@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-02 22:39:07 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-19 15:37:06 $ 
  */
 
 
@@ -33,7 +33,6 @@ public class VCEPreferences {
 	public static final String OPEN_JAVABEANS_VIEW = "OPEN_JAVABEANS_VIEW"; //$NON-NLS-1$		
 	public static final String NOTEBOOK_PAGE = "NOTEBOOK_PAGE"; //$NON-NLS-1$
 	public static final String SELECT_SOURCE = "SELECT_SOURCE"; //$NON-NLS-1$
-	public static final String SHOW_GEF_PALETTE = "SHOW_GEF_PALETTE"; //$NON-NLS-1$
 	public static final String SOURCE_SYNC_DELAY = "SOURCE_SYNC_DELAY_NEW" ; //$NON-NLS-1$
 	public static final int	   DEFAULT_SYNC_DELAY = 1000 ;
 	public static final String SOURCE_DELAY_FACTOR = "SOURCE_DELAY_FACTOR_NEW" ; //$NON-NLS-1$
@@ -41,13 +40,7 @@ public class VCEPreferences {
     public static final String GENERATE_COMMENT = "GENERATE_EXPRESSION_COMMENT" ; //$NON-NLS-1$
     public static final String GENERATE_TRY_CATCH_BLOCK = "GENERATE_TRY_CATCH_BLOCK"; //$NON-NLS-1$
 //    public static String REQUIRE_IVJ_COMPONENTS = "REQUIRE_IVJ_COMPONENTS"; //$NON-NLS-1$
-    // Store the sash widths for the palette so that as the user resizes the palette sash
-    // it is saved and retrieved for new editors
-    public static final String PALETTE_SASH_LEFT_RATIO = "PALETTE_SASH_LEFT_RATIO"; //$NON-NLS-1$
-    public static final String PALETTE_SASH_RIGHT_RATIO = "PALETE_SASH_RIGHT_RATIO"; //$NON-NLS-1$
-    public static final int	   DEFAULT_PALETTE_SASH_LEFT_RATIO = 1;
-    public static final int	   DEFAULT_PALETTE_SASH_RIGHT_RATIO = 4;    
-    
+  
     public static final String LOOK_AND_FEEL = "lookandfeel"; //$NON-NLS-1$
     public static final String LF_NAME = "name"; //$NON-NLS-1$
     public static final String LF_CLASS = "class"; //$NON-NLS-1$
@@ -146,14 +139,11 @@ public static JavaVEPlugin getPlugin() {
 public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	// TODO A lot of these preferences shouldn't be in here. They are really in different plugs, like the source sync
 	// and style stuff are in codegen and max_awt... are in visuals.
-	aStore.setDefault(VCEPreferences.SHOW_GEF_PALETTE, true) ;
 	aStore.setDefault(VCEPreferences.OPEN_JAVABEANS_VIEW, true);
 	aStore.setDefault(VCEPreferences.OPEN_PROPERTIES_VIEW, true);
 	aStore.setDefault(VCEPreferences.SOURCE_SYNC_DELAY,VCEPreferences.DEFAULT_SYNC_DELAY) ;
 	aStore.setDefault(VCEPreferences.SOURCE_DELAY_FACTOR,VCEPreferences.DEFAULT_L2R_FACTOR) ;	
 	aStore.setValue(VCEPreferences.SOURCE_DELAY_FACTOR,VCEPreferences.DEFAULT_L2R_FACTOR) ;	// Always locked in at DEFAULT_L2R_FACTOR so that SOURCE_SYNC_DELAY is the final delay value 
-	aStore.setDefault(VCEPreferences.PALETTE_SASH_LEFT_RATIO,VCEPreferences.DEFAULT_PALETTE_SASH_LEFT_RATIO);
-	aStore.setDefault(VCEPreferences.PALETTE_SASH_RIGHT_RATIO,VCEPreferences.DEFAULT_PALETTE_SASH_RIGHT_RATIO);
 	aStore.setDefault(VCEPreferences.JVE_PATTERN_STYLE_ID, "GetterStyle");		 //$NON-NLS-1$
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_WIDTH, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_WIDTH);
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_HEIGHT, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT);

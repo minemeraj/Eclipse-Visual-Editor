@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-04 23:27:17 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-19 15:37:06 $ 
  */
 
 import java.util.ArrayList;
@@ -64,7 +64,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 	protected Button splitRadioButton;
 	protected Button notebookRadioButton;
-	protected Button showGEFPaletteButton;
 	protected Button generateExpressionComment;
 	protected Table stylesTable;
 	protected StackLayout stylesContributorAreaLayout;
@@ -77,8 +76,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Image fJavaBeansToSourceImage;
 	protected Image fSourceToJavaBeansImage;
 	protected Image fJavaBeansViewImage;
-	protected Image fPropertiesViewImage;
-	protected Image fPaletteViewerImage;	
+	protected Image fPropertiesViewImage;	
 
 	protected int fLookAndFeelSelected;
 	
@@ -198,7 +196,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		Group group = createGroup(appearanceComposite, VCEMessages.getString("PreferencePage.EditorGroup.Title"), 2); //$NON-NLS-1$
 		splitRadioButton = createRadioButton(group, VCEMessages.getString("PreferencePage.EditorGroup.SplitPaneOrientation")); //$NON-NLS-1$
 		notebookRadioButton = createRadioButton(group, VCEMessages.getString("PreferencePage.EditorGroup.UseNoteBook")); //$NON-NLS-1$
-		showGEFPaletteButton = createCheckBox(group, VCEMessages.getString("PreferencePage.EditorGroup.PaletteInEditor.InSplitPane"), 0); //$NON-NLS-1$
 
 		Composite openComposite = new Composite(appearanceComposite, SWT.NONE);
 		openComposite.setLayout(new GridLayout(2, false));
@@ -676,7 +673,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		generateExpressionComment.setSelection(fStore.getBoolean(VCEPreferences.GENERATE_COMMENT));
 		generateTryCatchBlock.setSelection(fStore.getBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
-		showGEFPaletteButton.setSelection(fStore.getBoolean(VCEPreferences.SHOW_GEF_PALETTE));
 		sourceToVisual.setText(fStore.getString(VCEPreferences.SOURCE_SYNC_DELAY));
 		calculateTotalSourceToVisualTime();
 	}
@@ -757,7 +753,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.SHOW_LIVE_WINDOW, showWindowCheckBox.getSelection());
 		// Save whether to show the VCE and Source as a split pane or notebook
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
-		fStore.setValue(VCEPreferences.SHOW_GEF_PALETTE, showGEFPaletteButton.getSelection());
 
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
@@ -817,7 +812,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		generateExpressionComment.setSelection(store.getDefaultBoolean(VCEPreferences.GENERATE_COMMENT));
 		generateTryCatchBlock.setSelection(store.getDefaultBoolean(VCEPreferences.GENERATE_TRY_CATCH_BLOCK));
 		splitRadioButton.setSelection(!store.getDefaultBoolean(VCEPreferences.NOTEBOOK_PAGE));
-		showGEFPaletteButton.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_GEF_PALETTE));
 		sourceToVisual.setText(Integer.toString(VCEPreferences.DEFAULT_SYNC_DELAY));
 		
 		openPropertiesViewIfRequired.setSelection(true);
