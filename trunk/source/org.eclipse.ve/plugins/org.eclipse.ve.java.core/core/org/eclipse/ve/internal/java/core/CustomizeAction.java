@@ -11,14 +11,13 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.11 $  $Date: 2005-03-18 18:45:05 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.ui.actions.EditorPartAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -37,7 +36,7 @@ public class CustomizeAction extends SelectionAction {
 		setText(JavaMessages.getString("Action.Customize.Text")); //$NON-NLS-1$
 	}
 	/**
-	 * @see EditorPartAction#calculateEnabled()
+	 * @see org.eclipse.gef.ui.actions.EditorPartAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
 		List editParts = getSelectedObjects();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-03-18 18:38:17 $ 
+ *  $Revision: 1.9 $  $Date: 2005-03-18 18:44:38 $ 
  */
 
 import java.util.*;
@@ -20,11 +20,13 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.*;
+
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cdm.impl.DiagramDataImpl;
 import org.eclipse.ve.internal.java.core.BeanUtilities;

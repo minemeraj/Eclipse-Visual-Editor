@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.90 $  $Date: 2005-03-10 16:52:08 $ 
+ *  $Revision: 1.91 $  $Date: 2005-03-18 18:49:20 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -88,9 +88,6 @@ import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
-
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.CDEUtilities.EditPartNamePath;
@@ -98,22 +95,17 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.properties.*;
-
-import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
-import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
-import org.eclipse.ve.internal.java.vce.VCEPreferences;
-import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
-import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
-
+import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
