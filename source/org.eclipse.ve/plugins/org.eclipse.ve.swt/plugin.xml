@@ -166,7 +166,7 @@
    
   <extension
          point="org.eclipse.ve.java.core.choosebean">
-      <contributor
+      <contributor container="SWT_CONTAINER" plugin="org.eclipse.swt"
             class="org.eclipse.ve.internal.swt.SWTChooseBeanContributor">
       </contributor>
    </extension>   
