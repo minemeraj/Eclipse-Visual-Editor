@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 14:09:40 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 23:19:15 $ 
  */
 
 import java.util.*;
@@ -22,13 +22,12 @@ import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.HoldProcessingCommand;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;
-
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 /**
  * Base LayoutSwitcher class.
  */
@@ -62,7 +61,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.
 			IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(containerBean);			
-			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, policy.getEditDomain());
+			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, policy.getEditDomain());
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}
@@ -102,7 +101,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.
 			IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy(containerBean);			
-			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, policy.getEditDomain());
+			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, policy.getEditDomain());
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}

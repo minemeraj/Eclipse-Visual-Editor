@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 14:21:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 23:19:15 $ 
  */
 
 import java.util.*;
@@ -25,14 +25,16 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.jem.internal.instantiation.base.*;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.ve.internal.java.visual.*;
-
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 /**
  * TreeEditPart for an awt Container.
  */
@@ -131,7 +133,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE){
 				IBeanProxy containerProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)getModel());
 				if (containerProxy != null) {
-					ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, EditDomain.getEditDomain(this));
+					ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
 					lpHelper = lpFactory.getLayoutPolicyHelper(null);
 				}
 			}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-03 23:18:20 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-05 23:19:15 $ 
  */
 
 import java.util.List;
@@ -388,17 +388,20 @@ public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentM
 	}
 	return (IArrayBeanProxy) constants.getManagerLocationMethodProxy.invokeCatchThrowableExceptions(aComponentManager);
 }
-
+/**
+ * Return the ILayoutPolicyFactory for the layout manager of a containerProxy
+ */
+public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanProxy containerProxy, EditDomain domain) {
+	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
+	return getLayoutPolicyFactoryFromLayoutManger(layoutManagerProxy, domain);
+}
 /**
  * Return the ILayoutPolicyFactory for the layout manager of a LayoutManagerProxy
  * Note: if containerProxy is null, then editdomain can be null.
  */
-public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanProxy containerProxy, EditDomain domain) {
-	if (containerProxy == null)
+public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanProxy layoutManagerProxy, EditDomain domain) {
+	if (layoutManagerProxy == null)
 		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
-	
-	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
-	if(layoutManagerProxy == null) return new NullLayoutPolicyFactory(); // There is nothing we can check against, so we hardcode null.
 	
 	ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(layoutManagerProxy.getTypeProxy(),domain);
 	if(factory == null){

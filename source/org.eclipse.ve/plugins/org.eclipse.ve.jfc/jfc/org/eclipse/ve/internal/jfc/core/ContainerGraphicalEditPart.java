@@ -11,9 +11,8 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-27 16:36:10 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 23:19:15 $ 
  */
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
@@ -27,16 +26,15 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.visual.*;
-
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 /**
  * ViewObject for the awt Container.
@@ -77,7 +75,7 @@ protected void createLayoutEditPolicy() {
 	IBeanProxy containerProxy = getComponentProxy().getBeanProxy();
 	if (containerProxy != null) {
 		// a container was created. 
-		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(containerProxy, EditDomain.getEditDomain(this));
+		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
 		if(lpFactory.getLayoutInputPolicyClass() != null){
 			layoutPolicy = VisualUtilities.getLayoutPolicy(lpFactory.getLayoutInputPolicyClass(),getContainerPolicy());
 		}
