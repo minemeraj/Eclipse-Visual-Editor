@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-20 14:56:02 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-16 13:52:25 $ 
  */
+
+import java.util.StringTokenizer;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -33,22 +35,26 @@ import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
- * Cell editor for javax.swing.ImageIcon.
- * TODO Needs to be changed to use parse tree all of the way through to Icon dialog and beyond.
- * @version 	1.0
+ * Cell editor for javax.swing.ImageIcon. TODO Needs to be changed to use parse
+ * tree all of the way through to Icon dialog and beyond.
+ * 
+ * @version 1.0
  * @author
  */
-public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor, INeedData {
+public class ImageCellEditor extends DialogCellEditor
+		implements
+			IJavaCellEditor,
+			INeedData {
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$
 	private static final String IMAGE_INITSTRING_START = "org.eclipse.swt.graphics.Image(org.eclipse.swt.widgets.Display.getCurrent()"; //$NON-NLS-1$
-	private static final String IMAGE_CLASSNAME = "org.eclipse.swt.graphics.Image";
+	private static final String IMAGE_CLASSNAME = "org.eclipse.swt.graphics.Image"; //$NON-NLS-1$
 
 	public ImageCellEditor(Composite parent) {
 		super(parent);
 	}
-	/* 
+	/*
 	 * Create an instance of the MOF BeanType with string specified
 	 */
 	private Object createValue(String path) {
@@ -57,83 +63,105 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 		}
 
 		this.path = path;
-		
-		
+
 		return BeanUtilities.createJavaObject(IMAGE_CLASSNAME,
-			JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
+				JavaEditDomainHelper.getResourceSet(fEditDomain),
+				getJavaAllocation());
 	}
-	
+
 	/**
 	 * Return the JavaAllocation for the current value.
-	 * @return
 	 * 
-	 * @since 1.0.0
+	 * @return @since 1.0.0
 	 */
 	public JavaAllocation getJavaAllocation() {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS2);
-		String initString = getJavaInitializationString(); 
+		String initString = getJavaInitializationString();
 		parser.setSource(initString.toCharArray());
-		parser.setSourceRange(0,initString.length());
-		parser.setKind(ASTParser.K_EXPRESSION) ;		
-        ASTNode ast = parser.createAST(null);
-        if (ast == null)
-        	return null;	// It didn't parse.
-	
-        ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-        alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) ast));
+		parser.setSourceRange(0, initString.length());
+		parser.setKind(ASTParser.K_EXPRESSION);
+		ASTNode ast = parser.createAST(null);
+		if (ast == null)
+			return null; // It didn't parse.
+
+		ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE
+				.createParseTreeAllocation();
+		alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver())
+				.createExpression((Expression) ast));
 		return alloc;
 	}
-	
+
 	/*
 	 * Find the argument to the new Image Turn it into a string.
 	 */
-	public static String getPathFromInitializationAllocation(JavaAllocation allocation) {
+	public static String getPathFromInitializationAllocation(
+			JavaAllocation allocation) {
 		if (allocation instanceof ParseTreeAllocation) {
-			PTExpression exp = ((ParseTreeAllocation) allocation).getExpression();
-			if (exp instanceof PTClassInstanceCreation && ((PTClassInstanceCreation) exp).getType().equals(IMAGE_CLASSNAME) && ((PTClassInstanceCreation) exp).getArguments().size() == 2) {
+			PTExpression exp = ((ParseTreeAllocation) allocation)
+					.getExpression();
+			if (exp instanceof PTClassInstanceCreation
+					&& ((PTClassInstanceCreation) exp).getType().equals(
+							IMAGE_CLASSNAME)
+					&& ((PTClassInstanceCreation) exp).getArguments().size() == 2) {
 				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
-				((PTExpression) ((PTClassInstanceCreation) exp).getArguments().get(1)).accept(flattener);
+				((PTExpression) ((PTClassInstanceCreation) exp).getArguments()
+						.get(1)).accept(flattener);
 				return flattener.getResult();
 			}
 		}
-		
-		return "";	// Don't know how to handle if not an ParseTree allocation.
+
+		return ""; // Don't know how to handle if not an ParseTree allocation. //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * getJavaInitializationString method comment.
 	 */
 	public String getJavaInitializationString() {
 		//return path != null ? "" : "";
-		if ((path==null)||(path.equals("")))return "";
-		return "new " + IMAGE_INITSTRING_START + ',' + path + ")"; //$NON-NLS-1$
+		if ((path == null) || (path.equals(""))) //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		return "new " + IMAGE_INITSTRING_START + ',' + path + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected void updateContents(Object aValue) {
-		Label lbl = getDefaultLabel(); 
+		Label lbl = getDefaultLabel();
 		if (lbl == null)
 			return;
 
-		if (aValue != null)
-			lbl.setText(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
-		else
-			lbl.setText("");
+		if (aValue != null) {
+			String initStr = getPathFromInitializationAllocation(((IJavaObjectInstance) aValue)
+					.getAllocation());
+			int ind_first = initStr.indexOf("\""); //$NON-NLS-1$
+			int ind_last = initStr.lastIndexOf("\""); //$NON-NLS-1$
+			if ((ind_first != -1) && (ind_last != -1)) {
+				initStr = initStr.substring(ind_first + 1, ind_last);
+				StringTokenizer tokenizer = new StringTokenizer(initStr,"\"\\/"); //$NON-NLS-1$
+				String fname = ""; //$NON-NLS-1$
+				while (tokenizer.hasMoreTokens()) {
+					fname = tokenizer.nextToken();
+				}
+				lbl.setText(fname);
+				return;
+			}
+		}
+		lbl.setText(""); //$NON-NLS-1$
 	}
-
 	public Object openDialogBox(Control cellEditorWindow) {
-		ImageDialog iconDialog =
-			new ImageDialog(
-				cellEditorWindow.getShell(),
-				((IFileEditorInput) fEditDomain.getEditorPart().getEditorInput()).getFile().getProject());
+		ImageDialog iconDialog = new ImageDialog(cellEditorWindow.getShell(),
+				((IFileEditorInput) fEditDomain.getEditorPart()
+						.getEditorInput()).getFile().getProject());
 
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();
 		if (aValue != null) {
-				iconDialog.setValue(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
+			iconDialog
+					.setValue(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue)
+							.getAllocation()));
 		}
-		
+
 		int returnCode = iconDialog.open();
-		// The return code says whether or not OK was pressed on the property editor
+		// The return code says whether or not OK was pressed on the property
+		// editor
 		if (returnCode == Window.OK) {
 			return createValue(iconDialog.getValue());
 		} else

@@ -12,8 +12,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-25 02:34:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-16 13:52:26 $ 
  */
+import java.util.StringTokenizer;
+
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
@@ -96,7 +98,7 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 			}
 		}
 
-		return ""; // Don't know how to handle if not an ParseTree allocation.
+		return ""; // Don't know how to handle if not an ParseTree allocation. //$NON-NLS-1$
 	}
 
 	/**
@@ -111,12 +113,24 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 		if (lbl == null)
 			return;
 
-		if (aValue != null)
-			lbl.setText(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
-		else
-			lbl.setText(""); //$NON-NLS-1$
+		if (aValue != null) {
+			String initStr = getPathFromInitializationAllocation(((IJavaObjectInstance) aValue)
+					.getAllocation());
+			int ind_first = initStr.indexOf("\""); //$NON-NLS-1$
+			int ind_last = initStr.lastIndexOf("\""); //$NON-NLS-1$
+			if ((ind_first != -1) && (ind_last != -1)) {
+				initStr = initStr.substring(ind_first + 1, ind_last);
+				StringTokenizer tokenizer = new StringTokenizer(initStr,"\"\\/"); //$NON-NLS-1$
+				String fname = ""; //$NON-NLS-1$
+				while (tokenizer.hasMoreTokens()) {
+					fname = tokenizer.nextToken();
+				}
+				lbl.setText(fname);
+				return;
+			}
+		}
+		lbl.setText(""); //$NON-NLS-1$
 	}
-
 	public Object openDialogBox(Control cellEditorWindow) {
 		IconDialog iconDialog = new IconDialog(cellEditorWindow.getShell(), ((IFileEditorInput) fEditDomain.getEditorPart().getEditorInput())
 				.getFile().getProject());
