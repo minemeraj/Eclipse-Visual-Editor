@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-17 12:23:39 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-18 16:24:11 $ 
  */
 
 import java.util.*;
@@ -44,6 +44,7 @@ import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.CDMFactory;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
@@ -360,11 +361,30 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 						storeSelectionHistory();
 					}
 					String realFQN = type.getFullyQualifiedName('$');
-					EClass eclass = (EClass) Utilities.getJavaClass(realFQN, resourceSet);
-					EObject eObject = eclass.getEPackage().getEFactoryInstance().create(eclass);
+					// If there is a prototype factory use this to create the default instance
+					PrototypeFactory prototypeFactory = null;
+					EClass eClass = (EClass) Utilities.getJavaClass(realFQN, resourceSet);					
+					try {
+						
+						ClassDescriptorDecorator decorator =
+							(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
+									eClass,
+									ClassDescriptorDecorator.class,
+									PrototypeFactory.PROTOTYPE_FACTORY_KEY);
+						String prototypeFactoryName = (String)decorator.getKeyedValues().get(PrototypeFactory.PROTOTYPE_FACTORY_KEY);
+						prototypeFactory = (PrototypeFactory) CDEPlugin.createInstance(null,prototypeFactoryName);
+					} catch (Exception e) {
+						JavaVEPlugin.getPlugin().getLogger().log(Level.WARNING,e);
+					}
+					EObject eObject = null;
+					if(prototypeFactory == null){
+						eObject = eClass.getEPackage().getEFactoryInstance().create(eClass);
+					} else {
+						eObject = prototypeFactory.createPrototype(eClass);
+					}
 					setBeanName(eObject, beanLabelText);
 					newResults[(i*2)] = eObject;
-					newResults[(i*2)+1] = eclass;
+					newResults[(i*2)+1] = eClass;
 				}
 			}
 			return newResults;
