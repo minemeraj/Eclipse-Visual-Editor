@@ -11,10 +11,13 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JProgressBarBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
+
+import javax.swing.BoundedRangeModel;
+import javax.swing.plaf.ProgressBarUI;
 
 public class JProgressBarBeanInfo extends IvjBeanInfo {
 		
@@ -263,7 +266,55 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	)		  	
+		  	),
+			// getModel()
+			super.createMethodDescriptor(getBeanClass(),"getModel",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JProgressBarMessages.getString("getModel().Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("getModel().Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setModel(BoundedRangeModel)
+			super.createMethodDescriptor(getBeanClass(),"setModel",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JProgressBarMessages.getString("setModel(BoundedRangeModel).Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("setModel(BoundedRangeModel).Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("model", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JProgressBarMessages.getString("setModel(BoundedRangeModel).model.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			BoundedRangeModel.class
+	      		}		    		
+		  	),
+			// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JProgressBarMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("getUI().Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(ProgressBarUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JProgressBarMessages.getString("setUI(ProgressBarUI).Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("setUI(ProgressBarUI).Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("progressBarUI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JProgressBarMessages.getString("setUI(ProgressBarUI).progressBarUI.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			ProgressBarUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -335,7 +386,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		DISPLAYNAME, JProgressBarMessages.getString("stringPainted.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JProgressBarMessages.getString("stringPainted.Desc") //$NON-NLS-1$
 	    		}
-	    	)
+	    	),
+	    	// model
+	    	super.createPropertyDescriptor(getBeanClass(),"model", new Object[]{ //$NON-NLS-1$
+	    		DISPLAYNAME, JProgressBarMessages.getString("model.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("model.Desc"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
+	    	// ui
+	    	super.createPropertyDescriptor(getBeanClass(),"uI", new Object[]{ //$NON-NLS-1$
+	    		DISPLAYNAME, JProgressBarMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JProgressBarMessages.getString("ui.Desc"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

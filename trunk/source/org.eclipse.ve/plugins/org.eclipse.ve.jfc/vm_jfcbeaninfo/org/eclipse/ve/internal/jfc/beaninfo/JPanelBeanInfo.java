@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JPanelBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -85,6 +85,36 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPanelMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Get the ComboBoxUI object",
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE	      		
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(PanelUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPanelMessages.getString("setUI(PanelUI).Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Set the panel UI",
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("ui", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JPanelMessages.getString("setUI(PanelUI).aUI.Name"), //$NON-NLS-1$
+	      				// SHORTDESCRIPTION, "Panel UI",
+	      				}
+	      			)
+	      		},
+	      		new Class[] {
+	      			javax.swing.plaf.PanelUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -97,7 +127,21 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
  * @return java.beans.PropertyDescriptor[]
  */
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
-	return( new PropertyDescriptor[0]);
+	try {
+			PropertyDescriptor aDescriptorList[] = {
+				// ui
+				super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+						DISPLAYNAME, JPanelMessages.getString("ui.Name"), //$NON-NLS-1$
+						SHORTDESCRIPTION, JPanelMessages.getString("ui.Desc"), //$NON-NLS-1$
+						EXPERT, Boolean.TRUE,
+				}
+				),
+				};
+			return aDescriptorList;
+		}catch(Throwable t) {
+			handleException(t);
+		}
+	return null;
 }
 
 

@@ -11,10 +11,10 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FrameBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
-import java.beans.*;
+import java.beans.ParameterDescriptor;
 
 public class FrameBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle resframe = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.frame");  //$NON-NLS-1$
@@ -194,7 +194,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] { 
 	      			String.class 
 	      		}	    		
-		  	)
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -219,7 +219,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	super.createPropertyDescriptor(getBeanClass(),"menuBar", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, resframe.getString("menuBarDN"),		    	 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resframe.getString("menuBarSD"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	EXPERT, Boolean.TRUE,
 	    		}
 	    	),
 			// resizable
@@ -234,7 +234,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resframe.getString("titleSD"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE
 	    		}
-	    	)
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

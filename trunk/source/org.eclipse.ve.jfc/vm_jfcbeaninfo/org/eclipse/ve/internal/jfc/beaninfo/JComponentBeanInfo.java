@@ -11,10 +11,12 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JComponentBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
+
+import javax.swing.TransferHandler;
 
 public class JComponentBeanInfo extends IvjBeanInfo {
 
@@ -414,7 +416,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	   				DISPLAYNAME, JComponentMessages.getString("getActionMap().Name"), //$NON-NLS-1$
 	      			// SHORTDESCRIPTION, "Get the ActionMap",
         			EXPERT, Boolean.TRUE,
-	      			HIDDEN, Boolean.TRUE
+	      			//HIDDEN, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -937,7 +939,7 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	   			DISPLAYNAME, JComponentMessages.getString("setActionMap(ActionMap).Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("setActionMap(ActionMap).Desc"), //$NON-NLS-1$
        			EXPERT, Boolean.TRUE,	      		
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {
 	    			createParameterDescriptor("actionMap", new Object[] { //$NON-NLS-1$
@@ -1276,7 +1278,31 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
-		  	)	 	
+		  	),
+		  	// getTransferHandler()
+		  	super.createMethodDescriptor(getBeanClass(),"getTransferHandler",  //$NON-NLS-1$
+				new Object[] {
+	   				DISPLAYNAME, JComponentMessages.getString("getTransferHandler().Name"), //$NON-NLS-1$
+	      			SHORTDESCRIPTION, JComponentMessages.getString("getTransferHandler().Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}	    		
+		  	),
+		  	// setNextFocusableComponent(Component)
+		  	super.createMethodDescriptor(getBeanClass(),"setTransferHandler",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JComponentMessages.getString("setTransferHandler(TransferHandler).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("aComponent", new Object[] { //$NON-NLS-1$
+	   				DISPLAYNAME, JComponentMessages.getString("setTransferHandler(TransferHandler).aTransferHandler.Name"), //$NON-NLS-1$
+	      			})
+	      		},
+	      		new Class[] { 
+		  			TransferHandler.class
+	      		}	    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -1296,7 +1322,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JComponentMessages.getString("actionMap.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("actionMap.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 			// alignmentX
@@ -1375,7 +1401,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JComponentMessages.getString("inputVerifier.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("inputVerifier.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 	    	// insets
@@ -1412,7 +1438,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				SHORTDESCRIPTION, JComponentMessages.getString("nextFocusableComponent.Desc"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Next component to get the focus",
 	      		EXPERT, Boolean.TRUE,
-	      		
+
 	    		}
 	    	),
 	    	// opaque
@@ -1516,6 +1542,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"y", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JComponentMessages.getString("y.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JComponentMessages.getString("y.Desc"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}
+	    	),
+	    	// transferHandler
+			super.createPropertyDescriptor(getBeanClass(),"transferHandler", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, JComponentMessages.getString("transferHandler.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JComponentMessages.getString("transferHandler.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE
 	    		}
 	    	)	

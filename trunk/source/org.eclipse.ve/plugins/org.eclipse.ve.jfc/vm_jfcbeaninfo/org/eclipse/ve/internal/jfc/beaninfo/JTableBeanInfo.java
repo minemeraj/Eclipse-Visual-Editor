@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:33 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -1402,7 +1402,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"cellEditor", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, resJTable.getString("cellEditor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("CellEditor.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// cellSelectionEnabled
@@ -1603,7 +1604,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, resJTable.getString("selectionModel.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("SelectionModel.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// showGrid
@@ -1629,10 +1631,18 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"tableHeader", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, resJTable.getString("tableHeader.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("tableHeader.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
 	      	EXPERT, Boolean.TRUE
 	    		}
-	    	)	
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, resJTable.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, resJTable.getString("ui.Desc"), //$NON-NLS-1$
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

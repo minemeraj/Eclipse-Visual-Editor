@@ -11,10 +11,12 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JPopupMenuBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
+
+import javax.swing.plaf.PopupMenuUI;
 
 public class JPopupMenuBeanInfo extends IvjBeanInfo {
 		
@@ -396,7 +398,57 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			java.awt.Component.class, int.class, int.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getInvoker()
+			super.createMethodDescriptor(getBeanClass(),"getInvoker",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPopupMenuMessages.getString("getInvoker().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setInvoker(Component)
+			super.createMethodDescriptor(getBeanClass(),"setInvoker",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPopupMenuMessages.getString("setInvoker(Component).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("invoker", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JPopupMenuMessages.getString("setInvoker(Component).aComponent.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			java.awt.Component.class
+	      		}		    		
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPopupMenuMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setInvoker(Component)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JPopupMenuMessages.getString("setUI(PopupMenuUI).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("popupMenuUI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JPopupMenuMessages.getString("setUI(PopupMenuUI).popupMenuUI.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+					PopupMenuUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -447,14 +499,27 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selectionModel", new Object[] { //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "The model delegate to handle single selections",
 	      		EXPERT, Boolean.TRUE,
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 	    	// visible
 			super.createPropertyDescriptor(getBeanClass(),"visible", new Object[] { //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JPopupMenuMessages.getString("visible.Desc"), //$NON-NLS-1$
 	    		}
-	    	)			
+	    	),
+	    	// invoker
+			super.createPropertyDescriptor(getBeanClass(),"invoker", new Object[] { //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JPopupMenuMessages.getString("invoker.Desc"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, JPopupMenuMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JPopupMenuMessages.getString("ui.Desc"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

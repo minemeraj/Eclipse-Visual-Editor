@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JInternalFrameBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -997,7 +997,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	),
 			// JMenuBar
 			super.createPropertyDescriptor(getBeanClass(),"JMenuBar", new Object[] { //$NON-NLS-1$
-	      	HIDDEN, Boolean.TRUE	      	
+	      	EXPERT, Boolean.TRUE	      	
 	    		}
 	    	),
 	    	// layer
@@ -1073,6 +1073,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JInternalFrameMessages.getString("title.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JInternalFrameMessages.getString("title.Desc"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE
+	    		}
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JInternalFrameMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JInternalFrameMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE
 	    		}
 	    	)	    	
 		};

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JDesktopPaneBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -218,21 +218,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JDesktopMessages.getString("desktopManager.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("desktopManager.Desc"), //$NON-NLS-1$
       		    EXPERT, Boolean.TRUE,
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 			super.createPropertyDescriptor(getBeanClass(),"selectedFrame", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JDesktopMessages.getString("selectedFrame.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("selectedFrame.Desc"), //$NON-NLS-1$
       		    EXPERT, Boolean.TRUE,
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	),
 			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JDesktopMessages.getString("UI.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("UI.Desc"), //$NON-NLS-1$
       		    EXPERT, Boolean.TRUE,
-	      		HIDDEN, Boolean.TRUE
+	      		//HIDDEN, Boolean.TRUE
 	    		}
 	    	)	    	
 		};

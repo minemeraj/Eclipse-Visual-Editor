@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JDialogBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -300,7 +300,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"JMenuBar", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, JDialogMessages.getString("JMenuBar.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JDialogMessages.getString("JMenuBar.Desc"), //$NON-NLS-1$
-	      	HIDDEN, Boolean.TRUE	      	
+	      	EXPERT, Boolean.TRUE	      	
 	    		}
 	    	),
 	    	// modal

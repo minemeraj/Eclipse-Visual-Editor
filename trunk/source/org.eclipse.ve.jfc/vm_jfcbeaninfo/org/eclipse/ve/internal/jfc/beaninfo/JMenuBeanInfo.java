@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -473,7 +473,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"accelerator", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JMenuMessages.getString("accelerator.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JMenuMessages.getString("accelerator.Desc"), //$NON-NLS-1$
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE,
 	      		EXPERT, Boolean.TRUE
 	    		}
 	    	),

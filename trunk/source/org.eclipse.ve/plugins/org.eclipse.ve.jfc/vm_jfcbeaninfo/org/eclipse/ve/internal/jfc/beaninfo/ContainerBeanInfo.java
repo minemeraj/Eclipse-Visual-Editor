@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
+import java.awt.FocusTraversalPolicy;
 import java.beans.*;
 public class ContainerBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle rescontainer = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.container");  //$NON-NLS-1$
@@ -602,6 +603,31 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
 		  	),
+		  	// getFocusTraversalPolicy()
+			super.createMethodDescriptor(getBeanClass(),"getFocusTraversalPolicy",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, rescontainer.getString("MthdDesc.getFocusTraversalPolicy.Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Get the focus traversal policy",
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setFocusTraversalPolicy(FocusTraversalPolicy)
+			super.createMethodDescriptor(getBeanClass(),"setFocusTraversalPolicy",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, rescontainer.getString("MthdDesc.SetFocusTraversalPolicy.Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Set the focus traversal policy",
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("focusTraversalPolicy", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, rescontainer.getString("ParamDesc.SetFocusTraversalPolicy.focusTraversalPolicy.Name"), //$NON-NLS-1$
+	      				// SHORTDESCRIPTION, "Focus traversal policy",
+	      				})
+	      		},
+	      		new Class[] {
+					FocusTraversalPolicy.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -666,6 +692,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(), "preferredSize", new Object[] {//$NON-NLS-1$
 		   	DISPLAYNAME, rescontainer.getString("preferredSizeDN"),				 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, rescontainer.getString("preferredSizeSD"), //$NON-NLS-1$
+	    		}
+	    	),
+	    	// focusTraversalPolicy
+			super.createPropertyDescriptor(getBeanClass(),"focusTraversalPolicy", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, rescontainer.getString("PropDesc.focusTraversalPolicy.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, rescontainer.getString("PropDesc.focusTraversalPolicy.Desc"), //$NON-NLS-1$
+	      	BOUND, Boolean.TRUE,
+	      	PREFERRED, Boolean.TRUE,
+	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 		};

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JLabelBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -528,7 +528,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      				"javax.swing.SwingConstants.BOTTOM"	      			 //$NON-NLS-1$
 	    		}
 	    		}
-	    	)		
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JLabelMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JLabelMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE,
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

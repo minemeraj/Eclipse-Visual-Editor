@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JComboBoxBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -701,7 +701,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, JComboBoxMessages.getString("editor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("editor.Dec"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 	    	// enabled
@@ -729,7 +729,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, JComboBoxMessages.getString("keySelectionManager.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("keySelectionManager.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// layout - hide it
@@ -756,7 +756,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// opaque
@@ -778,7 +778,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, JComboBoxMessages.getString("renderer.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("renderer.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,	      	
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 	    	// selectedIndex
@@ -802,7 +802,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JComboBoxMessages.getString("selectedObjects.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE	      	
 	    		}
-	    	)	
+	    	),
+	    	// action
+			super.createPropertyDescriptor(getBeanClass(),"action", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, JComboBoxMessages.getString("action.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JComboBoxMessages.getString("action.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE	      	
+	    		}
+	    	),
+	    	// action
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, JComboBoxMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JComboBoxMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE	      	
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

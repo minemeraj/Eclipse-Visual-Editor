@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JListBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-21 22:15:37 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -708,7 +708,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JListMessages.getString("cellRenderer.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JListMessages.getString("cellRenderer.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY , Boolean.FALSE,
+	      	//DESIGNTIMEPROPERTY , Boolean.FALSE,
 	      	BOUND, Boolean.TRUE }   
 	    	),
 	    	// firstVisibleIndex
@@ -827,7 +827,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JListMessages.getString("selectionModel.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JListMessages.getString("selectionModel.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 			// selectedValue
@@ -849,6 +850,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JListMessages.getString("visibleRowCount.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JListMessages.getString("visibleRowCount.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,	      	
+	    		}
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JListMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JListMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE,
 	    		}
 	    	)	
 		};

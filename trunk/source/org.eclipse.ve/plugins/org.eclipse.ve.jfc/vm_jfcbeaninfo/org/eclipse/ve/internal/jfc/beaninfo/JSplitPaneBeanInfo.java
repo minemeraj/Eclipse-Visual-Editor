@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -596,6 +596,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JSplitPaneMessages.getString("topComponent.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JSplitPaneMessages.getString("topComponent.Desc"), //$NON-NLS-1$
 	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	    		}
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JSplitPaneMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JSplitPaneMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+			EXPERT, Boolean.TRUE,
+			BOUND, Boolean.TRUE,
 	    		}
 	    	)	
 		};

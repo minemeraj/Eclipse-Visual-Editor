@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTreeBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -1470,8 +1470,9 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"cellEditor", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, resJTreeBundle.getString("cellEditor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("cellEditor.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      	BOUND, Boolean.TRUE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	BOUND, Boolean.TRUE,
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// cellRenderer
@@ -1479,8 +1480,10 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, resJTreeBundle.getString("cellRenderer.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("cellRenderer.Desc"), //$NON-NLS-1$
 	      	// PREFERRED, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      	BOUND, Boolean.TRUE }   
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	BOUND, Boolean.TRUE,
+			EXPERT, Boolean.TRUE
+				}   
 	    	),
 			// editable
 			super.createPropertyDescriptor(getBeanClass(),"editable", new Object[] { //$NON-NLS-1$
@@ -1577,7 +1580,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 			// opaque
@@ -1647,8 +1651,9 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selectionModel", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, resJTreeBundle.getString("selectionModel.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("selectionModel.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      	BOUND, Boolean.TRUE,	      	
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	BOUND, Boolean.TRUE,
+			EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// selectionPath
@@ -1706,7 +1711,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resJTreeBundle.getString("scrollsOnExpand.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE
 	    		}
-	    	)
+	    	),
+			// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, resJTreeBundle.getString("ui.Name"), //$NON-NLS-1$
+			SHORTDESCRIPTION, resJTreeBundle.getString("ui.Desc"), //$NON-NLS-1$
+			EXPERT, Boolean.TRUE
+			     }
+			 ),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-14 21:01:35 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -357,8 +357,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"cellEditor", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, TableColumnMessages.getString("cellEditor.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("cellEditor.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
-	      	
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 			// cellRenderer
@@ -367,7 +367,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("cellRenderer.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// headerRenderer
@@ -376,7 +376,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("headerRenderer.Desc"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 	    	// headerValue
