@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:AddMany xmi:version="2.0" 
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-    xmlns:event="event.xmi"
-    featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart"
-    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart">
-  </addedEObjects>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
-    propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter"/>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-    beanLocation="GLOBAL_LOCAL"
-    beanReturn="false"
-    beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
-</event:AddMany>
-
+<xmi:XMI xmi:version="2.0" 
+		xmlns:xmi="http://www.omg.org/XMI" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+	    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
+	    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
+	    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+	    xmlns:event="event.xmi">
+	<event:AddMany featureName="eAnnotations">
+	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+	    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart"
+	    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart">
+	  </addedEObjects>
+	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
+	    propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter"/>
+	  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+	    beanLocation="GLOBAL_LOCAL"
+	    beanReturn="false"
+	    beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
+	</event:AddMany>
+  <event:AddMany featureName="eStructuralFeatures">
+    <addedEObjects xsi:type="ecore:EReference" name="bounds">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.BoundsPropertyDescriptor"/>
+    </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="location">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LocationPropertyDescriptor"/>
+    </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="size">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SizePropertyDescriptor"/>
+    </addedEObjects>
+  </event:AddMany>
+</xmi:XMI>
