@@ -84,6 +84,7 @@ public class Scenario179 extends TestCase implements Test {
 		PerfSuite.waitFor(5000);		
 		
 		closeOpenTestProject();
+		PerfSuite.waitFor(10000);		
 		
 		start = System.currentTimeMillis();		
 		openJVE(TEST_FILENAME);
