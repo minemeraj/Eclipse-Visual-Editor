@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodParser.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-20 22:54:35 $ 
  */
 
 import java.util.logging.Level;
@@ -108,9 +108,9 @@ public class MethodParser {
 		if (!result[0]) {  // methodName was not found, need to add it.
 			int insertOffset = -1; 
 			if (SuperBlock[0] != null)   // We found a super() call
-				insertOffset= SuperBlock[0].getStartPosition()+SuperBlock[0].getLength()+1+fSeperator.length() ; // for LF
+				insertOffset= SuperBlock[0].getStartPosition()+SuperBlock[0].getLength()+fSeperator.length() ; // for LF
 		    else if (SuperBlock[1] != null)
-		        insertOffset = SuperBlock[1].getStartPosition()+SuperBlock[1].getLength()+1 ;
+		        insertOffset = SuperBlock[1].getStartPosition()+SuperBlock[1].getLength() ;
 		        
 		    if (insertOffset>=0) {
 		    	// TODO  Need to use current filler not just a \t
