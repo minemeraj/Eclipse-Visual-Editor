@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.47 $  $Date: 2004-06-16 21:05:12 $ 
+ *  $Revision: 1.48 $  $Date: 2004-06-18 23:46:43 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -43,10 +43,11 @@ import org.eclipse.gef.palette.*;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
-import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.gef.ui.palette.*;
 import org.eclipse.gef.ui.parts.*;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
+import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
@@ -68,7 +69,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
-import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -135,8 +135,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	protected GraphicalViewer primaryViewer;
 	protected XMLTextPage xmlTextPage;
-	private PalettePage palettePage;	// Palette page for the palette viewer	
-	private boolean paletteEmbedded;	// Flag whether palette embedded or not.
+	private CustomPalettePage palettePage;	// Palette page for the palette viewer	
 
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
@@ -424,11 +423,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	public void createPartControl(Composite parent) {	
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
-		 
-		// If we already got the palettePage, then we are definitely not embedded.
-		// If there is no palette view, then we are not embedded.
-		paletteEmbedded = palettePage == null && getSite().getPage().findView("org.eclipse.gef.ui.palette_view") == null; //$NON-NLS-1$;		
-		
+				
 		boolean isNotebook = store.getBoolean(VCEPreferences.NOTEBOOK_PAGE);
 		if (isNotebook) {
 			createNotebookEditor(parent, store);
@@ -460,46 +455,91 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		});
 	}
+	
 
+	private PaletteViewerProvider provider;
+	protected PaletteViewerProvider getPaletteViewerProvider() {
+		if (provider == null)
+			provider = createPaletteViewerProvider();
+		return provider;
+	}
+	
+	protected PaletteViewerProvider createPaletteViewerProvider() {
+		return new PaletteViewerProvider(editDomain) {
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.gef.ui.palette.PaletteViewerProvider#configurePaletteViewer(org.eclipse.gef.ui.palette.PaletteViewer)
+			 */
+			protected void configurePaletteViewer(PaletteViewer viewer) {
+				super.configurePaletteViewer(viewer);
+				if (rebuildPalette)
+					rebuildPalette();
+			}
+		};
+	}	
+
+	private FlyoutPaletteComposite paletteSplitter;
+	
 	/*
 	 * Create the editor as a split pane editor with the graphical editor on top and the text editor on the bottom.
+	 * The palette will be on the left if no viewer.
 	 */
 	protected void createSplitpaneEditor(Composite parent, Preferences store) {
-		
-			Composite jveParent = null;
-			CustomSashForm paletteEditorSashForm = null;
-			if(!paletteEmbedded){
-				jveParent = parent;
-			} else {
-				// Split them all on the same parent.
-				paletteEditorSashForm = new CustomSashForm(parent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
-				jveParent = paletteEditorSashForm;
-				createPaletteViewer(jveParent);				
-			}
+		paletteSplitter = new FlyoutPaletteComposite(parent, SWT.NONE, getSite().getPage(),	getPaletteViewerProvider(), getPalettePreferences());
 			
-			// JVE/Text editor split on the right under editorComposite
-			CustomSashForm editorParent = new CustomSashForm(jveParent, SWT.VERTICAL);
-			createPrimaryViewer(editorParent);
+		// JVE/Text editor split on the right under editorComposite
+		CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL);
+		createPrimaryViewer(editorParent);		
 
-			// Let the super java text editor fill it in.			
-			super.createPartControl(editorParent);
-
-			if(paletteEmbedded){
-				paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
-				paletteEditorSashForm.setWeights(getPaletteSashWeights());
-			}
-
-			editorParent.setSashBorders(new boolean[] { true, true });
-
-			if(paletteEmbedded){			
-				// Display the palette if the preferences state it should be initially shown
-				boolean showPalette = store.getBoolean(VCEPreferences.SHOW_GEF_PALETTE);
-				if (!showPalette)
-					paletteEditorSashForm.maxLeft();
-			}
-			
-
+		// Let the super java text editor fill it in.			
+		super.createPartControl(editorParent);
+		editorParent.setSashBorders(new boolean[] { true, true });
+		paletteSplitter.setGraphicalControl(editorParent);
+		if (palettePage != null) {
+			paletteSplitter.setExternalViewer(palettePage.getPaletteViewer());
+			palettePage = null;
+		}
 	}
+	
+	protected FlyoutPaletteComposite.FlyoutPreferences getPalettePreferences() {
+		return new FlyoutPaletteComposite.FlyoutPreferences() {
+			
+			private Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
+
+			// All of the values are set from the palette itself and stored. We can't set starting values, those
+			// will come from the preferences. If not set, palette does something default.
+			private static final String DOCK_LOCATION = "DOCK_LOCATION";
+			private static final String PALETTE_STATE = "PALETTE_STATE";
+			private static final String PALETTE_WIDTH = "PALETTE_WIDTH";
+			
+
+			public int getDockLocation() {
+				return store.getInt(DOCK_LOCATION);
+			}
+
+			public int getPaletteState() {
+				return store.getInt(PALETTE_STATE);
+			}
+
+			public int getPaletteWidth() {
+				return store.getInt(PALETTE_WIDTH);
+			}
+
+			public void setDockLocation(int location) {
+				store.setValue(DOCK_LOCATION, location);
+			}
+
+			public void setPaletteState(int state) {
+				store.setValue(PALETTE_STATE, state);
+			}
+
+			public void setPaletteWidth(int width) {
+				store.setValue(PALETTE_WIDTH, width);
+			}
+		};
+	}
+	
+	
 	/*
 	 * Create the editor as a note book with one tab for the design and the other for the text editor.
 	 */
@@ -513,25 +553,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		jveTab.setControl(editorParent);
 		jveTab.setText(CodegenEditorPartMessages.getString("JavaVisualEditorPart.DesignPart")); //$NON-NLS-1$
 
-		Composite jveParent = null;
-		CustomSashForm paletteEditorSashForm = null;
-		if(!paletteEmbedded){
-			jveParent = editorParent;
-		} else {
-			// Split them all on the same parent.
-			paletteEditorSashForm = new CustomSashForm(editorParent, SWT.HORIZONTAL, CustomSashForm.NO_MAX_RIGHT);
-			jveParent = paletteEditorSashForm;
-			createPaletteViewer(jveParent);				
-		}
-		createPrimaryViewer(jveParent);
-		
-		if (paletteEmbedded) {
-			paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
-			paletteEditorSashForm.setWeights(getPaletteSashWeights());
-			boolean showPalette = store.getBoolean(VCEPreferences.SHOW_GEF_PALETTE);
-			if (!showPalette)
-				paletteEditorSashForm.maxLeft();
-			
+		paletteSplitter = new FlyoutPaletteComposite(editorParent, SWT.NONE, getSite().getPage(), getPaletteViewerProvider(), getPalettePreferences());
+		paletteSplitter.setGraphicalControl(createPrimaryViewer(paletteSplitter));
+		if (palettePage != null) {
+			paletteSplitter.setExternalViewer(palettePage.getPaletteViewer());
+			palettePage = null;
 		}
 
 		// Create the parent (new tab) for the java text editor.
@@ -548,19 +574,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		folder.setSelection(jveTab);
 	}
 
-	/*
-	 * create the palette viewer.
-	 */
-	protected Control createPaletteViewer(Composite parent) {
-		PaletteViewer paletteViewer = new PaletteViewer();
-		editDomain.setPaletteViewer(paletteViewer);
-		if(rebuildPalette){
-			rebuildPalette();
-		}		
-		Control paletteControl = paletteViewer.createControl(parent);
-		return paletteControl;
-	}
-	
 	private List paletteCategories = new ArrayList(5);
 	/*
 	 * Rebuild the palette.
@@ -668,18 +681,19 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/*
 	 * Create the primary viewer, which is the Graphical Viewer.
 	 */
-	protected void createPrimaryViewer(Composite parent) {
+	protected Control createPrimaryViewer(Composite parent) {
 		if (VCEPreferences.isXMLTextOn()) {
 			// If the Pref store wants the XML page put it on a sash
 			SashForm sashform = new SashForm(parent, SWT.VERTICAL);
 			createGraphicalViewer(sashform);
 			createXMLTextViewerControl(sashform);
+			return sashform;
 		} else {
-			createGraphicalViewer(parent);
+			return createGraphicalViewer(parent);
 		}
 	}
 
-	protected void createGraphicalViewer(Composite parent) {
+	protected Control createGraphicalViewer(Composite parent) {
 		primaryViewer = new ScrollingGraphicalViewer();
 
 		Control gviewer = primaryViewer.createControl(parent);
@@ -733,6 +747,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		KeyHandler keyHandler = new KeyHandler();				
 		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);					
 		primaryViewer.setKeyHandler(new GraphicalViewerKeyHandler(primaryViewer).setParent(keyHandler));
+		
+		paletteSplitter.hookDropTargetListener(primaryViewer);
+		return gviewer;
 	}
 
 	/*
@@ -1929,31 +1946,33 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			return super.getAdapter(adapterKey);
 	}
 	
-	class VEPalettePage extends Page implements PalettePage{
-			Control control;
+	private class CustomPalettePage extends PaletteViewerPage {
+		public CustomPalettePage(PaletteViewerProvider provider) {
+			super(provider);
+		}
 		public void createControl(Composite parent) {
-			control = createPaletteViewer(parent);
-			control.addDisposeListener(new DisposeListener() {
-
-				public void widgetDisposed(DisposeEvent e) {
-					palettePage = null;
-					editDomain.setPaletteViewer(null);
-					rebuildPalette = true;	// Because next time palette is created we need to rebuild it.
-				}
-			});
+			super.createControl(parent);
+			if (paletteSplitter != null)
+				paletteSplitter.setExternalViewer(viewer);
 		}
-		public Control getControl() {
-			return control;
+		public void dispose() {
+			if (paletteSplitter != null)
+				paletteSplitter.setExternalViewer(null);
+			super.dispose();
 		}
-		public void setFocus() {
-		}		
-	};
+		public PaletteViewer getPaletteViewer() {
+			return viewer;
+		}
+	}
 	
 	protected PalettePage getPalettePage(){
-		if(!paletteEmbedded && palettePage == null){
-			palettePage = new VEPalettePage();
-		};
-		return palettePage;
+		if (paletteSplitter == null) {
+			// The palettePage is saved only because we not yet created out main control. It is
+			// needed in there to setup. Once setup, it will be nulled out.
+			palettePage = new CustomPalettePage(getPaletteViewerProvider());
+			return palettePage;
+		}
+		return new CustomPalettePage(getPaletteViewerProvider());
 	}
 	
 	protected IContentOutlinePage getContentOutlinePage(){
