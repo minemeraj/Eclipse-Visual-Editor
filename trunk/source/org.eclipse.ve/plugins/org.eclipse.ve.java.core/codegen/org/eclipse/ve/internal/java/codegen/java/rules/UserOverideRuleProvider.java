@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UserOverideRuleProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -63,7 +63,7 @@ public class UserOverideRuleProvider implements IRuleProvider {
 		
 		List list = TemplateUtil.getPluginAndPreReqJarPath("org.eclipse.ve.java.core"); //$NON-NLS-1$
 		try {
-			list.add(TemplateUtil.getPlatformJREPath());
+			list.addAll(TemplateUtil.getPlatformJREPath());
 		}
 		catch (CoreException e) {}
 		classPath = new String[list.size()];

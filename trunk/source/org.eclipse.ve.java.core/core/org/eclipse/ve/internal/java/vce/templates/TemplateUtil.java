@@ -10,19 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
 import java.io.File;
-import java.net.URL;
 import java.util.*;
 
 import org.eclipse.core.boot.BootLoader;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
-
+import org.eclipse.jdt.launching.*;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 /**
@@ -35,7 +32,7 @@ public class TemplateUtil {
 
     private final static HashMap fClassPathMap = new HashMap() ;  // cache class path
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
-    private static String fPlatformJRE = null ;
+    private static List fPlatformJRE = null ;
 	
 	static public boolean isDevMode(IPluginDescriptor desc) {
 		
@@ -188,31 +185,38 @@ public class TemplateUtil {
 		return buf.toString();
 	}
 	
-	static public String getPlatformJREPath () throws TemplatesException {
+	static public List getPlatformJREPath() throws TemplatesException {
 
-		if (fPlatformJRE != null) return fPlatformJRE ;
+		if (fPlatformJRE != null)
+			return fPlatformJRE;
 
-		// Try to use the shipped rt.jar				
-		IPath jrePath = null;
-		URL installURL = BootLoader.getInstallURL();
-		String file = installURL.getFile();
-		IPath installPath = new Path(file).removeTrailingSeparator();
-		jrePath = installPath.append(new Path("/jre/lib/rt.jar")); //$NON-NLS-1$
-		String result = getCorrectPath(jrePath.toString()) ;
-		File f = new File (result) ;
-		if (f.canRead()) {
-			fPlatformJRE = result ;
-			return fPlatformJRE ;
-		}		
-		// This is a dev. environment no installed JRE, use the default VM's jar
-		IVMInstall vi = JavaRuntime.getDefaultVMInstall() ;
-		IPath  path = new Path(vi.getInstallLocation().toString()).append("jre").append("lib").append("rt.jar") ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		result = fPlatformJRE = getCorrectPath(path.toString()) ;
-		f = new File (result) ;
-		if (f.canRead()) {
-			fPlatformJRE = result ;
+		VMStandin detectedVMStandin = null;
+		// Try to detect a VM for each declared VM type
+		IVMInstallType[] vmTypes = JavaRuntime.getVMInstallTypes();
+		for (int i = 0; i < vmTypes.length; i++) {
+
+			File detectedLocation = vmTypes[i].detectInstallLocation();
+			if (detectedLocation != null) {
+
+				// Create a standin for the detected VM and add it to the result collector
+				String vmID = String.valueOf("1");
+				detectedVMStandin = new VMStandin(vmTypes[i], vmID);
+				if (detectedVMStandin != null) {
+					detectedVMStandin.setInstallLocation(detectedLocation);
+					detectedVMStandin.setName(detectedVMStandin.getInstallLocation().getName());
+					LibraryLocation[] locations = JavaRuntime.getLibraryLocations(detectedVMStandin);
+					fPlatformJRE = new ArrayList(locations.length);
+					for (int j = 0; j < locations.length; j++) {
+						IPath path = locations[j].getSystemLibraryPath();
+						if (!Path.EMPTY.equals(path))
+							fPlatformJRE.add(path.toString());
+					}
+					return fPlatformJRE;
+				}
+			}
 		}
-		return fPlatformJRE ;
+		fPlatformJRE = Collections.EMPTY_LIST;
+		return fPlatformJRE;
 	}
 	
 	/**
