@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.40 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.41 $  $Date: 2004-06-02 22:39:07 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -133,6 +133,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected GraphicalViewer primaryViewer;
 	protected XMLTextPage xmlTextPage;
 	private PalettePage palettePage;	// Palette page for the palette viewer	
+	private boolean paletteEmbedded;	// Flag whether palette embedded or not.
 
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
@@ -388,10 +389,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (store.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW)) {
 			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.BeansList"); //$NON-NLS-1$
 		}
-		
-		if(store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER)) {
-			site.getPage().showView("org.eclipse.gef.ui.palette_view"); //$NON-NLS-1$
-		}
 
 		// Now restore focus to new editor since the above caused it to be lost.
 		site.getPage().activate(site.getPage().findEditor(getEditorInput()));
@@ -403,6 +400,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	public void createPartControl(Composite parent) {	
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
+		 
+		// If we already got the palettePage, then we are definitely not embedded.
+		// If there is no palette view, then we are not embedded.
+		paletteEmbedded = palettePage == null && getSite().getPage().findView("org.eclipse.gef.ui.palette_view") == null; //$NON-NLS-1$;		
 		
 		boolean isNotebook = store.getBoolean(VCEPreferences.NOTEBOOK_PAGE);
 		if (isNotebook) {
@@ -441,11 +442,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	protected void createSplitpaneEditor(Composite parent, Preferences store) {
 		
-			boolean paletteInViewer = store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER);		
-
 			Composite jveParent = null;
 			CustomSashForm paletteEditorSashForm = null;
-			if(paletteInViewer){
+			if(!paletteEmbedded){
 				jveParent = parent;
 			} else {
 				// Split them all on the same parent.
@@ -461,12 +460,20 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// Let the super java text editor fill it in.			
 			super.createPartControl(editorParent);
 
-			if(!paletteInViewer){
+			if(paletteEmbedded){
 				paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
 				paletteEditorSashForm.setWeights(getPaletteSashWeights());
 			}
 
 			editorParent.setSashBorders(new boolean[] { true, true });
+
+			if(paletteEmbedded){			
+				// Display the palette if the preferences state it should be initially shown
+				boolean showPalette = store.getBoolean(VCEPreferences.SHOW_GEF_PALETTE);
+				if (!showPalette)
+					paletteEditorSashForm.maxLeft();
+			}
+			
 
 	}
 	/*
@@ -482,11 +489,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		jveTab.setControl(editorParent);
 		jveTab.setText(CodegenEditorPartMessages.getString("JavaVisualEditorPart.DesignPart")); //$NON-NLS-1$
 
-		boolean paletteInViewer = store.getBoolean(VCEPreferences.PALETTE_IN_VIEWER);		
-
 		Composite jveParent = null;
 		CustomSashForm paletteEditorSashForm = null;
-		if(paletteInViewer){
+		if(!paletteEmbedded){
 			jveParent = editorParent;
 		} else {
 			// Split them all on the same parent.
@@ -496,9 +501,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		createPrimaryViewer(jveParent);
 		
-		if (paletteEditorSashForm != null) {
+		if (paletteEmbedded) {
 			paletteEditorSashForm.setSashBorders(new boolean[] { false, true });
 			paletteEditorSashForm.setWeights(getPaletteSashWeights());
+			boolean showPalette = store.getBoolean(VCEPreferences.SHOW_GEF_PALETTE);
+			if (!showPalette)
+				paletteEditorSashForm.maxLeft();
+			
 		}
 
 		// Create the parent (new tab) for the java text editor.
@@ -1884,7 +1893,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	};
 	
 	protected PalettePage getPalettePage(){
-		if(palettePage == null){
+		if(!paletteEmbedded && palettePage == null){
 			palettePage = new VEPalettePage();
 		};
 		return palettePage;

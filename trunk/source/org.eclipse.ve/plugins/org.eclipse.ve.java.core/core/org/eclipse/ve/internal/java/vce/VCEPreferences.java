@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-02 22:39:07 $ 
  */
 
 
@@ -33,9 +33,7 @@ public class VCEPreferences {
 	public static final String OPEN_JAVABEANS_VIEW = "OPEN_JAVABEANS_VIEW"; //$NON-NLS-1$		
 	public static final String NOTEBOOK_PAGE = "NOTEBOOK_PAGE"; //$NON-NLS-1$
 	public static final String SELECT_SOURCE = "SELECT_SOURCE"; //$NON-NLS-1$
-	
-	public static final String PALETTE_IN_VIEWER = "PALETTE_IN_SEPRATE_VIEWER";	//$NON-NLS-1$
-	
+	public static final String SHOW_GEF_PALETTE = "SHOW_GEF_PALETTE"; //$NON-NLS-1$
 	public static final String SOURCE_SYNC_DELAY = "SOURCE_SYNC_DELAY_NEW" ; //$NON-NLS-1$
 	public static final int	   DEFAULT_SYNC_DELAY = 1000 ;
 	public static final String SOURCE_DELAY_FACTOR = "SOURCE_DELAY_FACTOR_NEW" ; //$NON-NLS-1$
@@ -148,7 +146,7 @@ public static JavaVEPlugin getPlugin() {
 public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	// TODO A lot of these preferences shouldn't be in here. They are really in different plugs, like the source sync
 	// and style stuff are in codegen and max_awt... are in visuals.
-	aStore.setDefault(VCEPreferences.PALETTE_IN_VIEWER,false);	
+	aStore.setDefault(VCEPreferences.SHOW_GEF_PALETTE, true) ;
 	aStore.setDefault(VCEPreferences.OPEN_JAVABEANS_VIEW, true);
 	aStore.setDefault(VCEPreferences.OPEN_PROPERTIES_VIEW, true);
 	aStore.setDefault(VCEPreferences.SOURCE_SYNC_DELAY,VCEPreferences.DEFAULT_SYNC_DELAY) ;
