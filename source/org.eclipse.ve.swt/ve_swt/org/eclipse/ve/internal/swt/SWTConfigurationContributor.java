@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-11 17:44:54 $ 
+ *  $Revision: 1.13 $  $Date: 2005-03-11 22:07:39 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.net.MalformedURLException;
@@ -106,7 +106,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 			if (p!=null) {
 				BundleDescription[] fragDesc = p.getPluginModel().getBundleDescription().getFragments();						
 				for (int i = 0; i < fragDesc.length; i++) {
-				     if (fragDesc[i].getName().startsWith("org.eclipse.swt."+arch))
+				     if (fragDesc[i].getSymbolicName().startsWith("org.eclipse.swt."+arch))
 				     	location = new Path(fragDesc[i].getLocation());				
 				}
 			}		
