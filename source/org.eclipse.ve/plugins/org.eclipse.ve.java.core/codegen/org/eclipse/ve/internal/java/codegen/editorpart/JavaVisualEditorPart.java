@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.24 $  $Date: 2004-04-07 18:02:39 $ 
+ *  $Revision: 1.25 $  $Date: 2004-04-09 19:46:56 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -208,6 +208,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		modelBuilder = new JavaSourceTranslator(editDomain);
 
 		modelChangeController = new JavaVisualEditorModelChangeController(this, modelBuilder);
+		editDomain.setData(IDiagramModelBuilder.MODEL_BUILDER_KEY, modelBuilder);
 		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));
 		editDomain.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);	
 		
