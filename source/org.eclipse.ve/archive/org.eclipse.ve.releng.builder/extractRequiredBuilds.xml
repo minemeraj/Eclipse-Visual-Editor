@@ -9,6 +9,7 @@
 
 	<target name="init">
 		<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
+		<echo>url=${url}  zipname=${zipname}</echo>
 	</target>
 
 	<target name="testurl" if="url,zipname">
