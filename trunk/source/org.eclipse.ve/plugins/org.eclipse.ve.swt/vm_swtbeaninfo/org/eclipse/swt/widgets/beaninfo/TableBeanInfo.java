@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-26 16:43:44 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -34,7 +34,7 @@ public BeanDescriptor getBeanDescriptor() {
 			{ "style" , "style" , Boolean.FALSE , new Object[] {
 			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
 			} } ,
-			{ "selection" , "selection" , Boolean.FALSE , new Object[] {
+			{ "selectionStyle" , "selectionStyle" , Boolean.FALSE , new Object[] {
 				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
 				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
 			} },

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: GroupBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-26 16:43:44 $ 
+ *  $RCSfile: LabelBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-26 16:43:44 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -24,22 +24,32 @@ import org.eclipse.swt.widgets.*;
  * 
  * @since 1.0.0
  */
-public class GroupBeanInfo extends SimpleBeanInfo {
+public class LabelBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Group.class);
+	BeanDescriptor descriptor = new BeanDescriptor(Label.class);
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
-	    new Object[] [] {			
-			{ "noRadioGroup" , "noRadioGroup" , Boolean.FALSE , new Object[] {
-				"NO_RADIO_GROUP" , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				
+	    new Object[] [] {
+			{ "orientation" , "orientation" , Boolean.FALSE ,  new Object[] {
+			    "HORIZONTAL" , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) ,
+				"VERTICAL" , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				
+			} },
+			{ "textAlignment" , "textAlignment", Boolean.FALSE , new Object[] {
+				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					
+				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) ,
+				"CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				
+			} },
+			{ "separator" , "separator", Boolean.FALSE , new Object[] {
+				"SEPARATOR" , "org.eclipse.swt.SWT.SEPARATOR" , new Integer(SWT.SEPARATOR)					
 			} },
 			{ "shadow" , "shadow" , Boolean.FALSE , new Object[] {
 				"IN" , "org.eclipse.swt.SWT.SHADOW_IN" , new Integer(SWT.SHADOW_IN),
 				"OUT" , "org.eclipse.swt.SWT.SHADOW_OUT" , new Integer(SWT.SHADOW_OUT),
-				"ETCHED IN" , "org.eclipse.swt.SWT.SHADOW_ETCHED_IN" , new Integer(SWT.SHADOW_ETCHED_IN),
-				"ETCHED OUT" , "org.eclipse.swt.SWT.SHADOW_ETCHED_OUT" , new Integer(SWT.SHADOW_ETCHED_OUT),
 				"NONE" , "org.eclipse.swt.SWT.SHADOW_NONE" , new Integer(SWT.SHADOW_NONE)
+			} },
+			{ "wrap" , "wrap", Boolean.FALSE , new Object[] {
+				"WRAP" , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					
 			} }
 		}
 	);
