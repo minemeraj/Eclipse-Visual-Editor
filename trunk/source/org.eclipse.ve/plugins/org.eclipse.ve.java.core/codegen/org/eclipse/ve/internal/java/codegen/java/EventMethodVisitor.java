@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-09 12:05:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -60,10 +60,15 @@ public class EventMethodVisitor extends MethodVisitor {
 		fastDom = dom ;
 		boolean useDefault = true ;
 		for (int i=0; i<fESigs.size(); i++) {
-		    if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
+			try {
+		     if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
 		    	useDefault = false ;
 		    	break ;
-		    }		   		    
+		     }
+			}
+			catch (NullPointerException npe) {
+				// Introspection problems.. just keep on going
+			}
 		}
 		if (useDefault) fPrefixConstraint = fDefaultPrefix ;
 	}
