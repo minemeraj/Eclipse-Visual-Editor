@@ -11,18 +11,20 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-01 13:39:39 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-01 18:02:59 $ 
  */
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
+import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.wizards.NewClassCreationWizard;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
-
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -60,11 +62,6 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		fPage.createType(monitor); // use the full progress monitor
 		ICompilationUnit cu= JavaModelUtil.toOriginal(fPage.getCreatedType().getCompilationUnit());
-		if (cu != null) {
-			IResource resource= cu.getResource();
-			selectAndReveal(resource);
-			openResource(resource);
-		}	
 	}
 	
 	protected void openResource(IResource resource) {
@@ -76,5 +73,51 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 			fPluginName = element.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
 			fExampleClassName = (String) object;
 		}			
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#canRunForked()
+	 */
+	protected boolean canRunForked() {
+		return !fPage.isEnclosingTypeSelected();
+	}
+	/*
+	 * This method is an exact copy of super.super.performFinish() API.
+	 * The reason for copying is that one cannot call that API without
+	 * hitting a NPE.
+	 */
+	public boolean performFinishNewElement() {
+		IWorkspaceRunnable op= new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+				try {
+					finishPage(monitor);
+				} catch (InterruptedException e) {
+					throw new OperationCanceledException(e.getMessage());
+				}
+			}
+		};
+		try {
+			getContainer().run(canRunForked(), true, new WorkbenchRunnableAdapter(op, getSchedulingRule()));
+		} catch (InvocationTargetException e) {
+			handleFinishException(getShell(), e);
+			return false;
+		} catch  (InterruptedException e) {
+			return false;
+		}
+		return true;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
+	 */
+	public boolean performFinish() {
+		warnAboutTypeCommentDeprecation();
+		boolean res= performFinishNewElement();
+		if (res) {
+			IResource resource= fPage.getModifiedResource();
+			if (resource != null) {
+				selectAndReveal(resource);
+				openResource(resource);
+			}	
+		}
+		return res;
 	}
 }
