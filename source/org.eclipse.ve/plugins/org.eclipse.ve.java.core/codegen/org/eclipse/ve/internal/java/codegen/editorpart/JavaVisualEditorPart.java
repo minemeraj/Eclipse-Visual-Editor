@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.15 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.16 $  $Date: 2004-03-24 15:07:39 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -83,7 +83,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 import org.eclipse.ui.views.properties.*;
 
-import org.eclipse.jem.internal.beaninfo.core.BeaninfoNature;
+import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
