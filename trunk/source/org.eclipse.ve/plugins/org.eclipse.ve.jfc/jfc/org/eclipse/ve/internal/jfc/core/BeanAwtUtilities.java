@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-22 23:49:21 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-02 19:34:38 $ 
  */
 
 import java.util.List;
@@ -49,20 +49,22 @@ public static Point getOffScreenLocation(){
 		return new Point(0,0);
 	else {
 		// Get how big the display is and put it out beyond that.
-		Display disp = Display.getCurrent();
-		if (disp == null)
-			disp = Display.getDefault();
-		final Rectangle[] b = new Rectangle[1];
-		final Display dsp = disp;
-		disp.syncExec(new Runnable() {
-			/**
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				b[0] = dsp.getBounds();
-			}
-		});
-		return new Point(Math.max(10000, b[0].width*2), Math.max(10000, b[0].height*2));
+//		Display disp = Display.getCurrent();
+//		if (disp == null)
+//			disp = Display.getDefault();
+//		final Rectangle[] b = new Rectangle[1];
+//		final Display dsp = disp;
+//		disp.syncExec(new Runnable() {
+//			/**
+//			 * @see java.lang.Runnable#run()
+//			 */
+//			public void run() {
+//				b[0] = dsp.getBounds();
+//			}
+//		});
+//		return new Point(Math.max(10000, b[0].width*2), Math.max(10000, b[0].height*2));
+		// TODO 57295 : Need to determine this dynamically - maybe using java.awt.Toolkit.getScreenSize() and cant do a syncExec() 
+		return new Point(10000, 10000);
 	}
 }
 
