@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.22 $  $Date: 2004-04-05 22:16:36 $ 
+ *  $Revision: 1.23 $  $Date: 2004-04-07 14:01:15 $ 
  */
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -68,6 +69,8 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.commands.ICommand;
+import org.eclipse.ui.commands.ICommandManager;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -1472,10 +1475,26 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private boolean textEditorActive = false;
 	private boolean textEditorFocus = false;
 	private boolean firstSelection = true ;  // First selection after activation
+	private ICommandManager commandMgr = PlatformUI.getWorkbench().getCommandSupport().getCommandManager();
 	private FocusListener focusListener = new FocusListener() {
-		public void focusGained(FocusEvent e) {
+		private void enableDelCommand(boolean flag) {
+			//		TODO: this is a temporary workaround to the fact that the compilation unit editor
+			//      uses a package protected AdapterSourceViewer to handle command's target.
+			ICommand c = commandMgr.getCommand("org.eclipse.ui.edit.delete") ; //$NON-NLS-1$
+			try {
+				Class cmdClazz = getClass().getClassLoader().loadClass("org.eclipse.ui.internal.commands.Command"); //$NON-NLS-1$
+				Method m = cmdClazz.getDeclaredMethod("setDefined", new Class[] { boolean.class } ); //$NON-NLS-1$
+				m.setAccessible(true);
+				m.invoke(c, new Object[] {new Boolean(flag)}) ;				
+			} catch (Exception e1) {
+				JavaVEPlugin.log(e1);
+			}
+		}
+		public void focusGained(FocusEvent e) {			
 			textEditorFocus = textEditorActive = e.getSource() == getSourceViewer().getTextWidget();
+			enableDelCommand(textEditorFocus); // disable the del command if the GEF pane is in focus.
 			if (textEditorActive) {
+				
 				// Set the common actions up from the text editor.
 				Iterator itr = commonActionRegistry.getActions();
 				while (itr.hasNext()) {
@@ -1494,6 +1513,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		public void focusLost(FocusEvent e) {
 			if (textEditorActive)
 				textEditorFocus = false;
+			enableDelCommand(true);  // ReActivate the command for other editors
 		}
 	};
 		
