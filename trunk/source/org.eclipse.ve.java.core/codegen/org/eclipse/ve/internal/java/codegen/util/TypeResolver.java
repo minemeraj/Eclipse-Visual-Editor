@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-10 17:52:23 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-24 20:15:13 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -613,6 +613,12 @@ public class TypeResolver {
 							setBlastAll();
 							return;
 						case IJavaElementDelta.CHANGED:
+							if ((delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
+								// The project has been closed. For now we'll just blast everything and reresolve.
+								// In the future we can see if we should only remove those resolved in this project.
+								setBlastAll();
+								return;
+							}
 							if (isClasspathResourceChange(delta)) {
 								// The classpath of the project has been changed. For now we will blast all.
 								// In the future we could use the fragment root added/removed/changed notifications
