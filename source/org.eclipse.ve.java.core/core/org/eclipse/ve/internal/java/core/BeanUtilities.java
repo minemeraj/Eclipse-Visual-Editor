@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.15 $  $Date: 2004-05-26 14:44:51 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-27 19:00:00 $ 
  */
 
 import java.util.*;
@@ -194,50 +194,6 @@ public class BeanUtilities {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param classNameToCollect - The string of the class being searched for, e.g. "java.awt.Button" to find all buttons
-	 * @param objects - the objects are added to this list (will be the IJavaInstance)
-	 * @param labels - the labels that come from the label providers
-	 * @param beanComposition - bean composition 
-	 * @param editDomain - edit domain
-	 * 
-	 * @since 1.0.0
-	 */
-	public static void collectFreeFormParts(String classNameToCollect, List objects, List labels, BeanComposition beanComposition,EditDomain editDomain){
-		
-		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
-		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(classNameToCollect,beanComposition.eResource().getResourceSet());
-		
-		Iterator components = beanComposition.getMembers().iterator();
-		while(components.hasNext()){
-			Object component = components.next();
-			if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
-				// Test the class
-				IJavaInstance javaComponent = (IJavaObjectInstance) component;
-				JavaHelpers componentType= javaComponent.getJavaType();
-				if ( javaClass.isAssignableFrom(componentType)) {
-					objects.add(component);
-					String label = BeanUtilities.getLabel(javaComponent,editDomain);
-					labels.add(label);
-				}
-			}
-		}
-		// Now we know the children set the items
-		String[] items = new String[labels.size()];
-		System.arraycopy(labels.toArray(),0,items,0,items.length);
-
-		Arrays.sort(items);
-		ArrayList a = new ArrayList() ;
-		for (int i = 0; i < items.length; i++) {			
-			for (int j = 0; j < labels.size(); j++) {
-				if (items[i].equals(labels.get(j))) {
-					a.add(objects.get(j));
-					break;
-				}
-			}		
-		}
-	}
 
 	/**
 	 * @param componentType

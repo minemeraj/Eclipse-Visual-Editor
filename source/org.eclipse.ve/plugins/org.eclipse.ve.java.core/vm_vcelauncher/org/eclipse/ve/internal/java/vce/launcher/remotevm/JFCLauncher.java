@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCLauncher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-18 13:56:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-27 19:00:00 $ 
  */
 
 import java.applet.Applet;
@@ -44,6 +44,7 @@ public class JFCLauncher implements ILauncher {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#launch(java.lang.Class, java.lang.Object, java.lang.String[])
 	 */
+		
 	public void launch(Class clazz, Object javaBean, String[] args) {
 		// Set the look and feel if required	
 		String lookAndFeelArg = System.getProperty("vce.launcher.lookandfeel"); //$NON-NLS-1$
@@ -51,6 +52,7 @@ public class JFCLauncher implements ILauncher {
 		if (lookAndFeelArg != null && !(lookAndFeelArg.equals(""))){ //$NON-NLS-1$
 			try { 
 				UIManager.setLookAndFeel(lookAndFeelArg);
+				SwingUtilities.updateComponentTreeUI((Component) javaBean);
 			} catch ( Exception exc ) {
 				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.SettingLookAndFeel_ERROR_"), new Object[] {lookAndFeelArg})); //$NON-NLS-1$
 				exc.printStackTrace();
