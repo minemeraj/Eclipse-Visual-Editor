@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-21 21:13:41 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -244,7 +244,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void loadModel() {
 		// Loading the Model will reSet everyting; make sure all commit and flush
 		// callers have been called.
-		modelBuilder.commitAndFlush(false) ;
+		modelBuilder.commit() ;
 //		Kick off the setup thread. Doing so that system stays responsive.
 		Thread setup = new Thread(new Setup(), "Setup JavaVisualEditorPart"); //$NON-NLS-1$
 		setup.setPriority(Thread.currentThread().getPriority() - 1); // Make it slightly slower so that ui thread still active
@@ -996,7 +996,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 
 		public void waitForCompleteTransaction() {
-			modelBuilder.commitAndFlush(false);
+			modelBuilder.commit();
 			// Make sure there are no changes outstanding. Will wait until they are committed. Will immediately wake up committer.
 		}
 
@@ -1599,10 +1599,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					return;
 				// TODO Rich, we need some type of call back - this will hand hold Sri in the meantime
 				while (modelChangeController.inTransaction()) {
-					modelBuilder.commitAndFlush(true) ;
+					modelBuilder.commit() ;
 				}
 				// Make sure all callbacks have been called.
-				modelBuilder.commitAndFlush(false) ;
+				modelBuilder.commit() ;
 
 				// Now do rest of setup, which is the same whether first time or not.								
 				statusController.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, true);
@@ -1696,7 +1696,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			initialized = true;
 			// In the case that we are called because a target VM recycle, make sure
 			// all outstanding callbacks are called from the Synchronizer.
-			modelBuilder.commitAndFlush(false) ;
+			modelBuilder.commit() ;
 			initializeEditDomain();
 			modelBuilder.setMsgRenderer(statusController);
 			modelBuilder.setEditDomain(editDomain);

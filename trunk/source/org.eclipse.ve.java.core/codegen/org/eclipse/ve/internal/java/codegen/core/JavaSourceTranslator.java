@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 21:13:41 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1235,7 +1235,7 @@ public synchronized void reconnect(org.eclipse.ui.IFileEditorInput input,IProgre
 public synchronized void disconnect(boolean clearVCEModel) {
 
     if (fSrcSync != null) {
-       commitAndFlush(false);    
+       commit();    
        fSrcSync.disconnect() ;
     }
 
@@ -1259,7 +1259,7 @@ public synchronized void dispose() {
 	
 	if (fSrcSync != null) {
 		fSrcSync.setSharedUpdatingLocalStrategy(null) ;
-		commitAndFlush(false);
+		commit();
 		fSrcSync.uninstall() ;
 		fSrcSync = null ;
 		// The following is a hack until CodeGen uses the EditDomain.		
@@ -1296,127 +1296,52 @@ public boolean isReloadPending() {
 }
 
 /**
- * This one provide a Synchronous call to drive a commit and flush process
- * This call can not be nested.  i.e., one can not call a commitAndFlush indirectly from
- * a strategy (worker) routine.   This will cause the thread to want to wait for itself to finish
+ * This one provide a Synchronous call to drive a commit process
+ * This will induce CodeGen to remove any beans that were marked for deletion
+ * and will be considered an end to a top down transaction.  
  */
-public void commitAndFlush(boolean canWait) {
-    if (fSrcSync == null) return ;
-    if (fBeanModel == null ||
-        fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN) ||
-        fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL)) return ;
-    // TODO This is the really BAD !!! we need to fix the way we synchronize"
-    // The problem is that the Synchronizer will wait untill all workers are done before
-    // responding on commit request.  But, in a reload from scratch of an extended
-    // JFrame for example, where we have a worker thread calling this in a response
-    // of a content pane insertion transaction ... dead lock.
-    if (fMsgRrenderer == null ||
-        fMsgRrenderer.isStatusSet(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS))
-        return ;
-         
-    
-    final ArrayList waitDone = new ArrayList() ;
-    final Display display = Display.getCurrent();
-    long  startTime, endTime  ;
-    
-    // If we are doing reload from scratch, or bring up, no point to wait 
-    if (fBeanModel == null || fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN) || fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL)) {
-       JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(sync, canWait="+canWait+" BringUp - returned")	 ; //$NON-NLS-1$ //$NON-NLS-2$
-       return ;
-    }
-    
-    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(sync, canWait="+canWait+" Display="+display+") - start",MsgLogger.LOG_FINEST) ;          //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    waitDone.add(Thread.currentThread()) ;
-    ISynchronizerListener listener = new ISynchronizerListener() {
-                             public void markerProcessed (String marker) {
-                                 synchronized (this) {
-                                     waitDone.clear() ;
-                                     if (display != null)
-                                        display.asyncExec(null) ;
-                                     else
-                                        this.notifyAll() ;
-                                        
-                                 }
-                             }
-                          } ;
-
-      fSrcSync.notifyOnMarker(listener,"commitAndFlush",!canWait) ; //$NON-NLS-1$
-      startTime = System.currentTimeMillis() ;  
-      endTime = startTime+5*Math.max(500, fSrcSync.getDelay()) ;
-
-      int NestGuard ;
-      synchronized (this) {
-         NestGuard = fCommitAndFlushNestGuard++ ;
-      }
-      if (display != null) {      	
-      	while (!waitDone.isEmpty())  {
-         try { 		     
-       	// Busy wait, because we do not want to miss a wake up call		  
-		 	if (!display.readAndDispatch()) {
-		 		if (NestGuard == 0) {
-				   display.sleep();
-		 		}
-				else {
-					JavaVEPlugin.log("commitAndFlush Nesting = "+NestGuard,MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
-					break ;
-				}
-				   
-			}	        
-		  }
-		  catch (Throwable t) {}				   			  		           
-//         if (System.currentTimeMillis()>endTime) {
-//        	JavaVEPlugin.log("JavaSourceTranslator.commitAndFlush(): Nested call error",MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
-//        	waitDone.clear() ;
-//         }
-	    }
-      }
-      else { // No Display      	            
-        synchronized (listener) {      	 	
-      	  while (!waitDone.isEmpty())
-      	 	try {
-      	 	 listener.wait(endTime-startTime+1) ;
-      	 	}
-      	 	catch (InterruptedException e) {
-      	 		if (System.currentTimeMillis()>endTime) {
-        	         JavaVEPlugin.log("JavaSourceTranslator.commitAndFlush(): Nested call error",MsgLogger.LOG_WARNING) ; //$NON-NLS-1$
-        	         waitDone.clear() ;
-      	 		}
-            }
-        }
-      } 
+public void commit() {
+	
+	// First commit	
+	if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+		fBeanModel.deleteDesignatedBeans() ;
+		fBeanModel.docChanged();
+	}
       	 		      	 			                    
-    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush - done",MsgLogger.LOG_FINEST) ;         //$NON-NLS-1$
-    synchronized (this) {
-      fCommitAndFlushNestGuard-- ;
-      if (fCommitAndFlushNestGuard<0) fCommitAndFlushNestGuard=0 ;
-    }
+    JavaVEPlugin.log("JavaSourceTranslator: commit",MsgLogger.LOG_FINEST) ;         //$NON-NLS-1$
 }
 /**
  * This one provide an Async. registration for a notification on flush process
+ * 
+ * No need to use asynchroneous commit anymore, as no flushing is performed anymore.
+ * Only synchrenous commnet commit use commit(boolean) instead
+ * 
+ * @deprecate
  */
 public void commitAndFlush(ISynchronizerListener listener, String marker) {
     
     // First commit
     
-    if (fBeanModel != null) {
-      fBeanModel.deleteDesignatedBeans() ;
-      fBeanModel.docChanged();
-    }
-    
+    commit() ;
+
+    // No need to wait for the synchronizer anymore to flush.  Top Down
+    // is done on the actual CU.
     if (listener == null) return ;
+    else listener.markerProcessed(marker) ;
     
-        // If we are doing reload from scratch, or bring up, no point to wait 
-    if (fBeanModel == null || !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING)) {
-       JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(sync,  BringUp - returned")	 ; //$NON-NLS-1$
-       listener.markerProcessed(marker) ;
-       return ;
-    }
-    
-    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(async) - start",MsgLogger.LOG_FINEST) ;          //$NON-NLS-1$
-    if (fSrcSync == null) 
-      listener.markerProcessed(marker) ;
-    else     
-      fSrcSync.notifyOnMarker(listener,marker,false) ;    
+//    
+//        // If we are doing reload from scratch, or bring up, no point to wait 
+//    if (fBeanModel == null || !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING)) {
+//       JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(sync,  BringUp - returned")	 ; //$NON-NLS-1$
+//       listener.markerProcessed(marker) ;
+//       return ;
+//    }
+//    
+//    JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush(async) - start",MsgLogger.LOG_FINEST) ;          //$NON-NLS-1$
+//    if (fSrcSync == null) 
+//      listener.markerProcessed(marker) ;
+//    else     
+//      fSrcSync.notifyOnMarker(listener,marker,false) ;    
     JavaVEPlugin.log("JavaSourceTranslator: commitAndFlush - done",MsgLogger.LOG_FINEST) ;         //$NON-NLS-1$
 }
 

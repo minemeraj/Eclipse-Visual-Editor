@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 21:13:41 $ 
  */
 
 
@@ -58,16 +58,18 @@ public interface IDiagramModelBuilder extends IDiagramModelInstance {
     /**
      * Denotes that a compound operation is completed.  This
      * will actually remove source code of deleted components, if needed,
-     * and will flush the changes to the Java Editor.
+     * and resume listening to source code changes.
      * 
      * This operation is synchroneous.
      */
-    public void commitAndFlush(boolean canWait) ;
+    public void commit() ;
     /**
      * Async. version of commitAndFlush
      * 
      * @param listener implements the call back
      * @param marker is an optional origin designator for the call back.
+     * 
+     * @deprecated  use commit()
      */
     public void commitAndFlush(ISynchronizerListener listener, String marker) ;
     

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IDiagramSourceDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 21:13:41 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus;
 import org.eclipse.ve.internal.java.codegen.java.ISourceTranslatorListener;
-import org.eclipse.ve.internal.java.codegen.java.ISynchronizerListener;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**
@@ -49,25 +49,6 @@ public interface IDiagramSourceDecoder {
 	
 	public void dispose() ;
 
-	/**
-	 * Denote that a compound operation is completed.  This
-	 * will actually remove code for deleted components, if needed,
-	 * and will flush the changes to the Java Editor.
-	 * A call to this API is synchroneous.
-	 * 
-	 * @param canWait denotes if the call can wait for the next sync.
-	 *         cycle.  if false, a flush will be instigated with no delay.
-	 */
-	public void commitAndFlush(boolean canWait) ;
-	/**
-	 * Async. version of commitAndFlush
-	 *        The flush will occur on the next cycle of the synchronizer
-	 * 
-	 * @param listener implements the call back to be called when the flush occured.
-	 * @param marker is an optional designator of the call back.
-     */
-	public void commitAndFlush(ISynchronizerListener listener, String marker) ;
-	
 	/**
 	 * @param delay will set up the delay time for JavaSourceSynchronizer
 	 *         value less than JavaSourceSynchronizer.DEFAULT_SYNC_DELAY will be ignored.
