@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.3 $ $Date: 2004-04-20 09:07:12 $
+ * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.4 $ $Date: 2004-05-18 18:10:29 $
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -33,7 +33,7 @@ public class FillLayoutPolicyFactory extends Object implements ILayoutPolicyFact
 	 * FillLayout
 	 */
 	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
-		return new RowLayoutEditPolicy(containerPolicy);
+		return new FillLayoutEditPolicy(containerPolicy);
 	}
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep) {
 		// Nothing that special about FillLayout so we can use the default policy helper
