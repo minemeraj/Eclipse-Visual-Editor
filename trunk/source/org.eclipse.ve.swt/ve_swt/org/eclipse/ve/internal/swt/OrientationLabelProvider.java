@@ -20,7 +20,7 @@ public class OrientationLabelProvider extends EnumeratedIntValueLabelProvider {
 	
 	public OrientationLabelProvider(){
 		super(
-		    new String[] { "HORIZONTAL" , "VERTICAL" } ,
+		    new String[] { SWTMessages.getString("OrientationLabelProvider.Name.Horizontal") , SWTMessages.getString("OrientationLabelProvider.Name.Vertical") } , //$NON-NLS-1$ //$NON-NLS-2$
 			new Integer[] { new Integer(SWT.HORIZONTAL) , new Integer(SWT.VERTICAL ) }
 		);
 	}

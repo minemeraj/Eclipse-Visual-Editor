@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,12 +36,12 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 		new Object[] [] {
-			{ "readOnly" , "readOnly", Boolean.FALSE , new Object[] {
-				"READ_ONLY" , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					
+			{ "readOnly" , ComboMessages.getString("ComboBeanInfo.StyleBits.Readonly.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ComboMessages.getString("ComboBeanInfo.StyleBits.Readonly.Value.ReadOnly") , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "style" , "style", Boolean.FALSE , new Object[] {
-				"DROP DOWN" , "org.eclipse.swt.SWT.DROP_DOWN" , new Integer(SWT.DROP_DOWN),
-				"SIMPLE" , "org.eclipse.swt.SWT.SIMPLE" , new Integer(SWT.SIMPLE)
+			{ "style" , ComboMessages.getString("ComboBeanInfo.StyleBits.Style.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ComboMessages.getString("ComboBeanInfo.StyleBits.Style.Value.DropDown") , "org.eclipse.swt.SWT.DROP_DOWN" , new Integer(SWT.DROP_DOWN), //$NON-NLS-1$ //$NON-NLS-2$
+				ComboMessages.getString("ComboBeanInfo.StyleBits.Style.Value.Simple") , "org.eclipse.swt.SWT.SIMPLE" , new Integer(SWT.SIMPLE) //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

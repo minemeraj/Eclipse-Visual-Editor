@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.15 $ $Date: 2004-05-19 23:04:11 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.16 $ $Date: 2004-06-03 14:45:07 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -237,7 +237,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			// The propertyName is also changed to be the first name
 			// This is for style bits like SWT.BORDER that become called "border" with "BORDER" and "not set";
 			if (names.length == 1) {
-				names = new String[] { names[0], "<not set>"};
+				names = new String[] { names[0], SWTMessages.getString("WidgetPropertySourceAdapter.NotSet")}; //$NON-NLS-1$
 				initStrings = new String[] { initStrings[0], STYLE_NOT_SET_INITSTRING};
 				values = new Integer[] { values[0], new Integer(STYLE_NOT_SET)};
 			}

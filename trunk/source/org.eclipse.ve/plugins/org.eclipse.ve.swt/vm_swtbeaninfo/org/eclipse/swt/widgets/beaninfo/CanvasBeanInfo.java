@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CanvasBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,20 +36,20 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {			
-			{ "noBackground" , "noBackground" , Boolean.TRUE , new Object[] {
-			    "NO_BACKGROUND" , "org.eclipse.swt.SWT.NO_BACKGROUND" , new Integer(SWT.NO_BACKGROUND)				
+			{ "noBackground" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoBackground.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoBackground.Value.NoBackground") , "org.eclipse.swt.SWT.NO_BACKGROUND" , new Integer(SWT.NO_BACKGROUND)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "noFocus" , "noFocus" , Boolean.TRUE ,  new Object[] {
-				"NO_FOCUS" , "org.eclipse.swt.SWT.NO_FOCUS" , new Integer(SWT.NO_FOCUS)				
+			{ "noFocus" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoFocus.Name") , Boolean.TRUE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoFocus.Value.NoFocus") , "org.eclipse.swt.SWT.NO_FOCUS" , new Integer(SWT.NO_FOCUS)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "noMergePaints" , "noMergePaints", Boolean.TRUE , new Object[] {
-				"NO_MERGE_PAINTS" , "org.eclipse.swt.SWT.NO_MERGE_PAINTS" , new Integer(SWT.NO_MERGE_PAINTS)				
+			{ "noMergePaints" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoMergePaints.Name"), Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoMergePaints.Value.NoMergePaints") , "org.eclipse.swt.SWT.NO_MERGE_PAINTS" , new Integer(SWT.NO_MERGE_PAINTS)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "noRedrawResize" , "noRedrawResize" , Boolean.TRUE , new Object[] {
-				"NO_REDRAW_RESIZE" , "org.eclipse.swt.SWT.NO_REDRAW_RESIZE" , new Integer(SWT.NO_REDRAW_RESIZE)				
+			{ "noRedrawResize" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRedrawResize.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRedrawResize.Value.NoRedrawResize") , "org.eclipse.swt.SWT.NO_REDRAW_RESIZE" , new Integer(SWT.NO_REDRAW_RESIZE)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "noRadioGroup" , "noRadioGroup" , Boolean.TRUE , new Object[] {
-				"NO_RADIO_GROUP" , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				
+			{ "noRadioGroup" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRadioGroup.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoRadioGroup.Value.NoRadioGroup") , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } 			
 		}
 	);

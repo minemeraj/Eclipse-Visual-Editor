@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -35,20 +35,20 @@ public class TableBeanInfo extends IvjBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		"SWEET_STYLEBITS", //$NON-NLS-1$
 	    new Object[] [] {				
-			{ "style" , "style" , Boolean.FALSE , new Object[] {
-			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
+			{ "style" , TableMessages.getString("TableBeanInfo.StyleBits.Style.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    TableMessages.getString("TableBeanInfo.StyleBits.Style.Value.Check") , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK)  //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "selectionStyle" , "selectionStyle" , Boolean.FALSE , new Object[] {
-				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
-				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
+			{ "selectionStyle" , TableMessages.getString("TableBeanInfo.StyleBits.SelectionStyle.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TableMessages.getString("TableBeanInfo.StyleBits.SelectionStyle.Value.Single") , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				TableMessages.getString("TableBeanInfo.StyleBits.SelectionStyle.Value.Multi") , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "fullSelection" , "fullSelection" , Boolean.FALSE , new Object[] {
-				"FULL_SELECTION" , "org.eclipse.swt.FULL_SELECTION" , new Integer(SWT.FULL_SELECTION) 					
+			{ "fullSelection" , TableMessages.getString("TableBeanInfo.StyleBits.FullSelection.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TableMessages.getString("TableBeanInfo.StyleBits.FullSelection.Value.FullSelection") , "org.eclipse.swt.FULL_SELECTION" , new Integer(SWT.FULL_SELECTION) 					 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "hideSelection" , "hideSelection" , Boolean.FALSE , new Object[] {
-				"HIDE_SELECTION" , "org.eclipse.swt.HIDE_SELECTION" , new Integer(SWT.HIDE_SELECTION) 					
+			{ "hideSelection" , TableMessages.getString("TableBeanInfo.StyleBits.HideSelection.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TableMessages.getString("TableBeanInfo.StyleBits.HideSelection.Value.HideSelection") , "org.eclipse.swt.HIDE_SELECTION" , new Integer(SWT.HIDE_SELECTION) 					 //$NON-NLS-1$ //$NON-NLS-2$
 			} }			
 		}
 	);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GroupBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,15 +36,15 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {			
-			{ "noRadioGroup" , "noRadioGroup" , Boolean.FALSE , new Object[] {
-				"NO_RADIO_GROUP" , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				
+			{ "noRadioGroup" , GroupMessages.getString("GroupBeanInfo.StyleBits.NoRadioGroup.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.NoRadioGroup.Value.NoRadioGroup") , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "shadow" , "shadow" , Boolean.FALSE , new Object[] {
-				"IN" , "org.eclipse.swt.SWT.SHADOW_IN" , new Integer(SWT.SHADOW_IN),
-				"OUT" , "org.eclipse.swt.SWT.SHADOW_OUT" , new Integer(SWT.SHADOW_OUT),
-				"ETCHED IN" , "org.eclipse.swt.SWT.SHADOW_ETCHED_IN" , new Integer(SWT.SHADOW_ETCHED_IN),
-				"ETCHED OUT" , "org.eclipse.swt.SWT.SHADOW_ETCHED_OUT" , new Integer(SWT.SHADOW_ETCHED_OUT),
-				"NONE" , "org.eclipse.swt.SWT.SHADOW_NONE" , new Integer(SWT.SHADOW_NONE)
+			{ "shadow" , GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Value.In") , "org.eclipse.swt.SWT.SHADOW_IN" , new Integer(SWT.SHADOW_IN), //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Value.Out") , "org.eclipse.swt.SWT.SHADOW_OUT" , new Integer(SWT.SHADOW_OUT), //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Value.EtchedIn") , "org.eclipse.swt.SWT.SHADOW_ETCHED_IN" , new Integer(SWT.SHADOW_ETCHED_IN), //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Value.EtchedOut") , "org.eclipse.swt.SWT.SHADOW_ETCHED_OUT" , new Integer(SWT.SHADOW_ETCHED_OUT), //$NON-NLS-1$ //$NON-NLS-2$
+				GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Value.None") , "org.eclipse.swt.SWT.SHADOW_NONE" , new Integer(SWT.SHADOW_NONE) //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);

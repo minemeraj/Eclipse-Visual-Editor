@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-01 18:04:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-03 14:45:34 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,23 +37,23 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
-			{ "style" , "style" , Boolean.FALSE ,  new Object[] {
-			    "PUSH" , "org.eclipse.swt.SWT.PUSH" , new Integer(SWT.PUSH) ,
-				"CHECK" , "org.eclipse.swt.SWT.CHECK" ,  new Integer(SWT.CHECK), 				
-				"RADIO" , "org.eclipse.swt.SWT.RADIO" , new Integer(SWT.RADIO) ,
-				"ARROW" , "org.eclipse.swt.SWT.ARROW" , new Integer(SWT.ARROW) ,
-				"TOGGLE" , "org.eclipse.swt.SWT.TOGGLE" , new Integer(SWT.TOGGLE)				
+			{ "style" , ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			    ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Value.Push") , "org.eclipse.swt.SWT.PUSH" , new Integer(SWT.PUSH) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Value.Check") , "org.eclipse.swt.SWT.CHECK" ,  new Integer(SWT.CHECK), 				 //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Value.Radio") , "org.eclipse.swt.SWT.RADIO" , new Integer(SWT.RADIO) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Value.Arrow") , "org.eclipse.swt.SWT.ARROW" , new Integer(SWT.ARROW) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.Style.Value.Toggle") , "org.eclipse.swt.SWT.TOGGLE" , new Integer(SWT.TOGGLE)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,
-			{ "textAlignment" , "textAlignment", Boolean.FALSE , new Object[] {
-				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					
-				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) ,
-				"CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				
+			{ "textAlignment" , ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Left") , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Center") , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "arrowStyle" , "arrowStyle", Boolean.FALSE , new Object[] {
-				"UP" , "org.eclipse.swt.SWT.UP" , new Integer(SWT.UP) ,					
-				"DOWN" , "org.eclipse.swt.SWT.DOWN" , new Integer(SWT.DOWN) ,
-				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,
-				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) 				
+			{ "arrowStyle" , ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Value.Up") , "org.eclipse.swt.SWT.UP" , new Integer(SWT.UP) ,					 //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Value.Down") , "org.eclipse.swt.SWT.DOWN" , new Integer(SWT.DOWN) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Value.Left") , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) , //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) 				 //$NON-NLS-1$ //$NON-NLS-2$
 			} }
 		}
 	);
