@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.19 $  $Date: 2004-06-11 19:23:24 $ 
+ *  $Revision: 1.20 $  $Date: 2004-06-18 16:31:34 $ 
  */
 
 import java.util.*;
@@ -540,14 +540,16 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				// The base ClassDescriptorDecorator has a key of "org.eclipse.ve.internal.PrototypeFactory" that returns a class name
 				// implementing "org.eclipse.ve.internal.PrototypeFactory" that can create the EMF model for this
 				// If such a decorator exists then the selection is assumed to be valid
-				EClass selectedEMFClass = (EClass) Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
-				ClassDescriptorDecorator decorator =
-					(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-						selectedEMFClass,
-						ClassDescriptorDecorator.class,
-						PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-				if(decorator != null) {
-					isDefaultConstructorSearchRequired = false;
+				if(resourceSet!=null){
+					EClass selectedEMFClass = (EClass) Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
+					ClassDescriptorDecorator decorator =
+						(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
+							selectedEMFClass,
+							ClassDescriptorDecorator.class,
+							PrototypeFactory.PROTOTYPE_FACTORY_KEY);
+					if(decorator != null) {
+						isDefaultConstructorSearchRequired = false;
+					}
 				}
 				
 				IType type = ti.resolveType(getJavaSearchScope());
