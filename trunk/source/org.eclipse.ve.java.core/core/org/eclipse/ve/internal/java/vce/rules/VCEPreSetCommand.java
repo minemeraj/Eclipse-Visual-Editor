@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-23 20:58:22 $ 
  */
 
 import java.util.*;
@@ -219,9 +219,12 @@ public class VCEPreSetCommand extends CommandWrapper {
 		
 	
 	private EClass classAWTComponent;
+	private EClass classSWTControl;	// TODO Hack for SWT, needs to be done by some kind of contribution SWT makes to the VE and not hard coded here	
+	
 	protected void initialize() {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		classAWTComponent = (EClass) rset.getEObject(URI.createURI("java:/java.awt#Component"), true); //$NON-NLS-1$
+		classSWTControl = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Control"), true); //$NON-NLS-1$		
 //		classJLabel = (EClass) rset.getEObject(URI.createURI("java:/javax.swing#JLabel"), true);		
 	}
 	
@@ -234,6 +237,8 @@ public class VCEPreSetCommand extends CommandWrapper {
 //			return LOCAL;
 //		else 
 		if (classAWTComponent.isInstance(property))
+			return GLOBAL;
+		else if (classSWTControl != null && classSWTControl.isInstance(property))
 			return GLOBAL;
 		else
 			return PROPERTY;
