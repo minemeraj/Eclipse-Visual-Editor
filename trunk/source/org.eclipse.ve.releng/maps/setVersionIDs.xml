@@ -21,6 +21,7 @@
 	<property name="org.eclipse.ve.examples-feature-v" value="${id}"/>
 	<property name="org.eclipse.ve.java.core-v" value="${id}"/>
 	<property name="org.eclipse.ve.jfc-v" value="${id}"/>
+	<property name="org.eclipse.ve.swt-v" value="${id}"/>	
 	<property name="org.eclipse.ve.propertysheet-v" value="${id}"/>
 	<property name="org.eclipse.ve.doc-v" value="${id}"/>
 	<property name="org.eclipse.ve.tests-v" value="${id}"/>
@@ -46,6 +47,7 @@
 			<filter token="org.eclipse.ve.examples-feature" value="${org.eclipse.ve.examples-feature-v}"/>
 			<filter token="org.eclipse.ve.java.core" value="${org.eclipse.ve.java.core-v}"/>
 			<filter token="org.eclipse.ve.jfc" value="${org.eclipse.ve.jfc-v}"/>
+			<filter token="org.eclipse.ve.swt" value="${org.eclipse.ve.swt-v}"/>			
 			<filter token="org.eclipse.ve.propertysheet" value="${org.eclipse.ve.propertysheet-v}"/>
 			<filter token="org.eclipse.ve.doc" value="${org.eclipse.ve.doc-v}"/>
 			<filter token="org.eclipse.ve.tests" value="${org.eclipse.ve.tests-v}"/>
@@ -74,6 +76,7 @@
 	<versionProjectFromWorkspace project="org.eclipse.ve.examples-feature" versionName="${id}" property="org.eclipse.ve.examples-feature-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.java.core" versionName="${id}" property="org.eclipse.ve.java.core-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.jfc" versionName="${id}" property="org.eclipse.ve.jfc-v"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.swt" versionName="${id}" property="org.eclipse.ve.swt-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.propertysheet" versionName="${id}" property="org.eclipse.ve.propertysheet-v"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.doc" versionName="${id}" property="org.eclipse.ve.doc-v"/>	
 	<versionProjectFromWorkspace project="org.eclipse.ve.tests" versionName="${id}" property="org.eclipse.ve.tests-v"/>

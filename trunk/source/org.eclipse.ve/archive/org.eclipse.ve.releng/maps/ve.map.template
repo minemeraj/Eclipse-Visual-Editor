@@ -25,6 +25,7 @@ plugin@org.eclipse.ve.examples=@org.eclipse.ve.examples-v@,:pserver:anonymous@de
 plugin@org.eclipse.ve.java.core=@org.eclipse.ve.java.core-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.propertysheet=@org.eclipse.ve.propertysheet-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.jfc=@org.eclipse.ve.jfc-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.swt=@org.eclipse.ve.swt-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.tests=@org.eclipse.ve.tests-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.doc=@org.eclipse.ve.doc-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
