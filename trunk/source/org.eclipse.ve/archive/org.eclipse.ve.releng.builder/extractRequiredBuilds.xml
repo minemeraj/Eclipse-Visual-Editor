@@ -23,7 +23,6 @@
 	</target>
 				
 	<target name="outofdate" if="zipname" unless="sameurl" depends="testurl">	
-		<echo message="in out of date"	/>
 		<delete>
 			<fileset dir="${buildDirectory}/..">
 			    <include name="${zipname}"/>
@@ -32,6 +31,7 @@
 	</target>
 		
 	<target name="download" if="url,zipname" depends="outofdate">
+<echo message="in download"/>
 		<get src="${url}" dest="${buildDirectory}/../${zipname}" usetimestamp="true"/>
 		<propertyfile file="${buildDirectory}/../${zipname}.properties">
 			<entry key="downurl" value="${url}"/>
