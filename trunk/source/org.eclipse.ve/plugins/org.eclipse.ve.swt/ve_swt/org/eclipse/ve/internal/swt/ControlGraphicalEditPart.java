@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-03-21 22:48:08 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-03-28 22:09:51 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -160,11 +160,10 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		}
 	}
 	protected IVisualComponent getVisualComponent() {
-		return (IVisualComponent) getControlProxy(); // For AWT, the component proxy is the visual component.
+		return (IVisualComponent) BeanProxyUtilities.getBeanProxyHost(getBean());
 	}
-	protected ControlProxyAdapter getControlProxy() {
-		IBeanProxyHost beanProxy = BeanProxyUtilities.getBeanProxyHost(getBean());
-		return (ControlProxyAdapter) beanProxy;
+	protected IBeanProxyHost getControlProxy() {
+		return BeanProxyUtilities.getBeanProxyHost(getBean());
 	}
 	public IJavaInstance getBean() {
 		if(bean == null){

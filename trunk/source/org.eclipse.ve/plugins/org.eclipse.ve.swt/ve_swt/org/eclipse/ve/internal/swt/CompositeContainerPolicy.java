@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.9 $$  $$Date: 2005-02-15 23:51:47 $$ 
+ *  $$Revision: 1.10 $$  $$Date: 2005-03-28 22:09:51 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -62,35 +62,36 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			javaChild = aChild;
 		}
 		public void execute() {
-			//TODO need to use commandBuilder/commnds for setting features
 			if(javaChild.getAllocation() != null){
-				IJavaObjectInstance correctParent = (IJavaObjectInstance)getContainer();
-				PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
-				if(expression instanceof PTClassInstanceCreation){
-					PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
-					if(classInstanceCreation.getArguments().size() == 2){
-						Object firstArgument = classInstanceCreation.getArguments().get(0);
-						if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
-							PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-							parentRef.setObject(correctParent);
-							classInstanceCreation.getArguments().remove(0);
-							classInstanceCreation.getArguments().add(0,parentRef);
-							// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
-							ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-							newAlloc.setExpression(expression);								
-							javaChild.setAllocation(newAlloc);
-						} else if (firstArgument instanceof PTInstanceReference){
-							PTInstanceReference instanceReference = (PTInstanceReference)firstArgument;
-							if(instanceReference.getObject() != correctParent){
-								instanceReference.setObject(correctParent);
-								// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+				IJavaObjectInstance correctParent = (IJavaObjectInstance)getContainer(); 
+				if(javaChild.getAllocation() instanceof ParseTreeAllocation){
+					PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
+					if(expression instanceof PTClassInstanceCreation){
+						PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
+						if(classInstanceCreation.getArguments().size() == 2){
+							Object firstArgument = classInstanceCreation.getArguments().get(0);
+							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
+								PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+								parentRef.setObject(correctParent);
+								classInstanceCreation.getArguments().remove(0);
+								classInstanceCreation.getArguments().add(0,parentRef);
+								// 	ReCreate the allocation feature so that CodeGen will reGenerate the constructor
 								ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
 								newAlloc.setExpression(expression);								
 								javaChild.setAllocation(newAlloc);
+							} else if (firstArgument instanceof PTInstanceReference){
+								PTInstanceReference instanceReference = (PTInstanceReference)firstArgument;
+								if(instanceReference.getObject() != correctParent){
+									instanceReference.setObject(correctParent);
+									// 	ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+									ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+									newAlloc.setExpression(expression);								
+									javaChild.setAllocation(newAlloc);
+								}
 							}
 						}
-					}
-				} 			
+					} 			
+				}
 			}
 		}
 		protected boolean prepare() {
