@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.16 $  $Date: 2004-11-16 18:52:56 $ 
+ *  $Revision: 1.17 $  $Date: 2004-12-08 23:23:38 $ 
  */
 
 import java.util.*;
@@ -129,7 +129,7 @@ protected BeanPart processFieldAccess (MethodInvocation stmt) {
  * 
  * @param stmt
  * @return all the beans that could be potentially targets for this expression.
- *  Asscume createFoo() {
+ *  Assume createFoo() {
  *         C = new Composite (parent)
  *         B = new Button(C)
  *  }
@@ -151,10 +151,18 @@ protected BeanPart[] processCreateMethod(MethodInvocation stmt) {
 			else {
 				// If we got here, than not all beans were processed yet
 				// we will have to come back on the 2nd reTry
-				break;
+				return new BeanPart[0];
 			}
 		}
 		return  (BeanPart[]) beans.toArray(new BeanPart[beans.size()]);
+}
+
+protected boolean isSetStatement(MethodInvocation stmt) {
+	if (stmt.arguments() != null && stmt.arguments().size()==1) {
+		if (stmt.getName().getIdentifier().startsWith("set")) //$NON-NLS-1$
+			return true;
+	}
+	return false;
 }
 	
 /**
@@ -179,7 +187,7 @@ protected void processAMessageSend() {
   	  	bean = processFieldAccess(stmt);
   	  // something like this.setFoo() -- look at the rule base if we should
   	  // process.
-  	  else if (stmt.getExpression() instanceof ThisExpression)  
+  	  else if (stmt.getExpression() instanceof ThisExpression || isSetStatement(stmt))  
   	  	bean = processRefToThis(stmt) ;
   	  else if (stmt.getExpression()==null) {
   	      // either a method invocation for creating a child (e.g, creatFoo(), or access to this.setFoo()
