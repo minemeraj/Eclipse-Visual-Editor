@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.8 $  $Date: 2005-03-07 22:55:33 $ 
+ *  $Revision: 1.9 $  $Date: 2005-03-07 23:28:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -29,6 +29,7 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMFactory;
 
@@ -98,8 +99,8 @@ public class VEModelInstance implements IVEModelInstance {
 
 			// TODO: workaround to the fact that if we load from cache, their may
 			//       be timing associated with the creation of an element from .xmi.
-			//       so, create the BeanSubclass for the first time here.
-			fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
+			//       so, force the JCM package init() call by accessing it.
+			JCMPackage pkg = JCMPackage.eINSTANCE;
 			if (!ignoreCache && 
 					(fResource=VEModelCacheUtility.doLoadFromCache(this, null))!=null){				
 				fRoot = (BeanSubclassComposition) fResource.getEObject("/");
@@ -108,7 +109,8 @@ public class VEModelInstance implements IVEModelInstance {
 				isFromCache=true;	
 			}
 			else {
-				fResource = rs.createResource(URI.createURI(fUri));				
+				fResource = rs.createResource(URI.createURI(fUri));
+				fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
 				Diagram d = CDMFactory.eINSTANCE.createDiagram();
 				d.setId(Diagram.PRIMARY_DIAGRAM_ID);
 				fRoot.getDiagrams().add(d);
