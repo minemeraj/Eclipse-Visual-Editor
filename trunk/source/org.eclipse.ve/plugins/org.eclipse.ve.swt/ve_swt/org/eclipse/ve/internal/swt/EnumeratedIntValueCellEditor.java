@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-08 14:50:01 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-10 01:57:15 $ 
  */
 
 import java.util.logging.Level;
@@ -71,17 +71,20 @@ protected Object doGetObject(int index){
 		);
 }
 protected int doGetIndex(Object anObject){
+	int fillValue = -1;
 	// The argument is an IJavaInstance.  Get its bean proxy and compare its int to what we have.
 	if (anObject instanceof IJavaInstance) {
 		// get the init string from the real value and set the editor value
 		IIntegerBeanProxy fillValueProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)anObject, JavaEditDomainHelper.getResourceSet(fEditDomain));
 		// The proxy is an int.  which represents one of the values.
 		// Loop the array of fill values and return the index for the one found.
-		int fillValue = fillValueProxy.intValue();
-		for (int i = 0; i < FILL_VALUES.length; i++) {
-			if (fillValue == FILL_VALUES[i].intValue()) {
-				return i;
-			}
+		fillValue = fillValueProxy.intValue();
+	} else {
+		fillValue = ((Integer)anObject).intValue();
+	}
+	for (int i = 0; i < FILL_VALUES.length; i++) {
+		if (fillValue == FILL_VALUES[i].intValue()) {
+			return i;
 		}
 	}
 	return sNoSelection;

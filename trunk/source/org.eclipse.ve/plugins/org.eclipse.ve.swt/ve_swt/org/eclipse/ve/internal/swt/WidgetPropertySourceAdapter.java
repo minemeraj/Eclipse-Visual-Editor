@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-10 00:40:24 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-10 01:57:15 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -264,6 +264,7 @@ private WidgetProxyAdapter getWidgetProxyAdapter(){
 }
 
 public Object getPropertyValue(Object descriptorID) {
+	// check = 50331656
 	if(descriptorID instanceof EStructuralFeature) {
 		return super.getPropertyValue(descriptorID);
 	} else if(descriptorID instanceof StyleBitPropertyID) {
