@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,23 +9,25 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: DiagramContentsGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ * $RCSfile: DiagramContentsGraphicalEditPart.java,v $ $Revision: 1.1 $ $Date: 2004-03-26 23:07:50 $
  */
+package org.eclipse.ve.internal.cde.emf;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.Diagram;
+
+import org.eclipse.ve.internal.cde.core.ContentsGraphicalEditPart;
+
 /**
- * Contents GraphicalEditPart for a Diagram where DiagramFigures are its children.
- * Subclasses will be used to determine the children editparts that need to be created.
+ * Contents GraphicalEditPart for a Diagram where DiagramFigures are its children. Subclasses will be used to determine the children editparts that
+ * need to be created.
  */
 public abstract class DiagramContentsGraphicalEditPart extends ContentsGraphicalEditPart {
-	
+
 	protected List getModelChildren() {
 		Diagram diagram = (Diagram) getModel();
 		return diagram.getFigures();
@@ -44,22 +45,27 @@ public abstract class DiagramContentsGraphicalEditPart extends ContentsGraphical
 
 	protected DiagramAdapter diagramAdapter = createModelAdapter();
 
-	protected class DiagramAdapter extends AdapterImpl {
+	protected class DiagramAdapter extends EditPartAdapterRunnable {
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+
 		/*
 		 * This method may be overridden for more notifications, but super.notifyChanged() must be called from subclasses.
 		 */
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeatureID(Diagram.class) == CDMPackage.DIAGRAM__FIGURES)
-				refreshChildren();
-		}		
+				queueExec(DiagramContentsGraphicalEditPart.this);
+		}
 	}
-	
+
 	/*
 	 * This may be overridden to return a subclass of DiagramAdapter.
 	 */
 	protected DiagramAdapter createModelAdapter() {
 		// Create an adaptor that is used to listen to changes from the
-		// MOF model object.  The MOF notifications are used by this edit part to stay updated.
+		// MOF model object. The MOF notifications are used by this edit part to stay updated.
 		return new DiagramAdapter();
 	}
 }

@@ -11,11 +11,9 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.16 $  $Date: 2004-03-24 15:07:39 $ 
+ *  $Revision: 1.17 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,9 +25,9 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.parts.ScrollableThumbnail;
 import org.eclipse.draw2d.parts.Thumbnail;
 import org.eclipse.emf.common.notify.Notifier;
@@ -41,12 +39,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.*;
-import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
-import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
+import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.PaletteViewer;
@@ -58,17 +55,13 @@ import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.IRewriteTarget;
+import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
@@ -78,6 +71,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
@@ -95,8 +89,6 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
-import org.eclipse.ve.internal.cde.palette.Category;
-import org.eclipse.ve.internal.cde.palette.Palette;
 import org.eclipse.ve.internal.cde.properties.*;
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
@@ -120,9 +112,9 @@ import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
  */
 public class JavaVisualEditorPart extends CompilationUnitEditor implements DirectSelectionInput {
 	
-	public final static String MARKER_PropertySelection	= "propertySheetSelection" ; //$NON-NLS-1$
-	public final static String MARKER_PropertyChange 	= "propertySheetValueChange" ; //$NON-NLS-1$
-	public final static String MARKER_JVESelection	  	= "VCE Selection" ; //$NON-NLS-1$
+	public final static int SELECT_JVE = 1;
+	public final static int SELECT_PROPERTY = 2;
+	public final static int SELECT_PROPERTY_CHANGE = 3;
 	
 	public final static String PI_CLASS = "class";
 	public final static String PI_PALETTE = "palette";
@@ -140,9 +132,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected GraphicalViewer primaryViewer;
 	protected XMLTextPage xmlTextPage;
 
-	protected LoadingFigureController loadingFigureController;
+	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
-	protected StatusRenderer statusController;
 	protected IDiagramModelBuilder modelBuilder;
 
 	protected ProxyFactoryRegistry proxyFactoryRegistry;
@@ -154,7 +145,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected JavaOutlinePage beansListPage;
 	
-	protected ActionRegistry graphicalActionRegistry = new ActionRegistry();	// Registry of just the graphical ones that need to be accessed by action contributor.
+	protected String currentStatusMessage = "";
+	
+	/*
+	 *  Registry of just the graphical ones (i.e. not in common with text editor) that need to be accessed by action contributor. 
+	 */
+	protected ActionRegistry graphicalActionRegistry = new ActionRegistry();
 	
 	// Registry of actions that are in common with the graph viewer and the java text editor that need to be accessed by action contributor.
 	// What is different is that these actions are all RetargetTextEditorActions. The focus listener will make sure that whichever
@@ -167,10 +163,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected SelectionServiceListener selectionServiceListener = new SelectionServiceListener();
 
 	public JavaVisualEditorPart() {
-		// User TimerStep APIs for performance measurements
-//		TimerStep.instance().writeEnvironment(com.ibm.etools.logging.util.BuildInfo.getWSABuildLevel());
-//		TimerStep.instance().writeCounters2(100);		
 	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
 	 */
@@ -191,14 +185,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()}));
 
 		// We need the following now because both the thread that will be spawned off in doSetInput and 
-		// in the createPartControl need the statusController and loadingFigureControler and EditDomain
+		// in the createPartControl need the loadingFigureControler and EditDomain
 		// to exist at that time. 
 		//
 		// Actually the createPartControl will probably occur before the thread runs to do the rest of
 		// the initialization.	
-		statusController = new StatusRenderer();
-		loadingFigureController = new LoadingFigureController();
-		statusController.addStatusListener(loadingFigureController);
+		loadingFigureController = new JaveVisualEditorLoadingFigureController();
 
 		// Do any initializations that are needed for both the viewers and the codegen parser when they are created.
 		// Need to be done here because there would be race condition between the two threads otherwise.
@@ -206,14 +198,68 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		ClassDescriptorDecoratorPolicy policy = new ClassDescriptorDecoratorPolicy();
 		// Get the default decorator and put a JavaBean label provider onto it
 		ClassDescriptorDecorator defaultClassDescriptorDecorator = (ClassDescriptorDecorator) policy.getDefaultDecorator(ClassDescriptorDecorator.class);
-		defaultClassDescriptorDecorator.setLabelProviderClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.properties.DefaultLabelProviderWithName"); //$NON-NLS-1$
+		defaultClassDescriptorDecorator.setLabelProviderClassname(DefaultLabelProviderWithName.DECORATOR_CLASSNAME_VALUE);
+		ClassDescriptorDecoratorPolicy.setClassDescriptorDecorator(editDomain, policy);	
 		
-		ClassDescriptorDecoratorPolicy.setClassDescriptorDecorator(editDomain, policy);
-		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));
-		editDomain.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);		
-				
 		modelBuilder = new JavaSourceTranslator(editDomain);
+// TODO GET RID of this when Gili no longer needs one.
+modelBuilder.setMsgRenderer(new IJVEStatus() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#showMsg(java.lang.String, int)
+	 */
+	public void showMsg(String msg, int kind) {
+		// TODO Auto-generated method stub
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#addStatusListener(org.eclipse.ve.internal.java.codegen.core.IJVEStatusChangeListener)
+	 */
+	public void addStatusListener(IJVEStatusChangeListener sl) {
+		// TODO Auto-generated method stub
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#removeStatusListener(org.eclipse.ve.internal.java.codegen.core.IJVEStatusChangeListener)
+	 */
+	public void removeStatusListener(IJVEStatusChangeListener sl) {
+		// TODO Auto-generated method stub
+	}
+	int status;
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#setStatus(int, boolean)
+	 */
+	public void setStatus(int flag, boolean state) {
+		if (state) {
+			status |= flag;
+		} else {
+			status &= ~flag;
+		}
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#getState()
+	 */
+	public int getState() {
+		// TODO Auto-generated method stub
+		return status;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#isStatusSet(int)
+	 */
+	public boolean isStatusSet(int state) {
+		// TODO Auto-generated method stub
+		return (status & state) != 0;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus#setReloadPending(boolean)
+	 */
+	public boolean setReloadPending(boolean flag) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+});
 
+		modelChangeController = new JavaVisualEditorModelChangeController(this, modelBuilder);
+		editDomain.setCommandStack(new JavaVisualEditorCommandStack(modelChangeController));
+		editDomain.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, modelChangeController);	
+		
 		// Create the common actions
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
 		RetargetTextEditorAction deleteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Delete."); //$NON-NLS-1$
@@ -236,6 +282,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		// Create the customize action since needed right away.
 		graphicalActionRegistry.registerAction(new CustomizeJavaBeanAction(this, editDomain));
+		
+		// Create the pause/reload action.
+		graphicalActionRegistry.registerAction(new ReloadAction(new ReloadAction.IReloadCallback() {
+			public void pause() {
+				modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE);	// So no updates while paused.
+				modelBuilder.pause();
+			}
+			public void reload() {
+				loadModel();
+			}
+		}));
 			
 		super.init(site, input);
 	}
@@ -245,47 +302,55 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		// The input has changed.
-		modelChangeController.waitForCompleteTransaction(); // Don't want any transactions pending when we change input.
 		super.doSetInput(input);
-
-		setRootModel(null); // Clear it out so we don't see all of the changes.
 		loadModel();
 	}
 	
+	protected Job setupJob = null; 
 	protected void loadModel() {
-		// Loading the Model will reSet everyting; make sure all commit and flush
-		// callers have been called.
-		modelBuilder.commit() ;
-//		Kick off the setup thread. Doing so that system stays responsive.
-		Thread setup = new Thread(new Setup(), "Setup JavaVisualEditorPart"); //$NON-NLS-1$
-		setup.setPriority(Thread.currentThread().getPriority() - 1); // Make it slightly slower so that ui thread still active
-		setup.start();
+		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
+		rla.setEnabled(false);	// While reloading, don't want button to be pushed.
+		
+		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE);	// Don't allow updates..
+		
+		setRootModel(null); // Clear it out so we don't see all of the changes that are about to happen.
+		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.
+		// Kick off the setup thread. Doing so that system stays responsive.
+		if (setupJob == null) {
+			setupJob = new Setup("Setup JavaVisualEditorPart");
+			setupJob.setPriority(Job.SHORT); // Make it slightly slower so that ui thread still active
+		}
+		// TODO Not quite happy with this. Need way to cancel and join any previous to be on safe side.
+		// This here will reschedule it to run again if one already running.
+		setupJob.schedule();	// Start asap.
 	}
 
+	private BeanSubclassComposition currentSetRoot;
 	/*
 	 * Set a new model into the root editparts. This can happen because the setup and the initial creation
 	 * of the viewers can be in a race condition with each other.
+	 * NOTE: Must run in display thread.
 	 */
 	protected void setRootModel(final BeanSubclassComposition root) {
-		Runnable run = new Runnable() {
-			public void run() {
-				Iterator itr = editDomain.getViewers().iterator();
-				while (itr.hasNext()) {
-					EditPartViewer viewer = (EditPartViewer) itr.next();
-					EditPart rootEP = viewer.getContents();
-					rootEP.deactivate();
-					rootEP.setModel(root);
-					rootEP.refresh();
-					rootEP.activate();
-					rootEP.refresh();
-				}
-			}
-		};
+		Assert.isTrue(Display.getCurrent() != null);
+		
+		Iterator itr = editDomain.getViewers().iterator();
+		while (itr.hasNext()) {
+			EditPartViewer viewer = (EditPartViewer) itr.next();
+			EditPart rootEP = viewer.getContents();
+			rootEP.deactivate();
+			rootEP.setModel(root);
+			rootEP.refresh();
+			rootEP.activate();
+			rootEP.refresh();
+		}
 
-		if (Display.getCurrent() != null)
-			run.run(); // Already in display thread
-		else
-			Display.getDefault().asyncExec(run);
+		try {
+			if (currentSetRoot != root && currentSetRoot != null)
+				currentSetRoot.eNotify(new ENotificationImpl((InternalEObject) currentSetRoot, CompositionProxyAdapter.RELEASE_PROXIES, null, null, null, false));
+		} finally {
+			currentSetRoot = root;
+		}
 	}
 
 	/*
@@ -592,15 +657,21 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * we may not yet have Setup completed. So we need a common synchronized method that will set the diagram data
 	 * when both are ready. Both places will call this method at thier appropriate time.
 	 * 
-	 * NOTE: Must be careful of no deadlocks, so quick in and out and no further locks.
+	 * NOTE: Must run in display thread.
 	 */
-	protected synchronized void initializeViewers() {
+	protected void initializeViewers() {
+		Assert.isTrue(Display.getCurrent() != null);
+		
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			if (d != null) {
 				editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
 				setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
+				loadingFigureController.showLoadingFigure(false);
 			}
+			ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
+			rla.setEnabled(true);
+			modelChangeController.setHoldState(IModelChangeController.READY_STATE);	// Restore to allow updates.
 		}
 	}
 
@@ -644,7 +715,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private static final URI basePaletteRoot = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi#java_palette"); //$NON-NLS-1$
-
+	
 	/*
 	 * A default contributor that works with the palette extension point format. This here so that 
 	 * the default registration contributor can do the same thing with its palette contribution.
@@ -692,11 +763,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				currentCategories.addAll(cats);
 			return true;
 		}	
-	}
-	/*
+	}	/*
 	 * This will create the proxy factory registry.
 	 */
-	protected void createProxyFactoryRegistry(IFile aFile) throws CoreException {
+	protected void createProxyFactoryRegistry(IFile aFile, IProgressMonitor monitor) throws CoreException {
 		if (isDisposed())
 			return;	// No registry because we already closed.
 		if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
@@ -826,7 +896,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			new IConfigurationContributor[] { BeaninfoNature.getRuntime(aFile.getProject()).getConfigurationContributor(), jcmCont };
 
 		ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
-				contribs, new NullProgressMonitor());
+				contribs, monitor);
 		registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
 		
 		synchronized (this) {
@@ -836,7 +906,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				return;
 			}
 			proxyFactoryRegistry = registry;
-			proxyFactoryRegistry.addRegistryListener(registryListener);			
+			proxyFactoryRegistry.addRegistryListener(registryListener);
+			beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
 		}
 		return;
 	}
@@ -845,7 +916,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * @see org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry.IRegistryListener#registryTerminated(ProxyFactoryRegistry)
 		 */
 		public void registryTerminated(ProxyFactoryRegistry registry) {
-			final EObject root = modelBuilder.getModelRoot();
 			// Need to deactivate all of the editparts because they don't work without a vm available.
 			Display.getDefault().asyncExec(new Runnable() {
 				/**
@@ -853,7 +923,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				 */
 				public void run() {
 					setRootModel(null);
-					root.eNotify(new ENotificationImpl((InternalEObject) root, CompositionProxyAdapter.RELEASE_PROXIES, null, null, null, false));
 					if (++recycleCntr < 3) {
 						// We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
 						if (getSite().getWorkbenchWindow().getActivePage().getActiveEditor() == JavaVisualEditorPart.this && activationListener.shellActive) {
@@ -871,30 +940,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	private void restartVM() {
 		restartVMNeeded = false;
-		Runnable run = new Runnable() {
-			/**
-			 * @see java.lang.Runnable#run()
-			 */
-			public void run() {
-				try {					
-					IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-					createProxyFactoryRegistry(file);
-					if (proxyFactoryRegistry != null) {
-						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
-						loadModel();	// Now reload the model.
-					}
-					
-					if (rebuildPalette)
-						rebuildPalette();
-				} catch (CoreException e) {
-				}
-			}
-		};
-		
-		if (Display.getCurrent() != null)
-			run.run();
-		else
-			Display.getDefault().asyncExec(run);
+		loadModel();
 	}
 
 	protected SelectionSynchronizer getSelectionSynchronizer() {
@@ -905,6 +951,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	public void dispose() {
 		try {
+			if (setupJob != null) {
+				// We can't actually wait for it because we could get into a deadlock since it may
+				// try to do syncExec for some reason.
+				setupJob.cancel();
+			}
 			
 			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
 			if (proxyFactoryRegistry != null) {
@@ -914,10 +965,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 			modelBuilder.dispose();
 			
-			if (statusController != null)
-			    statusController.dispose();
-			
-
 			if (modelSynchronizer != null) {
 				modelSynchronizer.stopSynchronizer();
 			}
@@ -967,11 +1014,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#updateStatusField(java.lang.String)
 	 */
 	protected void updateStatusField(String category) {
-		if (category.equals(IJVEStatus.STATUS_CATEGORY_SYNC_ACTION))
-			statusController.updateSyncAction();
-		else if (category.equals(IJVEStatus.STATUS_CATEGORY_SYNC_STATUS))
-			statusController.updateSyncStatus();
-		else
+		if (category.equals(JavaVisualEditorActionContributor.STATUS_FIELD_CATEGORY)) {
+			IStatusField field= getStatusField(category);
+			if (field != null)
+				field.setText(currentStatusMessage);
+		} else
 			super.updateStatusField(category);
 	}
 	
@@ -987,10 +1034,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		propertySheetPage = new EToolsPropertySheetPage() {
 			public void setActionBars(IActionBars actionBars) {
 				super.setActionBars(actionBars);
-				// The menu and toolbars have RetargetActions for UNDO and REDO
+				// The menu and toolbars have RetargetActions for UNDO and REDO and pause/reload.
 				// Set an action handler to redirect these to the action registry's actions so they work when the property sheet is enabled
 				actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getAction(ActionFactory.UNDO.getId()));
 				actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), getAction(ActionFactory.REDO.getId()));
+				actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(ReloadAction.RELOAD_ACTION_ID));
 			}
 		};
 
@@ -1041,10 +1089,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								if (val instanceof IJavaInstance)
 									parent = (IJavaInstance) val;
 							}
-							if (parent != null) {
-								EStructuralFeature sf = (EStructuralFeature) id;
-								modelChangeController.flushCodeGen(new EditorSelectionSynchronizer((IJavaInstance) parent, sf), MARKER_PropertyChange); //$NON-NLS-1$
-							}
+							if (parent != null)
+								select(SELECT_PROPERTY_CHANGE, parent, (EStructuralFeature) id);
 						}
 					}
 				}		
@@ -1054,774 +1100,138 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	
 	/*
-	 * This class is used to cause the appropriate section of code
-	 * in the text editor to be selected. It is called by code generation
-	 * when it reaches the code finished being written to the working copy.
+	 * This method is used to cause the appropriate section of code
+	 * in the text editor to be selected.
 	 * 
-	 * This class is instantiated whenever a bean is selected in the graphical/tree viewer
-	 * or a property has been selected. It causes a flush of the codegen cycle and then
-	 * when flush is completed this class is called to drive the text selection.
+	 * This method is used whenever a bean is selected in the graphical/tree viewer
+	 * or a property has been selected. 
+	 * 
+	 * NOTE: This should only be called from UI thread.
 	 */
-	private class EditorSelectionSynchronizer implements ISynchronizerListener {
-		Notifier fNotifier;
-		EStructuralFeature fSF = null ;
-		EditorSelectionSynchronizer(Notifier aJavaBean) {
-			fNotifier = aJavaBean;
-		}
-		EditorSelectionSynchronizer(IJavaInstance aParentJavaBean, EStructuralFeature sf) {
-			this(aParentJavaBean) ;
-			fSF = sf ;
+	protected void select(int selectionType, Notifier notifier, EStructuralFeature sf) {
+		ICodeGenAdapter codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(notifier, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+		if (codeGenAdapter == null)
+		   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(notifier, ICodeGenAdapter.JVE_CODEGEN_EXPRESSION_SOURCE_RANGE);
+		if (codeGenAdapter == null)
+		   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(notifier, ICodeGenAdapter.JVE_CODE_GEN_TYPE);
+		   
+		if ((selectionType == SELECT_PROPERTY || selectionType == SELECT_PROPERTY_CHANGE) 
+		    	&& codeGenAdapter != null && sf != null && (codeGenAdapter instanceof BeanDecoderAdapter)) {
+			// We are driving a property, use it's parent/sf
+			ICodeGenAdapter[] list =  ((BeanDecoderAdapter)codeGenAdapter).getSettingAdapters(sf) ;
+			if (list != null && list.length>0)
+			   codeGenAdapter = list[0] ;
 		}
 		
-		public void markerProcessed(String marker) {
-			ICodeGenAdapter codeGenAdapter = null ;
-			if (MARKER_JVESelection.equals(marker) || MARKER_PropertySelection.equals(marker) || MARKER_PropertyChange.equals(marker))   
-			   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(fNotifier,ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-			if (codeGenAdapter == null)
-			   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(fNotifier,ICodeGenAdapter.JVE_CODEGEN_EXPRESSION_SOURCE_RANGE);
-			if (codeGenAdapter == null)
-			   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(fNotifier,ICodeGenAdapter.JVE_CODE_GEN_TYPE);
-			   
-			if ((MARKER_PropertySelection.equals(marker) || MARKER_PropertyChange.equals(marker)) 
-			    && codeGenAdapter != null && fSF!=null && (codeGenAdapter instanceof BeanDecoderAdapter)) {
-				// We are driving a property, use it's parent/sf
-				ICodeGenAdapter[] list =  ((BeanDecoderAdapter)codeGenAdapter).getSettingAdapters(fSF) ;
-				if (list != null && list.length>0)
-				   codeGenAdapter = list[0] ;
-			}
-			if (codeGenAdapter == null) {
-				JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + fNotifier, //$NON-NLS-1$
-				Level.FINE);
-			} else {
-				try {
-					final ICodeGenSourceRange sourceRange = codeGenAdapter.getHighlightSourceRange();
-					// Drive the selection in the java editor
-					// This must be done on the Display thread so that SWT works correctly
-					// Only do this if the source editor is not in focus, because if so then the user
-					// may be typing in it and if we drive the cursor away from them they won't like it
-					if (!textEditorFocus && sourceRange != null) {
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								try {
-									setHighlightRange(sourceRange.getOffset(), sourceRange.getLength(), true);
-								} catch (Exception exc) {
-									exc.printStackTrace();
-									// Do nothing - We get assertion failures that I don't fully understand, especially when
-									// dropping onto the JavaBeans viewer
-								}
-							}
-						});
-					}
-				} catch (CodeGenException exc) {
-					JavaVEPlugin.log(exc);
-				}
-			}
-		}
-	}
-
-	// TODO Remove this as soon as possible. Need a better model controller. Need to work with Gili on this.
-	protected JavaModelChangeController modelChangeController = new JavaModelChangeController();
-	private class JavaModelChangeController implements IModelChangeController, ICodeGenFlushController {
-		// The undomanager doesn't handle nesting of compound changes, so we need to do it here.
-		private int compoundChangeCount = 0;
-		private boolean inTransaction = false;
-		private int isRunning = 0; // Note that a Runable is outstanding
-		private boolean allowingChanges = false;
-		private boolean fHoldChanges = false;
-		private String fHoldMsg = null;
-		private ArrayList fCodeGenFlushReq = new ArrayList();
-
-		public synchronized boolean inTransaction() {
-			return inTransaction;
-		}
-		public synchronized void setHoldChanges(boolean flag, String msg) {
-			fHoldChanges = flag;
-			fHoldMsg = msg;
-			while (flag && inTransaction && isRunning > 0) {
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-
-		public synchronized boolean isHoldChanges() {
-			return fHoldChanges;
-		}
-
-		public void waitForCompleteTransaction() {
-			modelBuilder.commit();
-			// Make sure there are no changes outstanding. Will wait until they are committed. Will immediately wake up committer.
-		}
-
-		// TODO This is a hack, we should have an Editor Error manager in the future to handle
-		// errors, their context, and the way we denote them to the user.
-		private void showMsg(String msg) {
-			IStatusLineManager statusLine = getEditorSite().getActionBars().getStatusLineManager();
-			if (msg != null)
-				statusLine.setMessage(IErrorHolder.ErrorType.getSevereErrorImage(), msg);
-			else
-				statusLine.setMessage(null, null);
-		}
-
-		public boolean run(Runnable runnable, boolean updatePS) {
-			boolean localAllowChanges = false;
-			boolean localHoldChanges; // Hold instance may be changing in the middle
-			boolean localRunit;
-			String localHoldMsg = null;
-			synchronized (this) {
-				// No point to query the JavaEditor if we are on hold
-				isRunning++;
-				localHoldChanges = fHoldChanges;
-				localHoldMsg = fHoldMsg;
-			}
-
+		if (codeGenAdapter == null) {
+			JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + notifier, //$NON-NLS-1$
+					Level.FINE);
+		} else {
 			try {
-				localAllowChanges = startChange();
-				localRunit = !localHoldChanges && localAllowChanges;
-
-				if (localRunit) {
-					runnable.run();
-					if (updatePS && rootPropertySheetEntry != null)
-						rootPropertySheetEntry.refreshFromRoot();
-				} else if (localHoldChanges)
-					showMsg(localHoldMsg);
-				else
-					showMsg(CodegenEditorPartMessages.getString("EditorPart.Msg.FileReadOnly_ERROR_")); //$NON-NLS-1$
-			} finally {
-				if (localAllowChanges)
-					stopChange();
-				synchronized (this) {
-					isRunning--;
-					if (isRunning <= 0) {
-						this.notifyAll();
-						isRunning = 0;
+				final ICodeGenSourceRange sourceRange = codeGenAdapter.getHighlightSourceRange();
+				// Drive the selection in the java editor
+				// Only do this if the source editor is not in focus, because if so then the user
+				// may be typing in it and if we drive the cursor away from them they won't like it
+				if (!textEditorFocus && sourceRange != null) {
+					try {
+						setHighlightRange(sourceRange.getOffset(), sourceRange.getLength(), true);
+					} catch (Exception exc) {
+						exc.printStackTrace();
+						// Do nothing - We get assertion failures that I don't fully understand, especially when
+						// dropping onto the JavaBeans viewer
 					}
 				}
-			}
-
-			return localRunit;
-		}
-
-		// There is still a small window for a race condition, but it can't be addressed for beta. Needs better
-		// support within codegen to transactialize it.
-		//
-		// If startChange returns true, then stopChange MUST be called, otherwise counters will get messed up.
-		//
-		// NOTE: This thread must NOT already be sync on "this" or else it won't work.
-		private boolean startChange() {
-			// starts changes and returns whether changes allowed.
-			boolean doit = false;
-			final IRewriteTarget rewriteTarget = (IRewriteTarget) getAdapter(IRewriteTarget.class);
-			JavaVEPlugin.log("(+1) Starting change", Level.FINEST); //$NON-NLS-1$
-			synchronized (this) {
-				if (compoundChangeCount++ == 0) {
-					if (rewriteTarget != null) {
-						// We only check for allow changes once, when we start a nested change group.
-						// While nested we don't allow changes depending upon the initial test.
-						try { // Must be called on the Display thread 
-							// It is important that we clear the compoundChangCount if there are any fooFoo.			
-							allowingChanges = validateEditorInputState();
-							;
-						} catch (Throwable t) {
-							JavaVEPlugin.log(t, Level.WARNING);
-						}
-						if (allowingChanges)
-							doit = true;
-						else
-							compoundChangeCount = 0; // Go back to no transaction.
-					} else
-						allowingChanges = true; // Editor not fully up yet, so not a transaction that can be undone. Just go do it.		
-				} else
-					JavaVEPlugin.log("(+2) Starting nested transaction", Level.FINEST); //$NON-NLS-1$
-			}
-
-			if (doit) {
-				JavaVEPlugin.log("(+1a) Starting wait for completion", Level.FINEST); //$NON-NLS-1$
-				// Needed to have commitAndFlush outside of sync block because the commitAndFlushAsync below may also try to access "this", but from a different thread.
-				// Can't have any pending changes before beginning next group of changes.				
-				waitForCompleteTransaction();
-				JavaVEPlugin.log("(-1a) Ending wait for completion", Level.FINEST); //$NON-NLS-1$
-				JavaVEPlugin.log("(+1b) Starting begin compound change", Level.FINEST); //$NON-NLS-1$
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						// Stopping the reDraw causes the SWT (Editor) Text Widget to be
-						// Out of sync with the JDT model and the AnnotatorPainter that tries
-						// to maintain the errors on this widget
-//						rewriteTarget.setRedraw(false); // So we don't get so much flicker.							
-						JavaVEPlugin.getPlugin().getLogger().log("Redraw off", Level.FINER); //$NON-NLS-1$
-						rewriteTarget.beginCompoundChange();
-					}
-				}); // setRedraw needs to be in a UI thread.
-				JavaVEPlugin.log("(-1b) Ending begin compound change", Level.FINEST); //$NON-NLS-1$
-				synchronized (this) {
-					inTransaction = true;
-				}
-				JavaVEPlugin.getPlugin().getLogger().log("(+3) Transaction started", Level.FINEST); //$NON-NLS-1$
-			}
-			JavaVEPlugin.log("(-1) Ending starting change", Level.FINEST); //$NON-NLS-1$
-			return allowingChanges;
-		}
-
-		private synchronized void stopChange() {
-			// stops changes
-			if (--compoundChangeCount <= 0) {
-				JavaVEPlugin.log("(3a) Starting end transaction", Level.FINEST); //$NON-NLS-1$
-				compoundChangeCount = 0; // In case we get out of sync.
-				if (inTransaction) {
-					// We have done a beginCompoundChange, must now do endCompoundChange
-					boolean localAllow = allowingChanges;
-					allowingChanges = false;
-					if (localAllow) {
-						// When the CDE has finished executing the command we need to flush and commit
-						// This tells the code generation to complete updating the source.					
-						modelBuilder.commitAndFlush(new ISynchronizerListener() {
-							public void markerProcessed(String marker) {
-								final IRewriteTarget rewriteTarget = (IRewriteTarget) getAdapter(IRewriteTarget.class);
-								boolean doEnd = true;
-								JavaVEPlugin.log("(+3b) Starting async commit processing", Level.FINEST); //$NON-NLS-1$
-								synchronized (JavaModelChangeController.this) {
-									if (compoundChangeCount <= 0) {
-										inTransaction = false; // We haven't started a new one while processing the termination.
-										JavaModelChangeController.this.notifyAll();
-									} else {
-										doEnd = false;
-										// We've started a new transaction since this end request went through, so treat it as nested.
-										JavaVEPlugin.log("(3b) Another transaction has started, treat it as nested for now.", Level.FINEST); //$NON-NLS-1$
-									}
-								}
-								processCodeGenFlushIfNeeded();
-								final boolean finalDoEnd = doEnd;
-								Display.getDefault().syncExec(new Runnable() {
-									public void run() {
-										if (finalDoEnd) {
-											rewriteTarget.endCompoundChange();
-											JavaVEPlugin.log("(-3) End transaction", Level.FINEST); //$NON-NLS-1$
-										}
-//										rewriteTarget.setRedraw(true);
-										JavaVEPlugin.getPlugin().getLogger().log("Redraw on", Level.FINER); //$NON-NLS-1$
-									}
-								}); // setRedraw needs to be in a UI thread.
-								JavaVEPlugin.log("(-3b) End async commit processing", Level.FINEST); //$NON-NLS-1$
-							}
-						}, "modelChangeMarker"); //$NON-NLS-1$
-					}
-				}
-			} else
-				JavaVEPlugin.log("(-2) Ending nested transaction", Level.FINEST); //$NON-NLS-1$
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
-		 */
-		public String getHoldMsg() {
-			return fHoldMsg;
-		}
-
-		/**
-		 * Called from stopChage();
-		 * 
-		 * Assuming that this is called after we finished a transaction
-		 * (where a commit/Flush was already called)
-		 */
-		private void processCodeGenFlushIfNeeded() {
-
-			ArrayList localList;
-			synchronized (this) {
-				localList = fCodeGenFlushReq;
-				fCodeGenFlushReq = new ArrayList();
-			}
-
-			Iterator itr = localList.iterator();
-			while (itr.hasNext()) {
-				ISynchronizerListener l = (ISynchronizerListener) itr.next();
-				String m = (String) itr.next();
-				// No need to call commitAndFlush - already did, and is too expensive
-				// at this point.
-				try {
-					l.markerProcessed(m);
-				} catch (Throwable t) {
-					JavaVEPlugin.log(t);
-				}
-
-			}
-		}
-		/**
-		 * This method is to be used to ask for CodeGen to flush generated code to the JavaEditor.
-		 *  
-		 * If we are in the middle of a transaction, queue the flush request to CodeGen.
-		 */
-		public synchronized void flushCodeGen(ISynchronizerListener listener, String marker) {
-			if (inTransaction) {
-				fCodeGenFlushReq.add(listener);
-				fCodeGenFlushReq.add(marker);
-			} else if (!isHoldChanges())
-				modelBuilder.commitAndFlush(listener, marker);
-			else
-				try {
-					listener.markerProcessed(marker);
-				} catch (Throwable t) {
-					JavaVEPlugin.log(t);
-				}
-		}
-
-	};
-
-	/*
-	 * Listener to listen for code status changes.
-	 * Update the graph viewer with a "Loading..." message when
-	 * reload from scratch is in progress.
-	 */
-	protected static final Insets INSETS = new Insets(10, 25, 10, 25);
-	private class LoadingFigureController implements IJVEStatusChangeListener {
-
-		protected GraphicalViewer viewer;
-		protected Label loadingFigure;
-		protected boolean showingLoadingFigure = true;
-		
-		public IFigure getRootFigure(IFigure target) {
-			IFigure parent = target.getParent();
-			while (parent.getParent() != null)
-				parent = parent.getParent();
-			return parent;
-		}		
-
-		public LoadingFigureController() {
-		}
-
-		/**
-		 * Call when we have a viewer to actually work with.
-		 * At this point in time we can now display the current loading status.
-		 * 
-		 * This allows us to start listening before we have a viewer.
-		 * This should only be called once.
-		 */
-		public void startListener(GraphicalViewer viewer) {
-			this.viewer = viewer;
-				loadingFigure = new Label(CodegenMessages.getString("CodeGenVisualGraphicalEditorPart.StatusChangeListener.loading")) {//$NON-NLS-1$
-	Locator locator = new Locator() {
-					public void relocate(IFigure target) {
-						// Center the figure in the middle of the canvas
-						Dimension canvasSize = getRootFigure(target).getSize();					
-						Dimension prefSize = target.getPreferredSize();
-						int newX = (canvasSize.width - prefSize.width) / 2;
-						int newY = (canvasSize.height - prefSize.height) / 2;
-						Rectangle b = new Rectangle(newX, newY, prefSize.width, prefSize.height);
-						target.translateToRelative(b);
-						target.setBounds(b);
-					}
-				};
-				
-				public void validate() {
-					if (!isValid())
-						locator.relocate(this);
-					super.validate();
-				}
-			};
-			loadingFigure.setEnabled(true);
-			loadingFigure.setOpaque(true);
-			loadingFigure.setBorder(new AbstractBorder() {
-				public Insets getInsets(IFigure figure) {
-					return INSETS;
-				}
-
-				public void paint(IFigure figure, Graphics graphics, Insets insets) {			
-					graphics.setLineWidth(1);
-					graphics.setLineStyle(Graphics.LINE_SOLID);
-					graphics.setXORMode(false);
-					Rectangle rect = getPaintRectangle(figure, insets);
-					// Draw a Black border out the outside to distinquish between the label and surroundings,
-					graphics.setForegroundColor(ColorConstants.black);
-					rect.resize(-1, -1);
-					graphics.drawRectangle(rect);					
-					// Draw a white border just inside so that we have a white box around it.
-					graphics.setForegroundColor(ColorConstants.white);					
-					rect.translate(1, 1);
-					rect.resize(-2, -2);
-					graphics.drawRectangle(rect);
-				}
-			});
-			if (showingLoadingFigure)
-				showLoadingFigure();
-		}
-
-		public void statusChanged(int oldStatus, int newStatus) {
-			if ((newStatus & (ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS | ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_PENDING))
-				> 0) {
-				if (!showingLoadingFigure) {
-					showLoadingFigure();
-				}
-			} else if (showingLoadingFigure)
-				removeLoadingFigure();
-		}
-
-		protected Layer getLoadingLayer() {
-			return (Layer) ((LayerManager) viewer.getEditPartRegistry().get(LayerManager.ID)).getLayer(LayerConstants.HANDLE_LAYER);
-		}
-
-		private FigureListener rootFigureListener = new FigureListener() {
-			public void figureMoved(IFigure source) {
-				loadingFigure.revalidate();
-			}
-		};
-
-		private PropertyChangeListener scrolledListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (RangeModel.PROPERTY_VALUE.equals(evt.getPropertyName()))
-					loadingFigure.revalidate();	// Scrollbar has moved, so revalidate.
-			}
-
-		};
-		
-		protected void removeLoadingFigure() {
-			showingLoadingFigure = false;
-			if (viewer != null) {
-				Layer layer = getLoadingLayer();
-				if (layer.getChildren().contains(loadingFigure)) {
-					layer.remove(loadingFigure);
-				}
-				Viewport vp = getViewport(layer);
-				if (vp != null) {
-					vp.getHorizontalRangeModel().removePropertyChangeListener(scrolledListener);
-					vp.getVerticalRangeModel().removePropertyChangeListener(scrolledListener);
-				}
-				getRootFigure(layer).removeFigureListener(rootFigureListener);
-			}
-		}
-		
-		protected Viewport getViewport(IFigure figure) {
-			IFigure f = figure;
-			while (f != null && !(f instanceof Viewport))
-				f = f.getParent();
-			return (Viewport) f;
-		}
-
-		protected void showLoadingFigure() {
-			showingLoadingFigure = true;
-			if (viewer != null) {
-				Layer layer = getLoadingLayer();
-				layer.add(loadingFigure);
-				Viewport vp = getViewport(layer);
-				if (vp != null) {
-					vp.getHorizontalRangeModel().addPropertyChangeListener(scrolledListener);
-					vp.getVerticalRangeModel().addPropertyChangeListener(scrolledListener);
-				}				
-				getRootFigure(layer).addFigureListener(rootFigureListener);
-				loadingFigure.revalidate();
+			} catch (CodeGenException exc) {
+				JavaVEPlugin.log(exc);
 			}
 		}
 	}
 
+	protected JavaVisualEditorModelChangeController modelChangeController;
+	
 	/*
-	 * This class is responsible to keep the status bar in sync. with the current editor.
-	 * It is also a notifier of status changes.
-	 */
-	private class StatusRenderer implements IJVEStatus, MouseListener {
-
-		int fState = JVE_CODEGEN_STATUS_OUTOFSYNC;
-		int fPendingCounter = 0;
-		int fPauseProcessing = 0;
-		ListenerList listeners = new ListenerList(1);
-
-		/**
-		* @see IJVEStatus#showMsg(String, int)
-		*/
-		public void showMsg(final String msg, int kind) {
-			final IStatusLineManager statusLine = getEditorSite().getActionBars().getStatusLineManager();
-			if (statusLine == null)
-				return;
-			final Image image;
-			if (kind == ERROR_MSG)
-				image = IBeanProxyHost.ErrorType.getSevereErrorImage();
-			else if (kind == WARNING_MSG)
-				image = IBeanProxyHost.ErrorType.getWarningErrorImage();
-			else
-				image = null;
-
-			if (msg != null)
-				JavaVEPlugin.log(msg, Level.FINE);
-
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					statusLine.setMessage(image, msg);
-				}
-			});
-
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.core.codegen.ICodeGenStatus#getStatus()
-		 */
-		public int getState() {
-			return fState;
-		}
-
-		public void refreshStatus(final int oldState) {
-			if (Display.getCurrent() != null)
-				primRefreshStatus(oldState);
-			else
-				Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					primRefreshStatus(oldState);
-				}
-			});
-		}
-
-		private void primRefreshStatus(int oldState) {
-
-			updateSyncStatus();
-			updateSyncAction();
-
-			Object[] lsts = listeners.getListeners();
-			for (int i = 0; i < lsts.length; i++) {
-				IJVEStatusChangeListener listener = (IJVEStatusChangeListener) lsts[i];
-				try {
-					listener.statusChanged(oldState, getState());
-				} catch (Throwable t) {
-					JavaVEPlugin.log(t);
-				}
-			}
-		}
-
-		public void updateSyncAction() {
-			IJVEActionField actionField = (IJVEActionField) getStatusField(IJVEStatus.STATUS_CATEGORY_SYNC_ACTION);
-			if (actionField == null)
-				return;
-
-			actionField.setPauseListener(this);
-
-			// Update Arrows color
-			if (isStatusSet(JVE_CODEGEN_STATUS_UPDATING_SOURCE)) {
-				actionField.setModel2Src(true);
-			} else {
-				actionField.setModel2Src(false);
-			}
-
-			if (isStatusSet(JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL)) {
-				actionField.setSrc2Model(true);
-
-			} else {
-				actionField.setSrc2Model(false);
-			}
-			// Update Buttom's play/pause
-			if (isStatusSet(JVE_CODEGEN_STATUS_PARSE_ERRROR))
-				actionField.setError(true);
-			else {
-				actionField.setError(false) ;
-				if (isStatusSet(JVE_CODEGEN_STATUS_PAUSE)) {
-					actionField.setPause(true);
-				} else {
-					actionField.setPause(false);
-				}
-			}
-
-		}
-		
-		public void dispose() {
-			IJVEActionField actionField = (IJVEActionField) getStatusField(IJVEStatus.STATUS_CATEGORY_SYNC_ACTION);
-			if (actionField != null) {			
-				  actionField.unsetPauseListener(this) ;			
-			}
-		}
-
-		public void updateSyncStatus() {
-			IStatusField textField = getStatusField(IJVEStatus.STATUS_CATEGORY_SYNC_STATUS);
-			if (textField == null)
-				return;
-
-			String msg = null;
-			if (isStatusSet(JVE_CODEGEN_STATUS_OUTOFSYNC))
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_OUTOFSYNC;
-			else
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_INSYNC;
-
-			if (isStatusSet(JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS) || isStatusSet(JVE_CODEGEN_STATUS_RELOAD_PENDING))
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_RELOAD;
-			else if (isStatusSet(JVE_CODEGEN_STATUS_SYNCHING))
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_SYNCING;
-			else if (isStatusSet(JVE_CODEGEN_STATUS_PAUSE))
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_PAUSE;
-
-			if (isStatusSet(JVE_CODEGEN_STATUS_PARSE_ERRROR))
-				msg = IJVEStatus.STATUS_MSG_SYNC_STATUS_PARSE_ERROR;
-
-			textField.setText(msg);
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.core.codegen.ICodeGenStatus#isStatusSet(int)
-		 */
-		public synchronized boolean isStatusSet(int state) {
-			return ((getState() & state) == state);
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.core.codegen.ICodeGenStatus#setStatus(int, boolean)
-		 */
-		public synchronized void setStatus(int flag, boolean state) {
-			int oldState = getState();
-			if (state)
-				fState |= flag;
-			else
-				fState &= (~flag);
-			if (oldState != getState())
-				refreshStatus(oldState);
-		}
-
-		/**
-		 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(MouseEvent)
-		 */
-		public void mouseDoubleClick(MouseEvent e) {
-		}
-		public void mouseDown(MouseEvent e) {
-		}
-		public void mouseUp(MouseEvent e) {
-			if (fPauseProcessing > 0)
-				return;
-
-			if (isStatusSet(JVE_CODEGEN_STATUS_PARSE_ERRROR))
-				return;
-
-			boolean flag = !isStatusSet(JVE_CODEGEN_STATUS_PAUSE);
-
-			try {
-				fPauseProcessing++;
-				modelBuilder.pauseRoundTripping(flag);
-			} catch (Throwable t) {
-				JavaVEPlugin.log(t);
-			} finally {
-				fPauseProcessing--;
-				if (fPauseProcessing < 0)
-					fPauseProcessing = 0;
-			}
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.core.codegen.ICodeGenStatus#setReloadPending(boolean)
-		 */
-		public synchronized boolean setReloadPending(boolean flag) {
-			if (flag)
-				fPendingCounter++;
-			else if (fPendingCounter > 0)
-				fPendingCounter--;
-			if (fPendingCounter > 0) {
-				setStatus(JVE_CODEGEN_STATUS_RELOAD_PENDING, true);
-				return true;
-			} else {
-				setStatus(JVE_CODEGEN_STATUS_RELOAD_PENDING, false);
-				return false;
-			}
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#addStatusListener(IJVEStatusChangeListener)
-		 */
-		public synchronized void addStatusListener(IJVEStatusChangeListener sl) {
-			listeners.add(sl);
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.java.codegen.editorpart.IJVEStatus#removeStatusListener(IJVEStatusChangeListener)
-		 */
-		public synchronized void removeStatusListener(IJVEStatusChangeListener sl) {
-			listeners.remove(sl);
-		}
-
-	}
-
-	/*
-	 * Runnable to do the setup for a new input file (and initial initialization if needed) in a
-	 * separate thread. Loaded from doSetup.
+	 * Job to do the setup for a new input file (and initial initialization if needed).
 	 */
 	private static final Integer NATURE_KEY = new Integer(0);	// Used within Setup to save the nature	 
-	private class Setup implements Runnable {
+	private class Setup extends Job {
 
-		public void run() {
-// final boolean doTimer = !initialized;	// TODO Remove all comments about timer step.			
-			try {				
-				if (!initialized)
-					initialize();
-				else {
+		public Setup(String name) {
+			super(name);
+		}
+				
+		protected IStatus run(IProgressMonitor monitor) {			
+			try {
+				monitor.beginTask("", 300);
+				if (!initialized) {
+					initialize(new SubProgressMonitor(monitor, 100));
+				} else {
 					// Check to see if nature is still valid. If it is not, we need to reinitialize for it. OR it 
 					// could be we were moved to another project entirely.
 					BeaninfoNature nature = (BeaninfoNature) editDomain.getData(NATURE_KEY);
 					IFile file = ((IFileEditorInput) getEditorInput()).getFile();					
 					if (nature == null || !nature.isValidNature() || !file.getProject().equals(nature.getProject()))
-						initializeForProject(file);
+						initializeForProject(file, new SubProgressMonitor(monitor, 100));
+					else {
+						boolean createFactory = false;
+						synchronized (JavaVisualEditorPart.this) {
+							createFactory = proxyFactoryRegistry == null || !proxyFactoryRegistry.isValid();
+						}
+						if (createFactory)
+							createProxyFactoryRegistry(file, new SubProgressMonitor(monitor, 100));	// The registry is gone, need new one.
+						else
+							monitor.worked(100);
+					}
 				}
-				if (isDisposed())
-					return;
-				// TODO Rich, we need some type of call back - this will hand hold Sri in the meantime
-				while (modelChangeController.inTransaction()) {
-					modelBuilder.commit() ;
-				}
-				// Make sure all callbacks have been called.
-				modelBuilder.commit() ;
+			
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				
+				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
+				monitor.subTask("Initializing model");
 
-				// Now do rest of setup, which is the same whether first time or not.								
-				statusController.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, true);
-//				if (doTimer)
-//					TimerStep.instance().writeCounters2(50);			
-				statusController.setReloadPending(true);
-				try {
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				
+				DiagramData dd = modelBuilder.getModelRoot();
+				if (dd != null) {
+					editDomain.setDiagramData(dd);
+					InverseMaintenanceAdapter ia = new InverseMaintenanceAdapter() {
+						protected boolean subShouldPropagate(
+							EReference ref,
+							Object newValue) {
+							return !(newValue instanceof Diagram); // On the base BeanComposition, don't propagate into Diagram references.
+						}
+					};
+					dd.eAdapters().add(ia);
+					ia.propagate();
+	
+					if (dd != null
+						&& EcoreUtil.getExistingAdapter(
+							dd,
+							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)
+							== null) {
+						CompositionProxyAdapter a =
+							new CompositionProxyAdapter();
+						dd.eAdapters().add(a);
+						a.initBeanProxy();
+					}
 					
-						// TODO move back off thread
-						// Currently there are other reloads from Gili's side that can occur at the same time,
-						// but happen on the GUI thread. So push this off to GUI too. Don't like it because it
-						// locks up the GUI, but can't help. No safe way to handle the interaction.
-						// Next release we need to get ALL source -> jve model interactions queued onto another thread
-						// including reloads. But it must all be the same thread so that we don't get race conditions.
-						// Needs to be carefully thought out because the jve model can also be updated from any where.						
-						final Exception[] ex = new Exception[1];
-						Display.getDefault().syncExec(new Runnable() {
+					if (!isDisposed() && !monitor.isCanceled())
+						getSite().getShell().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								try {
-									statusController.setReloadPending(false);		
-									modelBuilder.loadModel((IFileEditorInput) getEditorInput(), null);
-//									if (doTimer) {
-//										TimerStep.instance().writeCounters2(51);	//TODO Remove doTimer variable too when getting rid of TimerStep.			
-//										TimerStep.instance().writeCounters2(101);	//TODO Remove doTimer variable too when getting rid of TimerStep.			
-//									}
-								} catch (CodeGenException e) {
-									ex[0] = e;
-								}
+								initializeViewers();
 							}
 						});
-						if (ex[0] != null)
-							throw ex[0];
-
-						DiagramData dd = modelBuilder.getModelRoot();
-						editDomain.setDiagramData(dd);
-						InverseMaintenanceAdapter ia = new InverseMaintenanceAdapter() {
-							/**
-							 * @see org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter#subShouldPropagate(EReference, Object)
-							 */
-							protected boolean subShouldPropagate(
-								EReference ref,
-								Object newValue) {
-								return !(newValue instanceof Diagram);
-								// On the base BeanComposition, don't propagate into Diagram references.
-							}
-						};
-						dd.eAdapters().add(ia);
-						ia.propagate();
-
-						if (dd != null
-							&& EcoreUtil.getExistingAdapter(
-								dd,
-								CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)
-								== null) {
-							CompositionProxyAdapter a =
-								new CompositionProxyAdapter();
-							dd.eAdapters().add(a);
-							a.initBeanProxy();
+				} else {
+					// We didn't get a model for some reason, so just bring down the load controller, the parse error flag should already be set.
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
 						}
-										
-
-					initializeViewers();
-				} finally {					
-					statusController.setStatus(ICodeGenStatus.JVE_CODEGEN_STATUS_RELOAD_IN_PROGRESS, false);
+					});	
+					return Status.CANCEL_STATUS;
 				}
+			
 			} catch (final Exception x) {
 				// If we are disposed, then it doesn't matter what the error is. This can occur because we closed
 				// while loading and there is no way to stop this thread when that occurs. We don't want main thread
@@ -1829,7 +1239,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// really care. This way we let it throw an exception because something was in a bad state and just
 				// don't put up a message.
 				if (!isDisposed()) {
-					Display.getDefault().asyncExec(new Runnable() {
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
 							String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
@@ -1841,21 +1251,27 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						}
 					});
 					JavaVEPlugin.log(x);
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
+							((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(true);	// Set it for parse error.
+						}
+					});					
+					return Status.CANCEL_STATUS;
 				}
 			}
+			
+			monitor.done();
+			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
 
-		protected void initialize() throws CoreException {
+		protected void initialize(IProgressMonitor monitor) throws CoreException {
 			initialized = true;
-			// In the case that we are called because a target VM recycle, make sure
-			// all outstanding callbacks are called from the Synchronizer.
-			modelBuilder.commit() ;
-			initializeEditDomain();
-			modelBuilder.setMsgRenderer(statusController);			
+			initializeEditDomain();		
 			modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
 
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-			initializeForProject(file);
+			initializeForProject(file, monitor);
 
 			// Add listener to part activation so that we can handle recycle the vm when reactivated.
 			final IWorkbenchWindow window = getSite().getWorkbenchWindow();
@@ -1917,14 +1333,33 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					refreshTextPage();	// Because model has been updated.
 				}
 
-		    	public void statusChanged (String msg){}
-				public void reloadIsNeeded(boolean flag){}
-				public void parsingStatus (boolean error){}  
-				public void parsingPaused(boolean paused) {}
+		    	public void statusChanged (String msg){
+		    		currentStatusMessage = msg;
+		    		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							updateStatusField(JavaVisualEditorActionContributor.STATUS_FIELD_CATEGORY);
+						}
+					});
+		    	}
+				public void reloadIsNeeded(){
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							loadModel();
+						}
+					});
+				}
+				
+				public void parsingStatus (boolean error){
+					((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(error);
+				}
+				
+				public void parsingPaused(boolean paused) {
+					// We don't need this. Since we cause the pause, we know when paused.
+				}
 			});
 			
 			if (rebuildPalette) {
-				Display.getDefault().asyncExec(new Runnable() {
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (!isDisposed())
 							rebuildPalette();
@@ -1933,7 +1368,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		}
 
-		protected void initializeForProject(IFile file) throws CoreException {
+		protected void initializeForProject(IFile file, IProgressMonitor monitor) throws CoreException {
 			IProject proj = file.getProject();
 			BeaninfoNature nature = BeaninfoNature.getRuntime(proj);
 			ResourceSet rs = nature.newResourceSet();
@@ -1948,13 +1383,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// java:/ protocol in MOF
 			JavaInstantiation.initialize(nature.getResourceSet());
 			
-			// Create the target VM that is used for instances within the document we open
-			createProxyFactoryRegistry(file);
-			
 			// Make sure that there is an AdaptorFactory for BeanProxies installed
-			beanProxyAdapterFactory = new BeanProxyAdapterFactory(proxyFactoryRegistry, editDomain, new BasicAllocationProcesser());
+			beanProxyAdapterFactory = new BeanProxyAdapterFactory(null, editDomain, new BasicAllocationProcesser());
 			rs.getAdapterFactories().add(beanProxyAdapterFactory);
 			
+			// Create the target VM that is used for instances within the document we open
+			createProxyFactoryRegistry(file, monitor);
+						
 			if (modelSynchronizer != null)
 				modelSynchronizer.setProject(JavaCore.create(proj));
 		}
@@ -1982,7 +1417,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// Can't happen, but it throws it
 			}
 		}
-
 	};
 
 	private ActivationListener activationListener = new ActivationListener();
@@ -2184,22 +1618,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public void doSave(IProgressMonitor progressMonitor) {
-		modelChangeController.waitForCompleteTransaction();
-		super.doSave(progressMonitor);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
-	 */
-	public void doSaveAs() {
-		modelChangeController.waitForCompleteTransaction();
-		super.doSaveAs();
-	}
-
-	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class required) {
@@ -2349,7 +1767,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID));
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID));
 			actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID, getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID));
-			actionBars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, getAction(CustomizeJavaBeanAction.ACTION_ID));			
+			actionBars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, getAction(CustomizeJavaBeanAction.ACTION_ID));
+			actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(ReloadAction.RELOAD_ACTION_ID));
 
 			IToolBarManager tbm = actionBars.getToolBarManager();
 			collapseAllAction = new CollapseAllAction();
@@ -2548,7 +1967,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						              entry.getPropertySources()[0].getEditableValue() : null ;
 						if (prop != null && (prop instanceof IJavaObjectInstance) && 
 						    EcoreUtil.getExistingAdapter((Notifier)prop,ICodeGenAdapter.JVE_CODEGEN_EXPRESSION_SOURCE_RANGE)!=null) {
-							modelChangeController.flushCodeGen(new EditorSelectionSynchronizer((Notifier)prop), MARKER_PropertySelection); //$NON-NLS-1$
+							select(SELECT_PROPERTY, (Notifier)prop, null);
 						}						
 						else {
 							IDescriptorPropertySheetEntry pentry = entry.getParent();
@@ -2567,10 +1986,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 									if (val instanceof IJavaInstance)
 										parent = (IJavaInstance) val;
 								}
-								if (parent != null) {
-									EStructuralFeature sf = (EStructuralFeature) entry.getId();
-									modelChangeController.flushCodeGen(new EditorSelectionSynchronizer(parent, sf), MARKER_PropertySelection); //$NON-NLS-1$
-								}
+								if (parent != null)
+									select(SELECT_PROPERTY, parent, (EStructuralFeature) entry.getId());
 							}
 						}
 					}
@@ -2624,19 +2041,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		// If a cursor has moved, we want to drive back - reset the HighlightRange()
 		resetHighlightRange() ;
-		if (model instanceof IJavaInstance) {
-			// It is possible that the javaBean has just been added or changes made to it
-			// that have not made it to the source yet.
-			// We therefore need to flush any pending changes through before we query the source range
-			// to drive selection otherwise we are going to drive source changes ahead of the source being actually changed
-			modelChangeController.flushCodeGen(new EditorSelectionSynchronizer((IJavaInstance) model), MARKER_JVESelection); //$NON-NLS-1$
-		} else if (model instanceof EventInvocationAndListener) {
+		if (model instanceof IJavaInstance)
+			select(SELECT_JVE, (IJavaInstance) model, null);
+		else if (model instanceof EventInvocationAndListener) {
 			EventInvocationAndListener eil = (EventInvocationAndListener) model ;
 			AbstractEventInvocation ei = (AbstractEventInvocation) eil.getEventInvocations().get(0) ;
-			modelChangeController.flushCodeGen(new EditorSelectionSynchronizer(ei), MARKER_JVESelection); //$NON-NLS-1$
-		} else if (model instanceof Notifier) {
-		   	Notifier n = (Notifier) model ;
-			modelChangeController.flushCodeGen(new EditorSelectionSynchronizer(n), MARKER_JVESelection); //$NON-NLS-1$								
-		}
+			select(SELECT_JVE, ei, null);
+		} else if (model instanceof Notifier)
+			select(SELECT_JVE, (Notifier) model, null);								
 	}
 }

@@ -11,18 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorCommandStack.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
- */
-
-/*
- * This is a dummy command stack that executes commands but does not actually
- * keep a stack
- * It is used by the JVE because all undo and redo of the JVE is defefrred through
- * to the JavaEditor that undoes the source changes
- * This makes for a more consistent user experiences where GUI changes and also source changes
- * are all undone together
- *
- * It will use the passed in IModelChangeController to process the commands.
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import java.util.*;
@@ -31,7 +20,20 @@ import org.eclipse.gef.commands.*;
 
 import org.eclipse.ve.internal.cde.core.IModelChangeController;
 
-public class JavaVisualEditorCommandStack extends CommandStack {
+/*
+ * This is a dummy command stack that executes commands but does not actually keep a stack
+ * It is used by the JVE because all undo and redo of the JVE is deferred through
+ * to the JavaEditor that undoes the source changes.
+ * This makes for a more consistent user experiences where GUI changes and also source changes
+ * are all undone together
+ *
+ * It will use the passed in IModelChangeController to process the commands.
+ * 
+ * <package> protected because only the JavaVisualEditorPart should use it. 
+ * 
+ * @since 1.0.0
+ */
+class JavaVisualEditorCommandStack extends CommandStack {
 
 	protected List fCommandStackListeners;
 	protected IModelChangeController modelChangeController;

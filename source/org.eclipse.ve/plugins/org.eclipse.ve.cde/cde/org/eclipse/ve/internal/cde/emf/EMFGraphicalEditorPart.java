@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 
@@ -64,11 +64,13 @@ import org.eclipse.ui.part.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.palette.Palette;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
+
 import org.eclipse.ve.internal.propertysheet.AbstractPropertySheetEntry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
@@ -291,36 +293,75 @@ protected DefaultEditDomain createEditDomain(){
 	dom.setAnnotationLinkagePolicy(createLinkagePolicy());
 	// Give it a default do nothing special model controller.
 	dom.setData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY, new IModelChangeController() {
-		private boolean fHoldChanges = false ;
-		private boolean inTransaction;
-		public synchronized void setHoldChanges(boolean flag, String msg) {
-			fHoldChanges = flag ;			
-		}	
-	    public synchronized boolean isHoldChanges() {
-	    	return fHoldChanges ;
-	    }
+		
+		private int compoundChangeCount = 0;
+		private int holdState = READY_STATE;
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#inTransaction()
+		 */
+		public synchronized boolean inTransaction() {
+			return compoundChangeCount > 0;
+		}
+		
+		public void setHoldChanges(boolean flag, String msg) {
+			// TODO deprecated - remove when ready
+		}
+
+		public boolean isHoldChanges() {
+			return false;	// TODO deprecated - remove when ready.
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldState()
+		 */	
+		public int getHoldState() {
+			return holdState;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#run(Runnable, boolean)
+		 */	
 		public boolean run(Runnable runnable, boolean updatePS) {
-			inTransaction = true;
-		  try {
-			if (!fHoldChanges) {
+			if (getHoldState() != IModelChangeController.READY_STATE)
+				return false;	// Not in position to execute.
+			
+			try {
+				startChange();
 				runnable.run();
 				if (updatePS && rootPropertySheetEntry != null)
 					rootPropertySheetEntry.refreshFromRoot();
-				return true;
-			} else
-				return false;
-		} finally {
-			inTransaction = false;
+			} finally {
+				stopChange();
+			}
+
+			return true;
 		}
+
+		private synchronized void startChange() {
+			compoundChangeCount++;
 		}
+
+		private synchronized void stopChange() {
+			if (--compoundChangeCount <= 0) {
+				compoundChangeCount = 0; // In case we get out of sync.
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
+		 */
 		public String getHoldMsg() {
-			return null ;
+			return "";
 		}
-		
-		public boolean inTransaction() {
-			return inTransaction;
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#setHoldState(int)
+		 */
+		public void setHoldState(int stateFlag) {
+			holdState = stateFlag;
 		}
-	});
+});
 	return dom;
 }
 

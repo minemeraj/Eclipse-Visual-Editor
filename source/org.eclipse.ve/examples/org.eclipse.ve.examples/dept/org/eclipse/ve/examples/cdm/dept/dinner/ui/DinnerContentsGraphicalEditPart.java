@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.dinner.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: DinnerContentsGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:12 $ 
  */
 
 import java.io.*;
@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.*;
+
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramFigure;
 import org.eclipse.ve.examples.cdm.dept.Company;

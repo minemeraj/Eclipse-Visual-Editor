@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 import java.util.Iterator;
@@ -25,11 +25,12 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.ve.internal.cde.commands.CancelVisualConstraintCommand;
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.model.*;
+
+import org.eclipse.ve.internal.cde.commands.CancelVisualConstraintCommand;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * XYLayoutEditPolicy where the constraint info is stored
@@ -238,6 +239,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * It will also be called when the child editpolicy has been activated
 	 * with the current contents of the constraint so that the initial
 	 * setting may be made.
+	 * <p>
 	 */
 	protected void refreshFromEditPart(EditPart child, Object constraintValue) {		
 		Rectangle constraint = (Rectangle) getChildConstraint(child, constraintValue);
@@ -245,6 +247,12 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		setConstraintToFigure(child, rect);
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy#setConstraintToFigure(org.eclipse.gef.EditPart, org.eclipse.draw2d.geometry.Rectangle)
+	 * 
+	 * Note: This must be executed in the UI thread.
+	 */
 	protected void setConstraintToFigure(EditPart child, org.eclipse.draw2d.geometry.Rectangle figureConstraint) {
 		IConstraintHandler handler = getConstraintHandler(child);
 		if (handler != null) {
@@ -256,6 +264,9 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		((GraphicalEditPart) getHost()).setLayoutConstraint(child, ((GraphicalEditPart) child).getFigure(), figureConstraint);
 	}
 
+	/*
+	 * Note: This must be executed in the UI thread.
+	 */
 	private void setNewSize(EditPart child, int width, int height) {
 		// Used solely by the refresh policy to set a new size from the child so that we don't need to query
 		// and calculate the whole constraint. We just get the old figure constraint and reapply with the size
@@ -326,7 +337,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		}
 		return constraint;
 	}
-
+	
 	/**
 	 * A child has been added. We need to add in the listener for Visual Constraint changes. We will
 	 * also have an editpolicy on the child to handle this.
@@ -351,11 +362,11 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 							// The constraint keyedvalue was changed
 							switch (kvMsg.getEventType()) {
 								case Notification.SET : // It was changed.
-									refreshFromEditPart(getHost(), ((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
+									queueRefreshFromEditPart(((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
 									break;
 
 								case Notification.UNSET : // It was removed
-									refreshFromEditPart(getHost(), null);
+									queueRefreshFromEditPart(null);
 									break;
 							}
 						}
@@ -382,6 +393,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			// Signal an initial change so that this child gets positioned correctly.
 			signalRefresh();
 		}
+		
 
 		/*
 		 * Signal the refresh from current state.
@@ -392,8 +404,17 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			if (vi != null) {
 				kv = vi.getKeyedValues().get(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
 			}
-			refreshFromEditPart(getHost(), kv);
+			queueRefreshFromEditPart(kv);
 		}
+		
+		private void queueRefreshFromEditPart(final Object constraint) {
+			CDEUtilities.displayExec(getHost().getViewer().getControl().getDisplay(), new Runnable() {
+				public void run() {
+					if (!deactivated)
+						refreshFromEditPart(getHost(), constraint);
+				}
+			});
+		}		
 
 		public void deactivate() {
 			deactivated = true;
@@ -412,13 +433,13 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
 		public void sizeChanged(final int width, final int height) {
 			// Needs to be done on UI thread.
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (!deactivated) {
-							setNewSize(getHost(), width, height);
-						}
+			CDEUtilities.displayExec(getHost().getViewer().getControl().getDisplay(), new Runnable() {
+				public void run() {
+					if (!deactivated) {
+						setNewSize(getHost(), width, height);
 					}
-				});
+				}
+			});
 		}
 
 	};

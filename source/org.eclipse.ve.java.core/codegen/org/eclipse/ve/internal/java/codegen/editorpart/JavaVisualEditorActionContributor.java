@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -38,26 +38,19 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class JavaVisualEditorActionContributor extends CompilationUnitEditorActionContributor {
 	
-	protected static final String[] STATUS_FIELDS = new String[] {
-		IJVEStatus.STATUS_CATEGORY_SYNC_STATUS,
-		IJVEStatus.STATUS_CATEGORY_SYNC_ACTION
-	};
-	
-	private IStatusField[] statusFields = new IStatusField[] {
-		new StatusLineContributionItem(IJVEStatus.STATUS_CATEGORY_SYNC_STATUS),
-		new JVEActionStatusLineContributionItem(IJVEStatus.STATUS_CATEGORY_SYNC_ACTION)		
-	};
-	
 	protected IEditorPart activeEditor;
 	public static final String 
 		PALETTE_SELECTION_ACTION_ID = "paletteSelection", //$NON-NLS-1$
 		PALETTE_MARQUEE_SELECTION_ACTION_ID = "paletteMarqueeSelection", //$NON-NLS-1$
 		PALETTE_DROPDOWN_ACTION_ID = "paletteDropdown"; //$NON-NLS-1$
 		
-	private RetargetAction deleteAction, undoAction, redoAction, palSelectAction, palMarqueeAction, customizeAction, alignmentWindowRetargetAction;
+	private RetargetAction deleteAction, undoAction, redoAction, palSelectAction, palMarqueeAction, reloadAction, customizeAction, alignmentWindowRetargetAction;
 	private MenuCreatorRetargetAction palDropdownAction;
 	
 	private AlignmentWindowAction alignmentWindowAction;
+
+	public final static String STATUS_FIELD_CATEGORY = "JVE_STATUS_FIELD";
+	private StatusLineContributionItem statusField = new StatusLineContributionItem(STATUS_FIELD_CATEGORY);
 	 
 	public JavaVisualEditorActionContributor() {
 		// These actions are retargeted so that it works with both the JavaBeans viewer and the editor part
@@ -100,6 +93,11 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		palDropdownAction.setEnabled(false);
 		markAsPartListener(palDropdownAction);
 		
+		reloadAction = new LabelRetargetAction(ReloadAction.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX);
+		reloadAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif")); //$NON-NLS-1$
+		reloadAction.setEnabled(false);
+		markAsPartListener(reloadAction);
+		
 		customizeAction = new LabelRetargetAction(CustomizeJavaBeanAction.ACTION_ID, ""); //$NON-NLS-1$
 		customizeAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/etool16/customizebean_co.gif")); //$NON-NLS-1$
 		customizeAction.setEnabled(false);
@@ -121,6 +119,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		tbm.add(deleteAction);
 		tbm.add(undoAction);
 		tbm.add(redoAction);	
+		tbm.add(reloadAction);		
 		tbm.add(new Separator());
 		tbm.add(palSelectAction);
 		tbm.add(palMarqueeAction);
@@ -132,9 +131,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 	
 	public void contributeToStatusLine(IStatusLineManager statusLineManager) {
 		super.contributeToStatusLine(statusLineManager);
-		for (int i = 0; i < statusFields.length; i++) {
-			statusLineManager.add((IContributionItem) statusFields[i]);
-		}
+		statusLineManager.add(statusField);
 	}
 
 	/* (non-Javadoc)
@@ -146,22 +143,14 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 			
 		if (getActiveEditorPart() instanceof ITextEditorExtension) {
 			ITextEditorExtension extension = (ITextEditorExtension) getActiveEditorPart();
-			for (int i = 0; i < STATUS_FIELDS.length; i++) {
-				extension.setStatusField(null, STATUS_FIELDS[i]);
-				if (statusFields[i] instanceof JVEActionStatusLineContributionItem) {
-					// When the editor is closed, we nee to remove the link or the outgoing editor
-					// In case that the IDE keep holding this contributor
-					((JVEActionStatusLineContributionItem) statusFields[i]).setPauseListener(null);
-				}
-			}
+			extension.setStatusField(null, STATUS_FIELD_CATEGORY);
 		}
 		
 		super.setActiveEditor(part);
 		
 		if (getActiveEditorPart() instanceof ITextEditorExtension) {
 			ITextEditorExtension extension= (ITextEditorExtension) getActiveEditorPart();
-			for (int i= 0; i < STATUS_FIELDS.length; i++)
-				extension.setStatusField(statusFields[i], STATUS_FIELDS[i]);
+			extension.setStatusField(statusField, STATUS_FIELD_CATEGORY);
 		}
 		
 		ITextEditor textEditor = (getActiveEditorPart() instanceof ITextEditor) ? (ITextEditor) getActiveEditorPart() : null;
@@ -173,6 +162,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		bars.setGlobalActionHandler(PALETTE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_MARQUEE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_DROPDOWN_ACTION_ID, getAction(textEditor, PALETTE_DROPDOWN_ACTION_ID));
+		bars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(textEditor, ReloadAction.RELOAD_ACTION_ID));
 		bars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, getAction(textEditor, CustomizeJavaBeanAction.ACTION_ID));		
 	}
 	/* (non-Javadoc)

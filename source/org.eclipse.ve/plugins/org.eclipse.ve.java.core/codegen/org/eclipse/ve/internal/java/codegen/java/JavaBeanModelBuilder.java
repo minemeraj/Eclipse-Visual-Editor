@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import java.util.*;
@@ -129,6 +129,8 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 			}
 		}
 		return result ;
+	} catch (CodeGenSyntaxError e) {
+		throw e;	// Pass it on, don't log it twice.
 	} catch (Exception e) {
 		throw new CodeGenSyntaxError ("JVE Parsing Error: "+e.getMessage());
 	}

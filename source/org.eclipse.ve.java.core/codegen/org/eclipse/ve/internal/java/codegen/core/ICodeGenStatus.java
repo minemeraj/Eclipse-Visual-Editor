@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ICodeGenStatus.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 /**
@@ -21,6 +21,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  * Window>Preferences>Java>Templates.
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
+ * @deprecated NEED to get rid of this. Renderer no longer exists.
  */
 public interface ICodeGenStatus {
 	

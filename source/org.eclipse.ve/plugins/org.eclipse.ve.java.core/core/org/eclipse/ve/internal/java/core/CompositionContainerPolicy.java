@@ -11,19 +11,29 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFContainerPolicy;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
  * Container Edit Policy for Bean Compositions.
  */
-public class CompositionContainerPolicy extends EMFContainerPolicy {
+public class CompositionContainerPolicy extends JavaContainerPolicy {
 	
 	public CompositionContainerPolicy(EditDomain domain) {
 		super(JCMPackage.eINSTANCE.getBeanComposition_Components(), domain);
 	}
-
+	
+	/**
+	 * @param containmentSF
+	 * @param domain
+	 * 
+	 * @since 1.0.0
+	 */
+	protected CompositionContainerPolicy(EStructuralFeature containmentSF, EditDomain domain) {
+		super(containmentSF, domain);
+	}
 }

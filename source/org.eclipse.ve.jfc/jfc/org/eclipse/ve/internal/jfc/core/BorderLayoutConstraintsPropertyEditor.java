@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutConstraintsPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:38 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -49,7 +49,7 @@ public class BorderLayoutConstraintsPropertyEditor extends ObjectComboBoxCellEdi
 			public String getText(Object element){
 			String internalTag = null;
 			if (element instanceof IJavaInstance) {
-				IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
+				IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element, true);
 				if (proxy == null)
 					internalTag = "";	// It shouldn't be null. //$NON-NLS-1$
 				else

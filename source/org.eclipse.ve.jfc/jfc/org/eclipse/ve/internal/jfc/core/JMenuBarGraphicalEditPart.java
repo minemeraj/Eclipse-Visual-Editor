@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,13 +9,14 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JMenuBarGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ * $RCSfile: JMenuBarGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.List;
 
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,9 +25,11 @@ import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 /**
  * @author pwalker
- *
+ * 
  * Graphical editpart for JMenuBar
  */
 public class JMenuBarGraphicalEditPart extends ContainerGraphicalEditPart {
@@ -35,6 +37,7 @@ public class JMenuBarGraphicalEditPart extends ContainerGraphicalEditPart {
 
 	/**
 	 * Constructor for JMenuBarGraphicalEditPart.
+	 * 
 	 * @param model
 	 */
 	public JMenuBarGraphicalEditPart(Object model) {
@@ -58,33 +61,27 @@ public class JMenuBarGraphicalEditPart extends ContainerGraphicalEditPart {
 		return (List) ((EObject) getModel()).eGet(sfMenus);
 	}
 
-public void activate() {
-	super.activate();	
-	((EObject) getModel()).eAdapters().add(menubarAdapter);
-}
-
-public void deactivate() {
-	super.deactivate();
-	((EObject) getModel()).eAdapters().remove(menubarAdapter);
-}
-
-private Adapter menubarAdapter = new Adapter() {
-	public void notifyChanged(Notification notification) {
-		if (notification.getFeature() == sfMenus)
-			refreshChildren();
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(menubarAdapter);
 	}
 
-	public Notifier getTarget() {
-		return null;
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(menubarAdapter);
 	}
 
-	public void setTarget(Notifier newTarget) {
-	}
-
-	public boolean isAdapterForType(Object type) {
-		return false;
-	}
-};
+	private Adapter menubarAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
+				refreshChildren();			
+		}
+		
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sfMenus)
+				queueExec(JMenuBarGraphicalEditPart.this);
+		}
+	};
 
 	public void setModel(Object model) {
 		super.setModel(model);

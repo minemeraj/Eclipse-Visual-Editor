@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualBendpointEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 import java.util.*;
@@ -59,16 +59,28 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 		viListener = new VisualInfoPolicy.VisualInfoListener(getHost().getModel(), dom.getDiagram(viewer), dom) {
 			public void notifyVisualInfoChanges(Notification msg) {
 				if (msg.getFeatureID(VisualInfo.class) == CDMPackage.VISUAL_INFO__KEYED_VALUES) {
-					Notification kvMsg = KeyedValueNotificationHelper.notifyChanged(msg, CDMModelConstants.VISUAL_BENDPOINTS_KEY);
+					final Notification kvMsg = KeyedValueNotificationHelper.notifyChanged(msg, CDMModelConstants.VISUAL_BENDPOINTS_KEY);
 					if (kvMsg != null) {
 						// The bendpoints keyedvalue was changed
 						switch (kvMsg.getEventType()) {
 							case Notification.SET : // It was changed.
-								refreshBendpoints(((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
+								CDEUtilities.displayExec(getHost(), new Runnable() {
+									public void run() {
+										// if goes inactive, then diagram will be null
+										if (diagram != null)
+											refreshBendpoints(((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
+									}
+								});
 								break;
 
 							case Notification.UNSET : // It was removed
-								refreshBendpoints(null);
+								CDEUtilities.displayExec(getHost(), new Runnable() {
+									public void run() {
+										// if goes inactive, then diagram will be null
+										if (diagram != null)
+											refreshBendpoints(null);
+									}
+								});
 								break;
 						}
 					}
@@ -77,15 +89,28 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 
 			public void notifyVisualInfo(int eventType, VisualInfo oldVI, VisualInfo newVI) {
 				// A visual info was either added or removed
-				refreshBendpoints();
+				CDEUtilities.displayExec(getHost(), new Runnable() {
+					public void run() {
+						// if goes inactive, then diagram will be null
+						if (diagram != null)
+							refreshBendpoints();
+					}
+				});
 			}
 
 			public void notifyAnnotationChanges(Notification msg) {
 				// An annotation was either added or removed
-				refreshBendpoints();
+				CDEUtilities.displayExec(getHost(), new Runnable() {
+					public void run() {
+						// if goes inactive, then diagram will be null
+						if (diagram != null)
+							refreshBendpoints();
+					}
+				});
 			}
 
 		};
+		
 		refreshBendpoints();
 	}
 

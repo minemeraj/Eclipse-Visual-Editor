@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.dinner.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: EntreeGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:12 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -19,6 +19,8 @@ import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.*;
+
 import org.eclipse.ve.internal.cdm.DiagramFigure;
 import org.eclipse.draw2d.*;
 import org.eclipse.gef.EditPart;
@@ -77,7 +79,7 @@ public class EntreeGraphicalEditPart extends DiagramFigureGraphicalEditPart {
 		return super.getAdapter(key);
 	}
 	/**
-	 * @see org.eclipse.ve.internal.cde.core.DiagramFigureGraphicalEditPart#createModelAdapter()
+	 * @see org.eclipse.ve.internal.cde.emf.DiagramFigureGraphicalEditPart#createModelAdapter()
 	 */
 	protected DiagramFigureAdapter createModelAdapter() {
 		return new DiagramFigureAdapter() {

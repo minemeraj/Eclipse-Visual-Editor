@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,41 +9,48 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JPopupMenuTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ * $RCSfile: JPopupMenuTreeEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
  */
+
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
  * @author pwalker
- *
+ * 
  * Tree editpart for JPopupMenu. Similar to JMenuEditTreeEditPart
  */
 public class JPopupMenuTreeEditPart extends ComponentTreeEditPart {
 	protected EStructuralFeature sfItems;
-	private Adapter containerAdapter = new AdapterImpl() {
-		public void notifyChanged(Notification msg) {
-			if (msg.getFeature() == sfItems)
+
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
 				refreshChildren();
-			
 		}
 
+		public void notifyChanged(Notification msg) {
+			if (msg.getFeature() == sfItems)
+				queueExec(JPopupMenuTreeEditPart.this);
+		}
 	};
 
 	/**
 	 * Constructor for JPopupMenuTreeEditPart.
+	 * 
 	 * @param model
 	 */
 	public JPopupMenuTreeEditPart(Object model) {
@@ -54,9 +60,8 @@ public class JPopupMenuTreeEditPart extends ComponentTreeEditPart {
 	protected void createEditPolicies() {
 		// The TreeContainerEditPolicy is the CDE one
 		super.createEditPolicies();
-		installEditPolicy(
-			EditPolicy.TREE_CONTAINER_ROLE,
-			new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new JMenuContainerPolicy(EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new JMenuContainerPolicy(
+				EditDomain.getEditDomain(this))));
 	}
 
 	public void activate() {
@@ -69,17 +74,16 @@ public class JPopupMenuTreeEditPart extends ComponentTreeEditPart {
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
 
-
 	public List getChildJavaBeans() {
 		return (List) ((EObject) getModel()).eGet(sfItems);
 	}
 
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		if (ep instanceof ComponentTreeEditPart)
-			((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject)model));
+		if (ep instanceof ComponentTreeEditPart) ((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject) model));
 		return ep;
 	}
+
 	/*
 	 * @see EditPart#setModel(Object)
 	 */

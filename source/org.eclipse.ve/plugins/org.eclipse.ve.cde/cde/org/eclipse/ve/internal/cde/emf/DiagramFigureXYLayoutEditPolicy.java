@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.cde.core;
+package org.eclipse.ve.internal.cde.emf;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DiagramFigureXYLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.1 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 import java.util.Iterator;
@@ -30,6 +30,8 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.ve.internal.cde.commands.ApplyVisualConstraintCommand;
 import org.eclipse.ve.internal.cde.commands.CancelVisualConstraintCommand;
+import org.eclipse.ve.internal.cde.core.*;
+
 import org.eclipse.ve.internal.cdm.DiagramFigure;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.model.*;

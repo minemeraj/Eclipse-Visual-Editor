@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodAnalyzer.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import java.util.*;
@@ -131,7 +131,7 @@ String pc = exp.getContent() ;
               exp.setOffset(buf.length()) ;
               if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_DELETE)) { //(exp.getState() == exp.STATE_NOT_EXISTANT) {
             	// Skip the expression
-            	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("Need to deal with comments associated with statement") ; //$NON-NLS-1$
+            	// TODO "Need to deal with comments associated with statement") ; //$NON-NLS-1$
             	deleteCandidate.add(exp) ;
             	JavaVEPlugin.log("\tDeleting: "+exp, Level.FINE) ; //$NON-NLS-1$
             	// Advance the left marker to the start of next expression
@@ -144,7 +144,7 @@ String pc = exp.getContent() ;
 if (pc != null && !pc.equals(exp.getContent())) {
 JavaVEPlugin.log("\tUpdating: "+pc+" -> "+exp.getContent(), Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 }
-            	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("clean this up") ; //$NON-NLS-1$
+            	// TODO "clean this up") ; //$NON-NLS-1$
             	flastFiller = exp.getFillerContent() ;
               }            
 		}
@@ -290,12 +290,12 @@ public String getCompositionReflectedSource() throws CodeGenException {
 	// re-construct in here 
 	StringBuffer buf = new StringBuffer (2*fSource.length()) ;    
 	// Keep track which beans are involved
-	org.eclipse.ve.internal.cde.core.CDEHack.fixMe("this may not be the init method for a bean") ; //$NON-NLS-1$
+	// TODO "this may not be the init method for a bean"
 	Vector beans = new Vector() ; 
 	// Update existing source code  
 	int srcOffset=reflectExistingSource(buf,beans) ;		
 	
-	org.eclipse.ve.internal.cde.core.CDEHack.fixMe() ;
+	// TODO This was a CDEHACK.fixme(). Is it a problem?
 	for (int i=0; i<beans.size(); i++) {
 		appendNewSource(buf,(BeanPart)beans.elementAt(i),flastFiller) ;
 	}

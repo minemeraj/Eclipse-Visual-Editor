@@ -1,15 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:34 $
+ */
+
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
-import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
@@ -19,9 +31,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.*;
+
 import org.eclipse.ve.internal.java.core.*;
 
 public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
@@ -63,8 +78,13 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	
 		// Listen to the IBeanProxyHost so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
-			public void errorStatus(int severity){
-				setSeverity(severity);
+			public void errorStatus(final int severity){
+				CDEUtilities.displayExec(ControlGraphicalEditPart.this,  new Runnable() {
+
+					public void run() {
+						setSeverity(severity);
+					}
+				});
 			}
 		};
 	

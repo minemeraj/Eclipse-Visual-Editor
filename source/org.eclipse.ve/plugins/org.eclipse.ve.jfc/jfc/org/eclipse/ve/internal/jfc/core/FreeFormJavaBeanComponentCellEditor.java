@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormJavaBeanComponentCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-26 23:07:38 $ 
  */
 
 import java.util.*;
@@ -25,7 +25,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.jem.java.JavaClass;
@@ -36,7 +35,7 @@ import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.propertysheet.*;
 
 /**
- * To do 
+ * TODO 
  * - Right now this assumes the container/components relationship to find components and the inverse to go from a component to its top level container on the free form
  *   This doesn't hold true for JTabbedPane, JSplitPane, etc...  
  * - Don't let a class tab to itself ( this is just silly from a user point of view ) 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: IJVEStatus.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
@@ -19,6 +19,7 @@ import org.eclipse.ve.internal.java.codegen.core.IJVEStatusChangeListener;
 
 /**
  * @version 	1.0
+ * @deprecated NEED to get rid of this
  * @author
  */
 public interface IJVEStatus extends ICodeGenStatus {

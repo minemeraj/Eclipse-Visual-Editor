@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,28 +9,32 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JToolBarGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
+ * $RCSfile: JToolBarGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
  * GraphicalEditPart for javax.swing.JToolBar.
  */
 public class JToolBarGraphicalEditPart extends ContainerGraphicalEditPart {
 	protected EStructuralFeature sfItems;
+
 	protected JavaClass classAction;
 
 	public JToolBarGraphicalEditPart(Object model) {
@@ -46,8 +49,7 @@ public class JToolBarGraphicalEditPart extends ContainerGraphicalEditPart {
 	}
 
 	/*
-	 * Get only Components... can't handle Actions right now allow though they
-	 * will show up in the VM and be reflected back into the graph viewer. 
+	 * Get only Components... can't handle Actions right now allow though they will show up in the VM and be reflected back into the graph viewer.
 	 */
 	public List getModelChildren() {
 		List items = (List) ((EObject) getModel()).eGet(sfItems);
@@ -55,39 +57,32 @@ public class JToolBarGraphicalEditPart extends ContainerGraphicalEditPart {
 		Iterator iter = items.iterator();
 		while (iter.hasNext()) {
 			IJavaInstance item = (IJavaInstance) iter.next();
-			if (!classAction.isInstance(item))
-				children.add(item);
+			if (!classAction.isInstance(item)) children.add(item);
 		}
 		return children;
 	}
 
-public void activate() {
-	super.activate();	
-	((EObject) getModel()).eAdapters().add(toolbarAdapter);
-}
-
-public void deactivate() {
-	super.deactivate();
-	((EObject) getModel()).eAdapters().remove(toolbarAdapter);
-}
-
-private Adapter toolbarAdapter = new Adapter() {
-	public void notifyChanged(Notification notification) {
-		if (notification.getFeature() == sfItems)
-			refreshChildren();
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(toolbarAdapter);
 	}
 
-	public Notifier getTarget() {
-		return null;
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(toolbarAdapter);
 	}
 
-	public void setTarget(Notifier newTarget) {
-	}
-
-	public boolean isAdapterForType(Object type) {
-		return false;
-	}
-};
+	private Adapter toolbarAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+		
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sfItems)
+				queueExec(JToolBarGraphicalEditPart.this);
+		}
+	};
 
 	/*
 	 * @see EditPart#setModel(Object)
@@ -99,6 +94,7 @@ private Adapter toolbarAdapter = new Adapter() {
 		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
 		classAction = (JavaClass) Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
 	}
+
 	/**
 	 * @see org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart#setPropertySource(ComponentGraphicalEditPart, EObject)
 	 */

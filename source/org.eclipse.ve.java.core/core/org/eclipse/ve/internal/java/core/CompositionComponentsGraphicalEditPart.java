@@ -11,22 +11,29 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
+import java.util.*;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.cde.core.*;
+
 import org.eclipse.ve.internal.jcm.BeanComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
- * Composition Graphical Edit Part that instantiates and disposes bean proxies
+ * Composition Graphical Edit Part for Java Beans Compositions.
  */
 public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEditPart {
 
@@ -36,11 +43,22 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	}
 
 	protected void createEditPolicies() {
-		VisualInfoXYLayoutEditPolicy ep = new VisualInfoXYLayoutEditPolicy(new CompositionContainerPolicy(EditDomain.getEditDomain(this)));
+		VisualInfoXYLayoutEditPolicy ep = new VisualInfoXYLayoutEditPolicy(getContainerPolicy());
 		ep.setZoomable(true);
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, ep);
 	}
 	
+	
+	/**
+	 * Get the container policy for this editpart. Subclasses may override and return something different.
+	 * @return container policy.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected ContainerPolicy getContainerPolicy() {
+		return new CompositionContainerPolicy(EditDomain.getEditDomain(this));
+	}
+
 	protected List getModelChildren() {
 		BeanComposition comp = (BeanComposition) getModel();
 		return comp != null ? comp.getComponents() : Collections.EMPTY_LIST;
@@ -49,10 +67,24 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	protected Adapter compositionAdapter = new AdapterImpl() {
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeatureID(BeanComposition.class) == JCMPackage.BEAN_COMPOSITION__COMPONENTS)
-				refreshChildren();
+				queueRefreshChildren();
 		}
 	};
-
+	
+	/**
+	 * Queue up a refresh child for next async exec.
+	 *  
+	 * @since 1.0.0
+	 */
+	protected void queueRefreshChildren() {
+		CDEUtilities.displayExec(getViewer().getControl().getDisplay(), new Runnable() {
+			public void run() {
+				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
+				if (isActive())
+					refreshChildren();
+			}
+		});
+	}
 	
 	public void activate() {
 		super.activate();
@@ -64,6 +96,41 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 		super.deactivate();
 		if (getModel() != null)
 			((BeanComposition) getModel()).eAdapters().remove(compositionAdapter);
+	}
+
+	protected EditPart createChild(Object model) {
+		// If the model object is in error then we create a special placeholder
+		if ( model instanceof IJavaInstance){
+			IBeanProxyHost modelBeanProxy = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)model);
+			// If we have a fatal error then we use a special graphical edit part
+			// We must NOT use the one defined on the class as for some classes, e.g. Component it
+			// has a lot of behavior that relies on the live JavaBean being present
+			if(modelBeanProxy == null || modelBeanProxy.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE){
+				// The DefaultGraphicalEditPart will show the icon and its label provider will indicate to the
+				// user that the JavaBean failed to be created
+				JavaBeanGraphicalEditPart result = new JavaBeanGraphicalEditPart(model);
+				return result;
+			}
+		}
+		return super.createChild(model);
+	}
+
+	public Object getAdapter(Class key) {
+		Object result = super.getAdapter(key);
+		if (result == null && getModel() != null) {
+			// See if any of the MOF adapters on our target can return a value for the request
+			Iterator mofAdapters = ((Notifier) getModel()).eAdapters().iterator();
+			while (mofAdapters.hasNext()) {
+				Object mofAdapter = mofAdapters.next();
+				if (mofAdapter instanceof IAdaptable) {
+					Object mofAdapterAdapter = ((IAdaptable) mofAdapter).getAdapter(key);
+					if (mofAdapterAdapter != null) {
+						return mofAdapterAdapter;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

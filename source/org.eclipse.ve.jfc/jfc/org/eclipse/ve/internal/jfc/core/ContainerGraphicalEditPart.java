@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,9 +9,10 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: ContainerGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-04 16:13:57 $ 
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
+
 import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
@@ -29,144 +29,138 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 
 /**
- * ViewObject for the awt Container.
- * Creation date: (2/16/00 3:45:46 PM)
- * @author: Joe Winchester
+ * ViewObject for the awt Container. Creation date: (2/16/00 3:45:46 PM) @author: Joe Winchester
  */
 public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 
-public ContainerGraphicalEditPart(Object model) {
-	super(model);
-}
-
-protected ContainerPolicy getContainerPolicy() {
-	return new ContainerPolicy(EditDomain.getEditDomain(this));	// AWT standard Contained Edit Policy
-}
-
-protected IFigure createFigure() {
-	IFigure fig = super.createFigure();
-	fig.setLayoutManager(new XYLayout());
-	return fig;
-}
-
-protected void createEditPolicies() {
-	super.createEditPolicies();
-	installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy());	// This is a special policy that just handles the size/position of visual components wrt/the figures. It does not handle changing size/position.
-	createLayoutEditPolicy();
-}
-
-/**
- * Because java.awt.Container can vary its layout manager we need to use 
- * the correct layout input policy for the layout manager that is calculated by
- * a factory
- */
-protected void createLayoutEditPolicy() {
-	// Need to create the correct layout input policy depending upon the layout manager setting.
-	EditPolicy layoutPolicy = null;
-	// Get the layout input policy class from the layout policy factory 
-	IBeanProxy containerProxy = getComponentProxy().getBeanProxy();
-	if (containerProxy != null) {
-		// a container was created. 
-		ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
-		layoutPolicy = lpFactory.getLayoutEditPolicy(getContainerPolicy());
+	public ContainerGraphicalEditPart(Object model) {
+		super(model);
 	}
-	// If the LayoutPolicyFactory didn't specifiy a LayoutInputPolicy, use UnknownLayoutInputPolicy
-	if (layoutPolicy == null) {
-		layoutPolicy = new UnknownLayoutInputPolicy(getContainerPolicy());
-	}
-	
-	removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
-	// Layout policies put figure decorations for things like grids so we should remove this
-	installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
-}
 
-protected List getModelChildren() {
-	// Model children is the components feature.
-	// However, this returns the constraint components, but we want to return instead
-	// the components themselves. They are the "model" that gets sent to the createChild and
-	// component edit part.
-	List constraintChildren = (List) ((EObject) getModel()).eGet(sf_containerComponents);
-	ArrayList children = new ArrayList(constraintChildren.size());
-	Iterator itr = constraintChildren.iterator();
-	while (itr.hasNext()) {
-		EObject con = (EObject) itr.next();		
-		IJavaInstance component = (IJavaInstance)con.eGet(sf_constraintComponent);	// Get the component out of the constraint
-		if (component != null) {
-			// It was added. It would be null if it couldn't be added for some reason
-			children.add(component);
+	protected ContainerPolicy getContainerPolicy() {
+		return new ContainerPolicy(EditDomain.getEditDomain(this)); // AWT standard Contained Edit Policy
+	}
+
+	protected IFigure createFigure() {
+		IFigure fig = super.createFigure();
+		fig.setLayoutManager(new XYLayout());
+		return fig;
+	}
+
+	protected void createEditPolicies() {
+		super.createEditPolicies();
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); // This is a special policy that just
+		// handles the size/position of visual
+		// components wrt/the figures. It does not
+		// handle changing size/position.
+		createLayoutEditPolicy();
+	}
+
+	/**
+	 * Because java.awt.Container can vary its layout manager we need to use the correct layout input policy for the layout manager that is
+	 * calculated by a factory
+	 */
+	protected void createLayoutEditPolicy() {
+		// Need to create the correct layout input policy depending upon the layout manager setting.
+		EditPolicy layoutPolicy = null;
+		// Get the layout input policy class from the layout policy factory
+		IBeanProxy containerProxy = getComponentProxy().getBeanProxy();
+		if (containerProxy != null) {
+			// a container was created.
+			ILayoutPolicyFactory lpFactory = BeanAwtUtilities.getLayoutPolicyFactory(containerProxy, EditDomain.getEditDomain(this));
+			layoutPolicy = lpFactory.getLayoutEditPolicy(getContainerPolicy());
 		}
-	}
-	return children;
-}
-
-
-private Adapter containerAdapter = new Adapter() {
-	public void notifyChanged(Notification notification) {
-		if (notification.getFeature() == sf_containerComponents)
-			refreshChildren();
-		else if (notification.getFeature() == sf_containerLayout)
-			createLayoutEditPolicy();
-
+		// If the LayoutPolicyFactory didn't specifiy a LayoutInputPolicy, use UnknownLayoutInputPolicy
+		if (layoutPolicy == null) {
+			layoutPolicy = new UnknownLayoutInputPolicy(getContainerPolicy());
+		}
+		removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any Layout policies put figure decorations for things like grids so we
+		// should remove this
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
 	}
 
-	public Notifier getTarget() {
-		return null;
+	protected List getModelChildren() {
+		// Model children is the components feature. However, this returns the constraint components, but we want to return instead the components
+		// themselves. They are the "model" that gets sent to the createChild and component edit part.
+		List constraintChildren = (List) ((EObject) getModel()).eGet(sf_containerComponents);
+		ArrayList children = new ArrayList(constraintChildren.size());
+		Iterator itr = constraintChildren.iterator();
+		while (itr.hasNext()) {
+			EObject con = (EObject) itr.next();
+			IJavaInstance component = (IJavaInstance) con.eGet(sf_constraintComponent); // Get the component out of
+			// the constraint
+			if (component != null) {
+				// It was added. It would be null if it couldn't be added for some reason
+				children.add(component);
+			}
+		}
+		return children;
 	}
 
-	public void setTarget(Notifier newTarget) {
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+
+		public void run() {
+			if (isActive())
+				refreshChildren();		
+		}
+		
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sf_containerComponents) {
+				queueExec(ContainerGraphicalEditPart.this);
+			} else if (notification.getFeature() == sf_containerLayout) {
+				queueExec(ContainerGraphicalEditPart.this, new Runnable() {
+
+					public void run() {
+						if (isActive())
+							createLayoutEditPolicy();
+					}
+				});
+			}
+		}
+	};
+
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
-	public boolean isAdapterForType(Object type) {
-		return false;
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
-};
 
-public void activate() {
-	super.activate();	
-	((EObject) getModel()).eAdapters().add(containerAdapter);
-}
+	private EReference sf_containerLayout, sf_constraintComponent, sf_containerComponents;
 
-public void deactivate() {
-	super.deactivate();
-	((EObject) getModel()).eAdapters().remove(containerAdapter);
-}
-
-
-private EReference 
-	sf_containerLayout,
-	sf_constraintComponent,
-	sf_containerComponents;
-	
-protected EditPart createChild(Object model) {
-	EditPart ep = super.createChild(model);
-	if (ep instanceof ComponentGraphicalEditPart) {
-		setPropertySource((ComponentGraphicalEditPart) ep, (EObject) model);
-		((ComponentGraphicalEditPart) ep).setTransparent(true);	// So that it doesn't create an image, we subsume it here.
+	protected EditPart createChild(Object model) {
+		EditPart ep = super.createChild(model);
+		if (ep instanceof ComponentGraphicalEditPart) {
+			setPropertySource((ComponentGraphicalEditPart) ep, (EObject) model);
+			((ComponentGraphicalEditPart) ep).setTransparent(true); // So that it doesn't create an image, we subsume it here.
+		}
+		return ep;
 	}
-	return ep;
-}
 
-protected void setPropertySource(ComponentGraphicalEditPart childEP, EObject child) {
-	childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter.getFirstReferencedBy(child, sf_constraintComponent), IPropertySource.class));	// This is the property source of the actual model which is part of the constraintComponent.
-}
+	protected void setPropertySource(ComponentGraphicalEditPart childEP, EObject child) {
+		childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter.getFirstReferencedBy(child,
+				sf_constraintComponent), IPropertySource.class)); // This is the property source of the actual model which is part of the
+		// constraintComponent.
+	}
 
 	/*
 	 * @see EditPart#setModel(Object)
 	 */
 	public void setModel(Object model) {
 		super.setModel(model);
-		
 		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
 		sf_containerLayout = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_LAYOUT);
-		sf_constraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);	
-		sf_containerComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);		
+		sf_constraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
+		sf_containerComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);
 	}
-
 }

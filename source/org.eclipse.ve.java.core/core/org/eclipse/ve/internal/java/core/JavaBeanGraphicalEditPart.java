@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,13 +9,11 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JavaBeanGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:08:01 $
  */
+package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
@@ -24,14 +21,16 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart;
 import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
 
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
-	
+
 	public JavaBeanGraphicalEditPart(Object model) {
 		setModel(model);
 	}
@@ -42,7 +41,12 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		if (fBeanProxyErrorListener == null) {
 			fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 				public void errorStatus(int severity) {
-					refreshVisuals();
+					CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, new Runnable() {
+						public void run() {
+							if (isActive())
+								refreshVisuals();
+						}
+					});
 				}
 			};
 		}
@@ -61,7 +65,9 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	}
 
 	protected Image fOverlayImage;
+
 	protected int fOverlaySeverity;
+
 	protected void setFigureImage(Label aLabel, Image anImage) {
 
 		// See whether or not the JavaBean is in error
@@ -76,12 +82,10 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 				fOverlayImage.dispose();
 				fOverlayImage = null;
 			}
-			// If we don't have an overlay image then create one 
+			// If we don't have an overlay image then create one
 			if (fOverlayImage == null && anImage != null) {
-				fOverlayImage =
-					new Image(
-						getViewer().getControl().getDisplay(),
-						new JavaBeanTreeEditPart.JavaBeansImageDescriptor(anImage, beanProxyStatus).getImageData());
+				fOverlayImage = new Image(getViewer().getControl().getDisplay(), new JavaBeanTreeEditPart.JavaBeansImageDescriptor(anImage,
+						beanProxyStatus).getImageData());
 				fOverlaySeverity = beanProxyStatus;
 			}
 			super.setFigureImage(aLabel, fOverlayImage);
@@ -89,7 +93,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	}
 
 	public Object getAdapter(Class aKey) {
-		// See if any of the MOF adapters on our target can return a value for the request		
+		// See if any of the MOF adapters on our target can return a value for the request
 		Object result = super.getAdapter(aKey);
 		if (result != null) {
 			return result;
@@ -101,9 +105,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 				Object mofAdapter = mofAdapters.next();
 				if (mofAdapter instanceof IAdaptable) {
 					Object mofAdapterAdapter = ((IAdaptable) mofAdapter).getAdapter(aKey);
-					if (mofAdapterAdapter != null) {
-						return mofAdapterAdapter;
-					}
+					if (mofAdapterAdapter != null) { return mofAdapterAdapter; }
 				}
 			}
 		}
@@ -113,7 +115,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	protected IActionFilter getJavaActionFilter() {
 		return JavaBeanActionFilter.INSTANCE;
 	}
-	
+
 	public List getEditPolicies() {
 		List result = new ArrayList();
 		EditPolicyIterator i = getEditPolicyIterator();
@@ -123,14 +125,16 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
-	protected IFigure createFigure() {		
+	protected IFigure createFigure() {
 		IFigure fig = super.createFigure();
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this)) ;
-	    fig.setToolTip(ToolTipFig) ;	
-		return fig ;
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this));
+		fig.setToolTip(ToolTipFig);
+		return fig;
 	}
 
 }
