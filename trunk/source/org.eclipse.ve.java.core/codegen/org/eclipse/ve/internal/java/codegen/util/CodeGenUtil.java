@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.22 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.23 $  $Date: 2004-05-20 17:06:15 $ 
  */
 
 
@@ -553,7 +553,8 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 			String qn;
 			if (importList!=null) {
 			  // use Imports
-			  importList.add(jc.getQualifiedName());
+			  if (!importList.contains(jc.getQualifiedName()))
+			      importList.add(jc.getQualifiedName());
 			  qn = jc.getName();
 		    }
 			else // use full qualifier
