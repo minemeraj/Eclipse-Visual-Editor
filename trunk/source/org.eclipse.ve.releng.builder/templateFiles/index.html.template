@@ -1,142 +1,204 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
-<title>Visual Editor Project - Download</title>
+  <meta content="text/html; charset=iso-8859-1"
+ http-equiv="Content-Type">
+  <link type="text/css" href="http://dev.eclipse.org/default_style.css"
+ rel="stylesheet">
+  <title>Visual Editor Project - Download</title>
 </head>
 <body>
-&nbsp; 
-
-
-
-<table BORDER=0 CELLSPACING=5 CELLPADDING=2 WIDTH="100%" >
-  <tr> 
-    <td ALIGN=LEFT width="80%"> 
-      <p><b><font face="Verdana" size="+3">@type@ Build: @build@</font></b><br>
-        @date@ </p>
-      <p>These downloads are provided under the <a href="http://www.eclipse.org/legal/notice.html">Eclipse.org 
-        Software User Agreement</a>.</p>
-      <p>To view the build notes for this build click <a href="buildNotes.php">here</a>.<br>
-        To view the test results and compile logs for this build click <a href="testResults.php">here</a>.<BR>
- To view the map file entries 
-for this build click
-click <A href="directory.txt">here</A>.<BR></td>
-  </tr>
+&nbsp;
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td width="80%" align="left">
+      <p><b><font size="+3" face="Verdana">@type@ Build: @build@</font></b><br>
+@date@ </p>
+      <p>These downloads are provided under the <a
+ href="http://www.eclipse.org/legal/notice.html">Eclipse.org Software
+User Agreement</a>.</p>
+      <p>To view the build notes for this build click <a
+ href="buildNotes.php">here</a>.<br>
+To view the test results and compile logs for this build click <a
+ href="testResults.php">here</a>.<br>
+To view the map file entries for this build click
+click <a href="directory.txt">here</a>.<br>
+      </p>
+      </td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td align=LEFT valign=TOP colspan="3" bgcolor="#0080C0"><b><font face="Arial,Helvetica" color="#FFFFFF">Requirements</font></b></td>
-  </tr>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#0080c0" colspan="3" valign="top" align="left">
+      <h1><b><font color="#ffffff" face="Arial,Helvetica">Requirements
+- PLEASE READ THIS SECTION FIRST<br>
+      </font></b></h1>
+      </td>
+    </tr>
+  </tbody>
 </table>
-<P>These are the prerequisites to install the Visual Editor. They must be downloaded and installed before the Visual Editor can be installed.</P>
-<TABLE>
-	<TBODY>
-		<TR>
-			<TD>Eclipse build @eclipseBuildID@:</TD>
-			<TD>(<A href="@eclipseURL@/index.php">build page</A>) (<A
-				href="@eclipseZipURL@">download win32 zip</A>)</TD>
-		</TR>
-		<TR>
-			<TD>EMF build @emfBuildID@:</TD>
-			<TD>(<A href="@emfURL@">build page</A>) (<A href="@emfZipURL@">download zip</A>)</TD>
-		</TR>
-		<TR>
-			<TD>GEF Build @gefBuildID@:</TD>
-			<TD>(<A href="@gefURL@/index.php">build page</A>) (<A
-				href="@gefZipURL@">download zip</A>)</TD>
-		</TR>
-	</TBODY>
-</TABLE>
+<p>These are the prerequisites to install the Visual Editor. They must
+be downloaded and installed before the Visual Editor can be installed.
+At this point in time since these are all drivers that are in
+development and are not release drivers, they cannot be mixed and
+matched. For VE to work they must match.<br>
+</p>
+<table>
+  <tbody>
+    <tr>
+      <td>Eclipse build @eclipseBuildID@:</td>
+      <td>(<a href="@eclipseURL@/index.php">build page</a>) (<a
+ href="@eclipseZipURL@">download win32 zip</a>)</td>
+    </tr>
+    <tr>
+      <td>EMF build @emfBuildID@:</td>
+      <td>(<a href="@emfURL@">build page</a>) (<a href="@emfZipURL@">download
+zip</a>)</td>
+    </tr>
+    <tr>
+      <td>GEF Build @gefBuildID@:</td>
+      <td>(<a href="@gefURL@/index.php">build page</a>) (<a
+ href="@gefZipURL@">download zip</a>)</td>
+    </tr>
+  </tbody>
+</table>
 <br>
-
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td align=LEFT valign=TOP colspan="3" bgcolor="#0080C0"><b><font face="Arial,Helvetica" color="#FFFFFF"> 
-      Visual Editor Runtime </font></b></td>
-  </tr>
-	<TR>
-		<TD align="LEFT" valign="TOP" colspan="3">This download is the normal Visual Editor installation. It contains only the runtime files. There is no source or developer files. It is to be used for the normal customer installation of the Visual Editor.</TD>
-	</TR></table>
-<table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
-  <tr> 
-    <td align=RIGHT valign=TOP width="7%"> 
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#0080c0" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica"> Visual Editor Runtime </font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download is the
+normal Visual Editor installation. It contains only the runtime files.
+There is no source or developer files. It is to be used for the normal
+customer installation of the Visual Editor.</td>
+    </tr>
+  </tbody>
+</table>
+%runtime%
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
       <div align="left"><b>Status</b></div>
-    </td>
-    <td width="34%"><b>Platform</b></td>
-    <td width="59%"><b>Download</b></td>
-    %runtime% </tr>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td colspan="2">&nbsp;</td>
-  </tr>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-        
-    <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">SDK</font></b></td>
-      </tr>
-	<TR>
-		<TD align="LEFT" valign="TOP" colspan="3">This download is the developer's SDK. It contains source and documentation for developers that want to extend the Visual Editor.</TD>
-	</TR></table>
-    <table BORDER=0 CELLSPACING=2 CELLPADDING=0 WIDTH="100%" bordercolor="#999999" >
-  <tr> 
-    <td align=RIGHT valign=TOP width="7%"> 
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#999999" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica">SDK</font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download is the
+developer's SDK. It contains source and documentation for developers
+that want to extend the Visual Editor.</td>
+    </tr>
+  </tbody>
+</table>
+%sdk%
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
       <div align="left"><b>Status</b></div>
-    </td>
-    <td width="34%"><b>Platform</b></td>
-    <td width="59%"><b>Download</b></td>
- %sdk%
-  </tr>
- </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td colspan="2">&nbsp;</td>
-  </tr>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+    </tr>
+  </tbody>
 </table>
-
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">Examples </font></b></td>
-  </tr>
-	<TR>
-		<TD align="LEFT" valign="TOP" colspan="3">This download contains the examples for the Visual Editor. It includes source. (At this time they aren't useful).</TD>
-	</TR></table>
-<table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
-  <tr> 
-    <td align=RIGHT valign=TOP width="7%"> 
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#999999" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica">Examples </font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download contains
+the examples for the Visual Editor. It includes source. (At this time
+they aren't useful).</td>
+    </tr>
+  </tbody>
+</table>
+%examples%
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
       <div align="left"><b>Status</b></div>
-    </td>
-    <td width="34%"><b>Platform</b></td>
-    <td width="59%"><b>Download</b></td>
-    %examples% </tr>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td colspan="2">&nbsp;</td>
-  </tr>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td align=LEFT valign=TOP colspan="3" bgcolor="#999999"><b><font face="Arial,Helvetica" color="#FFFFFF">JUnit Plugin Tests and Automated Testing Framework</font></b></td>
-  </tr>
-	<TR>
-		<TD align="LEFT" valign="TOP" colspan="3">This download contains the JUnit tests for testing the Visual Editor. It would be used by developers of the Visual Editor project itself.</TD>
-	</TR></table>
-<table border=0 cellspacing=2 cellpadding=0 width="100%" bordercolor="#999999" >
-  <tr> 
-    <td align=RIGHT valign=TOP width="7%"> 
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td bgcolor="#999999" colspan="3" valign="top" align="left"><b><font
+ color="#ffffff" face="Arial,Helvetica">JUnit Plugin Tests and
+Automated Testing Framework</font></b></td>
+    </tr>
+    <tr>
+      <td colspan="3" valign="top" align="left">This download contains
+the JUnit tests for testing the Visual Editor. It would be used by
+developers of the Visual Editor project itself.</td>
+    </tr>
+  </tbody>
+</table>
+%tests%
+<table bordercolor="#999999" width="100%" cellpadding="0"
+ cellspacing="2" border="0">
+  <tbody>
+    <tr>
+      <td width="7%" valign="top" align="right">
       <div align="left"><b>Status</b></div>
-    </td>
-    <td width="34%"><b>Platform</b></td>
-    <td width="59%"><b>Download</b></td>
-    %tests% </tr>
+      </td>
+      <td width="34%"><b>Platform</b></td>
+      <td width="59%"><b>Download</b></td>
+    </tr>
+  </tbody>
 </table>
-<table border=0 cellspacing=5 cellpadding=2 width="100%" >
-  <tr> 
-    <td colspan="2">&nbsp;</td>
-  </tr>
+<table width="100%" cellpadding="2" cellspacing="5" border="0">
+  <tbody>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+  </tbody>
 </table>
 <p>&nbsp;</p>
 </body>
