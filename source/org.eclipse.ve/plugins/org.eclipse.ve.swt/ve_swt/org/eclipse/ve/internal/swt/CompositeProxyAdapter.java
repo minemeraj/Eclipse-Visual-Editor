@@ -114,6 +114,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 						return layoutMethodProxy().invoke(getBeanProxy());
 					}
 				});
+				if(imSupport != null) refreshImage();
 			} catch (ThrowableProxy e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
