@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-03-09 18:49:08 $ 
  */
 
 
@@ -38,27 +38,27 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.type.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginWidth", RowLayout.class.getField("marginWidth"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginWidth"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.marginwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginWidth.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginHeight", RowLayout.class.getField("marginHeight"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginHeight"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.marginheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginHeight.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginLeft", RowLayout.class.getField("marginLeft"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginLeft"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.marginleft"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginLeft.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginRight", RowLayout.class.getField("marginRight"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginRight"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.marginright"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginRight.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginTop", RowLayout.class.getField("marginTop"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginTop"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.margintop"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginTop.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginBottom", RowLayout.class.getField("marginBottom"), new Object[]{
-						DISPLAYNAME, resbundle.getString("rowlayout.marginBottom"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("rowlayout.marginbottom"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowlayout.marginBottom.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("spacing", RowLayout.class.getField("spacing"), new Object[]{
