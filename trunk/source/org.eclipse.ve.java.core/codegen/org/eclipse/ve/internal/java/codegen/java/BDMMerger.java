@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-08 18:15:57 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-16 21:21:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,8 +23,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -50,14 +48,24 @@ public class BDMMerger {
 	protected boolean isNewModelCompleteCU = false;
 	protected Display display = null ;
 	
+	protected List needToRedecodeExpressions = new ArrayList();
+	
 	public BDMMerger(IBeanDeclModel mainModel, IBeanDeclModel newModel, boolean isNewModelCompleteCU, Display display){
 		this.mainModel = mainModel;
 		this.newModel = newModel;
 		this.isNewModelCompleteCU = isNewModelCompleteCU;
 		this.display = display;
+		needToRedecodeExpressions.clear();
 	}
 	
-	// return success
+	/**
+	 * Tries to merge/update the main BDM with the contents of the new BDM
+	 * 
+	 * @return Returns whether there was a successful merge.
+	 * @throws CodeGenException
+	 * 
+	 * @since 1.0.0
+	 */
 	public boolean merge() throws CodeGenException{
 		boolean merged = true;
 		if( mainModel != null && newModel != null ){
@@ -66,18 +74,50 @@ public class BDMMerger {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && removeDeletedMethods() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
+			merged = merged && updateEventHandlers() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && addNewBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && addThisMethod() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
+			merged = merged && updateMethods() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && mergeAllBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && updateFreeForm() ;
 		}
+		needToRedecodeExpressions.clear();
 		return merged ;
 	}
 	
-	
+	/**
+	 * Even though a majority of methods in the main BDM  are created when a new bean 
+	 * is created, there could be methods in the main BDM which do not init any bean - 
+	 * methods like initConnections() which do not have any initializing bean, but contribute
+	 * expressions to an existing bean. Hence update all methods in the main BDM with correct
+	 * offsets and contents.
+	 * 
+	 * @return  Returns whether a successful addition of methods has been performed
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateMethods() {
+		if(newModel.getTypeRef()!=null){
+			Iterator newMethodsItr = newModel.getTypeRef().getMethods();
+			while (newMethodsItr.hasNext()) {
+				CodeMethodRef updMethod = (CodeMethodRef) newMethodsItr.next();
+				CodeMethodRef mainMethod = mainModel.getMethod(updMethod.getMethodHandle());
+				if(mainMethod==null){
+					// main model doesnt have a method which the updated model has - add it
+					createNewMainMethodRef(updMethod);
+				}else{
+					updateMethodOffsetAndContent(mainMethod, updMethod);
+				}
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -186,11 +226,13 @@ public class BDMMerger {
 		return map;
 	}
 	
-	protected boolean updateMethodOffset(CodeMethodRef mainMethod, CodeMethodRef updatedMethod){
+	protected boolean updateMethodOffsetAndContent(CodeMethodRef mainMethod, CodeMethodRef updatedMethod){
 		if(mainMethod==null || updatedMethod==null)
 			return false ;
 		if(mainMethod.getOffset() != updatedMethod.getOffset())
 			mainMethod.setOffset(updatedMethod.getOffset());
+		if(updatedMethod.getContent()!=null && updatedMethod.getContent().equals(mainMethod.getContent()))
+			mainMethod.setContent(updatedMethod.getContent());
 		return true ;
 	}
 	
@@ -220,15 +262,170 @@ public class BDMMerger {
 		}
 	}
 	
-	protected boolean updateBeanPart(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
-		updateMethodOffset(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
-		updateReturnMethod(mainBeanPart, updatedBeanPart);
+	/**
+	 * Removes the main BDMs CallBack expression from the main BDM.
+	 * 
+	 * @param mainExp
+	 * @return  Return whether the CallBack expression has been successfully removed.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean removeDeletedCallBackExpression(CodeCallBackRef mainExp){
+		mainExp.dispose();
+		return true;
+	}
+	
+	/**
+	 * This method checks 
+	 * 
+	 * @param mainCBExp
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void checkEventExpNeedsRedecoding(CodeCallBackRef mainCBExp){
+		if(mainCBExp!=null && mainCBExp.getBean()!=null){
+			Collection eventExps = mainCBExp.getBean().getRefEventExpressions();
+			for (Iterator iter = eventExps.iterator(); iter.hasNext();) {
+				CodeExpressionRef exp = (CodeExpressionRef) iter.next();
+				if(!needToRedecodeExpressions.contains(exp))
+					needToRedecodeExpressions.add(exp);
+			}
+		}
+	}
+	
+	/**
+	 * Updates the passed in main CallBack expression with the contents of the equivalent passed in 
+	 * updated CallBack expression. Both expressions are equivalent with possibilly changed content
+	 *  
+	 * @param main
+	 * @param updExp
+	 * @param equivalency
+	 * @return  Return whether a successful update on the main CallBack expression has been performed
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean processSameCallBackExpression(CodeCallBackRef main, CodeCallBackRef updExp){
+		if(main.getOffset()!=updExp.getOffset())
+			main.setOffset(updExp.getOffset());
+		main.setContent(updExp.getContent());
+		main.setExprStmt(updExp.getExprStmt());
+		return true;
+	}
+	
+	/**
+	 * Adds the passed in new CallBack expression to the main BDM. 
+	 * 
+	 * @param newExp
+	 * @return  Returns whether the passed in CallBack expression was successfully added to the mainBDM 
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean addNewCallBackExpression(CodeCallBackRef newExp){
+		boolean added = false;
+		CodeMethodRef newMethodRef = newExp.getMethod();
+		BeanPart newBean = newExp.getBean();
+		if(newMethodRef!=null && newExp!=null){
+			CodeMethodRef mainMethod = mainModel.getMethod(newMethodRef.getMethodHandle());
+			BeanPart mainBean = mainModel.getABean(newBean.getUniqueName());
+			if(mainMethod!=null && mainBean!=null){
+				CodeCallBackRef callBack = new CodeCallBackRef(newExp.getExprStmt(), mainMethod);
+				callBack.setBean(mainBean);
+				checkEventExpNeedsRedecoding(callBack);
+				added = true;
+			}
+		}
+		return added;
+	}
+	
+	/**
+	 * CallBackRefExpressions are used by the regular and event expressions during decoding. In order for 
+	 * the correct decoding of the regular and event expressions, the call back expressions must be merged
+	 * in first.
+	 * 
+	 * @param mainBeanPart
+	 * @param updatedBeanPart
+	 * @return Return whether a successful update of the main BDM has been performed.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateCallBackExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
+		boolean processed = true;
+		List mainCallBackExpressions = new ArrayList(mainBeanPart.getRefCallBackExpressions());
+		List updatedCallBackExpressions = new ArrayList(updatedBeanPart.getRefCallBackExpressions());
+		
+		for(int mainExpCount = 0; mainExpCount < mainCallBackExpressions.size(); mainExpCount++ ){
+			CodeCallBackRef mainExp = (CodeCallBackRef) mainCallBackExpressions.get(mainExpCount);
+			boolean equivalentExpFound = false ;
+			for (int updatedExpCount = 0 ; updatedExpCount < updatedCallBackExpressions.size(); updatedExpCount++) {
+				CodeCallBackRef updExp = (CodeCallBackRef) updatedCallBackExpressions.get(updatedExpCount);
+				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
+					boolean contentSame = false;
+					contentSame = mainExp.getContent().equals(updExp.getContent());
+					if ( !contentSame ) 
+						continue ; // Not the same expressions
+					equivalentExpFound = true;
+					processed = processed & processSameCallBackExpression(mainExp, updExp);
+					mainCallBackExpressions.remove(mainCallBackExpressions.indexOf(mainExp)) ;
+					updatedCallBackExpressions.remove(updatedCallBackExpressions.indexOf(updExp)) ;
+					mainExpCount -- ;
+					updatedExpCount -- ;
+					break;
+				}
+			}
+			if(!equivalentExpFound){
+				// No Equivalent expression was found - delete it
+				mainCallBackExpressions.remove(mainCallBackExpressions.indexOf(mainExp)) ;
+				mainExpCount -- ;
+				checkEventExpNeedsRedecoding(mainExp);
+				removeDeletedCallBackExpression(mainExp);
+			}
+		}
+		
+		// Now add the newly added expressions
+		for (int newExpCount = 0; newExpCount < updatedCallBackExpressions.size(); newExpCount++) {
+			CodeCallBackRef exp = (CodeCallBackRef) updatedCallBackExpressions.get(newExpCount);
+			processed = processed & addNewCallBackExpression(exp);
+		}
+		return processed;
+	}
+	
+	/**
+	 * Updates the regular and event expressions of the main BDMs beanpart with the new BDMs beanpart.
+	 *  
+	 * @param mainBeanPart
+	 * @param updatedBeanPart
+	 * @return Return whether a successful update of the main BDM has been performed.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateRegularAndEventExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
 		List allMainBPExpressions = new ArrayList(mainBeanPart.getRefExpressions()) ;
 		List allUpdateBPExpressions = new ArrayList(updatedBeanPart.getRefExpressions()) ;
 		allMainBPExpressions.addAll(mainBeanPart.getRefEventExpressions()) ;
 		allUpdateBPExpressions.addAll(updatedBeanPart.getRefEventExpressions()) ;
-		boolean regular = processExpressions(allMainBPExpressions, allUpdateBPExpressions) ;
-		return regular ;
+		return processExpressions(allMainBPExpressions, allUpdateBPExpressions) ;
+	}
+	
+	/**
+	 * Updates the beanpart of the main BDM with the contents of the beanpart in the updated BDM.
+	 * Things which are updated are:
+	 *  # Method offsets of the init method of the beanpart
+	 *  # The return method of the beanpart (methods could have merged or split)
+	 *  # The call back expressions are updated
+	 *  # The regular and event expressions are updated.
+	 *  
+	 * @param mainBeanPart
+	 * @param updatedBeanPart
+	 * @return Return whether a successful update of the main BDM has been performed.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateBeanPart(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
+		updateMethodOffsetAndContent(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
+		updateReturnMethod(mainBeanPart, updatedBeanPart);
+		boolean update = updateCallBackExpressions(mainBeanPart, updatedBeanPart);
+		update = update && updateRegularAndEventExpressions(mainBeanPart, updatedBeanPart);
+		return update ;
 	}
 
 	protected boolean processEquivalentExpressions(final CodeExpressionRef mainExp, final CodeExpressionRef newExp, int equivalencyLevel){
@@ -247,6 +444,10 @@ public class BDMMerger {
 				if(mainExp.getOffset()==newExp.getOffset()){
 					// Absolutely no change, even in location
 					mainExp.setContent(newExp.getContentParser())  ;
+					// Code callback refs could have been added/removed/updated - 
+					// need to re-decode them if need be.
+					if(needToRedecodeExpressions.contains(mainExp))
+						mainExp.refreshFromJOM(newExp);
 				}else{
 					// Offset has been changed - might have to decode it as it might contain
 					// expression ordering in it. Ex: add(comp1); add(comp2) etc.
@@ -254,7 +455,7 @@ public class BDMMerger {
 					// No need to refresh when a shadow expression 
 					// We also do not care about event ordering
 					if(!newExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
-						!(newExp instanceof CodeEventRef)) {
+						((!(newExp instanceof CodeEventRef)) || needToRedecodeExpressions.contains(mainExp))) {
 					   // Will take care of reordering of expressions
 					   logFiner("Updating because of changed offset "+newExp.getCodeContent());
 					   mainExp.refreshFromJOM(newExp); 
@@ -446,6 +647,16 @@ public class BDMMerger {
 		return null ;
 	}
 	
+	/**
+	 * Performs a merge on all beans in the main BDM and the updating BDM. At this 
+	 * place, the main BDM has all the deleted beans removed, the new beans added, 
+	 * the new methods and event handlers added. There should be one-one correspondence
+	 * between beans in the main BDM and the update BDM. 
+	 *  
+	 * @return Returns whether a successful merge has taken place.
+	 * 
+	 * @since 1.0.0
+	 */
 	protected boolean mergeAllBeans(){
 		boolean merge = true ; 
 		List mainModelBeans = mainModel.getBeans() ;
@@ -777,4 +988,131 @@ public class BDMMerger {
 		}
 		return add;
 	}
+	
+	/**
+	 * Adds and removes the contents of the main event handler with the contents of 
+	 * the passed in updated event handler.
+	 * 
+	 * @param mainEH
+	 * @param updatedEH
+	 * @return  Returns whether successful updating has taken place.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateEventHandler(CodeEventHandlerRef mainEH, CodeEventHandlerRef updatedEH){
+		List mainEHMethods = new ArrayList();
+		List updatedEHMethods = new ArrayList();
+		for (Iterator iter = mainEH.getMethods(); iter.hasNext();) 
+			mainEHMethods.add(iter.next());
+		for (Iterator iter = updatedEH.getMethods(); iter.hasNext();) 
+			updatedEHMethods.add(iter.next());
+		
+		// Check which main BDM event handler methods need to be removed
+		for (int mainMtdCount = 0; mainMtdCount < mainEHMethods.size(); mainMtdCount++) {
+			CodeMethodRef mainMethod = (CodeMethodRef) mainEHMethods.get(mainMtdCount);
+			boolean suitableMethodFound = false;
+			for (int updMtdCount = 0; updMtdCount < updatedEHMethods.size(); updMtdCount++) {
+				CodeMethodRef updMethod = (CodeMethodRef) updatedEHMethods.get(updMtdCount);
+				if(mainMethod.getMethodName().equals(updMethod.getMethodName())){
+					suitableMethodFound = true;
+					mainEHMethods.remove(mainMethod);
+					mainMtdCount--;
+					updatedEHMethods.remove(updMethod);
+					updMtdCount--;
+					updateMethodOffsetAndContent(mainMethod, updMethod);
+				}
+			}
+			if(!suitableMethodFound){
+				// remove method which is not to be found in the update
+				mainEHMethods.remove(mainMethod);
+				mainMtdCount--;
+				mainMethod.dispose();
+			}
+		}
+		
+		// Add the new BDM event handler methods
+		for (int updMtdCount = 0; updMtdCount < updatedEHMethods.size(); updMtdCount++) {
+			CodeMethodRef updMethod = (CodeMethodRef) updatedEHMethods.get(updMtdCount);
+			new CodeMethodRef(
+				updMethod.getDeclMethod(), 
+				(CodeTypeRef) mainEH, 
+				updMethod.getMethodHandle(),
+				createSourceRange(updMethod.getOffset(), updMethod.getLen()),
+				updMethod.getContent());
+
+		}
+		return true;
+	}
+	
+	/**
+	 * Updates the main BDM with the types and methods of event handlers
+	 * in the main BDM. It removes any deleted methods and types. The 
+	 * call back expressions are processed later when beans are merged.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateEventHandlers(){
+		List mainEventHandlers = new ArrayList(mainModel.getEventHandlers());
+		List updatedEventHandlers = new ArrayList(newModel.getEventHandlers());
+		for (int mainEHC = 0; mainEHC < mainEventHandlers.size(); mainEHC++) {
+			CodeEventHandlerRef mainEventHandler = (CodeEventHandlerRef) mainEventHandlers.get(mainEHC);
+			String mainEventHanlderName = mainEventHandler.getName();
+			boolean suitableEventHandlerFound = false;
+			for (int updEHC = 0; updEHC < updatedEventHandlers.size(); updEHC++) {
+				CodeEventHandlerRef updEventHandler = (CodeEventHandlerRef) updatedEventHandlers.get(updEHC);
+				if(mainEventHanlderName.equals(updEventHandler.getName())){
+					
+					suitableEventHandlerFound = true;
+					
+					// Event handlers are same - remove them for further checking and 
+					// update thier contents - methods, etc.
+					mainEventHandlers.remove(mainEventHandler);
+					mainEHC--;
+					updatedEventHandlers.remove(updEventHandler);
+					updEHC--;
+					
+					updateEventHandler(mainEventHandler, updEventHandler);
+					break;
+				}
+			}
+			if(!suitableEventHandlerFound){
+				// The new BDM doesnt have this event handler - it was removed. 
+				// Hence remove the event handler in the main BDM
+				mainEventHandlers.remove(mainEventHandler);
+				mainEHC--;
+				mainEventHandler.dispose();
+			}
+		}
+		// Now all main event handlers have been either updated or removed.
+		// Now the new event handlers need to be added
+		for (int updEHC = 0; updEHC < updatedEventHandlers.size(); updEHC++) {
+			CodeEventHandlerRef newEventHandler = (CodeEventHandlerRef) updatedEventHandlers.get(updEHC);
+			createNewEventHandler(newEventHandler);
+		}
+		return true;
+	}
+	
+	/**
+	 * Creates a new event handler in the main BDM with the passed in event handler as a template
+	 * 
+	 * @param newEventHandler
+	 * 
+	 * @since 1.0.0
+	 */
+	private void createNewEventHandler(CodeEventHandlerRef updateEventHandler) {
+		CodeEventHandlerRef newEventHandler = new CodeEventHandlerRef(updateEventHandler.getTypeDecl(), mainModel);
+		mainModel.getEventHandlers().add(newEventHandler);
+		for (Iterator iter = updateEventHandler.getMethods(); iter.hasNext();) {
+			CodeMethodRef updateEventHandlerMethod = (CodeMethodRef) iter.next();
+			new CodeMethodRef(
+				updateEventHandlerMethod.getDeclMethod(), 
+				(CodeTypeRef) newEventHandler, 
+				updateEventHandlerMethod.getMethodHandle(),
+				createSourceRange(updateEventHandlerMethod.getOffset(), updateEventHandlerMethod.getLen()),
+				updateEventHandlerMethod.getContent());
+		}
+	}
+
 }
