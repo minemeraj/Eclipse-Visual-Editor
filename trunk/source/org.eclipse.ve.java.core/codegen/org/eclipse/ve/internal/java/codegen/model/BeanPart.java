@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.26 $  $Date: 2004-11-05 20:08:16 $ 
+ *  $Revision: 1.27 $  $Date: 2004-11-09 19:26:00 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -82,6 +82,8 @@ protected void processFragment(VariableDeclaration vd, Type tp) {
 	fName = vd.getName().getIdentifier();
 	if (tp instanceof SimpleType)
 		setType(((SimpleType)tp).getName());
+	else if (tp instanceof PrimitiveType)
+		setType(((PrimitiveType)tp).getPrimitiveTypeCode().toString());
 }
 
 public  BeanPart (VariableDeclarationStatement decl) {	
