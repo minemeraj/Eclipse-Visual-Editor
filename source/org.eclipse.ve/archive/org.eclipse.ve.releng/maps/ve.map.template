@@ -28,6 +28,7 @@ plugin@org.eclipse.ve.jfc=@org.eclipse.ve.jfc-v@,:pserver:anonymous@dev.eclipse.
 plugin@org.eclipse.ve.swt=@org.eclipse.ve.swt-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.tests=@org.eclipse.ve.tests-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.doc=@org.eclipse.ve.doc-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.sdk=@org.eclipse.ve-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
 feature@org.eclipse.jem=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.tests=@org.eclipse.jem.tests-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
@@ -35,5 +36,5 @@ feature@org.eclipse.jem.tests=@org.eclipse.jem.tests-feature-v@,:pserver:anonymo
 feature@org.eclipse.ve=@org.eclipse.ve-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=@org.eclipse.ve.examples-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=@org.eclipse.ve.tests-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
-feature@org.eclipse.ve.sdk=@org.eclipse.ve-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
+feature@org.eclipse.ve.sdk=@org.eclipse.ve-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
