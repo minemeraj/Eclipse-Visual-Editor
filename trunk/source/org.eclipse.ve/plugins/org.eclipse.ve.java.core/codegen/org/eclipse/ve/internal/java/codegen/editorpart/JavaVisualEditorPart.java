@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-04 12:32:02 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-04 16:04:27 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -669,7 +669,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		IConfigurationContributor[] contribs =
 			new IConfigurationContributor[] { BeaninfoNature.getRuntime(aFile.getProject()).getConfigurationContributor(), jcmCont };
 
-			ProxyFactoryRegistry registry = ProxyPlugin.getPlugin().startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
+			ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(aFile.getProject(), "VM for " + aFile.getName(), //$NON-NLS-1$
 				contribs, new NullProgressMonitor());
 			registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
 		if (paletteCats != null) {
