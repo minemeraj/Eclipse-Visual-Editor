@@ -386,7 +386,7 @@
    </extension>
 <!-- ========================================================================================= -->
 <!-- Extend the Java perspective so the Java Beans viewer appears beneath the resources viewer -->
-<!-- and the Properties appears stacked on the outline view                                    -->
+<!-- and the Properties appears stacked on the problems view at the bottom                     -->
 <!-- and the Palette to the left of the editor part											   -->
 <!-- ========================================================================================= -->
    <extension
@@ -407,7 +407,7 @@
                id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
-               relative="org.eclipse.ui.views.ContentOutline"
+               relative="org.eclipse.ui.views.ProblemView"
                visible="false"
                relationship="stack"
                id="org.eclipse.ui.views.PropertySheet">
@@ -443,7 +443,7 @@
                id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
          </view>
          <view
-               ratio="0.75"
+               ratio="0.70"
                relative="org.eclipse.ui.editorss"
                visible="false"
                relationship="right"
@@ -478,7 +478,6 @@
             id="org.eclipse.ve.java.core.examples">
       </category>
       <wizard
-            javatype="true"
             name="%visualclass"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
             category="org.eclipse.jdt.ui.java"
