@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.8 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -42,13 +42,15 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 		
 		Expression exp = (Expression) event.arguments().get(0) ;
 		int index = getInvocationIndex();		
-		if (addToEMFmodel)
-		   cleanUpPreviousIfNedded() ;
-		else {
+		if (!addToEMFmodel) {
 			restoreInvocationFromModel(index);
 			return true;
 		}
-		EventInvocation ee = (EventInvocation) fEventInvocation ;
+
+		// Build a new Event Invocation, and compare it to the current one
+		// If need to change it go for it, if not throw it away
+		EventInvocation ee = JCMFactory.eINSTANCE.createEventInvocation();
+		ee.setEvent(((EventInvocation)fEventInvocation).getEvent());
 		if (exp instanceof ClassInstanceCreation) {
 			ClassInstanceCreation qe = (ClassInstanceCreation) exp;
 			if (qe.getAnonymousClassDeclaration() != null) {

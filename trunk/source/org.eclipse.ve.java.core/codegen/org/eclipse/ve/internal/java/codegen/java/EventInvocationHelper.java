@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -233,4 +233,14 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 		return getDecorator().getListenerMethods();
 	}
 
+	protected boolean isDifferntEnvocation(AbstractEventInvocation ei) {
+		EventInvocation e = (EventInvocation)ei;
+		if (fEventInvocation==null || ((EventInvocation)fEventInvocation).getEvent()!=e.getEvent())
+			return true;
+		else
+			return false;
+	}
+	protected boolean isDiffrentDetails(AbstractEventInvocation ee) {		
+		return false;
+	}
 }

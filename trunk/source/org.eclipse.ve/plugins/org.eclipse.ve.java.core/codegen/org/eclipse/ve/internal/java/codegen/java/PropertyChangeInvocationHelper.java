@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.9 $  $Date: 2005-03-17 23:31:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.java.*;
 
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
 
@@ -159,5 +160,36 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 		PropetyChangeCallbacks = cb.getMethods() ;
 		return PropetyChangeCallbacks;
 	}
+	protected boolean isDifferntEnvocation(AbstractEventInvocation ei) {
+		return false;
+	}
 
+	protected boolean isDiffrentDetails(AbstractEventInvocation ee) {
+		List eeProps = ((PropertyChangeEventInvocation)ee).getProperties();
+		List curProps = ((PropertyChangeEventInvocation) fEventInvocation).getProperties();
+		if (eeProps.size()!=curProps.size())
+			return true;
+				
+		for (int i = 0; i < eeProps.size(); i++) {
+				boolean found = false;
+				PropertyEvent e1 = (PropertyEvent)eeProps.get(i);
+				for (int j = 0; j < curProps.size(); j++) {
+					PropertyEvent e2 = (PropertyEvent)curProps.get(j);
+					if (e1.isUseIfExpression()==e2.isUseIfExpression()) {
+						if (e1.getPropertyName()==null || e1.getPropertyName()==null) { 
+						  if (e1.getPropertyName()==e2.getPropertyName()) {
+							found = true;
+							break;
+						  }
+						}
+						else if (e1.getPropertyName().equals(e2.getPropertyName())) {
+							found = true;
+							break;
+						}
+					}
+				}
+				if (!found) return true;
+			}
+		return false;
+	}
 }
