@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.21 $  $Date: 2004-04-15 19:34:35 $ 
+ *  $Revision: 1.22 $  $Date: 2004-04-15 22:20:22 $ 
  */
 
 
@@ -585,8 +585,13 @@ public  void insertContentToDocument() {
  */
 public void refreshAST() {
 		
-		final Statement[] s = new Statement[] { null } ;    
-        ASTNode ast = AST.parse(AST.K_STATEMENTS, getContent().toCharArray(), 0, getContent().length(), null);
+		final Statement[] s = new Statement[] { null } ;   
+		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		parser.setSource(getContent().toCharArray());
+		parser.setSourceRange(0,getContent().length());
+		parser.setKind(ASTParser.K_STATEMENTS) ;		
+//        ASTNode ast = AST.parse(AST.K_STATEMENTS, getContent().toCharArray(), 0, getContent().length(), null);
+        ASTNode ast = parser.createAST(null);
         ASTVisitor visitor = new ASTVisitor() {
 			public void endVisit(ExpressionStatement node) {
 				s[0] = node;			
