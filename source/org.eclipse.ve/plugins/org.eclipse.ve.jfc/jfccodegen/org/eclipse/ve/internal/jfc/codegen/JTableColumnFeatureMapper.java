@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableColumnFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-17 16:43:12 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-04 21:34:31 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.java.AbstractFeatureMapper;
-import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 
 /**
  * @version 	1.0

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.2 $  $Date: 2004-07-30 15:20:00 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 21:35:04 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -18,13 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.swt.targetvm.IImageCapture;
  
