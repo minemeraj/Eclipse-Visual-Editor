@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-18 23:46:21 $ 
  */
 
 import org.eclipse.swt.SWT;
@@ -490,7 +490,7 @@ public class CustomSashForm extends SashForm {
 					
 		// If the upper panel has focus, flip focus to the lower panel because the upper panel is now hidden.
 		Control[] children = getChildren();
-		boolean upperFocus = isFocusAncestor(children[0]);
+		boolean upperFocus = isFocusAncestorA(children[0]);
 		setWeights(weights);
 		if (upperFocus)
 			children[1].setFocus();	
@@ -518,7 +518,7 @@ public class CustomSashForm extends SashForm {
 		
 		// If the lower panel has focus, flip focus to the upper panel because the lower panel is now hidden.
 		Control[] children = getChildren();
-		boolean lowerFocus = isFocusAncestor(children[1]);
+		boolean lowerFocus = isFocusAncestorA(children[1]);
 		setWeights(weights);
 		if (lowerFocus)
 			children[0].setFocus();		
@@ -528,7 +528,7 @@ public class CustomSashForm extends SashForm {
 	 * This determines if the control or one of its children
 	 * has the focus. It was hidden by SWT, but it is really useful.
 	 */
-	protected boolean isFocusAncestor (Control control) {
+	protected boolean isFocusAncestorA (Control control) {
 		Display display = getDisplay ();
 		Control focusControl = display.getFocusControl ();
 		while (focusControl != null && focusControl != control) {
