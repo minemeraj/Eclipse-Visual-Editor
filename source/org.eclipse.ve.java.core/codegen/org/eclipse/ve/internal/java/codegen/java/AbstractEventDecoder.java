@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-14 22:04:51 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
@@ -281,9 +280,6 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 		fEventInvocation = ei;
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#generate(EStructuralFeature, Object[])
-	 */
 	public String generate(AbstractEventInvocation ei, Object[] args) throws CodeGenException {
 	
 	if (!Initialize(ei)) return null ;

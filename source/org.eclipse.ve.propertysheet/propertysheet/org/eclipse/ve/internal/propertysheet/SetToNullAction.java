@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SetToNullAction.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:15 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-14 22:04:50 $ 
  */
 package org.eclipse.ve.internal.propertysheet;
 
@@ -18,7 +18,6 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -56,9 +55,6 @@ public class SetToNullAction extends EToolsPropertySheetAction {
 		setEnabled(enable);
 	}
 
-	/**
-	 * @see Action
-	 */
 	public void run() {
 		IStructuredSelection selected = (IStructuredSelection) getSelection();
 		if (!selected.isEmpty()) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-04 16:52:24 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-14 22:04:51 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +24,6 @@ import org.eclipse.debug.ui.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -43,10 +42,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * Performs single click launching for local java applications.
  */
 public class JavaBeanShortcut implements ILaunchShortcut {
-	
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
+
 	public void searchAndLaunch(Object[] search, String mode) {
 		IType[] types = null;
 		if (search != null) {			

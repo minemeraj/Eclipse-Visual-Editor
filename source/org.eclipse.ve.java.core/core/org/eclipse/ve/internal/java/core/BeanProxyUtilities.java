@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-14 22:04:51 $ 
  */
 
 import java.util.List;
@@ -263,12 +263,8 @@ public class BeanProxyUtilities {
 		String[] methodParms = new String[inputMethods.size()];
 		for (int i = 0; i < inputMethods.size(); i++) {
 			JavaParameter parm = (JavaParameter) inputMethods.get(i);
-			// Mistake on my part, didn't get getQualifiedNameForReflection() added to JavaHelpers, so only available on JavaClass.
 			JavaHelpers jh = parm.getJavaType();
-			if (jh instanceof JavaClass)
-				methodParms[i] = ((JavaClass) jh).getQualifiedNameForReflection();
-			else
-				methodParms[i] = jh.getQualifiedName();			
+			methodParms[i] = jh.getQualifiedNameForReflection();
 		}
 		String className = aMethod.getContainingJavaClass().getQualifiedNameForReflection();
 		// Now get the method proxy on the same VM as the source
