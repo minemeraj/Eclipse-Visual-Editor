@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-12 23:22:08 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -927,7 +927,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			if (codeGenAdapter == null)
 			   codeGenAdapter = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(fNotifier,ICodeGenAdapter.JVE_CODE_GEN_TYPE);
 			   
-			if ((MARKER_PropertySelection.equals(marker) || MARKER_PropertyChange.equals(marker)) && codeGenAdapter != null && fSF!=null) {
+			if ((MARKER_PropertySelection.equals(marker) || MARKER_PropertyChange.equals(marker)) 
+			    && codeGenAdapter != null && fSF!=null && (codeGenAdapter instanceof BeanDecoderAdapter)) {
 				// We are driving a property, use it's parent/sf
 				ICodeGenAdapter[] list =  ((BeanDecoderAdapter)codeGenAdapter).getSettingAdapters(fSF) ;
 				if (list != null && list.length>0)
