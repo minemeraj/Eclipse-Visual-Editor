@@ -80,7 +80,7 @@ customer installation of the Visual Editor.</td>
     </tr>
   </tbody>
 </table>
-%runtime%
+
 <table bordercolor="#999999" width="100%" cellpadding="0"
  cellspacing="2" border="0">
   <tbody>
@@ -90,6 +90,7 @@ customer installation of the Visual Editor.</td>
       </td>
       <td width="34%"><b>Platform</b></td>
       <td width="59%"><b>Download</b></td>
+      %runtime%
     </tr>
   </tbody>
 </table>
@@ -113,7 +114,7 @@ that want to extend the Visual Editor.</td>
     </tr>
   </tbody>
 </table>
-%sdk%
+
 <table bordercolor="#999999" width="100%" cellpadding="0"
  cellspacing="2" border="0">
   <tbody>
@@ -123,6 +124,7 @@ that want to extend the Visual Editor.</td>
       </td>
       <td width="34%"><b>Platform</b></td>
       <td width="59%"><b>Download</b></td>
+       %sdk%
     </tr>
   </tbody>
 </table>
@@ -146,7 +148,7 @@ they aren't useful).</td>
     </tr>
   </tbody>
 </table>
-%examples%
+
 <table bordercolor="#999999" width="100%" cellpadding="0"
  cellspacing="2" border="0">
   <tbody>
@@ -156,6 +158,7 @@ they aren't useful).</td>
       </td>
       <td width="34%"><b>Platform</b></td>
       <td width="59%"><b>Download</b></td>
+      %examples%
     </tr>
   </tbody>
 </table>
@@ -180,7 +183,7 @@ developers of the Visual Editor project itself.</td>
     </tr>
   </tbody>
 </table>
-%tests%
+
 <table bordercolor="#999999" width="100%" cellpadding="0"
  cellspacing="2" border="0">
   <tbody>
@@ -190,6 +193,7 @@ developers of the Visual Editor project itself.</td>
       </td>
       <td width="34%"><b>Platform</b></td>
       <td width="59%"><b>Download</b></td>
+      %tests%
     </tr>
   </tbody>
 </table>
