@@ -27,7 +27,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			{ "org.eclipse.jface", "jface.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.jface.text", "jfacetext.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.core.runtime", "runtime.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" }, //$NON-NLS-1$ //$NON-NLS-2$			
 			{ "org.eclipse.osgi", "osgi.jar" } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
@@ -66,12 +66,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private boolean isJFace(IPath containerPath) {
 		// The first segment is the SWT_CONTAINER name
-		for (int i = 1; i < containerPath.segmentCount(); i++) {
-			if (containerPath.segment(i).equals("JFACE")) { //$NON-NLS-1$
-				return true;
-			}
-		}
-		return false;
+		return "JFACE".equals(containerPath.segment(1));
 	}
 
 	public IClasspathEntry[] getClasspathEntries() {

@@ -40,10 +40,20 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 		includeJFaceButton = new Button(c, SWT.CHECK);
 		includeJFaceButton.setText(SWTMessages.getString("SWTContainerWizardPage.includeJFaceCheck")); //$NON-NLS-1$
 		
-		
 		setControl(c);
 		
-	}	
+		initializeFromSelection();		
+		
+	}
+	
+	protected void initializeFromSelection() {
+		if (getControl() != null) {
+			if (fClassPathEntry != null) {
+				includeJFaceButton.setSelection("JFACE".equals(fClassPathEntry.getPath().segment(1)));
+			}
+		}
+			
+	}
 	
 	public boolean finish(){
 		Path path;
@@ -58,6 +68,7 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 	
 	public void setSelection(IClasspathEntry containerEntry) {
 		fClassPathEntry = containerEntry;
+		initializeFromSelection();		
 	}
 	public IClasspathEntry getSelection() {
 		return fClassPathEntry;
