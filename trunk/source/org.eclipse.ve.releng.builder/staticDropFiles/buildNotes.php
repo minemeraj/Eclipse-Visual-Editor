@@ -21,7 +21,7 @@
 	echo "<title>Build Notes for $buildType $buildName </title>";
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" href="../../../default_style.css" type="text/css">
+<link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
 </head>
 <body>
 
