@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-01 12:28:46 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-03 16:55:13 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -89,7 +89,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		return target.toFile();
 	}
 	protected boolean  cleanMetaDirectory(IPath root, boolean delRoot) {
-			return deleteDirectoryConntent(appendProjectPath(getModelCacheDirectory(),root),delRoot);			
+			return deleteDirectoryConntent(getModelCacheDirectory(),delRoot);			
 	}
 	protected void processDelta(IResourceDelta delta) {
 		if (delta!=null) {
