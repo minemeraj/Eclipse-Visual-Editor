@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -15,7 +14,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
-import java.util.ArrayList;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
 public class FontPropertyEditor implements PropertyEditor {
 	
@@ -234,6 +237,7 @@ public class FontPropertyEditor implements PropertyEditor {
 				}
 			});
 			
+			createFontFromProxy(control);
 			updateSelections();
 			nameField.selectAll();
 		}
@@ -439,5 +443,42 @@ public class FontPropertyEditor implements PropertyEditor {
 	
 	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
 		fExistingValue = value;
+		//force getting font when creating dialog
+		this.value = null;
 	}	
+	
+    private void createFontFromProxy(Control control) {
+		if ((this.fExistingValue == null) && (value != null)) { return; }
+		try {
+			//type: Font
+			IBeanProxy fontProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
+			IBeanTypeProxy fontType = fontProxy.getTypeProxy();
+			IMethodProxy getFontData = fontType.getMethodProxy("getFontData");
+			//type: FontData[]
+			IArrayBeanProxy fontDataArrayProxy = (IArrayBeanProxy) getFontData.invoke(fontProxy);
+			int len = fontDataArrayProxy.getLength();
+			FontData[] fontData = new FontData[len];
+			for (int i = 0; i < len; i++) {
+				//type: FontData
+				IBeanProxy fontDataProxy = fontDataArrayProxy.get(i);
+				IBeanTypeProxy fontDataType = fontDataProxy.getTypeProxy();
+
+				IMethodProxy getHeight = fontDataType.getMethodProxy("getHeight");
+				IMethodProxy getStyle = fontDataType.getMethodProxy("getStyle");
+				IMethodProxy getName = fontDataType.getMethodProxy("getName");
+
+				int height = ((IIntegerBeanProxy) getHeight.invoke(fontDataProxy)).intValue();
+				int style = ((IIntegerBeanProxy) getStyle.invoke(fontDataProxy)).intValue();
+				String name = ((IStringBeanProxy) getName.invoke(fontDataProxy)).stringValue();
+
+				fontData[i] = new FontData(name, height, style);
+			}
+
+			this.value = new Font(control.getDisplay(), fontData);
+		} catch (ThrowableProxy t) {
+			//failsafe
+		}
+	}
+
+	
 }

@@ -6,15 +6,15 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.Spinner;
 
@@ -286,6 +286,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 	public Control createControl(Composite parent, int style, boolean showPreview) {
 		if (control == null || control.isDisposed()) {
 			control = new Composite(parent, style);
+			createColorFromProxy(control);
 			
 			black = control.getDisplay().getSystemColor(SWT.COLOR_BLACK);
 			
@@ -753,6 +754,29 @@ public class ColorPropertyEditor implements PropertyEditor {
 		fExistingValue = value;
 		// We have the IDE object that points to the color on the target VM
 		
-		
+		this.color = null;
 	}
+	
+	public void createColorFromProxy(Control control) {
+		if ((fExistingValue == null) || (color != null)) { return; }
+
+		try {
+			//type: Color
+			IBeanProxy colorProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
+			IBeanTypeProxy colorType = colorProxy.getTypeProxy();
+
+			IMethodProxy getBlue = colorType.getMethodProxy("getBlue");
+			IMethodProxy getGreen = colorType.getMethodProxy("getGreen");
+			IMethodProxy getRed = colorType.getMethodProxy("getRed");
+
+			int blue = ((IIntegerBeanProxy) getBlue.invoke(colorProxy)).intValue();
+			int green = ((IIntegerBeanProxy) getGreen.invoke(colorProxy)).intValue();
+			int red = ((IIntegerBeanProxy) getRed.invoke(colorProxy)).intValue();
+
+			this.color = new Color(control.getDisplay(), red, green, blue);
+		} catch (ThrowableProxy t) {
+			//failsafe
+		}
+	}
+	
 }
