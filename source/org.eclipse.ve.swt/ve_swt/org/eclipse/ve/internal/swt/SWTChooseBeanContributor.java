@@ -1,0 +1,31 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: SWTChooseBeanContributor.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-17 12:23:26 $ 
+ */
+package org.eclipse.ve.internal.swt;
+
+import org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor;
+
+ 
+/**
+ * 
+ * @since 1.0.0
+ */
+public class SWTChooseBeanContributor extends YesNoListChooseBeanContributor{
+
+	public static String[] SWT_BASE_TYPE_NAMES = {"org.eclipse.swt.widgets", "Widget"}; //$NON-NLS-1$ //$NON-NLS-2$
+	public SWTChooseBeanContributor(){
+		super(SWTMessages.getString("SWTChooseBeanContributor.Name"),  SWT_BASE_TYPE_NAMES, null); //$NON-NLS-1$
+	}
+
+}

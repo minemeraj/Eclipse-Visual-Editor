@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeFilterMatcher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-05 18:14:26 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:39 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -59,6 +59,10 @@ class TypeFilterMatcher implements FilteredList.FilterMatcher {
 		if(this.noFQNs==null)
 			this.noFQNs = new ArrayList();
 	}
+	public TypeFilterMatcher(List yesFQNs, List noFQNs, String initialTypeName){
+		this(yesFQNs,noFQNs);
+		setFilter(initialTypeName,true,false);
+	}
 	
 	/*
 	 * @see FilteredList.FilterMatcher#setFilter(String, boolean)
@@ -85,6 +89,8 @@ class TypeFilterMatcher implements FilteredList.FilterMatcher {
 		if (!(element instanceof TypeInfo))
 			return false;
 
+//		if(emptyListsAll) return true;
+		
 		TypeInfo type= (TypeInfo) element;
 
 		if (!fMatcher.match(type.getTypeName()))

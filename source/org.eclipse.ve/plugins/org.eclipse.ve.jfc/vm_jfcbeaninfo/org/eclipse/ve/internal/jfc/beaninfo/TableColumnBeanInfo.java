@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:33 $ 
  */
 
 import java.beans.*;
@@ -414,7 +414,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"modelIndex", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, TableColumnMessages.getString("modelIndex.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, TableColumnMessages.getString("modelIndex.Desc"), //$NON-NLS-1$
-	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// preferredWidth

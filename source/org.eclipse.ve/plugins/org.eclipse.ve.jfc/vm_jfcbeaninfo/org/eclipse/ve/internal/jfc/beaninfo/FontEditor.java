@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FontEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-17 12:23:33 $ 
  */
 
 import java.awt.*;
@@ -22,7 +22,13 @@ public class FontEditor extends PropertyEditorSupport {
 	FontPropertyEditor customEditor = null;
 	public String getAsText() {
 	String strStyle;
-	Font font = (Font) getValue();
+	Font font = null;
+	try{
+		font = (Font) getValue();
+	} catch (ClassCastException exc){
+		System.err.print("Value not a font = " + getValue());
+		exc.printStackTrace();
+	}
 	if (font == null || !(font instanceof Font))
 		return "";	//$NON-NLS-1$
 	if (font.isBold()) {

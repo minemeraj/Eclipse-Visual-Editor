@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 22:11:01 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-17 12:23:39 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -45,8 +46,11 @@ import org.eclipse.ve.internal.cdm.CDMFactory;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
+import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
@@ -439,6 +443,21 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		
 	}
 	
+	/**
+	 * A helper method to find a decorator of a specific instance.
+	 */
+	protected EAnnotation findDecorator(EList decorators, Class decoratorType) {
+		if (decorators == null)
+			return null;
+		for (int i = 0; i < decorators.size(); i++) {
+			EAnnotation o = (EAnnotation) decorators.get(i);
+			if (decoratorType.isInstance(o))
+				return o;
+		}
+		return null;
+	}				
+	
+	
 	protected IStatus getClassStatus(Object selected){
 		Throwable t = null;
 		String message = new String(); 
@@ -450,6 +469,23 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		}else{
 			try{
 				TypeInfo ti = (TypeInfo) selected;
+				
+				boolean isDefaultConstructorRequired = true;
+				// The base set of rules is that classes can only be instantiated if they have default constructors
+				// Some classes however (such as SWT controls) don't conform to this, however can still be created
+				// The base ClassDescriptorDecorator has a key of "org.eclipse.ve.internal.PrototypeFactory" that returns a class name
+				// implementing "org.eclipse.ve.internal.PrototypeFactory" that can create the EMF model for this
+				// If such a decorator exists then the selection is assumed to be valid
+				EClass selectedEMFClass = (EClass) Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
+				ClassDescriptorDecorator decorator =
+					(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
+						selectedEMFClass,
+						ClassDescriptorDecorator.class,
+						PrototypeFactory.PROTOTYPE_FACTORY_KEY);
+				if(decorator != null) {
+					isDefaultConstructorRequired = false;
+				}
+				
 				IType type = ti.resolveType(getJavaSearchScope());
 				
 				boolean isTypePublic = Flags.isPublic(type.getFlags());
@@ -460,18 +496,23 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				boolean isPublicNullConstructorPresent = false;
 				boolean isAnyConstructorPresent = false;
 				
-				IMethod[] methods = type.getMethods();
-				for(int m=0;m<methods.length;m++){
-					if(methods[m].isConstructor() &&
-					   methods[m].getParameterTypes().length<1 &&
-					   Flags.isPublic(methods[m].getFlags())){
-					   	isPublicNullConstructorPresent = true;
-					   	//break;
+				// If we don't need a default constructor skip the searching of the methods for one
+				if(!isDefaultConstructorRequired){
+					IMethod[] methods = type.getMethods();
+					for(int m=0;m<methods.length;m++){
+						if(methods[m].isConstructor() &&
+								methods[m].getParameterTypes().length<1 &&
+								Flags.isPublic(methods[m].getFlags())){
+							isPublicNullConstructorPresent = true;
+							//break;
+						}
+						if(methods[m].isConstructor())
+							isAnyConstructorPresent=true;
 					}
-					if(methods[m].isConstructor())
-						isAnyConstructorPresent=true;
 				}
-				if(!isPublicNullConstructorPresent && isAnyConstructorPresent){
+ 				boolean constructorError = isDefaultConstructorRequired && !isPublicNullConstructorPresent && isAnyConstructorPresent;
+				
+				if(constructorError){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
 					message = message.concat(ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.NoPublicNullConstructor")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -496,7 +537,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				//		+ Type is public OR type is in present package
 				//		+ Type is not abstract
 				//		+ Enclosing type is not IType OR Enclosing type is IType and this type is static
-				isInstantiable = ((!isAnyConstructorPresent) || isPublicNullConstructorPresent) && (isTypePublic || isInPresentPackage) && (!isTypeAbstract) && ((!isTypeInner) || (isTypeInner && isTypeStatic));
+				isInstantiable = !constructorError && (isTypePublic || isInPresentPackage) && (!isTypeAbstract) && ((!isTypeInner) || (isTypeInner && isTypeStatic));
 				if(isInstantiable)
 					message = new String();
 				setClassName(getFullSelectionName(ti), isInstantiable) ;
@@ -595,7 +636,9 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	 */
 	public void setFilter(String filter) {
 		super.setFilter(filter);
-		filterCombo.setText(filter);
+		if(filterCombo != null){
+			filterCombo.setText(filter);
+		}
 	}
 
 	/**

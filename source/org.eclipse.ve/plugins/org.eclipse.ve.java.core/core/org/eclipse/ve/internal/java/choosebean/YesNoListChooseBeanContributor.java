@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: YesNoListChooseBeanContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-15 19:11:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-17 12:23:39 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -61,9 +61,13 @@ public class YesNoListChooseBeanContributor implements IChooseBeanContributor {
 	public FilterMatcher getFilter(IJavaProject javaProject) {
 		if(filter==null){
 			setJavaProject(javaProject);
-			setFilter(new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs()));
+			setFilter(createFilterMatcher());
 		}
 		return filter;
+	}
+	
+	protected FilterMatcher createFilterMatcher(){
+		return new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs());		
 	}
 
 	/**
@@ -107,10 +111,7 @@ public class YesNoListChooseBeanContributor implements IChooseBeanContributor {
 								// Some of these will be hierarchy roots themselves								
 								// So collect all the classes that extend them
 								for (int i = 0; i < subTypes.length; i++) {
-									IType[] implementors = th.getAllSubtypes(subTypes[i]);
-									if(subTypes[i].getFullyQualifiedName().equals("javax.swing.AbstractAction")){
-										Object a = subTypes[i];
-									}
+									IType[] implementors = th.getAllSubtypes(subTypes[i]);								
 									for (int stc = 0; stc < implementors.length; stc++) {
 										subTypesList.add(implementors[stc].getFullyQualifiedName());
 									}																	

@@ -10,9 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-15 19:11:50 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:39 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
+
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
  
 /**
  * 
@@ -22,6 +25,13 @@ public class NamedTypeChooseBeanContributor extends YesNoListChooseBeanContribut
 	
 	public NamedTypeChooseBeanContributor(String displayName, String classPackageName, String className){
 		super(displayName, new String[] {classPackageName, className},null); 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor#createFilterMatcher()
+	 */
+	protected FilterMatcher createFilterMatcher() {
+		return new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs(), "*");
 	}
 	
 }

@@ -86,6 +86,8 @@
       </contributor>
    </extension>
    
+<!-- Register the jar containing the beaninfo classes for SWT -->
+   
   <extension point="org.eclipse.jem.beaninfo.registrations">
       <container path="SWT_CONTAINER">
          <beaninfos>
@@ -99,5 +101,14 @@
          </beaninfos>
       </container>
    </extension>      
+
+<!-- Contribute to the ChooseBean dialog to allow dropping of SWT widgets -->
+   
+  <extension
+         point="org.eclipse.ve.java.core.choosebean">
+      <contributor
+            class="org.eclipse.ve.internal.swt.SWTChooseBeanContributor">
+      </contributor>
+   </extension>   
 
 </plugin>

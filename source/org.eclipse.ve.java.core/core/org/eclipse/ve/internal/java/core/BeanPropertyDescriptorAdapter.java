@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-08 21:25:26 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-17 12:23:39 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -39,6 +39,8 @@ import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
+
+import org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider;
 
 import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
 
@@ -71,6 +73,8 @@ public CellEditor createPropertyEditor(Composite parent){
 	if (!((EStructuralFeature) getTarget()).isChangeable())
 		return null;	// The feature is a read-only, so no editor to allow changes
 	
+	PropertyDecorator propertyDecorator = null;  // Decorator holding java.beans.PropertyDescriptor information from the BeanInfo
+	
 	// Step 1 - See if the emf feature decorator has it.
 	BasePropertyDecorator decorator = getBaseDecorator();
 	if (decorator != null && decorator.isSetCellEditorClassname()) {
@@ -90,7 +94,7 @@ public CellEditor createPropertyEditor(Composite parent){
 	
 	//	2 - Look for a java.beans.PropertyEditor on the Bean PropertyDescriptor
 	if ( editorClass == null ) {
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)target);
+		propertyDecorator = Utilities.getPropertyDecorator((EModelElement)target);
 		if ( propertyDecorator != null ) {
 			JavaClass propertyEditorClass = propertyDecorator.getPropertyEditorClass();
 			// If we have a property editor class explicitly defined on the feature then instantiate it
@@ -153,8 +157,9 @@ public CellEditor createPropertyEditor(Composite parent){
 		
 	if ( editorClass != null ) {
 		return createCellEditorInstance(editorClass,parent, editorClassNameAndData, null);
-	} else
-		return null;
+	} else {
+		return new TypeReferenceCellEditor(parent,((JavaClass)propertyDecorator.getPropertyType()).getQualifiedName());
+	}
 }
 	
 private static String[] EXPERT_FILTER_FLAGS = new String[] {IPropertySheetEntry.FILTER_ID_EXPERT};
@@ -268,8 +273,9 @@ public ILabelProvider getLabelProvider(){
 	if ( labelProviderClass != null ) {
 		return labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
 	} else {
-		// Step 5 - BeanCellRenderer will simply do toBeanString.
-		return labelProvider = new BeanCellRenderer();
+		// Step 5 - Default label provider uses the label provider from the value itself
+		// (which is what is going to be used by the JavaBeans tree viewer) and if no provider exists the toString()
+		return labelProvider = new JavaBeanLabelProvider();
 	}
 }
 public boolean isExpandable() {
