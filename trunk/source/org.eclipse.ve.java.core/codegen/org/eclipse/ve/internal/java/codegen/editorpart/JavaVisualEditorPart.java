@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.62 $  $Date: 2004-09-10 22:40:29 $ 
+ *  $Revision: 1.63 $  $Date: 2004-11-02 19:13:53 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -896,7 +896,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * 
 	 * @since 1.0.0
 	 */
-	static class DefaultVEContributor implements IVEContributor {
+	static class DefaultVEContributor implements IVEContributor1 {
 		/**
 		 * Configuration element to use for contribution. Set this before usage. That way an instance of this
 		 * can be reused.
@@ -936,8 +936,18 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			else
 				currentCategories.addAll(cats);
 			return true;
-		}	
-	}	/*
+		}
+		
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.java.codegen.editorpart.IVEContributor1#modifyPaletteCatsList(java.util.List)
+		 */
+		public boolean modifyPaletteCatsList(List currentCategories) {
+			return false;
+		}
+	}
+	
+	/*
 	 * This will create the proxy factory registry.
 	 */
 	private ProxyFactoryRegistry.IRegistryListener registryListener = new ProxyFactoryRegistry.IRegistryListener() {
@@ -1269,19 +1279,31 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					JavaVisualEditorVMController.RegistryResult regResult = JavaVisualEditorVMController.getRegistry(file);
 					
 					// Everything is all set up. Now let's see if we need to rebuild the palette.
-					// First run though all visible containers that implement the IVEContributor interface.
+					// This is a two pass process.
+					
+					// First run though all visible containers that implement the IVEContributor1 interface.
 					final ResourceSet rset = EMFEditDomainHelper.getResourceSet(editDomain);				
 					for (Iterator iter = regResult.configInfo.getContainers().entrySet().iterator(); iter.hasNext();) {
 						final Map.Entry entry = (Map.Entry) iter.next();
-						if (((Boolean) entry.getValue()).booleanValue() && entry.getKey() instanceof IVEContributor) {
-							Platform.run(new ISafeRunnable() {
-								public void handleException(Throwable exception) {
-									// Default logs fro us.
-								}
-								public void run() throws Exception {
-									rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
-								}
-							});
+						if (((Boolean) entry.getValue()).booleanValue())
+							if (entry.getKey() instanceof IVEContributor) {
+								Platform.run(new ISafeRunnable() {
+									public void handleException(Throwable exception) {
+										// Default logs fro us.
+									}
+									public void run() throws Exception {
+										rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+									}
+								});
+							} else if (entry.getKey() instanceof IVEContributor1) {
+								Platform.run(new ISafeRunnable() {
+									public void handleException(Throwable exception) {
+										// Default logs fro us.
+									}
+									public void run() throws Exception {
+										rebuildPalette = ((IVEContributor1) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+									}
+								}); 
 						}
 					}
 					
@@ -1309,6 +1331,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 													if (contributor instanceof IVEContributor)
 														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													else if (contributor instanceof IVEContributor1)
+														rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
 												}
 											}
 										});
@@ -1342,6 +1366,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 														if (contributor instanceof IVEContributor)
 															rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+														else if (contributor instanceof IVEContributor1)
+															rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
 													} catch (CoreException e) {
 														JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
 													}
@@ -1353,7 +1379,92 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							}
 						}
 					}
+
+					// Now pass2 which is for modify palette.
+					// Now run though all visible containers that implement the IVEContributor1 interface 
+					for (Iterator iter = regResult.configInfo.getContainers().entrySet().iterator(); iter.hasNext();) {
+						final Map.Entry entry = (Map.Entry) iter.next();
+						if (((Boolean) entry.getValue()).booleanValue())
+							if (entry.getKey() instanceof IVEContributor1) {
+								Platform.run(new ISafeRunnable() {
+									public void handleException(Throwable exception) {
+										// Default logs fro us.
+									}
+									public void run() throws Exception {
+										rebuildPalette = ((IVEContributor1) entry.getKey()).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+									}
+								}); 
+						}
+					}
 					
+					// Now run though visible containers ids.
+					if (!regResult.configInfo.getContainerIds().isEmpty()) {
+						for (Iterator iter = regResult.configInfo.getContainerIds().entrySet().iterator(); iter.hasNext();) {
+							Map.Entry entry = (Map.Entry) iter.next();
+							if (((Boolean) entry.getValue()).booleanValue()) {
+								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
+								if (contributors != null) {
+									for (int i = 0; i < contributors.length; i++) {
+										final int ii = i;
+										Platform.run(new ISafeRunnable() {
+											public void handleException(Throwable exception) {
+												// Default logs exception for us.
+											}
+											public void run() throws Exception {
+												if (contributors[ii].getName().equals(PI_PALETTE)) {
+													if (defaultVE[0] == null)
+														defaultVE[0] = new DefaultVEContributor();
+													defaultVE[0].paletteContribution = contributors[ii];
+													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+													if (contributor instanceof IVEContributor1)
+														rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+												}
+											}
+										});
+									}
+								}
+							}
+						}
+					}
+					
+					// Now run though visible plugin ids.
+					if (!regResult.configInfo.getPluginIds().isEmpty()) {
+						for (Iterator iter = regResult.configInfo.getPluginIds().entrySet().iterator(); iter.hasNext();) {
+							Map.Entry entry = (Map.Entry) iter.next();
+							if (((Boolean) entry.getValue()).booleanValue()) {
+								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getPluginConfigurations((String) entry.getKey());
+								if (contributors != null) {
+									for (int i = 0; i < contributors.length; i++) {
+										final int ii = i;
+										Platform.run(new ISafeRunnable() {
+											public void handleException(Throwable exception) {
+												// Default logs exception for us.
+											}
+											public void run() throws Exception {
+												if (contributors[ii].getName().equals(PI_PALETTE)) {
+													if (defaultVE[0] == null)
+														defaultVE[0] = new DefaultVEContributor();
+													defaultVE[0].paletteContribution = contributors[ii];
+													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
+													try {
+														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
+														if (contributor instanceof IVEContributor1)
+															rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+													} catch (CoreException e) {
+														JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+													}
+												}
+											}
+										});
+									}
+								}
+							}
+						}
+					}
+
 					synchronized (JavaVisualEditorPart.this) {
 						proxyFactoryRegistry = regResult.registry;
 						proxyFactoryRegistry.addRegistryListener(registryListener);
