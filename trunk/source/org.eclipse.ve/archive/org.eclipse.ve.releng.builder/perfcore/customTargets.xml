@@ -18,9 +18,11 @@
 <!-- Add one target for each root element and each configuration -->
 <!-- ===================================================================== -->
 
-<target name="assemble.org.eclipse.perfmsr.core">
-<!-- ADD POST STEPS -->
-</target>
+	<target name="assemble.phony.perfcore">
+		<property name="archiveName" value="phonyPerfCore-${buildId}.zip"/>
+		<ant antfile="${assembleScriptName}"/>
+	<!-- ADD POST STEPS -->
+	</target>
 
 <!-- ===================================================================== -->
 <!-- Check out map files from correct repository -->
