@@ -39,7 +39,7 @@ if x%1==x-vm set vm=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-bc set bootclasspath=-Dbootclasspath=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-target set target=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-buildID set buildID=-DbuildID=%2 && shift && shift && goto processcmdlineargs
-if x%1==x-ftp set ftpUser=-DftpUser=%2 && ftpPassword=-DftpPassword=%3 && shift && shift && shift && goto processcmdlineargs
+if x%1==x-ftp set ftpUser=-DftpUser=%2 && set ftpPassword=-DftpPassword=%3 && shift && shift && shift && goto processcmdlineargs
 set buildType=%1 && shift && goto processcmdlineargs
 
 :run
