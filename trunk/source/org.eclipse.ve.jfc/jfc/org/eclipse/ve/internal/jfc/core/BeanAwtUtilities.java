@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-08 11:49:26 $ 
+ *  $Revision: 1.18 $  $Date: 2005-02-09 13:57:32 $ 
  */
 
 import java.util.List;
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
@@ -36,6 +37,7 @@ import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -408,11 +410,24 @@ public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentM
 	return (IArrayBeanProxy) constants.getManagerLocationMethodProxy.invokeCatchThrowableExceptions(aComponentManager);
 }
 /**
- * Return the ILayoutPolicyFactory for the layout manager of a containerProxy
+ * Return the ILayoutPolicyFactory for the layout manager of a container
  */
-public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanProxy containerProxy, EditDomain domain) {
-	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
-	return getLayoutPolicyFactoryFromLayoutManger(layoutManagerProxy, domain);
+public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManager(IJavaInstance layoutManager, EditDomain domain) {
+
+	if(layoutManager == null)
+		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+	
+	ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(layoutManager.eClass(),domain);
+	if(factory == null){
+		// Need to see if it is type LayoutManager2
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
+		IBeanProxy layoutManagerProxy = invoke_getLayout(BeanProxyUtilities.getBeanProxy(layoutManager));
+		EClassifier layoutManagerClass = Utilities.getJavaClass(layoutManagerProxy.getTypeProxy(), rset);
+		return getDefaultLayoutPolicyFactory(layoutManagerClass);
+	} else {
+		return factory;
+	}
+	
 }
 /**
  * Return the ILayoutPolicyFactory for the layout manager of a LayoutManagerProxy

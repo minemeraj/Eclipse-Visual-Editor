@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-08 11:55:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-02-09 13:57:32 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -48,11 +48,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	// These are used with the freeform to position, and make visible the component, but those are
 	// edittime settings are not reflected in the runtime code generation.
 
-	private IJavaInstance fDefaultVisibility = null; // Default value of visibility if not applied, queried from live object.
-//	private IJavaInstance fDefaultLocation = null;
-	// Default value of location if not applied, queried from live object, or last set from bounds.
-
-	private IJavaInstance fVisibilityToUse = null; // Visibility to use when live object created, it is the override value.
+	private IJavaInstance fDefaultVisibility = null; // Default value of visibility if it has been overrideen, queried from live object.
+	private IJavaInstance fVisibilityToUse = null; // Visibility to use when live object created, it is the override value 
+	
 	private IJavaInstance fJLocationToUse = null; // Location to use when live object created, this is the override value
 												 // For example for live windows this is set to an off-screen value.  null if not overriden
 	private Point fPLocationToUse = null;		 // As above but stored as a Point rather than an IJavaInstance
@@ -336,14 +334,18 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 */
 	public void applyVisibility(boolean apply, Boolean setToVisibility) {
 		if (apply || setToVisibility == null) {
-			if (((EObject) target).eIsSet(sfComponentVisible)) {
-				super.applied(sfComponentVisible, ((EObject) target).eGet(sfComponentVisible), 0);
+			if (getEObject().eIsSet(sfComponentVisible)) {
+				super.applied(sfComponentVisible, (getEObject()).eGet(sfComponentVisible), 0);
 			}
 		} else {
+			// We are about to apply a non-default visibility so capture the current one
+			if(fDefaultVisibility == null){
+				recordDefaultVisibility();
+			}
 			fVisibilityToUse =
 				BeanProxyUtilities.wrapperBeanProxy(
 					getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(setToVisibility),
-					((EObject) target).eResource().getResourceSet(),
+					getEObject().eResource().getResourceSet(),
 					null,
 					true);
 
@@ -641,16 +643,15 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	protected void applyAllSettings() {
 		if (isBeanProxyInstantiated()) {
 			// Query the current value and put into fDefaultLocation so that we know what it was at the beginning.
-//			fDefaultLocation =
-//				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentLocation), ((EObject) target).eResource().getResourceSet(), null, false);
 			if (fJLocationToUse != null) {
 				// We have a location setting that bypasses the setting in the mof object, apply it now so that it would off screen when made visible.
 				super.applied(sfComponentLocation, fJLocationToUse, -1);
 			}				
 
-			// Query the current value and put into fDefaultVisibility so that we know what it was at the beginning.
-			fDefaultVisibility =
-				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentVisible), ((EObject) target).eResource().getResourceSet(), null, false);
+			if(getEObject().eIsSet(sfComponentVisible)){
+				// Query the current value and put into fDefaultVisibility so that we know what it was at the beginning.
+				recordDefaultVisibility();
+			}
 		}
 		super.applyAllSettings();
 		if (isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE) {
@@ -660,6 +661,11 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				super.applied(sfComponentVisible, fVisibilityToUse, -1);
 			}
 		}		
+	}
+	
+	private void recordDefaultVisibility(){
+		fDefaultVisibility =
+			BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentVisible), ((EObject) target).eResource().getResourceSet(), null, false);		
 	}
 	
 	protected void reapplyVisibility() {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-09 13:57:32 $ 
  */
 
 import java.util.Iterator;
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.java.core.*;
 
 public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHoldProcessing {
 
-	protected EReference sfConstraintConstraint, sfContainerComponents, sfConstraintComponent, sfName;
+	protected EReference sfConstraintConstraint, sfContainerComponents, sfConstraintComponent, sfName, sfLayout;
 
 	public ContainerProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
@@ -45,6 +45,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 		sfConstraintConstraint = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_CONSTRAINT);
 		sfContainerComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);
 		sfConstraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
+		sfLayout = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_LAYOUT);
 		sfName = JavaInstantiation.getReference(rset, JFCConstants.SF_COMPONENT_NAME);
 	}
 
@@ -267,7 +268,10 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 				BeanAwtUtilities.invoke_add_Component_Object(getBeanProxy(), componentBeanProxy, constraintBeanProxy);
 			}
 	
-			if (BeanAwtUtilities.invoke_getLayout(getBeanProxy()) == null)
+			// If the target VM layout is null then apply the bounds/size/location
+			// Presumabely the target VM layout manager can't be null if it is a non-null value in the EMF model
+			// so check this first to avoid VM traffic before querying the live value
+			if(!getEObject().eIsSet(sfLayout) && BeanAwtUtilities.invoke_getLayout(getBeanProxy()) == null)
 				componentAdapter.applyNullLayoutConstraints(); // Make sure the bounds are applied.
 		} catch (ThrowableProxy e) {
 			((ComponentProxyAdapter) componentProxyHost).processError(sfContainerComponents, e, aConstraintComponent);
