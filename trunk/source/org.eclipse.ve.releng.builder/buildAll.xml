@@ -3,6 +3,7 @@
 
 	<target name="init">
 		<property name="buildDirectory" location="${basedir}/../src/eclipse" />
+		<property name="testBase" location="${basedir}/../testing" />
 		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
 		<antcall target="create.label.properties" />
 		<property file="${buildDirectory}/label.properties" />
