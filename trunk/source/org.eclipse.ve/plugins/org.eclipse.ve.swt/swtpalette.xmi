@@ -1,0 +1,60 @@
+<xmi:XMI xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI" 
+  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
+  <palette:CategoryCmp xmi:id="swtCat">
+    <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="SWT"/>
+    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry1obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Shell"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shell"/>
+      </cmpEntries>  
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry3" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Composite"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="Composite"/>
+      </cmpEntries>  
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Group"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string8" string="Group"/>
+      </cmpEntries>  
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Button"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Button"/>
+      </cmpEntries>        
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/textfield_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry4obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Text"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string4" string="Text"/>
+      </cmpEntries>        
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry6" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry6obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Label"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string6" string="Label"/>
+      </cmpEntries>              
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry5" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/listbox_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry5obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#List"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="List"/>
+      </cmpEntries>              
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/choice_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Combo"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Combo"/>
+      </cmpEntries>            
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry6" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/progressbar_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry6obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#ProgressBar"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Progress Bar"/>
+      </cmpEntries>                    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry7" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/slider_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry7obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Slider"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Slider"/>
+      </cmpEntries>          
+    </cmpGroups> 
+  </palette:CategoryCmp>
+</xmi:XMI>
