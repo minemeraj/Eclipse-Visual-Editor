@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.14 $  $Date: 2005-02-25 23:08:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -132,7 +132,7 @@ protected IEventDecoder  getEventDecoder(){
 public boolean  decodeExpression() throws CodeGenException {
     
       // If it is already in MOF, no need to create it again.
-      if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
+      if ((!isAnyStateSet()) || isStateSet(STATE_DELETE))  
       	return true ;
       
       if(isStateSet(STATE_NO_MODEL))

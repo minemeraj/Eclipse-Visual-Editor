@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-25 23:07:18 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
@@ -177,6 +177,19 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     protected boolean noAnnotationInSource(boolean keepOnFreeForm) {
     	boolean decoded = true;
     	if (fAnnotationKey == null || fBeanpart == null) return false; 
+    	
+    	try {
+    	// Smart decode
+    	 Object val = getAnnotationValue();
+    	 if (val instanceof Boolean) {
+    		Boolean bVal = (Boolean)val;
+    		if (bVal.booleanValue() == !keepOnFreeForm)
+    			return decoded;
+    	 }
+    	}
+    	catch (CodeGenException e) {}
+     
+    	
 
     	Annotation a = CodeGenUtil.getAnnotation(fBeanpart.getEObject()) ;
     	if (a == null) return false;
