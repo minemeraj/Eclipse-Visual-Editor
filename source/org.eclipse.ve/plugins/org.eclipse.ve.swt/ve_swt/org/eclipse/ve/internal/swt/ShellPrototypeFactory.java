@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPrototypeFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -39,7 +39,7 @@ public class ShellPrototypeFactory implements PrototypeFactory {
 		IJavaObjectInstance shellInstance = (IJavaObjectInstance)aClass.getEPackage().getEFactoryInstance().create(aClass);
 		
 		ParseTreeAllocation parseTreeAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-		PTClassInstanceCreation classInstanceCreation = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.swt.widgets.Shell",null);
+		PTClassInstanceCreation classInstanceCreation = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.swt.widgets.Shell",null); //$NON-NLS-1$
 
 		parseTreeAllocation.setExpression(classInstanceCreation);
 		shellInstance.setAllocation(parseTreeAllocation);

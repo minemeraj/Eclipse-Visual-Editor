@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-31 00:54:39 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,7 +28,7 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 		if (element instanceof IJavaInstance) {
 			return getText((IJavaInstance) element);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -67,6 +67,6 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 			return fontLabelBeanProxy.stringValue();
 		} catch (ThrowableProxy exc) {
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

@@ -115,21 +115,21 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 
 	protected IMethodProxy layoutMethodProxy(){
 		if(layoutMethodProxy == null){
-			layoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("layout");
+			layoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("layout"); //$NON-NLS-1$
 		}
 		return layoutMethodProxy;
 	}
 	
 	protected IMethodProxy moveAboveMethodProxy(){
 		if(moveAboveMethodProxy == null){
-			moveAboveMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveAbove", "org.eclipse.swt.widgets.Control");
+			moveAboveMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveAbove", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return moveAboveMethodProxy;
 	}	
 	
 	protected IMethodProxy moveBelowMethodProxy(){
 		if(moveBelowMethodProxy == null){
-			moveBelowMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveBelow", "org.eclipse.swt.widgets.Control");
+			moveBelowMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveBelow", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return moveBelowMethodProxy;
 	}

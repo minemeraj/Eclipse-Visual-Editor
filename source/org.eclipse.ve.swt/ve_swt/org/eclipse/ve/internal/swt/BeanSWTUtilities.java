@@ -162,7 +162,7 @@ public class BeanSWTUtilities {
     	BeanSWTUtilities constants = getConstants(aBeanProxy);
     	
     	if (constants.computeSizeMethodProxy == null) {
-    		constants.computeSizeMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("computeSize",
+    		constants.computeSizeMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("computeSize", //$NON-NLS-1$ //$NON-NLS-2$
     				new String[] {"int" , "int"}); //$NON-NLS-1$ //$NON-NLS-2$
     	}
         if (constants.computeSizeMethodProxy != null) {
@@ -283,7 +283,7 @@ public class BeanSWTUtilities {
 		Map containers = new HashMap(), plugins = new HashMap();
 		try {
 			ProxyPlugin.getPlugin().getIDsFound(proj, containers, new HashMap(), plugins, new HashMap());
-			return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false;
+			return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false; //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (JavaModelException e) {
 		}
 		return false;

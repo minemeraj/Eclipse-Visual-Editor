@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -258,8 +258,8 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 		ir.setObject((IJavaObjectInstance) getContainer());
 		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();
-		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");
-		fa.setField("NONE");
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT"); //$NON-NLS-1$
+		fa.setField("NONE"); //$NON-NLS-1$
 		fa.setReceiver(name);
 		ic.getArguments().add(ir);
 		ic.getArguments().add(fa);

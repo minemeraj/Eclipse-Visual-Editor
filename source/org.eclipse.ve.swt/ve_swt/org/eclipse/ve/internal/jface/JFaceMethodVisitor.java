@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -50,7 +50,7 @@ public class JFaceMethodVisitor extends MethodVisitor {
 				TypeResolver.Resolved resolved = model.getResolver().resolveType(svd.getType());
 				if(resolved!=null)
 					fqn = resolved.getName();
-				if("org.eclipse.swt.widgets.Composite".equals(fqn)){
+				if("org.eclipse.swt.widgets.Composite".equals(fqn)){ //$NON-NLS-1$
 					createParamBeanPart(svd, model, method);
 				}
 			}
@@ -74,19 +74,19 @@ public class JFaceMethodVisitor extends MethodVisitor {
 		}
 		
 		// Create the bean part
-		BeanPart bp = new BeanPart(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ;
+		BeanPart bp = new BeanPart(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ; //$NON-NLS-1$
 		model.addBean(bp) ;
 		if(initMethod!=null)
 			bp.addInitMethod(initMethod);
 		
 		// Find out the 'this' BeanPart
-		BeanPart thisPart = model.getABean("this");
+		BeanPart thisPart = model.getABean("this"); //$NON-NLS-1$
 		
 		// Create the expression 
 		CodeExpressionRef exp = new CodeExpressionRef(initMethod, bp);
 		exp.setBean(bp);
 		exp.setNoSrcExpression(true);
-		exp.setDecoder(new ImplicitAllocationDecoder(thisPart, bp, "delegate_control"));
+		exp.setDecoder(new ImplicitAllocationDecoder(thisPart, bp, "delegate_control")); //$NON-NLS-1$
 		exp.setOffset(svd.getStartPosition()-method.getStartPosition());
 		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 		updateContentParser(svd, model, exp);

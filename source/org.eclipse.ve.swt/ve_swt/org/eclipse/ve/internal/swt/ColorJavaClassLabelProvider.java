@@ -26,7 +26,7 @@ public class ColorJavaClassLabelProvider extends LabelProvider {
 		if (element instanceof IJavaInstance && !(((IJavaInstance)element).getAllocation() instanceof ParseTreeAllocation)) {
 			return BeanProxyUtilities.getBeanProxy((IJavaInstance) element).toBeanString();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

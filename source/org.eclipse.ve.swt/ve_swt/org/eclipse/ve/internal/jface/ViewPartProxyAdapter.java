@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -47,7 +47,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
 
 public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualComponent , IControlProxyHost {
 	
-	public static final String TARGETVM_VIEWPARTHOST = "org.eclipse.ve.internal.jface.targetvm.ViewPartHost";
+	public static final String TARGETVM_VIEWPARTHOST = "org.eclipse.ve.internal.jface.targetvm.ViewPartHost"; //$NON-NLS-1$
 	protected List fControlListeners = null; // Listeners for IComponentNotification.
 	protected ControlManager fControlManager; // The listener on the IDE	
 	protected ImageNotifierSupport imSupport;
@@ -107,7 +107,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				// Find the target VM helper ViewPartHost class and remove the ViewPart 		
 			
 				IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-				IMethodProxy removeViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("removeViewPart","org.eclipse.ui.part.WorkbenchPart");
+				IMethodProxy removeViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("removeViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
 			    removeViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,aBeanProxy);
 				
 				return null;
@@ -214,7 +214,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
             	if (getBeanProxy() != null) {
             		// Call the layout() method on the target VM's					
 					IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-					IMethodProxy layoutViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("layoutViewPart","org.eclipse.ui.part.WorkbenchPart");
+					IMethodProxy layoutViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("layoutViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
 				    layoutViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,getBeanProxy());					
             	}
 					
@@ -260,7 +260,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				// 1) org.eclipse.ve.jface.targetvm.ViewPartHost.addViewPart(WorkbenchPart) with the ViewPart as the argument 		
 			
 				IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart","org.eclipse.ui.part.WorkbenchPart");
+				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
 				// The method addViewPart returns a two element array typed to org.eclipse.swt.Composite
 				// The first is the composite for the outer ViewPane, the second for the inner composite that is the argument to createPartControl(Composite)
 				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,aBeanProxy);

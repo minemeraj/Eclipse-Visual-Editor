@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-04 22:25:51 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -198,7 +198,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		previewGD.horizontalAlignment = GridData.FILL;
 		previewGD.grabExcessHorizontalSpace = true;
 		previewGD.grabExcessVerticalSpace = false;
-		initStringLabel.setText("");
+		initStringLabel.setText(""); //$NON-NLS-1$
 		initStringLabel.setLayoutData(gridData3);
 		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
 		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -754,9 +754,9 @@ public class ColorCustomPropertyEditor extends Composite {
 			IBeanProxy colorProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
 			IBeanTypeProxy colorType = colorProxy.getTypeProxy();
 
-			IMethodProxy getBlue = colorType.getMethodProxy("getBlue");
-			IMethodProxy getGreen = colorType.getMethodProxy("getGreen");
-			IMethodProxy getRed = colorType.getMethodProxy("getRed");
+			IMethodProxy getBlue = colorType.getMethodProxy("getBlue"); //$NON-NLS-1$
+			IMethodProxy getGreen = colorType.getMethodProxy("getGreen"); //$NON-NLS-1$
+			IMethodProxy getRed = colorType.getMethodProxy("getRed"); //$NON-NLS-1$
 
 			int blue = ((IIntegerBeanProxy) getBlue.invoke(colorProxy)).intValue();
 			int green = ((IIntegerBeanProxy) getGreen.invoke(colorProxy)).intValue();
@@ -923,8 +923,8 @@ public class ColorCustomPropertyEditor extends Composite {
 				}
 			}
 		} else if (isJFace) {
-			String jfaceConstantName = jfaceColorInitStrings[jfaceColorSelection].replaceAll("org.eclipse.jface.preference.JFacePreferences",
-					"JFacePreferences");
+			String jfaceConstantName = jfaceColorInitStrings[jfaceColorSelection].replaceAll("org.eclipse.jface.preference.JFacePreferences", //$NON-NLS-1$
+					"JFacePreferences"); //$NON-NLS-1$
 			result = "JFaceResources.getColorRegistry().get(" + jfaceConstantName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		}

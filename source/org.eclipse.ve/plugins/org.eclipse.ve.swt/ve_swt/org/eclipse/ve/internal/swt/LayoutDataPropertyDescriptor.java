@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutDataPropertyDescriptor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,7 +44,7 @@ public class LayoutDataPropertyDescriptor extends EToolsPropertyDescriptor imple
 	
 
 	public LayoutDataPropertyDescriptor(String aLayoutDataClassName, EStructuralFeature sf, boolean nullsInvalid){
-	    super(sf, "layoutData");
+	    super(sf, "layoutData"); //$NON-NLS-1$
 	    setNullInvalid(nullsInvalid);
 		layoutDataClassName = aLayoutDataClassName;
 	}
@@ -56,7 +56,7 @@ public class LayoutDataPropertyDescriptor extends EToolsPropertyDescriptor imple
 		if(actualValue != null || layoutDataClassName == null) return actualValue;
 		// If we have no value then create a dummy one based on the layoutData class so the property sheet gets
 		// faked out into thinking there is a child which allows sub properties to be set
-		String initString = "new " + layoutDataClassName + "()";
+		String initString = "new " + layoutDataClassName + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 		// To allow expandable properties we must return the fake layout data object wrapped up to be a valid IPropertySource
 		ResourceSet rs = JavaEditDomainHelper.getResourceSet(fEditDomain);
 		IJavaInstance fakeLayoutData = BeanUtilities.createJavaObject(

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-11 17:44:27 $
+ *  $Revision: 1.6 $  $Date: 2005-04-05 20:11:45 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -291,12 +291,12 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		// Prior to 3.1 these were in package protected fields on GridLayout but these are no longer available so the helper class
 		// computes the values
 		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-				"org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper");
+				"org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper"); //$NON-NLS-1$
 		IBeanProxy gridLayoutHelperProxy = null;
 		try {
 			gridLayoutHelperProxy = gridLayoutHelperType.newInstance();
 			final IBeanProxy gridLayoutHelperProxyFinal = gridLayoutHelperProxy;
-			final IMethodProxy setCompositeMethodProxy = gridLayoutHelperType.getMethodProxy("setComposite", "org.eclipse.swt.widgets.Composite");
+			final IMethodProxy setCompositeMethodProxy = gridLayoutHelperType.getMethodProxy("setComposite", "org.eclipse.swt.widgets.Composite"); //$NON-NLS-1$ //$NON-NLS-2$
 			DisplayManager.DisplayRunnable runnable = new DisplayManager.DisplayRunnable() {
 
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
@@ -342,7 +342,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public boolean isContainerColumnsEqualWidth() {
 		boolean result = false;
 
-		IFieldProxy getColumnsEqualWidthsFieldProxy = getLayoutManagerBeanProxy().getTypeProxy().getDeclaredFieldProxy("makeColumnsEqualWidth");
+		IFieldProxy getColumnsEqualWidthsFieldProxy = getLayoutManagerBeanProxy().getTypeProxy().getDeclaredFieldProxy("makeColumnsEqualWidth"); //$NON-NLS-1$
 		//$NON-NLS-1$
 		try {
 			IBooleanBeanProxy booleanProxyEqualWidths = (IBooleanBeanProxy) getColumnsEqualWidthsFieldProxy.get(getLayoutManagerBeanProxy());

@@ -54,7 +54,7 @@ public class FontPropertyEditor implements PropertyEditor, INeedData {
 	public String getJavaInitializationString() {
 		if(customFontEditor != null)
 			return customFontEditor.getJavaInitializationString();
-		return "null";
+		return "null"; //$NON-NLS-1$
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if(customFontEditor != null)

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: CursorPropertyEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 20:11:46 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -632,7 +632,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
 		fCursorInstance = value;
 		String cursorName = CursorJavaClassLabelProvider.getText(value);
-		if (!cursorName.equals("")) {
+		if (!cursorName.equals("")) { //$NON-NLS-1$
 			for (int i = 0; i < cursorNames.length; i++) {
 				if (cursorNames[i].equals(cursorName)) {
 					cursorConstant = i;
@@ -656,7 +656,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 		if (fCursorInstance != null) {
 			return CursorJavaClassLabelProvider.getText(fCursorInstance);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -664,7 +664,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 	 * @see PropertyEditor#getJavaInitializationString()
 	 */
 	public String getJavaInitializationString() {
-		StringBuffer init = new StringBuffer("new " + CURSOR_CLASS_PREFIX + "org.eclipse.swt.widgets.Display.getDefault(), "); //$NON-NLS-1$
+		StringBuffer init = new StringBuffer("new " + CURSOR_CLASS_PREFIX + "org.eclipse.swt.widgets.Display.getDefault(), "); //$NON-NLS-1$ //$NON-NLS-2$
 		if (cursorConstant != -1) {
 			init.append(CURSOR_PREFIX + cursorConstants[cursorConstant] + ")"); //$NON-NLS-1$
 			return init.toString();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutLabelProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 20:11:45 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -36,7 +36,7 @@ public class LayoutLabelProvider extends LabelProvider implements INeedData {
 			String qualifiedName = getQualifiedName(element);
 			return LayoutCellEditor.getDisplayName(editDomain, qualifiedName);
 		} else {
-			return "null";
+			return "null"; //$NON-NLS-1$
 		}
 	}
 
@@ -46,7 +46,7 @@ public class LayoutLabelProvider extends LabelProvider implements INeedData {
 		if (beanProxy != null) {
 			return beanProxy.getTypeProxy().getTypeName();
 		}
-		return ""; // $NON-NLS-1$
+		return ""; // $NON-NLS-1$ //$NON-NLS-1$
 	}
 	/**
 	 * @see INeedData#setData(Object)

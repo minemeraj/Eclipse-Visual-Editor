@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 /*
- * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.7 $ $Date: 2005-02-15 23:51:47 $
+ * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.8 $ $Date: 2005-04-05 20:11:45 $
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -34,7 +34,7 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 public class RowLayoutEditPolicy extends DefaultLayoutEditPolicy implements IActionFilter {
 	
 	// unique ID of this layout edit policy
-	public static final String LAYOUT_ID = "org.eclipse.swt.layout.RowLayout";
+	public static final String LAYOUT_ID = "org.eclipse.swt.layout.RowLayout"; //$NON-NLS-1$
 	
 	private static final int HORIZONTAL = 1 << 8;
 	private int type = HORIZONTAL;

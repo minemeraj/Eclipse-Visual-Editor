@@ -118,7 +118,7 @@ public IBeanTypeProxy getEnvironmentBeanTypeProxy(){
 
 public IBeanProxy getDisplayProxy() {
 	if (displayProxy == null)
-		displayProxy = environmentBeanTypeProxy.getMethodProxy("getDisplay").invokeCatchThrowableExceptions(null);
+		displayProxy = environmentBeanTypeProxy.getMethodProxy("getDisplay").invokeCatchThrowableExceptions(null); //$NON-NLS-1$
 	return displayProxy;
 }
 

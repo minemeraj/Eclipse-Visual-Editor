@@ -149,7 +149,7 @@ protected final IBeanTypeProxy getEnvironmentBeanTypeProxy(ProxyFactoryRegistry 
 }
 protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyFactoryRegistry){
 	if(getFieldMethodProxy == null){	
-		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		
+		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return getFieldMethodProxy;
 }

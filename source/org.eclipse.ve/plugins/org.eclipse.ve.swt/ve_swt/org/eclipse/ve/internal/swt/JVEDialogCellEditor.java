@@ -74,9 +74,9 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 			public PTExpression resolveName(Name name) {
 				PTExpression exp = null;
 				if (name instanceof QualifiedName &&
-						(name.getFullyQualifiedName().startsWith("org.eclipse.swt.SWT.") ||
-						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources.") ||
-						name.getFullyQualifiedName().startsWith("org.eclipse.jface.preference.JFacePreferences."))) {
+						(name.getFullyQualifiedName().startsWith("org.eclipse.swt.SWT.") || //$NON-NLS-1$
+						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources.") || //$NON-NLS-1$
+						name.getFullyQualifiedName().startsWith("org.eclipse.jface.preference.JFacePreferences."))) { //$NON-NLS-1$
 					PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(((QualifiedName)name).getQualifier().getFullyQualifiedName());
 					exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, ((QualifiedName) name).getName().getIdentifier());
 					return exp;
@@ -147,7 +147,7 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 			chooser.setJavaObjectInstanceValue((IJavaObjectInstance)value);
 			label.setText(chooser.getText());
 		} else {
-			label.setText("");
+			label.setText(""); //$NON-NLS-1$
 		}
 	}	
 }

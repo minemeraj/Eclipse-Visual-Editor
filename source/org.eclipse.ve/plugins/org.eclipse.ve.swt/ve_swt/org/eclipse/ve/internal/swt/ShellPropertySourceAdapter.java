@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 20:11:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -42,8 +42,8 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 						// See if trim family set, if not, add it in. Only if we are not adjusting trim already.
 						// (Actually since we are going from nothing to something, really shouldn't need to test if
 						// trim in here, we should know it isn't).
-						if (!propertyID.getFamilyName().equals("trim")) {
-							StyleBitPropertyID trimFamily = findFamily("trim");
+						if (!propertyID.getFamilyName().equals("trim")) { //$NON-NLS-1$
+							StyleBitPropertyID trimFamily = findFamily("trim"); //$NON-NLS-1$
 							if (!isSameStyleFamilySet(newArg, trimFamily)) {
 								// Add it in.
 								newArg = addStyleBit(newArg, trimFamily, trimFamily.getStyle(TRIM_STRINGS[0], TRIM_STRINGS[1]));
@@ -76,8 +76,8 @@ public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 							// See if trim family set, if not, add it in. Only if we are not adjusting trim already.
 							// (Actually since we are going from nothing to something, really shouldn't need to test if
 							// trim in here, we should know it isn't).
-							if (!propertyID.getFamilyName().equals("trim")) {
-								StyleBitPropertyID trimFamily = findFamily("trim");
+							if (!propertyID.getFamilyName().equals("trim")) { //$NON-NLS-1$
+								StyleBitPropertyID trimFamily = findFamily("trim"); //$NON-NLS-1$
 								if (!isSameStyleFamilySet(newArg, trimFamily)) {
 									// Add it in.
 									newArg = addStyleBit(newArg, trimFamily, trimFamily.getStyle(TRIM_STRINGS[0], TRIM_STRINGS[1]));

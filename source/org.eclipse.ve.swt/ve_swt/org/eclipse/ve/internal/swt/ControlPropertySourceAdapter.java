@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-18 22:02:39 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 20:11:45 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			compositeJavaObjectInstance = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
 					getEObject(),
 					JavaInstantiation.getReference(
-							Utilities.getJavaClass("org.eclipse.swt.widgets.Composite",getEObject().eResource().getResourceSet()),
+							Utilities.getJavaClass("org.eclipse.swt.widgets.Composite",getEObject().eResource().getResourceSet()), //$NON-NLS-1$
 							SWTConstants.SF_COMPOSITE_CONTROLS));
 		}
 		
@@ -73,7 +73,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				String fn = sf.getName();				
 				if(explicitUserSizing) {
 					// exclude the layoutData property
-					if ("layoutData".equals(fn))
+					if ("layoutData".equals(fn)) //$NON-NLS-1$
 						continue loop;
 				} else {
 					// exclude bounds/size/location because we have a layout manager
@@ -82,7 +82,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				}
 
 				// LayoutData is wrappered so it is treated differently to allow values on un-set layoutData instances to be set
-				if("layoutData".equals(fn)){
+				if("layoutData".equals(fn)){ //$NON-NLS-1$
 					// We need the class of the layoutData to set.  This comes from looking at the policyFactory
 					// for our container's layoutManager
 					CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter)BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);					
