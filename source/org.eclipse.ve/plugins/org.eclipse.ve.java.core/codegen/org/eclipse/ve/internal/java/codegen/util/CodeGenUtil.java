@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.9 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.10 $  $Date: 2004-02-10 23:37:11 $ 
  */
 
 
@@ -538,12 +538,16 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 	return -1;
 }
 
-public static String getInitString(IJavaInstance javaInstance) {
+public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model) {
 	JavaAllocation alloc = javaInstance.getAllocation();
 	if (alloc instanceof InitStringAllocation)
 		return ((InitStringAllocation) alloc).getInitString();
 	else if (alloc instanceof ParseTreeAllocation) {
-		return ((ParseTreeAllocation) alloc).getExpression().toString();	// TODO For now the Expression.toString() will give us an init string.
+		PTExpression e = ((ParseTreeAllocation)javaInstance.getAllocation()).getExpression();
+		// Resolve references if needed
+		CodeGenExpFlattener f = new CodeGenExpFlattener(model);
+		e.accept(f);
+		return f.getResult();
 	} else {
 		// There is none, so let's create the default ctor (only valid for classes)
 		// Return construct with default ctor when not explicitly set.

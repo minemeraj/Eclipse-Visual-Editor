@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-10 23:37:11 $ 
  */
 
 import java.util.Iterator;
@@ -324,9 +324,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		fPropInstance = (IJavaInstance) currentVal;
 		if (currentVal != null) {
 			if (currentVal instanceof IJavaObjectInstance)
-				return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal));
+				return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel()));
 			else if (currentVal instanceof IJavaDataTypeInstance)
-				return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal);
+				return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel());
 
 		} else { // Is it a null value ??
 			EObject eobj = fbeanPart.getEObject();			

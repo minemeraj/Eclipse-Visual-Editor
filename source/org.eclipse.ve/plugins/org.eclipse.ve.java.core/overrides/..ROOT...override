@@ -22,7 +22,7 @@
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         expDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectDecoder"
         eventDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectEventDecoder"
-        methodGenerator="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.MethodTextGenerator"/>
+        methodGenerator="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.util.DefaultMethodTextGenerator"/>
         
   </event:AddMany>
   <event:Add  featureName="eStructuralFeatures">

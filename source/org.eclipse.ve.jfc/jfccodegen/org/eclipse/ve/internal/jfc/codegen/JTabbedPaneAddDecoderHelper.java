@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:40 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:16 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -315,7 +315,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		String AddedArg;
 		if (fAddedPart == null)
-			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance);
+			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel());
 		else if (fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
 		else
@@ -325,19 +325,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		// TODO  Need to deal with non String instances
 		if (fTitleInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance));
+			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance,fbeanPart.getModel()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		if (fIconInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fIconInstance));
+			finalArgs.add(CodeGenUtil.getInitString(fIconInstance,fbeanPart.getModel()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		finalArgs.add(AddedArg);
 
 		if (fToolTipInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance));
+			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance,fbeanPart.getModel()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 

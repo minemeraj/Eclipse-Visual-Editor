@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-29 12:58:23 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,8 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.core.MsgLogger;
@@ -27,8 +25,6 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
-import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
@@ -46,20 +42,21 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	protected	IBeanDeclModel	fModel ;
 	protected	EObject			fComponent ;	
 	protected   String			fmethodName = null ;
-	protected   String[]		fComments = null ;
-	protected	String			finitbeanName = null ;
-	protected   String[]			fmethodArgs = null ;
-	protected   String[]		fbeanInitArgs = null ;
+	protected   String[]		fComments = null ;			// JavaDoc for the method	
+	protected   String[]		fmethodArgs = null ;
+	protected	String			finitbeanName = null ;		// Initialized Bean
+	protected   String[]		finitbeanArgs = null ;		// Init constructor args. 
 	protected   IMethodTemplate fMethodTemplate = null ;
 	protected	EStructuralFeature[] fignoreSFlist = null ;
+	protected   boolean			fGenerateComments=false ;
 	
 	
 	public class MethodInfo {
 		public String		   fSeperator ;
-		public String[]		   fComments ;  // method's JavaDoc/Comments
+		public String[]		   fComments ;			// method's JavaDoc/Comments
 		public String          fmethodName ;
 		public String		   freturnType ;
-		public String[]		   fmethodArguments ;    // type name array
+		public String[]		   fmethodArguments ;	// type name array
 		public String		   finitBeanName ;
 		public String		   finitBeanType ;
 		public String[]		   finitBeanArgs;		// Constructor arguments
@@ -69,6 +66,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 			fmethodName = AbstractMethodTextGenerator.this.fmethodName ;
 			finitBeanType = ((JavaClassImpl)fComponent.eClass()).getQualifiedName();
 			finitBeanName = AbstractMethodTextGenerator.this.finitbeanName ;
+			fGenerateComments = AbstractMethodTextGenerator.this.fGenerateComments ;
 			if (AbstractMethodTextGenerator.this.fComments==null)
 				fComments = new String[] {IMethodTextGenerator.DEFAULT_METHOD_COMMENT+finitBeanName } ;
 		    else
@@ -78,15 +76,19 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 				freturnType = finitBeanType;
 		    else
 		    	freturnType = null ;
-			finitBeanArgs = AbstractMethodTextGenerator.this.fbeanInitArgs;
+			finitBeanArgs = AbstractMethodTextGenerator.this.finitbeanArgs;
 			fmethodArgs = AbstractMethodTextGenerator.this.fmethodArgs;
 		}
 
 	}
+		
 	
 	public AbstractMethodTextGenerator(EObject component, IBeanDeclModel model) {
 		fModel = model ;
 		fComponent=component ;
+// Given that we are using templates, these type of comments can be added by a user
+//		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
+//		fGenerateComments=store.getBoolean(VCEPreferences.GENERATE_COMMENT);
 	}
 
     protected abstract IMethodTemplate getMethodTemplate() ;
@@ -131,14 +133,14 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 * @return Returns the fbeanInitArgs.
 	 */
 	public String[] getBeanInitArgs() {
-		return fbeanInitArgs;
+		return finitbeanArgs;
 	}
 
 	/**
 	 * @param fbeanInitArgs The fbeanInitArgs to set.
 	 */
 	public void setBeanInitArgs(String[] beanInitArgs) {
-		this.fbeanInitArgs = beanInitArgs;
+		this.finitbeanArgs = beanInitArgs;
 	}
 
 	/**
@@ -249,6 +251,45 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 */
 	public String getMethodPrefix() {
 		return DEFAULT_METHOD_PREFIX;
+	}
+	
+	protected CodeExpressionRef createInitExpression(BeanPart bean) {
+		ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
+		return eg.createInitExpression() ;
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#generateInLine(org.eclipse.ve.internal.java.codegen.model.CodeMethodRef, java.lang.String, java.util.List)
+	 */
+	public void generateInLine(CodeMethodRef method, String beanName, List kids) throws CodeGenException {
+				    	
+				
+		// Set up a new BeanPart in the decleration Model
+		BeanPart bp = fModel.getABean(beanName) ;
+		if(bp==null)
+			bp = fModel.getABean(BeanDeclModel.constructUniqueName(method,beanName));//method.getMethodHandle()+"^"+fName);
+				
+		
+		CodeExpressionRef initExp = createInitExpression(bp);
+		// Allow the expression sorted to find a nice spot for this one
+		initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
+		initExp.setOffset(-1) ;
+		try {   
+			method.updateExpressionOrder() ;
+		}
+		catch (Throwable e) {
+			JavaVEPlugin.log(e, MsgLogger.LOG_SEVERE) ;
+			return   ;
+		}
+		// We may be processing a nested child, 
+		// and the method is not in the source yet
+		if (method.getMethodHandle() != null)
+			initExp.insertContentToDocument() ;
+		else
+			initExp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED,true) ;
+		
+		generateForSetFeatures(bp) ;							
 	}
 
 }
