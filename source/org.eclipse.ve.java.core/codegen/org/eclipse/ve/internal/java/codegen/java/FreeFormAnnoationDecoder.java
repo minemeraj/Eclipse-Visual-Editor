@@ -11,8 +11,9 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-17 20:28:01 $ 
  */
+import java.awt.Point;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -56,19 +57,27 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
         Rectangle constraint = (Rectangle) getAnnotationValue() ;
-        FreeFormAnnotationTemplate fft = getFFtemplate() ;
-        if (constraint != null) 
-        	fft.setPosition(constraint.x,constraint.y) ;
-        else
-        	fft.setPosition(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        boolean isModelled = false;
         if(	fBeanpart!=null && 
-        	fBeanpart.getEObject()!=null && 
-			fBeanpart.getEObject().eResource()!=null && 
-			fBeanpart.getEObject().eResource().getResourceSet()!=null){
-        	fft.setParseable(!InstanceVariableCreationRule.isModelled(fBeanpart.getEObject().eClass(), fBeanpart.getEObject().eResource().getResourceSet()));
-        }else
-        	fft.setParseable(true);
-        fContent = fft.toString() ;
+            fBeanpart.getEObject()!=null && 
+    		fBeanpart.getEObject().eResource()!=null && 
+    		fBeanpart.getEObject().eResource().getResourceSet()!=null){
+            	isModelled = InstanceVariableCreationRule.isModelled(fBeanpart.getEObject().eClass(), fBeanpart.getEObject().eResource().getResourceSet());
+            }else
+            	isModelled = false;
+        if(!isModelled || constraint!=null){
+	        FreeFormAnnotationTemplate fft = getFFtemplate() ;
+	        if (constraint != null) 
+	        	fft.setPosition(new Point(constraint.x,constraint.y)) ;
+	        else
+	        	fft.setPosition(null);
+	        
+	        fft.setParseable(!isModelled);
+	        
+	        fContent = fft.toString() ;
+        }else{
+        	fContent = "";
+        }
         return fContent ;
     }
         
@@ -152,12 +161,12 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
           String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
           if (curAnnotation == null) {
             // Brand New Anotation 
-              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
+              newSrc = generate(null,null) ;
               if (newSrc == null || newSrc.length() == 0) {
                 JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", Level.WARNING) ; //$NON-NLS-1$
                 return ;
               }
-              
+              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc; 
               // Just append the comment at the end of the line
               int end = FreeFormAnnotationTemplate.getEOL(src, 0);
               int pSpaces = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, end);
@@ -170,7 +179,9 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
               s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
-              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
+              newSrc = generate(null,null) ;
+              if(newSrc!=null && newSrc.length()>0)
+              	newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc; 
               start = start + s;
               len = end-s+1;
           }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationTemplate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-14 19:53:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-17 20:28:14 $ 
  */
 /**
  * @version 	1.0
@@ -60,7 +60,7 @@ public String toString () {
 	   st.append(ExpressionTemplate.SPACE) ;	
     st.append(ANNOTATION_SIG) ;
     st.append(fAnnotationType) ;
-    st.append(ExpressionTemplate.SPACE) ;
+    st.append(":") ;
     st.append(getContent()) ;
     
     //st.append(fSeperator) ;

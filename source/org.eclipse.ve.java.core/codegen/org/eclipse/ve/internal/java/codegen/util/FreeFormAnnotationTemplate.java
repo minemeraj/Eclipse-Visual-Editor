@@ -1,5 +1,6 @@
 package org.eclipse.ve.internal.java.codegen.util;
 
+import java.awt.Point;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ToolFactory;
@@ -19,7 +20,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-14 19:53:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-17 20:28:14 $ 
  */
 /**
  * @version 	1.0
@@ -49,15 +50,15 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     
     public FreeFormAnnotationTemplate(int x, int y) {
         super(VISUAL_INFO_TYPE);
-        setPosition(x,y) ;
+        setPosition(new Point(x,y)) ;
     }
     
-    public void setPosition (int x, int y) {
-    	if(x==Integer.MIN_VALUE && y==Integer.MIN_VALUE)
+    public void setPosition (Point point) {
+    	if(point==null)
     		positionString = "";
     	else
     		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
-                   "\""+Integer.toString(x)+","+Integer.toString(y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                   "\""+Integer.toString(point.x)+","+Integer.toString(point.y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     
     public void setParseable(boolean parse){
@@ -309,6 +310,10 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
 	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractAnnotationTemplate#determineContent()
 	 */
 	protected String determineContent() {
-		return parseString + ExpressionTemplate.SPACE + positionString;
+		String content = parseString;
+		if(content!=null && content.length()>0 && positionString!=null && positionString.length()>0)
+			content = content + "," ;
+		content = content + positionString;
+		return content;
 	}
 }

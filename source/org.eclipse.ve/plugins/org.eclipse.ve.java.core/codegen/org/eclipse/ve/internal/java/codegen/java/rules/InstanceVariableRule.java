@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.7 $  $Date: 2004-05-14 19:54:05 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-17 20:28:14 $ 
  */
 
 import java.util.HashMap;
@@ -42,10 +42,10 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		//
 		if (isModelled(field.getType(), resolver, di))
 			return false;
-		if (!ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di))
+		if (AnnotationDecoderAdapter.hasMetaInformation(field))
 			return false;
 		//TODO: support multi declerations
-		return !AnnotationDecoderAdapter.hasMetaInformation(field);
+		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
 	}
 	
 	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IVEModelInstance di) {
@@ -53,16 +53,16 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		//
 		if (isModelled(stmt.getType(), resolver, di))
 			return false;
-		if (!ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di))
+		if (AnnotationDecoderAdapter.hasMetaInformation(stmt))
 			return false;
 		//TODO: support multi declerations
-		return !AnnotationDecoderAdapter.hasMetaInformation(stmt);
+		return !ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
 	}
 	
 	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
 		try {
 			String name = decl.getName().getIdentifier();
-			if (name.startsWith(InstanceVariableCreationRule.getDefaultPrefix(di.getModelResourceSet()))) {
+			if (name.startsWith("ivj")) {
 				// Ignore VCE connections
 				if (name.startsWith("ivjConn")) //$NON-NLS-1$
 					return true;

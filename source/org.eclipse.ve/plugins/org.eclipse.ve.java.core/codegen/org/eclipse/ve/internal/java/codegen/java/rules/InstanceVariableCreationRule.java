@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.10 $  $Date: 2004-05-14 19:54:05 $ 
+ *  $Revision: 1.11 $  $Date: 2004-05-17 20:28:14 $ 
  */
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.*;
@@ -87,14 +87,6 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	   	return sf;
 	}
 
-	protected static void loadPrefixPreferences(ResourceSet rs){
-		if(fRS!=null && fRS.equals(rs))
-			return ;
-		if(fDefaultPrefix==null)
-			fDefaultPrefix = VCEPreferencePage.loadDefaultPrefix(false);
-		fRS = rs;
-	}
-	
 	/**
 	 * Determines if this class is to be modelled or not
 	 * This value is set via the overrides mechanism
@@ -110,22 +102,6 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		return getDefaultBooleanValue(aClass, getStructuralFeatureNamed("modelled", rs));
 	}
 	
-	public static String getDefaultPrefix(ResourceSet rs){
-		loadPrefixPreferences(rs);
-		return fDefaultPrefix;
-	}
-	
-	/**
-	 * Get the default prefix name for a given object type.
-	 */
-	public static String getPrefix(EClassifier meta, ResourceSet rs) {
-		loadPrefixPreferences(rs);
-		if(isModelled(meta, rs))
-			return "";
-		else
-			return getDefaultPrefix(rs);
-	}
-
 	public static String addPrefix(String pre, String name) {
 		if (pre == null || pre.length() == 0)
 			return name;
@@ -257,19 +233,13 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	}
 
 	public String getValidInstanceVariableName(ResourceSet rs, EObject obj, String base, IType currentType, IBeanDeclModel bdm) {
-		EClassifier meta = ((IJavaInstance) obj).getJavaType();
 		if (base.charAt(0) == '"')
 			base = base.substring(1);
 		if (base.charAt(base.length() - 1) == '"')
 			base = base.substring(0, base.length() - 2);
 
-		String prefix = getPrefix(meta, rs);
-		if (prefix.length() != 0) {
-			if (!base.startsWith(prefix))
-				base = addPrefix(prefix, base);
-			if (isInternalType(obj, rs))
-				base += Integer.toString(internalIndex++);
-		}
+		if (isInternalType(obj, rs))
+			base += Integer.toString(internalIndex++);
 
 		String name = base;
 

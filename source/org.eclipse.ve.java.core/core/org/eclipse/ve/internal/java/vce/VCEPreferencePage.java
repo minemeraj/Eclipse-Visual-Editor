@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-14 19:52:42 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-17 20:28:32 $ 
  */
 
 import java.util.ArrayList;
@@ -66,7 +66,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Button showSplitPaneGEFPaletteButton;
 	protected Button generateExpressionComment;
 	protected Table stylesTable;
-	protected Text objectPrefixText;
 	protected StackLayout stylesContributorAreaLayout;
 	protected Composite styleContributorArea;
 	//    protected Button requireIVJforComponents ;
@@ -86,7 +85,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private TableItem currentLookAndFeelItem;
 
 	private String fStyleID = null;
-	private String defaultPrefix = null;
 
 	protected Label createLabel(Composite group, String aLabelString, Image aLabelImage) {
 		Label label = new Label(group, SWT.LEFT);
@@ -420,12 +418,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		sourceToVisual.addModifyListener(modifyListener);
 		sourceToVisual.setTextLimit(9);
 		
-		Group codeGenGroup_Prefix = createGroup(codeGenComposite, VCEMessages.getString("VCEPreferencePage.DefaultPrefix.Desc"), 2); //$NON-NLS-1$
-		codeGenGroup_Prefix.setLayout(new GridLayout(3, false));
-		
-		objectPrefixText = createLabelText(codeGenGroup_Prefix, VCEMessages.getString("VCEPreferencePage.DefaultPrefix.GroupTitle"), 20); //$NON-NLS-1$
-
-		Label spacer = new Label(codeGenGroup_Prefix, SWT.NONE);
+		Label spacer = new Label(sourceSyncGrp, SWT.NONE);
 		spacer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 	
@@ -645,41 +638,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		return fStore;
 	}
 	
-	/**
-	 * Returns in the format {{classname, prefix},{classname,prefix},..}
-	 * 
-	 * @param Pass in the value stored in the store
-	 * @return 
-	 * 
-	 * @since 1.0.0
-	 */
-	public static String loadDefaultPrefix(boolean loadDefault){
-		String storeEntry = loadDefault ?
-				VCEPreferences.getPlugin().getPluginPreferences().getDefaultString(VCEPreferences.VE_DEFAULT_PREFIX_KEY):
-				VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.VE_DEFAULT_PREFIX_KEY);
-		return storeEntry;
-	}
-	
-	/**
-	 * Stores the passed in prefixes into the store
-	 * 
-	 * @param prefixes in the format {{classname, prefix},{classname,prefix},..}
-	 * 
-	 * @since 1.0.0
-	 */
-	public static void storeDefaultPrefix(String prefix){
-		VCEPreferences.getPlugin().getPluginPreferences().setValue(VCEPreferences.VE_DEFAULT_PREFIX_KEY, prefix);
-	}
-	
-	protected void initalizeDefaultPrefix(boolean withDefaults){
-		defaultPrefix = loadDefaultPrefix(withDefaults);
-		objectPrefixText.setText(defaultPrefix);
-	}
-	
-	protected String getDefaultPrefix(){
-		return objectPrefixText.getText();
-	}
-	
 	protected void initializeGUIControlsFromStore() {
 
 		getStore();
@@ -717,8 +675,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			}
 		}
 		
-		initalizeDefaultPrefix(false);
-
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
@@ -832,8 +788,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		fStore.setValue(VCEPreferences.JVE_PATTERN_STYLE_ID, fStyleID);
 		
-		storeDefaultPrefix(getDefaultPrefix());
-
 		saveContributorSettings();
 		
 		VCEPreferences.getPlugin().savePluginPreferences();
@@ -884,7 +838,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		splitRadioButton.setSelection(!store.getDefaultBoolean(VCEPreferences.NOTEBOOK_PAGE));
 		showSplitPaneGEFPaletteButton.setSelection(store.getDefaultBoolean(VCEPreferences.SPLITPANE_SHOW_GEF_PALETTE));
 		sourceToVisual.setText(Integer.toString(VCEPreferences.DEFAULT_SYNC_DELAY));
-		initalizeDefaultPrefix(true);
 
 		// Having set the radio button for the split pane versus notebook to the default
 		// We need to make sure that the check boxes for whether the palette should be shown or not

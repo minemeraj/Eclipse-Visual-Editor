@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-17 20:28:01 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -172,7 +172,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			return false;
 		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
 		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource);
-		if(annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_PARSE)>-1)
+		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_PARSE)>-1)
 			return true;
 		return false;
 	}
@@ -199,7 +199,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			}
 			if(node!=null){
 				CompilationUnit cuNode = (CompilationUnit) node;
-				int fieldLineNumber = cuNode.lineNumber(field.getStartPosition());
+				int fieldLineNumber = cuNode.lineNumber(field.getType().getStartPosition()); // we check for the type's location, cos previous comments effect the field's start position
 				List comments = ((CompilationUnit)node).getCommentList();
 				for (int cc = 0; cc < comments.size(); cc++) {
 					if (comments.get(cc) instanceof LineComment){ 
@@ -215,7 +215,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 								FieldDeclaration[] fields = ((TypeDeclaration)cuNode.types().get(0)).getFields();
 								for (int fc = 0; fc < fields.length; fc++) {
 									if(	!fields[fc].equals(field) &&
-											cuNode.lineNumber(fields[fc].getStartPosition())==fieldLineNumber+1)
+											cuNode.lineNumber(fields[fc].getType().getStartPosition())==fieldLineNumber+1)
 										return false;
 								}
 								return true;
