@@ -3,9 +3,11 @@
 	<name>org.eclipse.ve.jfc</name>
 	<comment></comment>
 	<projects>
+		<project>com.ibm.wtp.common</project>
 		<project>org.eclipse.core.boot</project>
 		<project>org.eclipse.core.resources</project>
 		<project>org.eclipse.core.runtime</project>
+		<project>org.eclipse.core.runtime.compatibility</project>
 		<project>org.eclipse.emf.ecore</project>
 		<project>org.eclipse.gef</project>
 		<project>org.eclipse.jdt.core</project>
@@ -22,7 +24,6 @@
 		<project>org.eclipse.ve.cde</project>
 		<project>org.eclipse.ve.java.core</project>
 		<project>org.eclipse.ve.propertysheet</project>
-		<project>org.eclipse.wtp.common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
