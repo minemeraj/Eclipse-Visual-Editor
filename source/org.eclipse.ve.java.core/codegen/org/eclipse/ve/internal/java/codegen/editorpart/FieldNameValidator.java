@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-05 22:16:36 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-20 14:55:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -129,7 +129,7 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 			IMethod iInitmethod = CodeGenUtil.getMethod(mainType, initMethod.getMethodHandle());
 			if(iInitmethod!=null){
 				try {
-					ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+					ASTParser parser = ASTParser.newParser(AST.JLS2);
 					String wrapperSource = "class WRAPPER_CLASS{\r\n"+iInitmethod.getSource()+"\r\n}"; //$NON-NLS-1$ //$NON-NLS-2$
 					parser.setSource(wrapperSource.toCharArray());
 					ASTNode wrapperNode= parser.createAST(null);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.27 $  $Date: 2004-05-20 13:06:57 $ 
+ *  $Revision: 1.28 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.util.*;
@@ -204,7 +204,7 @@ protected void parseInitExpression (BeanPart b) {
 				// main already exists
 				// See if there are any statement in it.
 				String clazz = "class Foo {\n" + main.getSource() + "\n}";
-				ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(clazz.toCharArray());
 				parser.setSourceRange(0, clazz.length());
 				parser.setKind(ASTParser.K_COMPILATION_UNIT);

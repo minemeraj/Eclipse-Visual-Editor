@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.36 $  $Date: 2004-05-20 13:17:41 $ 
+ *  $Revision: 1.37 $  $Date: 2004-05-20 14:55:59 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -249,7 +249,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   					return true;
   				}else{
   					try {
-  				  		workingCopy.reconcile(false, false, null, null);
+  				  		workingCopy.reconcile(ICompilationUnit.NO_AST, false, null, null);
  						currentSource = workingCopy.getBuffer().getContents();
   						
   						IType primaryType = workingCopy.findPrimaryType() ;
@@ -340,7 +340,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 	}
 
 	protected CompilationUnit parse(String source){
-   		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+   		ASTParser parser = ASTParser.newParser(AST.JLS2);
 		parser.setSource(source.toCharArray());
 		return (CompilationUnit) parser.createAST(null);
   	}

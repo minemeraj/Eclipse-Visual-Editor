@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-18 18:15:17 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-20 14:56:03 $ 
  */
 
 import org.eclipse.jdt.core.dom.*;
@@ -70,7 +70,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 	 */
 	public JavaAllocation getJavaAllocation() {
 
-		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		ASTParser parser = ASTParser.newParser(AST.JLS2);
 		String initString = getJavaInitializationString(); 
 		parser.setSource(initString.toCharArray());
 		parser.setSourceRange(0,initString.length());

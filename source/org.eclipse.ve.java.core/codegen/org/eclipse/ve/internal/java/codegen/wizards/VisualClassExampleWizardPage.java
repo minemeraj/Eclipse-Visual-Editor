@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-11 16:03:22 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-20 14:55:59 $ 
  */
 
 import java.io.*;
@@ -134,10 +134,10 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 				
 				// if we are working on a enclosed type that is open in an editor,
 				// then replace the enclosing type with its working copy
-				IType workingCopy= (IType) EditorUtility.getWorkingCopy(enclosingType);
+				/*IType workingCopy= (IType) (ICompilationUnit)enclosingType.getCompilationUnit();
 				if (workingCopy != null) {
 					enclosingType= workingCopy;
-				}
+				}*/
 	
 				ICompilationUnit parentCU= enclosingType.getCompilationUnit();
 					

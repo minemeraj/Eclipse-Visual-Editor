@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-17 20:28:01 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-20 14:55:59 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -23,7 +23,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.ui.refactoring.RefactoringPreferences;
+import org.eclipse.jdt.internal.ui.refactoring.RefactoringSavePreferences;
 import org.eclipse.jdt.internal.ui.text.correction.LinkedNamesAssistProposal;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.jface.text.ITextViewer;
@@ -415,7 +415,7 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 			public void run() {
 			  try {
 				fDecoder.getBeanModel().suspendSynchronizer();				
-				ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(cu);
 				CompilationUnit cuNode = (CompilationUnit) parser.createAST(null);
 				BPVarFinderVisitor visitor = new BPVarFinderVisitor(oldVarName, methodName, paramNames);
@@ -440,7 +440,7 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 								methodName.length()==varNameLower.length()+3){
 									//	Excatly of the form get<VarName>()
 									String newMethodName = "get" + newFieldName.toUpperCase(Locale.getDefault()).charAt(0) + newFieldName.substring(1);
-									parser = ASTParser.newParser(AST.LEVEL_2_0);
+									parser = ASTParser.newParser(AST.JLS2);
 									parser.setSource(cu);
 									cuNode = (CompilationUnit) parser.createAST(null);
 									String getterMethodName = bpRetMethod.getElementName();
@@ -486,8 +486,8 @@ protected void performGlobalRename(BeanPart nameChangedBP, final IField bpField,
 	nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite().getShell().getDisplay().asyncExec(
 		new Runnable() {
 			public void run() {
-				boolean previousRefactoringSaveEditors = RefactoringPreferences.getSaveAllEditors();
-				RefactoringPreferences.setSaveAllEditors(true);
+				boolean previousRefactoringSaveEditors = RefactoringSavePreferences.getSaveAllEditors();
+				RefactoringSavePreferences.setSaveAllEditors(true);
 				try {
 					RenameSupport rename =
 							RenameSupport.create(
@@ -504,7 +504,7 @@ protected void performGlobalRename(BeanPart nameChangedBP, final IField bpField,
 				} catch (InvocationTargetException e) {
 					JavaVEPlugin.log(e, Level.WARNING);
 				}finally{
-					RefactoringPreferences.setSaveAllEditors(previousRefactoringSaveEditors);
+					RefactoringSavePreferences.setSaveAllEditors(previousRefactoringSaveEditors);
 				}
 			}
 		}
