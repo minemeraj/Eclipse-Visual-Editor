@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-08 01:19:05 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-14 21:45:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -216,5 +216,30 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			}
 		}		
 		return super.generate(args);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#primIsDeleted()
+	 */
+	public boolean primIsDeleted() {
+		boolean result = super.primIsDeleted();
+		if (!result) {
+			// See if there is a 'control' expression
+			EObject parent = getParent().getEObject();
+			BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+			ICodeGenAdapter[] list = pAdapter.getSettingAdapters(getControlSF());
+			ExpressionDecoderAdapter adapter = null;
+			for (int i = 0; list!=null && i < list.length; i++) {
+				if (list[i] instanceof ExpressionDecoderAdapter) {
+					adapter = (ExpressionDecoderAdapter)list[i] ;
+					if (!adapter.getDecoder().getBeanPart().equals(fbeanPart))
+							adapter = null;
+					else						
+					        break;
+				}
+			}
+			if (adapter==null) return true;
+			return adapter.getDecoder().isDeleted();
+		}
+		return result;
 	}
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-08 01:19:05 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-14 21:45:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.ast.MessageSend;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -346,13 +346,27 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		return (!cRef.equals(pRef));
 	}
 	
+	
+	protected CodeExpressionRef generateInitExpression() {
+		ExpressionRefFactory eGen = new ExpressionRefFactory(fAddedPart, JavaInstantiation.getAllocationFeature((IJavaInstance)fAddedPart.getEObject()));		
+		try {
+			CodeExpressionRef newExpr = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
+			newExpr.insertContentToDocument();
+			return newExpr;
+
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e);
+		}		
+		return null;
+	}
+	
 	/**
 	 * In the case that noSRC expression is needed, the Constructor becomes the master
 	 * of this expression ... for z ordering
 	 * @return
 	 * @todo Generated comment
 	 */
-	protected CodeExpressionRef getMaster() {
+	protected CodeExpressionRef getInitExpression() {
 		Iterator itr = fAddedPart.getRefExpressions().iterator();
 		while (itr.hasNext()) {
 			CodeExpressionRef e = (CodeExpressionRef) itr.next();
@@ -365,7 +379,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
 				return e;
 		}
-		return null;
+		return generateInitExpression();
 	}
 	
 	/* (non-Javadoc)
@@ -381,7 +395,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		else {
 			// This feature has no src.
 			fOwner.getExprRef().setNoSrcExpression(true);
-			CodeExpressionRef master = getMaster() ;
+			CodeExpressionRef master = getInitExpression() ;
 			fOwner.getExprRef().setMasterExpression(master);
 			if (master.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 				// master was not generated yet, .. snooze it
