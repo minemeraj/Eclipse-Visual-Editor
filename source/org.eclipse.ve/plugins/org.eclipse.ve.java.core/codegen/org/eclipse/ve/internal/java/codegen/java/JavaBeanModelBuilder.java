@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.20 $  $Date: 2004-12-01 17:09:08 $ 
+ *  $Revision: 1.21 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -240,7 +240,8 @@ protected void cleanModel () {
 		if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
 			if (BeanPartFactory.getInstanceInitializationExpr(bean) == null && !bean.isInstanceInstantiation()){
 //			    &&  (bean.getReturnedMethod() == null || bean.getRefExpressions().isEmpty())) {
-				JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
 				removeFlag = true;
 			}
 		}
@@ -349,7 +350,8 @@ protected  void analyzeEvents() {
  */  
 public IBeanDeclModel build () throws CodeGenException {
 
-JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; //$NON-NLS-1$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; //$NON-NLS-1$
 
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.12 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -126,7 +126,8 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
       	CodeGenUtil.eSet(target.getEObject(), fFmapper.getFeature(null), toAdd.getEObject(), index) ;
       }
       }
-      JavaVEPlugin.log("DelegateRelationShipDecoderHelper.add("+toAdd+","+target+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+      	JavaVEPlugin.log("DelegateRelationShipDecoderHelper.add("+toAdd+","+target+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 }
 
 /**

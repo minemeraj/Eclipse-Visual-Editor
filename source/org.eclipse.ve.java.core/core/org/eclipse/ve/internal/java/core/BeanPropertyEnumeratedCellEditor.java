@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEnumeratedCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -118,11 +118,15 @@ public void setData(Object data){
 			fBeanProxies[i] = fBeanTypeProxy.newInstance(fInitStrings[i]);
 		}
 	} catch ( ThrowableProxy exc ) {
-		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, Level.WARNING);
-	} catch (InstantiationException exc) {			
-		JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, Level.WARNING);
+		if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc, Level.WARNING);
+		}
+	} catch (InstantiationException exc) {
+		if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc, Level.WARNING);
+		}
 	}		
 }
 }

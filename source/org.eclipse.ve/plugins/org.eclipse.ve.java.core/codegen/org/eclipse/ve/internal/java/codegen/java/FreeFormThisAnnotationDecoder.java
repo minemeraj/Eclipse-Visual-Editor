@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.logging.Level;
@@ -151,64 +151,64 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IAnnotationDecoder#reflectMOFchange()
 	 */
 	public void reflectMOFchange() {
-		
-	 synchronized (fBeanpart.getModel().getDocumentLock()) {
-        
-        try {
-         
-          String src = getDesignatedAnnotationString(fBeanpart.getModel().getCompilationUnit()) ;
-          ICodeGenSourceRange curSR = getDesignatedAnnotationRange(fBeanpart.getModel().getCompilationUnit()) ;
-          if (src == null || curSR == null) {
-          	JavaVEPlugin.log("FFThisAnnotationDecoder.reflectMOFchange(): Could not insert THIS FF annotation",Level.FINE) ; //$NON-NLS-1$
-          	return ;          	
-          }
-          String newSrc = null ;
-          int len ;
-                     
-          String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src) ;
-          
-          if (curAnnotation == null) {
-            // Brand New Anotation 
-              newSrc = generate(null,null) ;
-              if (newSrc == null || newSrc.length() == 0) {
-                JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", Level.WARNING) ; //$NON-NLS-1$
-                return ;
-              }
-              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc; 
-              
-              int commentStart = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
-              commentStart = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, commentStart);
-              if (commentStart <0)
-                 len = 0 ;                    
-              else
-                 len = commentStart + FreeFormAnnotationTemplate.ANNOTATION_START.length() ;                 
-              
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Creating FF annotation", Level.FINE) ;                          //$NON-NLS-1$
-          }
-          else {
-              JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
-              newSrc = generate(null,null) ;
-              if(newSrc!=null && newSrc.length()>0)
-              	newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
-              int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
-              s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
-              int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;
-              len = end+1 ;                
-          }
-              
 
-          fBeanpart.getModel().getDocumentBuffer().replace(curSR.getOffset(),len,newSrc) ;
-		  // update offsets
-		  fBeanpart.getModel().driveExpressionChangedEvent(null, curSR.getOffset(), newSrc.length()-len) ;
-		  
-		  JavaVEPlugin.log(newSrc, Level.FINE) ;
-        }
-        catch (Exception e) {
-            JavaVEPlugin.log(e, Level.WARNING) ;
-        }
-     }
-        
-    }
+		synchronized (fBeanpart.getModel().getDocumentLock()) {
+
+			try {
+
+				String src = getDesignatedAnnotationString(fBeanpart.getModel().getCompilationUnit());
+				ICodeGenSourceRange curSR = getDesignatedAnnotationRange(fBeanpart.getModel().getCompilationUnit());
+				if (src == null || curSR == null) {
+					JavaVEPlugin.log("FFThisAnnotationDecoder.reflectMOFchange(): Could not insert THIS FF annotation", Level.FINE); //$NON-NLS-1$
+					return;
+				}
+				String newSrc = null;
+				int len;
+
+				String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src);
+
+				if (curAnnotation == null) {
+					// Brand New Anotation
+					newSrc = generate(null, null);
+					if (newSrc == null || newSrc.length() == 0) {
+						if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+							JavaVEPlugin.log(fBeanpart.getUniqueName() + " No FF annotation.", Level.WARNING); //$NON-NLS-1$
+						return;
+					}
+					newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
+
+					int commentStart = FreeFormAnnotationTemplate.getAnnotationStart(src);
+					commentStart = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, commentStart);
+					if (commentStart < 0)
+						len = 0;
+					else
+						len = commentStart + FreeFormAnnotationTemplate.ANNOTATION_START.length();
+
+					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+						JavaVEPlugin.log(fBeanpart.getUniqueName() + " Creating FF annotation", Level.FINE); //$NON-NLS-1$
+				} else {
+					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+						JavaVEPlugin.log(fBeanpart.getUniqueName() + " Updating FF annotation", Level.FINE); //$NON-NLS-1$
+					newSrc = generate(null, null);
+					if (newSrc != null && newSrc.length() > 0)
+						newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
+					int s = FreeFormAnnotationTemplate.getAnnotationStart(src);
+					s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
+					int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s);
+					len = end + 1;
+				}
+
+				fBeanpart.getModel().getDocumentBuffer().replace(curSR.getOffset(), len, newSrc);
+				// update offsets
+				fBeanpart.getModel().driveExpressionChangedEvent(null, curSR.getOffset(), newSrc.length() - len);
+
+				JavaVEPlugin.log(newSrc, Level.FINE);
+			} catch (Exception e) {
+				JavaVEPlugin.log(e, Level.WARNING);
+			}
+		}
+
+	}
 }
 
 

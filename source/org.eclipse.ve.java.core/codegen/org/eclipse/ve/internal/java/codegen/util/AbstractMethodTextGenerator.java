@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.12 $  $Date: 2004-06-21 16:23:34 $ 
+ *  $Revision: 1.13 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -243,7 +243,8 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 				String src = newExpr.getContent();
 				if (src == null)
 					throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-				JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
 			}
 		}
 	}

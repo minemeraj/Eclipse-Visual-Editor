@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -201,24 +201,32 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		if (targetClass == null || targetClass.getInitializationError() != null) {
 			// The target class is invalid.
 			Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {JavaMessages.getString("BasicAllocationProcesser.unknown_ERROR_")})); //$NON-NLS-1$ //$NON-NLS-2$
-			JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			JavaVEPlugin.log(exc, Level.WARNING);
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
 			throw new AllocationException(exc);			
 		}
 		
 		try { 					
 			return initializationString != null ? targetClass.newInstance(initializationString) : targetClass.newInstance();
 		} catch ( ThrowableProxy exc ) {
-			JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-			JavaVEPlugin.log(exc, Level.WARNING);
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
 			throw new AllocationException(exc);
 		} catch (InstantiationException exc) {
-			JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
-			JavaVEPlugin.log(exc, Level.WARNING);
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
 			throw new AllocationException(exc);
-		} catch (ClassCastException exc){				
-			JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$				
-			JavaVEPlugin.log(exc, Level.WARNING);
+		} catch (ClassCastException exc){
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Could not instantiate " + targetClass.getTypeName() + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$				
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
 			throw new AllocationException(exc);			
 		}
 	}

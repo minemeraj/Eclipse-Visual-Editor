@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.15 $  $Date: 2004-12-16 18:36:42 $ 
  */
 
 import java.util.*;
@@ -134,7 +134,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		EStructuralFeature cf = CodeGenUtil.getComponentFeature(targetContainer);
 		java.util.List compList = (java.util.List) targetContainer.eGet(cf);
-		JavaVEPlugin.log("ContainerAddDecoderHelper(" + componentToAdd.eClass() + "," + targetContainer.eClass() + "@" + index + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+			JavaVEPlugin.log("ContainerAddDecoderHelper(" + componentToAdd.eClass() + "," + targetContainer.eClass() + "@" + index + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (index < 0)
 			compList.add(CC);
 		else

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -109,8 +109,10 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 				ownsProxy = true;
 			} catch (ThrowableProxy exc) {
 				processInstantiationError(exc);
-				JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, Level.WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(exc, Level.WARNING);
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, Level.WARNING); //$NON-NLS-1$
+					JavaVEPlugin.log(exc, Level.WARNING);
+				}
 			}
 		}
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.logging.Level;
 
@@ -61,8 +61,10 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 				fSFname = ((EStructuralFeature) fSF).getName();
 				fPD = Utilities.getPropertyDecorator((EModelElement) sf);
 			} catch (Throwable e) {
-				JavaVEPlugin.log("Utilities.getPropertyDecorator on:" + sf, Level.WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(e, Level.WARNING);
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+					JavaVEPlugin.log("Utilities.getPropertyDecorator on:" + sf, Level.WARNING); //$NON-NLS-1$
+					JavaVEPlugin.log(e, Level.WARNING);
+				}
 			}
 			if (fPD == null && isFieldAccess(sf)) {
 				fisMethod = false;

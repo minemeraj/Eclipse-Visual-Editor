@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -42,16 +42,17 @@ static public ResourceSet fdecoratorRSCache = null ;
 
 
 private List primGetDecorators(EObject metaObject) {
-    
-     JavaVEPlugin.log("AttributeFeatureMapper.primGetDecorators: "+((EClass) metaObject).getName(), Level.FINEST) ; //$NON-NLS-1$
-     EList properties = ((JavaClass)metaObject).getAllProperties() ;
-	 fdecoratorCache.put(metaObject,properties) ;
-     Iterator itr = Utilities.getPropertiesIterator(properties);
-     ArrayList list = new ArrayList() ;
-     while (itr.hasNext()) {
-         list.add(itr.next()) ;
-     }
-     return list ;    
+
+	if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+		JavaVEPlugin.log("AttributeFeatureMapper.primGetDecorators: " + ((EClass) metaObject).getName(), Level.FINEST); //$NON-NLS-1$
+	EList properties = ((JavaClass) metaObject).getAllProperties();
+	fdecoratorCache.put(metaObject, properties);
+	Iterator itr = Utilities.getPropertiesIterator(properties);
+	ArrayList list = new ArrayList();
+	while (itr.hasNext()) {
+		list.add(itr.next());
+	}
+	return list;
 }
 
 /**
@@ -79,7 +80,8 @@ protected Iterator getPropertiesIterator(EObject obj) {
      
     if (fdecoratorRSCache==null || rs != fdecoratorRSCache) {
         // Poor Man's cache at this point
-        JavaVEPlugin.log("AttributeFeatureMapper.getPropertiesIterator():  *ClearingCache*", Level.FINE) ; //$NON-NLS-1$
+    	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+    		JavaVEPlugin.log("AttributeFeatureMapper.getPropertiesIterator():  *ClearingCache*", Level.FINE) ; //$NON-NLS-1$
         fdecoratorCache.clear();
         fdecoratorRSCache = rs ;
     }
@@ -157,7 +159,8 @@ public EStructuralFeature getFeature (Statement exprStmt) {
 				fPD = pd;
 				break;
 			} catch (Exception e) {
-				JavaVEPlugin.log("AttributeFeatureMapper.getFeature() : " + e, Level.WARNING); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+					JavaVEPlugin.log("AttributeFeatureMapper.getFeature() : " + e, Level.WARNING); //$NON-NLS-1$
 				continue;
 			}
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.70 $  $Date: 2004-12-06 20:38:30 $ 
+ *  $Revision: 1.71 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1234,7 +1234,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		
 		if (codeGenAdapter == null) {
-			JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + notifier, //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("JavaVisualEditorPart.markerProcessed(): No CodeGen Adapter on: " + notifier, //$NON-NLS-1$
 					Level.FINE);
 		} else {
 			try {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.List;
@@ -187,7 +187,8 @@ public class BeanProxyUtilities {
 			return proxyDomain.getProxyFactoryRegistry();
 		} else {
 			// TODO Is this really a good thing to do"); //$NON-NLS-1$
-			JavaVEPlugin.log("Unable to find a proxy factory registry for " + anEditPart, Level.WARNING); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log("Unable to find a proxy factory registry for " + anEditPart, Level.WARNING); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -397,8 +398,10 @@ public class BeanProxyUtilities {
 		try {
 			return aMethodProxy.invoke(aReceiver);
 		} catch (ThrowableProxy exc) {
-			JavaVEPlugin.log("Error invoking " + aMessageName, Level.WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc, Level.WARNING);
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Error invoking " + aMessageName, Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
 			return null;
 		}
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.15 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -450,7 +450,8 @@ public void notifyChanged(Notification msg) {
 				if (!CDEUtilities.isUnset(msg)) {
 
 					if (msg.getFeature().equals(getEventsSF())) {
-						JavaVEPlugin.log("Event feature setting ?????? on : "+msg.getNewValue(),Level.FINE); //$NON-NLS-1$
+						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+							JavaVEPlugin.log("Event feature setting ?????? on : "+msg.getNewValue(),Level.FINE); //$NON-NLS-1$
 					}
 					else
 						setElement(msg);
@@ -477,7 +478,8 @@ public void notifyChanged(Notification msg) {
 		         //noOp
 		         break;
 			default :
-				JavaVEPlugin.log(this +" No action= ????? (" + msg.getEventType() + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log(this +" No action= ????? (" + msg.getEventType() + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 
 		}

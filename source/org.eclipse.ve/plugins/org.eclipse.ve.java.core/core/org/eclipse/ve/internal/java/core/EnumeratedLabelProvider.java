@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
 /*
- * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.5 $ $Date: 2004-08-27 15:34:09 $
+ * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.6 $ $Date: 2004-12-16 18:36:14 $
  */
 import java.util.logging.Level;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -51,11 +51,15 @@ public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProv
 					enumeratedValues[i] = aBeanTypeProxy.newInstance(fInitStrings[i]);
 				}
 			} catch (ThrowableProxy exc) {
-				JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(exc, Level.WARNING);
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+					JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+					JavaVEPlugin.log(exc, Level.WARNING);
+				}
 			} catch (InstantiationException exc) {
-				JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-				JavaVEPlugin.log(exc, Level.WARNING);
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+					JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+					JavaVEPlugin.log(exc, Level.WARNING);
+				}
 			}
 			registry.registerConstants(this, enumeratedValues);
 		}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:46 $ 
+ *  $Revision: 1.5 $  $Date: 2004-12-16 18:36:42 $ 
  */
 
 import java.io.*;
@@ -256,7 +256,8 @@ public class ImageDataCollector implements ICallback {
 				createImageData(new DataInputStream(is));
 				break;
 			default:
-				JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+					JavaVEPlugin.log("Invalid callback in ImageDataCollector="+msgID, Level.WARNING);	//$NON-NLS-1$
 		}
 	}
 	

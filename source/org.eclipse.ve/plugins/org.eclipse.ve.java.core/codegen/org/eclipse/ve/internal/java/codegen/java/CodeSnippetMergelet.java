@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -166,87 +166,96 @@ private CodeEventRef createNewEventExpression(CodeEventRef e, CodeMethodRef m, b
 	return newe ;
 }
 
-private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRef oExp, CodeMethodRef oMethod, int status) throws CodeGenException {
-	
-	    boolean updated = false ;
+	private boolean processExpressionDelta(CodeExpressionRef dExp, CodeExpressionRef oExp, CodeMethodRef oMethod, int status) throws CodeGenException {
+
+		boolean updated = false;
 		if (oExp != null && dExp != null && !dExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
-			if (oExp.isEquivalent(dExp) < 0) throw new CodeGenException("No the same Expressions"); //$NON-NLS-1$
+			if (oExp.isEquivalent(dExp) < 0)
+				throw new CodeGenException("No the same Expressions"); //$NON-NLS-1$
 			oExp.setExprStmt(dExp.getExprStmt());
 		}
-        if (oExp != null && dExp != null)
-           oExp.updateLimboState(dExp) ;
-        if (oExp == null && status != ICodeDelta.ELEMENT_ADDED && status != ICodeDelta.ELEMENT_UNDETERMINED) {
-            JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta(): could not find"+dExp, //$NON-NLS-1$
-                                                Level.FINE) ;
-        }
-        switch (status) { 
-        	case ICodeDelta.ELEMENT_UNDETERMINED:                 
-                 JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta() In Limbo: "+oExp, //$NON-NLS-1$
-                                                     Level.FINE) ;
-                 if (oExp != null)  
-                    oExp.setState(CodeExpressionRef.STATE_EXP_IN_LIMBO, true) ;
-                    
-                 // VCE model is not updated
-        		 break;
-        	case ICodeDelta.ELEMENT_UPDATED_OFFSETS:
-        		 oExp.setOffset(dExp.getOffset());
-        		 // No need to refresh when a shadow expression 
-        		 // We also do not care about event ordering
-        		 if(!(dExp instanceof CodeEventRef))
-        		 	// Will take care of reordering of expressions
-        		 	oExp.refreshFromJOM(dExp); 
-        	     break;
-        	case ICodeDelta.ELEMENT_NO_CHANGE:   
-                 if (oExp != null)
-                    oExp.setContent(dExp.getContentParser())  ;
-        	     break ;        	   
-        	case ICodeDelta.ELEMENT_CHANGED:
-                 if (oExp != null) {
-                 	if (oExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-                 		// Change in a "new" statement we can not refresh at this point
-                 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true) ;
-                 		return false  ;
-                 	}
-                 	if(oExp.getOffset()!=dExp.getOffset())
-                 		oExp.setOffset(dExp.getOffset());
-        	        oExp.refreshFromJOM(dExp);                 
-        	        updated = true ;
-                 }
-        	     break ;
-        	case ICodeDelta.ELEMENT_DELETED:
-                 if (oExp != null) {
-                    if (oExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-                 		// Change in a "new" statement we can not refresh at this point
-                 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true) ;
-                 		return false ;
-                 	}                           	       
-        	       oExp.dispose() ;
-        	       updated = true ;
-                 }
-        	     break ;
-        	case ICodeDelta.ELEMENT_ADDED:
-                 try {
-                  if (dExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-                 		// Change in a "new" statement we can not refresh at this point
-                 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true) ;
-                 		return false ;
-                   }
-                   CodeExpressionRef newExp = createNewExpression(dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
-        	       if(newExp==null && dExp instanceof CodeEventRef)
-        	       	   newExp = createNewEventExpression((CodeEventRef)dExp,oMethod,!dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
-        	       updated = true ;
-                 }
-                 catch (CodeGenException e) {} ; // Do not create dup expressions
-        	     break ;
-        	default:
-        	     throw new CodeGenException("Invalid Status") ; //$NON-NLS-1$
-        }	
-        return updated ;
-}
+		if (oExp != null && dExp != null)
+			oExp.updateLimboState(dExp);
+		if (oExp == null && status != ICodeDelta.ELEMENT_ADDED && status != ICodeDelta.ELEMENT_UNDETERMINED) {
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta(): could not find" + dExp, //$NON-NLS-1$
+						Level.FINE);
+		}
+		switch (status) {
+			case ICodeDelta.ELEMENT_UNDETERMINED:
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("CodeSnippetMergelent.processExpressionDelta() In Limbo: " + oExp, //$NON-NLS-1$
+							Level.FINE);
+				if (oExp != null)
+					oExp.setState(CodeExpressionRef.STATE_EXP_IN_LIMBO, true);
+
+				// VCE model is not updated
+				break;
+			case ICodeDelta.ELEMENT_UPDATED_OFFSETS:
+				oExp.setOffset(dExp.getOffset());
+				// No need to refresh when a shadow expression
+				// We also do not care about event ordering
+				if (!(dExp instanceof CodeEventRef))
+					// Will take care of reordering of expressions
+					oExp.refreshFromJOM(dExp);
+				break;
+			case ICodeDelta.ELEMENT_NO_CHANGE:
+				if (oExp != null)
+					oExp.setContent(dExp.getContentParser());
+				break;
+			case ICodeDelta.ELEMENT_CHANGED:
+				if (oExp != null) {
+					if (oExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+						// Change in a "new" statement we can not refresh at this point
+						fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+						return false;
+					}
+					if (oExp.getOffset() != dExp.getOffset())
+						oExp.setOffset(dExp.getOffset());
+					oExp.refreshFromJOM(dExp);
+					updated = true;
+				}
+				break;
+			case ICodeDelta.ELEMENT_DELETED:
+				if (oExp != null) {
+					if (oExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+						// Change in a "new" statement we can not refresh at this point
+						fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+						return false;
+					}
+					oExp.dispose();
+					updated = true;
+				}
+				break;
+			case ICodeDelta.ELEMENT_ADDED:
+				try {
+					if (dExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+						// Change in a "new" statement we can not refresh at this point
+						fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+						return false;
+					}
+					CodeExpressionRef newExp = createNewExpression(dExp, oMethod, !dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState()
+																																	  // &
+																																	  // dExp.STATE_NO_OP)
+																																	  // !=
+																																	  // dExp.STATE_NO_OP))
+																																	  // ;
+					if (newExp == null && dExp instanceof CodeEventRef)
+						newExp = createNewEventExpression((CodeEventRef) dExp, oMethod, !dExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
+					updated = true;
+				} catch (CodeGenException e) {
+				}
+				; // Do not create dup expressions
+				break;
+			default:
+				throw new CodeGenException("Invalid Status"); //$NON-NLS-1$
+		}
+		return updated;
+	}
 
 
 /**
- *  JCMMethod is already in the BDM, update changes to its content
+ * JCMMethod is already in the BDM, update changes to its content
  */
 private boolean updateMethodDelta (CodeMethodRef m, List deleteList) throws CodeGenException {
 
@@ -350,7 +359,8 @@ public boolean updateBDM(IBeanDeclModel model) throws CodeGenException {
 	}
 	else { // Instance Variable update
 	 	// TBD
-	 	JavaVEPlugin.log("CodeSnippetMerglent.updateBDM() : no CodeMethodRef", Level.WARNING) ; //$NON-NLS-1$
+		if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+			JavaVEPlugin.log("CodeSnippetMerglent.updateBDM() : no CodeMethodRef", Level.WARNING) ; //$NON-NLS-1$
 	}
 	return modelUpdated ;
 }

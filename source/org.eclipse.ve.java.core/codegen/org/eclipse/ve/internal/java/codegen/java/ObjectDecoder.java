@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 
@@ -70,18 +70,18 @@ protected void initialFeatureMapper(EStructuralFeature sf) {
 }
 
 
-protected void initialDecoderHelper() {
-	// Bind an Attribute Mapper
-	if (fFeatureMapper.getFeature(null).equals(getAllocationFeature((IJavaObjectInstance)fbeanPart.getEObject())))
-		fhelper = new ConstructorDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
-	else if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance)fbeanPart.getEObject(), false))  {
-        JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for "+fFeatureMapper.getFeature(null), //$NON-NLS-1$
-        Level.FINE) ;
-        fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr,  fFeatureMapper, this);
-    }
-    else
-	   fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this) ;	
-}
+	protected void initialDecoderHelper() {
+		// Bind an Attribute Mapper
+		if (fFeatureMapper.getFeature(null).equals(getAllocationFeature((IJavaObjectInstance) fbeanPart.getEObject())))
+			fhelper = new ConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+		else if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance) fbeanPart.getEObject(), false)) {
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for " + fFeatureMapper.getFeature(null), //$NON-NLS-1$
+						Level.FINE);
+			fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+		} else
+			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+	}
 
 
 protected boolean isAnyAttributeSet(IJavaObjectInstance obj) {

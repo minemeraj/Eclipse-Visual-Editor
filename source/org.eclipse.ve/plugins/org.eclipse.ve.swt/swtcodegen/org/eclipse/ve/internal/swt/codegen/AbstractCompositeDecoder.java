@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-20 15:58:49 $ 
+ *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:31 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -23,6 +24,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
  * @author Gili Mendel
@@ -78,7 +80,8 @@ public abstract class AbstractCompositeDecoder extends SWTControlDecoder {
 			try {
 				value = component.eGet(sf);
 			} catch (Exception e) {
-				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("AbstractCompositeDecoder.getChildren() Error: Obj= " + component + " SF: " + sf); //$NON-NLS-1$ //$NON-NLS-2$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+					JavaVEPlugin.log("AbstractCompositeDecoder.getChildren() Error: Obj= " + component + " SF: " + sf); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (value == null || (!(value instanceof IJavaObjectInstance)))
 				continue;

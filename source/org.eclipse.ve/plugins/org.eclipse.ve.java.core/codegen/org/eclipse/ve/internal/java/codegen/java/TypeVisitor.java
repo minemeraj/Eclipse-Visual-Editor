@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-11-16 18:52:58 $ 
+ *  $Revision: 1.10 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.*;
@@ -213,7 +213,8 @@ public void visit()  {
 				}
 			}
 		    catch (Exception e) {
-			   JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+		    	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+		    		JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
 		    }
 		}		
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2004-10-13 16:20:21 $ 
+ *  $Revision: 1.28 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.Iterator;
@@ -222,8 +222,8 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
             {
             	// Could not match delta for the existing expression
             	// At this time will not preserve existing
-    			JavaVEPlugin.log(
-    				"SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.FINE); //$NON-NLS-1$
+            	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+            		JavaVEPlugin.log("SimpleAttr.DecoderHelper.primRefreshFromComposition(): Error", Level.FINE); //$NON-NLS-1$
     			return generate(null);
     		}
     		positions[0]++ ;
@@ -285,7 +285,8 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		// TODO  Should cache this in the Feature Mapper
 		String mtd = fFmapper.getMethodName();
         if (mtd == null) {
-            JavaVEPlugin.log("No Write JCMMethod found for "+fFmapper.getFeature(null)+" on "+fbeanPart.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+        	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+        		JavaVEPlugin.log("No Write JCMMethod found for "+fFmapper.getFeature(null)+" on "+fbeanPart.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
             return null ;
         }
 		String sel = fbeanPart.getSimpleName();

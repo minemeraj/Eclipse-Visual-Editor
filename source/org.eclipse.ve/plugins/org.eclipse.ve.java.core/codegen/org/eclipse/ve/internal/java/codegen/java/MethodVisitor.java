@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-11-16 18:52:56 $ 
+ *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.List;
@@ -168,7 +168,7 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
       	ExpressionVisitor v = new ExpressionVisitor(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater);
       	v.setProgressMonitor(getProgressMonitor());
       	v.visit();
-      }else
+      }else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
          JavaVEPlugin.log ("\t[JCMMethod] Visitor did not processAStatement : "+stmt, Level.FINE) ; //$NON-NLS-1$
 }	
 	
@@ -206,7 +206,8 @@ public void visit() {
 	// and set its content pane with an instance JPanel, we will loose it as
 	// the JFrame is local and would not put in the FF
 	if (fMethod.getDeclMethod().isConstructor()) {
-		JavaVEPlugin.log("Skiping Custructor parsing: "+fMethod.getMethodName()) ; //$NON-NLS-1$
+		if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+			JavaVEPlugin.log("Skiping Custructor parsing: "+fMethod.getMethodName()) ; //$NON-NLS-1$
 		return ;
 	}	
 	

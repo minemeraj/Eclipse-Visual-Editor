@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.17 $  $Date: 2004-12-16 18:36:14 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -45,6 +45,8 @@ import org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider;
 
 import org.eclipse.ve.internal.propertysheet.DefaultWrapperedValidator;
 import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
+
+import com.ibm.wtp.common.logger.proxy.Logger;
 
 /**
  * The creation method for BeanProperties is different than for regular MOF properties
@@ -90,7 +92,9 @@ public CellEditor createPropertyEditor(Composite parent){
 			editorClassNameAndData = classNameAndData;	// Set here so that if class not found, this left null
 		} catch (ClassNotFoundException e) {
 			// One specified, but incorrect, log it, but continue and see if we can get another way.
-			JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+			Logger logger = JavaVEPlugin.getPlugin().getLogger();
+			if (logger.isLoggingLevel(Level.WARNING))
+					logger.log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 		}
 	}
 	
@@ -151,7 +155,9 @@ public CellEditor createPropertyEditor(Composite parent){
 					editorClassNameAndData = classNameAndData;	// Set here so that left unset if class not found.
 				} catch (ClassNotFoundException e) {
 					// One specified, but incorrect, log it, but continue and see if we can get another way.
-					JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e), Level.WARNING); //$NON-NLS-1$
+					Logger logger = JavaVEPlugin.getPlugin().getLogger();
+					if (logger.isLoggingLevel(Level.WARNING))
+						logger.log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e), Level.WARNING); //$NON-NLS-1$
 				}
 			}
 				
@@ -423,8 +429,11 @@ protected CellEditor createCellEditorInstance(Class clazz,Composite aComposite, 
 		if (validator != null)
 			editor.setValidator(validator);
 	} catch (Exception exc) {
-		String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] {clazz});		 //$NON-NLS-1$
-		JavaVEPlugin.getPlugin().getLogger().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc), Level.WARNING);
+		Logger logger = JavaVEPlugin.getPlugin().getLogger();
+		if (logger.isLoggingLevel(Level.WARNING)) {
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz}); //$NON-NLS-1$
+			logger.log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc), Level.WARNING);
+		}
 	}
 	return editor;
 }

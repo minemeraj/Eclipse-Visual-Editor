@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UserOverideRuleProvider.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.7 $  $Date: 2004-12-16 18:36:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -88,7 +88,8 @@ public class UserOverideRuleProvider implements IRuleProvider {
 				if (fRule == null) {
 					// Need to compile
 					if (!fsrcFile.canRead()) {
-						JavaVEPlugin.log("UserOverideRuleProvider: Can not read source file: " + fsrcFile.getAbsolutePath(), //$NON-NLS-1$
+						if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+							JavaVEPlugin.log("UserOverideRuleProvider: Can not read source file: " + fsrcFile.getAbsolutePath(), //$NON-NLS-1$
 								Level.WARNING);
 						return null;
 					}
@@ -107,7 +108,8 @@ public class UserOverideRuleProvider implements IRuleProvider {
 
 				fRule.setRegistry(ruleRegistry);
 			} catch (Exception ex) {
-				JavaVEPlugin.log("UserOverideRuleProvider.getRule(): " + ex.getMessage(), //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+					JavaVEPlugin.log("UserOverideRuleProvider.getRule(): " + ex.getMessage(), //$NON-NLS-1$
 						Level.WARNING);
 			} finally {
 				if (in != null)

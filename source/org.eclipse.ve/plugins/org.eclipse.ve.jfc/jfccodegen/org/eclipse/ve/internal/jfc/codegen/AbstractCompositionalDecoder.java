@@ -12,9 +12,10 @@ package org.eclipse.ve.internal.jfc.codegen;
 
 /*
  *  $RCSfile: AbstractCompositionalDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.6 $  $Date: 2004-12-16 18:36:42 $ 
  */
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -23,6 +24,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public abstract class AbstractCompositionalDecoder extends ContainerDecoder {
 
@@ -72,7 +74,8 @@ public abstract class AbstractCompositionalDecoder extends ContainerDecoder {
 			try {
 				value = component.eGet(sf);
 			} catch (Exception e) {
-				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("AbstractCompotionDecoder.getChildren() Error: Obj= " + component + " SF: " + sf); //$NON-NLS-1$ //$NON-NLS-2$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+					JavaVEPlugin.log("AbstractCompotionDecoder.getChildren() Error: Obj= " + component + " SF: " + sf); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (value == null || (!(value instanceof IJavaObjectInstance)))
 				continue;

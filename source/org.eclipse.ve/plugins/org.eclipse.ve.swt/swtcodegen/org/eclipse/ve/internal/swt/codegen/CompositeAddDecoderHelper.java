@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2004-09-02 14:42:20 $ 
+ *  $Revision: 1.15 $  $Date: 2004-12-16 18:36:31 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -284,7 +284,8 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		int end = start<0 ? -1 : 	          
 						  expSig.lastIndexOf(")"); //$NON-NLS-1$
 		if (start<0 || end<0) {
-			JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", Level.WARNING) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log ("NoConstraintAdDecoderHelper.primRefreshFromComposition(): Error", Level.WARNING) ; //$NON-NLS-1$
 			return expSig ;
 		}
 		

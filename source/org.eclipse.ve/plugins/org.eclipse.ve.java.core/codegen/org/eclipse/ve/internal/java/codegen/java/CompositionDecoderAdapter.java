@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -51,45 +51,48 @@ public CompositionDecoderAdapter (BeanPart b) {
 /**
  * When methods are added to bean subclass, we want to attach MemberDecoderAdapter to them
  */
-protected void processMethods(Notification msg) {
+	protected void processMethods(Notification msg) {
 
-	switch ( msg.getEventType()) {		
+		switch (msg.getEventType()) {
 			case Notification.ADD_MANY:
 			case Notification.REMOVE_MANY:
-                 List al = (List) msg.getNewValue() ;
-                 int i = 0 ;
-                 Iterator aitr = al.iterator() ;
-                 int pos = msg.getPosition();
-                 int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE ;
-                 while (aitr.hasNext()) {
-                 	int mpos = pos<0 ? pos : pos + i++ ;
-                 	Object o = aitr.next() ;
-                 	processMethods(new ENotificationImpl((InternalEObject)msg.getNotifier(), type, (EStructuralFeature) msg.getFeature(), null, o, mpos)) ;
-                 }             
-             break ;
-		case Notification.ADD :
-			  MemberDecoderAdapter a = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(((EObject)msg.getNewValue()).eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
-		      // looking for a MemberDecoeder Adapter Only
-		      if (!a.getClass().isAssignableFrom(MemberDecoderAdapter.class))
-		      	a = null;
-		      if (a==null) {
-			      a = new MemberDecoderAdapter(fbeanModel) ;
-			      a.setTarget((Notifier)msg.getNewValue()) ;
-			      ((Notifier)msg.getNewValue()).eAdapters().add(a) ;
-		      }
-		case Notification.REMOVE :
-		     if (msg.getOldValue() != null) {
-		         Adapter oa = EcoreUtil.getExistingAdapter((Notifier)msg.getOldValue(), ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
-		         if (oa != null)
-		            ((Notifier)msg.getOldValue()).eAdapters().remove(oa) ;
-		      }		     
-		     break ;		     		    
-	      default:
-	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
-	           return ;
+				List al = (List) msg.getNewValue();
+				int i = 0;
+				Iterator aitr = al.iterator();
+				int pos = msg.getPosition();
+				int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE;
+				while (aitr.hasNext()) {
+					int mpos = pos < 0 ? pos : pos + i++;
+					Object o = aitr.next();
+					processMethods(new ENotificationImpl((InternalEObject) msg.getNotifier(), type, (EStructuralFeature) msg.getFeature(), null, o,
+							mpos));
+				}
+				break;
+			case Notification.ADD:
+				MemberDecoderAdapter a = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(((EObject) msg.getNewValue()).eContainer(),
+						ICodeGenAdapter.JVE_MEMBER_ADAPTER);
+				// looking for a MemberDecoeder Adapter Only
+				if (!a.getClass().isAssignableFrom(MemberDecoderAdapter.class))
+					a = null;
+				if (a == null) {
+					a = new MemberDecoderAdapter(fbeanModel);
+					a.setTarget((Notifier) msg.getNewValue());
+					((Notifier) msg.getNewValue()).eAdapters().add(a);
+				}
+			case Notification.REMOVE:
+				if (msg.getOldValue() != null) {
+					Adapter oa = EcoreUtil.getExistingAdapter((Notifier) msg.getOldValue(), ICodeGenAdapter.JVE_MEMBER_ADAPTER);
+					if (oa != null)
+						((Notifier) msg.getOldValue()).eAdapters().remove(oa);
+				}
+				break;
+			default:
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log(this + " No action= ????? (" + msg.getEventType() + ")", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				return;
+		}
+
 	}
-	
-}
 
 /**
  * The method will induce the generation of settings and parent child relashinships
@@ -123,7 +126,8 @@ protected void processSettings(Notification msg) {
 		     // No need to remove anything from the source at this point	    
 		     break ;		     		    
 	      default:
-	           JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	      	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+	      		JavaVEPlugin.log(this+" No action= ????? ("+msg.getEventType()+")", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	           return ;
 	}	
 }
@@ -151,7 +155,8 @@ public void notifyChanged(Notification msg){
         case JCMPackage.BEAN_SUBCLASS_COMPOSITION__LISTENER_TYPES:
           	  break ;
         default:
-              JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: "+msg.getFeature(), Level.FINE) ; //$NON-NLS-1$
+        	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+        		JavaVEPlugin.log("CompositionDecoderAdapter: Did not process msg: "+msg.getFeature(), Level.FINE) ; //$NON-NLS-1$
       } 
  }
  catch (Throwable t) {

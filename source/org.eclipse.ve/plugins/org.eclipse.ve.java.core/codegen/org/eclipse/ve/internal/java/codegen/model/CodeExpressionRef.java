@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.35 $  $Date: 2004-11-19 17:34:45 $ 
+ *  $Revision: 1.36 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 
@@ -258,7 +258,8 @@ protected boolean isDuplicate() {
 		     return true ;
 		}
 		catch (CodeGenException exp) {
-			JavaVEPlugin.log("CodeExpressionRef.isDuplicate():  can not determine: "+this) ;	 //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log("CodeExpressionRef.isDuplicate():  can not determine: "+this) ;	 //$NON-NLS-1$
 		}
 	}	
 	return result ;
@@ -278,12 +279,14 @@ public  boolean  decodeExpression() throws CodeGenException {
       
       // Do not decode
       if (fBean.getInitMethod() == null || !fBean.getInitMethod().equals(fMethod)) {
-      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Invalid init JCMMethod for"+fBean,Level.FINE) ; //$NON-NLS-1$      	
+      	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+      		JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Invalid init JCMMethod for"+fBean,Level.FINE) ; //$NON-NLS-1$      	
       	return false ;
       }
       
       if (isDuplicate()) {
-      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fexpStmt, Level.FINE) ; //$NON-NLS-1$
+      	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+      		JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fexpStmt, Level.FINE) ; //$NON-NLS-1$
       	return false ;
       }
     
@@ -555,7 +558,8 @@ public  void updateDocument(boolean updateSharedDoc) {
 			 !isStateSet(STATE_NO_SRC)){
     		// Do we need to update the document ?
     		if (getContent() != null && prevContent.equals(getContent()))  {
-    			JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, Level.FINE) ; //$NON-NLS-1$
+    			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+    				JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, Level.FINE) ; //$NON-NLS-1$
     			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
     			return ;
     		}
@@ -569,7 +573,8 @@ public  void updateDocument(boolean updateSharedDoc) {
 		setOffset(off) ;
 		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
 	}
-	JavaVEPlugin.log(trace.toString(), Level.FINE) ;
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log(trace.toString(), Level.FINE) ;
 
 	if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
@@ -656,7 +661,8 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 
 public  void insertContentToDocument() {
 	if (isStateSet(STATE_NO_SRC) || isStateSet(STATE_DELETE)) return ;
-	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	synchronized (fBean.getModel().getDocumentLock()) {
 		// mark a controlled update (Top-Down)		
 		setState(STATE_UPDATING_SOURCE, true); 
@@ -691,9 +697,10 @@ public void refreshAST() {
 		};
 		ast.accept(visitor);
 		
-        if (s[0] ==null)
-        	JavaVEPlugin.log("CodeExpressionRef.refreshAST(): could notrefresh "+getContent(),Level.WARNING);
-        else
+        if (s[0] ==null) {
+        	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+        		JavaVEPlugin.log("CodeExpressionRef.refreshAST(): could notrefresh "+getContent(),Level.WARNING);
+        } else
             fexpStmt = s[0];	
 }
 
@@ -791,7 +798,8 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 			}	
 			catch (Exception e) {
 				// It is possible that a feature is not available, but entered in the code
-				JavaVEPlugin.log("CodeExpressionRef.isEquivalent: could not compare :\n\t"+this+"\n\t"+exp1) ; //$NON-NLS-1$ //$NON-NLS-2$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+					JavaVEPlugin.log("CodeExpressionRef.isEquivalent: could not compare :\n\t"+this+"\n\t"+exp1) ; //$NON-NLS-1$ //$NON-NLS-2$
                 return -1 ;
 				
 			}

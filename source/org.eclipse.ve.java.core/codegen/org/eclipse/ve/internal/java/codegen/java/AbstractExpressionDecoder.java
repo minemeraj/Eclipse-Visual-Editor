@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.11 $  $Date: 2004-11-05 20:08:15 $ 
+ *  $Revision: 1.12 $  $Date: 2004-12-16 18:36:14 $ 
  */
 import java.util.logging.Level;
 
@@ -143,7 +143,8 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		try {
 			result = fhelper.decode();
 		} catch (Exception e) {
-			JavaVEPlugin.log(e.getMessage(), Level.FINEST);
+			if (JavaVEPlugin.isLoggingLevel(Level.FINEST))
+				JavaVEPlugin.log(e.getMessage(), Level.FINEST);
 		}
 
 		// Always try to revert to a simple helper
@@ -189,7 +190,8 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		if (result == null && !(fhelper instanceof SimpleAttributeDecoderHelper)) {
 			// Specialized decoder may not be applicable, try a vanilla one
 			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-			JavaVEPlugin.log("generate():  *Defaulting* to a SimpleAttr. Helper", Level.FINE); //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log("generate():  *Defaulting* to a SimpleAttr. Helper", Level.FINE); //$NON-NLS-1$
 			result = fhelper.generate(args);
 		}
 

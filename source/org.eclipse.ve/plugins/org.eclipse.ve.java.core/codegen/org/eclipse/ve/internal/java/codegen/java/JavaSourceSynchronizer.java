@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.12 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.13 $  $Date: 2004-12-16 18:36:14 $ 
  */
 
 import java.util.ArrayList;
@@ -357,7 +357,8 @@ public class JavaSourceSynchronizer {
 		fsrcTranslator.fireStatusChanged(CodeGenJavaMessages.getString("JavaSourceSynchronizer.Synchronizing")) ;   //$NON-NLS-1$
 		
 		if (strategy == null) {
-			JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+				JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$
 			return ;
 		}
 		
