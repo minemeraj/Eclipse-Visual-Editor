@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.10 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.11 $  $Date: 2004-02-06 15:21:25 $ 
  */
 
 
@@ -71,15 +71,15 @@ public final static int                STATE_IMPLICIT	     	= 0x020 ;
     //  In progress of updating the source
 public final static int                STATE_UPDATING_SOURCE   	= 0x040 ; 
     //  This expression relative position in the source can not be changed.
-public final static int                STATE_SRC_LOC_FIXED     	= 0x060 ;
+public final static int                STATE_SRC_LOC_FIXED     	= 0x080 ;
     //  Expression in src. can not be parsed at this time, but is in the VE model
-public final static int                STATE_EXP_IN_LIMBO      	= 0x080 ;
+public final static int                STATE_EXP_IN_LIMBO      	= 0x100 ;
    //   Expression is not persisted in source code.
-public final static int                STATE_EXP_NOT_PERSISTED 	= 0x100 ;
+public final static int                STATE_EXP_NOT_PERSISTED 	= 0x200 ;
   // Typically set for a Delta BDM
-public final static int                STATE_SHADOW            	= 0x200 ;
+public final static int                STATE_SHADOW            	= 0x400 ;
   // Typically set for an allocation statement that initialize the expression.
-public final static int                STATE_INIT_EXPR         	= 0x400 ;  
+public final static int                STATE_INIT_EXPR         	= 0x800 ;  
 
 /*******/
 	
@@ -633,10 +633,7 @@ public  void updateDocument(boolean updateSharedDoc) {
     			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
     			return ;
     		}
-    
-    		//IMethod m = CodeGenUtil.refreshMethod(getMethod().getMethodHandle(),fBean.getModel().getCompilationUnit()) ;	  
-    		//getMethod().setMethod(m) ;
-    		// getMethod().refreshIMethod();
+	
     		int docOff = off+getMethod().getOffset() ;
     		String newContent = ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) ? "" : getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
     		trace.append("\t changed to: \n") ; //$NON-NLS-1$
@@ -659,8 +656,8 @@ protected void updateDocument(int docOff, int len, String newContent) {
 	
 		try {
 			model.aboutTochangeDoc();
-			model.getDocumentBuffer().replace(docOff,len,newContent) ;
-			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
+			model.getDocumentBuffer().replace(docOff,len,newContent) ;				
+			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;		
 			setState(STATE_EXP_NOT_PERSISTED,false);
         } catch (Exception e) {
 			JavaVEPlugin.log(e) ;
@@ -671,7 +668,7 @@ public  void insertContentToDocument() {
 	if (isStateSet(STATE_NO_SRC)) return ;
 	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	synchronized (fBean.getModel().getDocumentLock()) {
-		// mark a controlled update (Top-Down)
+		// mark a controlled update (Top-Down)		
 		setState(STATE_UPDATING_SOURCE, true); 
 		int docOff = getOffset()+getMethod().getOffset() ;
 		updateDocument(docOff, 0, getContent()) ;
@@ -892,8 +889,10 @@ private void primSetState(int flag) {
 public void clearState(){
 	primSetState(0);
 }
-public void clearState(int state){
-	primSetState(state);
+
+
+public void setStateFrom(CodeExpressionRef e){
+	primSetState(e.primGetState());
 }
 public void setState(int flag, boolean state) {
 	if(state)
@@ -931,7 +930,7 @@ public String toString(){
 	return super.toString() + states;
 }
 
-private int primGetState() {
+public int primGetState() {
 	return fInternalState ;
 }
 
@@ -976,7 +975,7 @@ public CodeExpressionRef createShadow(CodeMethodRef mr, BeanPart bp) {
     CodeExpressionRef shadow = new CodeExpressionRef (mr,bp) ;
     
     
-    shadow.clearState(primGetState()) ;
+    shadow.setStateFrom(this) ;
     shadow.setState(STATE_SHADOW, true) ;
     
     shadow.setExpression(getExpression()) ;
