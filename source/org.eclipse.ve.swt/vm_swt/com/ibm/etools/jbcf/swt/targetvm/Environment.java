@@ -16,7 +16,7 @@ public class Environment {
 		if (display != null)
 			return;
 
-		t = new Thread() {
+		t = new Thread("SWT UI Thread for VE") {
 			public void run() {
 				synchronized (Thread.currentThread()) {
 					display = new Display();
