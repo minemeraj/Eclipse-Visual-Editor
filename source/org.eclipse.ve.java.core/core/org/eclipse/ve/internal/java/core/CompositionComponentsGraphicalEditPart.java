@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-06 11:12:07 $ 
  */
 
 import java.util.*;
@@ -23,12 +23,15 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -107,7 +110,11 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 			// If we have a fatal error then we use a special graphical edit part
 			// We must NOT use the one defined on the class as for some classes, e.g. Component it
 			// has a lot of behavior that relies on the live JavaBean being present
-			if(modelBeanProxy == null || modelBeanProxy.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE){
+			IJavaInstance javaModel = (IJavaInstance)model;
+			JavaHelpers awtComponentClass = Utilities.getJavaClass("java.awt.Component",javaModel.eResource().getResourceSet());
+			// This is a hack because the trap to no use the defined edit part for Component must not be generalized
+			// A better fix would be that the edit part is more robust and can deal with no bean proxy there
+			if(modelBeanProxy == null || (awtComponentClass.isAssignableFrom(javaModel.eClass()) && modelBeanProxy.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)){
 				// The DefaultGraphicalEditPart will show the icon and its label provider will indicate to the
 				// user that the JavaBean failed to be created
 				JavaBeanGraphicalEditPart result = new JavaBeanGraphicalEditPart(model);
