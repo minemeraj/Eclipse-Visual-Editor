@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageController.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-19 17:05:43 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-16 13:49:41 $ 
  */
 
 import java.io.File;
@@ -763,7 +763,7 @@ public class ImageController {
 	/**
 	 * List of current valid extensions that Java can handle.
 	 */
-	public static final String[] VALID_EXTENSIONS = new String[] {".gif", ".jpg", ".png"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final String[] VALID_EXTENSIONS = new String[] {".gif", ".jpg", ".png", ".bmp", ".ico"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	
 	/**
 	 * An inner class that filters images.  Currently it allows the extensions
