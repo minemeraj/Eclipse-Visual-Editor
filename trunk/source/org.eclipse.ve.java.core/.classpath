@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="core/"/>
+    <classpathentry kind="src" path="codegen/"/>
+    <classpathentry kind="src" path="common/"/>
+    <classpathentry kind="src" path="vm_javaremotevm"/>
+    <classpathentry kind="src" path="vm_vcelauncher"/>
+    <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="archiver.jar"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>

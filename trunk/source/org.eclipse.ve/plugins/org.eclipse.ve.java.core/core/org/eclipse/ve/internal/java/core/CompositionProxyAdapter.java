@@ -1,0 +1,158 @@
+package org.eclipse.ve.internal.java.core;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: CompositionProxyAdapter.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ */
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.impl.NotifierImpl;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+/**
+ * This is a special adaptor for BeanCompositions.
+ * There really isn't a bean proxy, but we need to handle
+ * the disposition of beanproxies. This will be where this is done.
+ *
+ * It is also a notifier. What will happen is it will renotify all
+ * events before processing the event. This is useful because
+ * other adapters that need to do something before this one cleans
+ * up the proxies.
+ *
+ */
+public class CompositionProxyAdapter extends NotifierImpl implements Adapter {
+	public static final Class BEAN_COMPOSITION_PROXY = CompositionProxyAdapter.class;
+	
+	public static final int RELEASE_PROXIES = 3000000;
+	// A BIG KLUDGE AT THE MOMENT TO NOTIFY THE COMPOSITION ADAPTERS TO RELEASE ALL PROXIES.
+	public static final int INSTANTIATE_PROXIES = 3000001;
+	// A BIG KLUDGE AT THE MOMENT TO NOTIFY THE COMPOSITION ADAPTERS TO INSTANTIATE ALL PROXIES.	
+	
+	Notifier target;
+	
+public Notifier getTarget() {
+	return target;
+}	
+
+public void setTarget(Notifier target) {
+	this.target = target;
+}
+
+public boolean isAdapterForType(Object type) {
+	return BEAN_COMPOSITION_PROXY.equals(type);
+}
+
+public void notifyChanged(Notification msg) {
+	if (msg.getEventType() == Notification.REMOVING_ADAPTER) {
+		eAdapters().clear();
+	} else
+		eNotify(msg);	// Notify listeners of the change before we do anything with it.
+	if (msg.getEventType() == RELEASE_PROXIES) {
+		releaseBeanProxy();
+	} else if (msg.getEventType() == INSTANTIATE_PROXIES) {
+		initBeanProxy();
+	} else {
+		// Now process it.
+		switch (msg.getEventType()) {
+			case Notification.REMOVING_ADAPTER:
+				releaseBeanProxy();
+				break;
+			case Notification.ADD:
+			case Notification.SET:
+				if (!CDEUtilities.isUnset(msg)) {
+					releaseSetting(msg.getOldValue());
+					initSetting(msg.getNewValue());
+					break;
+				}	// else flow into unset.
+			case Notification.REMOVE:
+			case Notification.UNSET:
+				releaseSetting(msg.getOldValue());
+				break;
+			case Notification.ADD_MANY:
+				Iterator itr = ((List) msg.getNewValue()).iterator();
+				while (itr.hasNext())
+					initSetting(itr.next());
+				break;
+			case Notification.REMOVE_MANY:
+				itr = ((List) msg.getOldValue()).iterator();
+				while (itr.hasNext())
+					releaseSetting(itr.next());
+				break;
+		}		
+	}
+}
+
+public void initBeanProxy() {
+
+	Iterator settings = ((EObject)target).eContents().iterator();	// Get only the composite features.
+	while (settings.hasNext()) {;
+		initSetting(settings.next());
+	}
+}
+
+/**
+ * When we are explicitly disposed dispose all bean proxies on all values
+ * of our composition.
+ */
+public void releaseBeanProxy() {
+
+	// It will go through the attribute settings and dispose
+	// of them too since they were instantiated by this object.
+	Iterator settings = ((EObject)target).eContents().iterator();	// Get only the attrs and composite refs.
+	while (settings.hasNext()) {
+		releaseSetting(settings.next());
+	}
+}
+
+protected void initSetting(Object v) {
+	if (v instanceof IJavaInstance) {	
+		IBeanProxyHost value = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) v);
+		if (value != null && value.getBeanProxyDomain().getProxyFactoryRegistry().isValid()) {
+			value.instantiateBeanProxy();
+		}
+	}
+}
+
+protected void releaseSetting(Object v) {
+	if (v instanceof IJavaInstance) {	
+		// Get existing adapter, if it doesn't have one, don't create it.
+		IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
+		if (value != null) {
+			value.releaseBeanProxy();	// Dispose of a bean proxy automatically takes care of dispose any of the children of the proxy.
+		}
+	}
+}
+
+
+
+/**
+ * About to be thrown away. Run disposeBeanProxy first to
+ * make sure that any bean cleanup required is done.
+ */
+protected void finalize() throws Throwable {
+	if (getTarget() != null) {
+		eAdapters().clear();
+		releaseBeanProxy();
+	}
+}
+/**
+ * isAdaptorForType method comment.
+ */
+public boolean isAdaptorForType(Object type) {
+	return BEAN_COMPOSITION_PROXY.equals(type);
+}
+}

@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.java.core"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName"
+   class="org.eclipse.ve.internal.java.core.JavaVEPlugin">
+
+   <runtime>
+      <library name="core.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.java,org.eclipse.ve.internal.jcm"/>
+      </library>
+      <library name="codegen.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.java.codegen"/>
+      </library>
+      <library name="common.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.java.common"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ve.cde" export="true"/>
+      <import plugin="org.eclipse.jem.beaninfo" export="true"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.emf.codegen"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+   </requires>
+
+
+<!-- This extension point is for registering contributions based on classpath variable paths.
+        NOTE: This is an experimental API extension point which will be changed in the future.
+           
+        Format is:
+        <extension point="org.eclipse.jem.core.registrations">
+          <variable path="avariablename" (or path="avariablename/something.jar")
+               contributor="classname of an IConfigurationContributor"
+               palettecats="xmi document" paletteloc="last">
+          </variable>
+        </extension>
+        
+        If it is of type "avariablename", then this info will be used for all variable classpath entries
+        that start with this variable. This allows several bean class jars that are subpaths
+        of a variable to share the same beaninfo information.
+        
+        If it is of type "avariablename/...", then this info will be used only for this particular
+        path.
+        
+        If contributor is set, then using standard IExecutableExtension protocol, the contributor will
+        instantiated and will be able to contribute to the remote vm. It needs to implement
+        org.eclipse.jem.proxy.IConfigurationContributor and can implement org.eclipse.core.runtime.IExecutableExtension
+        if it needs parameters or to be called with the standard extension initialize information.
+        
+        There can be more than one for the same path, they will be concatenated together. Probably
+        shouldn't do this in the same plugin, but it allows multiple plugins to contribute beaninfos
+        to the same variable path. Though the final order is indeterminate since it is the order
+        the extension points are processed.
+        
+        If palettecats is set, then this will be an xmi document. It will take the palette categories that
+        are in the root of this document and will add them to the palette if this variable is found in in the classpath.
+        
+        paletteloc is the location of where the entries will be added. The order the of the registrations 
+        for variables will be the order of the variables within the classpath. The order of the registrations 
+        within a particular variable is undefined because it depends upon the order of plugin evaluation. For example,
+        if the classpath contains variable XYZ and QXR in that order, and QXR has two registrations, QXR1 and QXR2,
+        then XYZ registration will be found before QXR registrations, but the order of QXR1 and QXR2, if they come
+        from two different plugins/fragments, will be undetermined.
+        
+		The palette registrations are divided into two sections, "first" and the "last" section. If paletteloc is omitted, or
+		is "first", then the registration will be added to the end of the "first" section in the order found. If paletteloc is
+		"last", then the registration will be added to the end of the "last" section. When all done, the final list will be
+		"first" followed by "last" sections. This will allow some relative control over where the palette cats will be found with
+		some consistency.
+        -->
+   <extension-point id="registrations" name="%registrationsName"/>
+   <extension-point id="style" name="Parsing/generation style"/>
+<!-- The syntax for creating a look and feel is								-->
+<!--   <extension point="org.eclipse.ve.internal.java.core.vce.lookandfeel">				-->
+<!--      <lookandfeel name="Plugin" class="com.mylookandfeel.MyLFClass"/>	-->
+<!--    </extension>   														-->
+<!-- The look and feel will then appear on the preferences page and the user	-->
+<!-- can make it the workbench default for the Visual Editor 					-->
+   <extension-point id="lookandfeel" name="%lookAndFeelName"/>
+   
+<!--	This extension point allows for providing source contributors for 
+		a new Visual class of a certain kind
+		
+		<extension 
+   			point="org.eclipse.ve.jfc.newsource">
+      	<contributor
+      		type="javax.swing.JFrame"
+      		class="org.eclipse.ve.internal.jfc.core.JFrameSourceContributor"/>
+      	<contributor
+      		type="javax.swing.JPanel"
+      		class="org.eclipse.ve.internal.jfc.core.JPanelSourceContributor"/>
+   		</extension>
+		The class specified to the class attribute should implement
+		org.eclipse.ve.internal.jfc.wizards.IVisualClassCreationSourceContributor-->
+   <extension-point id="newsource" name="%newSourceContrbutorsName"/>   
+
+<!-- This container initializer is part of an experimental API that may be changed in future releases and is not guaranteed to be supported
+        It is to be used in combination with the palette extension APIs to allow a JAVA_BEANS container to be created by the container wizard
+        that can then be expanded into a set of classpath entries for the JAR files containing the JavaBeans based on the registrations extension point.
+        For more information on this API visit the WebSphere Developer Domain at http://www7b.boulder.ibm.com/wsdd/ and search for keywords like
+        "Extending the Visual Editor for Java palette" -->
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.ve.internal.java.wizard.ContainerInitializer"
+            id="JAVA_BEANS">
+      </classpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http:///org/eclipse/ve/internal/jcm.ecore"
+            class="org.eclipse.ve.internal.jcm.JCMPackage">
+      </package>
+   </extension>
+   <extension
+         point="org.eclipse.ve.cde.adapter">
+      <adapter
+            typeclass="org.eclipse.jem.beaninfo/org.eclipse.jem.internal.beaninfo.PropertyDecorator"
+            adapterclass="org.eclipse.ve.internal.java.core.BeanPropertyDescriptorAdapter">
+      </adapter>
+   </extension>
+   <extension
+         point="org.eclipse.jem.beaninfo.overrides">
+      <override
+            package="..ROOT.."
+            path="platform:/plugin/org.eclipse.ve.java.core/overrides">
+      </override>
+      <override
+            package="java.lang"
+            path="platform:/plugin/org.eclipse.ve.java.core/overrides/java/lang">
+      </override>
+   </extension>
+<!-- 
+     Events popup on a JavaBean in the Java Beans view or GEF viewer
+     -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.java.events.popup.object">
+         <action
+               label="%events.label"
+               style="pulldown"
+               class="org.eclipse.ve.internal.java.core.JavaBeanEventsObjectActionDelegate"
+               menubarPath="group.add"
+               enablesFor="1"
+               id="org.eclipse.ve.java.visual.events">
+         </action>
+      </objectContribution>
+   </extension>
+<!--
+     Events popup for an existing listener in the Java Beans view, i.e. add a focusLost method to an existing focusListener 
+     ( that may have a callback already present for another method such as focusGained )
+     -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.EventInvocationAndListenerTreeEditPart"
+            id="org.eclipse.ve.java.listener.events.popup.object">
+         <action
+               label="%events.label"
+               style="pulldown"
+               class="org.eclipse.ve.internal.java.core.EventInvocationAndListenerEventsObjectActionDelegate"
+               menubarPath="group.add"
+               enablesFor="1"
+               id="org.eclipse.ve.java.visual.listener.events">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%VCE.preferenceName Visual Editor"
+            category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
+            class="org.eclipse.ve.internal.java.vce.VCEPreferencePage"
+            id="org.eclipse.ve.internal.java.vce.VCEPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            name="%configType.name Java Bean"
+            delegate="org.eclipse.vi.internal.java.vce.launcher.JavaBeanLaunchConfigurationDelegate"
+            modes="run, debug"
+            id="org.eclipse.vi.internal.java.vce.launcher.JavaBean">
+         <fileExtension
+               default="false"
+               extension="java">
+         </fileExtension>
+         <fileExtension
+               default="false"
+               extension="class">
+         </fileExtension>
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            icon="icons/full/ctool16/java_bean_launcher.gif"
+            configTypeID="org.eclipse.vi.internal.java.vce.launcher.JavaBean"
+            id="org.eclipse.vi.internal.java.vce.launcher.JavaBean">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            label="%shortcut.label Java Bean"
+            icon="icons/full/ctool16/java_bean_launcher.gif"
+            modes="run, debug"
+            class="org.eclipse.vi.internal.java.vce.launcher.JavaBeanShortcut"
+            id="org.eclipse.ve.internal.java.core.vce.localJavaShortcut">
+         <perspective
+               id="org.eclipse.jdt.ui.JavaPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.jdt.ui.JavaHierarchyPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.debug.ui.DebugPerspective">
+         </perspective>
+      </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.vi.internal.java.vce.launcher.JavaBean"
+            class="org.eclipse.vi.internal.java.vce.launcher.JavaBeanLauncherTabGroup"
+            id="org.eclipse.vi.internal.java.vce.JavaBeanLauncherConfigurationTabGroup">
+      </launchConfigurationTabGroup>
+   </extension>
+<!-- Define the default pattern style -->
+   <extension
+         point="org.eclipse.ve.java.core.style">
+      <style
+            description="%Style.GetterStyle.Desc Getter style (Visual Editor Default)"
+            id="GetterStyle">
+         <prefui
+               class="org.eclipse.ve.internal.java.codegen.java.rules.VCEPrefContributor">
+         </prefui>
+         <rule
+               class="org.eclipse.ve.internal.java.vce.rules.VCEPropertyRule"
+               id="org.eclipse.ve.internal.java.rules.IPropertyRule">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.vce.rules.VCEChildRule"
+               id="org.eclipse.ve.internal.java.rules.IChildRule">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule"
+               id="ruleInstanceVariable">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule"
+               id="ruleMethodVariable">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.OverideMethodVisitRule"
+               id="ruleOverideMethod">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.IfStatementRule"
+               id="ruleIfStatement">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.ReturnStmtRule"
+               id="ruleReturnStatement">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.ThisReferenceRule"
+               id="ruleIThisReference">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule"
+               id="ruleInstanceVariableCreation">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.BeanNameProposalRule"
+               id="ruleBeanNameProposal">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.EventProcessingRule"
+               id="ruleEventProcessing">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.EventMethodParsingRule"
+               id="ruleEventMethodParsing">
+         </rule>
+         <rule
+               class="org.eclipse.ve.internal.java.codegen.java.rules.ParentChildRelationship"
+               id="ruleParentChild">
+         </rule>
+      </style>
+   </extension>
+<!-- ============================================================================================================== -->
+<!-- The JavaVisualEditorPart wrappers a JBCF editor and a Java Editor with a splitpane or notebook separating them -->
+<!-- ============================================================================================================== -->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%jveeditor Visual Editor"
+            default="false"
+            icon="icons/full/obj16/javavisualeditor_obj.gif"
+            extensions="java"
+            contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
+            class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+      </editor>
+   </extension>
+<!-- =============================================================================== -->
+<!-- Add the Refactor and Navigate action sets to the menu when the editor is active -->
+<!-- =============================================================================== -->
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.jdt.ui.CodingActionSet">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+<!-- ============================================================= -->
+<!-- Extend the Search menu with the action set for the JavaEditor -->
+<!-- ============================================================= -->
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.jdt.ui.SearchActionSet">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+<!-- ================================================================================= -->
+<!-- The Open Type Hierarchy and Open Type are defined in their own action set         -->
+<!-- that we must associate with the JavaVisualEditor to get them on the navigate menu -->
+<!-- ================================================================================= -->
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.jdt.ui.A_OpenActionSet">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+<!-- ============================================================================================================== -->
+<!-- Editor actions are editor specific, so we need to duplicate them here.                                         -->
+<!-- ============================================================================================================== -->
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart.BreakpointRulerActions">
+         <action
+               label="%Dummy.label"
+               class="org.eclipse.jdt.internal.debug.ui.actions.ManageBreakpointRulerActionDelegate"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.jdt.ui.actions.ManageBreakpointRulerAction">
+         </action>
+         <action
+               label="%Dummy.label"
+               class="org.eclipse.jdt.internal.ui.javaeditor.JavaSelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.jdt.internal.ui.javaeditor.JavaSelectRulerAction">
+         </action>
+      </editorContribution>
+   </extension>
+<!-- ============================ -->
+<!-- Define the Java Beans viewer -->
+<!-- ============================ -->
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="%javabeansview Java Beans"
+            icon="icons/full/ctool16/javavisualeditor_co.gif"
+            category="org.eclipse.jdt.ui.java"
+            class="org.eclipse.ve.internal.java.codegen.editorpart.BeansList"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
+      </view>
+   </extension>
+<!-- ========================================================================================= -->
+<!-- Extend the Java perspective so the Java Beans viewer appears beneath the resources viewer -->
+<!-- and the Properties appears stacked on the outline view                                    -->
+<!-- ========================================================================================= -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <newWizardShortcut
+               id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
+         </newWizardShortcut>
+         <viewShortcut
+               id="org.eclipse.ui.views.PropertySheet">
+         </viewShortcut>
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               visible="false"
+               relationship="bottom"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
+         </view>
+         <view
+               relative="org.eclipse.ui.views.ContentOutline"
+               visible="false"
+               relationship="stack"
+               id="org.eclipse.ui.views.PropertySheet">
+         </view>
+      </perspectiveExtension>
+   </extension>
+<!-- ====================================================================================================== -->
+<!-- Extend the JavaBrowsing perspective so the JavaBeans and Properties appears on top of the members list -->
+<!-- and the properties viewer to the right of the editor part                                              -->
+<!-- ====================================================================================================== -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         <newWizardShortcut
+               id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
+         </newWizardShortcut>
+         <viewShortcut
+               id="org.eclipse.ui.views.PropertySheet">
+         </viewShortcut>
+         <view
+               relative="org.eclipse.jdt.ui.MembersView"
+               visible="false"
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
+         </view>
+         <view
+               ratio="0.75"
+               relative="org.eclipse.ui.editorss"
+               visible="false"
+               relationship="right"
+               id="org.eclipse.ui.views.PropertySheet">
+         </view>
+      </perspectiveExtension>
+   </extension>
+<!-- ======================================================+==================== -->
+<!-- Extend the Debug perspective so the JavaBeans appears on top of the outline -->
+<!-- =========================================================================== -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.debug.ui.DebugPerspective">
+         <view
+               relative="org.eclipse.ui.views.ContentOutline"
+               visible="false"
+               relationship="stack"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
+         </view>
+      </perspectiveExtension>
+   </extension>
+<!-- ======================================================================== -->
+<!-- Extend the popup menu on Edit parts                                      -->
+<!-- ======================================================================== -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction.popup.object">
+         <action
+               label="%PopupMenus.RenameAction.Label Rename field"
+               class="org.eclipse.ve.internal.java.codegen.editorpart.RenameJavaBeanObjectActionDelegate"
+               menubarPath="org.eclipse.gef.group.edit"
+               enablesFor="1"
+               id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            name="%visualclass"
+            icon="icons/full/ctool16/newvisualclass_wiz.gif"
+            category="org.eclipse.jdt.ui.java"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
+         <description>
+            %visual.class
+         </description>
+      </wizard>
+   </extension>
+</plugin>

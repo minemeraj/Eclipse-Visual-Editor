@@ -1,0 +1,30 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: WindowDialogSourceTemplate.javajet,v $
+ *  $Revision: 1.1 $ $Date: 2003-10-27 17:48:30 $
+ */
+%>
+<%@ jet 
+	skeleton="VisualClassSourceWizardSkeleton.java" 
+	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
+	class="WindowDialogSourceGenerator" %>
+public class <%=typeName%> {
+
+	/**
+	 * @param owner
+	 */
+	public <%=typeName%>(java.awt.Frame owner) {
+		super(owner);
+		initialize();
+	}
+	
+	/**
+	 * This method initializes this
+	 * 
+	 * @return void
+	 */
+	public void initialize(){
+		this.setSize(300,200);
+	}
+}
