@@ -18,9 +18,8 @@
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/RadioButton.xmi#RadioButton_1">
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="RadioButton"/>
       </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry4obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#Text"/>
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif"
+      		prototypeURI="platform:/plugin/org.eclipse.ve.swt/TextField.xmi#TextField_1">
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string4" string="Text"/>
       </cmpEntries>        
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/textarea_obj.gif"
