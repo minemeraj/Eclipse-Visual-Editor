@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -152,8 +154,21 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		primAddControl(child,indexOfChild);
 		childValidated(this);
 	}
+	
+	protected void setupBeanProxy(IBeanProxy beanProxy) {		
+		super.setupBeanProxy(beanProxy);
+		// Hack for now till I can talk this through with Rich properly - JRW
+		// If we don't declare the fact that implicit allocation is not owned then we dispose them
+		// and we shouldn't as it is the responsibility of the owner to dispose them
+		JavaAllocation allocation = getJavaObject().getAllocation();
+		if(allocation instanceof ImplicitAllocation){
+			fOwnsProxy = false;
+		}
+		
+	}
 
 	public void releaseBeanProxy() {
+				
 		// Need to release all of the controls.  This is because they will be implicitly disposed anyway when super
 		// gets called because the target VM will dispose them as children
 		// If they have been implicitly disposed on the target VM but the IBeanProxyHost doesn't know about this then i

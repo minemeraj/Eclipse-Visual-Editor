@@ -215,11 +215,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			}
 	}
 	
-	protected void primInstantiateBeanProxy() {
-		super.primInstantiateBeanProxy();
-	}
-	
-	
 	protected void initializeControlManager() {
 		if (isBeanProxyInstantiated()) {
 			// Create an instance of ComponentManager on the target VM
