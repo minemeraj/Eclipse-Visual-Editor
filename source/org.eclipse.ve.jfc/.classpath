@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path="jfc/"/>
-    <classpathentry kind="src" path="common/"/>
-    <classpathentry kind="src" path="codegen/"/>
+    <classpathentry kind="src" path="jfccommon/"/>
+    <classpathentry kind="src" path="jfccodegen/"/>
     <classpathentry kind="src" path="vm_jfcbeaninfo"/>
     <classpathentry kind="src" path="vm_jfcvm"/>
     <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
