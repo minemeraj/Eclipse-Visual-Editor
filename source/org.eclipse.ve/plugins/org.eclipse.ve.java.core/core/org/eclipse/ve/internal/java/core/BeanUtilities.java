@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.12 $  $Date: 2004-05-19 20:20:21 $ 
+ *  $Revision: 1.13 $  $Date: 2004-05-21 09:42:48 $ 
  */
 
 import java.util.Iterator;
@@ -162,7 +162,21 @@ public class BeanUtilities {
 	 */
 	public static IJavaInstance getFeatureValue(IJavaInstance javaObject, String featureName) {
 		EStructuralFeature feature = javaObject.eClass().getEStructuralFeature(featureName);
-		if(feature == null) return null;
+		if(feature == null) {
+			return null;
+		} else {
+			return getFeatureValue(javaObject,feature);
+		}
+	}
+	/**
+	 * @param javaObjectInstance
+	 * @param featureName
+	 * Return the feature value.  Either is is set in the EMF model so we get it
+	 * or else we go to the target VM
+	 * 
+	 * @since 1.0.0
+	 */	
+	public static IJavaInstance getFeatureValue(IJavaInstance javaObject, EStructuralFeature feature){
 		Object featureValue = javaObject.eGet(feature);
 		if(featureValue != null){
 			return (IJavaInstance)featureValue;
