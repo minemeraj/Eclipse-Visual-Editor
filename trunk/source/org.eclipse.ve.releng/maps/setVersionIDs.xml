@@ -31,8 +31,6 @@
 	<versionProjectFromWorkspace project="org.eclipse.ve.propertysheet" versionName="${id}"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.tests" versionName="${id}"/>
 	<versionProjectFromWorkspace project="org.eclipse.ve.tests-feature" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve-feature" versionName="${id}"/>	
-	<versionProjectFromWorkspace project="org.eclipse.ve.releng" versionName="${id}"/>
-	<versionProjectFromWorkspace project="org.eclipse.ve.releng.builder" versionName="${id}"/>	
+	<versionProjectFromWorkspace project="org.eclipse.ve-feature" versionName="${id}"/>		
 </target>
 </project>
