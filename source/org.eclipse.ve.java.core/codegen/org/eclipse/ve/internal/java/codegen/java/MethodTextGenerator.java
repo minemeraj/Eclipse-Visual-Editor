@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-27 01:12:06 $ 
  */
 
 import java.util.*;
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-
+// TODO:  this class should be converted to use JavaJet templates
 
 public class MethodTextGenerator implements IMethodTextGenerator {
 	
@@ -328,6 +328,22 @@ public String toString() {
 	return super.toString() + fMethodName;
 }
 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#setBeanInitArgs(java.lang.String[])
+	 */
+	public void setBeanInitArgs(String[] fbeanInitArgs) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#setMethodArguments(java.lang.String[])
+	 */
+	public void setMethodArguments(String[] fmethodArguments) {
+		// TODO Auto-generated method stub
+
+	}
 
 }
 

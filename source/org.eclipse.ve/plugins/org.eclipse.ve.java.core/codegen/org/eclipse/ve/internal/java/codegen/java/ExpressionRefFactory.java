@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-27 01:12:06 $ 
  */
 
 import java.util.Iterator;
@@ -145,13 +145,16 @@ private org.eclipse.jdt.internal.compiler.ast.Statement getInitExpression(String
 
 		//TODO: this is a poor man's parsing, need revisit in the move to the new AST
 		org.eclipse.jdt.internal.compiler.ast.Statement st[] = cudecl.types[0].methods[1].statements ;
-		if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.LocalDeclaration ||
-		    st[0] instanceof org.eclipse.jdt.internal.compiler.ast.Assignment)
-		   return cudecl.types[0].methods[1].statements[0] ;
-		else if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.IfStatement) {
-			org.eclipse.jdt.internal.compiler.ast.Statement as = ((org.eclipse.jdt.internal.compiler.ast.IfStatement)st[0]).thenStatement ;
-			if (as instanceof org.eclipse.jdt.internal.compiler.ast.Block)
-				return ((org.eclipse.jdt.internal.compiler.ast.Block)as).statements[0] ;
+		if (st != null) {
+			if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.LocalDeclaration
+				|| st[0] instanceof org.eclipse.jdt.internal.compiler.ast.Assignment)
+				return cudecl.types[0].methods[1].statements[0];
+			else if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.IfStatement) {
+				org.eclipse.jdt.internal.compiler.ast.Statement as =
+					((org.eclipse.jdt.internal.compiler.ast.IfStatement) st[0]).thenStatement;
+				if (as instanceof org.eclipse.jdt.internal.compiler.ast.Block)
+					return ((org.eclipse.jdt.internal.compiler.ast.Block) as).statements[0];
+			}
 		}
 		return null ;
 			

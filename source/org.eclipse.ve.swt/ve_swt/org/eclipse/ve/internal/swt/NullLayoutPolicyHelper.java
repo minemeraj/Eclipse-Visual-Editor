@@ -17,10 +17,15 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.rules.*;
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;;
+import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
+;
 /**
  * Null layout policy helper.
  *
@@ -57,16 +62,50 @@ public NullLayoutPolicyHelper(ContainerPolicy ep) {
 public void setContainerPolicy(ContainerPolicy policy) {
 	this.policy = policy;
 }
+
+/**
+ * This is a temporary hack to add an initialization string (allocation) to a dropped component
+ * which contain a parsed tree referencing the parent.
+ * 
+ * Rich has not implemented a ref. parsed tree yet, so use this as a deprecated method
+ * 
+ * @deprecated
+ * @param parent
+ * @return
+ * 
+ * @since 1.0.0
+ */
+
+private Command  createInitStringCommand(IJavaObjectInstance child, IJavaObjectInstance parent) {
+  
+	TemporaryPTE pt = new TemporaryPTE() ;
+	pt.setParent(parent);
+	pt.setFlags("org.eclipse.swt.SWT.None") ;
+	JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(pt);
+	ApplyAttributeSettingCommand applyCmd = new ApplyAttributeSettingCommand();
+	applyCmd.setTarget(child);
+	applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation"));
+	applyCmd.setAttributeSettingValue(alloc);	
+	
+	return applyCmd;
+}
+
+public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+	return getCreateChildCommand(childComponent,null,constraint,position) ;
+
+}
 /**
  * Return a command to create the child with the constraints set correctly
  */
-public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+public Command getCreateChildCommand(Object childComponent, Object parent, Object constraint, Object position) {
 	
 	Command createContributionCmd = policy.getCreateCommand(childComponent, position);
 	if (createContributionCmd == null || !createContributionCmd.canExecute())
 		return UnexecutableCommand.INSTANCE;	// It can't be created
 			
 	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
+	if (parent != null)
+	  command.append(createInitStringCommand((IJavaObjectInstance) childComponent, (IJavaObjectInstance) parent));
 	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint) constraint));
 	command.append(createContributionCmd);
 

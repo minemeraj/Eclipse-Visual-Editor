@@ -4,9 +4,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
     xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
+    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"    
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
     xmlns:event="event.xmi"
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetProxyAdapter"/>
+  <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
+      methodGenerator="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTNoArgNoReturnMethodTextGenerator"/>
 </event:AddMany>
