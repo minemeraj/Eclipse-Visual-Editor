@@ -51,8 +51,8 @@ the Visual Editor's palette, building a BeanInfo class and working with
 EMF<span style="font-style: italic;"> .override</span> files to
 introduce custom editor behavior.&nbsp; The
 reader of this tutorial is intended to be someone who wishes to
-customize the Visual Editor for a particular widget and understand the
-a number of touch points that can be used to achieve this.<br>
+customize the Visual Editor for a particular widget and understands there
+are a number of touch points that can be used to achieve this.<br>
 </p>
 <p><b>Gili Mendel, IBM<br>
 Joe Winchester, IBM<br>
@@ -174,7 +174,7 @@ available to the user to add callback logic to through the <span
  style="font-style: italic;">Add Event</span>
 dialog.&nbsp; <br>
 </p>
-<p>This tutorial shows to extend the edit experience by creating a
+<p>This tutorial shows how to extend the edit experience by creating a
 plugin that
 enables specific Visual Editor behavior over
 and above the default that is determined through inheritance.&nbsp;
@@ -519,7 +519,7 @@ section <a href="#A_complete_example">A complete example</a><br>
 <p>This section describes how to build the plugin <span
  style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;
 </span>This will be used to package the CustomWidget itself as well as
-the include the extensions required to override its default
+to include the extensions required to override its default
 behavior.&nbsp; The end result for users is that they will install this
 plugin onto their Eclipse environment and then configure their Java
 projects to use the custom widget jar that is included in this plugin <a
@@ -622,7 +622,7 @@ listed above.<br>
 <blockquote class="PictureParagraph">
   <blockquote> </blockquote>
 </blockquote>
-Having create the plugin there are two major steps remaining.&nbsp; The
+Having created the plugin there are two major steps remaining.&nbsp; The
 first is to create the actual custom widget class itself and test it,
 and the second is to extend the visual editor to have the customized
 behavior described in the <a href="#Introduction">introduction</a>.<br>
@@ -633,7 +633,7 @@ packages for workbench and widget code<br>
 There are two jar files being created as part of this tutorial.&nbsp;
 The reason for this is based on the architecture of the Visual Editor
 and how it uses a separate JVM for the classes instantiated by the
-editor rather with re-use or share the JVM used for by Eclipse itself.<br>
+editor rather with re-use or share the JVM used by Eclipse itself.<br>
 <br>
 The Visual Editor can be considered as an extension to the Java
 Development Tooling (JDT) that lets you preview any visual controls
@@ -644,10 +644,10 @@ features like Code assist and the Outline viewer.&nbsp; When you use
 code assist the list of available classes is scoped to be only those
 that are valid for the current compilation unit, namely those present
 in the Java build path of the project.&nbsp; The Java build path is
-specified through the project's properties and can be through of as the
+specified through the project's properties and can be thought of as the
 list of <span style="font-style: italic;">-classpath</span> entries
 that make up the <span style="font-style: italic;">javac </span>command.&nbsp;
-If you try to use a class that isn't on the build path you will be a
+If you try to use a class that isn't on the build path you will get a
 compile error.&nbsp; If you try to call a method that doesn't exist on
 a valid class you will get a compile error, although if you were to
 change the build path so that it now contained a version of the class
@@ -723,7 +723,7 @@ jar for the plugin itself.&nbsp; We renamed the default jar name to <i>
 customwidgetplugin.jar</i> so that is will not be confused with the
 <a href="#Runtime_jar">run time jar</a>. This contains the Eclipse code
 that
-will run inside the workbench and is defined in on the <span
+will run inside the workbench and is defined in the <span
  style="font-style: italic;">Runtime </span>tab of the manifest editor
 for the plugin's plugin.xml file.&nbsp; <br>
 <br>
@@ -733,7 +733,7 @@ for the plugin's plugin.xml file.&nbsp; <br>
 <img src="images/note.gif" alt="Note: " height="13" width="62"> The
 name of the plugin code's jar
 is either held in a <span style="font-family: monospace;">&lt;runtime&gt;&lt;library
-name="customwidgetplugin.jar"&gt;&lt;/runtime&gt;</span> tag in the the
+name="customwidgetplugin.jar"&gt;&lt;/runtime&gt;</span> tag in the
 <span style="font-style: italic;">plugin.xml</span> file for a pre 3.1
 plugin, or else for an OSGI 3.1compatible only plugin the jar file name
 is held in the <span style="font-style: italic;">MANIFEST.MF</span>
@@ -977,7 +977,7 @@ the container wizard page.&nbsp; This tutorial is using <img
 <br>
 </span>Having configured the wizard page and the container initializer
 this will now add an instance of the RegisteredClasspathContainer to
-the user's build path of their Java project.&nbsp; This need to be told
+the user's build path of their Java project.&nbsp; This needs to be told
 where to locate the jars that contain the runtime code.&nbsp; There is
 an extension point used by the RegisteredClasspathContainer class named
 <span style="font-style: italic;">org.eclipse.ve.java.core.registrations.&nbsp;
@@ -1004,7 +1004,7 @@ coded literal <img style="width: 24px; height: 13px;" alt=""
 Prompter".&nbsp; </span>The plugin element&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
 &lt;library runtime="customwidgets.jar".&gt; describes the actual
-location of the runtime jars that container the <span
+location of the runtime jars that contain the <span
  style="font-style: italic;">MyCustomPrompter </span>class.&nbsp; If
 there are multiple jars then the entry can be repeated.&nbsp;&nbsp; The
 location of the jar is relative to the plugin itself, so if <span
@@ -1012,7 +1012,7 @@ location of the jar is relative to the plugin itself, so if <span
 directory called <span style="font-style: italic;">jars </span>within
 the plugin then the entry would be runtime="jars/.customwidgets.jar".<br>
 <br>
-Having update the plugin.xml file to define the classpath container the
+Having updated the plugin.xml file to define the classpath container the
 next step is to test this.<br>
 <h2><a name="Using_a_classpath_container"></a>Using a classpath
 container<br>
@@ -1123,7 +1123,7 @@ serializes to&nbsp; <a
  href="http://www.omg.org/technology/documents/formal/xmi.htm">XMI</a>
 which is an XML representation of a graph of EMF objects.&nbsp; Plugins
 can define their own XMI files that describe the categories to be added
-to the palette, the groups these belond to, and the actual entries
+to the palette, the groups these belong to, and the actual entries
 themselves.&nbsp; For the org.eclipse.ve.examples.customwidgets plugin
 there will be a palette XMI file that describes the single category and
 class to add.<br>
@@ -1182,7 +1182,7 @@ to write a Visual Editor XMI file is to copy an existing one that is
 similar to what you desire and then alter just the parts that need
 changing.<br>
 </p>
-<p>Having create the <span style="font-style: italic;">customprompter.xmi
+<p>Having created the <span style="font-style: italic;">customprompter.xmi
 </span>file we need to enable the Visual Editor to use it.&nbsp; This
 is done by associating the palette file with a classpath container, in
 our case the Custom Prompter.&nbsp; <br>
@@ -1285,9 +1285,9 @@ behavior over and above that it inherits by virtue of extending <span
 has an <i>int</i> property named <i style="font-weight: bold;">type</i><span
  style="font-weight: bold;">
 </span>with <i>getType</i>() and <i>setType</i>(int aType)
-methods.&nbsp; While the signature of <i>setType</i> allows ito accept
+methods.&nbsp; While the signature of <i>setType</i> allows it to accept
 any int, the class itself only works with one of the three values 0, 1,
-or 2 The definition of the the values is held in three static constants
+or 2 The definition of the values is held in three static constants
 on the <span style="font-family: monospace;">MyPrompterClass</span>.<br>
 </p>
 <pre><span style="color: rgb(153, 0, 0);">public final static int</span> <span
@@ -1567,7 +1567,7 @@ specification.<br>
 <br>
 Some kinds of customization are not possible through the BeanInfo
 mechanism because while it provides a powerful way to describe edit
-time behavior and shape for a class the Visual Editor need to be able
+time behavior and shape for a class the Visual Editor needs to be able
 to export some of its innermost extension points to the creator of the
 Java class, and the BeanInfo mechanism is designed to provide a
 portable way of customizing a Java class that can be transported easily
@@ -1580,7 +1580,7 @@ BeanInfo would violate the idea that BeanInfo classes are portable (as
 Eclipse interfaces and the SWT are not necessarily available to other
 visual design tools).<br>
 <br>
-For this reason the Visual Editor a separate mechanism to extend a
+For this reason the Visual Editor has a separate mechanism to extend a
 class's edit time behavior that is done through <span
  style="font-style: italic;">override </span>files<span
  style="font-style: italic;">. </span>This works in conjunction with
@@ -1628,7 +1628,7 @@ model, thereby allowing specific classes to have custom behavior for
 each subsystem.&nbsp; Rather than hold these directly against the
 JavaClass (which is a generic model of Java classes that can be used by
 Eclipse plugins other than the Visual Editor)&nbsp; they are held
-against decorators classes that annotate the descriptive information of
+against decorator classes that annotate the descriptive information of
 a class.&nbsp; These can be thought of similar to key value pairs that
 hold information rather than provide functionality.&nbsp; <br>
 </p>
@@ -1665,7 +1665,7 @@ created for the package path. &nbsp; The Figure below shows the
 directory structure of the <span style="font-style: italic;">org.eclipse.ve.example.customwidget
 </span>plugin with the folder structure of <span
  style="font-style: italic;">/overrides/org/ecliose/ve/example/customwidget/prompter
-</span>(whichmatches that defined in the registration path=<img
+</span>(which matches that defined in the registration path=<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
 extension point).&nbsp; <br>
 </p>
@@ -1919,7 +1919,7 @@ and extends <span style="font-family: monospace;">org.eclipse.swt.Composite</spa
 and was built using the Visual Editor.&nbsp; This has the methods
 <span style="font-family: monospace;">public setString(String aString) </span>to
 set the current value of the
-Strring, and <span style="font-family: monospace;">public String
+String, and <span style="font-family: monospace;">public String
 getString() </span>to return it.&nbsp; These are
 both called by the <span style="font-family: monospace;">CustomLabelEditor
 </span>when it&nbsp;<img style="width: 24px; height: 13px;" alt=""
@@ -1934,9 +1934,9 @@ returns the value.&nbsp; <br>
 specialized to return the value of the LableDialogContent, which
 represents the String entered by the user as the new <span
  style="font-style: italic;">text </span>property.&nbsp; This is so
-that the value can be referenced by the CustomLabelEditor itself whe it
+that the value can be referenced by the CustomLabelEditor itself when it
 <img style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">has
-reate the actual object that will be set into the Visual Editor
+created the actual object that will be set into the Visual Editor
 model.<br>
 </p>
 <p>If the TitleAreaDialog isn't cancelled then the JFace cell editor
@@ -1953,7 +1953,7 @@ createStringJavaObject(String aString);<br>
 <p>To create an <span style="font-family: monospace;">IJavaInstance </span>requires
 two steps.&nbsp; First the EMF
 <span style="font-family: monospace;">JavaClass </span>needs to be
-located and then it an instance of <span
+located and then an instance of <span
  style="font-family: monospace;">IJavaInstance </span>needs to be
 created using this with rules as to how the actual instantion of the
 live Java object should occur (both in code and by the target VM).<br>
@@ -2084,7 +2084,7 @@ ensure that it displays the current value of the <span
  style="font-family: monospace;"> doSetValue(Object
 value);&nbsp;</span> This method is given an argument of an <span
  style="font-family: monospace;">IJavaInstance
-</span>which represent the current value of the String object in the
+</span>which represents the current value of the String object in the
 Visual
 Editor's EMF model.&nbsp; To convert from this to this to a<span
  style="font-family: monospace;"> java.lang.String </span>object can
@@ -2106,7 +2106,7 @@ JVM.&nbsp;&nbsp;&nbsp; This proxy is an instance of <span
  style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.IBeanProxy</span>
 and is able to perform tasks such as remote method&nbsp; invocation on
 the actual target VM instance. <br>
-The API for this is modelled on the the<span
+The API for this is modelled on the<span
  style="font-family: monospace;"> java.lang.reflect</span> API however,
 unlike the reflection API which performs dynamic invocation within a
 single JVM, the bean proxy mechanism works between the Eclipse
@@ -2223,7 +2223,7 @@ the target VM.<br>
 <p>Having obtained the <span style="font-family: monospace;">IBeanTypeProxy
 <span style="font-family: arial,helvetica,geneva;">the instance of </span></span>an
 <span style="font-family: monospace;">IBeanProxy </span>for the
-java.io.File can be created by locating the the correct <span
+java.io.File can be created by locating the correct <span
  style="font-family: monospace;">IConstructorProxy </span>and calling
 <span style="font-family: monospace;">newInstance(IBeanProxy[])</span>
 with the correct arguments.<br>
@@ -2401,7 +2401,7 @@ that has introduces the types <span style="font-family: monospace;">IPointBeanPr
  style="font-family: monospace;">IDimensionBeanProxy</span>.&nbsp; This
 can occur safely if you know that the Eclipse workbench's JVM contains
 the classes in its -classpath and that these are a compatible shape
-with the target VM's instances.&nbsp; This and and other advanced
+with the target VM's instances.&nbsp; This and other advanced
 topics such handling arrays, installing helper class on the target VM's
 -classpath for a classpath container, exceptions and debugging the
 target VM
@@ -2691,12 +2691,12 @@ figure is set to its preferred size, and because this involves
 calculating using the fontMetrics to determine the width of the label's
 text the font must be&nbsp;<img style="width: 24px; height: 13px;"
  alt="" src="images/tag_6.gif"> explicitly set to the value it will
-acquire when it is added to the parent.&nbsp; Having complete the
+acquire when it is added to the parent.&nbsp; Having completed the
 creation of the Label it is added as a child of the <span
  style="font-family: monospace;">ImageFigure</span>.<br>
 </p>
 <p>To test the CustomWidgetGraphicalEditPart launch the Eclipse
-workbench target and verify the the image of a MyCustomPrompter class
+workbench target and verify that the image of a MyCustomPrompter class
 now renders itself with an image of the live visual covered with the <span
  style="color: rgb(255, 0, 0);">VE R</span><span
  style="color: rgb(255, 0, 0);">ules </span>text and icon <img
@@ -2878,7 +2878,7 @@ and this is done through adding&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"> the
 namespace for codeGenHelper in the XMI package declarations and an
 xsi:type of <span style="font-style: italic;">namespace:CodeGenHelperClass
-</span>with symtax&nbsp;<img style="width: 24px; height: 13px;" alt=""
+</span>with syntax&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag_4.gif"> <span style="font-style: italic;">source="codegen.CodeGenHelperClass</span>".&nbsp;
 The expression decoder is stored in the expDecoder feature of the
 CodeGenHelperClass and defined with the syntax of&nbsp;<img
@@ -2948,7 +2948,7 @@ Eclipse target workbench.&nbsp; Use the Properties view to set the <span
  style="font-style: italic;">text </span>property and ensure that the
 line is generated with the new comment.&nbsp; If it fails follow the
 same steps as for the custom property editor described earlier <span
- style="color: rgb(204, 0, 0);">&lt;&lt;add ref&gt;&gt;</span> whcih
+ style="color: rgb(204, 0, 0);">&lt;&lt;add ref&gt;&gt;</span> which
 involve looking in the .log file for any XMI syntax errors, using the
 BeanInfoClassAdapter to ensure the .override is being detected, and
 then finally debugging the decoder helper itself.&nbsp; <br>
@@ -2956,7 +2956,7 @@ then finally debugging the decoder helper itself.&nbsp; <br>
 <p>The final step of the tutorial is to promote the <span
  style="font-style: italic;">buttonSelection </span>event to the list
 of preferred events used by the Visual Editor when a list of events to
-be added is displayed to the user<br>
+be added is displayed to the user.<br>
 </p>
 <h2><a name="Preferred_Event">Specifying a preferred event</a></h2>
 <p><span style="font-style: italic; font-family: monospace;"></span><span
@@ -3017,7 +3017,7 @@ This returns an array of <span style="font-family: monospace;">java.beans.EventS
  style="color: rgb(153, 0, 0);">new </span>EventSetDescriptor[] {addButtonSelectionED};<br>			<br>       } <span
  style="color: rgb(153, 0, 0);">catch </span>(Exception e){<br>         e.printStackTrace();<br>       }					<br>       <span
  style="color: rgb(153, 0, 0);">return null</span>;<br>     }<br></pre>
-<p>To prompte a method to be preferred requies both the&nbsp;<img
+<p>To prompt a method to be preferred requies both the&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">
 MethodDescriptor being set to preferred and also the&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
@@ -3079,7 +3079,7 @@ as shown below<br>
 <p>In&nbsp; this tutorial, we looked at a high level where to start
 and extend the Visual Editor and use specialized property cell editors,
 BeanInfo, GEF edit parts, palette, and CodeGen decoders.&nbsp; To do
-this required understanding how to use Java build path contains as the
+this required understanding how to use Java build path containers as the
 trigger point for Visual Editor custom behavior, and how to inject
 specialized code through the user of BeanInfo classes (for cross IDE
 extensions) and .override files (for Visual Editor only specific
@@ -3089,7 +3089,7 @@ also the concept of the target VM was discussed.&nbsp; <br>
 <p>The software supplied with this article is for illustrative purposes
 only and should be used accordingly. The software is provided as is and
 with all faults, and hereby disclaims all other warranties and
-conditions, either express, implied or statutory, including, but not
+conditions, either expressed, implied or statutory, including, but not
 limited to, any (if any) implied warranties, duties or conditions of
 merchantability, of fitness for a particular purpose, of accuracy or
 completeness of responses, of results, of workmanlike effort, of lack
