@@ -103,7 +103,7 @@
 	 -->
      <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.java.core.editorpart.settextaction.popup.object">
+            id="org.eclipse.ve.internal.swt.editorpart.settextaction.popup.object">
          <filter
                name="BEANTYPE"
                value="org.eclipse.swt.widgets.Control">
@@ -123,7 +123,7 @@
 	-->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.cde.core.showgridaction.popup.object">
+            id="org.eclipse.ve.internal.swt.showgridaction.popup.object">
          <filter
                name="BEANTYPE"
                value="org.eclipse.swt.widgets.Composite">
@@ -135,12 +135,12 @@
          <action
                label="%PopupMenus.ShowGridAction.Label  Show Grid"
                class="org.eclipse.ve.internal.cde.core.ShowGridObjectActionDelegate"
-               id="org.eclipse.ve.internal.cde.core.showgridaction">
+               id="org.eclipse.ve.internal.swt.showgridaction">
          </action>
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.cde.core.hidegridaction.popup.object">
+            id="org.eclipse.ve.internal.swt.hidegridaction.popup.object">
          <filter
                name="BEANTYPE"
                value="org.eclipse.swt.widgets.Composite">
@@ -152,7 +152,28 @@
          <action
                label="%PopupMenus.HideGridAction.Label  Hide Grid"
                class="org.eclipse.ve.internal.cde.core.ShowGridObjectActionDelegate"
-               id="org.eclipse.ve.internal.cde.core.hidegridaction">
+               id="org.eclipse.ve.internal.swt.hidegridaction">
+         </action>
+      </objectContribution>
+      
+      <!--
+      	Add customize layout option
+      -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.swt.customizelayoutaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="org.eclipse.swt.widgets.Composite">
+         </filter>
+         <filter
+               name="EDITPOLICY#customizelayout"
+               value="true">
+         </filter>
+         <action
+               label="%PopupMenus.HideGridAction.CustomizeLayout  Customize Layout"
+               class="org.eclipse.ve.internal.swt.CustomizeLayoutObjectActionDelegate"
+               id="org.eclipse.ve.internal.swt.customizelayoutaction">
          </action>
       </objectContribution> 
    </extension> 

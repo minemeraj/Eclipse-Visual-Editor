@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-15 22:31:11 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-07 12:46:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -43,6 +43,10 @@ public LayoutPolicyHelper(VisualContainerPolicy ep){
 	setContainerPolicy(ep);
 }
 public LayoutPolicyHelper(){
+}
+
+protected IJavaObjectInstance getContainer() {
+	return (IJavaObjectInstance) policy.getContainer();
 }
 		
 public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
