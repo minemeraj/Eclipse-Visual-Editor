@@ -190,18 +190,22 @@
 			defaultExpand="false">
 		</category>
 			<visualElement
-         type="java.lang.Object"
-         icon="icons/full/clcl16/shell_obj.gif"
-         category="org.eclipse.ve.swt.cat"
-         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
-         name="%NewStyleComponent.Application">
+				 pluginId="org.eclipse.swt"
+		         container="SWT_CONTAINER"
+	    	     type="java.lang.Object"
+	        	 icon="icons/full/clcl16/shell_obj.gif"
+		         category="org.eclipse.ve.swt.cat"
+	    	     contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
+	        	 name="%NewStyleComponent.Application">
 			</visualElement>
 			<visualElement
-         type="org.eclipse.swt.widgets.Composite"
-         icon="icons/full/clcl16/composite_obj.gif"
-         category="org.eclipse.ve.swt.cat"
-         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
-         name="%NewStyleComponent.Composite">
+				 pluginId="org.eclipse.swt"
+		         container="SWT_CONTAINER"
+		         type="org.eclipse.swt.widgets.Composite"
+		         icon="icons/full/clcl16/composite_obj.gif"
+		         category="org.eclipse.ve.swt.cat"
+		         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
+		         name="%NewStyleComponent.Composite">
 			</visualElement>
   </extension>   
   
