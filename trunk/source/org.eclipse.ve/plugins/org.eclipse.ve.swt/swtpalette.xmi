@@ -61,18 +61,16 @@
           creationClassURI="java:/org.eclipse.swt.widgets#ProgressBar"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Progress Bar"/>
       </cmpEntries>     
-<!--    
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrollbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
-          creationClassURI="java:/org.eclipse.swt.widgets#ScrollBar"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ScrollBar"/>
-      </cmpEntries>                          
- -->      
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry7" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/slider_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry7obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Slider"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Slider"/>
       </cmpEntries>          
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry100" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scale_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry100obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Scale"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Scale"/>
+      </cmpEntries>
     </cmpGroups> 
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group2">
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry10" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif">
