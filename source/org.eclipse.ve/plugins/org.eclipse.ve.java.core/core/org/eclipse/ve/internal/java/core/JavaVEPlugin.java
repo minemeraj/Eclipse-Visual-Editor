@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-23 19:21:34 $ 
  */
 
 import java.util.*;
@@ -33,7 +33,6 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
 
-	public static final String PI_JBCF = "org.eclipse.ve.internal.java.core"; // Plugin ID, used for QualifiedName. //$NON-NLS-1$
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors";
 	// ID of the registrations extension point.
