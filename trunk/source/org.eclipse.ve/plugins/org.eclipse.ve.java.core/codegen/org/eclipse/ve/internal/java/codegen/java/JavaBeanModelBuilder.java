@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.21 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.22 $  $Date: 2005-01-10 19:26:52 $ 
  */
 
 import java.util.*;
@@ -24,7 +24,7 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.ISynchronizable;
 
-import org.eclipse.jem.internal.temp.VETimerTests;
+import org.eclipse.jem.util.TimerTests;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -117,7 +117,7 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 	//       we may consider to turn off some errors ... as we are not interested in
 	//       to compile all of this, but rather bits of pieaces of this
 
-	VETimerTests.basicTest.startStep("AST creation");	
+	TimerTests.basicTest.startStep("AST creation");	
 	try {
 		String sourceBeingParsed = null;
 		CompilationUnit result;
@@ -162,7 +162,7 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 				}
 			}
 		}
-		VETimerTests.basicTest.stopStep("AST creation");
+		TimerTests.basicTest.stopStep("AST creation");
 		return result ;
 	} catch (CodeGenSyntaxError e) {
 		throw e;	// Pass it on, don't log it twice.
@@ -317,7 +317,7 @@ protected List getInnerTypes() {
 }
 
 protected  void analyzeEvents() {
-	VETimerTests.basicTest.startStep("Parse Events");
+	TimerTests.basicTest.startStep("Parse Events");
 	fMonitor.subTask("Analyzing events");
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
@@ -342,7 +342,7 @@ protected  void analyzeEvents() {
 			break ;
 		}
 	  }
-	  VETimerTests.basicTest.stopStep("Parse Events");
+	  TimerTests.basicTest.stopStep("Parse Events");
 }
 
 /**
@@ -384,7 +384,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    
 	    // Start visiting our main type
 	    visitType((TypeDeclaration)fastCU.types().get(0), fModel, jdtMethods, tryAgain, fMonitor) ;
-//	    VETimerTests.basicTest.startStep("Parse expressions");
+//	    TimerTests.basicTest.startStep("Parse expressions");
 	
 	    // Let the non resolved visitor a chance to run again.    
 	    for (int i=0; i<tryAgain.size(); i++) {
@@ -392,7 +392,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    	visitor.setNoRetry() ;
 	    	visitor.visit() ;
 	    }
-//	    VETimerTests.basicTest.stopStep("Parse expressions");
+//	    TimerTests.basicTest.stopStep("Parse expressions");
 
 	    analyzeEvents() ;
 	    fMonitor.worked(100);
@@ -439,12 +439,12 @@ private int determineWorkAmount() {
 }
 
 protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElementInfo[] mthds, List tryAgain, IProgressMonitor monitor){
-	VETimerTests.basicTest.startStep("Creating Instance Var. BeanParts");
+	TimerTests.basicTest.startStep("Creating Instance Var. BeanParts");
  	TypeVisitor v = new TypeVisitor(type,model, tryAgain,false) ;
 	v.setJDTMethods(mthds);
 	v.setProgressMonitor(monitor);
 	v.visit()  ;
-	VETimerTests.basicTest.stopStep("Creating Instance Var. BeanParts");
+	TimerTests.basicTest.stopStep("Creating Instance Var. BeanParts");
 }
 
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.47 $  $Date: 2005-01-05 18:41:43 $ 
+ *  $Revision: 1.48 $  $Date: 2005-01-10 19:26:52 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.temp.VETimerTests;
+import org.eclipse.jem.util.TimerTests;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -779,10 +779,10 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL,true) ;
 	
 	try{
-		VETimerTests.basicTest.startStep("Create IJavaObject Instances");
+		TimerTests.basicTest.startStep("Create IJavaObject Instances");
 		// Before handle expressions, make sure all BeanPart s have instances
 		createJavaInstances(new SubProgressMonitor(pm, 10)) ;
-		VETimerTests.basicTest.stopStep("Create IJavaObject Instances");
+		TimerTests.basicTest.stopStep("Create IJavaObject Instances");
 	
 		// Create a new progress monitor for the decoding of expressions
 		SubProgressMonitor expProgressMonitor = new SubProgressMonitor(pm, 45);
@@ -918,16 +918,16 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
     	return;
 		
 			
-    VETimerTests.basicTest.startStep("Parsing");			
+    TimerTests.basicTest.startStep("Parsing");			
 	JavaBeanModelBuilder builder  = new JavaBeanModelBuilder(fEDomain, fSrcSync, fWorkingCopy,
                                               fWorkingCopy.getFile().getLocation().toFile().toString(),null,new SubProgressMonitor(pm, 40, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK)) ;              
     
 	builder.setDiagram(fVEModel) ;
 	fBeanModel = builder.build() ; 	
 	fBeanModel.setSourceSynchronizer(fSrcSync) ;	
-	VETimerTests.basicTest.stopStep("Parsing");
+	TimerTests.basicTest.stopStep("Parsing");
 	
-	VETimerTests.basicTest.startStep("Decoding");
+	TimerTests.basicTest.startStep("Decoding");
 	try {		
 	  buildCompositionModel(pm) ;	 
 	}
@@ -935,7 +935,7 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 		JavaVEPlugin.log (e, Level.SEVERE) ; //$NON-NLS-1$
 	}
 	pm.subTask("Finished decoding document");
-	VETimerTests.basicTest.stopStep("Decoding");
+	TimerTests.basicTest.stopStep("Decoding");
 	return;
 }
 
@@ -1075,7 +1075,7 @@ private void deCapitateModel() {
 
 public synchronized void reConnect(IFile file) {
 	// clearModel(true) ;
-	VETimerTests.basicTest.startStep("WorkingCopy connection");
+	TimerTests.basicTest.startStep("WorkingCopy connection");
 	deCapitateModel();
 	fVEModel = new VEModelInstance(file,fEDomain);
 	if (fWorkingCopy == null) {
@@ -1098,7 +1098,7 @@ public synchronized void reConnect(IFile file) {
 	}
 
 	fdisconnected=false ;
-	VETimerTests.basicTest.stopStep("WorkingCopy connection");
+	TimerTests.basicTest.stopStep("WorkingCopy connection");
 }
 
 public  void reconnect(org.eclipse.ui.IFileEditorInput input,IProgressMonitor pm) throws CodeGenException {
