@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-10 18:27:35 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-16 21:05:12 $ 
  */
 
 import java.util.Iterator;
 
+import org.eclipse.core.resources.*;
 import org.eclipse.jdt.core.*;
 
 import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
@@ -27,18 +28,45 @@ import org.eclipse.jem.internal.proxy.core.IStandardBeanTypeProxyFactory;
  */
 
 public class JavaModelSynchronizer extends JavaModelListener {
+	public interface TerminateRunnable {
+		/**
+		 * Terminate runnable for this synchronizer. The <code>close</code> parameter
+		 * is used to indicate this is a hard-close. This would occur for project close or delete.
+		 * This could be used to not recycle vm for example since the project is closing or being deleted.
+		 * @param close <code>true</code> if this is a project pre-close/pre-delete, <code>false</code> otherwise.
+		 * 
+		 * @since 1.0.0
+		 */
+		public void run(boolean close);
+	}
 	protected IBeanProxyDomain proxyDomain;
 	protected IJavaProject fProject; // The project this listener is opened on.
 	private boolean recycleVM = false;
-	private Runnable terminateRun;	
+	private TerminateRunnable terminateRun;	
 	private String ignoreTypeName;	// The name of the "this" class.
+	private IResourceChangeListener resourceTracker = new IResourceChangeListener() {
+		public void resourceChanged(IResourceChangeEvent e) {
+			// About to close or delete the project and it is ours, so we need to cleanup.
+			// Performance: It has been noted that dres.equals(...) can be slow with the number
+			// of visits done. Checking just the last segment (getName()) first before checking
+			// the entire resource provides faster testing. If the last segment is not equal,
+			// then the entire resource could not be equal.
+			IResource eventResource = e.getResource();
+			if (eventResource.getName().equals(getJavaProject().getElementName()) && eventResource.equals(getJavaProject().getProject())) {
+				terminateRun.run(true);	// This project is going away. (may actually be a rename) so terminate the vm.
+				return;
+			}
+		}
+	};
+	
 
-	public JavaModelSynchronizer(IBeanProxyDomain proxyDomain, IJavaProject aProject, Runnable terminateRun) {
+	public JavaModelSynchronizer(IBeanProxyDomain proxyDomain, IJavaProject aProject, TerminateRunnable terminateRun) {
 		super(ElementChangedEvent.POST_CHANGE);
 		this.proxyDomain = proxyDomain;
 		this.terminateRun = terminateRun;
 		
-		fProject = aProject;		
+		fProject = aProject;
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceTracker, IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 	}
 	
 	/* (non-Javadoc)
@@ -62,15 +90,11 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
 		if (isInClasspath(element)) {
 			if (delta.getKind() == IJavaElementDelta.REMOVED || delta.getKind() == IJavaElementDelta.ADDED) {
-				// Don't need to do anything for delete/close/add/open of main project because Eclipse will close us down
-				// anyway for this.			
-				if (!element.equals(fProject)) {
-					// However, all other projects are required projects and if they are deleted/closed/added/opened when need to do
-					// a recycle because we don't know any of the state, whether they are still there or not.
-					recycleVM = true;
-					return;	// Don't need to process further since we will recycle.
-				}
-				return;
+				// If our project goes, we need to stop the vm so that it can't be erased.
+				// All related projects are required projects and if they are deleted/closed/added/opened when need to do
+				// a recycle because we don't know any of the state, whether they are still there or not.
+				recycleVM = true;
+				return;	// Don't need to process further since we will recycle.
 			} else if (isClasspathResourceChange(delta)) {
 				recycleVM = true; // The .classpath file itself in SOME DEPENDENT PROJECT has changed. 
 				return;	// Don't need to process further since we will recycle.
@@ -215,7 +239,7 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		super.elementChanged(event);
 		if (recycleVM) {
 			recycleVM = false;
-			terminateRun.run();
+			terminateRun.run(false);
 		}
 	}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.46 $  $Date: 2004-06-14 16:50:52 $ 
+ *  $Revision: 1.47 $  $Date: 2004-06-16 21:05:12 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
@@ -255,6 +256,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		graphicalActionRegistry.registerAction(new ReloadAction(reloadCallback));
 		graphicalActionRegistry.registerAction(new ReloadNowAction(reloadCallback));
+		
+		setRootInProgressLock = Platform.getJobManager().newLock();
 			
 		super.init(site, input);
 	}
@@ -279,7 +282,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		modelChangeController.setHoldState(IModelChangeController.NO_UPDATE_STATE, null);	// Don't allow updates..
 		
 		setRootModel(null); // Clear it out so we don't see all of the changes that are about to happen.
-		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.
+		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.	
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
 			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE")); //$NON-NLS-1$
@@ -297,6 +300,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	private BeanSubclassComposition currentSetRoot;
 	private static final Object SELECTED_EDITPARTS_KEY = new Object();
+	// A lock to indicate a set non-null root is in progress. This is necessary because if a set root is in progress
+	// we shouldn't try to load a new model while an old model is still loading. It doesn't like being ripped out from
+	// underneath itself.
+	private ILock setRootInProgressLock = null;	
 	/*
 	 * Set a new model into the root editparts. This can happen because the setup and the initial creation
 	 * of the viewers can be in a race condition with each other.
@@ -304,73 +311,84 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	protected void setRootModel(final BeanSubclassComposition root) {
 		Assert.isTrue(Display.getCurrent() != null);
-		if (root == null) {
-			// We are going away. Try to build the path to the selected editparts so they can be restored later.
-			// Have to gather them all first because individually set the roots of the viewers to null will
-			// destroy the selection for the following viewers. The viewers may have slightly different selections
-			// if one viewer had an editpart that other didn't. So we need to get each individually.
+		boolean acquiredLock = false;
+		try {
+			if (root == null) {
+				// We are going away. Try to build the path to the selected editparts so they can be restored later.
+				// Have to gather them all first because individually set the roots of the viewers to null will
+				// destroy the selection for the following viewers. The viewers may have slightly different selections
+				// if one viewer had an editpart that other didn't. So we need to get each individually.
+				Iterator itr = editDomain.getViewers().iterator();
+				while (itr.hasNext()) {
+					EditPartViewer viewer = (EditPartViewer) itr.next();
+					List selected = viewer.getSelectedEditParts();
+					if (selected.isEmpty())
+						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+					else {
+						List paths = new ArrayList(selected.size());
+						for (int i = 0; i < selected.size(); i++) {
+							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
+							if (editPartNamePath == null)
+								continue; // If the root is selected, then treat as not selected.
+							paths.add(editPartNamePath);
+						}
+						if (paths.isEmpty())
+							editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // None selected
+						else
+							editDomain.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
+					}
+				}
+			} else {
+				setRootInProgressLock.acquire();	// Get access to prevent a load while we are doing this.
+				acquiredLock = true;
+				if (root.eResource() == null || root.eResource().getResourceSet() == null) 
+					return; // This root has already been released. Means probably another reload in progress.
+			}
+
 			Iterator itr = editDomain.getViewers().iterator();
 			while (itr.hasNext()) {
 				EditPartViewer viewer = (EditPartViewer) itr.next();
-				List selected = viewer.getSelectedEditParts();
-				if (selected.isEmpty())
-					editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// None selected
-				else {
-					List paths = new ArrayList(selected.size());
-					for (int i = 0; i < selected.size(); i++) {
-						EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
-						if (editPartNamePath == null)
-							continue;	// If the root is selected, then treat as not selected.
-						paths.add(editPartNamePath);
-					}
-					if (paths.isEmpty())
-						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// None selected
-					else
-						editDomain.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
-				}
+				EditPart rootEP = viewer.getContents();
+				rootEP.deactivate();
+				rootEP.setModel(root);
+				rootEP.refresh();
+				rootEP.activate();
+				rootEP.refresh();
 			}
-		}
-		
-		Iterator itr = editDomain.getViewers().iterator();
-		while (itr.hasNext()) {
-			EditPartViewer viewer = (EditPartViewer) itr.next();
-			EditPart rootEP = viewer.getContents();
-			rootEP.deactivate();
-			rootEP.setModel(root);
-			rootEP.refresh();
-			rootEP.activate();
-			rootEP.refresh();
-		}
-		
-		if (root != null) {
-			// We have something, see if anything needs to be selected.
-			Iterator itr1 = editDomain.getViewers().iterator();
-			while (itr1.hasNext()) {
-				EditPartViewer viewer = (EditPartViewer) itr1.next();			
-				List paths = (List) editDomain.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
-				if (paths != null) {
-					editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// So that doesn't hang around.
-					for (int i = 0; i < paths.size(); i++) {
-						EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, editDomain);
-						if (selected != null)
-							viewer.appendSelection(selected);
-					}
-				}
-			}
-		}
-		
 
-		try {
-			if (currentSetRoot != root && currentSetRoot != null)
-				currentSetRoot.eNotify(new ENotificationImpl((InternalEObject) currentSetRoot, CompositionProxyAdapter.RELEASE_PROXIES, null, null, null, false));
+			if (root != null) {
+				// We have something, see if anything needs to be selected.
+				Iterator itr1 = editDomain.getViewers().iterator();
+				while (itr1.hasNext()) {
+					EditPartViewer viewer = (EditPartViewer) itr1.next();
+					List paths = (List) editDomain.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
+					if (paths != null) {
+						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY); // So that doesn't hang around.
+						for (int i = 0; i < paths.size(); i++) {
+							EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, editDomain);
+							if (selected != null)
+								viewer.appendSelection(selected);
+						}
+					}
+				}
+			}
+
+			try {
+				if (currentSetRoot != root && currentSetRoot != null)
+					currentSetRoot.eNotify(new ENotificationImpl((InternalEObject) currentSetRoot, CompositionProxyAdapter.RELEASE_PROXIES, null,
+							null, null, false));
+			} finally {
+				currentSetRoot = root;
+			}
+			if (propertySheetPage != null) {
+				// At this point in time the property sheet may be in focus, so it is not listening to selection changes
+				// from us. Because of this it may have an active entries which are now pointing to the obsolete
+				// model. This model won't have a resource set, etc. So the entries need to be sent away.
+				propertySheetPage.selectionChanged(this, primaryViewer.getSelection());
+			}
 		} finally {
-			currentSetRoot = root;
-		}
-		if (propertySheetPage != null) {
-			// At this point in time the property sheet may be in focus, so it is not listening to selection changes
-			// from us. Because of this it may have an active entries which are now pointing to the obsolete
-			// model. This model won't have a resource set, etc. So the entries need to be sent away.
-			propertySheetPage.selectionChanged(this, primaryViewer.getSelection());	
+			if (acquiredLock)
+				setRootInProgressLock.release();
 		}
 	}
 
@@ -1317,7 +1335,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				} catch (CoreException e) {
 					// Wrapper the exception in a status so that when we join we can get the original exception back.
-					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 16, "", e);
+					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 16, e.getStatus().getMessage(), e);
 				}
 				return Status.OK_STATUS;
 							
@@ -1341,6 +1359,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		protected IStatus run(IProgressMonitor monitor) {			
 			try {
+				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 300);
 				if (!initialized) {
 					initialize(new SubProgressMonitor(monitor, 100));
@@ -1369,6 +1388,23 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					return canceled();
 				}
 				
+				DiagramData dd = modelBuilder.getModelRoot();
+				if (dd != null) {
+					// See if we have an old model, and if we do, get the root in progress lock and then clear
+					// the model. This will stop the set root from working on an old root by mistake.
+					// We don't want to hold up ui, so we will just hold it long enough to release old model.
+					setRootInProgressLock.acquire();
+					try {
+						Resource res = dd.eResource();
+						if (res != null) {
+							ResourceSet rset = res.getResourceSet();
+							if (rset != null)
+								rset.getResources().remove(res);
+						}
+					} finally {
+						setRootInProgressLock.release();
+					}
+				}
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
@@ -1377,11 +1413,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
 				if (monitor.isCanceled()) {
-					loadCompleteSync.notifyAll();
+					setLoadIsPending(false);
 					return canceled();
 				}
 				
-				DiagramData dd = modelBuilder.getModelRoot();
+				dd = modelBuilder.getModelRoot();
 				if (dd != null) {
 					editDomain.setDiagramData(dd);
 					InverseMaintenanceAdapter ia = new InverseMaintenanceAdapter() {
@@ -1429,7 +1465,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			} catch (final Exception x) {
 				noLoadPrompt(x);
 				setLoadIsPending(false);
-				return canceled();
+				canceled();
+				return (x instanceof CoreException) ? ((CoreException) x).getStatus() : Status.CANCEL_STATUS;
 			}
 			
 			if (rebuildPalette && !monitor.isCanceled()) {
@@ -1497,7 +1534,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			initialized = true;
 			initializeEditDomain();		
 			modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
-
+			beanProxyAdapterFactory = new BeanProxyAdapterFactory(null, editDomain, new BasicAllocationProcesser());
+			
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			initializeForProject(file);
 
@@ -1519,13 +1557,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 			synchronized (JavaVisualEditorPart.this) {
 				// Add the model synchronizer.
-				modelSynchronizer = new JavaModelSynchronizer(beanProxyAdapterFactory, JavaCore.create(file.getProject()), new Runnable() {
+				modelSynchronizer = new JavaModelSynchronizer(beanProxyAdapterFactory, JavaCore.create(file.getProject()), new JavaModelSynchronizer.TerminateRunnable() {
 					/**
 					 * @see java.lang.Runnable#run()
 					 */
-					public void run() {
-						recycleCntr = 0; // So that this resets the cntr for premature terminates.
-						proxyFactoryRegistry.terminateRegistry();	// Terminate registry
+					public void run(boolean close) {
+						if (close)
+							recycleCntr = Integer.MAX_VALUE;	// Set it to max to indicate don't reload at this time. This is because our project is being deleted/closed.
+						else
+							recycleCntr = 0; // So that this resets the cntr for premature terminates.
+						if (proxyFactoryRegistry != null)
+							proxyFactoryRegistry.terminateRegistry();	// Terminate registry
 					}
 				});
 			}
@@ -1614,7 +1656,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			JavaInstantiation.initialize(nature.getResourceSet());
 			
 			// Make sure that there is an AdaptorFactory for BeanProxies installed
-			beanProxyAdapterFactory = new BeanProxyAdapterFactory(null, editDomain, new BasicAllocationProcesser());
 			rs.getAdapterFactories().add(beanProxyAdapterFactory);
 			
 			// Create the target VM that is used for instances within the document we open

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormComponentsHostAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-22 23:49:21 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-16 21:05:15 $ 
  */
 
 import java.util.Iterator;
@@ -222,7 +222,8 @@ public class FreeFormComponentsHostAdapter extends AdapterImpl {
 		this.composition = composition;
 		this.workbenchPage = workbenchPage;
 
-		rset = composition.eResource().getResourceSet();
+		rset = composition.eResource().getResourceSet();	
+		ensureEMFDetailsCached();
 	}
 
 	protected boolean isSwingType(IBeanProxyHost aProxy) {
@@ -276,7 +277,7 @@ public class FreeFormComponentsHostAdapter extends AdapterImpl {
 		if ( classComponent == null ) 
 			classComponent = (EClass) Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
 		if ( classJComponent == null )
-			classJComponent = (EClass) Utilities.getJavaClass("javax.swing.JComponent", rset); //$NON-NLS-1$		
+			classJComponent = (EClass) Utilities.getJavaClass("javax.swing.JComponent", rset); //$NON-NLS-1$
 	}
 	
 	public void notifyChanged(Notification msg) {
