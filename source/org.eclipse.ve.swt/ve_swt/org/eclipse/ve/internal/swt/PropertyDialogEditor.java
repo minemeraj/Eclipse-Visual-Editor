@@ -7,6 +7,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
@@ -15,6 +17,8 @@ public class PropertyDialogEditor extends Dialog {
 	protected IProject myProject = null;	
 	protected PropertyEditor chooser;
 	protected String initString;
+	
+	protected PropertyChangeListener changeListener;
 	
 	public PropertyDialogEditor(Shell parentShell, PropertyEditor aChooser, IProject project) {
 		super(parentShell);
@@ -42,9 +46,17 @@ public class PropertyDialogEditor extends Dialog {
 		// Ensure the OK button is only enabled when there is an actual value to return
 		final Button okButton = getButton(IDialogConstants.OK_ID);
 		okButton.setEnabled(false);
-		chooser.addPropertyChangeListener(new PropertyChangeListener(){
+		changeListener = new PropertyChangeListener(){
 			public void propertyChange(PropertyChangeEvent evt) {
-			 okButton.setEnabled(chooser.getValue() != null);
+				okButton.setEnabled(chooser.getValue() != null);
+			}
+		};
+		chooser.addPropertyChangeListener(changeListener);
+		okButton.addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				if (chooser != null) {
+					chooser.removePropertyChangeListener(changeListener);
+				}
 			}
 		});
 	}

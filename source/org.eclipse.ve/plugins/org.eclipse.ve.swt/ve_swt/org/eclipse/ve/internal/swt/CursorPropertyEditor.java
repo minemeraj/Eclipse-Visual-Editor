@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: CursorPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-22 20:59:56 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-20 16:41:17 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -85,7 +85,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 			arg0.doit = true;
 			try {
 				if (arg0.text != null && arg0.text.length() > 0) {
-					int value = Integer.parseInt(arg0.text);
+					Integer.parseInt(arg0.text);
 				}
 			} catch (NumberFormatException e) {
 				arg0.doit = false;
@@ -97,7 +97,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 	private Cursor cursorValue;
 	private int cursorConstant;
 	
-	private static final String CURSOR_CLASS_PREFIX = "org.eclipse.graphics.Cursor("; //$NON-NLS-1$
+	private static final String CURSOR_CLASS_PREFIX = "org.eclipse.swt.graphics.Cursor("; //$NON-NLS-1$
 	private static final String CURSOR_PREFIX = "org.eclipse.swt.SWT.CURSOR_"; //$NON-NLS-1$
 	
 	private static final String cursorNames[] = { messages.getString("appStarting"), messages.getString("arrow"), messages.getString("cross"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -157,66 +157,57 @@ public class CursorPropertyEditor implements PropertyEditor {
 	 * @see PropertyEditor#createControl(org.eclipse.swt.widgets.Composite, int)
 	 */
 	public Control createControl(Composite parent, int style) {
-		control = new Composite(parent, style);
-		RowLayout rowLayout = new RowLayout ();
-		rowLayout.type = SWT.VERTICAL;
-		rowLayout.fill = true;
-		control.setLayout(rowLayout);
-		
-		standardButton = new Button(control, SWT.RADIO);
-		standardButton.setText(messages.getString("standardCursor")); //$NON-NLS-1$
-		standardButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent arg0) {
-				radioSwitchStandard(true);
+		if (control == null || control.isDisposed()) {
+			control = new Composite(parent, style);
+			RowLayout rowLayout = new RowLayout();
+			rowLayout.type = SWT.VERTICAL;
+			rowLayout.fill = true;
+			control.setLayout(rowLayout);
+			standardButton = new Button(control, SWT.RADIO);
+			standardButton.setText(messages.getString("standardCursor")); //$NON-NLS-1$
+			standardButton.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent arg0) {
+					radioSwitchStandard(true);
+				}
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					radioSwitchStandard(true);
+				}
+			});
+			constantsSelect = new Combo(control, SWT.DROP_DOWN | SWT.READ_ONLY);
+			for (int i = 0; i < cursorNames.length; i++) {
+				constantsSelect.add(cursorNames[i], i);
 			}
-
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				radioSwitchStandard(true);
-			}
-		});
-		
-		constantsSelect = new Combo(control, SWT.DROP_DOWN | SWT.READ_ONLY);
-		for (int i = 0; i < cursorNames.length; i++) {
-			constantsSelect.add(cursorNames[i], i);
+			constantsSelect.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					int selection = constantsSelect.getSelectionIndex();
+					setCursorFromList(selection);
+				}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					int selection = constantsSelect.getSelectionIndex();
+					setCursorFromList(selection);
+				}
+			});
+			customButton = new Button(control, SWT.RADIO);
+			customButton.setText(messages.getString("customCursor")); //$NON-NLS-1$
+			customButton.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent arg0) {
+					radioSwitchStandard(false);
+				}
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					radioSwitchStandard(false);
+				}
+			});
+			makeCustomPanel(control);
+			preview = new PreviewPanel();
+			Control pcontrol = preview.createControl(control, SWT.NONE);
+			cursorValue = new Cursor(pcontrol.getDisplay(), SWT.CURSOR_HAND);
+			preview.updatePreview(cursorValue);
+			control.pack();
+			radioSwitchStandard(true);
+			xText.setText("0"); //$NON-NLS-1$
+			yText.setText("0"); //$NON-NLS-1$
+			
 		}
-		constantsSelect.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				int selection = constantsSelect.getSelectionIndex();
-				setCursorFromList(selection);
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				int selection = constantsSelect.getSelectionIndex();
-				setCursorFromList(selection);
-			}
-		});
-		
-		customButton = new Button(control, SWT.RADIO);
-		customButton.setText(messages.getString("customCursor")); //$NON-NLS-1$
-		customButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent arg0) {
-				radioSwitchStandard(false);
-			}
-
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				radioSwitchStandard(false);
-			}
-		});
-		
-		makeCustomPanel(control);
-		
-		preview = new PreviewPanel();
-		Control pcontrol = preview.createControl(control, SWT.NONE);
-		
-		cursorValue = new Cursor(pcontrol.getDisplay(), SWT.CURSOR_HAND);
-		
-		preview.updatePreview(cursorValue);
-
-		control.pack();
-		radioSwitchStandard(true);
-		xText.setText("0"); //$NON-NLS-1$
-		yText.setText("0"); //$NON-NLS-1$
 		
 		return control;
 	}
@@ -658,7 +649,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 	 * @see PropertyEditor#getJavaInitializationString()
 	 */
 	public String getJavaInitializationString() {
-		StringBuffer init = new StringBuffer("new org.eclipse.swt.graphics.Cursor(org.eclipse.swt.widgets.Display.getDefault(), "); //$NON-NLS-1$
+		StringBuffer init = new StringBuffer("new " + CURSOR_CLASS_PREFIX + "org.eclipse.swt.widgets.Display.getDefault(), "); //$NON-NLS-1$
 		if (cursorConstant != -1) {
 			init.append(CURSOR_PREFIX + cursorConstants[cursorConstant] + ")"); //$NON-NLS-1$
 			return init.toString();

@@ -279,8 +279,11 @@ public class ColorPropertyEditor implements PropertyEditor {
 		return createControl(parent, style, true);
 	}
 	
+	/* (non-Javadoc)
+	 * @see PropertyEditor#createControl(org.eclipse.swt.widgets.Composite, int)
+	 */
 	public Control createControl(Composite parent, int style, boolean showPreview) {
-		if (control == null) {
+		if (control == null || control.isDisposed()) {
 			control = new Composite(parent, style);
 			
 			black = control.getDisplay().getSystemColor(SWT.COLOR_BLACK);
@@ -466,7 +469,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 	
 	private void initializeColorConstants(Device d) {
 		// check to see that it's not already initialized
-		if (basicColorValues[0] == null) {
+		if (basicColorValues[0] == null || basicColorValues[0].isDisposed()) {
 			for (int i = 0; i < basicColorConstantValues.length; i++) {
 				basicColorValues[i] = d.getSystemColor(basicColorConstantValues[i]);
 			}
@@ -748,5 +751,7 @@ public class ColorPropertyEditor implements PropertyEditor {
 	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
 		fExistingValue = value;
 		// We have the IDE object that points to the color on the target VM
+		
+		
 	}
 }

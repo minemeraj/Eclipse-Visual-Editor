@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -77,10 +76,10 @@ public class FontPropertyEditor implements PropertyEditor {
 	protected int JFaceIndex = -1;
 
 	/* (non-Javadoc)
-	 * @see testing.JVEChooser#createControl(org.eclipse.swt.widgets.Composite, int)
+	 * @see PropertyEditor#createControl(org.eclipse.swt.widgets.Composite, int)
 	 */
 	public Control createControl(Composite parent, int style) {
-		if (control == null) {
+		if (control == null || control.isDisposed()) {
 			control = new Composite(parent, style);
 			GridLayout grid = new GridLayout();
 			grid.numColumns = 3;
