@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.34 $  $Date: 2004-09-09 18:11:50 $ 
+ *  $Revision: 1.35 $  $Date: 2004-11-19 17:34:45 $ 
  */
 
 
@@ -655,7 +655,7 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 }
 
 public  void insertContentToDocument() {
-	if (isStateSet(STATE_NO_SRC)) return ;
+	if (isStateSet(STATE_NO_SRC) || isStateSet(STATE_DELETE)) return ;
 	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	synchronized (fBean.getModel().getDocumentLock()) {
 		// mark a controlled update (Top-Down)		
