@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-12 15:58:26 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-18 14:30:11 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -162,45 +162,16 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		fSearchExternalJarsCheckButton = new Button(mainComp, SWT.CHECK);
 		fSearchExternalJarsCheckButton.setText(VCELauncherMessages.getString("BeanTab.externaljars.label")); //$NON-NLS-1$
 		fSearchExternalJarsCheckButton.setToolTipText(VCELauncherMessages.getString("BeanTab.externaljars.tooltip")); //$NON-NLS-1$
-		
-		TabFolder widgetSetsTabFolder = new TabFolder(comp, SWT.NONE);
-		gd = new GridData(GridData.FILL_BOTH);
-		widgetSetsTabFolder.setLayoutData(gd);
-		
-		// Provide options specific to the Swing/AWT widget sets
-		TabItem swingItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
-		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text"));
-		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip"));
-		
-		Composite swingOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
-		GridLayout swingLayout = new GridLayout();
-		swingOptionsComp.setLayout(swingLayout);
-		swingItem.setControl(swingOptionsComp);
-		
-		// The user can specify which look and feel they want
-		Label fJavaBeanLabel = new Label(swingOptionsComp, SWT.NONE);
-		fJavaBeanLabel.setText(VCELauncherMessages.getString("BeanTab.lookfeel.label")); //$NON-NLS-1$
-		gd = new GridData();
-		gd.horizontalSpan = 3;
-		fJavaBeanLabel.setLayoutData(gd);
-		
-		fLookAndFeelClasses = new ArrayList();
-		fLookAndFeelList = new List(swingOptionsComp,SWT.BORDER);
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.verticalAlignment = GridData.FILL;
-		data.grabExcessVerticalSpace = true;
-//		data.horizontalSpan = 3;		
-		fLookAndFeelList.setLayoutData(data);
-		
+
 		// Label for locale
-		Label fLocaleLabel = new Label(swingOptionsComp, SWT.NONE);
+		Label fLocaleLabel = new Label(mainComp, SWT.NONE);
 		fLocaleLabel.setText(VCELauncherMessages.getString("BeanTab.locale.label")); //$NON-NLS-1$
 		gd = new GridData();
-		fLocaleLabel.setLayoutData(gd);	
-
+		gd.horizontalSpan = 3;
+		fLocaleLabel.setLayoutData(gd);
+		
 		// For locale create a new group that has 3 columns
-		Composite localeComp = new Composite(swingOptionsComp, SWT.NONE);
+		Composite localeComp = new Composite(mainComp, SWT.NONE);
 		GridLayout localeLayout = new GridLayout();
 		localeLayout.numColumns = 3;
 		localeLayout.marginHeight = 0;
@@ -208,6 +179,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		localeComp.setLayout(localeLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		localeComp.setLayoutData(gd);
+		
+
 
 		// Controls for the locale
 			
@@ -243,6 +216,36 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
+		
+		TabFolder widgetSetsTabFolder = new TabFolder(comp, SWT.NONE);
+		gd = new GridData(GridData.FILL_BOTH);
+		widgetSetsTabFolder.setLayoutData(gd);
+		
+		// Provide options specific to the Swing/AWT widget sets
+		TabItem swingItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
+		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text"));
+		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip"));
+		
+		Composite swingOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
+		GridLayout swingLayout = new GridLayout();
+		swingOptionsComp.setLayout(swingLayout);
+		swingItem.setControl(swingOptionsComp);
+		
+		// The user can specify which look and feel they want
+		Label fJavaBeanLabel = new Label(swingOptionsComp, SWT.NONE);
+		fJavaBeanLabel.setText(VCELauncherMessages.getString("BeanTab.lookfeel.label")); //$NON-NLS-1$
+		gd = new GridData();
+		gd.horizontalSpan = 3;
+		fJavaBeanLabel.setLayoutData(gd);
+		
+		fLookAndFeelClasses = new ArrayList();
+		fLookAndFeelList = new List(swingOptionsComp,SWT.BORDER);
+		GridData data = new GridData();
+		data.horizontalAlignment = GridData.FILL;
+		data.verticalAlignment = GridData.FILL;
+		data.grabExcessVerticalSpace = true;
+//		data.horizontalSpan = 3;		
+		fLookAndFeelList.setLayoutData(data);
 		
 		// Let the user specify the size of the component to open 
 		// or whether to pack it
