@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-18 16:23:35 $ 
+ *  $Revision: 1.12 $  $Date: 2004-09-02 14:42:20 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -40,7 +40,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	BeanPart fParent = null ;
 	protected String constructorSF = null;
-	protected CodeExpressionRef childExp = null; // Expression to which this is the master
+	protected CodeExpressionRef masterExpression = null; // Expression drives the existence of this expression
 
 	/**
 	 * @param bean
@@ -131,16 +131,16 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			controlList.add(index, fbeanPart.getEObject());
 		}
 		
-		if(childExp==null){
+		if(masterExpression==null){
 			// Create a pseudo expression for the parent (no add(Foo) in SWT)
 			// This will drive the creation of a decoder with controls, and will
 			// establish the parent/child relationship in the BDM
 			ExpressionRefFactory eGen = new ExpressionRefFactory(fParent, sf);		
 			try {
-				childExp = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
+				masterExpression = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
 				// The z order for the "control" feature 
 				// will be base on this constructor
-				childExp.setMasterExpression(exp);
+				masterExpression.setMasteredExpression(exp);
 			} catch (CodeGenException e) {
 				JavaVEPlugin.log(e);
 			}
@@ -233,29 +233,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#primIsDeleted()
 	 */
 	public boolean primIsDeleted() {
-		boolean result = super.primIsDeleted();
-		if (!result) {
-			// See if there is a 'control' expression
-			BeanPart p = getParent() ;
-			if (p!= null) {
-				EObject parent = p.getEObject();
-				BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-				ICodeGenAdapter[] list = pAdapter.getSettingAdapters(getControlSF());
-				ExpressionDecoderAdapter adapter = null;
-				for (int i = 0; list!=null && i < list.length; i++) {
-					if (list[i] instanceof ExpressionDecoderAdapter) {
-						adapter = (ExpressionDecoderAdapter)list[i] ;
-						Object[] added = adapter.getDecoder().getAddedInstance();
-						if (added==null || added.length==0 || added[0]!=fbeanPart.getEObject())
-								adapter = null;
-						else						
-						        break;
-					}
-				}
-				if (adapter==null) return true;
-				return adapter.getDecoder().isDeleted();
-			}
-		}
+		boolean result = super.primIsDeleted() || fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_MASTER_DELETED);
 		return result;
 	}
 }

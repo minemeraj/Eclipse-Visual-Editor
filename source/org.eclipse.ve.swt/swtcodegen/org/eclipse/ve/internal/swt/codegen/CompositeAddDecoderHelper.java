@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2004-08-20 13:44:07 $ 
+ *  $Revision: 1.14 $  $Date: 2004-09-02 14:42:20 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -444,15 +444,15 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		else {
 			// This feature has no src.
 			fOwner.getExprRef().setNoSrcExpression(true);
-			CodeExpressionRef master = getInitExpression() ;
-			fOwner.getExprRef().setMasterExpression(master);
-			if (master.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+			CodeExpressionRef mastered = getInitExpression() ;
+			fOwner.getExprRef().setMasteredExpression(mastered);
+			if (mastered.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 				// master was not generated yet, .. snooze it
-				master.setNoSrcExpression(false);
+				mastered.setNoSrcExpression(false);
 				try {
-					master.generateSource(null);
-					master.getMethod().updateExpressionOrder();
-					master.insertContentToDocument();
+					mastered.generateSource(null);
+					mastered.getMethod().updateExpressionOrder();
+					mastered.insertContentToDocument();
 				} catch (CodeGenException e) {
 					JavaVEPlugin.log(e);
 				}

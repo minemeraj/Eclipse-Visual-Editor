@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2004-08-09 21:29:24 $ 
+ *  $Revision: 1.24 $  $Date: 2004-09-02 14:42:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -242,7 +242,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public String generate(Object[] args) throws CodeGenException {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
-			// ivjFoo = <allocation>;					
+			// ivjFoo = <allocation>;			
+		if (!fbeanPart.isInstanceVar()) {
+			String type = fbeanPart.getType();
+			fOwner.getExprRef().getReqImports().add(type);
+			int idx = type.lastIndexOf('.');
+			if (idx>=0)
+				type = type.substring(idx+1);
+			sb.append(type+" ");
+		}
 		sb.append(fbeanPart.getSimpleName());
 		sb.append(" = ");
 		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
