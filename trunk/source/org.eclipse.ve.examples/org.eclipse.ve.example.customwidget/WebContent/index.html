@@ -66,62 +66,6 @@ for our widget</a><br>
 <a href="#Overriding_an_Expression_Decoder">Overriding an Expression Decoder</a><br>
 <a href="#Preferred_Event">Preferred Event</a></p>
 <p>&nbsp;</p>
-<h2><a name="Preferred_Event0">Preferred Event</a></h2>
-<p>&nbsp;</p>
-<p>The MyCustomPrompter introduces event.&nbsp; VE will figure this out from the 
-class file because the event follows the JavaBean specification.</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.67.gif" class="PictureStyle"></p>
-<p>&nbsp;</p>
-<p>As such, if you use the Visual Editor to <b>Add Events...</b>, the <i>
-buttonSelected</i> event will be there<i>.&nbsp; </i>In this section we will use 
-the BeanInfo class to denote that this event is preferred.&nbsp; As such, this 
-event will be available on the Events context menu:</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.68.jpg" class="PictureStyle"></p>
-<p>&nbsp;</p>
-<p>The
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project">
-MyCustomPrompterBeanInfo.java</a> also overrides the <i>getEventSetDescriptors</i> 
-method, and set the preferred flag to true.</p>
-<pre>
-	public EventSetDescriptor[] getEventSetDescriptors() {
-		
-		try{
-			MethodDescriptor addButtonSelectionMD = new MethodDescriptor(
-				ButtonSelectionListener.class.getMethod("buttonSelected",
-				new Class[]{SelectionEvent.class})
-				);
-			<font color="#0000FF">addButtonSelectionMD.setPreferred(true)</font>;
-			addButtonSelectionMD.setValue("preferred",Boolean.TRUE);
-			
-			EventSetDescriptor addButtonSelectionED = new EventSetDescriptor(
-					"buttonSelection",
-					ButtonSelectionListener.class,
-					new MethodDescriptor[] {addButtonSelectionMD},
-					MyCustomPrompter.class.getMethod("addButtonSelectionListener",new Class[]{ButtonSelectionListener.class}),
-					MyCustomPrompter.class.getMethod("removeButtonSelectionListener",new Class[]{ButtonSelectionListener.class})
-					);
-
-			addButtonSelectionED.setPreferred(true);
-			
-			return new EventSetDescriptor[] {addButtonSelectionED};
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		}				
-		
-		return null;
-	}
-</pre>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2><a name="Conclusion0">Conclusion</a></h2>
-<p>In part 1 of this tutorial, we looked at a high level where to start and 
-extend the Visual Editor and use specialized property cell editors, BeanInfo, 
-GEF edit parts, palette, and CodeGen decoders.&nbsp;&nbsp;
-</p>
 
 <p>&nbsp;</p>
 <p></p>
