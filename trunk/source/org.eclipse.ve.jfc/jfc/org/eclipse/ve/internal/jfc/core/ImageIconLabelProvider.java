@@ -11,10 +11,8 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageIconLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-06 20:19:47 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-18 18:15:17 $ 
  */
-
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
@@ -26,30 +24,9 @@ public class ImageIconLabelProvider extends LabelProvider {
 
 		if (element instanceof IJavaObjectInstance) {
 			IJavaObjectInstance imageIcon = (IJavaObjectInstance) element;
-			// TODO Need to fix this compile error... for now just return null
-			return null;
-//			return getPathFromInitializationString(imageIcon.getInitializationString());
+			return ImageIconCellEditor.getPathFromInitializationAllocation(imageIcon.getAllocation());
 		}
 		return ""; //$NON-NLS-1$
 	}
 
-	public static String fixBackSlash(String pathname) {
-		if (pathname != null && !pathname.equals("")) { //$NON-NLS-1$
-			pathname = pathname.replace('\\', '/');
-		}
-		return pathname;
-
-	}
-	
-	/**
-	 * Parse through the initialization string and strip out the path information.
-	 */
-	protected String getPathFromInitializationString(String initStr) {
-		if (initStr == null || initStr.equals("") || initStr.indexOf('"') == -1) //$NON-NLS-1$
-			return ""; //$NON-NLS-1$
-		StringTokenizer stk = new StringTokenizer(initStr, "\""); //$NON-NLS-1$
-		stk.nextToken();
-		String pathname = fixBackSlash(stk.nextToken().trim());
-		return pathname;
-	}
 }

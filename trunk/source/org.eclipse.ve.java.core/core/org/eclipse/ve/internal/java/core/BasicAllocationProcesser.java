@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-27 21:35:21 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-18 18:15:15 $ 
  */
  
 import java.text.MessageFormat;
@@ -55,6 +55,12 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 */
 	private static class ParseAllocation extends ParseTreeAllocationInstantiationVisitor {
 		
+		private IBeanTypeProxy thisType;
+		
+		public ParseAllocation(IBeanTypeProxy thisType) {
+			this.thisType = thisType;
+		}
+		
 		/* (non-Javadoc)
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTInstanceReference)
 		 */
@@ -70,6 +76,29 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			return false;
 		}
 
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTMethodInvocation)
+		 */
+		public boolean visit(PTMethodInvocation node) {
+			// We are handling this.getClass() and getClass() special because we can possibly get the this.class. Normally "this...." anything 
+			// cannot be handled because we don't have a "this" object to work with. So if getClass() or this.getClass() then we know we
+			// can simply return the thisType we have already stored within us.
+			if ("getClass".equals(node.getName()) && (node.getReceiver() == null || node.getReceiver() instanceof PTThisLiteral)) {
+				if (thisType == null)
+					throw new IllegalArgumentException("Type of \"this\" was not found, or it was invalid.");
+				try {
+					getExpression().createProxyExpression(getNextExpression(), thisType);
+				} catch (IllegalStateException e) {
+					throw new ProcessingException(e);
+				} catch (ThrowableProxy e) {
+					throw new ProcessingException(e);
+				} catch (NoExpressionValueException e) {
+					throw new ProcessingException(e);
+				}
+				return false;
+			} else 
+				return super.visit(node);
+		}
 }
 	
 	protected IBeanProxyDomain domain; 
@@ -126,7 +155,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 * @since 1.0.0
 	 */
 	protected IBeanProxy allocate(ParseTreeAllocation parseTree) throws AllocationException {
-		ParseAllocation allocator = new ParseAllocation();
+		ParseAllocation allocator = new ParseAllocation(domain.getThisType());
 		try {
 			return allocator.getBeanProxy(parseTree.getExpression(), domain.getProxyFactoryRegistry());
 		} catch (ProcessingException e) {

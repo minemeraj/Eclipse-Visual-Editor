@@ -11,21 +11,30 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-06 20:19:47 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-18 18:15:17 $ 
  */
 
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
+import org.eclipse.jem.workbench.utility.NoASTResolver;
+import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
  * Cell editor for javax.swing.ImageIcon.
+ * TODO Needs to be changed to use parse tree all of the way through to Icon dialog and beyond.
  * @version 	1.0
  * @author
  */
@@ -33,6 +42,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$
+	private static final String IMAGE_ICON_CLASSNAME = "javax.swing.ImageIcon";
 
 	public ImageIconCellEditor(Composite parent) {
 		super(parent);
@@ -46,29 +56,55 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 		}
 
 		this.path = path;
-		return BeanUtilities.createJavaObject("javax.swing.ImageIcon", //$NON-NLS-1$
-		JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaInitializationString());
+		
+		
+		return BeanUtilities.createJavaObject(IMAGE_ICON_CLASSNAME,
+			JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
 	}
-
-	private static final String IMAGE_ICON_INITSTRING_START = "new javax.swing.ImageIcon("; //$NON-NLS-1$
+	
 	/**
-	 * Parse through the initialization string and strip out the path information.
+	 * Return the JavaAllocation for the current value.
+	 * @return
+	 * 
+	 * @since 1.0.0
 	 */
-	protected String getPathFromInitializationString(String initStr) {
-		if (initStr == null || !initStr.startsWith(IMAGE_ICON_INITSTRING_START))
-			return ""; // Not valid format //$NON-NLS-1$
+	public JavaAllocation getJavaAllocation() {
 
-		int lastParen = initStr.lastIndexOf(')');
-		if (lastParen == -1)
-			return ""; // Not valid format //$NON-NLS-1$
-
-		return initStr.substring(IMAGE_ICON_INITSTRING_START.length(), lastParen).trim(); // Get the arg
+		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		String initString = getJavaInitializationString(); 
+		parser.setSource(initString.toCharArray());
+		parser.setSourceRange(0,initString.length());
+		parser.setKind(ASTParser.K_EXPRESSION) ;		
+        ASTNode ast = parser.createAST(null);
+        if (ast == null)
+        	return null;	// It didn't parse.
+	
+        ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+        alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) ast));
+		return alloc;
 	}
+	
+	/*
+	 * Find the argument to the new ImageIcon. Turn it into a string.
+	 */
+	public static String getPathFromInitializationAllocation(JavaAllocation allocation) {
+		if (allocation instanceof ParseTreeAllocation) {
+			PTExpression exp = ((ParseTreeAllocation) allocation).getExpression();
+			if (exp instanceof PTClassInstanceCreation && ((PTClassInstanceCreation) exp).getType().equals(IMAGE_ICON_CLASSNAME) && ((PTClassInstanceCreation) exp).getArguments().size() == 1) {
+				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
+				((PTExpression) ((PTClassInstanceCreation) exp).getArguments().get(0)).accept(flattener);
+				return flattener.getResult();
+			}
+		}
+		
+		return "";	// Don't know how to handle if not an ParseTree allocation.
+	}
+	
 	/**
 	 * getJavaInitializationString method comment.
 	 */
 	public String getJavaInitializationString() {
-		return IMAGE_ICON_INITSTRING_START + path + ")"; //$NON-NLS-1$
+		return "new " + IMAGE_ICON_CLASSNAME + '(' + path + ")"; //$NON-NLS-1$
 	}
 
 	protected void updateContents(Object aValue) {
@@ -76,14 +112,10 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 		if (lbl == null)
 			return;
 
-		String text = ""; //$NON-NLS-1$
-		if (aValue != null) {
-			// TODO need to fix compile error
-//			String initString = getPathFromInitializationString(((IJavaObjectInstance) aValue).getInitializationString());
-//			if (initString != "") //$NON-NLS-1$
-//				text = initString;
-		}
-		lbl.setText(text);
+		if (aValue != null)
+			lbl.setText(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
+		else
+			lbl.setText("");
 	}
 
 	public Object openDialogBox(Control cellEditorWindow) {
@@ -94,12 +126,9 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();
 		if (aValue != null) {
-			// TODO need to fix compile error
-//			path = getPathFromInitializationString(aValue.getInitializationString());
-//			if (path != "") { //$NON-NLS-1$
-//				iconDialog.setValue(path);
-//			}
+				iconDialog.setValue(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
 		}
+		
 		int returnCode = iconDialog.open();
 		// The return code says whether or not OK was pressed on the property editor
 		if (returnCode == Window.OK) {

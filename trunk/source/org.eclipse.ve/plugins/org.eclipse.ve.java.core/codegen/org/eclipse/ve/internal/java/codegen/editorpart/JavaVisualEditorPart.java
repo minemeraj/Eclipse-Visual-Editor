@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.36 $  $Date: 2004-05-18 17:55:53 $ 
+ *  $Revision: 1.37 $  $Date: 2004-05-18 18:15:15 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1300,6 +1300,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (!initialized) {
 					initialize(new SubProgressMonitor(monitor, 100));
 				} else {
+					beanProxyAdapterFactory.setThisTypeName(null);	// Unset the this type since it could actually change after the load is done.					
 					// Check to see if nature is still valid. If it is not, we need to reinitialize for it. OR it 
 					// could be we were moved to another project entirely.
 					BeaninfoNature nature = (BeaninfoNature) editDomain.getData(NATURE_KEY);
@@ -1343,7 +1344,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
-					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.			
+					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
+					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.					
 					if (EcoreUtil.getExistingAdapter(
 							dd,
 							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)

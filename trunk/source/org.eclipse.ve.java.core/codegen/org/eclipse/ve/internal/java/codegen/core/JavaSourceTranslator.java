@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.34 $  $Date: 2004-05-14 19:58:43 $ 
+ *  $Revision: 1.35 $  $Date: 2004-05-18 18:15:15 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1201,4 +1201,11 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 	return fWorkingCopy;
 }
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#getThisTypeName()
+	 */
+	public String getThisTypeName() {
+		IType type = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit());
+		return type.getFullyQualifiedName();
+	}
 }
