@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.19 $  $Date: 2004-06-29 19:53:48 $ 
+ *  $Revision: 1.20 $  $Date: 2004-07-12 17:55:45 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1047,10 +1047,14 @@ public class BDMMerger {
 					mainModel.getABean(beanPart.getSimpleName())!=null){
 				BeanPart mainBP = mainModel.getABean(beanPart.getSimpleName());
 				if(mainBP.getInitMethod()==null && beanPart.getInitMethod()!=null){
-					// main BDM has no THIS init method, the new BDM has - hence create one
-					CodeMethodRef initMethod = createNewMainMethodRef(beanPart.getInitMethod()) ;
+					// main BDM has no THIS init method, the new BDM has one..
+					CodeMethodRef initMethod = mainModel.getMethod(beanPart.getInitMethod().getMethodHandle()) ;
+					// If the method doesnt exist create it..
+					if(initMethod==null){
+						initMethod = createNewMainMethodRef(beanPart.getInitMethod()) ;
+						logFiner("Created new init method "+initMethod.getMethodHandle()+" for THIS part");
+					}
 					mainBP.addInitMethod(initMethod);
-					logFiner("Created new init method "+initMethod.getMethodHandle()+" for THIS part");
 				}
 			}
 		}
