@@ -9,7 +9,7 @@
 
 echo "Hello, world!";
 
-if (!($f2=fopen("tests.new","w+")))
+if (!($f2=fopen("public/tests.new","w+")))
                   exit("Unable to open file.");
 fwrite($f2,"Testing\n");
 fclose($f2);
