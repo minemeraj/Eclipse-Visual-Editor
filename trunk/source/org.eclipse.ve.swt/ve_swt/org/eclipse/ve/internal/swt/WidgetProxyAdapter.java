@@ -59,6 +59,26 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 			});
 		}
 		super.releaseBeanProxy();
-	}		
+	}
 
+	/**
+	 * @return the int style value by interrogate getStyle() on the targetVM on the correct thread
+	 * 
+	 * @since 1.0.0
+	 */
+	private int style = -1;
+	public int getStyle() {
+		if(isBeanProxyInstantiated() && style == -1){
+			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					IBeanProxy widgetBeanProxy = getBeanProxy();
+					IMethodProxy getStyleMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("getStyle");
+					IIntegerBeanProxy styleBeanProxy = (IIntegerBeanProxy) getStyleMethodProxy.invoke(widgetBeanProxy);
+					 style = styleBeanProxy.intValue();
+					 return null;
+				}
+			});
+		}
+		return style;
+	}		
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-06 11:26:03 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-07 14:30:08 $ 
  */
 
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
 /**
  * Cell editor for an int field that is enumerated
  */
-public abstract class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements org.eclipse.ve.internal.propertysheet.INeedData {
+public class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements org.eclipse.ve.internal.propertysheet.INeedData {
 	protected EditDomain fEditDomain;
 	protected Object[] fSources; 
 	protected Integer[] FILL_VALUES;
