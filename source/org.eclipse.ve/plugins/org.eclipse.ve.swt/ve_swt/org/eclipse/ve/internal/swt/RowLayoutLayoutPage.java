@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-18 16:49:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -296,7 +296,7 @@ public class RowLayoutLayoutPage extends CustomizeLayoutPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) target).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(target, "EDITPOLICY#LAYOUTPOLICY", RowLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (af != null && af.testAttribute(target, LAYOUT_FILTER_KEY, RowLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		}
 		return false;

@@ -11,20 +11,16 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-26 18:23:30 $ 
  */
-import java.util.List;
-
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
+import org.eclipse.ve.internal.cde.core.CDEActionFilter;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 /**
@@ -70,22 +66,15 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
  *   BEANTYPE      - "" means the model of the EditPart is any type of bean, IJavaInstance
  *                   "class" means the model of the EditPart can be assigned to this type (through the JavaModel (EMF), not straight Java).
  *   PROPERTY      - "nameOfFeature" tests if the given feature is an available property of the model of the editpart. (Model needs to be EMF, does not need to be JavaModel).
- *   EDITPOLICY#   - This means redirect the request to the Editpolicies. The portion of "name" after the "#" becomes that "name" and
- *                   value is left as is, and then request to filter is sent to each of the edit policies that can handle IActionFilter or adapt to it.
- *   PARENT#       - This means redirect the request to the parent editpart. The portion of "name" after the "#" becomes that "name" and
- *                   value is left as is, and then request to filter is sent to parent editpart if it can handle IActionFilter or adapt to it.
- *   ANCESTOR#     - This means redirect the request to all of the parent editparts up to root. The portion of "name" after the "#" becomes that "name" and
- *                   value is left as is, and then request to filter is sent to parent editparts if they can handle IActionFilter or adapt to it.
  */
-public class JavaBeanActionFilter implements IActionFilter {
+public class JavaBeanActionFilter extends CDEActionFilter {
 	
 	public static final JavaBeanActionFilter INSTANCE = new JavaBeanActionFilter();	// Only one is needed. All the info it needs comes from the input.
-	private static final String 
+	
+	public static final String 
 		BEAN_TYPE_STRING = "BEANTYPE", //$NON-NLS-1$
-		PROPERTY_STRING = "PROPERTY", //$NON-NLS-1$
-		EDITPOLICY_STRING = "EDITPOLICY#", //$NON-NLS-1$
-		PARENT_STRING = "PARENT#", //$NON-NLS-1$
-		ANCESTOR_STRING = "ANCESTOR#"; //$NON-NLS-1$
+		PROPERTY_STRING = "PROPERTY"; //$NON-NLS-1$
+
 	
 	/*
 	 * Protected so that only singleton INSTANCE, or a subclass can instantiate it.
@@ -110,51 +99,13 @@ public class JavaBeanActionFilter implements IActionFilter {
 			// This allows an extension so that a popup action could be provided if a component
 			// had a specific property with its name equal to 'value'.			
 			return testAttributeForPropertyName(target, value);
-		} else if (name.startsWith(EDITPOLICY_STRING) && target instanceof IJavaBeanContextMenuContributor) {
-			// Iterate through the edit policies and call the testAttribute method for 
-			// the edit policy that implements an action filter or returns implements IAdaptable
-			// with a type of IActionFilter. 
-			// Return the first true condition else return false.
-			String arg = name.substring(EDITPOLICY_STRING.length());
-			List editpolicies = ((IJavaBeanContextMenuContributor)target).getEditPolicies();
-			for (int i = 0; i < editpolicies.size(); i++) {
-				EditPolicy ep = (EditPolicy) editpolicies.get(i);
-				if (ep instanceof IActionFilter) {
-					if (((IActionFilter)ep).testAttribute(target, arg, value))
-						return true;					
-				} else if (ep instanceof IAdaptable) {
-					IActionFilter af = (IActionFilter) ((IAdaptable)ep).getAdapter(IActionFilter.class);
-					if (af != null && af.testAttribute(target, arg, value))
-						return true;
-				}
-			}
-		} else if (name.startsWith(PARENT_STRING)) {
-			// Delegate the test to the editpart's parent if it has an IActionFilter
-			String arg = name.substring(PARENT_STRING.length());
-			EditPart parent = ((EditPart)target).getParent();
-			if (parent != null)
-				return editPartFilterTest(target, value, arg, parent);
-		} else if (name.startsWith(ANCESTOR_STRING)) {
-			String arg = name.substring(ANCESTOR_STRING.length());
-			for (EditPart parent = ((EditPart)target).getParent(); parent != null; parent = parent.getParent()) {
-				if (editPartFilterTest(target, value, arg, parent))
-					return true;			
-			}
 		}
-
-		return false;
+		
+		// Pass this test up to the parent CDEActionFilter
+		return super.testAttribute(target, name, value);
 	}
 	
-	protected boolean editPartFilterTest(Object target, String value, String arg, EditPart ep) {
-		if (ep instanceof IActionFilter)
-			return ((IActionFilter)ep).testAttribute(target, arg, value);
-		else if (ep instanceof IAdaptable) {
-			IActionFilter af = (IActionFilter)((IAdaptable)ep).getAdapter(IActionFilter.class);
-			if (af != null)
-				return af.testAttribute(target, arg, value);
-		}
-		return false;
-	}
+
 	
 	/**
 	 * Return true if this target bean has a structural feature name equal to 'value'

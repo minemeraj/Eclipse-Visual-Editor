@@ -11,69 +11,41 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-11 18:36:28 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-26 18:23:36 $ 
  */
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureListener;
-import org.eclipse.draw2d.FlowLayout;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.*;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Request;
+import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
+import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+
+import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
-import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
-import org.eclipse.ve.internal.cde.core.CDERequest;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.GridController;
-import org.eclipse.ve.internal.cde.core.IGridListener;
-import org.eclipse.ve.internal.cde.core.IImageListener;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-import org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter;
-import org.eclipse.ve.internal.jfc.core.ContainerPolicy;
-import org.eclipse.ve.internal.jfc.core.GridBagConstraint;
-import org.eclipse.ve.internal.jfc.core.GridBagLayoutPolicyHelper;
-import org.eclipse.ve.internal.jfc.core.JFCConstants;
 
 public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements IGridListener, IActionFilter {
 	public static final String LAYOUT_ID = "java.awt.GridBagLayout"; //$NON-NLS-1$
@@ -605,7 +577,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			return true;
 		else if (name.startsWith("showgrid") && value.equals("true") && fShowgrid) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
-		else if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$ //$NON-NLS-2$
+		else if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 
 		return false;

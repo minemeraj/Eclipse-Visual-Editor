@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-11 18:36:23 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-26 18:23:27 $ 
  */
 
 import java.util.List;
@@ -141,7 +141,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 	}
 	
 	/*
-	 * Return true if the parent's layout policy is a GridBagLayout.
+	 * Return true if the parent's layout policy is a XYLayout.
 	 * If parent is a tree editpart (selected from the Beans viewer, we need to get its
 	 * corresponding graphical editpart from the Graph viewer in order to check its layout policy.
 	 */
@@ -157,7 +157,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", XYLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$
+		if (af != null && af.testAttribute(parent, LAYOUT_FILTER_KEY, XYLayoutEditPolicy.LAYOUT_ID)) { //$NON-NLS-1$
 			return true;
 		}
 		return false;

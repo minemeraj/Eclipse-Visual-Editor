@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-18 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -43,7 +44,7 @@ public class FillLayoutEditPolicy extends RowLayoutEditPolicy implements IAction
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$ //$NON-NLS-2$
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		return false;
 	}

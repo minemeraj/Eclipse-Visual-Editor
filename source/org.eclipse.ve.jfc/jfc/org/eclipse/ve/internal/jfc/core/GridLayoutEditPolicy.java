@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-11 16:14:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:36 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -26,6 +27,9 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  * @since 1.0.0
  */
 public class GridLayoutEditPolicy extends FlowLayoutEditPolicy implements IActionFilter {
+	
+	public final static String LAYOUT_ID = "java.awt.GridLayout"; //$NON-NLS-1$
+	
 	public GridLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
 	}
@@ -39,7 +43,7 @@ public class GridLayoutEditPolicy extends FlowLayoutEditPolicy implements IActio
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		if (name.startsWith("LAYOUTPOLICY") && value.equals("java.awt.GridLayout")) //$NON-NLS-1$ //$NON-NLS-2$
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID))
 			return true;
 		
 		return false;

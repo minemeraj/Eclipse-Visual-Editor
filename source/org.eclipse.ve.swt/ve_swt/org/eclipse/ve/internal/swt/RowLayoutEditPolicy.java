@@ -8,7 +8,7 @@ package org.eclipse.ve.internal.swt;
  * Contributors: IBM Corporation - initial API and implementation
  **************************************************************************************************/
 /*
- * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.4 $ $Date: 2004-05-18 16:49:31 $
+ * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.5 $ $Date: 2004-05-26 18:23:33 $
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -18,6 +18,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutPage;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -87,7 +88,7 @@ public class RowLayoutEditPolicy extends DefaultLayoutEditPolicy implements IAct
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$
+		if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$
 		return true;
 		return false;
 	}

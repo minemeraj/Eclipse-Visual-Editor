@@ -1,4 +1,7 @@
 package org.eclipse.ve.internal.java.core;
+
+import org.eclipse.ve.internal.cde.core.ICDEContextMenuContributor;
+
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +14,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IJavaBeanGraphicalContextMenuContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:30 $ 
  */
 
 /**
@@ -21,6 +24,6 @@ package org.eclipse.ve.internal.java.core;
  * This allows us to filter the actions defined in the plugin.xml for this extension point
  * for editparts used in the graph viewer (see ComponentGraphicalEditPart).
  */
-public interface IJavaBeanGraphicalContextMenuContributor extends IJavaBeanContextMenuContributor {
+public interface IJavaBeanGraphicalContextMenuContributor extends ICDEContextMenuContributor {
 
 }

@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,8 +10,8 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: IJavaBeanContextMenuContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $RCSfile: ICDEContextMenuContributor.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-26 18:23:27 $ 
  */
 
 import java.util.List;
@@ -28,11 +28,11 @@ import java.util.List;
  * the Beans viewer.
  * 
  */
-public interface IJavaBeanContextMenuContributor {
+public interface ICDEContextMenuContributor {
 	
 	/*
 	 * This should not be needed but GEF doesn't make the edit policies public
-	 * except by a specific key. It is used by the JavaBeanActionFilter to pass
+	 * except by a specific key. It is used by the CDEActionFilter to pass
 	 * filter requests to the edit policies.
 	 */
 	public List getEditPolicies();	

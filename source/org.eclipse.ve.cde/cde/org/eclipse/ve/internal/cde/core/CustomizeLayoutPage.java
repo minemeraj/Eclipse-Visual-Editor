@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:20 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-26 18:23:27 $ 
  */
 
 import org.eclipse.jface.viewers.*;
@@ -23,6 +23,9 @@ import org.eclipse.ui.IEditorPart;
  * This is the base class for any CustomizeLayout page that can go on the CustomizeLayoutWindow.
  */
 public abstract class CustomizeLayoutPage {
+	
+	public final static String LAYOUT_POLICY_KEY = "LAYOUTPOLICY"; //$NON-NLS-1$
+	public final static String LAYOUT_FILTER_KEY = CDEActionFilter.EDITPOLICY_STRING + LAYOUT_POLICY_KEY;
 
 	/*
 	 * Set the selection provider. This will only be called once, right after
