@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-07-14 16:20:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-07-15 13:01:44 $ 
  */
 
 import java.util.HashMap;
@@ -106,8 +106,6 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 							setSuperClass(((VisualElementModel) domain).getSuperClass());
 							selectedElement = (VisualElementModel) domain;
 						}
-						else if (domain instanceof CategoryModel)
-							setSuperClass(null);
 					}
 				}
 			}
