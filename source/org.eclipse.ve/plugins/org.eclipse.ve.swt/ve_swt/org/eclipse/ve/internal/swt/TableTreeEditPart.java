@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.1 $ $Date: 2004-06-08 15:03:04 $
+ * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-08-21 18:55:04 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -61,9 +61,6 @@ public class TableTreeEditPart extends ControlTreeEditPart {
 	}
 
 	protected void createEditPolicies() {
-		// The TreeContainerEditPolicy is the CDE one
-		// We don't care about being a Container with components
-		// We are just interested in showing the viewPortView as a child
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new TableContainerPolicy(
 				EditDomain.getEditDomain(this))));
