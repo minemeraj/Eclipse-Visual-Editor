@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-05 16:13:50 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-05 17:50:27 $ 
  */
 import java.util.*;
 
@@ -495,7 +495,7 @@ public final BeanPart[] getBackRefs() {
 }
 
 /**
- *  
+ *  Reference target to point to its source (e.g., child to parent)
  */
 public void addBackRef (BeanPart bean, EReference sf) {
 	
@@ -515,29 +515,28 @@ public void addBackRef (BeanPart bean, EReference sf) {
 
 
 public void removeBackRef (BeanPart bean, boolean updateFF) {
-		
-	fbackReferences.remove(bean) ;
-	if (bean != null && getModel() != null && getModel().getCompositionModel() != null)
-	   if (fContainer != null && fContainer.equals(bean.getEObject())) {
-	      fContainer = null ;
-	      // Do not update in the case that this is induced from a compound command
-	      // that already removed this child from the JavaBean model - should not
-	      // try and add it to components.
-	      if (updateFF && getEObject().eContainer() != null)
-		     getModel().getCompositionModel().getModelRoot().getComponents().add(getEObject());
-	   }
+	removeBackRef(bean.getEObject(),updateFF);
 }
+
+/**
+ * Remove bean's target reference from its source
+ * @param bean
+ * @param updateFF
+ */
 public void removeBackRef (EObject bean, boolean updateFF) {
 
 	if (fModel==null) return ;
     BeanPart bp = fModel.getABean(bean) ;
     if (bp != null)		
-	    fbackReferences.remove(bean) ;
+	    fbackReferences.remove(bp) ;
 	if (bean != null && getModel().getCompositionModel() != null)
 	   if (fContainer != null && fContainer.equals(bean)) {
 		  fContainer = null ;
-		  if (updateFF && getEObject().eContainer() != null)
-		      getModel().getCompositionModel().getModelRoot().getComponents().add(getEObject());
+		  if (updateFF && getEObject().eContainer() != null) {
+		  	BeanSubclassComposition bsc = getModel().getCompositionModel().getModelRoot();
+		  	if (!bsc.getComponents().contains(getEObject()))
+		      bsc.getComponents().add(getEObject());
+		  }
 	   }
 }
 /**
@@ -634,6 +633,7 @@ public  void dispose() {
 
     IBeanDeclModel model = fModel ;
     
+
     if (fFFDecoder!=null)
     	fFFDecoder.dispose() ;
     fFFDecoder=null;
@@ -648,9 +648,14 @@ public  void dispose() {
 	for (int i = 0; i < fNoSrcExpressions.size(); i++) {
 		((CodeExpressionRef)fNoSrcExpressions.get(i)).dispose();
 	}
-	   
-
 	
+	for (int i = 0; i < fbackReferences.size(); i++) {
+		// This should be empty if decoders had the chance to do their thing
+		BeanPart bp = (BeanPart) fbackReferences.get(i);
+		bp.removeBackRef(this,true) ;
+	}
+	
+
 	fBeanInitMethods.clear() ;
 	fEventInitMethods.clear() ;
 	fBeanRefExpressions.clear() ;

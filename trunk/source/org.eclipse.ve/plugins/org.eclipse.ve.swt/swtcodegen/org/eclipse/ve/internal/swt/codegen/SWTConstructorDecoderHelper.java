@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-05 16:13:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-05 17:50:37 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -76,22 +76,14 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected void createParentChildRelationship() {				
 		
 		EObject parent = fParent.getEObject();
-		
-		if (parent.eContainer() != null) {
-			// First remove the child from the FF if needed
-			BeanSubclassComposition bsc;
-			// Parent is on the FF, or in a method
-			if (parent.eContainer() instanceof BeanSubclassComposition)
-				bsc = (BeanSubclassComposition) parent.eContainer();
-			else
-				bsc = (BeanSubclassComposition) parent.eContainer().eContainer();
-			bsc.getComponents().remove(fbeanPart.getEObject());
-		}
+				
 		
 		EStructuralFeature sf = parent.eClass().getEStructuralFeature("controls");
 		((EList)parent.eGet(sf)).add(fbeanPart.getEObject()) ;
 		
 		// Create a pseudo expression for the parent (no add(Foo) in SWT)
+		// This will drive the creation of a decoder with controls, and will
+		// establish the parent/child relationship in the BDM
 		ExpressionRefFactory eGen = new ExpressionRefFactory(fParent, sf);
 		try {
 			eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });

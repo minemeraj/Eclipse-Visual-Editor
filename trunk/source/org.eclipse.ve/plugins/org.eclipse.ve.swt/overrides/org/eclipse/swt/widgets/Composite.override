@@ -29,6 +29,7 @@
     <addedEObjects xsi:type="ecore:EReference" name="controls" eType="com.ibm.etools.java:JavaClass java:/org.eclipse.swt.widgets#Control"
         upperBound="-1" containment="false">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" childFeature="true"/>
     </addedEObjects>
   </event:AddMany>
 </xmi:XMI>
