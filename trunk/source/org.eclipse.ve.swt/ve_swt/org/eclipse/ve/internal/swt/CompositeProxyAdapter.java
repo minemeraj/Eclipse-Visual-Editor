@@ -1,5 +1,10 @@
 package org.eclipse.ve.internal.swt;
-
+/*
+ * Licensed Material - Property of IBM 
+ * (C) Copyright IBM Corp. 2002 - All Rights Reserved. 
+ * US Government Users Restricted Rights - Use, duplication or disclosure 
+ * restricted by GSA ADP Schedule Contract with IBM Corp. 
+ */
 
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +13,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -25,6 +31,18 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sf_containerControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
 
+	}
+	
+	protected void appliedList(EStructuralFeature sf, List newValues, int position, boolean testValidity){
+		// The default inherited behavior is to iterate everything in the list and apply it one by one
+		// This is not good for SWT composites where each time an element is applied it disposes everyone that came after it
+		// and re-creates the whole list in order, creating n squared type performance problems
+		if(sf == sf_containerControls){
+			Iterator iter = newValues.iterator();
+			while(iter.hasNext()){
+				primAddControl((IJavaObjectInstance)iter.next());
+			}
+		}
 	}
 
 	protected void applied(EStructuralFeature as, Object newValue, int position) {
@@ -76,15 +94,32 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 				iter.next();
 				continue;			
 			}
-			IJavaObjectInstance control = (IJavaObjectInstance)iter.next();
-			IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(control);
-			((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);
-			// Release the bean proxy and then instantiate it.  This is because we are inserting at a position
-			// and any already existing controls must be added in the corrected order
-			controlProxyHost.releaseBeanProxy();
-			controlProxyHost.instantiateBeanProxy();
+			primAddControl((IJavaObjectInstance)iter.next());
 		}		
 		childValidated(this);
+	}
+	
+	
+	public void releaseBeanProxy() {
+		// Need to release all of the controls.  This is because they will be implicitly disposed anyway when super
+		// gets called because the target VM will dispose them as children
+		// If they have been implicitly disposed on the target VM but the IBeanProxyHost doesn't know about this then i
+		// still thinks they are there and will try to re-dispose them and also it'll remain listening for changes 
+		// and this causes stack errors - bugzilla 60017
+		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
+		Iterator iter = controls.iterator();
+		while(iter.hasNext()){
+			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)iter.next());
+			value.releaseBeanProxy();
+		}
+		super.releaseBeanProxy();
+	}
+	
+	protected void primAddControl(IJavaObjectInstance aControl){
+		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
+		((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);
+		controlProxyHost.releaseBeanProxy();
+		controlProxyHost.instantiateBeanProxy();		
 	}
 	
 	protected void removeControl(IJavaObjectInstance aControl) throws ReinstantiationNeeded {
