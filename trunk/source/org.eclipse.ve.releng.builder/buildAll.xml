@@ -222,10 +222,11 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<available file="${eclipse.home}/plugins/org.eclipse.osgi_3.0.0" property="versionFound"/>
-		<fail unless="versionFound" message="Failed due to 3.0.0 Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
+		<property name="eclipse.version" value="3.0.0"/>
+		<available file="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}" property="versionFound"/>
+		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
-	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_3.0.0/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.0/core.jar"/>
+	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar"/>
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
@@ -234,14 +235,14 @@
 		
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory} ${updateLocalDirectory}" />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
 		</exec>
 
 		<!-- Now run the update process -->
-	    <java classname="org.eclipse.releng.generators.UpdateBuilder" >
+	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
 	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -cats ${updateLocalDirectory}/cats.properties" /> 
 	         <classpath>
-	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/core.jar" />
+	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar" />
 	         </classpath>
 	    </java>
 
