@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.50 $  $Date: 2005-01-19 17:59:16 $ 
+ *  $Revision: 1.51 $  $Date: 2005-01-20 19:11:42 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -64,6 +64,7 @@ int						fSrcSyncDelay = JavaSourceSynchronizer.DEFAULT_SYNC_DELAY ;
 IFile                   fFile = null ;
 EditDomain 			    fEDomain = null ;
 boolean                 fdisconnected = true ;
+boolean					fCanceled = false;
 boolean					floadInProgress=false;
 boolean					fmodelLoaded=false;
 boolean					fparseError=false;
@@ -772,8 +773,10 @@ void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenExcepti
 }
 
 
-protected boolean isDown() {
-	return (fdisconnected || (fVEModel!=null && fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)));
+protected boolean isDown(IProgressMonitor pm) {
+	if (pm!=null)
+	   fCanceled = pm.isCanceled();
+	return (fdisconnected || fCanceled);
 }
 
 /**
@@ -798,7 +801,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		Iterator itr = fBeanModel.getBeans().iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
 		while (itr.hasNext()) {
-			if (isDown())
+			if (isDown(pm))
 				return;
 		    BeanPart bean = (BeanPart) itr.next() ;
 			Collection expressions = new ArrayList(bean.getRefExpressions()) ;
@@ -832,7 +835,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		}
 		expProgressMonitor.done();
 		expProgressMonitor = null;
-		if (isDown())
+		if (isDown(pm))
 			return ;
 		// Clean up
 		itr = badExprssions.iterator() ;
@@ -851,7 +854,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	      // Model
 	      itr = fBeanModel.getBeans().iterator() ;
 		  while (itr.hasNext()) {
-		  	 if (isDown())
+		  	 if (isDown(pm))
 				return ;		 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	         bean.getBadExpressions().clear();
@@ -965,7 +968,7 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
 					  reverseParse(monitor);
 					}
 				} catch (Exception e) {
-					if (!isDown()) {
+					if (!isDown(monitor)) {
 						fireParseError(true);
 						String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
 						return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, msg ,e);
