@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
-<toc label="Visual Editor for Java User Guide" topic="topics/tve_overview.html">
+<toc label="Using the Visual Editor for Java" topic="topics/tve_overview.html">
    <anchor id="anchor0000"/>
    <topic label="Editing Java in the visual editor" href="topics/tve_overview.html">
       <anchor id="anchor0010"/>
@@ -117,25 +117,6 @@
          <anchor id="anchor0190"/>
       </topic>
       <anchor id="anchor0200"/>
-      <topic label="Extending the visual editor" href="topics/tve_extending.html">
-         <anchor id="anchor0210"/>
-         <topic label="Customizers for Java bean properties" href="topics/cve_customizers.html"/>
-         <topic label="Using a customizer to change properties" href="topics/tve_propertycustomizer.html"/>
-         <topic label="BeanInfo classes and introspection" href="topics/cve_beaninfo.html">
-            <topic label="BeanInfo classes for JRE classes" href="topics/cve_beaninfo_jre.html"/>
-            <topic label="Tips for writing BeanInfo classes for the visual editor" href="topics/cve_beaninfo_ve.html"/>
-            <topic label="Controlling BeanInfo information for plug-in developers" href="topics/tve_beaninfo.html"/>
-         </topic>
-         <topic label="Specifying the location of BeanInfo classes" href="topics/tve_beaninfo_location.html">
-            <topic label="Keeping beans and BeanInfo classes in different projects" href="topics/tve_beaninfo_diffproj.html"/>
-            <topic label="Keeping beans and BeanInfo classes in the same package" href="topics/tve_beaninfo_samepkg.html"/>
-            <topic label="Keeping beans and BeanInfo classes in different packages in the same project" href="topics/tve_beaninfo_diffpkg.html"/>
-            <topic label="Keeping BeanInfo classes in a JAR file" href="topics/tve_beaninfo_jar.html"/>
-            <topic label="Explicitly defining the location of BeanInfo classes" href="topics/tve_beaninfo_locationdefine.html"/>
-         </topic>
-         <anchor id="anchor0220"/>
-      </topic>
-      <anchor id="anchor0230"/>
       <topic label="Code migration from VisualAge for Java to the visual editor" href="topics/cve_migration_vaj.html"/>
       <topic label="Limitations for the visual editor for Java" href="topics/rve_limitations.html"/>
       <anchor id="anchor0240"/>
