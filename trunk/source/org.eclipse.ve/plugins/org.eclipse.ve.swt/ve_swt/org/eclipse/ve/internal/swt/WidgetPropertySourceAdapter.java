@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-12 18:50:08 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -36,6 +36,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
@@ -116,7 +117,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			fInitStrings = initStrings;
 			fValues = values; 
 		}
-		public CellEditor createPropertyEditor(Composite parent){
+		public CellEditor createPropertyEditor(Composite parent){		
 			return new EnumeratedIntValueCellEditor(parent,fNames,fValues,fInitStrings);
 		}
 		public ILabelProvider getLabelProvider() {

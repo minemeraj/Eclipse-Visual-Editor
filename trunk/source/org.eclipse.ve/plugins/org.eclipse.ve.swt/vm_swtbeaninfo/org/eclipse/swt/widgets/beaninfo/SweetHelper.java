@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SweetHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-12 18:50:31 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -26,7 +26,6 @@ public class SweetHelper {
 	public static final String STYLE_BITS_ID = "org.eclipse.ve.sweet.stylebits";
 /**
  * Combine all of the style bits from the descriptor's classes superclass into the descriptor
- * This is used in most cases of Control
  */	
 public static void mergeSuperclassStyleBits(BeanDescriptor descriptor){
 	
