@@ -1,0 +1,31 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile:  $
+ *  $Revision:  $
+ */
+   
+%><%@ jet skeleton="TemplateSkelaton.java" 
+        package="org.eclipse.ve" 
+        class="HelloClassTemplate"
+%> <%
+ if (info.fComments != null) { %>
+/**
+<%// Generate class JavaDoc/Comments  
+	  for(int i=0; i<info.fComments.length; i++) { %>
+ * <%=info.fComments[i]%>	
+<%}
+%>
+ *
+ */    
+
+<%}
+   if (info.fPackageName!=null) { %>
+package <%=info.fPackageName%>;
+<%  } %>
+
+public class HelloClass {
+   public String getOutput() {
+       return "Hello World";
+   }
+};
