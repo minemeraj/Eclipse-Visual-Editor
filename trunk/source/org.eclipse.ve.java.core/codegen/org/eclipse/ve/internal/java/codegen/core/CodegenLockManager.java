@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenLockManager.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-02 16:34:23 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-07 14:40:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -31,7 +31,8 @@ public class CodegenLockManager implements ICodegenLockManager {
 		if(flag){
 			readonlyRequestCount ++;
 		}else{
-			readonlyRequestCount --;
+			if(readonlyRequestCount>0)
+				readonlyRequestCount --;
 		}
 	}
 
@@ -40,6 +41,18 @@ public class CodegenLockManager implements ICodegenLockManager {
 	 */
 	public boolean isGUIReadonly() {
 		return readonlyRequestCount > 0;
+	}
+	
+	/**
+	 * Should be called by the one API which cleans 
+	 * all maintainance of the snippet update process.
+	 * This will the UI again, as it depends on the 
+	 * #isGUIReadonly() API.
+	 * 
+	 * @since 1.0.0
+	 */
+	public void resetGUIReadOnly(){
+		readonlyRequestCount = 0;
 	}
 
 	/* (non-Javadoc)
