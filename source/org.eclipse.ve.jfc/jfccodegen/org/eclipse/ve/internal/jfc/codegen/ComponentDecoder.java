@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:56:05 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-10 20:15:01 $ 
  */
 
 
@@ -48,7 +48,7 @@ protected String getMethod() {
       String method=null ;
 	  
 	  if (fFeatureMapper!= null)
-	    if(fFeatureMapper.getDecorator()!= null) 
+	    if(fFeatureMapper.getDecorator()!= null && fFeatureMapper.getDecorator().getWriteMethod()!=null) 
 	       method = fFeatureMapper.getDecorator().getWriteMethod().getName() ;
 	    	    
 	  if (method == null)
