@@ -15,10 +15,8 @@
    </license>
 
    <url>
-      <update
-         url="http://update.eclipse.org/updates"
-         label="%updateSiteName">
-      </update>
+      <update label="%updateSiteName" url="http://update.eclipse.org/tools/ve/updates/1.0"/>
+      <discovery label="%updateSiteName" url="http://update.eclipse.org/tools/ve/updates/1.0"/>
    </url>
 
   <includes id="org.eclipse.ve" version="1.0.0" /> 
