@@ -9,7 +9,8 @@
     xmlns:event="event.xmi"
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart">
+    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart"
+    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart">
   </addedEObjects>
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
     propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter"/>

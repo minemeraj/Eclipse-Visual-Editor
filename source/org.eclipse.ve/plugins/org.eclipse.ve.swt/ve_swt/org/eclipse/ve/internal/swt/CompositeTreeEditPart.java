@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-03-26 23:07:34 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-04-23 19:49:07 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -34,7 +34,7 @@ import org.eclipse.ve.internal.java.visual.*;
 /**
  * TreeEditPart for a SWT Container.
  */
-public class CompositeTreeEditPart extends JavaBeanTreeEditPart {
+public class CompositeTreeEditPart extends ControlTreeEditPart {
 
 	private EReference sf_compositeLayout, sf_compositeControls;
 
