@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.2 $  $Date: 2005-02-22 13:42:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -24,6 +24,8 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IModelChangeController;
 
 import org.eclipse.ve.internal.java.codegen.core.IEditorUpdateState;
 import org.eclipse.ve.internal.java.codegen.util.IBackGroundWorkStrategy;
@@ -42,6 +44,8 @@ public class SnippetParseJob extends ReverseParserJob {
 	private ICompilationUnit		cu;
 	private IEditorUpdateState		editorState;
 	private List 					docEvents;
+    private EditDomain fEditDomain;
+    public static final String SNIPPET = "SNIPPET";
 	
 	/**
 	 * @param file
@@ -61,7 +65,10 @@ public class SnippetParseJob extends ReverseParserJob {
 	 * @see org.eclipse.ve.internal.java.codegen.util.ReverseParserJob#doRun(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus doRun(IProgressMonitor monitor) {		
+	    
+	    IModelChangeController changeController = (IModelChangeController)fEditDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 		try {
+		  changeController.transactionBeginning(SNIPPET);
 		  strategyRoutine.run(curDisplay,cu,editorState,docEvents,monitor);
 		}
 		catch (Throwable t) {
@@ -71,8 +78,18 @@ public class SnippetParseJob extends ReverseParserJob {
 		}
 		finally {
 			editorState.setBottomUpProcessing(false);
+			changeController.transactionEnded(SNIPPET);			
 		}
 		return Status.OK_STATUS;
 	}
+    /**
+     * @param editDomain
+     * Set the edit domain
+     * 
+     * @since 1.0.2
+     */
+    public void setEditDomain(EditDomain editDomain) {
+        fEditDomain = editDomain;       
+    }
 
 }

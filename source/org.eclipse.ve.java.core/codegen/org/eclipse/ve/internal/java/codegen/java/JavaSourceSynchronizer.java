@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.16 $  $Date: 2005-02-22 13:42:24 $ 
  */
 
 import java.util.ArrayList;
@@ -129,8 +129,14 @@ public class JavaSourceSynchronizer implements ISynchronizable{
 			}
 		}
 		srcTranslator.fireSnippetProcessing(true);
-		SnippetParseJob job = new SnippetParseJob(workingCopyProvider.getFile(), srcTranslator.createSharedToLocalUpdater(), getDisplay(),
-				workingCopyProvider.getWorkingCopy(true), updateStatus, documentEventList);
+		SnippetParseJob job = new SnippetParseJob(
+		        workingCopyProvider.getFile(), 
+		        srcTranslator.createSharedToLocalUpdater(), 
+		        getDisplay(),
+				workingCopyProvider.getWorkingCopy(true), 
+				updateStatus, 
+				documentEventList);
+		job.setEditDomain(srcTranslator.getEditDomain());
 		job.schedule(getDelay());
 	}
 			

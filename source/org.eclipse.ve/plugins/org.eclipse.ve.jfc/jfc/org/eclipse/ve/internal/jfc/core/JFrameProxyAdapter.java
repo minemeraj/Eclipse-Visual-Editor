@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFrameProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.9 $  $Date: 2005-02-22 13:40:49 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -96,7 +96,7 @@ public class JFrameProxyAdapter extends FrameProxyAdapter {
 						IModelChangeController controller =
 							(IModelChangeController) getBeanProxyDomain().getEditDomain().getData(
 								IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-						controller.run(new Runnable() {
+						controller.doModelChanges(new Runnable() {
 							public void run() {
 								// Set the constraints on the component bean.  This will change the size of the component
 								// Because we will be called back with notify and apply the constraints rectangle to the live bean

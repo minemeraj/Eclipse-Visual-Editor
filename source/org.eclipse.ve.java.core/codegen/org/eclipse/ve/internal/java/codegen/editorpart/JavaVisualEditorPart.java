@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.85 $  $Date: 2005-02-21 14:42:06 $ 
+ *  $Revision: 1.86 $  $Date: 2005-02-22 13:45:46 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -83,6 +83,7 @@ import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import org.eclipse.jem.internal.proxy.remote.REMProxyConstants;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
@@ -195,6 +196,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	
 	public JavaVisualEditorPart() {
+	    
+//	    REMProxyConstants.setGatherCounts(true);
+//	    REMProxyConstants.reset();
+	    
 		bumpUIPriority(true, Thread.currentThread());
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 		if (DO_TIMER_TESTS) {
@@ -830,7 +835,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			Diagram d = modelBuilder.getDiagram();
 			try {
 			    IModelChangeController modelChangeController = (IModelChangeController)editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-			    modelChangeController.beginTransaction(IModelChangeController.INIT_VIEWERS);			    
+			    modelChangeController.transactionBeginning(IModelChangeController.INIT_VIEWERS_PHASE);			    
 			    
 				TimerTests.basicTest.startStep("Initialize Viewers"); //$NON-NLS-1$
 				if (doTimerStep)
@@ -859,7 +864,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				throw e;
 			}
 			finally {
-			    modelChangeController.endTransaction(IModelChangeController.INIT_VIEWERS);			    
+			    modelChangeController.transactionEnded(IModelChangeController.INIT_VIEWERS_PHASE);
+//				REMProxyConstants.println();			    
 				bumpUIPriority(false,null);
 			}
 		}
@@ -1548,7 +1554,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			int curPriority = Thread.currentThread().getPriority();
 		    IModelChangeController changeController = (IModelChangeController) editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);			
 			try {				
-			    changeController.beginTransaction(IModelChangeController.SETUP_PHASE);			    			   
+			    changeController.transactionBeginning(IModelChangeController.SETUP_PHASE);			    			   
 			    
 				Thread.currentThread().setPriority(curPriority+BRING_UP_PRIORITY_BUMP);
 				if (DO_TIMER_TESTS)
@@ -1695,7 +1701,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 			finally {
 				Thread.currentThread().setPriority(curPriority);
-			    changeController.endTransaction(IModelChangeController.SETUP_PHASE);				
+			    changeController.transactionEnded(IModelChangeController.SETUP_PHASE);				
 			}
 			
 			if (rebuildPalette && !monitor.isCanceled()) {

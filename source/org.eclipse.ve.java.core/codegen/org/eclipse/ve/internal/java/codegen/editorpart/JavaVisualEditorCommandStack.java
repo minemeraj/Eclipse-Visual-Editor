@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorCommandStack.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-22 13:42:43 $ 
  */
 
 import java.util.*;
@@ -45,7 +45,7 @@ class JavaVisualEditorCommandStack extends CommandStack {
 	public void execute(final Command aCommand) {
 		if (aCommand == null || !aCommand.canExecute())
 			return;
-		modelChangeController.run(new Runnable() {
+		modelChangeController.doModelChanges(new Runnable() {
 			public void run() {
 				try {
 					aCommand.execute();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-22 13:41:38 $ 
  */
 
 import java.text.Collator;
@@ -149,7 +149,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 					public void widgetSelected(SelectionEvent e) {
 						// TODO Needs to run through commands and also we need to have general purpose no commands so disable menu items
 						EditDomain domain = EditDomain.getEditDomain(editPart);
-						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).run(new Runnable() {
+						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 							public void run() {					
 								Shell shell = new Shell(Display.getDefault().getActiveShell());	
 								AddEventWizard addEventWizard = new AddEventWizard(javaBean,editPart);			
@@ -174,7 +174,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 						final EventSetDecorator eventDecor = (EventSetDecorator)widgetData[0];						
 						final MethodProxy methodProxy = (MethodProxy)widgetData[1];
 						EditDomain domain = EditDomain.getEditDomain(editPart);
-						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).run(new Runnable() {
+						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 							public void run() {
 								// TODO This should really return a command which we then put on the command stack.
 								Callback newlyCreatedCallback = JavaBeanEventUtilities.addCallback(javaBean,eventDecor,methodProxy.getMethod());
@@ -190,7 +190,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 					public void widgetSelected(SelectionEvent e) {
 						final PropertyDecorator propDecor = (PropertyDecorator)e.widget.getData();
 						EditDomain domain = EditDomain.getEditDomain(editPart);
-						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).run(new Runnable() {
+						((IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).doModelChanges(new Runnable() {
 							public void run() {
 								// TODO This should really return a command which we then put on the command stack.
 								PropertyEvent propertyEvent = JavaBeanEventUtilities.addPropertyChange(javaBean,propDecor.getName());
