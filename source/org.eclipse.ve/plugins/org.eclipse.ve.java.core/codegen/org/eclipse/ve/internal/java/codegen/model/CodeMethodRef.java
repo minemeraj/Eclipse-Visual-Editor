@@ -11,13 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.21 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.22 $  $Date: 2005-03-09 23:23:09 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -706,6 +707,30 @@ public JCMMethod getCompMethod() {
       fcompMethod.eAdapters().add(a) ;
 	}
 	return fcompMethod;
+}
+
+/**
+ * If we are coming up from a cache, we need to restore the Member adapter
+ * 
+ * @since 1.0.0
+ */
+public void restore() {
+	if (fcompMethod==null) {
+		EList methods = fTypeRef.getBeanComposition().getMethods();
+		for (int i = 0; i < methods.size(); i++) {
+			JCMMethod method = (JCMMethod)methods.get(i);
+			if (method.getName().equals(getMethodName())) {
+				fcompMethod = method;
+				MemberDecoderAdapter a = new MemberDecoderAdapter(fModel) ;
+				a.setMethodRef(this) ;
+				a.setTarget(fcompMethod) ;
+			    fcompMethod.eAdapters().add(a) ;
+				return;
+			}
+		}
+		JavaVEPlugin.log("should not be here",Level.SEVERE);
+	}
+	
 }
 
 public void setCompMethod(JCMMethod m)  throws CodeGenException {

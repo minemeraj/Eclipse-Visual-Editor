@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.16 $  $Date: 2005-03-09 23:23:09 $ 
  */
 import java.util.logging.Level;
 
@@ -155,8 +155,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		if (!result && !(fhelper instanceof SimpleAttributeDecoderHelper)) {
 			// A specialized decoded had faild.  Try to process with a simple Attribute Decoder
 			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-			if (fromCache)
+			if (fromCache) {
+			   getExprRef().getMethod().restore();
 			   result = fhelper.restore();
+			}
 			else
 			   result = fhelper.decode();
 			determinePriority();
