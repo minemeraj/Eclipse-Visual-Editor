@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.19 $  $Date: 2004-07-02 00:32:45 $ 
+ *  $Revision: 1.20 $  $Date: 2004-07-06 22:11:15 $ 
  */
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
@@ -30,18 +29,12 @@ import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
-import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-
-import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 public class BeanUtilities {
 	
