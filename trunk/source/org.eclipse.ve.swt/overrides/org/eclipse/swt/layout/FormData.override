@@ -17,6 +17,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.height" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.height.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="width" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -25,6 +27,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.width" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.width.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
 
@@ -33,6 +37,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.bottom" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.bottom.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="left" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
@@ -40,6 +46,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.left" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.left.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="right" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
@@ -47,6 +55,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.right" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.right.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="top" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
@@ -54,6 +64,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formdata.top" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formdata.top.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     

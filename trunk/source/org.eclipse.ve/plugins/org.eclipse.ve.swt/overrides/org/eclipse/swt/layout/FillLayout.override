@@ -19,6 +19,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="filllayout.type" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="filllayout.type.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
     
@@ -28,6 +30,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="filllayout.marginwidth" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="filllayout.marginwidth.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
     
@@ -37,6 +41,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="filllayout.marginheight" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="filllayout.marginheight.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>          
     
@@ -46,6 +52,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="filllayout.spacing" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="filllayout.spacing.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
         

@@ -17,6 +17,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formattachment.alignment" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formattachment.alignment.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="denominator" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -25,6 +27,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formattachment.denominator" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formattachment.denominator.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="numerator" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -33,6 +37,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formattachment.numerator" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formattachment.numerator.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="offset" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -41,6 +47,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formattachment.offset" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formattachment.offset.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
   </event:AddMany>
@@ -53,6 +61,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formattachment.control" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formattachment.control.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
   </event:Add>

@@ -16,6 +16,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formlayout.marginwidth" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formlayout.marginwidth.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
     
@@ -25,6 +27,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formlayout.marginheight" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formlayout.marginheight.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
 
@@ -34,6 +38,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="formlayout.spacing" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="formlayout.spacing.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
     

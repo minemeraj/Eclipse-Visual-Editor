@@ -17,6 +17,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="rowdata.width" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="rowdata.width.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
     
@@ -26,6 +28,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
 	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="rowdata.height" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="rowdata.height.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
 

@@ -12,6 +12,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.gridx" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.gridx.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="gridy" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -20,6 +22,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.gridy" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.gridy.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="gridwidth" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -28,6 +32,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.gridwidth" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.gridwidth.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="gridheight" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -36,6 +42,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.gridheight" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.gridheight.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="weightx" eType="org.eclipse.jem.java:JavaDataType java:/#double"
@@ -44,6 +52,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.weightx" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.weightx.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="weighty" eType="org.eclipse.jem.java:JavaDataType java:/#double"
@@ -52,6 +62,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.weighty" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.weighty.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="anchor" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -63,6 +75,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.anchor" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.anchor.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="fill" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -74,6 +88,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.fill" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.fill.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="ipadx" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -82,6 +98,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.ipadx" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.ipadx.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="ipady" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -90,6 +108,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.ipady" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.ipady.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
   </event:AddMany>
@@ -101,6 +121,8 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
         <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
             key="gridbagconstraints.insets" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
+        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+        	key="gridbagconstraints.insets.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.jfc/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>
   </event:Add>
