@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-01 21:10:27 $ 
  */
 
 import java.util.List;
@@ -197,16 +197,7 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
 public void visit() {
 	
 	getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()");
-	// Check to see if we have a special JCMMethod Visitor to use instead this one.
-	IOverideMethodVisitRule overideRule = (IOverideMethodVisitRule) CodeGenUtil.getEditorStyle(fModel).getRule(IOverideMethodVisitRule.RULE_ID) ;
-	if (overideRule != null) {
-		ISourceVisitor overideVisitor = overideRule.overideMethodVisit(fMethod.getDeclMethod(),fModel) ;
-		if (overideVisitor != null) {
-		   overideVisitor.visit() ;
-		   return ;
-		}
-	}	
-	
+
 	// A temporary limitation so that if one add local JFrame for example,
 	// and set its content pane with an instance JPanel, we will loose it as
 	// the JFrame is local and would not put in the FF
