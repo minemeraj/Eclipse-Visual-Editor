@@ -2,16 +2,16 @@
 <feature
       id="org.eclipse.ve.sdk"
       label="%featureName"
-      version="1.0.1.1"
-      image= "eclipse_update_120.jpg"
-      provider-name="%providerName">
+      version="1.0.2"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg">
 
    <description>
       %description
    </description>
-   
+
    <license url="%licenseURL">
-     %license
+      %license
    </license>
 
    <url>
@@ -19,13 +19,22 @@
       <discovery label="%updateSiteName" url="http://update.eclipse.org/tools/ve/updates/1.0"/>
    </url>
 
-  <includes id="org.eclipse.jem.sdk" version="0.0.0" /> 
-  <includes id="org.eclipse.ve" version="0.0.0" />  
-  <includes id="org.eclipse.ve.source" version="0.0.0" /> 
- 
-  <plugin
-      id="org.eclipse.ve.sdk"
-      download-size="0"
-      install-size="0"
-      version="0.0.0"/>
+   <includes
+         id="org.eclipse.jem.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ve"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.ve.source"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.ve.sdk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
