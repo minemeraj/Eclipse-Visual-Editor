@@ -19,7 +19,8 @@ public class ControlManager implements ICallback , ControlListener {
 		CO_MOVED = 2,
 		CO_REFRESHED = 3,
 		IMAGE_INITIAL_LENGTH = 4,
-		IMAGE_FINISHED = 5;
+		IMAGE_FINISHED = 5,
+		IMAGE_COLOR_MASKS = 6;
 	
 	protected Control fControl;
 	protected IVMServer fServer;
@@ -179,17 +180,31 @@ public class ControlManager implements ICallback , ControlListener {
 					final int[] pixels = new int[data.length];
 					for(int i = 0; i < data.length; i++){
 						pixels[i] = data[i];
-					}					
+					}
+					// Send the length back to the IDE which is the total length and then width and height
 					fServer.doCallback(new ICallbackRunnable(){
 						public Object run(ICallbackHandler handler) throws CommandException{
 							return handler.callbackWithParms(fCallbackID,IMAGE_INITIAL_LENGTH,
 								new Object[]{new Integer(pixels.length), new Integer(imageData.width), new Integer(imageData.height)});
 						}
 					});
+					// Send back the masks used by the image so the IDE can reconstitute it correctly
+					// This is a 4 arg int array of depth and then the red, green and blue mask
+					fServer.doCallback(new ICallbackRunnable(){
+						public Object run(ICallbackHandler handler) throws CommandException{
+							return handler.callbackWithParms(fCallbackID,IMAGE_COLOR_MASKS,
+								new Object[]{
+										   new Integer(imageData.depth),
+										   new Integer(imageData.palette.redMask), 
+										   new Integer(imageData.palette.greenMask), 
+										   new Integer(imageData.palette.blueMask)});
+						}
+					});
+					// Send back all of the image data
 					for (int i = 0; i < pixels.length; i++) {
 						outputStream.write( pixels[i]);		
 					}
-//					outputStream.write(pixels);
+
 					outputStream.close();
 					fServer.doCallback(new ICallbackRunnable(){
 						public Object run(ICallbackHandler handler) throws CommandException{

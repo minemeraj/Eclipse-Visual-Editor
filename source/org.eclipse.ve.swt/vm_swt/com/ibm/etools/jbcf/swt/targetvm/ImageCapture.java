@@ -13,28 +13,6 @@ public class ImageCapture {
 	
 	Control controlToCapture;
 	
-	public static void main (String [] args) {
-			
-		ImageCapture steveImageGrabber = new ImageCapture();
-		steveImageGrabber.run();
-			
-	}
-	
-	public void run(){
-		
-		Display display = new Display();
-		Shell shell = createShellToCapture(display);	
-		Shell targetShell = createShellToShowImage(display);
-				
-		shell.open();
-		targetShell.open();
-		
-		while (!shell.isDisposed ()) {
-			if (!display.readAndDispatch ()) display.sleep ();
-		}
-		display.dispose ();
-	
-	}
 	/**
 	 * Return the image of the argument.  This includes the client and non-client area
 	 * If the argument includeChildren is true then child controls are included 

@@ -36,7 +36,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	
 	protected void primInstantiateBeanProxy() {
 		try {
-			IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy();
 			// Create the control with the constructor of its parent composite
 			IJavaObjectInstance control = (IJavaObjectInstance)getTarget();
 			IJavaObjectInstance composite = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference)JavaInstantiation.getSFeature(control.eResource().getResourceSet(),SWTConstants.SF_COMPOSITE_CONTROLS)); 
