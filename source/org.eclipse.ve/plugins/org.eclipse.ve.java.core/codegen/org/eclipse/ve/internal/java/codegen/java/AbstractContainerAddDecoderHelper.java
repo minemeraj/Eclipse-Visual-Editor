@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.ArrayList;
@@ -307,6 +307,8 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	protected abstract ExpressionTemplate getExpressionTemplate() throws CodeGenException;
 
 	protected abstract void primRefreshArguments();
+	
+	protected abstract String generateSrc() throws CodeGenException;
 
 	public String generate(Object[] args) throws CodeGenException {
 
@@ -327,10 +329,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 
 		primRefreshArguments();
 
-		IMethodInvocationGenerator iGen = new DefaultMethodInvocationGenerator() ;
-		
-		
-		fExprSig = iGen.generateMethodInvocation(fAddedPart.getInitMethod().getMethodName()) ;
+		fExprSig = generateSrc();
 		return fExprSig;
 	}
 
@@ -405,7 +404,8 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#primRefreshFromComposition(String)
 	 */
 	public String primRefreshFromComposition(String exprSig) throws CodeGenException {
-		return null;
+		ExpressionTemplate exp = getExpressionTemplate();
+		return exp.toString();
 	}
 
 }

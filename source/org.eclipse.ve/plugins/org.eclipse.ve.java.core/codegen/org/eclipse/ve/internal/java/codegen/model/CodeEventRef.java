@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:37 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -132,7 +132,7 @@ public synchronized boolean  decodeExpression() throws CodeGenException {
       if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
       	return true ;
       
-      if(isStateSet(STATE_NO_OP))
+      if(isStateSet(STATE_NO_MODEL))
       	return true;
       
            
@@ -219,7 +219,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 		   return ;
 		}
 
-	if(isStateSet(STATE_NO_OP))     //((fState & STATE_NO_OP) > 0)
+	if(isStateSet(STATE_NO_MODEL))     //((fState & STATE_NO_OP) > 0)
 		return ;	
 	
 	if (fDecoder == null) throw new CodeGenException ("No Decoder") ; //$NON-NLS-1$
@@ -270,8 +270,8 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 
 			if (beanNameEquivalency && expEquivalency) {
 
-				if (isStateSet(STATE_NO_OP))
-					if (exp1.isStateSet(STATE_NO_OP)) {
+				if (isStateSet(STATE_NO_MODEL))
+					if (exp1.isStateSet(STATE_NO_MODEL)) {
 						if (getCodeContent().equals(exp1.getCodeContent()))
 							return 1;
 						else
@@ -279,7 +279,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 					}
 					else
 						return -1;
-				else if (exp1.isStateSet(STATE_NO_OP))
+				else if (exp1.isStateSet(STATE_NO_MODEL))
 					return -1;
 
 				if (getCodeContent().equals(exp1.getCodeContent()))

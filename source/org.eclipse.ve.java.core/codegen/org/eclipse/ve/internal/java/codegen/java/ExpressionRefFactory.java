@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.Iterator;
@@ -75,10 +75,9 @@ public CodeExpressionRef createFromJVEModel(Object[] args) throws CodeGenExcepti
 		exp.clearState();
 		exp.setState(CodeExpressionRef.STATE_EXIST, true);
 		exp.generateSource(fSF);
-		if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) //exp.getState()
-																							// ==
-																							// exp.STATE_NOT_EXISTANT)
-			return null;
+		if ((!exp.isAnyStateSet()) || 
+				exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) 
+			return exp ;
 
 		fExpr = exp;
 		try {
@@ -168,10 +167,12 @@ private org.eclipse.jdt.internal.compiler.ast.Statement getInitExpression(String
 /**
  * 
  * this method will parse a method to get its init expression (new Foo())
+ * The assumption is that the init metod was just created with a single 
+ * expression, the init expression
  * 
  * @since 1.0.0
  */
-public CodeExpressionRef createInitExpression() {
+public CodeExpressionRef parseInitExpression() {
 	
 	CodeMethodRef mr = fBeanPart.getInitMethod() ;
 	// Create a temporary class signiture
@@ -186,7 +187,7 @@ public CodeExpressionRef createInitExpression() {
 	//exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
 	exp.clearState();
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
-	exp.setState(CodeExpressionRef.STATE_NO_OP, true);
+	exp.setState(CodeExpressionRef.STATE_NO_MODEL, true);
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
 	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
 	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
@@ -195,9 +196,10 @@ public CodeExpressionRef createInitExpression() {
 	exp.setBean(fBeanPart) ;
 	fExpr = exp ;
 	
-	return fExpr ;	
-	
+	return fExpr ;		
 }
+
+
 
 /**
  *  Create a new Expression from an existing shadow one (e.g., delta expression)

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-30 23:25:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
  */
 import java.util.*;
 
@@ -52,19 +52,20 @@ public class BeanPart {
 	ArrayList		fBeanReturnMethods = new ArrayList () ;		// Metods/s which return the value of this bean
 	ArrayList		fEventInitMethods = new ArrayList() ;
 	ArrayList		fCallBackExpressions = new ArrayList() ;
+	ArrayList		fNoSrcExpressions = new ArrayList();
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
 	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
 	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	
 	IBeanDeclModel	fModel = null ;    
     BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel
-    boolean    	fisInstanceVar = true ;					// Is the bean an instance variable ?
-    boolean        fisInstanceInstantiation = false ;         // Is this bean part initilized with its decleration ?
+    boolean			fisInstanceVar = true ;					// Is the bean an instance variable ?
+    boolean			fisInstanceInstantiation = false ;         // Is this bean part initilized with its decleration ?
     FreeFormAnnoationDecoder fFFDecoder = null ;				// Responsible parse/generate FF tags
     String      	fFieldDeclHandle = null ;
     List        	fBadExpressions = null;
-    boolean		isInJVEModel = false ;
-    boolean		fSettingProcessingRequired = false ;
+    boolean			isInJVEModel = false ;
+    boolean			fSettingProcessingRequired = false ;
     
 
 /**
@@ -653,6 +654,10 @@ public  void dispose() {
 		  m.dispose() ;
 		
 	}
+	
+	for (int i = 0; i < fNoSrcExpressions.size(); i++) {
+		((CodeExpressionRef)fNoSrcExpressions.get(i)).dispose();
+	}
 	   
 
 	fModel = null ;
@@ -663,6 +668,7 @@ public  void dispose() {
 	fBeanReturnMethods.clear() ;
 	fbackReferences.clear();
 	fChildren.clear() ;
+	fNoSrcExpressions.clear();
 	if (fEObject != null) {
 	  ICodeGenAdapter a = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(fEObject,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
 	  while (a != null) {
@@ -703,6 +709,14 @@ public boolean isEquivalent(BeanPart b) {
 		if(fBadExpressions==null)
 			fBadExpressions = new ArrayList();
 		fBadExpressions.add(fBadExpression);
+	}
+	
+	public void addNoSrcExpresion(CodeExpressionRef exp) {
+		if (!fNoSrcExpressions.contains(exp))
+		    fNoSrcExpressions.add(exp);
+	}
+	public void removeNoSrcExpresion(CodeExpressionRef exp) {		
+			fNoSrcExpressions.remove(exp);
 	}
 	
 	public void removeAllBadExpressions(){

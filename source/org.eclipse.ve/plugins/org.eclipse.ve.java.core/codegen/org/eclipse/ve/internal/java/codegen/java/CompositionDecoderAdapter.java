@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +34,13 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-
+/**
+ * 
+ * This CodeGen adapter listens to the BeanSubclassComposition
+ * 
+ * @author Gili Mendel
+ * @since 0.5.0
+ */
 public class CompositionDecoderAdapter extends MemberDecoderAdapter implements IAdaptable {
 	
 

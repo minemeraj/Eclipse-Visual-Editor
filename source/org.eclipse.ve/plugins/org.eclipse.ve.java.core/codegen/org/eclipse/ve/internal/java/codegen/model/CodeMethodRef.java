@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.*;
@@ -218,7 +218,7 @@ protected void resetExpressionPriorities(){
 	for(int count=0;count<fExpressions.size();count++){
 		CodeExpressionRef expression = (CodeExpressionRef)fExpressions.get(count);
 		try{			
-			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_OP)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
+			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
 				(!expression.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
 				 expression.setProprity(expression.primGetDecoder().determinePriority());
@@ -237,7 +237,7 @@ protected void resetExpressionPriorities(){
 	for(int count=0;count<fEventExpressions.size();count++){
 		CodeExpressionRef expression = (CodeExpressionRef)fEventExpressions.get(count);
 		try{			
-			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_OP)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
+			if ((!expression.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) &&  //((expression.getState()& expression.STATE_NO_OP) == 0) && 
 				(expression.isAnyStateSet()) &&
 				(!expression.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT))) { //expression.getState() != expression.STATE_NOT_EXISTANT) {
 				 expression.setProprity(expression.primGetDecoder().determinePriority());

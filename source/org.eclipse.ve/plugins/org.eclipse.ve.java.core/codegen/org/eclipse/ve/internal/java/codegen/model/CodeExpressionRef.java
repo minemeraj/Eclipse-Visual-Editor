@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.8 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 
@@ -48,7 +48,6 @@ protected   Object[]				fArguments		= null ;   // Some expression involve other 
 private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
 protected 	Object					fPriority		= null;      
-protected   Object					fSync			= new Object () ;
 protected   CodeExpressionRef		fShadowExp		= null;
 
 
@@ -56,28 +55,31 @@ protected   CodeExpressionRef		fShadowExp		= null;
    The following are various states the expression can be at
 *********/ 
  
-    //  Expression is not in any of the below states
-public final static int                STATE_NOT_EXISTANT     = 0x01 ;
-    //  Expression exists in the VCE model
-public final static int                STATE_EXIST 	         = 0x02 ;
-    //  Source reflects the current value in the VCE model
-public final static int                STATE_IN_SYNC	         = 0x04 ;
-    //  Valid source exists with no VCE model e.g., bean foo = new bean() 
-public final static int                STATE_NO_OP		     = 0x08 ;
-    //  VCE model entry without source code 
-public final static int                STATE_IMPLICIT	     = 0x10 ;
+
+    //  Expression exists in the BDM model
+public final static int                STATE_EXIST				= 0x01 ;
+    //  Source / Model are in sync
+public final static int                STATE_IN_SYNC			= 0x02 ;
+    //  Valid source exists with no VE model (no decoder) e.g., bean foo = new bean() 
+public final static int                STATE_NO_MODEL			= 0x03 ;
+//  Valid source exists with no VE model (no decoder) e.g., bean foo = new bean() 
+public final static int                STATE_NO_SRC		     	= 0x4 ;
+//  Expression does not exists in the model or source e.g.,  a shadow expr.
+public final static int                STATE_NOT_EXISTANT     	= (STATE_NO_MODEL|STATE_NO_SRC) ;
+    //  Referred to an implicit usage. 
+public final static int                STATE_IMPLICIT	     	= 0x10 ;
     //  In progress of updating the source
-public final static int                STATE_UPDATING_SOURCE   = 0x20 ; 
+public final static int                STATE_UPDATING_SOURCE   	= 0x20 ; 
     //  This expression relative position in the source can not be changed.
-public final static int                STATE_SRC_LOC_FIXED     = 0x40 ;
-    //  Expression can not be on the fly parsed
-public final static int                STATE_EXP_IN_LIMBO      = 0x80 ;
+public final static int                STATE_SRC_LOC_FIXED     	= 0x40 ;
+    //  Expression in src. can not be parsed at this time, but is in the VE model
+public final static int                STATE_EXP_IN_LIMBO      	= 0x80 ;
    //   Expression is not persisted in source code.
-public final static int                STATE_EXP_NOT_PERSISTED = 0x0100 ;
+public final static int                STATE_EXP_NOT_PERSISTED 	= 0x100 ;
   // Typically set for a Delta BDM
-public final static int                STATE_SHADOW            = 0x0200 ;
+public final static int                STATE_SHADOW            	= 0x200 ;
   // Typically set for an allocation statement that initialize the expression.
-public final static int                STATE_INIT_EXPR         = 0x0400 ;  
+public final static int                STATE_INIT_EXPR         	= 0x400 ;  
 
 /*******/
 	
@@ -362,7 +364,7 @@ public  boolean  decodeExpression() throws CodeGenException {
       if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
       	return true ;
       
-      if(isStateSet(STATE_NO_OP))
+      if(isStateSet(STATE_NO_MODEL))
       	return true;
       
       // Do not decode
@@ -457,7 +459,7 @@ public void setDecoder(IExpressionDecoder decoder) {
 public  IExpressionDecoder getExpDecoder() {
 	if (fDecoder != null) return fDecoder ;
 	if (!isAnyStateSet() || isStateSet(STATE_NOT_EXISTANT) ||
-	    isStateSet(STATE_NO_OP))
+	    isStateSet(STATE_NO_MODEL))
     return null ;
 // Temporary sanity check
 if (this instanceof CodeEventRef)
@@ -477,7 +479,7 @@ public  void refreshFromComposition() throws CodeGenException {
 		   return ;
 	    }
 
-	if(isStateSet(STATE_NO_OP))     //((fState & STATE_NO_OP) > 0)
+	if(isStateSet(STATE_NO_MODEL))     //((fState & STATE_NO_OP) > 0)
 	    return ;	
 	
 	if (fDecoder == null) throw new CodeGenException ("No Decoder") ; //$NON-NLS-1$
@@ -514,20 +516,6 @@ public String _debugExpressions() {
  *                         JDOM Expression????
  */
 public  void updateLimboState (CodeExpressionRef exp) {
-//    if (exp == null) return ;
-//    boolean parsedOK  ;
-//    if (exp.isStateSet(STATE_EXP_IN_LIMBO)) //((exp.getState()&exp.STATE_EXP_IN_LIMBO)>0)
-//      if (exp.getExpression() != null)
-//         if (getExpression() != null && exp.getExpression() != getExpression()) //  The new exp was parsed indepandantly OK
-//            parsedOK = true ;
-//         else
-//            parsedOK = false ;
-//      else
-//        parsedOK = false ;             
-//    else    
-//        parsedOK = true ;
-//     
-//    setState(STATE_EXP_IN_LIMBO, !parsedOK);
 	setState(STATE_EXP_IN_LIMBO, exp.isStateSet(STATE_EXP_IN_LIMBO));
 }
 
@@ -551,7 +539,7 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 		   setExpression(exp.getExpression());
 		
 		// Update the VCE model
-		if((!isStateSet(STATE_EXP_IN_LIMBO)) && (!isStateSet(STATE_NO_OP))) { //((fState&STATE_EXP_IN_LIMBO)==0 && (fState&STATE_NO_OP)==0){
+		if((!isStateSet(STATE_EXP_IN_LIMBO)) && (!isStateSet(STATE_NO_MODEL))) { //((fState&STATE_EXP_IN_LIMBO)==0 && (fState&STATE_NO_OP)==0){
 			// Let the decoder refresh its JDOM Expression
 			primGetDecoder().setExpression(this);
 			// TODO This assumes that there is NO preveious value
@@ -578,6 +566,7 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 
 
 public  void updateDocument(ExpressionParser newParser) {
+	if (isStateSet(STATE_NO_SRC)) return ;
 	synchronized (fBean.getModel().getDocumentLock()) {
 		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
 		int off = getOffset();
@@ -591,12 +580,13 @@ public  void updateDocument(ExpressionParser newParser) {
 		fBean.getModel().getDocumentBuffer().replace(docOff, len, newContent);
 
 		setOffset(off);
-		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
+		setState(STATE_UPDATING_SOURCE, false); 
+		setState(STATE_EXP_NOT_PERSISTED,false);
 	}
 }
 
 public  void updateDocument(boolean updateSharedDoc) {
-	if(isStateSet(STATE_IN_SYNC))  
+	if(isStateSet(STATE_IN_SYNC)|| isStateSet(STATE_NO_SRC))  
 		return ;
      
        
@@ -657,7 +647,7 @@ public  void updateDocument(boolean updateSharedDoc) {
 	if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
 		dispose() ;
-	}
+	}	
 }
 
 protected void updateDocument(int docOff, int len, String newContent) {
@@ -667,12 +657,14 @@ protected void updateDocument(int docOff, int len, String newContent) {
 			model.aboutTochangeDoc();
 			model.getDocumentBuffer().replace(docOff,len,newContent) ;
 			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
+			setState(STATE_EXP_NOT_PERSISTED,false);
         } catch (Exception e) {
 			JavaVEPlugin.log(e) ;
 		}	
 }
 
 public  void insertContentToDocument() {
+	if (isStateSet(STATE_NO_SRC)) return ;
 	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
 	synchronized (fBean.getModel().getDocumentLock()) {
 		// mark a controlled update (Top-Down)
@@ -716,7 +708,8 @@ public void refreshAST() {
 				ProblemReporter reporter = new ProblemReporter(DefaultErrorHandlingPolicies.exitAfterAllProblems(), new CompilerOptions(), new DefaultProblemFactory(Locale.getDefault()));
 				CompilationResult result = new CompilationResult(scu, 1, 1, 20);
 				CompilationUnitDeclaration cudecl = getModelFromParser(reporter, result, scu);
-                setExpression(cudecl.types[0].methods[1].statements[0]) ;
+				if (cudecl.types[0].methods[1].statements!=null)
+                    setExpression(cudecl.types[0].methods[1].statements[0]) ;
 
 				
 		}
@@ -768,14 +761,14 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		boolean expEquivalency = expc1.equals(expc2);		
 		
 		if(beanNameEquivalency && expEquivalency){
-		    if (isStateSet(STATE_NO_OP))
-		       if (exp1.isStateSet(STATE_NO_OP)) {
+		    if (isStateSet(STATE_NO_MODEL))
+		       if (exp1.isStateSet(STATE_NO_MODEL)) {
 		       	if (getCodeContent().equals(exp1.getCodeContent())) return 1 ;
 		       	else return 0 ;
 		       }
 		       else return -1 ;
 		    else
-		       if (exp1.isStateSet(STATE_NO_OP)) return -1 ;
+		       if (exp1.isStateSet(STATE_NO_MODEL)) return -1 ;
 
             // Need to have decoders for equivalency		       
 		    if (getBean().getEObject() == null &&
@@ -893,6 +886,9 @@ private void primSetState(int flag) {
 public void clearState(){
 	primSetState(0);
 }
+public void clearState(int state){
+	primSetState(state);
+}
 public void setState(int flag, boolean state) {
 	if(state)
 		primSetState(primGetState() | flag);
@@ -908,13 +904,9 @@ public String toString(){
 	if(isStateSet(STATE_IMPLICIT))
 		states = states.concat("IMPLICIT#"); //$NON-NLS-1$
 	if(isStateSet(STATE_IN_SYNC))
-		states = states.concat("INSYNC#"); //$NON-NLS-1$
-	if(isStateSet(STATE_NO_OP))
-		states = states.concat("NOOP#"); //$NON-NLS-1$
+		states = states.concat("INSYNC#"); //$NON-NLS-1$	
 	if(isStateSet(STATE_INIT_EXPR))
-		states = states.concat("INIT#"); //$NON-NLS-1$		
-	if(isStateSet(STATE_NOT_EXISTANT))
-		states = states.concat("NOTEXIST#"); //$NON-NLS-1$
+		states = states.concat("INIT#"); //$NON-NLS-1$			
 	if(isStateSet(STATE_SRC_LOC_FIXED))
 		states = states.concat("SRCLOCFIXED#"); //$NON-NLS-1$
 	if(isStateSet(STATE_UPDATING_SOURCE))
@@ -922,7 +914,15 @@ public String toString(){
     if(isStateSet(STATE_EXP_NOT_PERSISTED))
         states = states.concat("NOTPERSISTED#"); //$NON-NLS-1$    
     if(isStateSet(STATE_SHADOW))
-        states = states.concat("SHADOW#"); //$NON-NLS-1$    
+        states = states.concat("SHADOW#"); //$NON-NLS-1$
+    if(isStateSet(STATE_NOT_EXISTANT))
+    	states = states.concat("NOTEXIST#"); //$NON-NLS-1$
+    else {
+    	if (isStateSet(STATE_NO_SRC))
+    	    states = states.concat("STATE_NO_SRC#"); //$NON-NLS-1$
+    	if (isStateSet(STATE_NO_MODEL))
+    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$
+    }
 	states = states.concat("}"+" Offset: "+Integer.toString(getOffset())); //$NON-NLS-1$ //$NON-NLS-2$
 	return super.toString() + states;
 }
@@ -971,17 +971,9 @@ public CodeExpressionRef createShadow(CodeMethodRef mr, BeanPart bp) {
    
     CodeExpressionRef shadow = new CodeExpressionRef (mr,bp) ;
     
+    
+    shadow.clearState(primGetState()) ;
     shadow.setState(STATE_SHADOW, true) ;
-    shadow.setState(STATE_EXIST, isStateSet(STATE_EXIST));
-    shadow.setState(STATE_EXP_IN_LIMBO, isStateSet(STATE_EXP_IN_LIMBO));
-    shadow.setState(STATE_EXP_NOT_PERSISTED, isStateSet(STATE_EXP_NOT_PERSISTED));
-    shadow.setState(STATE_IMPLICIT, isStateSet(STATE_IMPLICIT));
-    shadow.setState(STATE_IN_SYNC, isStateSet(STATE_IN_SYNC));
-    shadow.setState(STATE_INIT_EXPR, isStateSet(STATE_INIT_EXPR));
-    shadow.setState(STATE_NO_OP, isStateSet(STATE_NO_OP));
-    shadow.setState(STATE_NOT_EXISTANT, isStateSet(STATE_NOT_EXISTANT));
-    shadow.setState(STATE_SRC_LOC_FIXED, isStateSet(STATE_SRC_LOC_FIXED));
-    shadow.setState(STATE_UPDATING_SOURCE, isStateSet(STATE_UPDATING_SOURCE));
     
     shadow.setExpression(getExpression()) ;
     
@@ -1011,6 +1003,16 @@ protected IJVEDecoder primGetDecoder() {
  */
 public void setExpression(Statement statement) {
 	fExpr = statement;
+}
+
+public void setNoSrcExpression() {
+	setState(STATE_NO_SRC,true) ;
+	if (fBean!=null) {
+	   fBean.removeRefExpression(this);
+	   fBean.addNoSrcExpresion(this);
+	}
+	if (getMethod()!=null)
+	    getMethod().removeExpressionRef(this) ;
 }
 
 }

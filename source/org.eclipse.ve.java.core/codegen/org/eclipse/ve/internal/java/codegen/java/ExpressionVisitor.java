@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
  */
 
 import java.util.Iterator;
@@ -210,7 +210,7 @@ protected void processAssignmment() {
 			if (initExpr) {
 			   bean.addInitMethod(fMethod) ;
 			   fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-			   fExpression.setState(CodeExpressionRef.STATE_NO_OP, true);
+			   fExpression.setState(CodeExpressionRef.STATE_NO_MODEL, true);
 			   fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 			}
 			else {
@@ -256,7 +256,7 @@ protected void processDeclarations() {
          bean.addInitMethod(fMethod) ;
          //fExpression.setState(fExpression.getState() | fExpression.STATE_IN_SYNC | fExpression.STATE_NO_OP) ;
          fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-         fExpression.setState(CodeExpressionRef.STATE_NO_OP, true);
+         fExpression.setState(CodeExpressionRef.STATE_NO_MODEL, true);
          fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);         
          bean.addRefExpression(fExpression) ;
 		 bean.getModel().addMethodInitializingABean(fMethod) ;			
