@@ -43,7 +43,7 @@
 		<antcall target="push" />
 	</target>
 
-	<target name="buildAll">
+	<target name="buildAll" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
 		</ant>
@@ -58,7 +58,7 @@
 		</ant>
 	</target>
 
-	<target name="test">
+	<target name="test" depends="init">
 		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
 		<!--<parallel>-->
 
