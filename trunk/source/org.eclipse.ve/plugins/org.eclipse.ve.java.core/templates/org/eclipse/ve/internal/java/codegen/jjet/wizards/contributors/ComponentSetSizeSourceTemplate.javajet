@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: ComponentSetSizeSourceTemplate.javajet,v $
- *  $Revision: 1.1 $ $Date: 2003-10-27 17:48:30 $
+ *  $Revision: 1.2 $ $Date: 2004-08-27 19:50:26 $
  */
 %>
 <%@ jet 
@@ -41,6 +41,9 @@ public class <%=typeName%> {
 			}else{
 				%>initialize()<%
 		}%> {
-		this.setSize(300,200);
+		this.setSize(300,200);<%
+	if ("java.awt.Frame".equals(superClassName)) {%>
+		this.setTitle("<%=superClassName.substring(superClassName.lastIndexOf(".")+1)%>");<%
+	}%>
 	}
 }
