@@ -10,13 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-11 15:27:25 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-17 19:20:04 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.*;
 import java.util.List;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
 /**
@@ -36,7 +45,31 @@ public class NullLayoutSwitcher extends LayoutSwitcher {
 		super(cp);
 		helper = new NullLayoutPolicyHelper(cp);
 	}
+	
+	/**
+	 * Returns a compound command containing the child constraint commands to position the
+	 * children within a null Layout container.
+	 * If there were previous constraints, remove them first.
+	 * Fot the children we're going to create Rectangle constraints and 
+	 * in order to do this we must get the position coordinates from the live bean
+	 * and create setting commands with a Bean rectangle constraint.
+	 */
 	protected Command getChangeConstraintsCommand(List children) {
-		return null;
+		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
+		// First get rid of any previous constraints 
+		cb.append(helper.getOrphanConstraintsCommand(children));
+		// Then get the current positioning of each of the children
+		ArrayList constraints = new ArrayList(children.size());
+		Iterator comps = children.iterator();
+		while (comps.hasNext()) {
+			IJavaObjectInstance comp = (IJavaObjectInstance) comps.next();
+			IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(comp);
+			
+			IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) BeanSWTUtilities.invoke_getBounds(compProxy);
+			Rectangle newRect = new Rectangle(rectProxy.getX(), rectProxy.getY(), rectProxy.getWidth(), rectProxy.getHeight());
+			constraints.add(new NullLayoutPolicyHelper.NullConstraint(newRect, true, true));
+		}
+		cb.append(helper.getChangeConstraintCommand(children, constraints));	// Now let the helper change the constraints correctly.
+		return cb.getCommand(); 
 	}
 }
