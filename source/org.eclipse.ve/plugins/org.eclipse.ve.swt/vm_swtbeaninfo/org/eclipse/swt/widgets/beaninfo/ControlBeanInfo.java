@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -39,7 +39,7 @@ public BeanDescriptor getBeanDescriptor() {
 			{ "border" , ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 			    ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Value.Border") , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "controlOrientation" , ControlMessages.getString("ControlBeanInfo.StyleBits.ControlOrientation.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			{ "controlOrientation" , ControlMessages.getString("ControlBeanInfo.StyleBits.ControlOrientation.Name") , Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 			    ControlMessages.getString("ControlBeanInfo.StyleBits.ControlOrientation.Value.LeftToRight") , "org.eclipse.swt.SWT.LEFT_TO_RIGHT" , new Integer(SWT.LEFT_TO_RIGHT),				 //$NON-NLS-1$ //$NON-NLS-2$
 			    ControlMessages.getString("ControlBeanInfo.StyleBits.ControlOrientation.Value.RightToLeft") , "org.eclipse.swt.SWT.RIGHT_TO_LEFT" , new Integer(SWT.RIGHT_TO_LEFT)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } 
@@ -77,6 +77,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"accessible", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ControlMessages.getString("accessibleDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ControlMessages.getString("accessibleSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// background
@@ -137,12 +138,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"menu", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ControlMessages.getString("menuDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ControlMessages.getString("menuSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// monitor
 			super.createPropertyDescriptor(getBeanClass(),"monitor", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ControlMessages.getString("monitorDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ControlMessages.getString("monitorSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// parent
@@ -156,6 +159,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"reparentable", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ControlMessages.getString("reparentableDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ControlMessages.getString("reparentableSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// shell

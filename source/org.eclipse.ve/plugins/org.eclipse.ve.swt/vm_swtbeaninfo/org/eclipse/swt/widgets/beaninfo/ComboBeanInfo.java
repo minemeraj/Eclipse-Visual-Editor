@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -72,24 +72,34 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ComboMessages.getString("itemsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ComboMessages.getString("itemsSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// orientation
 			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ComboMessages.getString("orientationDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ComboMessages.getString("orientationSD"), //$NON-NLS-1$
+		      	ENUMERATIONVALUES, new Object[] {
+						ComboMessages.getString("orientation.left_to_right"), new Integer(org.eclipse.swt.SWT.LEFT_TO_RIGHT), //$NON-NLS-1$
+				   		"org.eclipse.swt.SWT.LEFT_TO_RIGHT", //$NON-NLS-1$
+				   		ComboMessages.getString("orientation.right_to_left"), new Integer(org.eclipse.swt.SWT.RIGHT_TO_LEFT), //$NON-NLS-1$
+				   		"org.eclipse.swt.SWT.RIGHT_TO_LEFT", //$NON-NLS-1$
+				},
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// selection
 			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ComboMessages.getString("selectionDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ComboMessages.getString("selectionSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selectionIndex
 			super.createPropertyDescriptor(getBeanClass(),"selectionIndex", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ComboMessages.getString("selectionIndexDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ComboMessages.getString("selectionIndexSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// text
@@ -122,6 +132,17 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		handleException(exception);
 	};
 	return null;
+}
+
+protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
+	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+	
+	replacePropertyDescriptor(newPDs, "layout", null, new Object[] { 
+		DESIGNTIMEPROPERTY, Boolean.FALSE,
+		}
+	);
+
+	return newPDs;
 }
 
 }

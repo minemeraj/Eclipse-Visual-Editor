@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -79,18 +79,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"bounds", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("boundsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("boundsSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// clientArea
 			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("clientAreaDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("clientAreaSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// defaultButton
 			super.createPropertyDescriptor(getBeanClass(),"defaultButton", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("defaultButtonDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("defaultButtonSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// image
@@ -103,12 +106,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"images", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("imagesDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("imagesSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// location
 			super.createPropertyDescriptor(getBeanClass(),"location", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("locationDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("locationSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// maximized
@@ -133,6 +138,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"reparentable", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("reparentableDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("reparentableSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// size

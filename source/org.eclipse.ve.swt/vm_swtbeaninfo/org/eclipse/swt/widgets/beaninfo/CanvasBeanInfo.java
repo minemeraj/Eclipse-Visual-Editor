@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CanvasBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -65,6 +65,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"caret", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, CanvasMessages.getString("caretDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, CanvasMessages.getString("caretSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};
