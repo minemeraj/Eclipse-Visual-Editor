@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.14 $ $Date: 2005-02-15 23:51:49 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.15 $ $Date: 2005-02-23 13:38:37 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -123,7 +123,7 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 							name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 						}	
 						final IJavaInstance titleInstance = BeanUtilities.createString(rset, name);
-						controller.run(new Runnable() {
+						controller.doModelChanges(new Runnable() {
 							public void run() {
 								RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
 								cbld.applyAttributeSetting((EObject) target,sf, titleInstance);
