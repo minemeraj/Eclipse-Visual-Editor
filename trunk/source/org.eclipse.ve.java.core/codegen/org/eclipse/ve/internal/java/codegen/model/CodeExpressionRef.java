@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.23 $  $Date: 2004-04-23 23:15:51 $ 
+ *  $Revision: 1.24 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 
@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -39,7 +40,7 @@ protected   BeanPart				fBean			= null ;
 protected   Object[]				fArguments		= null ;   // Some expression involve other components
 private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
-protected 	Object					fPriority		= null;      
+protected 	VEexpressionPriority	fPriority		= null;      
 protected   CodeExpressionRef		fMasterExpression = null;  // STATE_NO_SRC expressions may have a master expression
 
 
@@ -136,8 +137,11 @@ public CodeMethodRef getMethod()  {
 }
 
 
-public Object getPriority(){
-	return fPriority;
+public VEexpressionPriority getPriority(){
+	if (isStateSet(STATE_DELETE|STATE_NO_MODEL))
+		return IJavaFeatureMapper.NOPriority;
+	
+	return primGetDecoder().determinePriority();
 }
 
 public String getCodeContent() {
@@ -753,7 +757,6 @@ public void dispose() {
 	clearState();	
 	setState(STATE_DELETE, true) ;
 	setContent((ExpressionParser) null) ;
-	setProprity(null) ;
 	if (fMethod != null)
 	   fMethod.removeExpressionRef(this) ;		
 	fMethod = null ;
@@ -763,8 +766,15 @@ public void dispose() {
 	}
 	fBean = null ;	
 }
-public void setProprity(Object priority){
-	fPriority = priority;
+
+/**
+ * 
+ * @param priority
+ * @todo Generated comment
+ * @deprecated  priorities will be calculated by the Expression itself.
+ */
+public void setProprity(VEexpressionPriority priority){
+	//fPriority = priority;
 }
 private void primSetState(int flag) {
     fInternalState = flag ;

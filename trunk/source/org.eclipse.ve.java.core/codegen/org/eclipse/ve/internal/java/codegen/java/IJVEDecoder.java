@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IJVEDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-28 14:21:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
@@ -35,7 +36,7 @@ public interface IJVEDecoder {
 	 * the more the expression will float in regards to other expressions with the same
 	 * Structural Feature.
 	 */
-	public Object determinePriority();
+	public VEexpressionPriority determinePriority();
 
 	// At this time the Factory will construct decoders with a default constructor
 	public void setExpression(CodeExpressionRef expr) throws CodeGenException;

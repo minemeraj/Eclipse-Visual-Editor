@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:33 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -462,7 +462,7 @@ public Object[] getArgsHandles(Statement expr) {
 			if (methodName == null)
 				methodName = AbstractFeatureMapper.getWriteMethod(fExpr);
 			if(methodName!=null)
-				return fFmapper.getPriorityIncrement(methodName) + super.getSFPriority();
+				return fFmapper.getFeaturePriority(methodName);
 		}
 		return super.getSFPriority();
 	}

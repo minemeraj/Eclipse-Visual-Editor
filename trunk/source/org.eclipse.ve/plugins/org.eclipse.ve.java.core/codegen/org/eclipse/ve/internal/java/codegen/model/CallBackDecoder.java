@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CallBackDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-28 14:21:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -22,10 +22,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.Callback;
+
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.java.ICallbackDecoder;
-import org.eclipse.ve.internal.java.codegen.java.IExpressionChangeListener;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**
@@ -164,8 +164,8 @@ public class CallBackDecoder implements ICallbackDecoder {
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IJVEDecoder#determinePriority()
 	 */
-	public Object determinePriority() {
-		return null;
+	public VEexpressionPriority determinePriority() {
+		return IJavaFeatureMapper.NOPriority;
 	}
 
 	/**

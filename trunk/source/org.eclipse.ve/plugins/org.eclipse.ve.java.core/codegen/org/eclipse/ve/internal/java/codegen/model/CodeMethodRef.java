@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-23 23:15:51 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 import java.util.*;
@@ -30,6 +30,7 @@ import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -217,7 +218,12 @@ public  Iterator getAllExpressions() {
   
  
 }
-
+/**
+ * 
+ * 
+ * @todo Generated comment
+ * @deprecated
+ */
 protected void resetExpressionPriorities(){
 	// Reset priority of normal expressions
 	for(int count=0;count<fExpressions.size();count++){
@@ -230,9 +236,9 @@ protected void resetExpressionPriorities(){
 			}else{
 				// TODO   Hard coding here is not scalable - we may have ivjFoo = getFrame().getContentPane() ; as init exp
 				if(expression.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){ //$NON-NLS-1$
-					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_INIT_EXPR, 0});
+//					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_INIT_EXPR, 0});
 				}else{
-					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
+//					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
 				}
 			}
 		}catch(Exception e ){JavaVEPlugin.log(e, Level.WARNING) ;}
@@ -249,9 +255,9 @@ protected void resetExpressionPriorities(){
 			}else{
 				// TODO  hard coding here is not scalable - we may have ivjFoo = getFrame().getContentPane() ; as init exp.
 				if(expression.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){ //$NON-NLS-1$
-					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_INIT_EXPR, 0});
+//					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_INIT_EXPR, 0});
 				}else{
-					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
+//					expression.setProprity(new int[]{IJavaFeatureMapper.PRIORITY_DEFAULT, 0});
 				}
 			}
 		}catch(Exception e ){JavaVEPlugin.log(e, Level.WARNING) ;}
@@ -266,6 +272,7 @@ protected void resetExpressionPriorities(){
  * 	the first offset that can be used to place an expression (Integer), 
  * 	the first filler that can be used (String) 
  * }
+ * @deprecated
  */
 protected static List sortExpressionsByBeans(List newfExpressions){
 	Hashtable beanToExpHash = new Hashtable();
@@ -332,6 +339,9 @@ protected static List sortExpressionsByBeans(List newfExpressions){
 	return tmpFinalOrder;
 }
 
+/**
+ * @deprecated
+ */
 protected List reorderInitExpsToTop(List unordered){
 	int maxPriorityCount = 0;
 	Iterator allExpressions = unordered.iterator();
@@ -339,37 +349,44 @@ protected List reorderInitExpsToTop(List unordered){
 	ArrayList orderedPri = new ArrayList(unordered.size());
 	while(allExpressions.hasNext()){
 		CodeExpressionRef exp = (CodeExpressionRef) allExpressions.next();
-		int[] expPriorities = (int[])exp.getPriority();
-		if(expPriorities==null){
-			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
-			expPriorities = new int[]{-1, -1};
-		}
-		if(expPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR ||
-			expPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR){
-			if(exp.getBean()!=null &&
-			   exp.getBean().getReturnedMethod()!=null &&
-			   exp.getBean().getReturnedMethod().equals(this)) {
-				ordered.add(0,exp);
-				orderedPri.add(0,expPriorities);
-			}
-			else {
-				int i;
-				for (i=maxPriorityCount; i>0; i--) {
-					if (expPriorities[1]< ((int[])orderedPri.get(i-1))[1])
-						break;						
-				}				
-				ordered.add(i,exp);
-				orderedPri.add(i,expPriorities);
-			}
-			maxPriorityCount++;
-		}else{
-			ordered.add(exp);
-			orderedPri.add(expPriorities);
-		}
-	}
+//		int[] expPriorities = (int[])exp.getPriority();
+//		if(expPriorities==null){
+//			JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//			expPriorities = new int[]{-1, -1};
+//		}
+//		if(expPriorities[0]==IJavaFeatureMapper.PRIORITY_INIT_EXPR ||
+//			expPriorities[0]==IJavaFeatureMapper.PRIORITY_CONSTRUCTOR){
+//			if(exp.getBean()!=null &&
+//			   exp.getBean().getReturnedMethod()!=null &&
+//			   exp.getBean().getReturnedMethod().equals(this)) {
+//				ordered.add(0,exp);
+//				orderedPri.add(0,expPriorities);
+//			}
+//			else {
+//				int i;
+//				for (i=maxPriorityCount; i>0; i--) {
+//					if (expPriorities[1]< ((int[])orderedPri.get(i-1))[1])
+//						break;						
+//				}				
+//				ordered.add(i,exp);
+//				orderedPri.add(i,expPriorities);
+//			}
+//			maxPriorityCount++;
+//		}else{
+//			ordered.add(exp);
+//			orderedPri.add(expPriorities);
+//		}
+}
 	return ordered;
 }
 
+/**
+ * 
+ * @param expressions
+ * @return
+ * @todo Generated comment
+ * @deprecated
+ */
 protected List orderExpressions(List expressions){
 	List tmpExpressionOrder = new ArrayList(expressions);
 	tmpExpressionOrder = sortExpressionsByBeans(tmpExpressionOrder);
@@ -377,38 +394,32 @@ protected List orderExpressions(List expressions){
 	return tmpExpressionOrder;
 }
 
-
-protected Object[] getUsableOffsetAndFiller(List allExpressionsSorted) throws CodeGenException{
+/**
+ * Called if this is the first expresson, and we need an offset from expression that is 
+ * not in our model
+ */
+protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	int offset = -1;
 	String filler = null;
 	
-	/*
-	 * First, we look at all the expressions passed in to find out 
-	 * 
-	 * (A) Which is the last SRC_LOC_FIXED expression, before a floating expression -OR-
-	 * (B) Which is the first SRC_LOC_FIXED expression, after a floating expression  
-	 * 
-	 * which can be used to provide a filler and an offset. If one is found it is returned. 
-	 */
-	 boolean floatingExpessionFound = false;
-	 for(int i=0;i<allExpressionsSorted.size();i++){
-	 	CodeExpressionRef ce = (CodeExpressionRef) allExpressionsSorted.get(i);
-	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)){
+	
+	ArrayList list = new ArrayList();
+	list.addAll(fExpressions);
+	list.addAll(fEventExpressions);
+	
+	// find the last expression in our model
+	for(int i=list.size()-1;i>=0;i--){
+	 	CodeExpressionRef ce = (CodeExpressionRef) list.get(i);
+	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && ce.getOffset()>=0){
 	 		offset = ce.getOffset();
 	 		filler = ce.getFillerContent();
-	 	}else{
-	 		floatingExpessionFound = true;
+	 		break;
 	 	}
-		if(floatingExpessionFound && offset!=-1 && filler!=null)
-			break;
 	 }
-	if(offset!=-1 && filler!=null)
+	 if(offset!=-1 && filler!=null)
 		return new Object[]{new Integer(offset), filler};
-	
-	/*
-	 * If a SRC_LOC_FIXED expression is not found, then a default is calculated by looking at the
-	 * AST and getting default values.
-	 */
+			
+	// No expression was found, use AST
 	IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());
 	IMethod fMethod = CodeGenUtil.getMethod(mainType, getMethodHandle());
 	if(fMethod!=null){
@@ -437,8 +448,10 @@ protected Object[] getUsableOffsetAndFiller(List allExpressionsSorted) throws Co
  *     Integer.MAX_VALUE priority. If any problem occurs, the
  *     expression is set a priority of -1.
  * (*) 
+ * @deprecated --- still here so that we can reference the old manner
+ *                 in which method was sorted
  */
-public  void updateExpressionOrder() throws CodeGenException{
+public  void ORIupdateExpressionOrder() throws CodeGenException{
 
 	resetExpressionPriorities();
 	
@@ -452,7 +465,7 @@ public  void updateExpressionOrder() throws CodeGenException{
 	int bestUsablePosition = -1;
 	String bestUsableFiller = new String();
 	try {
-		Object[] ret = getUsableOffsetAndFiller(allExpressions);
+		Object[] ret = getUsableOffsetAndFiller();
 		bestUsablePosition = ((Integer)ret[0]).intValue();
 		bestUsableFiller = (String)ret[1];
 	} catch (CodeGenException e) {
@@ -478,22 +491,22 @@ public  void updateExpressionOrder() throws CodeGenException{
 						while (itr.hasNext()) {
 							CodeExpressionRef tmpexp = (CodeExpressionRef) itr
 									.next();
-							int[] tmpexpPriorities = (int[]) tmpexp
-									.getPriority();
-							if (tmpexpPriorities == null) {
-								JavaVEPlugin.log(new Status(IStatus.ERROR,
-										JavaVEPlugin.getPlugin()
-												.getDescriptor()
-												.getUniqueIdentifier(),
-										IStatus.OK, "Priority is null", null));
-								tmpexpPriorities = new int[]{-1, -1};
-							}
-							if (tmpexp
-									.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)
-									&& (tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_CONSTRUCTOR)
-									&& tmpexp.getOffset() > bestUsablePosition)
-								bestUsablePosition = tmpexp.getOffset()
-										+ tmpexp.getLen();
+//							int[] tmpexpPriorities = (int[]) tmpexp
+//									.getPriority();
+//							if (tmpexpPriorities == null) {
+//								JavaVEPlugin.log(new Status(IStatus.ERROR,
+//										JavaVEPlugin.getPlugin()
+//												.getDescriptor()
+//												.getUniqueIdentifier(),
+//										IStatus.OK, "Priority is null", null));
+//								tmpexpPriorities = new int[]{-1, -1};
+//							}
+//							if (tmpexp
+//									.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)
+//									&& (tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_INIT_EXPR || tmpexpPriorities[0] == IJavaFeatureMapper.PRIORITY_CONSTRUCTOR)
+//									&& tmpexp.getOffset() > bestUsablePosition)
+//								bestUsablePosition = tmpexp.getOffset()
+//										+ tmpexp.getLen();
 						}
 					}
 			}
@@ -508,6 +521,172 @@ public  void updateExpressionOrder() throws CodeGenException{
 }
 
 
+/**
+ *  @return 0 if equal, 1 if p1>p2, -1 if p1<p2
+ **/
+protected int comparePriority (VEexpressionPriority p1, VEexpressionPriority p2) {
+   if (p1.getProiority() == p2.getProiority()) {
+      if (p1.getProiorityIndex() == p2.getProiorityIndex())
+          return 0 ;
+      else if (p1.getProiorityIndex()>p2.getProiorityIndex())
+              return 1;
+           else
+              return -1;
+   }
+   else if (p1.getProiority()>p2.getProiority())
+           return 1;
+        else
+           return -1;
+}
+
+/**
+ * 
+ * @param l List of expressions
+ * @param exp to add
+ * @param index
+ * 
+ * Add the expression, and set up its offset/filler
+ */
+protected void addExpression (List l, CodeExpressionRef exp, int index) throws CodeGenException {
+	int offset;
+	String filler;
+	
+	if (l.size()==0) {
+	  // No expression to piggy on from
+	  Object[] result = getUsableOffsetAndFiller();	  
+	  offset = ((Integer)result[0]).intValue();
+	  filler = (String) result[1];
+	}
+	else {
+		CodeExpressionRef cExp;
+		if (index==0) {
+			// Use the first element's filler
+			// We are to be inserted instead of this expression
+			cExp = (CodeExpressionRef) l.get(index);
+			offset = cExp.getOffset();
+		}
+		else {
+			// Use the last element's filler
+			// We are to be inserted after this expression
+			cExp = (CodeExpressionRef) l.get(index-1);
+			offset = cExp.getOffset()+cExp.getLen();
+		}
+		filler=cExp.getFillerContent();
+	}	
+	exp.setOffset(offset);
+	exp.setFillerContent(filler);
+	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
+	l.add(index, exp);
+}
+protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp) throws CodeGenException {
+	// 
+	// The sorted list may not be sorted the way we prioratize expressions, so it is may
+	// be coming from the source code .... so we have to go through ALL expressions
+	// to find a window where we can add the expression.
+	
+	int index = -1;
+	VEexpressionPriority expPriority = exp.getPriority();
+	if (exp.getPriority().equals(IJavaFeatureMapper.NOPriority)) {
+		// add to the end of the list
+		index=sortedList.size();
+	}
+	else {
+		// need to find out the first/last existing expressions we can insert
+		// the new exp.  Start from the end, as expression may not be sorted
+		// according to the priorities.
+		int first = -1, last = -1 ;
+		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
+		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);		   
+		   int compare = comparePriority(expPriority, cExp.getPriority());
+		   switch (compare) {
+		      case -1: // exp < current
+		      	       // This is the top most 
+		               first = (i+1)>=sortedList.size()? sortedList.size() : i+1;
+		               break;
+		      case  0: // exp == current
+		      		   if (last<0) { // first one
+		      		   	 // bottom most
+		      		     last = (i+1)>=sortedList.size()? sortedList.size() : i+1;
+		      		   } 
+		   }
+		}
+		   	   
+	   if (first>=0) {
+	      // have a top bound
+	      if (last>=0) {
+	          // try to group same bean expressions
+	          index = last-1;
+	          for (; index>=first; index--) {
+	          	 if (index>=sortedList.size())
+	          	 	continue;
+	             CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(index);
+	             if (cExp.getBean().equals(exp.getBean())) {
+	                index = index+1>sortedList.size() ? sortedList.size() : index+1;
+	                break;
+	             }
+	          }
+	          if (index<first) {
+	           	// No expressions on the same bean... put it at the end
+	           	index = last;
+	          }	          
+	      }
+	      else {	      	
+	      	 // since there is no last... first already points to the right location
+	         index = first;
+	      }
+	   }
+	   else {
+	   	  // This expression is with the highest priority
+	   	  index = 0;
+	   }	   
+	}	
+	addExpression (sortedList, exp, index) ;	
+}
+protected ArrayList sortExpressions(List list) throws CodeGenException {
+	
+	ArrayList  sortedList = new ArrayList();
+	ArrayList  needSorting = new ArrayList();
+	
+	// Those that are already set in code, will not change
+	for (int i=0; i<list.size(); i++) {
+		CodeExpressionRef exp = (CodeExpressionRef) list.get(i);
+		if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED))
+			needSorting.add(exp);
+		else {
+			sortedList.add(exp);
+			// sanity check
+			if (exp.getOffset()<0) throw new CodeGenException("Invalid Offset: "+exp);//$NON-NLS-1$
+		}
+	}
+	// TODO
+	// The sorting will set offsets for the new exp... at this time, after the sort, a new expression will be
+	// inserted into the document... updating everyone's else offset.
+	// this insert is not done here at this point... so we can not update the 2nd expression's offset
+	if (needSorting.size()>1)
+		  throw new CodeGenException ("Limitation ... only one new expression is allowed"); //$NON-NLS-1$
+	
+	for (int i=0; i<needSorting.size(); i++) {
+		addExpressionToSortedList(sortedList, (CodeExpressionRef)needSorting.get(i));
+	}		
+	return sortedList;	
+}
+
+public  void updateExpressionOrder() throws CodeGenException {
+	
+	ArrayList sortedList = sortExpressions(fExpressions);
+	fExpressions = sortedList;
+	
+	sortedList = sortExpressions(fEventExpressions);
+	fEventExpressions = sortedList;
+}
+
+/**
+ * 
+ * @param beans
+ * @return
+ * @todo Generated comment
+ * @deprecated
+ */
 protected static Enumeration determineBeanOrder(Enumeration beans){
 	SortedSet beanSorter = new TreeSet(getDefaultBeanOrderComparator());
 	while(beans.hasMoreElements()){
@@ -612,6 +791,7 @@ protected static Comparator getDefaultBeanOrderComparator(){
  * 	       first argument is less than, equal to, or greater than the
  *	       second.
  *  warning: Never return zero, as values are overwritten if equal.
+ * @deprecated
  */
 protected static Comparator getDefaultMethodComparator(){
 	// TODO  SortedMap doesnt store equal objects - please investigate
@@ -620,47 +800,48 @@ protected static Comparator getDefaultMethodComparator(){
 		public int compare(Object e1, Object e2){
 			CodeExpressionRef r1 = (CodeExpressionRef)e1;
 			CodeExpressionRef r2 = (CodeExpressionRef)e2;
-			int[] r1Priorities = (int[])r1.getPriority();
-			int[] r2Priorities = (int[])r2.getPriority();
-			if(r1Priorities==null){
-				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
-				r1Priorities = new int[]{-1, -1};
-			}
-			if(r2Priorities==null){
-				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
-				r2Priorities = new int[]{-1, -1};
-			}
-			int sfPriority1 = r1Priorities[0];
-			int sfPriority2 = r2Priorities[0];
-			int indexPriority1 = r1Priorities[1];
-			int indexPriority2 = r2Priorities[1];
-			int o1 = r1.getOffset();
-			int o2 = r2.getOffset();
-			if(o1<0)					// If the offsets are less than 0
-				o1 = Integer.MAX_VALUE;		// then the expression is a new one.
-			if(o2<0)					// Setting their offsets to MAX will
-				o2 = Integer.MAX_VALUE;		// make the expression add itself at the end of the 
-			if(sfPriority1<sfPriority2){					// list of similar priority expressions.
-				return 1;  // Descending
-			}else{
-				if(sfPriority1==sfPriority2){ // Same Priority, look at offsets
-					if(indexPriority1<indexPriority2){
-						return 1;
-					}else{
-						if(indexPriority1==indexPriority2){
-							if(o1<o2){
-								return -1; // Less Than
-							}else{
-								return 1; // Greater than
-							}
-						}else{
-							return -1;
-						}
-					}
-				}else{
-					return -1;  //Descending
-				}
-			}
+//			int[] r1Priorities = (int[])r1.getPriority();
+//			int[] r2Priorities = (int[])r2.getPriority();
+//			if(r1Priorities==null){
+//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//				r1Priorities = new int[]{-1, -1};
+//			}
+//			if(r2Priorities==null){
+//				JavaVEPlugin.log(new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), IStatus.OK, "Priority is null", null));
+//				r2Priorities = new int[]{-1, -1};
+//			}
+//			int sfPriority1 = r1Priorities[0];
+//			int sfPriority2 = r2Priorities[0];
+//			int indexPriority1 = r1Priorities[1];
+//			int indexPriority2 = r2Priorities[1];
+//			int o1 = r1.getOffset();
+//			int o2 = r2.getOffset();
+//			if(o1<0)					// If the offsets are less than 0
+//				o1 = Integer.MAX_VALUE;		// then the expression is a new one.
+//			if(o2<0)					// Setting their offsets to MAX will
+//				o2 = Integer.MAX_VALUE;		// make the expression add itself at the end of the 
+//			if(sfPriority1<sfPriority2){					// list of similar priority expressions.
+//				return 1;  // Descending
+//			}else{
+//				if(sfPriority1==sfPriority2){ // Same Priority, look at offsets
+//					if(indexPriority1<indexPriority2){
+//						return 1;
+//					}else{
+//						if(indexPriority1==indexPriority2){
+//							if(o1<o2){
+//								return -1; // Less Than
+//							}else{
+//								return 1; // Greater than
+//							}
+//						}else{
+//							return -1;
+//						}
+//					}
+//				}else{
+//					return -1;  //Descending
+//				}
+//			}
+return -1;
 		}
 		public boolean equals(Object o){
 			return super.equals(o);

@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IExpressionDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 
@@ -32,7 +33,7 @@ public interface IExpressionDecoderHelper {
 	 *  Returns the priority of the expression this decoder helper is the helper of.
 	 * @see IJVEDecoder.deteminePriorityOfExpression()
 	 */
-	public Object getPriorityOfExpression();
+	public VEexpressionPriority getPriorityOfExpression();
 	
    // A decode method will decode specific expressions.
    // If the expression was decoded, a true will be returned.

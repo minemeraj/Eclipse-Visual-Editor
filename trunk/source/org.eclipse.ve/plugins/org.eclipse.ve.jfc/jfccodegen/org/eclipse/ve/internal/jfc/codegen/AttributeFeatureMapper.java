@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: AttributeFeatureMapper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 17:09:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-28 14:21:37 $ 
  */
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -22,6 +22,7 @@ import org.eclipse.ve.internal.java.codegen.java.PropertyFeatureMapper;
 import org.eclipse.ve.internal.jfc.core.JFCConstants;
 
 public class AttributeFeatureMapper extends PropertyFeatureMapper implements IJFCFeatureMapper {
+	
 
 /* The following features are not properties, and have special handling */
 protected final static String hardCodeMethods[] = {
@@ -68,16 +69,16 @@ protected void processHardCodedProperty(String method, Object bean) {
 
 
 /**
- * @see org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper#getPriorityIncrement(String)
+ * @see org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper#getFeaturePriority(String)
  */
-public int getPriorityIncrement(String methodType) {
+public int getFeaturePriority(String methodType) {
 	if (methodType.equals(IJFCFeatureMapper.LAYOUT_NAME)) //$NON-NLS-1$
-		return IJavaFeatureMapper.PRIORITY_LAYOUT_CHANGE;
+		return PRIORITY_LAYOUT;
 	if(methodType.equals(IJFCFeatureMapper.JTABLE_MODEL_NAME)) //$NON-NLS-1$
-		return 1;
+		return PRIORITY_JTABLE_MODEL;
 	if(methodType.equals(IJFCFeatureMapper.JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME)) //$NON-NLS-1$
-		return IJavaFeatureMapper.PRIORITY_ADD_CHANGE+1;
-	return super.getPriorityIncrement(methodType);
+		return PRIORITY_JTABLE_AUTOCREATECOLUMNSFROMMODEL;
+	return super.getFeaturePriority(methodType);
 }
 
 

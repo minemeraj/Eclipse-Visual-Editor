@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:33 $ 
  */
 import java.util.logging.Level;
 
@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -35,7 +36,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	protected IBeanDeclModel fBeanModel = null;
 	protected IVEModelInstance fCompositonModel = null;
 	protected BeanPart fbeanPart = null;
-	protected Object fPriority = null;
+	protected VEexpressionPriority fPriority = null;
 
 	public AbstractExpressionDecoder(CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance bldr, BeanPart part) {
 		fExpr =  expr.getExprStmt();
@@ -54,10 +55,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	protected abstract void initialFeatureMapper(EStructuralFeature sf);
 	protected abstract void initialDecoderHelper();
 
-	public Object determinePriority() {
+	public VEexpressionPriority determinePriority() {
 
 		if (!Initialize())
-			return new int[] { IJavaFeatureMapper.PRIORITY_DEFAULT, IJavaFeatureMapper.PRIORITY_DEFAULT };
+			return IJavaFeatureMapper.DEFAULTPriority;
 
 		// If instanceof ContainerAddDecoderHelper, then the expressions
 		// priority keeps changing based on the position of the expression

@@ -49,4 +49,12 @@ public interface IJFCFeatureMapper extends IJavaFeatureMapper {
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_FEATURE_NAME = "autoCreateColumnsFromModel";
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME = "setAutoCreateColumnsFromModel";
 	
+	
+	// Some priorities that are used by the JFC feature mappers
+	final static int PRIORITY_JTABLE_MODEL = IJavaFeatureMapper.PRIORITY_DEFAULT;
+	// AutoCreate column must come before the setModel
+	final static int PRIORITY_JTABLE_AUTOCREATECOLUMNSFROMMODEL = PRIORITY_JTABLE_MODEL + 1000 ;
+	final static int PRIORITY_LAYOUT = IJavaFeatureMapper.PRIORITY_DEFAULT + 3000;
+	
+	
 }

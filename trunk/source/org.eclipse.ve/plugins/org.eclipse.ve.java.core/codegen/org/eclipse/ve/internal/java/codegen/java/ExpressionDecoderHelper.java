@@ -11,19 +11,19 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-28 14:21:33 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.Statement;
 
+import org.eclipse.ve.internal.jcm.MemberContainer;
+
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
-import org.eclipse.ve.internal.jcm.MemberContainer;
 
 public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelper {
 
@@ -119,8 +119,9 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		return 0;
 	}
 
-	public Object getPriorityOfExpression() {
-		return new int[] { getSFPriority(), getIndexPriority()};
+	public VEexpressionPriority getPriorityOfExpression() {
+		VEexpressionPriority pri = new VEexpressionPriority(getSFPriority(), getIndexPriority());
+		return pri;		
 	}
 
 	public void setDecodingContent(Statement exp) {

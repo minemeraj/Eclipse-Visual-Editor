@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-04-16 19:32:18 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-28 14:21:33 $ 
  */
 
 import java.util.*;
@@ -20,10 +20,8 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
@@ -51,7 +49,6 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
 	  
   
   protected  BeanPart fBean=null ;			   // Component associated with this adapter
-  Hashtable  fNullValuedSF = new Hashtable() ;    // Hold Exp. Decoder Adapters for null values
   Hashtable  fChildrens    = new Hashtable() ;    // Hold Exp. Decoder Adapters for components SF
   HashMap	 fSettings     = new HashMap() ;
   private   ImageDescriptorRegistry fJavaImageRegistry= JavaPlugin.getImageDescriptorRegistry();
@@ -191,41 +188,6 @@ public boolean isAdapterForType(Object type) {
 	return JVE_CODE_GEN_TYPE.equals(type) ||	        
 	        JVE_CODEGEN_BEAN_PART_ADAPTER.equals(type) ||
 	        IJavaToolTipProposalAdapter.JAVA_ToolTip_Proposal_TYPE.equals(type);
-}
-
-
-
-
-
-
-/**
- * Get the CODE_GEN adapter for a given object.  For null values, the adapter
- * is stored in fNullValuedSF
- */
-protected ICodeGenAdapter getDecoderAdapter(Object obj, Object sf) {
-	
-      if (obj == null)
-          return getNullValuedAdapter((EStructuralFeature)sf) ;		
-          
-      if (!(obj instanceof Notifier)) 
-          return null ;      
-          
-      ICodeGenAdapter a =  (ICodeGenAdapter) EcoreUtil.getExistingAdapter((Notifier)obj, JVE_CODEGEN_EXPRESSION_ADAPTER) ;
-      if (a == null) {
-      	 org.eclipse.ve.internal.java.core.JavaVEPlugin.log("JFCBeanDecoderAdapter.getDecoderAdapter() : No ExpressionAdapter <-- check me") ; //$NON-NLS-1$
-         a = (ICodeGenAdapter) EcoreUtil.getExistingAdapter((Notifier)obj,JVE_CODE_GEN_TYPE) ;
-      }
-                    
-      return a ;
-}
-
-
-protected void removeDecoderAdapter (Object obj, ICodeGenAdapter a, Object sf) {
-	if (a == null) return ;
-      if (obj == null || !(obj instanceof Notifier))
-	    removeNullValue((EStructuralFeature)sf) ;
-	else
-	   ((Notifier)obj).eAdapters().remove(a) ;	
 }
 
 
@@ -530,35 +492,6 @@ public BeanPart getBeanPart() {
 	return fBean ;
 }
 
-/**
- * @deprecated
- */
-public void  addNullValue(EStructuralFeature sf,ICodeGenAdapter adapter) {
-	fNullValuedSF.put(sf,adapter) ;
-}
-/**
- * @deprecated
- */
-public void  removeNullValue(EStructuralFeature sf) {
-	fNullValuedSF.remove(sf) ;
-}
-/**
- * @deprecated
- */
-public ICodeGenAdapter getNullValuedAdapter(EStructuralFeature sf) {
-	return (ICodeGenAdapter) fNullValuedSF.get(sf) ;
-}
-
-
-/**
- *   Container support
- *@deprecated 
- *  
- */
-public void  addChildAdapter(Object child, ICodeGenAdapter adapter) {
-	if (child != null)
-	   fChildrens.put(child,adapter) ;
-}
 
 
 public void addSettingAdapter(EStructuralFeature sf, ICodeGenAdapter a) {
@@ -605,22 +538,6 @@ public final ICodeGenAdapter[] getSettingAdapters(EStructuralFeature sf) {
 	}
 }
 
-/**
- *@deprecated 
- */
-public void  removeChildAdapter(Object child) {
-	if (child != null)
-	   fChildrens.remove(child) ;
-}
-/**
- *@deprecated 
- */
-public ICodeGenAdapter getChildAdapter(Object child) {
-	if (child != null)
-	   return (ICodeGenAdapter) fChildrens.get(child) ;
-	else
-	   return null ;
-}
 
 /**
  * @return the Java Source Range of the method that initializes the bean.
@@ -770,24 +687,6 @@ public Label getReturnMethodDisplayInformation() {
 
 public String getInitMethodName() {
 	return fBean.getInitMethod().getMethodName() ;
-}
-
-/**
- * @deprecated
- */
-public String getToolTipContent() {
-	StringBuffer st = new StringBuffer() ;
-	st.append(fBean.getSimpleName()) ;
-	if (fBean.isInstanceVar())
-	    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._is_an_instance_variable_of_type__1")) ; //$NON-NLS-1$
-	else
-	    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._is_a_local_variable_of_type__2")) ; //$NON-NLS-1$
-    st.append(fBean.getType()+CodeGenJavaMessages.getString("BeanDecoderAdapter.._3")) ; //$NON-NLS-1$
-    st.append(CodeGenJavaMessages.getString("BeanDecoderAdapter._nIt_is_initialized_by_the_method___4")+fBean.getInitMethod().getMethodName()+CodeGenJavaMessages.getString("BeanDecoderAdapter.()_5")) ; //$NON-NLS-1$ //$NON-NLS-2$
-    st.append (CodeGenJavaMessages.getString("BeanDecoderAdapter._n_6")+CodeGenJavaMessages.getString("BeanDecoderAdapter.Paste_to_source_7")) ; //$NON-NLS-1$ //$NON-NLS-2$
-    st.append (CodeGenJavaMessages.getString("BeanDecoderAdapter._n_8")+CodeGenJavaMessages.getString("BeanDecoderAdapter.Copy_text_to_clipboard_9")); //$NON-NLS-1$ //$NON-NLS-2$
-    
-    return st.toString();
 }
 
 

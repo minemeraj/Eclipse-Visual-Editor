@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:46 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-28 14:21:37 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -320,4 +320,14 @@ protected IJavaObjectInstance[] getComponentArguments(EObject root) {
 		return exp.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getSFPriority()
+	 */
+	protected int getSFPriority() {
+		String method = fFmapper.getMethodName();
+		if (method.equals(JTableDecoder.JTABLE_ADDCOLUMN_METHOD))
+				return fFmapper.getFeaturePriority(method);
+		else
+		        return super.getSFPriority();
+	}
 }
