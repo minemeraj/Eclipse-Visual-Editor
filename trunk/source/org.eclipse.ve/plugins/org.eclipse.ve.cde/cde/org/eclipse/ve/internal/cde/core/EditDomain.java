@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-12 20:01:39 $ 
  */
 
 import org.eclipse.gef.*;
@@ -301,22 +301,11 @@ public class EditDomain extends DefaultEditDomain {
 		return defaultAddAnnotationsCommand;
 	}
 	
-	public void setPaletteRoot(PaletteRoot root){
-		super.setPaletteRoot(root);
-		setData(PaletteRoot.class,root);
-	}
-	public void setPaletteViewer(PaletteViewer viewer){
-		super.setPaletteViewer(viewer);
-		setData(PaletteViewer.class,viewer);
-	}
 	public PaletteRoot getPaletteRoot(){
-		return (PaletteRoot) getData(PaletteRoot.class);
+		PaletteViewer v = getPaletteViewer();
+		return v != null ? v.getPaletteRoot() : null;
 	}
 	
-	public PaletteViewer getPaletteViewer() {
-		return (PaletteViewer) getData(PaletteViewer.class);
-	}
-
 	/**
 	 * The rule registry allows customization of function via rules.
 	 * If your application doesn't require such customization, then
