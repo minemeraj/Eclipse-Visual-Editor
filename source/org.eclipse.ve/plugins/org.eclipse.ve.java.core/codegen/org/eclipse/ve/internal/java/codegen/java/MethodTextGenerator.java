@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -59,7 +59,7 @@ protected CodeExpressionRef GenerateAttribute(EStructuralFeature sf,BeanPart bea
 	CodeExpressionRef exp = egen.createFromJVEModel(args) ;	
 	if (updateDoc)
      if (exp.getMethod().getMethodHandle() != null)
-	     exp.insertContentToDocument(true) ;
+	     exp.insertContentToDocument() ;
      else
          exp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED, true) ;
 	return exp ;
@@ -254,7 +254,7 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
    // We may be processing a nested child, 
    // and the method is not in the source yet
    if (method.getMethodHandle() != null)
-      initExp.insertContentToDocument(true) ;
+      initExp.insertContentToDocument() ;
    else
       initExp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED, true) ;
             

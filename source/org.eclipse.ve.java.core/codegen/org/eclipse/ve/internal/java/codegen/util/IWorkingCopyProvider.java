@@ -11,16 +11,12 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: IWorkingCopyProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
@@ -30,39 +26,63 @@ import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 public interface IWorkingCopyProvider extends ITypeResolver{
 
 
- 
- public ICompilationUnit getSharedWorkingCopy() ;
- public ICompilationUnit getSharedWorkingCopy(boolean forceReconcile) ;
- public ICompilationUnit getLocalWorkingCopy() ;
- 
- public IFileEditorInput getEditor() ;
- public IFile getFile() ;
- 
- public IDocument getSharedDocument() ;
- public IDocument getLocalDocument() ;
- public Object    getLocalDocLock() ;
+/**
+ * Get the working copy
+ * 
+ * @param forceReconcile if true will reconcile the CU if needed
+ */ 
+ public ICompilationUnit getWorkingCopy(boolean forceReconcile) ;
  
  /**
-  * Disconnect from the Shared/Local providers.
+  * @return the Input editor for this CU
+  */
+ public IFileEditorInput getEditor() ;
+ 
+ /**
+  * @return the resource associated with this CU
+  */
+ public IFile getFile() ;
+/**
+ * @return the Document associated with this CU
+ */ 
+ public IDocument getDocument() ;
+/**
+ * @return a global lock to be associated with this CU 
+ */ 
+ public Object    getDocLock() ;
+ 
+ /**
+  * DisAssociated from the working copy
   */
  public void disconnect() ;
  /**
-  * ReConnect to the Shared/Local providers.
+  * Re/Connect to working copy
   * @param new (or same) input file.
   */
- public void reconnect(IFile file) ;
- 
- 
- public void ReplaceWithLocalContent(IProgressMonitor pm, boolean commit) throws CodeGenException ; 
- public void UpdateDeltaToShared(ICancelMonitor pm, IDocumentListener docListener, List handles, boolean commit) throws CodeGenException ;
- 
- public void aboutToChangeShared() ;
- public void changeCompleteShared() ;
- public ISourceRange getSharedSourceRange(String handle) ;
- public int getSharedLineNo(int Offset) ;
+ public void connect(IFile file) ;
+ /**
+  * @param handle IJavaElement handle
+  * @return source range if one exists
+  */
+ public ISourceRange getSourceRange(String handle) ;
+ /**
+  * @param Offset is the character offset
+  * @return line number
+  */
+ public int getLineNo(int Offset) ;
+ /**
+  * @return the hierarchy associated with this CU
+  */
  public ITypeHierarchy getHierarchy() ;
- 
- 
+ /**
+  * 
+  * return the IJavaElement associated with a given handle signiture
+  * @param handle
+  * @return element if found, else null
+  * 
+  * @since 1.0.0
+  */
+ public IJavaElement getElement(String handle);
  
  public void dispose() ;
  

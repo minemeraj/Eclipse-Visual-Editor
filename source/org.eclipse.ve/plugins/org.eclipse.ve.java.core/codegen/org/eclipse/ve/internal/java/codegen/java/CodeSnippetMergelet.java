@@ -11,19 +11,15 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
 
-import org.eclipse.jdt.core.*;
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jface.text.BadLocationException;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
 public class CodeSnippetMergelet {
 
@@ -126,20 +122,6 @@ private BeanPart getOriginal (BeanPart b) {
 	return null ;
 }
 
-/** 
- *  Dump the text into the local document
- */
-private void replaceLocalContent(int left,int len,String Content) throws CodeGenException {
-	try {
-	  fBeanModel.getDocument().replace(left,len,Content) ;	  	
-	}
-	catch (BadLocationException e) {
-        	JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-        	throw new CodeGenException(e) ;		
-	}		
-}
-
-
 /**
  *  Generate an expression that is hooked into the main BDM
  */
@@ -213,7 +195,7 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
         		 if(!dExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
         		     !(dExp instanceof CodeEventRef))
         		 	// Will take care of reordering of expressions
-        		 	oExp.refreshFromJOM(dExp, false); 
+        		 	oExp.refreshFromJOM(dExp); 
         	     break;
         	case ICodeDelta.ELEMENT_NO_CHANGE:   
                  if (oExp != null)
@@ -228,7 +210,7 @@ private boolean processExpressionDelta (CodeExpressionRef dExp, CodeExpressionRe
                  	}
                  	if(oExp.getOffset()!=dExp.getOffset())
                  		oExp.setOffset(dExp.getOffset());
-        	        oExp.refreshFromJOM(dExp, false);                 
+        	        oExp.refreshFromJOM(dExp);                 
         	        updated = true ;
                  }
         	     break ;
@@ -326,17 +308,6 @@ private boolean updateMethodDelta (CodeMethodRef m, List deleteList) throws Code
 
 
 
-protected void replaceMethodContent() throws CodeGenException {
-	
-	try {
-	 IMethod m = CodeGenUtil.getMethod(CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()),fElementHandle) ;	
-	 replaceLocalContent(m.getSourceRange().getOffset(),m.getSourceRange().getLength(),fElementContent) ;
-	}
-	catch (JavaModelException e) {
-		throw new CodeGenException(e) ;
-	}
-}
-
 /**
  *  Assume a single element is to be merged (JCMMethod/Instance Var.)
  * @return boolean if any update was made to the model
@@ -373,15 +344,7 @@ public boolean updateBDM(IBeanDeclModel model) throws CodeGenException {
 		     // Check if we need to reLoad 
 		     if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return modelUpdated ;
              CodeMethodRef oriMref = getOriginalMethodElement() ;
-             try {
-                oriMref.disconnectFromDoc() ;
-                // We may entered non relevant (or non parsable) content
-		        replaceMethodContent() ;
-		        BeanPartFactory.fixOffsetIfNeeded(fElementContent,oriMref) ;
-             }
-             finally {
-               oriMref.connectToDoc() ;
-             }
+		     BeanPartFactory.fixOffsetIfNeeded(fElementContent,oriMref) ;
 		     break ;
 		default:
 		     throw new CodeGenException("Invalid State") ; //$NON-NLS-1$

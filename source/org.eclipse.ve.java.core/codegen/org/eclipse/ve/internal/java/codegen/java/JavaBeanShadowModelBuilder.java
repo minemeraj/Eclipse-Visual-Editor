@@ -10,20 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -55,9 +52,9 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 	public JavaBeanShadowModelBuilder(EditDomain d, IWorkingCopyProvider wcpArg, String filePath, char[][] packageName) {
 		this(d, filePath, packageName);
 
-		fWCP = createPseudoWorkingCopyProvider(wcpArg.getSharedWorkingCopy());
+		fWCP = createPseudoWorkingCopyProvider(wcpArg.getWorkingCopy(false));
 		try {
-			fwcContents = wcpArg.getSharedWorkingCopy().getSource() ;
+			fwcContents = wcpArg.getWorkingCopy(false).getSource() ;
 		}
 		catch (JavaModelException e) {
 			org.eclipse.ve.internal.java.core.JavaVEPlugin.log("JavaBeanShadowModelBuilder - *error* getting source code") ; //$NON-NLS-1$
@@ -74,54 +71,6 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 		//	Create a pseudo working provider that is limited to resolve, and provide a CU
 		IWorkingCopyProvider wcp = new IWorkingCopyProvider() {
 
-			public ICompilationUnit getSharedWorkingCopy() {
-				return null;
-			}
-			public ICompilationUnit getSharedWorkingCopy(boolean force) {
-				return null;
-			}
-			/**
-			 * Let the visitors the ability to get element handels etc.
-			 */
-			public ICompilationUnit getLocalWorkingCopy() {
-				return  referenceCU;
-			}
-			public IFileEditorInput getEditor() {
-				return null;
-			}
-			public IFile getFile() {
-				return null;
-			}
-			public IDocument getSharedDocument() {
-				return null;
-			}
-			public IDocument getLocalDocument() {
-				return null;
-			}
-			public Object getLocalDocLock() {
-				return null;
-			}
-			public void ReplaceWithLocalContent(IProgressMonitor pm, boolean commit) throws CodeGenException {
-				;
-			}
-			public void UpdateDeltaToShared(ICancelMonitor pm, IDocumentListener docListener, List handles, boolean commit) throws CodeGenException {
-				;
-			}
-			public void aboutToChangeShared() {
-				;
-			}
-			public void changeCompleteShared() {
-				;
-			}
-			public ISourceRange getSharedSourceRange(String handle) {
-				return null;
-			}
-			public int getSharedLineNo(int Offset) {
-				return -1;
-			}
-			public void dispose() {
-				;
-			}
 			public String resolve(String unresolved) {
 				try {
 					if (resolver == null)
@@ -144,11 +93,20 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 				catch (org.eclipse.jdt.core.JavaModelException e) {}
 				return null;
 			}
-			public void disconnect() {}
-			public void reconnect(IFile file) {}
 			public String toString() {
 				return "Shadow - "+super.toString() ; //$NON-NLS-1$
 			}
+			public ICompilationUnit getWorkingCopy(boolean forceReconcile) { return null; }
+			public IFileEditorInput getEditor() { return null; }
+			public IFile getFile() { return null; }
+			public IDocument getDocument() { return null; }
+			public Object    getDocLock() { return null; }
+			public void disconnect() {}
+			public void connect(IFile file) {}
+			public ISourceRange getSourceRange(String handle) { return null; }
+			public int getLineNo(int Offset) { return -1; }
+			public void dispose() {}
+			public IJavaElement getElement(String handle) { return null; } 
 				
 		};
 		

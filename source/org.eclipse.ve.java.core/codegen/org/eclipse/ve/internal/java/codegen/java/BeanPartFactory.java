@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -221,9 +221,6 @@ protected void generateMethodAndVar(BeanPart bp, IJavaObjectInstance component, 
     CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;  
     // Workaround, as the create method may create a method which include other comments,etc.
     fixOffsetsIfNeeded(newMethod,mref) ;
-    fBeanModel.updateJavaSource(field.getHandleIdentifier()) ;
-    fBeanModel.updateJavaSource(newMethod.getHandleIdentifier()) ;    
-            
     
 }
 
@@ -262,10 +259,10 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 		    
       IMethod newMethod=null ;
       // Create it as the last method 
-      try {           	                        		
+      try {           	                        	
+      	// Offsets will be updated with a call to refreshMethods on mref
         newMethod = cuType.createMethod(newMSrc,getSiblingForNewMEthod(cuType, false, false),false,null) ;            
         mref.setMethodHandle(newMethod.getHandleIdentifier()) ;       
-        // empty lines may shift to other methods
         mref.setContent(newMethod.getSource()) ;
 //        if (newMSrc.length() != newMethod.getSource().length()) {
 //             System.out.println ("JavaSourceTranslator.processAComponent(): newMethodSource("+newMSrc.length()+") JDOM("+newMethod.getSource().length()+")") ;
@@ -277,14 +274,10 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
     	 throw new CodeGenException(e) ;
      }    
  
-    JavaVEPlugin.log("Adding JCMMethod: \n"+newMSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$
-//    mref.setMethod(CodeGenUtil.refreshMethod(newMethod)) ;
-    mref.refreshIMethod();
-    
+    JavaVEPlugin.log("Adding JCMMethod: \n"+newMSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$    
     CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;  
     // Workaround, as the create method may create a method which include other comments,etc.
     fixOffsetsIfNeeded(newMethod,mref) ;
-    fBeanModel.updateJavaSource(newMethod.getHandleIdentifier()) ;  
     mref.setGenerationRequired(false) ;
 }
 
@@ -304,6 +297,9 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 		field = cuType.createField(ft.toString(), null, false, null);
 		if (field != null) {
 			bp.setFieldDeclHandle(field.getHandleIdentifier());
+			// This may be an overkill, as the refreshMethods() will be called eventually.
+			ISourceRange sr = field.getSourceRange();
+			fBeanModel.driveExpressionChangedEvent(null,sr.getOffset(),sr.getLength()) ;
 		}
 
 	}
@@ -311,7 +307,6 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 		throw new CodeGenException(e);
 	}
 	JavaVEPlugin.log("Adding Instance Var: \n" + ft + "\n", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
-	fBeanModel.updateJavaSource(field.getHandleIdentifier());
 }
 /**
  * The null constructor typically will call the initialization method.  The exception
@@ -356,8 +351,7 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
             
 			if (isNeedToCallInit(b)) {
 				MethodParser mp = new MethodParser(nullConstructor, fBeanModel.getLineSeperator());
-				if (mp.addMethodCallIfNeeded(iniMethod.getMethodName()))
-					fBeanModel.updateJavaSource(nullConstructor.getHandleIdentifier());
+				mp.addMethodCallIfNeeded(iniMethod.getMethodName());
 			}
         }
         else { // create one
@@ -407,8 +401,7 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
                             callInit +
                             template.getPostfix();
                             
-            IMethod newMethod = t.createMethod(newSrc, firstM, false, null) ;   
-            fBeanModel.updateJavaSource(newMethod.getHandleIdentifier()) ;
+            t.createMethod(newSrc, firstM, false, null) ;              
         }
 	} catch(JavaModelException e) {}
 	
@@ -481,7 +474,6 @@ protected CodeMethodRef generateThisInitMethod() throws CodeGenException {
       
     
    CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;    
-   fBeanModel.updateJavaSource(newMethod.getHandleIdentifier()) ;
    
    return mref ;    
                 
@@ -578,6 +570,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
       	 bp.addInitMethod(mref) ;
          generateLocalVariable(component,ma.getMethodRef(),varName, cu) ;
       }
+      fBeanModel.refreshMethods();
 }
 
 /**
@@ -680,9 +673,8 @@ public void removeBeanPart (BeanPart bean) {
 	  if (f != null) {		// delete the field
 		try {
 		  JavaVEPlugin.log("\tRemoving Field: "+f, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
-		  String handle = (f.getHandleIdentifier()) ;
+//		  String handle = (f.getHandleIdentifier()) ;
 		  f.delete(true,null) ;
-		  fBeanModel.updateJavaSource(handle) ;
 		}
 		catch (JavaModelException e) {} 
 	  }
@@ -745,9 +737,7 @@ public void removeBeanPart (BeanPart bean) {
 				IMethod m = CodeGenUtil.getMethod(tp, mr.getMethodHandle());
 				String handle = mr.getMethodHandle();
 				JavaVEPlugin.log("\tRemoving JCMMethod: " + handle, MsgLogger.LOG_FINE); //$NON-NLS-1$
-				mr.aboutToDispose();
 				m.delete(true, null);
-				fBeanModel.updateJavaSource(handle);
 			}
 			else
 				JavaVEPlugin.log("deleteBeanPart: method is not in source: " + bean.getUniqueName(), MsgLogger.LOG_FINE); //$NON-NLS-1$

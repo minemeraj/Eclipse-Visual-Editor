@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -46,13 +46,12 @@ public class JavaSourceSynchronizer {
  IWorkingCopyProvider    fWorkingCopyProvider  ;
  volatile Vector        fList = new Vector () ;
  Display                 fDisplay = null ;
- IBackGroundWorkStrategy fSharedUpdatingLocalStrategy  = null,
-                         fLocalUpdatingSharedStrategy = null ;
+ IBackGroundWorkStrategy fSharedUpdatingLocalStrategy  = null;                        
  WorkerPool              fStrategyWorkers = new WorkerPool(NO_OF_UPDATE_WORKERS) ;
  Hashtable               fSharedUpdatingLocalMonitor = new Hashtable() ,
                          fLocalUpdatingSharedMonitor = new Hashtable() ;
  
- SharedDocListener       fSharedDocListener = null ;
+ DocListener       		fDocListener = null ;
  
  JavaSourceTranslator    fsrcTranslator = null ;  // Hack, need to provide interface.
  ICodeGenStatus			 fStatus = null ;
@@ -240,7 +239,7 @@ public class JavaSourceSynchronizer {
 	 *
 	 *  
 	 */
-	class SharedDocListener implements IDocumentListener {
+	class DocListener implements IDocumentListener {
 		
 		List prev = null ;
 		DocumentEvent prevEvent = null ;
@@ -266,7 +265,7 @@ public class JavaSourceSynchronizer {
 						if (fStatus!=null)
 						   fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_OUTOFSYNC,true) ;
 						
-						prev = SynchronizerWorkItem.getWorkItemList(event,fWorkingCopyProvider.getSharedWorkingCopy(false),true,true) ;
+						prev = SynchronizerWorkItem.getWorkItemList(event,fWorkingCopyProvider.getWorkingCopy(true),true,true) ;
 						if (prev.size()>100)
 						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+prev.size(), //$NON-NLS-1$
 						                 org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
@@ -283,7 +282,7 @@ public class JavaSourceSynchronizer {
 						}
 						prevEvent = event ;
 						
-						List elements = SynchronizerWorkItem.refreshWorkItemList(prev,event,fWorkingCopyProvider.getSharedWorkingCopy(),true,false) ;
+						List elements = SynchronizerWorkItem.refreshWorkItemList(prev,event,fWorkingCopyProvider.getWorkingCopy(true),true,false) ;
 						if (elements.size()>100)
 						  JavaVEPlugin.log("JavaSourceSynchronizer$SharedDocListener.docChanged(): elements: "+elements.size(), //$NON-NLS-1$
 						                 org.eclipse.jem.internal.core.MsgLogger.LOG_WARNING) ;
@@ -374,12 +373,7 @@ public class JavaSourceSynchronizer {
 		fSharedUpdatingLocalStrategy = strategy ;		
 	}
 	
-	public void setLocalUpdatingSharedStrategy(IBackGroundWorkStrategy strategy) {
-		fLocalUpdatingSharedStrategy = strategy ;		
-	}
-	
     
-	
 	/**
 	 * Start the background thread, and add this synchroniser as 
 	 * the listener to the Shared document provider.
@@ -414,9 +408,7 @@ public class JavaSourceSynchronizer {
 		
 		if (fStatus!=null) {
 		   fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_SYNCHING,true) ;
-		   if (fLocalUpdatingSharedStrategy == strategy)
-		      fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_SOURCE,true) ;
-		   else if (fSharedUpdatingLocalStrategy == strategy)
+		   if (fSharedUpdatingLocalStrategy == strategy)
 		      fStatus.setStatus(IJVEStatus.JVE_CODEGEN_STATUS_UPDATING_JVE_MODEL,true) ;		  
 		}
 		
@@ -439,7 +431,7 @@ public class JavaSourceSynchronizer {
 			
 		StrategyWorker w = fStrategyWorkers.grabWorker() ;		  	
 		w.assignStrategy(strategy,workElements.toArray(new SynchronizerWorkItem[workElements.size()]),
-		  	           fSharedDocListener, getDisplay(),
+		  	           fDocListener, getDisplay(),
 		  	           newMon) ;		  								
 	}
 	
@@ -471,8 +463,6 @@ public class JavaSourceSynchronizer {
 		  }	
 		  
 		  try {			   
-		   // right -> left
-		   driveStrategy(LocalToSharedDelta,fLocalUpdatingSharedMonitor,fLocalUpdatingSharedStrategy) ;
 		   // left -> right
 		   driveStrategy(SharedToLocalDelta,fSharedUpdatingLocalMonitor,fSharedUpdatingLocalStrategy) ;
 		   if (fStrategyWorkers != null && !NotificationList.isEmpty())
@@ -629,10 +619,31 @@ public class JavaSourceSynchronizer {
         }
         return result ;
     }
+    
+    /**
+     * The Assumption here is that this will be called when the UI (top down) is driving
+     * a change, and does not want a feedback from the CU document.
+     * If there were any outstanding background work, than the UI would be in read only and could
+     * not call here.
+     * 
+     * @since 1.0.0
+     */
+    public void suspendDocListener() {
+    	if (fDocListener != null) {    		    
+    		    fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
+        }
+    }
+    
+    public void resumeDocListener() {
+    	if (fDocListener != null) {
+    		fWorkingCopyProvider.getDocument().addDocumentListener(fDocListener) ;
+    	}
+    }
+    
     public synchronized void disconnect() {
-        if (fSharedDocListener != null) {
-            fWorkingCopyProvider.getSharedDocument().removeDocumentListener(fSharedDocListener) ;
-            fSharedDocListener = null ;
+        if (fDocListener != null) {
+            fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
+            fDocListener = null ;
         }
         synchronized (fList) {
 			for (int i=0; i<fList.size(); i++) {
@@ -646,10 +657,12 @@ public class JavaSourceSynchronizer {
 			}		      
         	fList.clear() ;   
         }
-    }	public synchronized void connect() {
-        if (fSharedDocListener == null) {
-          fSharedDocListener = new SharedDocListener() ;
-          fWorkingCopyProvider.getSharedDocument().addDocumentListener(fSharedDocListener) ;        
+    }	
+    
+    public synchronized void connect() {
+        if (fDocListener == null) {
+          fDocListener = new DocListener() ;
+          fWorkingCopyProvider.getDocument().addDocumentListener(fDocListener) ;        
         }
     }
 /**

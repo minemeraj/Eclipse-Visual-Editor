@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 
@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -29,7 +28,6 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.ast.Expression;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.core.MsgLogger;
@@ -768,24 +766,10 @@ public static void eSet(EObject obj, EStructuralFeature sf, EObject val, int ind
  */
 public static IWorkingCopyProvider getRefWorkingCopyProvider(ICompilationUnit refCU) {
 	        final ICompilationUnit cu = refCU ;
-	  	    IWorkingCopyProvider wcp = new IWorkingCopyProvider(){			
+	  	    IWorkingCopyProvider wcp = new IWorkingCopyProvider(){
 	  	    	CodegenTypeResolver resolver = new CodegenTypeResolver(getMainType(cu));
 	  	    		  	    		  	    	
-				public ICompilationUnit getSharedWorkingCopy(){return cu;}
-				public ICompilationUnit getSharedWorkingCopy(boolean force){return cu;}
-				public ICompilationUnit getLocalWorkingCopy(){return cu;}
-				public IFileEditorInput getEditor(){return null;}
-				public IFile getFile(){return null;}
-				public IDocument getSharedDocument(){return null;}
-				public IDocument getLocalDocument(){return null;}
-				public Object    getLocalDocLock(){return null;}
-				public void ReplaceWithLocalContent(IProgressMonitor pm, boolean commit) throws CodeGenException{;}
-				public void UpdateDeltaToShared(ICancelMonitor pm, IDocumentListener docListener, List handles, boolean commit) throws CodeGenException{;}
-				public void aboutToChangeShared(){;}
-				public void changeCompleteShared(){;}
-				public ISourceRange getSharedSourceRange(String handle){return null;}
-				public int getSharedLineNo(int Offset){return -1;}
-				public void dispose(){;}
+
 				public String resolve(String unresolved){
 					try{
 						if(resolver==null)
@@ -807,8 +791,18 @@ public static IWorkingCopyProvider getRefWorkingCopyProvider(ICompilationUnit re
 		          catch (org.eclipse.jdt.core.JavaModelException e) {}
 		          return null ;
 		        }
+		        public ICompilationUnit getWorkingCopy(boolean forceReconcile) { return cu; }
+		        public IFileEditorInput getEditor() { return null; }
+		        public IFile getFile() { return null; }
+		        public IDocument getDocument() { return null; }
+		        public Object    getDocLock() { return null; }
 		        public void disconnect() {}
-		        public void reconnect(IFile file) {}
+		        public void connect(IFile file) {}
+		        public ISourceRange getSourceRange(String handle) { return null; }
+		        public int getLineNo(int Offset) { return -1; }
+		        public void dispose() {}
+		        public IJavaElement getElement(String handle) { return null; }
+
 	 	};
 	 	return wcp ;
 }

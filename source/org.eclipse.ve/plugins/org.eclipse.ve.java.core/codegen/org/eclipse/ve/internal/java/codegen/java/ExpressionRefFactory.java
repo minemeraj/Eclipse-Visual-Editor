@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public void insertContentToDocument() throws CodeGenException {
     if (fExpr == null) throw new CodeGenException("Invalid Context") ;  //$NON-NLS-1$
     
     if (fExpr.getMethod().getMethodHandle() != null)
-       fExpr.insertContentToDocument(true) ;
+       fExpr.insertContentToDocument() ;
     else
        fExpr.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED, true) ;
        

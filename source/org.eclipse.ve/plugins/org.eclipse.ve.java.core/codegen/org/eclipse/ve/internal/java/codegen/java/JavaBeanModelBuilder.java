@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -79,7 +79,7 @@ public void setDiagram(IDiagramModelInstance diag) {
  */
 public JavaBeanModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String filePath, char[][] packageName) {
 	this (d,filePath,packageName) ;
-  	fCU = wcp.getLocalWorkingCopy() ;
+  	fCU = wcp.getWorkingCopy(false) ;
   	fWCP = wcp ;
 }
 

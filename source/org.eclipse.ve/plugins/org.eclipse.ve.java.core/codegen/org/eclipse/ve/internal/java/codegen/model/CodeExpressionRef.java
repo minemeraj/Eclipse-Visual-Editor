@@ -11,14 +11,15 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.compiler.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
@@ -28,14 +29,13 @@ import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.BasicCompilationUnit;
-import org.eclipse.jdt.internal.core.Util;
-import org.eclipse.jface.text.BadLocationException;
 
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class CodeExpressionRef extends AbstractCodeRef {
 
@@ -398,6 +398,7 @@ public synchronized String  generateSource(EStructuralFeature sf) throws CodeGen
       setContent(p) ;
       setOffset(-1) ;
       setFillerContent(BeanMethodTemplate.getInitExprFiller());
+	  refreshAST();
       return result ;
 }
 
@@ -520,13 +521,12 @@ public synchronized void updateLimboState (CodeExpressionRef exp) {
  *  o Update the MOF model if a decoder is present.
  *  o Update the local working copy to reflect the text change.
  */
-public synchronized void refreshFromJOM(CodeExpressionRef exp, boolean updateDocumentContents){
+public synchronized void refreshFromJOM(CodeExpressionRef exp){
 	try{
 		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
 		
 		
 		int off = getOffset() ;
-	      int len = getLen() ;
 		
 		
 		// extract new changes
@@ -547,16 +547,6 @@ public synchronized void refreshFromJOM(CodeExpressionRef exp, boolean updateDoc
 				JavaVEPlugin.log(t) ;
 			}
 		}
-		// Update the local Doc
-		int docOff = off+getMethod().getOffset() ;
-        String newContent =  ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) ? "" : getContent(); //fState == STATE_NOT_EXISTANT ? "" : getContent() ; //$NON-NLS-1$
-        try {
-	           if(updateDocumentContents)
-	           		fBean.getModel().getDocument().replace(docOff,len,newContent) ;
-        }
-        catch (BadLocationException e) {
-        	  JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-        }
 	    setOffset(off) ;
 	    
 	    // Model is in update mode already here
@@ -583,21 +573,15 @@ public synchronized void updateDocument(ExpressionParser newParser) {
 		getMethod().refreshIMethod();
 		int docOff = off + getMethod().getOffset();
 		String newContent = getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
-		try {
-			fBean.getModel().getDocument().replace(docOff, len, newContent);
-		}
-		catch (BadLocationException e) {
-			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-		}
+		fBean.getModel().getDocumentBuffer().replace(docOff, len, newContent);
 
 		setOffset(off);
-		fBean.getModel().updateJavaSource(fMethod.getMethodHandle()) ;
 		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
 	}
 }
 
 public synchronized void updateDocument(boolean updateSharedDoc) {
-	if(isStateSet(STATE_IN_SYNC))  // ((fState&STATE_IN_SYNC)>0) 
+	if(isStateSet(STATE_IN_SYNC))  
 		return ;
      
        
@@ -628,7 +612,7 @@ public synchronized void updateDocument(boolean updateSharedDoc) {
             	prevContentFoundInCode = true;
             if(!prevContentFoundInCode){
 	            setOffset(off) ;
-	            insertContentToDocument(true) ;
+	            insertContentToDocument() ;
             }
 	   	    setState(STATE_EXP_IN_LIMBO,false) ;
         }
@@ -654,8 +638,7 @@ public synchronized void updateDocument(boolean updateSharedDoc) {
 		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
 	}
 	JavaVEPlugin.log(trace.toString(), MsgLogger.LOG_FINE) ;
-	if (updateSharedDoc)
-		fBean.getModel().updateJavaSource(fMethod.getMethodHandle()) ;
+
 	if ((!isAnyStateSet()) || isStateSet(STATE_NOT_EXISTANT)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
 		dispose() ;
@@ -664,48 +647,36 @@ public synchronized void updateDocument(boolean updateSharedDoc) {
 
 protected void updateDocument(int docOff, int len, String newContent) {
 	IBeanDeclModel model = fBean.getModel() ;
-	try {
-		model.setState(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT, true) ;
-		model.getDocument().replace(docOff,len,newContent) ;	
-		model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
-	}
-	catch (CodeGenException e) {
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-	}
-	catch (BadLocationException e) {
-		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-	}
-	finally {
+	
 		try {
-			model.setState(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT, false) ;
-		}
-		catch (CodeGenException e1) {			
-			e1.printStackTrace();
-		}
-	}
-	
-	
+			model.aboutTochangeDoc();
+			model.getDocumentBuffer().replace(docOff,len,newContent) ;
+			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
+        } catch (Exception e) {
+			JavaVEPlugin.log(e) ;
+		}	
 }
 
-public synchronized void insertContentToDocument(boolean updateSharedDoc) {
+public  void insertContentToDocument() {
 	JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", MsgLogger.LOG_FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
-	synchronized (fBean.getModel().getDocumentLock()) {	
-		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
-		// IMethod newM = CodeGenUtil.refreshMethod(getMethod().getMethodHandle(),fBean.getModel().getCompilationUnit()) ;
-		//getMethod().setMethod(newM) ;
-		//getMethod().refreshIMethod();
+	synchronized (fBean.getModel().getDocumentLock()) {
+		// mark a controlled update (Top-Down)
+		setState(STATE_UPDATING_SOURCE, true); 
 		int docOff = getOffset()+getMethod().getOffset() ;
 		updateDocument(docOff, 0, getContent()) ;
-		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
+		setState(STATE_UPDATING_SOURCE, false); 
 	}
-	if (updateSharedDoc)
-		fBean.getModel().updateJavaSource(fMethod.getMethodHandle()) ;
-    // AST will be refreshed by when we sync to the shared document, to avoid getting a CU that
-    // will require a reConsile	
 }
 
+private CompilationUnitDeclaration getModelFromParser(
+	ProblemReporter reporter,
+	CompilationResult result,
+	BasicCompilationUnit cu){
+	Parser aParser = new Parser(reporter,true);
+	return aParser.parse(cu,result);	
+}
 public void refreshAST() {
-	if (fExpr == null) {
+	if (fExpr == null || true) {
 
 		// Note:: Here we have an expressionRef, which has no AST statement. 
 		//        (AST statement is very important to 'decode()' an expressionRef
@@ -716,89 +687,29 @@ public void refreshAST() {
 		//        statement. Hence when code is inserted into the document, the
 		//        document is parsed so that the AST statement for the expression
 		//        just inserted can be found, and everything is stable.
+//TODO:  M7 Eclipse should provide support for this in AST		
 		if (getBean() != null && getBean().getModel() != null && getBean().getModel().getCompilationUnit() != null) {
-			try {
-				ICompilationUnit cu = getBean().getModel().getCompilationUnit();
+				StringBuffer sb = new StringBuffer();
+				sb.append("class Foo {\n void method() {\n") ;
+				sb.append(getContent()) ;
+				sb.append("\n}\n}") ;
+				
+		
 				BasicCompilationUnit scu =
-					new BasicCompilationUnit(cu.getSource().toCharArray(), (cu.getPackageDeclarations().length > 0) ? getPackageTokens(cu.getPackageDeclarations()[0]) : new char[][] { {}
-				}, cu.getElementName(), (String) JavaCore.getOptions().get(CompilerOptions.OPTION_Encoding));
+					new BasicCompilationUnit(sb.toString().toCharArray(),  new char[][] { {}
+				}, "Foo.java", (String) JavaCore.getOptions().get(CompilerOptions.OPTION_Encoding));
 				ProblemReporter reporter = new ProblemReporter(DefaultErrorHandlingPolicies.exitAfterAllProblems(), new CompilerOptions(), new DefaultProblemFactory(Locale.getDefault()));
 				CompilationResult result = new CompilationResult(scu, 1, 1, 20);
 				CompilationUnitDeclaration cudecl = getModelFromParser(reporter, result, scu);
-				TypeDeclaration mainType = cudecl.types[0];
-				AbstractMethodDeclaration[] mtds = mainType.methods;
-				for (int i = 0; i < mtds.length; i++) {
-					if (areMethodsSame(mtds[i], getMethod().getDeclMethod())) {
-						setExpression(detectStatement(mtds[i].statements, cu.getSource()));
-					}
-				}
-			}
-			catch (JavaModelException e) {
-				JavaVEPlugin.log("Error determining AST of an embedded CodeExpressionRef", MsgLogger.LOG_WARNING); //$NON-NLS-1$
-			}
+                setExpression(cudecl.types[0].methods[1].statements[0]) ;
+
+				
 		}
 
 	}
 }
 
-private Statement detectStatement(Statement[] stmts, String entireCode){
-	Statement ret = null;
-	if (stmts == null) return null ;
-	for(int cc=0;cc<stmts.length;cc++){
-		Statement stmt = stmts[cc];
-		if (stmt instanceof Block)
-			ret = detectStatement(((Block)stmt).statements, entireCode) ;
-		else if (stmt instanceof TryStatement)
-			ret = detectStatement(((TryStatement)stmt).tryBlock.statements, entireCode) ;
-		else if (stmt instanceof IfStatement) 
-			ret = detectStatement(new Statement[]{((IfStatement)stmt).thenStatement}, entireCode) ;
-		else if (stmt instanceof SynchronizedStatement) 
-			ret = detectStatement(((SynchronizedStatement)stmt).block.statements, entireCode) ;
-		else if(getCodeContent().indexOf(CodeSnippetTranslatorHelper.getCompleteSource(entireCode,stmt))>-1)
-			return stmts[cc];
-	}
-	return ret;
-}
 
-private boolean areMethodsSame(AbstractMethodDeclaration m1, AbstractMethodDeclaration m2){
-	if(m1==null || m2==null)
-		return false;
-	if(new String(m1.selector).equals(new String(m2.selector))){
-		Argument[] args1 = m1.arguments;
-		Argument[] args2 = m2.arguments;
-		if(args1==null && args2==null)
-			return true;
-		if(args1.length==args2.length){
-			boolean allEqual = true;
-			for(int i=0;i<args1.length;i++){
-				if(Util.compare(args1[i].name, args2[i].name) != 0)
-					allEqual = false;
-			}
-			return allEqual;
-		}
-	}
-	return false;
-}
-
-private CompilationUnitDeclaration getModelFromParser(
-	ProblemReporter reporter,
-	CompilationResult result,
-	BasicCompilationUnit cu){
-	Parser aParser = new Parser(reporter,true);
-	return aParser.parse(cu,result);	
-}
-
-private char[][] getPackageTokens(IPackageDeclaration pkg){
-	String pkgName = pkg.getElementName();
-	StringTokenizer dotTokenizer = new StringTokenizer(pkgName," .",false); //$NON-NLS-1$
-	char[][] tokens = new char[dotTokenizer.countTokens()][];
-	int count = 0;
-	while(dotTokenizer.hasMoreTokens()){
-		tokens[count] = dotTokenizer.nextToken().toCharArray();
-		count++;
-	}
-	return tokens;
-}
 
 public boolean isStateSet(int state){
 	return ((primGetState() & state) == state);
@@ -1021,10 +932,10 @@ public ExpressionParser getContentParser() {
 
 public ICodeGenSourceRange getTargetSourceRange() {
     if (fBean == null || fBean.getModel() == null) return null ;
-    ISourceRange mSR = fBean.getModel().getWorkingCopyProvider().getSharedSourceRange(fMethod.getMethodHandle()) ;   
+    ISourceRange mSR = fBean.getModel().getWorkingCopyProvider().getSourceRange(fMethod.getMethodHandle()) ;   
     if (mSR == null) return null ;
     CodeGenSourceRange result = new CodeGenSourceRange (mSR.getOffset()+getOffset(),getLen()) ;
-    result.setLineOffset(fBean.getModel().getWorkingCopyProvider().getSharedLineNo(result.getOffset())) ;
+    result.setLineOffset(fBean.getModel().getWorkingCopyProvider().getLineNo(result.getOffset())) ;
     return result ;
 }
 

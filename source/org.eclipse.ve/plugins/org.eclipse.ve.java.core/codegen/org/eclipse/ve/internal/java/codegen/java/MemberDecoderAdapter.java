@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 import java.util.*;
 
@@ -90,6 +90,7 @@ protected void  createBeanInstance(IJavaObjectInstance obj) throws CodeGenExcept
     
     BeanPartFactory bgen = new BeanPartFactory(fbeanModel,fbeanModel.getCompositionModel()) ;
     try {
+      fbeanModel.aboutTochangeDoc();
       bgen.createFromJVEModel(obj,fbeanModel.getCompilationUnit()) ;
     }
     catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {

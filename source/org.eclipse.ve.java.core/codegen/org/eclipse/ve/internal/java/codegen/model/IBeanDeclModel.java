@@ -11,20 +11,19 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
-import org.eclipse.jface.text.IDocument;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -35,11 +34,12 @@ import org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider;
 
 public interface IBeanDeclModel extends ITypeResolver{
 	
-	public final  int           BDM_STATE_DOWN            	= 0x01 ;	
-	public final  int           BDM_STATE_UP_AND_RUNNING  	= 0x02 ;
+	public final  int           BDM_STATE_DOWN            		= 0x01 ;	
+	public final  int           BDM_STATE_UP_AND_RUNNING  		= 0x02 ;
 	public final  int           BDM_STATE_UPDATING_JVE_MODEL	= 0x04 ;
-	public final  int           BDM_STATE_SNIPPET     		= 0x08 ;
-	public final  int           BDM_STATE_UPDATING_DOCUMENT	= 0x10 ;
+	public final  int           BDM_STATE_SNIPPET     			= 0x08 ;
+	public final  int           BDM_STATE_UPDATING_DOCUMENT		= 0x10 ;
+
 	
 	public List getBeans() ;
 	public void addBean (BeanPart bean) ;
@@ -54,7 +54,7 @@ public interface IBeanDeclModel extends ITypeResolver{
 	public IDiagramModelInstance getCompositionModel() ;
 	public void setCompositionModel(IDiagramModelInstance cm) ;	
 	public ICompilationUnit getCompilationUnit() ;
-	public IDocument getDocument() ;	
+	public IBuffer getDocumentBuffer() ;	
 	public Object getDocumentLock() ;	
 	public void addMethodInitializingABean (CodeMethodRef methodRef) ;
 	public CodeMethodRef getMethodInitializingABean (String methodHandle) ;
@@ -70,7 +70,6 @@ public interface IBeanDeclModel extends ITypeResolver{
     public String getLineSeperator() ;
     public void setWorkingCopyProvider(IWorkingCopyProvider wcp) ;
 	public IWorkingCopyProvider getWorkingCopyProvider() ;
-	public void updateJavaSource (String elementHandle) ;
 	public void setState(int flag, boolean state) throws CodeGenException ;
     public boolean isStateSet(int state) ;
     public void dispose() ;
@@ -90,6 +89,27 @@ public interface IBeanDeclModel extends ITypeResolver{
 	public CodeMethodRef getMethod(String handle) ;
 	public Iterator getAllMethods() ;
 	
+	/**
+	 * A CodeExpressionRef will call this API to fire an about to change Text when
+	 * a decoder is about to generate new text.  A working copy for the working copy will
+	 * be created, and CodeGen will stop listening to document changes.
+	 * @since 1.0.0
+	 */
+	public  void aboutTochangeDoc();
+	/**
+	 * At the end of a transaction (commit), this API will be calld to denote that 
+	 * all CodeExpresseionRef have finished to update the source code.  At this point the working
+	 * copy will be commited, and CodeGen will resume to listen to document changes.
+	 * @since 1.0.0
+	 */
+	public  void docChanged() ;	
+	/**
+	 * Will refresh all methods offsets/content 
+	 * This will be called when a new field/method is being create.
+	 * 
+	 * @since 1.0.0
+	 */
+	public void refreshMethods () ;
 }
       
 	

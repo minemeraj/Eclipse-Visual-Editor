@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisBeanDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -101,7 +101,7 @@ public Object getAdapter(Class adapter) {
 		// TODO Need to change setFieldDeclHandler on BeanPart for "this" so that it is the 
 		// appropriate decl handle for this class. However, there are currently several usages
 		// of the hard-coded string now used and this will need to be looked into.
-		return CodeGenUtil.getMainType(fbeanModel.getWorkingCopyProvider().getSharedWorkingCopy());
+		return CodeGenUtil.getMainType(fbeanModel.getCompilationUnit());
 	}
 	return super.getAdapter(adapter);
 }

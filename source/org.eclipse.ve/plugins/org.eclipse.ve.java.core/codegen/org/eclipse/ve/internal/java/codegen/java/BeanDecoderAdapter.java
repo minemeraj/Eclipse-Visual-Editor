@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-11 18:13:21 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -289,7 +289,7 @@ protected void setElement (Notification msg) {
 		try {
 			CodeExpressionRef exp = eGen.createFromJVEModel(args);
 			if (exp != null)
-				exp.insertContentToDocument(true);
+				exp.insertContentToDocument();
 		}
 		catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
@@ -539,7 +539,7 @@ protected void addEventElement (Notification msg) {
 	EventRefFactory ef = new EventRefFactory(fBean,aei) ; ;					
 	try {
 		CodeEventRef exp = ef.createFromJVEModel() ;
-		exp.insertContentToDocument(true) ;
+		exp.insertContentToDocument() ;
 	}
 	catch (CodeGenException e) {
 		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;
@@ -595,7 +595,7 @@ protected void addElement (Notification msg) {
 		ExpressionRefFactory eGen = new ExpressionRefFactory(fBean, (EStructuralFeature) msg.getFeature());
 		try {
 			CodeExpressionRef exp = eGen.createFromJVEModel(args);
-			exp.insertContentToDocument(true);
+			exp.insertContentToDocument();
 		}
 		catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
@@ -848,7 +848,7 @@ public Object getAdapter(Class aClass){
 	if ( aClass == IJavaElement.class ) { 
 		// Return the IField for this bean.
 		IJavaElement e = (IField) JavaCore.create(fBean.getFieldDeclHandle());
-		ICompilationUnit cu = fBean.getModel().getWorkingCopyProvider().getSharedWorkingCopy() ;
+		ICompilationUnit cu = fBean.getModel().getCompilationUnit() ;
 		IJavaElement[] es = cu.findElements(e);
 		if (es != null && es.length == 1)
 			return es[0];
