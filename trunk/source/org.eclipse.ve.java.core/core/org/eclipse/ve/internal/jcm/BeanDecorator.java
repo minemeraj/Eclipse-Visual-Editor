@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecorator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -30,6 +30,8 @@ import org.eclipse.emf.ecore.EAnnotation;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanProxyClassName <em>Bean Proxy Class Name</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation <em>Bean Location</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn <em>Bean Return</em>}</li>
  * </ul>
  * </p>
  *
@@ -66,5 +68,112 @@ public interface BeanDecorator extends EAnnotation, KeyedValueHolder{
 	 * @generated
 	 */
 	void setBeanProxyClassName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Bean Location</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.ve.internal.jcm.InstanceLocation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The location of any beans of this type, or subclasses that are not overridden, if not specifically overridden by the BeanFeatureDecorator or the Annotation key of INSTANCELOC.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Bean Location</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @see #isSetBeanLocation()
+	 * @see #unsetBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanDecorator_BeanLocation()
+	 * @model unsettable="true"
+	 * @generated
+	 */
+	InstanceLocation getBeanLocation();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Bean Location</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @see #isSetBeanLocation()
+	 * @see #unsetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @generated
+	 */
+	void setBeanLocation(InstanceLocation value);
+
+	/**
+	 * Unsets the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @generated
+	 */
+	void unsetBeanLocation();
+
+	/**
+	 * Returns whether the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation <em>Bean Location</em>}' attribute is set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return whether the value of the '<em>Bean Location</em>' attribute is set.
+	 * @see #unsetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @generated
+	 */
+	boolean isSetBeanLocation();
+
+	/**
+	 * Returns the value of the '<em><b>Bean Return</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Will this bean have a return method or not. A return method is one that when called will answer the bean. This will only be used for locations of GLOBAL type.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Bean Return</em>' attribute.
+	 * @see #isSetBeanReturn()
+	 * @see #unsetBeanReturn()
+	 * @see #setBeanReturn(boolean)
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanDecorator_BeanReturn()
+	 * @model unsettable="true"
+	 * @generated
+	 */
+	boolean isBeanReturn();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn <em>Bean Return</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Bean Return</em>' attribute.
+	 * @see #isSetBeanReturn()
+	 * @see #unsetBeanReturn()
+	 * @see #isBeanReturn()
+	 * @generated
+	 */
+	void setBeanReturn(boolean value);
+
+	/**
+	 * Unsets the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn <em>Bean Return</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSetBeanReturn()
+	 * @see #isBeanReturn()
+	 * @see #setBeanReturn(boolean)
+	 * @generated
+	 */
+	void unsetBeanReturn();
+
+	/**
+	 * Returns whether the value of the '{@link org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn <em>Bean Return</em>}' attribute is set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return whether the value of the '<em>Bean Return</em>' attribute is set.
+	 * @see #unsetBeanReturn()
+	 * @see #isBeanReturn()
+	 * @see #setBeanReturn(boolean)
+	 * @generated
+	 */
+	boolean isSetBeanReturn();
 
 } // BeanDecorator

@@ -11,15 +11,17 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -151,13 +153,31 @@ public interface JCMPackage extends EPackage{
 	int BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME = EcorePackage.EANNOTATION_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Bean Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEAN_DECORATOR__BEAN_LOCATION = EcorePackage.EANNOTATION_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Bean Return</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEAN_DECORATOR__BEAN_RETURN = EcorePackage.EANNOTATION_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the the '<em>Bean Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BEAN_DECORATOR_FEATURE_COUNT = EcorePackage.EANNOTATION_FEATURE_COUNT + 2;
+	int BEAN_DECORATOR_FEATURE_COUNT = EcorePackage.EANNOTATION_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl <em>Bean Feature Decorator</em>}' class.
@@ -251,13 +271,22 @@ public interface JCMPackage extends EPackage{
   int BEAN_FEATURE_DECORATOR__CHILD_FEATURE = EcorePackage.EANNOTATION_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Bean Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEAN_FEATURE_DECORATOR__BEAN_LOCATION = EcorePackage.EANNOTATION_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the the '<em>Bean Feature Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BEAN_FEATURE_DECORATOR_FEATURE_COUNT = EcorePackage.EANNOTATION_FEATURE_COUNT + 3;
+	int BEAN_FEATURE_DECORATOR_FEATURE_COUNT = EcorePackage.EANNOTATION_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl <em>Bean Composition</em>}' class.
@@ -567,13 +596,22 @@ public interface JCMPackage extends EPackage{
 	int CALLBACK__METHOD = 1;
 
 	/**
+	 * The feature id for the '<em><b>Statements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CALLBACK__STATEMENTS = 2;
+
+	/**
 	 * The number of structural features of the the '<em>Callback</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CALLBACK_FEATURE_COUNT = 2;
+	int CALLBACK_FEATURE_COUNT = 3;
 
 
 	/**
@@ -853,6 +891,54 @@ public interface JCMPackage extends EPackage{
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl <em>Keyed Instance Location</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl
+	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getKeyedInstanceLocation()
+	 * @generated
+	 */
+	int KEYED_INSTANCE_LOCATION = 13;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_INSTANCE_LOCATION__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_INSTANCE_LOCATION__VALUE = 1;
+
+	/**
+	 * The number of structural features of the the '<em>Keyed Instance Location</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_INSTANCE_LOCATION_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.InstanceLocation <em>Instance Location</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getInstanceLocation()
+	 * @generated
+	 */
+	int INSTANCE_LOCATION = 14;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.BeanDecorator <em>Bean Decorator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -872,6 +958,28 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	EAttribute getBeanDecorator_BeanProxyClassName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation <em>Bean Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Bean Location</em>'.
+	 * @see org.eclipse.ve.internal.jcm.BeanDecorator#getBeanLocation()
+	 * @see #getBeanDecorator()
+	 * @generated
+	 */
+	EAttribute getBeanDecorator_BeanLocation();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn <em>Bean Return</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Bean Return</em>'.
+	 * @see org.eclipse.ve.internal.jcm.BeanDecorator#isBeanReturn()
+	 * @see #getBeanDecorator()
+	 * @generated
+	 */
+	EAttribute getBeanDecorator_BeanReturn();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator <em>Bean Feature Decorator</em>}'.
@@ -904,6 +1012,17 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
   EAttribute getBeanFeatureDecorator_ChildFeature();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Bean Location</em>'.
+	 * @see org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation()
+	 * @see #getBeanFeatureDecorator()
+	 * @generated
+	 */
+	EAttribute getBeanFeatureDecorator_BeanLocation();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.BeanComposition <em>Bean Composition</em>}'.
@@ -1130,6 +1249,49 @@ public interface JCMPackage extends EPackage{
 	EReference getJCMMethod_Return();
 
 	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Keyed Instance Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Keyed Instance Location</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyType="java.lang.String" valueType="org.eclipse.ve.internal.jcm.InstanceLocation" 
+	 * @generated
+	 */
+	EClass getKeyedInstanceLocation();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getKeyedInstanceLocation()
+	 * @generated
+	 */
+	EAttribute getKeyedInstanceLocation_Key();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getKeyedInstanceLocation()
+	 * @generated
+	 */
+	EAttribute getKeyedInstanceLocation_Value();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.ve.internal.jcm.InstanceLocation <em>Instance Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Instance Location</em>'.
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @generated
+	 */
+	EEnum getInstanceLocation();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1277,6 +1439,17 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	EReference getCallback_Method();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.ve.internal.jcm.Callback#getStatements <em>Statements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Statements</em>'.
+	 * @see org.eclipse.ve.internal.jcm.Callback#getStatements()
+	 * @see #getCallback()
+	 * @generated
+	 */
+	EReference getCallback_Statements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.MemberContainer <em>Member Container</em>}'.

@@ -9,7 +9,9 @@
         treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentTreeEditPart"
         graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentGraphicalEditPart"
         modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentModelAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter"/>
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
+        beanLocation="GLOBAL_GLOBAL"
+        beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter"/>
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.ComponentDecoder"/>    
   </event:AddMany>

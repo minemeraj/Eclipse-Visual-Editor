@@ -11,27 +11,26 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-21 22:12:02 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import java.util.*;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.ve.internal.cde.core.AnnotationPolicy;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 
 /**
@@ -54,12 +53,12 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
  */
 public class VCEPreSetCommand extends CommandWrapper {
 	
-	protected static final int 
-		PROPERTY = 0,
-		LOCAL = 1,				// Local definition
-		GLOBAL_GLOBAL = 2,		// Global definition, global initialization
-		GLOBAL_LOCAL = 3;		// Global definition, initialized as part of the parent initialization
-
+	/**
+	 * Key in Annotation's KeyHolder for the BeanLocation override for a particular instance.
+	 * The KeyValue entry will be a Keyed.
+	 */
+	public static final String BEAN_LOCATION_KEY = "org.eclipse.ve.java.BeanLocation"; 
+	
 	protected EditDomain domain;
 	protected EObject target;
 	protected EObject newValue;
@@ -88,8 +87,6 @@ public class VCEPreSetCommand extends CommandWrapper {
 		if (target.eResource() == null)
 			command = NoOpCommand.INSTANCE;
 		else {
-			initialize();
-			
 			CommandBuilder cbld = new CommandBuilder();
 			cbld.setExecuteAndAppend(true);	// So that changes are seen immediately as we process.
 			
@@ -116,11 +113,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 				// handle all of its settings too. Since at this point the entire tree for the target has already been
 				// built and assigned if there are any (since this would of been done in a previous command) or if there
 				// were no settings, it is ok to apply the target to member right away.
-				m = getMethod(cbld, cbld, target, m);
+				m = getMethod(cbld, cbld, target, null, m);
 			}
 			
 			if (newValue != null)
-				handleValue(cbld, m, newValue, feature != null ? feature.isContainment() : false, new HashSet(10));	// If we don't have a feature, treat as not containment.
+				handleValue(cbld, m, newValue, feature, feature != null ? feature.isContainment() : false, new HashSet(10));	// If we don't have a feature, treat as not containment.
 				
 			if (!cbld.isEmpty())
 				command = cbld.getCommand();
@@ -130,17 +127,17 @@ public class VCEPreSetCommand extends CommandWrapper {
 		}
 	}
 
-	protected JCMMethod getMethod(CommandBuilder cbld, CommandBuilder memberBldr, EObject value, JCMMethod m) {
-		int settingType = settingType(value);
+	protected JCMMethod getMethod(CommandBuilder cbld, CommandBuilder memberBldr, EObject value, EStructuralFeature feature, JCMMethod m) {
 		if (value.eContainer() == null) {
 			// We are not contained, we need to be in a method.
 			// Need to promote this appropriately. If we don't have a method
 			// to go into, then we need to go to global.
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.			
 			handleAnnotation(value, memberBldr);	// Need to handle annotation first.
-			if (m == null || settingType == GLOBAL_GLOBAL) {
+			InstanceLocation settingType = settingType(value, feature);			
+			if (m == null || settingType == InstanceLocation.GLOBAL_GLOBAL_LITERAL) {
 				m = promoteGlobal(cbld, memberBldr, value);
-			} else if(settingType == GLOBAL_LOCAL){
+			} else if(settingType == InstanceLocation.GLOBAL_LOCAL_LITERAL){
 				m = promoteGlobalLocal(cbld,memberBldr,value,m);
 			} else {
 				m = promoteLocal(cbld, memberBldr, value, m);
@@ -149,7 +146,8 @@ public class VCEPreSetCommand extends CommandWrapper {
 			// We are contained by a properties, we need to be in a method.
 			// Need to promote this appropriately
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.
-			if (settingType(value) == GLOBAL_GLOBAL)
+			InstanceLocation settingType = settingType(value, feature);			
+			if (settingType == InstanceLocation.GLOBAL_GLOBAL_LITERAL)
 				m = promoteGlobal(cbld, memberBldr, value);
 			else
 				m = promoteLocal(cbld, memberBldr, value, (JCMMethod) value.eContainer());
@@ -229,8 +227,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 	protected JCMMethod createInitMethod(CommandBuilder cbld, EObject member) {
 		JCMMethod m = JCMFactory.eINSTANCE.createJCMMethod();
 		m.getInitializes().add(member);
-		// TODO - Hack to make sure the return is not set for SWT
-		if( !(classSWTControl.isInstance(member))) {
+		// Should this also be a return method. Look up on BeanDecorator.
+		BeanDecorator bd = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(member.eClass(), BeanDecorator.class, JCMPackage.eINSTANCE.getBeanDecorator_BeanReturn());
+		if(bd == null || bd.isBeanReturn()) {
+			// Either no decorator found set (so default is true) or specifically set to true.
 			m.setReturn(member);
 		}
 		cbld.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getBeanSubclassComposition_Methods(), m);
@@ -245,35 +245,44 @@ public class VCEPreSetCommand extends CommandWrapper {
 		return (BeanSubclassComposition) domain.getDiagramData();
 	}
 		
-	
-	private EClass classAWTComponent;
-	private EClass classSWTShell;	
-	private EClass classSWTControl;	// TODO Hack for SWT, needs to be done by some kind of contribution SWT makes to the VE and not hard coded here	
-	
-	protected void initialize() {
-		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
-		classAWTComponent = (EClass) rset.getEObject(URI.createURI("java:/java.awt#Component"), true); //$NON-NLS-1$
-		classSWTControl = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Control"), true); //$NON-NLS-1$
-		classSWTShell = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Shell"), true); //$NON-NLS-1$		
-		
-//		classJLabel = (EClass) rset.getEObject(URI.createURI("java:/javax.swing#JLabel"), true);		
-	}
-	
-	/*
-	 * Answer setting type, PROERTY/LOCAL/GLOBAL
+	/**
+	 * Answer the promotion type. It will be based upon the property and the feature that property
+	 * is being set into. It will first see if there is annotation on the property, and the annotation
+	 * answers where to put it. If it doesn't then it will see if the property determines the promotion type, 
+	 * if it does it will use that. Next it will see if the properties type (or a super class of it) answers
+	 * the location. Finally if none of these are set it will answer GLOBAL_GLOBAL.
+	 *  
+	 * @param property 
+	 * @param feature
+	 * @return the location.
+	 * 
+	 * @since 1.0.0
 	 */
-	protected int settingType(EObject property) {
-		if (classAWTComponent.isInstance(property))
-			return GLOBAL_GLOBAL;				// Hard code AWT components to be global and globally initialized (in their own getJavaBean() method)
-		else if(classSWTShell != null && classSWTShell.isInstance(property))
-			return GLOBAL_GLOBAL;
-		else if (classSWTControl != null && classSWTControl.isInstance(property))
-			return GLOBAL_LOCAL;				// Hard code SWT controls to be globally declared and initialized in their parent method
-		else
-			return PROPERTY;
+	protected InstanceLocation settingType(EObject property, EStructuralFeature feature) {
+		// First see if the property has an annotation with the location set.
+		Annotation annotation = domain.getAnnotationLinkagePolicy().getAnnotation(property);
+		if (annotation != null) {
+			InstanceLocation il = (InstanceLocation) annotation.getKeyedValues().get(BEAN_LOCATION_KEY);
+			if (il != null)
+				return il;
+		}
+		
+		// Next check if the feature has it set.
+		// We may not have a feature if we are the target of the entire command (and not the value being set).
+		BeanFeatureDecorator bfd = feature != null ? (BeanFeatureDecorator) CDEUtilities.findDecorator(feature, BeanFeatureDecorator.class) : null;
+		if (bfd != null && bfd.isSetBeanLocation())
+			return bfd.getBeanLocation();
+		
+		// Next check the bean class.
+		BeanDecorator bd = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(property.eClass(), BeanDecorator.class, JCMPackage.eINSTANCE.getBeanDecorator_BeanLocation());
+		if (bd != null)
+			return bd.getBeanLocation();
+		
+		// Default to Property.
+		return InstanceLocation.PROPERTY_LITERAL;
 	}
 	
-	protected void handleValue(CommandBuilder cbld, JCMMethod m, EObject value, boolean containment, Set processed) {
+	protected void handleValue(CommandBuilder cbld, JCMMethod m, EObject value, EStructuralFeature feature, boolean containment, Set processed) {
 		processed.add(value);
 		
 		// We will only walk into and handle non-IJavaInstance values that are contained.
@@ -308,12 +317,12 @@ public class VCEPreSetCommand extends CommandWrapper {
 						if (!hadChildren) {
 							if (!containment) {
 								mBldr = new CommandBuilder();
-								m = getMethod(cbld, mBldr, value, m);
+								m = getMethod(cbld, mBldr, value, ref, m);
 							}
 							hadChildren = true;
 						}
 						if (kid != null && !processed.contains(kid))
-							handleValue(cbld, m, (EObject) kid, ref.isContainment(), processed);
+							handleValue(cbld, m, (EObject) kid, ref, ref.isContainment(), processed);
 					}
 				} else {
 					// Don't want to process the allocation feature. That would not have any java instances in it
@@ -323,32 +332,32 @@ public class VCEPreSetCommand extends CommandWrapper {
 						if (!hadChildren) {
 							if (!containment) {
 								mBldr = new CommandBuilder();
-								m = getMethod(cbld, mBldr, value, m);
+								m = getMethod(cbld, mBldr, value, ref, m);
 							}
 							hadChildren = true;
 						}
 						if (kid != null && !processed.contains(kid))
-							handleValue(cbld, m, (EObject) kid, ref.isContainment(), processed);
+							handleValue(cbld, m, (EObject) kid, ref, ref.isContainment(), processed);
 					}
 				}
 			}
 		}
 		
 		if (!hadChildren && !containment && value.eContainer() == null) {
-			int promoteType = m != null ? settingType(value) : GLOBAL_GLOBAL;	// no current JCMMethod, then can only be global. 
+			InstanceLocation promoteType = m != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL;	// no current JCMMethod, then can only be global. 
 			// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
 			handleAnnotation(value, cbld);	// Need to handle annotation first.			
-			switch (promoteType) {
-				case GLOBAL_GLOBAL:
+			switch (promoteType.getValue()) {
+				case InstanceLocation.GLOBAL_GLOBAL:
 					promoteGlobal(cbld, cbld, value);
 					break;
-				case LOCAL:
+				case InstanceLocation.LOCAL:
 					promoteLocal(cbld, cbld, value, m);
 					break;
-				case GLOBAL_LOCAL:
+				case InstanceLocation.GLOBAL_LOCAL:
 					promoteGlobalLocal(cbld, cbld ,value,m);
 					break;
-				case PROPERTY:
+				case InstanceLocation.PROPERTY:
 					// Make sure it is a <properties> of the requested member container.
 					cbld.applyAttributeSetting(m, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
 					break;

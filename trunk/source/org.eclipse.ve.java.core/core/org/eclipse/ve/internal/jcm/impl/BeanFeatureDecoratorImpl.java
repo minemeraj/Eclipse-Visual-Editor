@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import java.util.Collection;
@@ -36,6 +36,7 @@ import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
+import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 /**
@@ -48,6 +49,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getKeyedValues <em>Keyed Values</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getBeanProxyMediatorName <em>Bean Proxy Mediator Name</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#isChildFeature <em>Child Feature</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl#getBeanLocation <em>Bean Location</em>}</li>
  * </ul>
  * </p>
  *
@@ -119,6 +121,35 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
   protected boolean childFeature = CHILD_FEATURE_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getBeanLocation() <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final InstanceLocation BEAN_LOCATION_EDEFAULT = InstanceLocation.GLOBAL_GLOBAL_LITERAL;
+
+	/**
+	 * The cached value of the '{@link #getBeanLocation() <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected InstanceLocation beanLocation = BEAN_LOCATION_EDEFAULT;
+
+	/**
+	 * This is true if the Bean Location attribute has been set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean beanLocationESet = false;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 */
@@ -188,6 +219,52 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		childFeature = newChildFeature;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE, oldChildFeature, childFeature));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InstanceLocation getBeanLocation() {
+		return beanLocation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBeanLocation(InstanceLocation newBeanLocation) {
+		InstanceLocation oldBeanLocation = beanLocation;
+		beanLocation = newBeanLocation == null ? BEAN_LOCATION_EDEFAULT : newBeanLocation;
+		boolean oldBeanLocationESet = beanLocationESet;
+		beanLocationESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION, oldBeanLocation, beanLocation, !oldBeanLocationESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void unsetBeanLocation() {
+		InstanceLocation oldBeanLocation = beanLocation;
+		boolean oldBeanLocationESet = beanLocationESet;
+		beanLocation = BEAN_LOCATION_EDEFAULT;
+		beanLocationESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION, oldBeanLocation, BEAN_LOCATION_EDEFAULT, oldBeanLocationESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSetBeanLocation() {
+		return beanLocationESet;
 	}
 
 	/**
@@ -280,6 +357,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 				return getBeanProxyMediatorName();
 			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
 				return isChildFeature() ? Boolean.TRUE : Boolean.FALSE;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
+				return getBeanLocation();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -323,6 +402,9 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
 				setChildFeature(((Boolean)newValue).booleanValue());
 				return;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
+				setBeanLocation((InstanceLocation)newValue);
+				return;
 		}
 		eDynamicSet(eFeature, newValue);
 	}
@@ -361,6 +443,9 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
 				setChildFeature(CHILD_FEATURE_EDEFAULT);
 				return;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
+				unsetBeanLocation();
+				return;
 		}
 		eDynamicUnset(eFeature);
 	}
@@ -390,6 +475,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 				return BEAN_PROXY_MEDIATOR_NAME_EDEFAULT == null ? beanProxyMediatorName != null : !BEAN_PROXY_MEDIATOR_NAME_EDEFAULT.equals(beanProxyMediatorName);
 			case JCMPackage.BEAN_FEATURE_DECORATOR__CHILD_FEATURE:
 				return childFeature != CHILD_FEATURE_EDEFAULT;
+			case JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION:
+				return isSetBeanLocation();
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -437,6 +524,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		result.append(beanProxyMediatorName);
 		result.append(", childFeature: ");
 		result.append(childFeature);
+		result.append(", beanLocation: ");
+		if (beanLocationESet) result.append(beanLocation); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

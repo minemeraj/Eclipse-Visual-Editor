@@ -11,11 +11,14 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
+
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -37,6 +40,7 @@ import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.Callback;
 import org.eclipse.ve.internal.jcm.EventInvocation;
+import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -125,6 +129,20 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass keyedInstanceLocationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum instanceLocationEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass listenerTypeEClass = null;
 
 	/**
@@ -205,11 +223,11 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackageImpl.init();
-		JavaRefPackageImpl.init();
-		InstantiationPackageImpl.init();
-		CDMPackageImpl.init();
 		BeaninfoPackageImpl.init();
+		JavaRefPackageImpl.init();
+		EcorePackageImpl.init();
+		CDMPackageImpl.init();
+		InstantiationPackageImpl.init();
 
 		// Obtain or create and register interdependencies
 
@@ -245,6 +263,24 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getBeanDecorator_BeanLocation() {
+		return (EAttribute)beanDecoratorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getBeanDecorator_BeanReturn() {
+		return (EAttribute)beanDecoratorEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getBeanFeatureDecorator() {
 		return beanFeatureDecoratorEClass;
 	}
@@ -265,6 +301,15 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 */
   public EAttribute getBeanFeatureDecorator_ChildFeature() {
 		return (EAttribute)beanFeatureDecoratorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getBeanFeatureDecorator_BeanLocation() {
+		return (EAttribute)beanFeatureDecoratorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -461,6 +506,42 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getKeyedInstanceLocation() {
+		return keyedInstanceLocationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyedInstanceLocation_Key() {
+		return (EAttribute)keyedInstanceLocationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyedInstanceLocation_Value() {
+		return (EAttribute)keyedInstanceLocationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getInstanceLocation() {
+		return instanceLocationEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public JCMFactory getJCMFactory() {
 		return (JCMFactory)getEFactoryInstance();
 	}
@@ -587,6 +668,15 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getCallback_Statements() {
+		return (EReference)callbackEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMemberContainer() {
 		return memberContainerEClass;
 	}
@@ -630,10 +720,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		// Create classes and their features
 		beanDecoratorEClass = createEClass(BEAN_DECORATOR);
 		createEAttribute(beanDecoratorEClass, BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME);
+		createEAttribute(beanDecoratorEClass, BEAN_DECORATOR__BEAN_LOCATION);
+		createEAttribute(beanDecoratorEClass, BEAN_DECORATOR__BEAN_RETURN);
 
 		beanFeatureDecoratorEClass = createEClass(BEAN_FEATURE_DECORATOR);
 		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME);
 		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__CHILD_FEATURE);
+		createEAttribute(beanFeatureDecoratorEClass, BEAN_FEATURE_DECORATOR__BEAN_LOCATION);
 
 		beanCompositionEClass = createEClass(BEAN_COMPOSITION);
 		createEReference(beanCompositionEClass, BEAN_COMPOSITION__COMPONENTS);
@@ -662,6 +755,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		callbackEClass = createEClass(CALLBACK);
 		createEAttribute(callbackEClass, CALLBACK__SHARED_SCOPE);
 		createEReference(callbackEClass, CALLBACK__METHOD);
+		createEReference(callbackEClass, CALLBACK__STATEMENTS);
 
 		eventInvocationEClass = createEClass(EVENT_INVOCATION);
 		createEReference(eventInvocationEClass, EVENT_INVOCATION__EVENT);
@@ -682,6 +776,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		createEAttribute(jcmMethodEClass, JCM_METHOD__NAME);
 		createEReference(jcmMethodEClass, JCM_METHOD__INITIALIZES);
 		createEReference(jcmMethodEClass, JCM_METHOD__RETURN);
+
+		keyedInstanceLocationEClass = createEClass(KEYED_INSTANCE_LOCATION);
+		createEAttribute(keyedInstanceLocationEClass, KEYED_INSTANCE_LOCATION__KEY);
+		createEAttribute(keyedInstanceLocationEClass, KEYED_INSTANCE_LOCATION__VALUE);
+
+		// Create enums
+		instanceLocationEEnum = createEEnum(INSTANCE_LOCATION);
 	}
 
 	/**
@@ -725,8 +826,8 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		CDMPackageImpl theCDMPackage = (CDMPackageImpl)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 		JavaRefPackageImpl theJavaRefPackage = (JavaRefPackageImpl)EPackage.Registry.INSTANCE.getEPackage(JavaRefPackage.eNS_URI);
-		BeaninfoPackageImpl theBeaninfoPackage = (BeaninfoPackageImpl)EPackage.Registry.INSTANCE.getEPackage(BeaninfoPackage.eNS_URI);
 		InstantiationPackageImpl theInstantiationPackage = (InstantiationPackageImpl)EPackage.Registry.INSTANCE.getEPackage(InstantiationPackage.eNS_URI);
+		BeaninfoPackageImpl theBeaninfoPackage = (BeaninfoPackageImpl)EPackage.Registry.INSTANCE.getEPackage(BeaninfoPackage.eNS_URI);
 
 		// Add supertypes to classes
 		beanDecoratorEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());
@@ -743,10 +844,13 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		// Initialize classes and features; add operations and parameters
 		initEClass(beanDecoratorEClass, BeanDecorator.class, "BeanDecorator", !IS_ABSTRACT, !IS_INTERFACE);
 		initEAttribute(getBeanDecorator_BeanProxyClassName(), ecorePackage.getEString(), "beanProxyClassName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBeanDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBeanDecorator_BeanReturn(), ecorePackage.getEBoolean(), "beanReturn", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(beanFeatureDecoratorEClass, BeanFeatureDecorator.class, "BeanFeatureDecorator", !IS_ABSTRACT, !IS_INTERFACE);
 		initEAttribute(getBeanFeatureDecorator_BeanProxyMediatorName(), ecorePackage.getEString(), "beanProxyMediatorName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 		initEAttribute(getBeanFeatureDecorator_ChildFeature(), ecorePackage.getEBoolean(), "childFeature", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getBeanFeatureDecorator_BeanLocation(), this.getInstanceLocation(), "beanLocation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(beanCompositionEClass, BeanComposition.class, "BeanComposition", !IS_ABSTRACT, !IS_INTERFACE);
 		initEReference(getBeanComposition_Components(), theEcorePackage.getEObject(), null, "components", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
@@ -775,6 +879,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		initEClass(callbackEClass, Callback.class, "Callback", !IS_ABSTRACT, !IS_INTERFACE);
 		initEAttribute(getCallback_SharedScope(), ecorePackage.getEBoolean(), "sharedScope", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 		initEReference(getCallback_Method(), theJavaRefPackage.getMethod(), null, "method", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEReference(getCallback_Statements(), theInstantiationPackage.getPTExpression(), null, "statements", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(eventInvocationEClass, EventInvocation.class, "EventInvocation", !IS_ABSTRACT, !IS_INTERFACE);
 		initEReference(getEventInvocation_Event(), theBeaninfoPackage.getBeanEvent(), null, "event", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
@@ -795,6 +900,17 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		initEAttribute(getJCMMethod_Name(), ecorePackage.getEString(), "name", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 		initEReference(getJCMMethod_Initializes(), theEcorePackage.getEObject(), null, "initializes", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 		initEReference(getJCMMethod_Return(), theEcorePackage.getEObject(), null, "return", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+
+		initEClass(keyedInstanceLocationEClass, Map.Entry.class, "KeyedInstanceLocation", !IS_ABSTRACT, !IS_INTERFACE);
+		initEAttribute(getKeyedInstanceLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedInstanceLocation_Value(), this.getInstanceLocation(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+
+		// Initialize enums and add enum literals
+		initEEnum(instanceLocationEEnum, InstanceLocation.class, "InstanceLocation");
+		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.GLOBAL_GLOBAL_LITERAL);
+		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.GLOBAL_LOCAL_LITERAL);
+		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.LOCAL_LITERAL);
+		addEEnumLiteral(instanceLocationEEnum, InstanceLocation.PROPERTY_LITERAL);
 
 		// Create resource
 		createResource(eNS_URI);

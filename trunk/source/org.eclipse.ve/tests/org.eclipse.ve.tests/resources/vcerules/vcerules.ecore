@@ -5,15 +5,54 @@
     xmlns:jcm="http:///org/eclipse/ve/internal/jcm.ecore"   
     name="vcerules"
     nsURI="platform:/plugin/org.eclipse.ve.tests/resources/vcerules/vcerules.ecore" nsPrefix="org.eclipse.ve.tests.vcerules">
+  <!-- Set up for PostSet tests -->
   <eClassifiers xsi:type="ecore:EClass" name="ParentContainer">
-    <eReferences name="components" eType="#//Component" upperBound="-1" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="components" eType="#//Component" upperBound="-1" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Component">
-    <eReferences name="childComponent" eType="#//Child">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="#//Child">
       <eAnnotations xsi:type="jcm:BeanFeatureDecorator" childFeature="true"/>
-    </eReferences>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Child">
-    <eReferences name="crossRef" eType="#//Child"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="crossRef" eType="#//Child"/>
   </eClassifiers>
+  
+  <!-- Now set up for preset tests. -->
+  <eClassifiers xsi:type="ecore:EClass" name="NOLocation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="GLOBAL_GLOBALLocation">
+    <eAnnotations xsi:type="jcm:BeanDecorator" beanLocation="GLOBAL_GLOBAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" beanLocation="GLOBAL_GLOBAL"/>    
+    </eStructuralFeatures>
+  </eClassifiers>
+  
+  <eClassifiers xsi:type="ecore:EClass" name="GLOBAL_LOCALLocation">
+    <eAnnotations xsi:type="jcm:BeanDecorator" beanLocation="GLOBAL_LOCAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" beanLocation="GLOBAL_LOCAL"/>    
+    </eStructuralFeatures>    
+  </eClassifiers>
+  
+  <eClassifiers xsi:type="ecore:EClass" name="LOCALLocation">
+    <eAnnotations xsi:type="jcm:BeanDecorator" beanLocation="LOCAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" beanLocation="LOCAL"/>    
+    </eStructuralFeatures>        
+  </eClassifiers>
+  
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyLocation">
+    <eAnnotations xsi:type="jcm:BeanDecorator" beanLocation="PROPERTY"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childComponent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject">    
+      <eAnnotations xsi:type="jcm:BeanFeatureDecorator" beanLocation="PROPERTY"/>    
+    </eStructuralFeatures>            
+  </eClassifiers>     
+
+  <eClassifiers xsi:type="ecore:EClass" name="NOReturn">
+    <eAnnotations xsi:type="jcm:BeanDecorator" beanReturn="false"/>
+  </eClassifiers>     
+    
 </ecore:EPackage>

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:15 $ 
  */
 import java.util.Map;
 
@@ -159,6 +159,13 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	private EClass keyedDynamicEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass keyedBooleanEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -673,6 +680,33 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getKeyedBoolean() {
+		return keyedBooleanEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyedBoolean_Key() {
+		return (EAttribute)keyedBooleanEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyedBoolean_Value() {
+		return (EAttribute)keyedBooleanEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getViewDimension() {
 		return viewDimensionEDataType;
 	}
@@ -797,6 +831,10 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		createEAttribute(keyedDynamicEClass, KEYED_DYNAMIC__KEY);
 		createEAttribute(keyedDynamicEClass, KEYED_DYNAMIC__VALUE);
 
+		keyedBooleanEClass = createEClass(KEYED_BOOLEAN);
+		createEAttribute(keyedBooleanEClass, KEYED_BOOLEAN__KEY);
+		createEAttribute(keyedBooleanEClass, KEYED_BOOLEAN__VALUE);
+
 		// Create data types
 		viewDimensionEDataType = createEDataType(VIEW_DIMENSION);
 		viewPointEDataType = createEDataType(VIEW_POINT);
@@ -915,7 +953,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		initEReference(getKeyedGeneric_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(keyedIntegerEClass, Map.Entry.class, "KeyedInteger", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEIntegerObject(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEInt(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 		initEAttribute(getKeyedInteger_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		initEClass(mapEntryEClass, Map.Entry.class, "MapEntry", IS_ABSTRACT, IS_INTERFACE);
@@ -925,6 +963,10 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		initEClass(keyedDynamicEClass, Map.Entry.class, "KeyedDynamic", !IS_ABSTRACT, !IS_INTERFACE);
 		initEAttribute(getKeyedDynamic_Key(), ecorePackage.getEString(), "key", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 		initEAttribute(getKeyedDynamic_Value(), theEcorePackage.getEJavaObject(), "value", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+
+		initEClass(keyedBooleanEClass, Map.Entry.class, "KeyedBoolean", !IS_ABSTRACT, !IS_INTERFACE);
+		initEAttribute(getKeyedBoolean_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEAttribute(getKeyedBoolean_Value(), ecorePackage.getEBoolean(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
 
 		// Initialize data types
 		initEDataType(viewDimensionEDataType, Dimension.class, "ViewDimension", IS_SERIALIZABLE);

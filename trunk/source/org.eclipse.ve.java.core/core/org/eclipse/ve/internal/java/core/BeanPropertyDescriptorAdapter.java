@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-01 21:35:49 $ 
+ *  $Revision: 1.13 $  $Date: 2004-05-04 22:31:20 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -33,6 +33,7 @@ import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.CDEMessages;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
@@ -340,7 +341,7 @@ protected EStructuralFeature getFeature(){
 }
 protected BasePropertyDecorator getBaseDecorator() {
 	// Return the BasePropertyDecorator for this feature.
-	return (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
+	return (BasePropertyDecorator) CDEUtilities.findDecorator((EModelElement) target, BasePropertyDecorator.class);
 }
 /**
  * instantiate the  class passed in. If it has an ctor that

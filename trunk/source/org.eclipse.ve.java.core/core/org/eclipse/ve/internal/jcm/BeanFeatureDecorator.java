@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanFeatureDecorator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanProxyMediatorName <em>Bean Proxy Mediator Name</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#isChildFeature <em>Child Feature</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}</li>
  * </ul>
  * </p>
  *
@@ -98,5 +99,60 @@ public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
 	 * @generated
 	 */
   void setChildFeature(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Bean Location</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.ve.internal.jcm.InstanceLocation}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The location of any beans of this feature, if not specifically overridden by the Annotation key of INSTANCELOC.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Bean Location</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @see #isSetBeanLocation()
+	 * @see #unsetBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator_BeanLocation()
+	 * @model unsettable="true"
+	 * @generated
+	 */
+	InstanceLocation getBeanLocation();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Bean Location</em>' attribute.
+	 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+	 * @see #isSetBeanLocation()
+	 * @see #unsetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @generated
+	 */
+	void setBeanLocation(InstanceLocation value);
+
+	/**
+	 * Unsets the value of the '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @generated
+	 */
+	void unsetBeanLocation();
+
+	/**
+	 * Returns whether the value of the '{@link org.eclipse.ve.internal.jcm.BeanFeatureDecorator#getBeanLocation <em>Bean Location</em>}' attribute is set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return whether the value of the '<em>Bean Location</em>' attribute is set.
+	 * @see #unsetBeanLocation()
+	 * @see #getBeanLocation()
+	 * @see #setBeanLocation(InstanceLocation)
+	 * @generated
+	 */
+	boolean isSetBeanLocation();
 
 } // BeanFeatureDecorator

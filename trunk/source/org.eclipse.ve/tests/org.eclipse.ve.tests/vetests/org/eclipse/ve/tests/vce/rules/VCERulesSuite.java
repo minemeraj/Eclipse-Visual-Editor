@@ -11,7 +11,7 @@ package org.eclipse.ve.tests.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCERulesSuite.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:24 $ 
  */
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 public class VCERulesSuite extends TestSuite {
 	// Testa cases to be include in the suite
-	private static Class testsList[] = { PostSetTest.class } ;
+	private static Class testsList[] = { PreSetTest.class, PostSetTest.class } ;
 	public static String pkgName = "org.eclipse.ve.tests.vce.rules" ;
     
 	/**

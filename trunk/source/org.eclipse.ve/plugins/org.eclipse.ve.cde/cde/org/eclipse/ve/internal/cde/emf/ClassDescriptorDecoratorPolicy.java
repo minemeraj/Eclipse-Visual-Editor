@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -121,13 +120,7 @@ public class ClassDescriptorDecoratorPolicy {
 	 * Find the decorator for this class only. Do not handle inheritance.
 	 */
 	protected ClassDescriptorDecorator findDecorator(EClassifier eClass) {
-		Iterator itr = eClass.getEAnnotations().iterator();
-		while (itr.hasNext()) {
-			Object next = itr.next();
-			if (next instanceof ClassDescriptorDecorator)
-				return (ClassDescriptorDecorator) next;
-		}
-		return null;
+		return (ClassDescriptorDecorator) CDEUtilities.findDecorator(eClass, ClassDescriptorDecorator.class);
 	}
 
 	/**

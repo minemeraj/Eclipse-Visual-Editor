@@ -11,12 +11,15 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
+
+import java.util.Map;
 
 import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
@@ -56,8 +59,37 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 			case JCMPackage.PROPERTY_EVENT: return createPropertyEvent();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION: return createBeanSubclassComposition();
 			case JCMPackage.JCM_METHOD: return createJCMMethod();
+			case JCMPackage.KEYED_INSTANCE_LOCATION: return (EObject)createKeyedInstanceLocation();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case JCMPackage.INSTANCE_LOCATION:
+				return InstanceLocation.get(initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case JCMPackage.INSTANCE_LOCATION:
+				return instanceValue == null ? null : instanceValue.toString();
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -139,6 +171,16 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public JCMMethod createJCMMethod() {
 		JCMMethodImpl jcmMethod = new JCMMethodImpl();
 		return jcmMethod;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry createKeyedInstanceLocation() {
+		KeyedInstanceLocationImpl keyedInstanceLocation = new KeyedInstanceLocationImpl();
+		return keyedInstanceLocation;
 	}
 
 	/**

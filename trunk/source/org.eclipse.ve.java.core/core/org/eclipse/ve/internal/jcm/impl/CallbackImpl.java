@@ -18,16 +18,27 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.jem.internal.instantiation.PTExpression;
 
 import org.eclipse.ve.internal.jcm.Callback;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -42,6 +53,7 @@ import org.eclipse.jem.java.Method;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.CallbackImpl#isSharedScope <em>Shared Scope</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.CallbackImpl#getMethod <em>Method</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.CallbackImpl#getStatements <em>Statements</em>}</li>
  * </ul>
  * </p>
  *
@@ -77,6 +89,16 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @ordered
 	 */
 	protected Method method = null;
+
+	/**
+	 * The cached value of the '{@link #getStatements() <em>Statements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStatements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList statements = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -160,6 +182,35 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList getStatements() {
+		if (statements == null) {
+			statements = new EObjectContainmentEList(PTExpression.class, this, JCMPackage.CALLBACK__STATEMENTS);
+		}
+		return statements;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+		if (featureID >= 0) {
+			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case JCMPackage.CALLBACK__STATEMENTS:
+					return ((InternalEList)getStatements()).basicRemove(otherEnd, msgs);
+				default:
+					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
+			}
+		}
+		return eBasicSetContainer(null, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
@@ -167,6 +218,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 			case JCMPackage.CALLBACK__METHOD:
 				if (resolve) return getMethod();
 				return basicGetMethod();
+			case JCMPackage.CALLBACK__STATEMENTS:
+				return getStatements();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -183,6 +236,10 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 				return;
 			case JCMPackage.CALLBACK__METHOD:
 				setMethod((Method)newValue);
+				return;
+			case JCMPackage.CALLBACK__STATEMENTS:
+				getStatements().clear();
+				getStatements().addAll((Collection)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -201,6 +258,9 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 			case JCMPackage.CALLBACK__METHOD:
 				setMethod((Method)null);
 				return;
+			case JCMPackage.CALLBACK__STATEMENTS:
+				getStatements().clear();
+				return;
 		}
 		eDynamicUnset(eFeature);
 	}
@@ -216,6 +276,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 				return sharedScope != SHARED_SCOPE_EDEFAULT;
 			case JCMPackage.CALLBACK__METHOD:
 				return method != null;
+			case JCMPackage.CALLBACK__STATEMENTS:
+				return statements != null && !statements.isEmpty();
 		}
 		return eDynamicIsSet(eFeature);
 	}

@@ -14,7 +14,9 @@
   </addedEObjects>
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
     propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter"/>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+    beanLocation="GLOBAL_LOCAL"
+    beanReturn="false"
     beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
 </event:AddMany>
 
