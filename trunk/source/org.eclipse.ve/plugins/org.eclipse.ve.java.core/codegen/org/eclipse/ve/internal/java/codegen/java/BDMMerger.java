@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.15 $  $Date: 2004-05-20 13:17:41 $ 
+ *  $Revision: 1.16 $  $Date: 2004-06-01 19:04:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -501,10 +501,35 @@ public class BDMMerger {
 				}
 			}
 			if(!equivalentExpFound){
-				// No Equivalent expression was found - delete it
+				// No Equivalent expression was found 
 				mainExpTobeProcessed.remove(mainExpTobeProcessed.indexOf(mainExp)) ;
 				mainExpCount -- ;
-				removeDeletedExpression(mainExp);
+				// Now there are cases where expressions are added to the beanpart after parsing and 
+				// during decoding (ex: createTable() - which is added to the Shell beanpart, during the 
+				// decoding of the constructor for Table). Such expressions are generally stored in the 
+				// beanpart's parent expressions list - so check the parent expressions of all bean parts 
+				// to determine if anyone will be adding this expression to the Shell beanpart later on.
+				boolean parentExpFound = false;
+				Iterator newBeansItr = newModel.getBeans().iterator();
+				while (newBeansItr.hasNext() && !parentExpFound) {
+					BeanPart newBean = (BeanPart) newBeansItr.next();
+					List newBPParentExps = newBean.getParentExpressons();
+					if(newBPParentExps!=null && newBPParentExps.size()>0){
+						for(int ec=0;ec<newBPParentExps.size();ec++){
+							CodeExpressionRef newParentExp = (CodeExpressionRef) newBPParentExps.get(ec);
+							String mainExpMethodName = mainExp.getMethodNameContent();
+							String mainExpInMethod = mainExp.getMethod()==null?null:mainExp.getMethod().getMethodName();
+							String newExpInMethod = newParentExp.getMethod()==null?null:newParentExp.getMethod().getMethodName();
+							if(mainExpMethodName!=null && mainExpMethodName.equals(newParentExp.getMethodNameContent()) &&
+									mainExpInMethod!=null && newExpInMethod!=null && mainExpInMethod.equals(newExpInMethod)){
+								parentExpFound = true;
+								break;
+							}
+						}
+					}
+				}
+				if(!parentExpFound)
+					removeDeletedExpression(mainExp);
 			}
 		}
 		
@@ -670,6 +695,10 @@ public class BDMMerger {
 		while (mainModelBeansItr.hasNext()) {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBP = (BeanPart) mainModelBeansItr.next();
+			// sometimes when statements (createTable()) are disposed in other methods, the beanpart (table)
+			// is disposed. Check to see if it is still in the model before proceeding with the merge.
+			if(mainBP.getModel()==null) 
+				continue;
 			BeanPart updateBP ;
 			if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
 				merge = merge && updateBeanPart(mainBP, updateBP);
