@@ -116,13 +116,6 @@
       </palette>
    </extension>
    <extension
-         point="org.eclipse.jem.proxy.contributors">
-      <contributor
-            container="org.eclipse.ve.examples.JavaExample"
-            class="org.eclipse.ve.examples.java.JavaExampleContributor">
-      </contributor>
-   </extension>
-   <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <registration
             container="org.eclipse.ve.examples.JavaExample">
