@@ -8,10 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  Created Feb 28, 2005 by Gili Mendel
- * 
- */
 package org.eclipse.ve.example.customwidget;
 
 import org.eclipse.draw2d.*;
@@ -34,8 +30,12 @@ public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
 		Label customFigure = new Label("VE Rules",CustomwidgetPlugin.getCustomImage());
 		customFigure.setForegroundColor(ColorConstants.red);
 		customFigure.setTextPlacement(PositionConstants.SOUTH);
+		// ImageFigure has no layout, so we will have to explicitly set the size().
+		// To get a prefered size (before we look up the hierarchy), Label will need a Font
+		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());
+		customFigure.setSize(customFigure.getPreferredSize());
+
 		figure.add(customFigure);
-//		customFigure.setSize(customFigure.getPreferredSize());		
 
 		return figure;
 	}
