@@ -4,8 +4,10 @@
       label="Phony feature of perfcore so we can build rest our stuff."
       version="1.1.0">
 
-   <includes
+   <plugin
          id="org.eclipse.perfmsr.core"
+         download-size="0"
+         install-size="0"
          version="0.0.0"/>
 
 </feature>
