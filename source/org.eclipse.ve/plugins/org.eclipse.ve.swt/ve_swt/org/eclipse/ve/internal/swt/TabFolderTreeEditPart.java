@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-20 20:53:28 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-23 22:25:07 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -107,8 +107,9 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 		Iterator itr = tabitems.iterator();
 		while (itr.hasNext()) {
 			EObject tabitem = (EObject) itr.next();
-			// Get the component out of the JTabComponent
-			children.add(tabitem.eGet(sf_tabItemControl));
+			// Get the control out of the TabItem
+			if (tabitem.eGet(sf_tabItemControl) != null)
+				children.add(tabitem.eGet(sf_tabItemControl));
 		}
 		return children;
 	}

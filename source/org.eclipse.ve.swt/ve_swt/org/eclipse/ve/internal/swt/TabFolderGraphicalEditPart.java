@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-23 17:50:00 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-23 22:25:07 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -172,7 +172,8 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		while (itr.hasNext()) {
 			EObject tabitem = (EObject) itr.next();
 			// Get the control out of the TabItem
-			children.add(tabitem.eGet(sf_tabItemControl));
+			if (tabitem.eGet(sf_tabItemControl) != null)
+				children.add(tabitem.eGet(sf_tabItemControl));
 		}
 		return children;
 	}
