@@ -25,6 +25,11 @@
       <import plugin="org.eclipse.jem.tests"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jem.proxy"/>
+      
+      <!-- dbk added for perf tests -->
+      <import plugin="org.eclipse.ui.ide" />
+      <import plugin="org.eclipse.jface" />   
+      <import plugin="org.eclipse.jem.util"/>           
    </requires>
 
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests;
 /*
  *  $RCSfile: AllSuites.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:35:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-14 19:11:29 $ 
  */
 
 import org.eclipse.ve.tests.cde.CDESuite;
@@ -19,6 +19,7 @@ import org.eclipse.ve.tests.codegen.java.rules.CodegenRulesSuite;
 import org.eclipse.ve.tests.codegen.java.templates.CodegenJavaTemplatesSuite;
 import org.eclipse.ve.tests.codegen.resolve.ResolveSuite;
 import org.eclipse.ve.tests.codegen.util.CodegenUtilSuite;
+import org.eclipse.ve.tests.perf.PerfSuite;
 import org.eclipse.ve.tests.vce.rules.VCERulesSuite;
 import org.eclipse.ve.tests.codegen.model.ModelTestsSuite;
 
@@ -29,7 +30,7 @@ public class AllSuites extends TestSuite {
 	// Testa cases to be include in the suite
 	private static Class suitesList[] =
 		{ CDESuite.class, CodegenRulesSuite.class, CodegenJavaTemplatesSuite.class, CodegenUtilSuite.class, VCERulesSuite.class, ModelTestsSuite.class,
-			ResolveSuite.class };
+			ResolveSuite.class, PerfSuite.class };
 
 	public static String pkgName = "Visual Editor jUnit Test Suite";
 
