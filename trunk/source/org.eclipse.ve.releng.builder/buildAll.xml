@@ -87,7 +87,7 @@
 		</ant>
 
 		<!--  Get the build map over for the results to point to. -->
-		<copy file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" tofile="${result}/directory.txt"/>
+		<copy file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/ve.map" tofile="${result}/directory.txt"/>
 
 	 	<!--  Insert url for supported eclipse drop-->
 		<replace file="${result}/${indexFileName}" token="@eclipseBuildID@" value="${eclipseBuildID}"/>
