@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2004-06-08 15:03:04 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-10 18:27:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,10 +22,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
@@ -127,7 +129,6 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 	 */
 	public void setModel(Object model) {
 		super.setModel(model);
-		JavaClass modelType = (JavaClass) ((EObject) model).eClass();
 		sfColumns = JavaInstantiation.getSFeature(((EObject) model).eClass().eResource().getResourceSet(), SWTConstants.SF_TABLE_COLUMNS);
 	}
 	}
