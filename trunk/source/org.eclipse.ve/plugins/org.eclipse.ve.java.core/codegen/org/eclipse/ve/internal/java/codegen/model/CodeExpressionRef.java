@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.30 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.31 $  $Date: 2004-09-02 14:42:19 $ 
  */
 
 
@@ -42,7 +42,7 @@ protected   Object[]				fArguments		= null ;   // Some expression involve other 
 private     int						fInternalState	= 0 ;
 protected   ExpressionParser		fContentParser	= null ; 
 protected 	VEexpressionPriority	fPriority		= null;      
-protected   CodeExpressionRef		fMasterExpression = null;  // STATE_NO_SRC expressions may have a master expression
+protected   CodeExpressionRef		fMasteredExpression = null;  // STATE_NO_SRC expressions may have a master expression
 protected   List					freqImports = new ArrayList();  // Imports required
 
 
@@ -52,29 +52,31 @@ protected   List					freqImports = new ArrayList();  // Imports required
  
 
     //  Expression exists in the BDM model
-public final static int                STATE_EXIST				= 0x001 ;
+public final static int                STATE_EXIST				= 0x0001 ;
     //  Source / Model are in sync
-public final static int                STATE_IN_SYNC			= 0x002 ;
+public final static int                STATE_IN_SYNC			= 0x0002 ;
     //  Valid source exists with no VE model (no decoder) e.g., bean foo = new bean() 
-public final static int                STATE_NO_MODEL			= 0x004 ;
+public final static int                STATE_NO_MODEL			= 0x0004 ;
 //  Valid source exists with no VE model (no decoder) e.g., bean foo = new bean() 
-public final static int                STATE_NO_SRC		     	= 0x008 ;
+public final static int                STATE_NO_SRC		     	= 0x0008 ;
 //  Expression is being deleted
-public final static int                STATE_DELETE     		= 0x010 ;
+public final static int                STATE_DELETE     		= 0x0010 ;
     //  Referred to an implicit usage. 
-public final static int                STATE_IMPLICIT	     	= 0x020 ;
+public final static int                STATE_IMPLICIT	     	= 0x0020 ;
     //  In progress of updating the source
-public final static int                STATE_UPDATING_SOURCE   	= 0x040 ; 
+public final static int                STATE_UPDATING_SOURCE   	= 0x0040 ; 
     //  This expression relative position in the source can not be changed.
-public final static int                STATE_SRC_LOC_FIXED     	= 0x080 ;
+public final static int                STATE_SRC_LOC_FIXED     	= 0x0080 ;
     //  Expression in src. can not be parsed at this time, but is in the VE model
-public final static int                STATE_EXP_IN_LIMBO      	= 0x100 ;
+public final static int                STATE_EXP_IN_LIMBO      	= 0x0100 ;
    //   Expression is not persisted in source code.
-public final static int                STATE_EXP_NOT_PERSISTED 	= 0x200 ;
-  // Typically set for a Delta BDM
-public final static int                STATE_MASTER            	= 0x400 ;
+public final static int                STATE_EXP_NOT_PERSISTED 	= 0x0200 ;
+  // A Master expression, drives the existance of another expression. 
+public final static int                STATE_MASTER            	= 0x0400 ;
+// A Master expression, drives the existance of another expression. 
+public final static int                STATE_MASTER_DELETED     = 0x0800 ;
   // Typically set for an allocation statement that initialize the expression.
-public final static int                STATE_INIT_EXPR         	= 0x800 ;  
+public final static int                STATE_INIT_EXPR         	= 0x1000 ;  
 
 /*******/
 	
@@ -558,7 +560,8 @@ public  void updateDocument(boolean updateSharedDoc) {
 	if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) { //(fState == STATE_NOT_EXISTANT) {
 		// Expression was deleted
 		if (isStateSet(STATE_MASTER)) {
-			CodeExpressionRef master = getMasterExpression();
+			CodeExpressionRef master = getMasteredExpression();
+			master.setState(STATE_MASTER_DELETED,isStateSet(STATE_DELETE));
 			master.setState(STATE_IN_SYNC,false);
 			master.updateDocument(true);
 		}
@@ -881,6 +884,8 @@ public String toString(){
         states = states.concat("NOTPERSISTED#"); //$NON-NLS-1$    
     if(isStateSet(STATE_MASTER))
         states = states.concat("MASTER#"); //$NON-NLS-1$
+    if(isStateSet(STATE_MASTER_DELETED))
+        states = states.concat("MASTER_DELETED#"); //$NON-NLS-1$
     if(isStateSet(STATE_DELETE))
     	states = states.concat("DELETE#"); //$NON-NLS-1$    
     if (isStateSet(STATE_NO_SRC))
@@ -888,8 +893,8 @@ public String toString(){
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
 	states = states.concat("}"+" Offset: "+Integer.toString(getOffset())); //$NON-NLS-1$ //$NON-NLS-2$
-	if (isStateSet(STATE_NO_SRC) && fMasterExpression != null)
-		return fMasterExpression.getContent() + states;
+	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
+		return fMasteredExpression.getContent() + states;
 	else
 	    return super.toString() + states;
 }
@@ -970,18 +975,18 @@ public Object[] getAddedInstances() {
 }
 
 /**
- * @return Returns the fMasterExpression.
+ * @return Returns the fMasteredExpression.
  * @todo Generated comment
  */
-public CodeExpressionRef getMasterExpression() {
-	return fMasterExpression;
+public CodeExpressionRef getMasteredExpression() {
+	return fMasteredExpression;
 }
 /**
- * @param masterExpression The fMasterExpression to set.
+ * @param masterExpression The fMasteredExpression to set.
  * @todo Generated comment
  */
-public void setMasterExpression(CodeExpressionRef masterExpression) {
-	fMasterExpression = masterExpression;
+public void setMasteredExpression(CodeExpressionRef masterExpression) {
+	fMasteredExpression = masterExpression;
 	if (masterExpression==null)
 		setState(STATE_MASTER,false) ;
 	else
@@ -991,10 +996,10 @@ public void setMasterExpression(CodeExpressionRef masterExpression) {
 	 * 
 	 */
 	public int getOffset() {
-		if (fMasterExpression != null && isStateSet(STATE_NO_SRC)) {
+		if (fMasteredExpression != null && isStateSet(STATE_NO_SRC)) {
 			// use our master offset.  This is important for
 			// figuring out expression priorities, and z orders
-			return fMasterExpression.getOffset();
+			return fMasteredExpression.getOffset();
 		}
 		else 
 			return super.getOffset();
