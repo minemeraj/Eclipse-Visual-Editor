@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-07 21:28:39 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,7 @@ import org.eclipse.ve.internal.java.core.*;
  * 
  * @since 1.0.0
  */
-public class TabFolderProxyAdapter extends CompositeProxyAdapter {
+public class TabFolderProxyAdapter extends ItemParentProxyAdapter {
 	private EReference sf_items;
 	/**
 	 * @param domain
