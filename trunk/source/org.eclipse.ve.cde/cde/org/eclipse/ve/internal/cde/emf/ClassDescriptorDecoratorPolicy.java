@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-01-31 19:19:23 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-01 20:14:54 $ 
  */
 
 import java.net.URL;
@@ -28,6 +28,7 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.*;
+import org.eclipse.ve.internal.cde.utility.GIFFileGraphic;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
