@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
  */
 
 import java.net.URL;
@@ -91,7 +91,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	private IVisualClassCreationSourceGenerator getGeneratorInstance(URL templateLocation){
 		java.util.List jdtClassPath = TemplateUtil.getPluginAndPreReqJarPath(JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier());
 		try {
-			jdtClassPath.add(TemplateUtil.getPlatformJREPath());
+			jdtClassPath.addAll(TemplateUtil.getPlatformJREPath());
 		} catch (TemplatesException  e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.tests.codegen.java.templates;
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactoryTest.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:40 $ 
  */
 import java.io.File;
 import java.io.FileWriter;
@@ -172,11 +172,8 @@ public class TemplateObjectFactoryTest extends TestCase {
 
 		// Computer the codeGen compile classPath
 		List list = TemplateUtil.getPluginAndPreReqJarPath("org.eclipse.ve.java.core");
-		list.add(TemplateUtil.getPlatformJREPath());
-		classPath = new String[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			classPath[i] = (String) list.get(i);
-		}
+		list.addAll(TemplateUtil.getPlatformJREPath());
+		classPath = (String[]) list.toArray(new String[list.size()]);
 	}
 
 	/**

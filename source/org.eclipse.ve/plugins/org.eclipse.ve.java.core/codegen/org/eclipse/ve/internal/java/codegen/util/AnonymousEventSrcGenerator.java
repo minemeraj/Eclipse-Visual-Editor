@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AnonymousEventSrcGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-04 17:36:45 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -69,7 +69,7 @@ protected IEventTemplate getEventTemplate() {
  	
 	try {
 		List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
-		list.add(TemplateUtil.getPlatformJREPath());
+		list.addAll(TemplateUtil.getPlatformJREPath());
 		String[] classPath = (String[]) list.toArray(new String[list.size()]);
 		String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
 		
@@ -89,7 +89,7 @@ protected IEventTemplate getEventMethodTemplate() {
  	
 	try {
 		List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
-		list.add(TemplateUtil.getPlatformJREPath());
+		list.addAll(TemplateUtil.getPlatformJREPath());
 		String[] classPath = (String[]) list.toArray(new String[list.size()]);
 		String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
 		
