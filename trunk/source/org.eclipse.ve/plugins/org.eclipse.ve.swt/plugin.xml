@@ -176,7 +176,7 @@
   <extension
  		point="org.eclipse.ve.java.core.newStyleComponent">
 		<category
-			name="SWT"
+			name="%NewStyleComponent.SWT"
 			id="org.eclipse.ve.swt.cat"
 			priority="100"
 			defaultExpand="false">
@@ -186,7 +186,7 @@
          icon="icons/full/clcl16/shell_obj.gif"
          category="org.eclipse.ve.swt.cat"
          contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
-         name="Application">
+         name="%NewStyleComponent.Application">
 			</visualElement>
 <!-- 7/16/04 paw - Disabled Composite in new visual class wizard in M2 until we decide how to handle this
 			<visualElement
@@ -194,7 +194,7 @@
          icon="icons/full/clcl16/composite_obj.gif"
          category="org.eclipse.ve.swt.cat"
          contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
-         name="Composite">
+         name="%NewStyleComponent.Composite">
 			</visualElement>
 -->
   </extension>   
