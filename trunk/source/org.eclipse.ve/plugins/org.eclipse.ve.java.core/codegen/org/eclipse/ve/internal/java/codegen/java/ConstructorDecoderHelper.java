@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2004-05-26 22:02:11 $ 
+ *  $Revision: 1.21 $  $Date: 2004-06-04 18:38:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -147,7 +147,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			}
 			public String resolveType(Type type) {
 				if (type.isSimpleType())
-				   return CodeGenUtil.resolve(((SimpleType)type).getName(), bdm);  //fbeanPart.getModel().resolve(type.toString());
+				   return CodeGenUtil.resolve(((SimpleType)type).getName(), bdm);
 				else if (type.isPrimitiveType())
 					return ((PrimitiveType) type).getPrimitiveTypeCode().toString();
 				else if (type.isArrayType()) {
@@ -163,6 +163,14 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				} else
 					//TBD
 					return "?";	// So it ends up with class not found exception.
+			}
+			
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
+			 */
+			public String resolveType(Name name) {
+				return CodeGenUtil.resolve(name, bdm);
 			}
 		}		
 		Resolver r = new Resolver() ;
