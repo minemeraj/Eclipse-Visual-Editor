@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-03-31 00:50:50 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-02 02:05:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -790,6 +790,7 @@ public class FontCustomPropertyEditor extends Composite {
 			}
 		}
 		initStringLabel.setText(result);
+		initStringLabel.setToolTipText(result);
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

@@ -75,7 +75,8 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 				PTExpression exp = null;
 				if (name instanceof QualifiedName &&
 						(name.getFullyQualifiedName().startsWith("org.eclipse.swt.SWT.") ||
-						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources."))) {
+						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources.") ||
+						name.getFullyQualifiedName().startsWith("org.eclipse.jface.preference.JFacePreferences."))) {
 					PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(((QualifiedName)name).getQualifier().getFullyQualifiedName());
 					exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, ((QualifiedName) name).getName().getIdentifier());
 					return exp;
