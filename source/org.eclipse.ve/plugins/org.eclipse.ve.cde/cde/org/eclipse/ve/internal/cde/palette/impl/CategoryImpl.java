@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CategoryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-21 17:48:23 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteDrawer;
 
 import org.eclipse.ve.internal.cde.palette.Category;
-import org.eclipse.ve.internal.cde.palette.Group;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
@@ -77,11 +76,15 @@ public abstract class CategoryImpl extends ContainerImpl implements Category {
 	}
 
 	public List getChildren() {
+		// TODO Need to eventually restructure this. GEF no longer allows groups with the categories. Need
+		// to restructure EMF model of palette to take this into account.
+		// For now, delve into the groups, get their children and return those instead.
 		List c = getCategoryGroups();
-		ArrayList result = new ArrayList(c.size());
-		for (int i=0; i<c.size(); i++)
-			result.add(((Group) c.get(i)).getEntry());
-			
+		ArrayList result = new ArrayList(c.size()*5);
+		for (int i=0; i<c.size(); i++) {
+			GroupImpl g = (GroupImpl) c.get(i);
+			result.addAll(g.getChildren());
+		}
 		return result;
 			
 	}
