@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 10:31:58 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 02:13:17 $ 
  */
 
 import java.util.Collections;
@@ -23,7 +23,8 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  * Layout input policiy for hanlding the Flow layout of a Container.
  */
 public class RowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy {
-	protected RowLayoutPolicyHelper helper = new RowLayoutPolicyHelper();
+	// RowLayout uses a generic policy helper
+	protected LayoutPolicyHelper helper = new UnknownLayoutPolicyHelper();
 
 	/**
 	 * Create with the container policy for handling DiagramFigures.

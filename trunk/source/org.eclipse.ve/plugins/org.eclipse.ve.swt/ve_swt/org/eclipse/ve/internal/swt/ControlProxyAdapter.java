@@ -183,6 +183,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			}
 		}
 		fControlManager.setControlBeanProxy(getBeanProxy());
+
 	}	
 	
 	
@@ -206,6 +207,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		// they get disposed and re-created, so we need to manage the control manager and who it is attached to
 		super.primInstantiateBeanProxy();
 		initializeControlManager();
+		// TODO This needs to be queued so that in the situation where a composite
+		// does a recycle of a number of controls there is just a single refresh 
+		if (imSupport != null) refreshImage();
 	}
 	
 	public void invalidateImage() {
@@ -219,6 +223,12 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public void removeImageListener(IImageListener listener) {
 		imSupport.removeImageListener(listener);
 	}
+ 	public void releaseBeanProxy() {
+		if (fControlManager != null) fControlManager.release(); 		
+		super.releaseBeanProxy();
+		fControlManager = null;
+	}
+	
 	public void validateBeanProxy(){
 		super.validateBeanProxy();
 		Display.getDefault().asyncExec(new Runnable() {

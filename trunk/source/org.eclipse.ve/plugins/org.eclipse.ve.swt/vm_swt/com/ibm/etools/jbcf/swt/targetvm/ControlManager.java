@@ -32,6 +32,7 @@ public class ControlManager implements ICallback , ControlListener {
 	}
 	
 	public void setControl(final Control aControl) {
+
 		final boolean[] queue = new boolean[1];
 		Environment.display.syncExec(new Runnable() {
 			public void run() {

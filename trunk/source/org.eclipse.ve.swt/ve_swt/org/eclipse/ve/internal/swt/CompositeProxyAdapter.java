@@ -77,7 +77,11 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		int controlCount = 0;
 		while(iter.hasNext()){
 			// If the number of times we have iterated over controls > position we are adding continue
-			if(controlCount++ < position) continue;			
+			if(controlCount++ < position) {
+				// Read the control off the iteration but ignore it as it is before the one being inserted and can be left alone
+				iter.next();
+				continue;			
+			}
 			IJavaObjectInstance control = (IJavaObjectInstance)iter.next();
 			IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(control);
 			((ControlProxyAdapter)controlProxyHost).setParentProxyHost(this);

@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi" 
-    featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
+<xmi:XMI xmi:version="2.0" 
+	xmlns:xmi="http://www.omg.org/XMI" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
+    xmlns:org.eclipse.jem.java="java.xmi" 
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:event="event.xmi">
+  <event:AddMany  featureName="eStructuralFeatures">
+    <addedEObjects xsi:type="ecore:EReference" name="type" eType="org.eclipse.jem.java:JavaDataType java:/#int"
+        unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationLabelProvider"
+          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationCellEditor"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
+        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="type"/>
+      </eAnnotations>
+    </addedEObjects>  
+  </event:AddMany>
+  <event:AddMany featureName="eAnnotations">    
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
         value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.RowLayoutPolicyFactory"/>
-  </addedEObjects>
-</event:Add>
+    </addedEObjects>
+  </event:AddMany>  
+</xmi:XMI>

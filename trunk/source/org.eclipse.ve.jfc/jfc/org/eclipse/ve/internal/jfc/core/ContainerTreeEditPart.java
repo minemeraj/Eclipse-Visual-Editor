@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-05 23:19:15 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-04 02:13:08 $ 
  */
 
 import java.util.*;
@@ -35,6 +35,8 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
+import org.eclipse.ve.internal.java.visual.TreeVisualContainerEditPolicy;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * TreeEditPart for an awt Container.
  */
@@ -44,9 +46,9 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 		super(model);
 	}
 
-	protected TreeContainerEditPolicy treeContainerPolicy;
+	protected TreeVisualContainerEditPolicy treeContainerPolicy;
 		
-	protected ContainerPolicy getContainerPolicy() {
+	protected VisualContainerPolicy getContainerPolicy() {		
 		return new ContainerPolicy(EditDomain.getEditDomain(this));	// AWT standard Contained Edit Policy
 	}
 	
@@ -118,7 +120,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 	
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		treeContainerPolicy = new TreeContainerEditPolicy(getContainerPolicy());
+		treeContainerPolicy = new TreeVisualContainerEditPolicy(getContainerPolicy());
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, treeContainerPolicy);
 		createLayoutPolicyHelper();
 	}

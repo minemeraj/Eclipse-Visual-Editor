@@ -14,8 +14,14 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
 /**
  * TreeEditPart for a SWT Container.
  */
@@ -29,10 +35,10 @@ public class CompositeTreeEditPart extends JavaBeanTreeEditPart {
 		super(model);
 	}
 
-	protected TreeContainerEditPolicy treeContainerPolicy;
+	protected TreeVisualContainerEditPolicy treeContainerPolicy;
 	
-	protected ContainerPolicy getContainerPolicy() {
-		return new JavaContainerPolicy(sf_compositeControls,EditDomain.getEditDomain(this));	// SWT standard Contained Edit Policy
+	protected VisualContainerPolicy getContainerPolicy() {
+		return new CompositeContainerPolicy(EditDomain.getEditDomain(this));
 	}	
 		
 	protected List getChildJavaBeans() {
@@ -71,13 +77,35 @@ public class CompositeTreeEditPart extends JavaBeanTreeEditPart {
 		
 		protected void createEditPolicies() {
 		super.createEditPolicies();
-		treeContainerPolicy = new TreeContainerEditPolicy(getContainerPolicy());
+		treeContainerPolicy = new TreeVisualContainerEditPolicy(getContainerPolicy());
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, treeContainerPolicy);
 		createLayoutPolicyHelper();
 	}
 	
 	protected void createLayoutPolicyHelper() {
-		//TODO
+		if (treeContainerPolicy != null) {
+			// Get the layout policy helper class from the layout policy factory and
+			// set it in the container helper policy.
+			IJavaInstance container = (IJavaInstance)getModel();
+			// It is possible the live JavaBean failed to create
+			ILayoutPolicyHelper lpHelper = null;
+			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE){
+				CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
+				// Get the type of the layout proxy from the composite
+				IBeanProxy layoutProxyAdapter = compositeProxyAdapter.getLayoutBeanProxy();				
+				if (layoutProxyAdapter != null) {
+					ILayoutPolicyFactory lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutProxyAdapter.getTypeProxy(), EditDomain.getEditDomain(this));
+					if(lpFactory != null) lpHelper = lpFactory.getLayoutPolicyHelper(null);
+				} else {
+					lpHelper = new NullLayoutPolicyHelper(getContainerPolicy());
+				}
+			}
+			
+			if (lpHelper == null)
+				lpHelper = new UnknownLayoutPolicyHelper(getContainerPolicy());
+				
+			treeContainerPolicy.setPolicyHelper(lpHelper);
+		}
 	}
 	/*
 	 * @see EditPart#setModel(Object)

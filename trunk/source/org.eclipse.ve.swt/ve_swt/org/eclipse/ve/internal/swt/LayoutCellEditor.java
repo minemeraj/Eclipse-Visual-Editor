@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-27 16:38:42 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-04 02:13:17 $ 
  */
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.*;
 import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.impl.JavaRefFactoryImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -35,10 +36,10 @@ public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaC
 	protected EditDomain fEditDomain;
 	
 	protected static String[] fItems = new String[]{
-		"null" , "FillLayout" , "RowLayout"
+		"null" , "FillLayout" , "FormLayout" , "GridLayout" , "RowLayout"
 	};
 	protected static String[] fClassNames = new String[] {
-		"","org.eclipse.swt.layout.FillLayout", "org.eclipse.swt.layout.RowLayout"
+		"","org.eclipse.swt.layout.FillLayout",  "org.eclipse.swt.layout.FormLayout" , "org.eclipse.swt.layout.GridLayout", "org.eclipse.swt.layout.RowLayout"
 	};
 /**
  * This method shows a list of available layout manager classes from which the 
@@ -49,14 +50,14 @@ public LayoutCellEditor(Composite aComposite){
 	super(aComposite,fItems);
 }
 /**
- * Return a MOF class that represents the constraint bean
+ * Return an EMF class that represents the constraint bean
  */
 protected Object doGetObject(int index) {
 	if (index == sNoSelection || index == 0)
 		return null;
 	String layoutManagerClassName = fClassNames[index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
-	JavaHelpers javaClass = JavaClassImpl.reflect(layoutManagerClassName, rset);
+	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
 	return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 }
 

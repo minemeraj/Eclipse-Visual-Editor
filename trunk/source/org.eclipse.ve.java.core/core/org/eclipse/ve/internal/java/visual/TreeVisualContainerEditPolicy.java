@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,8 +10,8 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TreeContainerEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-04 02:10:12 $ 
  */
 
 import java.util.*;
@@ -21,20 +21,21 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.*;
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.java.visual.*;
 /**
- * Tree ContainerEditPolicy for awt Containers.
+ * Tree ContainerEditPolicy for SWT Composites
  */
-public class TreeContainerEditPolicy extends org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy implements IActionFilter {
+public class TreeVisualContainerEditPolicy extends org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy implements IActionFilter {
 	
 	ILayoutPolicyHelper helper;
 	
-	public TreeContainerEditPolicy(ContainerPolicy policy) {
+	public TreeVisualContainerEditPolicy(VisualContainerPolicy policy) {
 		super(policy);
 	}
 	
 	public void setPolicyHelper(ILayoutPolicyHelper helper) {
-		helper.setContainerPolicy((ContainerPolicy) containerPolicy);
+		helper.setContainerPolicy((VisualContainerPolicy) containerPolicy);
 		this.helper = helper;
 	}
 	
@@ -65,9 +66,6 @@ public class TreeContainerEditPolicy extends org.eclipse.ve.internal.cde.core.Tr
 		return helper.getCreateChildCommand(child, constraints.get(0), beforePart != null ? beforePart.getModel() : null);
 	}
 		
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
-	 */
 	public boolean testAttribute(Object target, String name, String value) {
 		if (helper != null && helper instanceof IActionFilter) {
 			return ((IActionFilter)helper).testAttribute(target, name, value);
