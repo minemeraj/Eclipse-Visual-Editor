@@ -9,6 +9,10 @@ package org.eclipse.ve.internal.java.visual;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+/*
+ *  $RCSfile: NullLayoutConstraintCommand.java,v $
+ *  $Revision: 1.2 $  $Date: 2003-12-04 22:27:21 $ 
+ */
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 import org.eclipse.emf.common.util.URI;
  
