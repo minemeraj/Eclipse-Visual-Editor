@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-19 15:37:06 $ 
+ *  $Revision: 1.9 $  $Date: 2004-07-28 17:12:05 $ 
  */
 
 
@@ -174,7 +174,7 @@ public static boolean isXMLTextOn() {
 }
 
 /**
- * Is a VM option given to display the XML Text option
+ * Is a VM option given to display the Show Live Window option
  */
 public static boolean isLiveWindow ()
 {
