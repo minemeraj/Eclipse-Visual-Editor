@@ -22,6 +22,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
@@ -41,12 +42,36 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		sf_layoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
 	
-	/**
+	/*
 	 * Use to call BeanProxyAdapter's beanProxyAllocation.
 	 */
-	protected IBeanProxy superBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
+	protected IBeanProxy beanProxyAdapterBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
 		return super.beanProxyAllocation(allocation);
 	}
+	
+	/*
+	 * The initString is evaluated using a static method on the Environment target VM class
+	 * that ensures it is evaluated on the Display thread
+	 */
+	protected IBeanProxy basicInitializationStringAllocation(final String aString, final IBeanTypeProxy targetClass) throws IAllocationProcesser.AllocationException {
+		try {
+			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+					try {
+						return ControlProxyAdapter.super.basicInitializationStringAllocation(aString, targetClass);
+					} catch (AllocationException e) {
+						throw new RunnableException(e);
+					}
+				}
+			});
+			return (IBeanProxy) result;
+		} catch (ThrowableProxy e) {
+			throw new AllocationException(e);
+		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+			throw (AllocationException) e.getCause();
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
 	 */
@@ -65,7 +90,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					// composite
 					if (composite != null) {
 						try {
-							return superBeanProxyAllocation(allocation);
+							return beanProxyAdapterBeanProxyAllocation(allocation);
 						} catch (AllocationException e) {
 							throw new RunnableException(e);
 						}
