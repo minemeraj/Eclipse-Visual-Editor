@@ -29,10 +29,8 @@
   <event:AddMany notifierURI="java:/#char" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
         cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaCellEditor"
+        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider"
         nullInvalid="true"/>
-<!-- Don't have char a labelProviders yet.
-      labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider"
-  -->        
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
