@@ -15,21 +15,24 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="grabExcessHorizontalSpace"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.grabExcessHorizontalSpace" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
     <addedEObjects xsi:type="ecore:EReference" name="grabExcessVerticalSpace" eType="org.eclipse.jem.java:JavaDataType java:/#boolean"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="grabExcessVerticalSpace"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.grabExcessVerticalSpace" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
     <addedEObjects xsi:type="ecore:EReference" name="heightHint" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="heightHint"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.heightHint" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="horizontalAlignment" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -39,21 +42,24 @@
           labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
           cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="horizontalAlignment"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.horizontalAlignment" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="horizontalIndent" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="horizontalIndent"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.horizontalIndent" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="horizontalSpan" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="horizontalSpan"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.horizontalSpan" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="verticalAlignment" eType="org.eclipse.jem.java:JavaDataType java:/#int"
@@ -63,21 +69,24 @@
           labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
           cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>      
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="verticalAlignment"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.verticalAlignment" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="verticalSpan" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="verticalSpan"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.verticalSpan" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="widthHint" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="widthHint"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="griddata.widthHint" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     

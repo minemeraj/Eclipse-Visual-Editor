@@ -15,28 +15,46 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="height"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.height" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
     <addedEObjects xsi:type="ecore:EReference" name="width" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="width"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.width" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
 
     <addedEObjects xsi:type="ecore:EReference" name="bottom" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.bottom" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+      </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="left" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.left" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+      </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="right" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.right" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+      </eAnnotations>
     </addedEObjects>
     <addedEObjects xsi:type="ecore:EReference" name="top" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.layout#FormAttachment">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="formdata.top" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
+      </eAnnotations>
     </addedEObjects>
     
   </event:AddMany>
