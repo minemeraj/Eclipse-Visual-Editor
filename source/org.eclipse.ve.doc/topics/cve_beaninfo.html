@@ -62,23 +62,24 @@ and the cache is stale, introspection will re-occur.  </p>
 of a bean is done by calling the  <tt class="sysout">getBeanInfo(Class)</tt> static
 method with the bean class as the argument. For example:</p>
 <p> <tt class="sysout">java.beans.Introspector.getBeanInfo(MyJavaBean.class)</tt> </p>
-<p>The introspector uses the following logic to locate a BeanInfo class
-for the argument class  <tt class="sysout">MyJavaBean</tt>. This involves
-a number of sequential steps, and after any successful step the introspector
-stops looking. If any step fails, then the next step is used to try a different
-way to locate the bean info.</p>
-<ul><li>If the Java bean itself implements  <tt class="sysout">java.beans.BeanInfo</tt>,
-then it is used. This scenario rarely occurs, however, because it means that
-the run-time class  <tt class="sysout">MyJavaBean</tt> contains design
-time information that will be unnecessarily included at deployment.</li>
-<li>A class with the same name as the argument, but the string  <tt class="sysout">BeanInfo</tt> appended
-to it is searched for. For example,  <tt class="sysout">MyJavaBeanBeanInfo.</tt> It
-is first searched for in the same package as the class, and if one is not
-found, it is located within a defined search path. Rather than use the class
-path of the Java virtual machine to search for the BeanInfo class, the introspector
-has its own list of packages to search within. This is known as the BeanInfo
-search path. The introspector does not use the class path again in order to
-keep run-time and design time information separate.</li>
+<p>The introspector uses tests to locate a BeanInfo class for the argument
+class <tt class="sysout">MyJavaBean</tt>. If any test is successful,
+the introspector stops looking. If a step fails, the introspector tries the
+next test to locate the BeanInfo class. The introspector uses the following
+logical tests:</p>
+<ul><li>If the Java bean itself implements <tt class="sysout">java.beans.BeanInfo</tt>,
+then the bean is used as the BeanInfo class. This scenario rarely occurs,
+however, because it means that the run-time class <tt class="sysout">MyJavaBean</tt> contains
+design time information that will be unnecessarily included at deployment.</li>
+<li>If a class exists with the same name as the argument class plus
+the string <tt class="sysout">BeanInfo</tt> appended to the name (for
+example <tt class="sysout">MyJavaBeanBeanInfo</tt>), that class is used
+as the BeanInfo class. It is first searched for in the same package as the
+class, and if one is not found, it is located within a defined search path.
+Rather than use the class path of the Java virtual machine to search for the
+BeanInfo class, the introspector has its own list of packages to search within.
+This is known as the BeanInfo search path. The introspector does not use the
+class path again in order to keep run-time and design time information separate.</li>
 <li>If no BeanInfo class is found for the immediate class being introspected,
 then the introspector attempts to locate the BeanInfo class for the superclass.</li>
 <li>If no BeanInfo class is found for the immediate class being introspected,
