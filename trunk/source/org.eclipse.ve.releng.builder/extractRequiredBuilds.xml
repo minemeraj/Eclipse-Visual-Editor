@@ -9,7 +9,6 @@
 
 	<target name="init">
 		<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
-		<echo>url=${url}  zipname=${zipname}</echo>
 	</target>
 
 	<target name="testurl" if="url,zipname">
@@ -20,12 +19,14 @@
 				<equals arg1="${downurl}" arg2="${url}"/>
 			</and>
 		</condition>
+		<echo>sameurl=${sameurl} downurl=${downurl}</echo>
 	</target>
 				
-	<target name="outofdate" if="zipname" unless="sameurl" depends="testurl">		
+	<target name="outofdate" if="zipname" unless="sameurl" depends="testurl">	
+		<echo message="in out of date"	/>
 		<delete>
 			<fileset dir="${buildDirectory}/..">
-			    <include name="zipname"/>
+			    <include name="${zipname}"/>
 			</fileset>
 		</delete>
 	</target>
