@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.23 $  $Date: 2004-04-07 14:40:32 $ 
+ *  $Revision: 1.24 $  $Date: 2004-04-08 15:31:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -282,15 +282,11 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		fBeanModel.refreshMethods();
   	}
   	
-  	protected void merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ){
+  	protected void merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ) throws CodeGenException {
   		BDMMerger merger = new BDMMerger(mainModel, newModel, true, fDisplay);
-  		try{
-  			if(!merger.merge())
-  				Reload(fDisplay, m);
-  		}catch( Throwable t) {
-  			JavaVEPlugin.log("Merge failed : "+t.getMessage(), Level.WARNING);
+  		if(!merger.merge())
   			Reload(fDisplay, m);
-  		}
+  		
   	}
   	
   	/*
@@ -314,7 +310,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		return new String[0] ;
   	}
   	
-  	protected void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  	protected void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor) throws CodeGenException {
   		JavaBeanModelBuilder modelBldr =
 			new CodeSnippetModelBuilder(fEDomain, currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy);
 		modelBldr.setDiagram(fVEModel);
