@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-26 16:28:31 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-30 00:17:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -89,7 +89,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 					// TODO:  this is a temporary fix, and will not deal with
 					//        factories call etc.
 					String r = 	bdm.resolveType(n);
-					if (!r.equals(n)) {
+					if (r != null && !r.equals(n)) {
 						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
 						ptname.setName(r) ;
 						PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess() ;
