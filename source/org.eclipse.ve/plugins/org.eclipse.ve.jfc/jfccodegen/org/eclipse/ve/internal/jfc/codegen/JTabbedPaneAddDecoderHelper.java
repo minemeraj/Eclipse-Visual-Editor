@@ -11,21 +11,19 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-08-04 21:36:30 $ 
+ *  $Revision: 1.11 $  $Date: 2004-08-20 13:44:09 $ 
  */
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -33,8 +31,6 @@ import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
-
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -194,7 +190,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		if (args.size() >= 4)
 			bp = resolveAddedComponent((Expression)args.get(2));
 		else if (args.size() == 2)
-			bp = resolveAddedComponent((Expression)args.get(0));
+			bp = resolveAddedComponent((Expression)args.get(1));
 		else if (args.size() == 1)
 			bp = resolveAddedComponent((Expression)args.get(0));
 		else
@@ -246,8 +242,8 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 				processIcon((Expression)args.get(1));
 				processToolTip((Expression)args.get(3));
 			} else if (args.size() == 2) {
-				if (args.get(1) instanceof StringLiteral)
-					processTitle((Expression)args.get(1));
+				if (args.get(0) instanceof StringLiteral)
+					processTitle((Expression)args.get(0));
 			}
 
 			int index = -1;
@@ -447,7 +443,88 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		ExpressionTemplate exp = getExpressionTemplate();
 		return exp.toString();
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#shouldCommit(org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.emf.ecore.EObject, java.util.List)
+	 */
+	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args) {
+		boolean shouldCommit = super.shouldCommit(oldAddedPart, newAddedPart, newAddedInstance, args);
+		// Affected by offset changes?
+		if(!shouldCommit){
+			if (args.size() >= 4) {
+				String currentTitle = fTitleInstance==null?null:CodeGenUtil.getInitString(fTitleInstance, fbeanPart.getModel(), null);
+				String currentIcon = fIconInstance==null?null:CodeGenUtil.getInitString(fIconInstance, fbeanPart.getModel(), null);
+				String currentTooltip = fToolTipInstance==null?null:CodeGenUtil.getInitString(fToolTipInstance, fbeanPart.getModel(), null);
+				
+				String newTitle =  args.get(0) instanceof StringLiteral?"\""+((StringLiteral)args.get(0)).getLiteralValue()+"\"":null;
+				String newIcon =  args.get(1) instanceof StringLiteral?"\""+((StringLiteral)args.get(1)).getLiteralValue()+"\"":null;
+				String newTooltip =  args.get(3) instanceof StringLiteral?"\""+((StringLiteral)args.get(3)).getLiteralValue()+"\"":null;
+				
+				boolean titleChanged = true;
+				boolean iconChanged = true;
+				boolean tooltipChanged = true;
+				
+				if(newTitle==currentTitle || (newTitle!=null && newTitle.equals(currentTitle)) || (currentTitle!=null && currentTitle.equals(newTitle)))
+					titleChanged = false;
+				if(newIcon==currentIcon || (newIcon!=null && newIcon.equals(currentIcon)) || (currentIcon!=null && currentIcon.equals(newIcon)))
+					iconChanged = false;
+				if(newTooltip==currentTooltip || (newTooltip!=null && newTooltip.equals(currentTooltip)) || (currentTooltip!=null && currentTooltip.equals(newTooltip)))
+					tooltipChanged = false;
+				
+				shouldCommit = titleChanged || iconChanged || tooltipChanged;
+				
+			} else if (args.size() == 2) {
+				if (args.get(0) instanceof StringLiteral){
+					String currentTitle = fTitleInstance==null?null:CodeGenUtil.getInitString(fTitleInstance, fbeanPart.getModel(), null);
+					String newTitle =  args.get(0) instanceof StringLiteral?"\""+((StringLiteral)args.get(0)).getLiteralValue()+"\"":null;
+					boolean titleChanged = true;
+					if(newTitle==currentTitle || (newTitle!=null && newTitle.equals(currentTitle)) || (currentTitle!=null && currentTitle.equals(newTitle)))
+						titleChanged = false;
+					shouldCommit = titleChanged;
+				}
+			}
+
+			if(!shouldCommit){
+				if (args.size() == 5 && args.get(4) instanceof NumberLiteral) {}
+				else shouldCommit = !canAddingBeSkippedByOffsetChanges();
+			}
+		}
+		if(!shouldCommit){
+			if(fAddedPart!=null){
+		      	  boolean backRefAdded = false;
+			      BeanPart[] bRefs = fAddedPart.getBackRefs();
+			      int bRefCount = 0;
+			      for (; bRefCount < bRefs.length; bRefCount++) 
+					if(fbeanPart.equals(bRefs[bRefCount])){
+						backRefAdded = true;
+						break;
+					}
+				    
+			       boolean childAdded = false;
+				   Iterator childItr = fbeanPart.getChildren();
+				   while (childItr.hasNext()) {
+						BeanPart child = (BeanPart) childItr.next();
+						if(child.equals(fAddedPart)){
+							childAdded = true;
+							break;
+						}
+				   }
+					shouldCommit = !backRefAdded || !childAdded;
+			}
+			if(!shouldCommit){
+				int index = findIndex(fbeanPart);
+				EStructuralFeature sf = fFmapper.getFeature(null);
+				EObject targetEObject = fbeanPart.getEObject();
+				EObject addedOne = getRootObject(false);
+				if (sf.isMany()) {
+					List elements = getRootComponentList();
+					if((!elements.contains(addedOne)) || (index>-1 && elements.indexOf(addedOne)!=index))
+						shouldCommit = true;
+				}else
+				   shouldCommit =  (!targetEObject.eIsSet(sf)) || (!targetEObject.eGet(sf).equals(addedOne));
+			}
+		}
+		return shouldCommit;
+	}
 
 }

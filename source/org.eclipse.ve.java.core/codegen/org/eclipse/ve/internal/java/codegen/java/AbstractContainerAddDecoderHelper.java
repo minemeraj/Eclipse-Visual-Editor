@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-20 13:44:06 $ 
  */
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
@@ -189,7 +191,11 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 
 		// Unlink the real object from the intermediate/immediate object
 		if (targetRoot != null && targetRoot.eClass().getEAllStructuralFeatures().contains(getRootComponentSF())) {
-			targetRoot.eUnset(getRootComponentSF());
+			// The unsetting should be done on the intermediate object ONLY,
+			// which is NOT the component object. Else erroneous removal
+			// of settings is done
+			if(targetRoot!=getComponent(targetRoot)) 
+				targetRoot.eUnset(getRootComponentSF());
 		}
 
 		if (fAddedPart != null)
@@ -205,19 +211,35 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	}
 
 	protected abstract BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException;
+	
+	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args){
+		boolean beanPartChanged = oldAddedPart!=newAddedPart;
+		if(!beanPartChanged){
+			if(newAddedPart!=null)
+				beanPartChanged = !newAddedPart.isInJVEModel();
+			else
+				beanPartChanged = !fbeanPart.getInitMethod().getCompMethod().getProperties().contains(newAddedInstance);
+		}
+		return beanPartChanged;
+	}
 
 	/**
 	 *   Add new Componet to target Bean,
 	 */
 	protected boolean addComponent() throws CodeGenException {
-
 		BeanPart oldAddedPart = fAddedPart;
+		BeanPart newAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr)); 
+		EObject newAddedInstance = fAddedInstance;
+		if(newAddedPart!=null)
+			newAddedInstance = newAddedPart.getEObject();
+		List args = ((MethodInvocation) getExpression(fExpr)).arguments();
 
+		// SMART DECODING - 
+		if(shouldCommit(oldAddedPart, newAddedPart, newAddedInstance, args)){
 		clearPreviousIfNeeded();
 
-		fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
-		if (fAddedPart != null)
-			fAddedInstance = (IJavaObjectInstance) fAddedPart.getEObject();
+		fAddedPart = newAddedPart;
+		fAddedInstance = (IJavaObjectInstance) newAddedInstance;
 		if (fAddedPart == null && fAddedInstance == null)
 			throw new CodeGenException("No Added Part"); //$NON-NLS-1$
 
@@ -226,12 +248,14 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 				oldAddedPart.removeBackRef(fbeanPart, true);
 			}
 
-		List args = ((MethodInvocation) getExpression(fExpr)).arguments();
 		if (fAddedPart != null)
 			fAddedPart.addToJVEModel();
 		else
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fAddedInstance);
+		
 		return parseAndAddArguments(args);
+		}
+		return true;	
 	}
 
 	protected abstract boolean parseAndAddArguments(List args) throws CodeGenException;
@@ -408,5 +432,42 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		ExpressionTemplate exp = getExpressionTemplate();
 		return exp.toString();
 	}
+	
+	/**
+	 * Smart decoding capability:
+	 * This method returns whether decoding should be performed or not due to offset
+	 * changes. This is helpful during snippet update process where re-decoding is done for 
+	 * offset changes, and decoding should not be done unless there is some 
+	 * content change, or if the expression ordering has not changed 
+	 * 
+	 * @return
+	 */
+	protected boolean canAddingBeSkippedByOffsetChanges() {
+		EStructuralFeature sf = fFmapper.getFeature(null);
+		if(sf.isMany() && fbeanPart.getEObject()!=null){
+			List components = getIndexedEntries();
+			EObject entry = (EObject) getIndexedEntry();
+			int currentIndex = components.indexOf(entry);
+			Collection expressions = fbeanPart.getRefExpressions();
+			for (Iterator expItr = expressions.iterator(); expItr.hasNext();) {
+				CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+				Object[] expAddedInstances = exp.getAddedInstances();
+				for(int eaic=0; expAddedInstances!=null && eaic<expAddedInstances.length; eaic++){
+					EObject expAddedInstance = (EObject)expAddedInstances[eaic];
+					if(!components.contains(expAddedInstance))
+						expAddedInstance = getComponent(expAddedInstance);
+					if(		components.contains(expAddedInstance) && 
+							(	(components.indexOf(expAddedInstance) < currentIndex && 
+								exp.getOffset()>=fOwner.getExprRef().getOffset()) ||
+								(components.indexOf(expAddedInstance) > currentIndex && 
+								exp.getOffset()<=fOwner.getExprRef().getOffset()))){
+								return false;
+							}
+				}
+			}
+		}
+		return true;
+	}
+
 
 }

@@ -11,8 +11,9 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-04 21:36:30 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-20 13:44:09 $ 
  */
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -332,4 +334,54 @@ protected IJavaObjectInstance[] getComponentArguments(EObject root) {
 		else
 		        return super.getSFPriority();
 	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#shouldCommit(org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.ve.internal.java.codegen.model.BeanPart, org.eclipse.emf.ecore.EObject, java.util.List)
+	 */
+	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args) {
+		boolean shouldCommit = super.shouldCommit(oldAddedPart, newAddedPart, newAddedInstance, args);
+		// Affected by offset changes?
+		if(!shouldCommit){
+			if (args.size() == 2 && args.get(1) instanceof NumberLiteral) {}
+			else shouldCommit = !canAddingBeSkippedByOffsetChanges();
+		}
+		if(!shouldCommit){
+			if(fAddedPart!=null){
+		      	  boolean backRefAdded = false;
+			      BeanPart[] bRefs = fAddedPart.getBackRefs();
+			      int bRefCount = 0;
+			      for (; bRefCount < bRefs.length; bRefCount++) 
+					if(fbeanPart.equals(bRefs[bRefCount])){
+						backRefAdded = true;
+						break;
+					}
+				    
+			       boolean childAdded = false;
+				   Iterator childItr = fbeanPart.getChildren();
+				   while (childItr.hasNext()) {
+						BeanPart child = (BeanPart) childItr.next();
+						if(child.equals(fAddedPart)){
+							childAdded = true;
+							break;
+						}
+				   }
+					shouldCommit = !backRefAdded || !childAdded;
+			}
+			if(!shouldCommit){
+				int index = findIndex(fbeanPart);
+				EStructuralFeature sf = fFmapper.getFeature(null);
+				EObject targetEObject = fbeanPart.getEObject();
+				EObject addedOne = getRootObject(false);
+				if (sf.isMany()) {
+					List elements = getRootComponentList();
+					if((!elements.contains(addedOne)) || (index>-1 && elements.indexOf(addedOne)!=index))
+						shouldCommit = true;
+				}else
+				   shouldCommit =  (!targetEObject.eIsSet(sf)) || (!targetEObject.eGet(sf).equals(addedOne));
+			}
+		}
+		return shouldCommit;
+	}
+
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.21 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.22 $  $Date: 2004-08-20 13:44:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -438,7 +438,8 @@ public class BDMMerger {
 	}
 
 	protected boolean processEquivalentExpressions(final CodeExpressionRef mainExp, final CodeExpressionRef newExp, int equivalencyLevel){
-		newExp.getBean().setProxy(mainExp.getBean());
+		if(newExp.getBean()!=null) // Expressions like 'createComposite()' have no bean defined on them - no need of a proxy
+			newExp.getBean().setProxy(mainExp.getBean());
 		switch(equivalencyLevel){
 			case 0:
 				logFiner("Updating changed expression "+newExp.getCodeContent());
@@ -471,7 +472,8 @@ public class BDMMerger {
 				}
 				break;
 		}
-		newExp.getBean().setProxy(null);
+		if(newExp.getBean()!=null)
+			newExp.getBean().setProxy(null);
 		return true;
 	}
 
@@ -515,9 +517,9 @@ public class BDMMerger {
 				// decoding of the constructor for Table). Such expressions are generally stored in the 
 				// beanpart's parent expressions list - so check the parent expressions of all bean parts 
 				// to determine if anyone will be adding this expression to the Shell beanpart later on.
-				boolean parentExpFound = false;
+				CodeExpressionRef parentExpression = null;
 				Iterator newBeansItr = newModel.getBeans().iterator();
-				while (newBeansItr.hasNext() && !parentExpFound) {
+				while (newBeansItr.hasNext() && parentExpression==null) {
 					BeanPart newBean = (BeanPart) newBeansItr.next();
 					List newBPParentExps = newBean.getParentExpressons();
 					if(newBPParentExps!=null && newBPParentExps.size()>0){
@@ -528,14 +530,16 @@ public class BDMMerger {
 							String newExpInMethod = newParentExp.getMethod()==null?null:newParentExp.getMethod().getMethodName();
 							if(mainExpMethodName!=null && mainExpMethodName.equals(newParentExp.getMethodNameContent()) &&
 									mainExpInMethod!=null && newExpInMethod!=null && mainExpInMethod.equals(newExpInMethod)){
-								parentExpFound = true;
+								parentExpression = newParentExp;
 								break;
 							}
 						}
 					}
 				}
-				if(!parentExpFound)
+				if(parentExpression==null)
 					removeDeletedExpression(mainExp);
+				else
+					processEquivalentExpressions(mainExp, parentExpression, 1);
 			}
 		}
 		
