@@ -11,13 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.8 $  $Date: 2004-11-29 23:00:06 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cdm.*;
+import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -173,19 +174,22 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     	vi.getKeyedValues().removeKey(fAnnotationKey);
     }
     
-    protected void noAnnotationInSource() {
-    	if (fAnnotationKey == null || fBeanpart == null) return ; 
+    protected boolean noAnnotationInSource(boolean keepOnFreeForm) {
+    	boolean decoded = true;
+    	if (fAnnotationKey == null || fBeanpart == null) return false; 
 
     	Annotation a = CodeGenUtil.getAnnotation(fBeanpart.getEObject()) ;
-    	if (a == null) return ;
+    	if (a == null) return false;
     	
-    	VisualInfo vi = a.getVisualInfo(fCompositionModel.getDiagram()) ;
-    	if (vi == null)  return ;    	    
-    	ICodeGenAdapter adapter = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(a, ICodeGenAdapter.JVE_CODEGEN_ANNOTATION_ADAPTER) ;
-    	if (adapter != null) 
-    		vi.eAdapters().remove(adapter) ;
-    	vi.getKeyedValues().removeKey(fAnnotationKey);
-    	a.getVisualInfos().remove(vi);
+    	KeyedBooleanImpl c = (KeyedBooleanImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedBoolean());
+    	c.setValue(new Boolean(!keepOnFreeForm)) ; // The model has it reversed
+    	try {
+			setAnnotationValue (c) ;
+		}
+		catch (Exception e) {
+			decoded = false;
+		}
+		return decoded;
     }
     
     /*
