@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SetToNullAction.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-19 20:17:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-07-09 23:11:55 $ 
  */
 package org.eclipse.ve.internal.propertysheet;
 
@@ -34,15 +34,14 @@ public class SetToNullAction extends EToolsPropertySheetAction {
 		if (NULL_RESET_IMAGE == null) {
 			URL url = Platform.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/elcl16/nullreset16.gif")); //$NON-NLS-1$
 			NULL_RESET_IMAGE = url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
-		}
-// TODO Need a disabled image		
-//		if (NULL_RESET_DISABLE_IMAGE == null) {
-//			URL url = Platform.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/dlcl16/nullreset16.gif")); //$NON-NLS-1$
-//			NULL_RESET_DISABLE_IMAGE = url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
-//		}		
+		}	
+		if (NULL_RESET_DISABLE_IMAGE == null) {
+			URL url = Platform.find(PSheetPlugin.getPlugin().getBundle(), new Path("images/full/dlcl16/nullreset16.gif")); //$NON-NLS-1$
+			NULL_RESET_DISABLE_IMAGE = url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
+		}		
 
 		setImageDescriptor(NULL_RESET_IMAGE);
-//		setDisabledImageDescriptor(setImageDescriptor(NULL_RESET_IMAGE););
+		setDisabledImageDescriptor(NULL_RESET_DISABLE_IMAGE);
 		setText(PropertysheetMessages.getString(PropertysheetMessages.SET_NULLS_LABEL));
 		setToolTipText(PropertysheetMessages.getString(PropertysheetMessages.SET_NULLS_TOOLTIP));
 	}
