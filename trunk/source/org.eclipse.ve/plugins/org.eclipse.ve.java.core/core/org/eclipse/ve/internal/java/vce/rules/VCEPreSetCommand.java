@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-11 14:48:36 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-21 22:12:02 $ 
  */
 
 import java.util.*;
@@ -347,6 +347,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 					break;
 				case GLOBAL_LOCAL:
 					promoteGlobalLocal(cbld, cbld ,value,m);
+					break;
 				case PROPERTY:
 					// Make sure it is a <properties> of the requested member container.
 					cbld.applyAttributeSetting(m, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
