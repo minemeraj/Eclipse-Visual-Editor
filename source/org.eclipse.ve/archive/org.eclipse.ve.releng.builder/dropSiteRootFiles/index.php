@@ -40,8 +40,7 @@
         have problems downloading the drops, contact the <font size="-1" face="arial,helvetica,geneva"><a href="mailto:webmaster@eclipse.org">webmaster</a></font>. 
         If you have problems installing or getting the Visual Editor to run, <a href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/faq.html" target="_top">check 
         out the Visual Editor Project FAQ,</a> or try posting a question to the <a href="http://www.eclipse.org/newsgroups/index.html" target="_top">newsgroup</a>. 
-        All downloads are provided under the terms and conditions of the <a href="http://www.eclipse.org/legal/notice.html">Eclipse.org 
-        Software User Agreement</a> unless otherwise specified. </p>
+        All downloads are provided under the terms and conditions of the <a href="http://www.eclipse.org/legal/epl/notice.html">Eclipse Foundation Software User Agreement</a> unless otherwise specified. </p>
       <p> 
         For information about different kinds of builds look <a href="build_types.html">here</a>.</p>
       </td>
