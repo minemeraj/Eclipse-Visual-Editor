@@ -19,10 +19,6 @@ public static void initialize(){
 	t = new Thread(){
 		public void run(){
 			display = new Display();
-			freeFormHost = new Shell(display);
-			freeFormHost.setBounds(0,0,100,100);
-			freeFormHost.setLocation(-10000,-10000);
-			freeFormHost.open();
 			while(true){
 				display.readAndDispatch();
 			}			
@@ -31,6 +27,15 @@ public static void initialize(){
 	t.start();
 }
 
+public static Shell getFreeFormHost() {
+	if (freeFormHost == null) {
+		freeFormHost = new Shell(display);
+		freeFormHost.setBounds(0, 0, 100, 100);
+		freeFormHost.setLocation(-10000, -10000);
+		freeFormHost.open();
+	}
+	return freeFormHost;
+}
 public static String getFontLabel(Font aFont){
 	
 	FontData fontData = aFont.getFontData()[0];
