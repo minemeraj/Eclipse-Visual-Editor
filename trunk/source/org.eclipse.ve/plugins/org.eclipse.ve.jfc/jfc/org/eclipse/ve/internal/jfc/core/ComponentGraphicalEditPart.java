@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2004-08-27 15:34:49 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-02-08 11:52:15 $
  */
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -157,9 +158,9 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		 */
 		public void contributeModelSize(org.eclipse.ve.internal.cdm.model.Rectangle modelConstraint) {
 			// We will use the size out of the live component instead.
-			Rectangle bounds = getVisualComponent().getBounds();
-			modelConstraint.width = bounds.width;
-			modelConstraint.height = bounds.height;
+			Dimension size = getVisualComponent().getSize();
+			modelConstraint.width = size.width;
+			modelConstraint.height = size.height;			
 		}
 
 		/**

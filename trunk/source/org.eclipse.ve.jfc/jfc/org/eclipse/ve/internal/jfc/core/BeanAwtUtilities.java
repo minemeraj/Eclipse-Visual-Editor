@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-04 23:12:13 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-08 11:49:26 $ 
  */
 
 import java.util.List;
@@ -85,7 +85,7 @@ public static Point getOffScreenLocation(){
 		removeAllComponentsMethodProxy,
 		disposeComponentMethodProxy,
 		getLayoutMethodProxy,
-		setSizeMethodProxy,
+		setSizeMethodProxy,		
 		setBoundsMethodProxy,
 		getBoundsMethodProxy,
 		getLocationMethodProxy,
@@ -94,8 +94,10 @@ public static Point getOffScreenLocation(){
 		getParentMethodProxy,
 		getComponentsMethodProxy,
 		setComponentMethodProxy,
+		setComponentAndParentMethodProxy,
 		setRelativeParentMethodProxy,
 		getManagerLocationMethodProxy,
+		getManagerBoundsMethodProxy,		
 		managerInsertTabBeforeMethodProxy,
 		addTabMethodProxy,
 		getTabSelectedComponentMethodProxy,
@@ -384,6 +386,17 @@ public static void invoke_set_RelativeParent_Manager(IBeanProxy aComponentManage
 		);
 	}
 	constants.setRelativeParentMethodProxy.invokeCatchThrowableExceptions(aComponentManager, aContainerBeanProxy);
+}
+
+public static IArrayBeanProxy invoke_get_Bounds_Manager(IBeanProxy aComponentManager){
+
+	BeanAwtUtilities constants = getConstants(aComponentManager);
+	
+	if (constants.getManagerBoundsMethodProxy == null) {
+		constants.getManagerBoundsMethodProxy = aComponentManager.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy("getBounds"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	return (IArrayBeanProxy) constants.getManagerBoundsMethodProxy.invokeCatchThrowableExceptions(aComponentManager);
+	
 }
 
 public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentManager){
@@ -743,6 +756,25 @@ public static boolean isValidBeanLocation(EditDomain domain, EObject childCompon
 }
 
 protected BeanAwtUtilities() {
+}
+
+/**
+ * @param aComponentManager for the ComponentManager mediating between the two VMs
+ * @param visualComponentBeanProxy for the component itself
+ * @param parentContainerBeanProxy for the relative parent container proxy
+ */
+public static void invoke_set_ComponentAndParentBean_Manager(IBeanProxy aComponentManager, IBeanProxy visualComponentBeanProxy, IBeanProxy parentContainerBeanProxy) {
+
+	BeanAwtUtilities constants = getConstants(aComponentManager);
+	
+	if (constants.setComponentAndParentMethodProxy == null) {
+		constants.setComponentAndParentMethodProxy = aComponentManager.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+			"setComponentAndParent", //$NON-NLS-1$
+			new String[] {"java.awt.Component","java.awt.Container"} //$NON-NLS-1$
+		);
+	}
+	constants.setComponentAndParentMethodProxy.invokeCatchThrowableExceptions(aComponentManager, new IBeanProxy[] {visualComponentBeanProxy, parentContainerBeanProxy});	
+	
 }
 
 }

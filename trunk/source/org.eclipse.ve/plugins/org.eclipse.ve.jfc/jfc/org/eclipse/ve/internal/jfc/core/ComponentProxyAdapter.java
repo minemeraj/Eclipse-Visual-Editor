@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-09-22 22:49:32 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-08 11:55:20 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -49,11 +49,13 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	// edittime settings are not reflected in the runtime code generation.
 
 	private IJavaInstance fDefaultVisibility = null; // Default value of visibility if not applied, queried from live object.
-	private IJavaInstance fDefaultLocation = null;
+//	private IJavaInstance fDefaultLocation = null;
 	// Default value of location if not applied, queried from live object, or last set from bounds.
 
 	private IJavaInstance fVisibilityToUse = null; // Visibility to use when live object created, it is the override value.
-	private IJavaInstance fLocationToUse = null; // Location to use when live object created, this is the override value.
+	private IJavaInstance fJLocationToUse = null; // Location to use when live object created, this is the override value
+												 // For example for live windows this is set to an off-screen value.  null if not overriden
+	private Point fPLocationToUse = null;		 // As above but stored as a Point rather than an IJavaInstance
 
 	protected ImageDataCollector fImageDataCollector = null;
 	protected final Object imageAccessorSemaphore = new Object();	// [73930] Semaphore for access to image stuff, can't use (this) because that is also used for instantiation and deadlock can occur.
@@ -248,7 +250,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			}
 		}
 
-		if (fLocationToUse == null)
+		if (fJLocationToUse == null)
 			super.applied(as, newValue, position);	// We want location to be applied.
 	}
 
@@ -296,18 +298,12 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 
 		}
 
-		if (fLocationToUse == null)
+		if (fJLocationToUse == null)
 			super.applied(as, newValue, position);
 		else {
-			// Don't want location to be changed, so we will just do a set size instead. But we need to change fDefaultLocation to point to
-			// where bounds is pointing.
-			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fDefaultLocation);
-			if (d != null)
-				d.releaseBeanProxy();
+			// Don't want location to be changed, so we will just do a set size instead
 			String initString = PointJavaClassCellEditor.getJavaInitializationString(rect.getX(), rect.getY(),JFCConstants.POINT_CLASS_NAME);
-			fDefaultLocation = BeanUtilities.createJavaObject(JFCConstants.POINT_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString); //$NON-NLS-1$
-
-			IPointBeanProxy pointProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(fLocationToUse);
+			IPointBeanProxy pointProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(fJLocationToUse);
 			initString =
 				RectangleJavaClassCellEditor.getJavaInitializationString(pointProxy.getX(), pointProxy.getY(), rect.getWidth(), rect.getHeight(),JFCConstants.RECTANGLE_CLASS_NAME);
 			super.applied(
@@ -315,6 +311,15 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				BeanUtilities.createJavaObject(JFCConstants.RECTANGLE_CLASS_NAME, ((EObject) target).eResource().getResourceSet(), initString),//$NON-NLS-1$
 				position);
 			
+		}
+	}
+	
+	protected Point getDefaultLocation(){
+		if(fPLocationToUse == null){
+			return fComponentManager.getLocation();
+		} else {
+			Point targetVMLocation = fComponentManager.getLocation();
+			return new Point(targetVMLocation.x-fPLocationToUse.x,targetVMLocation.y-fPLocationToUse.y);
 		}
 	}
 
@@ -366,11 +371,13 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		} else {
 			// Create a new point for the location we wish to set the component to
 			// and apply this as an attribute settings
-				fLocationToUse = BeanUtilities.createJavaObject("java.awt.Point", //$NON-NLS-1$
-	 ((EObject) target).eResource().getResourceSet(), PointJavaClassCellEditor.getJavaInitializationString(setToLocation.x, setToLocation.y,JFCConstants.POINT_CLASS_NAME));
-
+			fJLocationToUse = BeanUtilities.createJavaObject(
+				"java.awt.Point", //$NON-NLS-1$
+				((EObject) target).eResource().getResourceSet(), 
+				PointJavaClassCellEditor.getJavaInitializationString(setToLocation.x, setToLocation.y,JFCConstants.POINT_CLASS_NAME));
 			// If we have a proxy then set the location to the specified setting.
-			super.applied(sfComponentLocation, fLocationToUse, 0); // Now apply the setTo value, use super to avoid checks on flag
+			fPLocationToUse = setToLocation;
+			super.applied(sfComponentLocation, fJLocationToUse, 0); // Now apply the setTo value, use super to avoid checks on flag
 		}
 	}
 
@@ -380,14 +387,13 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 * see if we are allowing them to go through.
 	 */
 	protected void canceled(EStructuralFeature as, Object oldValue, int position) {
-		if (!((as == sfComponentVisible && fVisibilityToUse != null) || (as == sfComponentLocation && fLocationToUse != null)))
+		if (!((as == sfComponentVisible && fVisibilityToUse != null) || (as == sfComponentLocation && fJLocationToUse != null)))
 			super.canceled(as, oldValue, position); // We letting the settings go through
-		if (as == sfComponentBounds && fLocationToUse != null) {
+		if (as == sfComponentBounds && fJLocationToUse != null) {
 			// We are canceling bounds and we have a location to use, so
 			// we need to restore default location to the original default since
 			// bounds had overridden it.
 			IBeanProxy loc = (IBeanProxy) getOriginalSettingsTable().get(sfComponentLocation);
-			fDefaultLocation = BeanProxyUtilities.wrapperBeanProxy(loc, ((EObject) target).eResource().getResourceSet(), null, false);
 		}
 	}
 	/**
@@ -406,9 +412,12 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				fComponentManager.addComponentListener((IVisualComponentListener) listeners.next());
 			}
 		}
-		fComponentManager.setComponentBeanProxy(getVisualComponentBeanProxy());
+		
 		if (fParentComponent != null) {
-			fComponentManager.setRelativeParentComponentBeanProxy(fParentComponent.getVisualComponentBeanProxy());
+			// Set both components togheter to reduce VM traffic latency
+			fComponentManager.setComponentAndParent(getVisualComponentBeanProxy(),fParentComponent.getVisualComponentBeanProxy());
+		} else {
+			fComponentManager.setComponentBeanProxy(getVisualComponentBeanProxy());			
 		}
 	}
 	/**
@@ -441,13 +450,6 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			fComponentManager = null;
 		}
 
-		if (fDefaultLocation != null) {
-			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fDefaultLocation);
-			if (d != null)
-				d.releaseBeanProxy();
-			fDefaultLocation = null;
-		}
-
 		if (fDefaultVisibility != null) {
 			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fDefaultVisibility);
 			if (d != null)
@@ -462,11 +464,11 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			fVisibilityToUse = null;
 		}
 
-		if (fLocationToUse != null) {
-			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fLocationToUse);
+		if (fJLocationToUse != null) {
+			IBeanProxyHost d = BeanProxyUtilities.getBeanProxyHost(fJLocationToUse);
 			if (d != null)
 				d.releaseBeanProxy();
-			fLocationToUse = null;
+			fJLocationToUse = null;
 		}
 
 		// TODO we want to release the fparentcomponent, but not everyone is setting it correctly in their proxy adapters, so until then we can't release it.
@@ -500,23 +502,38 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// Visible attribute and we didn't apply it, we used an override, so get default setting
 			return fDefaultVisibility;
 		} else {
-			if (aBeanPropertyAttribute == sfComponentLocation && fLocationToUse != null) {
+			if (aBeanPropertyAttribute == sfComponentLocation && fJLocationToUse != null) {
 				// Location attribute and we didn't apply it, we used an override, so get default setting
-				return fDefaultLocation;
-			} else if (aBeanPropertyAttribute == sfComponentBounds && fLocationToUse != null) {
+				// It is possible we have some bounds explicitly set on us in which case we need to use it's x and y
+				Point userApparentLocation = null;
+				if (getEObject().eIsSet(sfComponentBounds)){
+					IJavaInstance explicitBounds = (IJavaInstance)getEObject().eGet(sfComponentBounds);
+					IRectangleBeanProxy rect = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(explicitBounds);
+					userApparentLocation = new Point(rect.getX(),rect.getY());
+				} else {
+					userApparentLocation = getDefaultLocation();
+				}
+				return BeanUtilities.createJavaObject(
+					"java.awt.Point", //$NON-NLS-1$
+					getEObject().eResource().getResourceSet(), 
+					PointJavaClassCellEditor.getJavaInitializationString(userApparentLocation.x, userApparentLocation.y,JFCConstants.POINT_CLASS_NAME));
+			} else if (aBeanPropertyAttribute == sfComponentBounds && fJLocationToUse != null) {
 				// Bounds attribute and we didn't apply it, we used an override, so get the current bounds and
 				// then change the location to current location. The current location is either the set value, or the default location.
 				IJavaInstance currentBounds = super.getBeanPropertyValue(aBeanPropertyAttribute);
 				EObject eObject = (EObject) target;
 				IJavaInstance currentLoc = null;
-				if (eObject.eIsSet(sfComponentLocation))
+				if (eObject.eIsSet(sfComponentLocation)) {
 					currentLoc = (IJavaInstance) eObject.eGet(sfComponentLocation);
-				else
-					currentLoc = fDefaultLocation;
-				IPointBeanProxy currentLocProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(currentLoc);
-				IRectangleBeanProxy currentBoundsProxy = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(currentBounds);
-				currentBoundsProxy.setLocation(currentLocProxy);
-				return currentBounds;
+					IPointBeanProxy currentLocProxy = (IPointBeanProxy) BeanProxyUtilities.getBeanProxy(currentLoc);
+					IRectangleBeanProxy currentBoundsProxy = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(currentBounds);
+					currentBoundsProxy.setLocation(currentLocProxy);
+					return currentBounds;					
+				} else {
+					IRectangleBeanProxy currentBoundsProxy = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(currentBounds);
+					currentBoundsProxy.setLocation(getDefaultLocation().x,getDefaultLocation().y);
+					return currentBounds;
+				}
 			} else {
 				// Normal attribute or visibility/location applied, so get the real value.
 				return super.getBeanPropertyValue(aBeanPropertyAttribute);
@@ -624,11 +641,11 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	protected void applyAllSettings() {
 		if (isBeanProxyInstantiated()) {
 			// Query the current value and put into fDefaultLocation so that we know what it was at the beginning.
-			fDefaultLocation =
-				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentLocation), ((EObject) target).eResource().getResourceSet(), null, false);
-			if (fLocationToUse != null) {
+//			fDefaultLocation =
+//				BeanProxyUtilities.wrapperBeanProxy(super.getBeanPropertyProxyValue(sfComponentLocation), ((EObject) target).eResource().getResourceSet(), null, false);
+			if (fJLocationToUse != null) {
 				// We have a location setting that bypasses the setting in the mof object, apply it now so that it would off screen when made visible.
-				super.applied(sfComponentLocation, fLocationToUse, -1);
+				super.applied(sfComponentLocation, fJLocationToUse, -1);
 			}				
 
 			// Query the current value and put into fDefaultVisibility so that we know what it was at the beginning.

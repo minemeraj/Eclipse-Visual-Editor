@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.vm;
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-02-08 11:58:43 $ 
  */
 
 import java.awt.*;
@@ -40,6 +40,11 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 	public void initializeCallback(IVMServer server, int callbackID){
 		fServer = server;
 		fCallbackID = callbackID;
+	}
+	
+	public void setComponentAndParent(Component aComponent, Container aContainer){
+		setComponent(aComponent);
+		setRelativeParentComponent(aContainer);
 	}
 	
 	public void setComponent(Component aComponent) {
@@ -92,6 +97,17 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 			}
 		}		
 		return new Object[] {new Integer(x), new Integer(y)};
+	}
+	/**
+	 * This will return the bounds relative to the relative parent.
+	 * The result is a four element array that is broken down into x,y,width and height
+	 */	
+	public Object[] getBounds(){
+		
+		Object[] location = getLocation();
+		Dimension size = fComponent.getSize();
+		return new Object[] { location[0] , location[1] , new Integer(size.width), new Integer(size.height) };
+		
 	}
 	
 	/**
@@ -179,7 +195,7 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 					try {
 						fServer.doCallback(new ICallbackRunnable() {
 							public Object run(ICallbackHandler handler) throws CommandException {
-								return handler.callbackAsConstants(fCallbackID, Common.CL_REFRESHED, null);						
+								return handler.callbackAsConstants(fCallbackID, Common.CL_REFRESHED, getBounds());						
 							}
 						});
 					} catch (CommandException exp) {
