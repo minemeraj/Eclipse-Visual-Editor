@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-01-24 22:17:23 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-24 22:20:31 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -462,9 +462,15 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 				return null;	// Don't allow it to cross.
 		}
 			
-		InverseMaintenanceAdapter inverseAdapter = new InverseMaintenanceAdapter(allowCrossDoc);
+		InverseMaintenanceAdapter inverseAdapter = createInverseAdapter();
 		newValue.eAdapters().add(inverseAdapter);
 		return inverseAdapter;
+	}
+	/*
+	 * Override to create a different type of InverseMaintenanceAdapter
+	 */
+	protected InverseMaintenanceAdapter createInverseAdapter() {
+		return new InverseMaintenanceAdapter(allowCrossDoc);
 	}
 	
 	/*
