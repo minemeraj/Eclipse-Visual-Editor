@@ -1,2 +1,2 @@
-VE-SDK-1.0.2.1RC1.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/M-1.0.2.1RC1-200501131315/ | | | sdk | ve
-VE-runtime-1.0.2.1RC1.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/M-1.0.2.1RC1-200501131315/ | | | runtime | ve
+VE-SDK-1.0.2.1RC2.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/M-1.0.2.1RC2-200502151643/ | | | sdk | ve
+VE-runtime-1.0.2.1RC2.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/M-1.0.2.1RC2-200502151643/ | | | runtime | ve
