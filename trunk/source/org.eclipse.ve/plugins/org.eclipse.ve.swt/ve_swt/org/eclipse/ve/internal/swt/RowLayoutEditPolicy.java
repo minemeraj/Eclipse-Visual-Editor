@@ -8,14 +8,17 @@ package org.eclipse.ve.internal.swt;
  * Contributors: IBM Corporation - initial API and implementation
  **************************************************************************************************/
 /*
- * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.3 $ $Date: 2004-03-05 20:57:04 $
+ * $RCSfile: RowLayoutEditPolicy.java,v $ $Revision: 1.4 $ $Date: 2004-05-18 16:49:31 $
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
@@ -25,7 +28,11 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  * It'a based off the default FlowLayout for SWT and isHorizontal() 
  * returns true if the 'type' of the RowLayout is also horizontal.
  */
-public class RowLayoutEditPolicy extends DefaultLayoutEditPolicy {
+public class RowLayoutEditPolicy extends DefaultLayoutEditPolicy implements IActionFilter {
+	
+	// unique ID of this layout edit policy
+	public static final String LAYOUT_ID = "org.eclipse.swt.layout.RowLayout";
+	
 	private static final int HORIZONTAL = 1 << 8;
 	private int type = HORIZONTAL;
 	private EStructuralFeature sf_compositeLayout = null;
@@ -74,5 +81,14 @@ public class RowLayoutEditPolicy extends DefaultLayoutEditPolicy {
 		sf_compositeLayout = JavaInstantiation.getSFeature((IJavaObjectInstance) containerPolicy.getContainer(),
 				SWTConstants.SF_COMPOSITE_LAYOUT);
 		determineType();
+		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), RowLayoutLayoutPage.class);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
+	 */
+	public boolean testAttribute(Object target, String name, String value) {
+		if (name.startsWith("LAYOUTPOLICY") && value.equals(LAYOUT_ID)) //$NON-NLS-1$
+		return true;
+		return false;
 	}
 }
