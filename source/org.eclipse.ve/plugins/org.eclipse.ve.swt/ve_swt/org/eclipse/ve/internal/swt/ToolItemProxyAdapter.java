@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.3 $ $Date: 2004-09-08 22:15:54 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.4 $ $Date: 2004-11-09 17:48:35 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -112,7 +112,7 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 
 	protected IMethodProxy getBoundsMethodProxy() {
 		if (boundsMethodProxy == null) {
-			boundsMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getBounds");
+			boundsMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
 		}
 		return boundsMethodProxy;
 	}
