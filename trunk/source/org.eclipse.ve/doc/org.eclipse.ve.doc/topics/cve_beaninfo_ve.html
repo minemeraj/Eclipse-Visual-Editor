@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Tips for writing BeanInfo classes for the visual editor" />
+<meta name="abstract" content="This section describes some rules you can employ if you are writing a BeanInfo class for a Java bean intended for use in the visual editor for Java." />
+<meta name="description" content="This section describes some rules you can employ if you are writing a BeanInfo class for a Java bean intended for use in the visual editor for Java." />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_location.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="cve_beaninfo_ve" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Tips for writing BeanInfo classes for the visual editor</title>
+</head>
+<body id="cve_beaninfo_ve"><a name="cve_beaninfo_ve"><!-- --></a>
+
+<h1 class="topictitle1">Tips for writing BeanInfo classes for the visual editor</h1>
+<div><p>This section describes some rules you can employ if you are writing
+a BeanInfo class for a Java bean intended for use in the visual editor for
+Java.</p>
+<div class="skipspace"><p>The visual editor for Java uses the property descriptors described
+in the BeanInfo class to establish the list of entries in the Properties view,
+as well as how they should be edited.</p>
+<p>If a java.beans.PropertyDescriptor
+is hidden, then it will not be available within the Properties viewer. However,
+set methods of hidden properties will still be parsed by the code generator
+and will be applied to the live beans.</p>
+<p>When a property is hidden it
+is still used by code parsing, but it will not be included in any other Visual
+Editor view or feature. Visual Age for Java allowed a property to be excluded
+from the Properties view, but was still available for other functions. For
+example, making connections by making it design time  <var class="varname">false</var>.
+Although the visual editor for Java does not have connection capability, the
+concept of design time properties is carried forward. To make a property design
+time false, an attribute value should be set with the key of  <tt class="sysout">ivjDesignTimeProperty</tt>,
+and the value of  <tt class="sysout">Boolean.FALSE. </tt></p>
+<p>For
+example, if a BeanInfo class is being written for the class MyJavaBean that
+has a name property (from a public void setName(String) and public String
+getName() method pair), then the getPropertyDescriptors() method could be
+written as follows:</p>
+<pre>public PropertyDescriptor[] getPropertyDescriptors() { 
+    PropertyDescriptor[] result = new PropertyDescriptor[1]; 
+    try{ 
+        PropertyDescriptor directionDescriptor = new
+PropertyDescriptor("direction",MyJavaBean.class); 
+        directionDescriptor.setValue("enumerationValues",new
+Object[]{ 
+            "North",new
+Integer(myclasses.CompassPoint.NORTH),"myclasses.CompassPoint.NORTH",
+
+            "East",new
+Integer(myclasses.CompassPoint.EAST),"myclasses.CompassPoint.EAST",
+
+            "South",new
+Integer(myclasses.CompassPoint.SOUTH),"myclasses.CompassPoint.SOUTH",
+
+            "West",new
+Integer(myclasses.CompassPoint.WEST),"myclasses.CompassPoint.WEST" 
+        }); 
+        result[0] = directionDescriptor; 
+    } catch ( IntrospectionError exc ) { 
+    } 
+    return result;
+}</pre>
+<p>When a property is selected in the Properties view, an editor
+is created in the Value column that allows you to specify a new value. To
+calculate the editor for a property, the java.beans.PropertyDescriptor is
+queried for a property editor. If an associated property editor is found,
+then it is used. Otherwise, one is located that is defined to work with the
+property type. You cannot affect the list of pre-defined property editors
+for a type. If a java.beans.PropertyEditor is found in the property descriptor
+or found for the property type, then the Properties view will attempt to determine
+the type of editor to create. The rules used are:</p>
+<ol><li>If the method  <tt class="sysout">public boolean supportsCustomEdit()</tt> returns
+ <tt class="sysout">true</tt>, then a dialog editor is created. The dialog
+button launches the editor returned from the method public Component getCustomEditor().
+The editor returned should be a subclass of  <tt class="sysout">java.awt.Component</tt>,
+and it will be hosted with an <span class="uicontrol">OK</span> and <span class="uicontrol">Cancel</span> button
+in a Frame or JFrame as required.</li>
+<li>If the method  <tt class="sysout">public String[] getTags()</tt> returns
+an array of strings, they are shown in a list. The label used for an existing
+value in the Properties view is the result of calling  <tt class="sysout">public
+void setValue(Object)</tt> with the property value, then calling
+ <tt class="sysout">public String getAsText()</tt> to determine the String
+to use. As you select a new value in the list, the editor's method  <tt class="sysout">public
+void setAsText(String)</tt> is called, and the new property value
+is retrieved using  <tt class="sysout">public Object getValue()</tt>.</li>
+<li>If neither of the above two methods return a custom editor or tags, then
+a text field editor is created in the Properties sheet. The text value initially
+displayed is the result of calling  <tt class="sysout">public void setValue(Object)</tt> and
+ <tt class="sysout">public String getAsText()</tt>. When a new string
+is entered in the text editor on each keystroke, the method  <tt class="sysout">public
+void setAsText(String)</tt> is called. If the method throws a  <tt class="sysout">java.lang.IllegalArgumentException</tt>,
+then the exception message is shown in the status bar and the value will not
+be applied. If no exception is thrown, when the <span class="uicontrol">Enter</span> key
+is clicked in the text editor (or if another property in the Properties view
+receives focus), then the result of calling  <tt class="sysout">public Object getValue()</tt> is
+sent as the argument to the set method described in the property descriptor.</li>
+</ol>
+<p>For every <tt class="sysout">java.beans.PropertyEditor</tt> the
+method  <tt class="sysout">public String getJavaInitializationString()</tt> 
+must also be specialized. This returns the string that is used in the Java
+source code as the argument to the <tt class="sysout">set</tt> method
+of the property descriptor. This string should return the value, and any types
+referenced in the string should be fully qualified and not rely on any import
+statements in the class being composed. If your BeanInfo specializes the template
+JRE class <tt class="sysout">java.beans.SimpleBeanInfo</tt>, then the
+method is not abstract and will be inherited to return '???'. You must remember
+to specialize it correctly. </p>
+<p>In addition to using the public String[]
+getTags() method on a property descriptor to get a drop-down list, there is
+a shorter way of specifying a list of values. An attribute value is created
+with the key of  <tt class="sysout">enumerationValues</tt>, a value that
+is an array of triplicate entries of the displayName in the list, the value
+itself, and the initializationString. As an example, consider a property called
+ <var class="varname">direction</var> that is typed to  <tt class="sysout">int</tt> and
+can be assigned values of 0,1, 2 and 3. These are references to static fields
+NORTH, EAST, SOUTH, and WEST on the class  <tt class="sysout">myclasses.CompassPoint</tt>.
+The property descriptor could be written as follows:</p>
+<pre>public PropertyDescriptor[] getPropertyDescriptors() {
+    PropertyDescriptor[] result = new PropertyDescriptor[1];
+    try{
+        PropertyDescriptor directionDescriptor
+= new PropertyDescriptor("direction",MyJavaBean.class);
+        directionDescriptor.setValue("enumerationValues",new
+Object[]{
+           
+"North",new
+Integer(myclasses.CompassPoint.NORTH),"myclasses.CompassPoint.NORTH",
+           
+"East",new
+Integer(myclasses.CompassPoint.EAST),"myclasses.CompassPoint.EAST",
+           
+"South",new
+Integer(myclasses.CompassPoint.SOUTH),"myclasses.CompassPoint.SOUTH",
+           
+"West",new
+Integer(myclasses.CompassPoint.WEST),"myclasses.CompassPoint.WEST"
+        });
+        result[0] = directionDescriptor;
+    } catch ( IntrospectionError exc ) {
+    }
+    return result;
+}</pre>
+<p>The second value in each of the entries is not the int static
+field itself such as myclasses.CompoassPoint.NORTH but instead is an instance
+of  <tt class="sysout">java.lang.Integer</tt>. This is because primitive
+types cannot be put into an array that is typed to  <tt class="sysout">Object</tt>,
+so instead their  <tt class="sysout">java.lang equivalent</tt> must be
+used.</p>
+</div>
+<div class="skipspace"><h4 class="sectiontitle"> Bean Info events </h4><p>The list of events that is shown
+on a Java bean is the preferred method descriptors on its event descriptors.</p>
+<p>If
+an adapter class is available, then it should be added to the java.beans.EventDescriptor
+as a named attribute with a key of "eventAdapterClass", for example</p>
+<div class="p"><pre><samp class="codeph">EventSetDescriptor focusEventSetDescriptor = new EventSetDescriptor(</samp>  
+<samp class="codeph">  java.awt.Component.class,</samp>  
+<samp class="codeph">  "focus",</samp>  
+<samp class="codeph">  java.awt.event.FocusListener.class,</samp>  
+<samp class="codeph">  new String[] { "focusGained(java.awt.event.FocusEvent)", "focusLost(java.awt.event.FocusEvent)" },</samp>  
+<samp class="codeph">  "addFocusListener(java.awt.event.FocusListener)",</samp>
+<samp class="codeph">  "removeFocusListener(java.awt.event.FocusListener"</samp>
+<samp class="codeph">);</samp>
+<samp class="codeph"><b>focusEventSetDescriptor.setValue("eventAdapterClass", "java.awt.event.FocusAdapter");</b></samp></pre>
+ </div>
+</div>
+</div>
+
+<div>
+<p>
+<b class="parentlink">Parent topic:</b> <a href="../topics/cve_beaninfo.html" title="If you are creating new components or beans for use within the visual editor (for example, adding components to the palette), you can control their behavior by supplying a BeanInfo class.">BeanInfo classes and introspection</a><br />
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a href="../topics/tve_beaninfo.html" title="You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.">Controlling BeanInfo information for plug-in developers</a><br />
+<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and runtime to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
+</p>
+</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
+<br />
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Aligning components using X/Y alignment" />
+<meta name="abstract" content="When you set the layout manager to null, you can use the Customize Layout window to align components based on their bounds." />
+<meta name="description" content="When you set the layout manager to null, you can use the Customize Layout window to align components based on their bounds." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tve_align_xy" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Aligning components using X/Y alignment</title>
+</head>
+<body id="tve_align_xy"><a name="tve_align_xy"><!-- --></a>
+
+<h1 class="topictitle1">Aligning components using X/Y alignment</h1>
+<div><p>When you set the layout manager to null, you can use the Customize
+Layout window to align components based on their bounds.</p>
+<div class="skipspace"><p>With layout set to null, each component is independently placed
+and sized on the user interface based on its bounds. To avoid the tedious
+and error-prone task of individually updating each component's bounds, you
+can use the visual editor to align and adjust the sizes and placement of components
+based on relationships.</p>
+<div class="p">When layout is set to null, the Customize Layout
+window has a number of actions that work on a group of components. You can:<ul><li>Align components based on edges</li>
+<li>Align components based on center points</li>
+<li>Make components the same width and height</li>
+<li>Distribute components evenly, both vertically and horizontally, across
+a given space</li>
+</ul>
+</div>
+<p>For example, you can select three JButton components and specify
+that they should be the same width and aligned with each other on the left
+bound. The last selected JButton is used as the anchor, or control, for the
+other two buttons. The <span class="uicontrol">Align left</span> action aligns the
+JButtons with the left edge of the last selected JButton, and the <span class="uicontrol">Match
+width</span> action makes the selected JButtons the same width as the
+control JButton.</p>
+<p>The alignment buttons on the Customize Layout window
+are only enabled if the following conditions are true:</p>
+<ul><li>Two or more components are selected, and the parent containers have no
+layout manager (null).</li>
+<li>The components have no parent and have been placed on the Design view
+directly.</li>
+</ul>
+<p>In addition to aligning components and matching width and height,
+you can distribute components. When components are distributed, their positions
+are changed so that they are evenly spaced within a bounding box defined by
+their parent container. For example, the <span class="uicontrol">Distribute vertical</span> button
+ <img src="../images/distributevert_obj.gif" alt="distribute vertical button" /> will
+arrange the following controls so that they have the same spacing:</p>
+<p> <img src="../images/Align_01.gif" alt="beans as placed on Design view" /> By
+clicking <span class="uicontrol">Distribute vertical</span>, it will look like this:</p>
+<p><img src="../images/Align_02.gif" alt="beans distributed vertically" /></p>
+<p>Notice
+that the three buttons are distributed within the height of the parent (the
+frame's top and bottom edge).</p>
+<p>To allow for more control over the area
+used for the distribution, you can enable the distribute box with the alignment
+window button  <img src="../images/distributebox_obj.gif" alt="distribute box" />.
+This will show a box drawn around the area of all the selected components,
+which can be moved and resized using its handles. When a 'distribute' occurs
+and the box is active, the area that is divided up to reposition the controls
+will be the distribute box, rather than the parent container.</p>
+<p> <br /><img src="../images/Align_03.gif" alt="beans with distribution box" /><br /> The
+box can be moved and resized  <br /><img src="../images/Align_04.gif" alt="beans in resized distribution box" /><br /> and vertical distribute is now within this box.</p>
+<p> <img src="../images/Align_05.gif" alt="beans distributed vertically within box" /></p>
+<p>To align, resize, and distribute components in
+null layout:</p>
+</div>
+<ol><li class="skipspace"><span>In the Design view or Java Beans view, select two or more components
+that you want to align or adjust in relation to each other. You can use the
+marquee selection tool or hold the Ctrl key to select multiple components. </span> The last component that you select is the control component, or
+anchor. The anchor component is indicated by black resize handles, while the
+other selected components have white handles.</li>
+<li class="skipspace"><span>Do one of the following to open the Customize Layout window: </span><ul><li>Right-click and select <span class="uicontrol">Customize Layout</span> from
+the pop-up menu.</li>
+<li>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/aligndialog_obj.gif" alt="show alignment window icon" /></span> toolbar button.</li>
+</ul>
+ <br /><img src="../images/customizeLayout_null.gif" alt="Customize Layout window for null layout" /><br /></li>
+<li class="skipspace"><span>To align the components with each other, use the following buttons:</span><ul><li><span class="uicontrol">Align left</span> - aligns the components with the
+left edge of the anchor component.</li>
+<li><span class="uicontrol">Align center</span> - aligns the components with the
+center of the anchor component along a vertical plane.</li>
+<li><span class="uicontrol">Align right</span> - aligns the components with the
+right edge of the anchor component.</li>
+<li><span class="uicontrol">Align top</span> - aligns the components with the
+top edge of the anchor component.</li>
+<li><span class="uicontrol">Align middle</span> - aligns the components with the
+middle of the anchor component along a horizontal plane.</li>
+<li><span class="uicontrol">Align bottom</span> - aligns the components with the
+bottom edge of the anchor component.</li>
+</ul>
+</li>
+<li class="skipspace"><span>To adjust the size of the selected components, use the following
+buttons:</span><ul><li><span class="uicontrol">Match width</span> - makes the components the same
+width as the anchor component.</li>
+<li><span class="uicontrol">Match height</span> - makes the components the same
+height as the anchor component.</li>
+</ul>
+</li>
+<li class="skipspace"><span>To distribute the spacing of the components, first do one of the
+following to specify the bounds of the distribution area:</span><ul><li>Click nothing to use the container as the distribution area (this
+is the default behavior), or click <span class="uicontrol">Hide distribute box</span> if
+the box is already showing.</li>
+<li>Click the <span class="uicontrol">Show distribute box</span> and drag the
+handles of the box to create the desired size for your distribution.</li>
+</ul>
+ Then, use one of the following buttons to distribute the components:<ul><li><span class="uicontrol">Distribute horizontally</span> - makes the components
+the same width as the anchor component.</li>
+<li><span class="uicontrol">Distribute vertically</span> - makes the components
+the same height as the anchor component.</li>
+</ul>
+</li>
+</ol>
+</div>
+
+<div>
+<p>
+<b class="parentlink">Parent topic:</b> <a href="../topics/tve_layout_overview.html" title="Use the visual editor for Java to visually arrange and lay out visual components in your Java application.">Laying out components using the visual editor</a><br />
+</p>
+<p><b class="relconceptshd">Related concepts</b><br />
+<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
+</p>
+</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
+<br />
+</div>
+</body>
+</html>
