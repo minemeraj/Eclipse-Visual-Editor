@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 19:28:57 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 20:57:04 $ 
  */
 import java.util.*;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -52,13 +52,19 @@ public class ControlPropertySourceAdapter extends BeanPropertySourceAdapter {
 		}
 		
 		boolean explicitUserSizing = false;
+		boolean ignoreLayoutData = false;
 		// Top level things like Shells don't have a parent
 		if (compositeJavaObjectInstance == null) {
 			explicitUserSizing = true;
 		} else {
 			CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);
 			IBeanProxy layoutBeanProxy = compositeProxyAdapter.getLayoutBeanProxy();
-			if(layoutBeanProxy == null) explicitUserSizing = true;
+			// null layout and FillLayout don't have layout data
+			if (layoutBeanProxy == null) 
+				explicitUserSizing = true;
+			else if (layoutBeanProxy.getTypeProxy().getTypeName().equals("org.eclipse.swt.layout.FillLayout")) {
+				ignoreLayoutData = true;
+			}
 		}
 		
 		List descriptorList = new ArrayList(descriptors.length);			
@@ -76,6 +82,8 @@ public class ControlPropertySourceAdapter extends BeanPropertySourceAdapter {
 					if ("bounds".equals(fn) || "size".equals(fn) || "location".equals(fn)) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						continue loop;
 				}
+				if("layoutData".equals(fn) && ignoreLayoutData)
+					continue loop;
 				// LayoutData is wrappered so it is treated differently to allow values on un-set layoutData instances to be set
 				if("layoutData".equals(fn)){
 					// We need the class of the layoutData to set.  This comes from looking at the policyFactory
@@ -86,6 +94,9 @@ public class ControlPropertySourceAdapter extends BeanPropertySourceAdapter {
 					LayoutDataPropertyDescriptor layoutPD = null;
 					if(factory != null){
 						layoutPD = (LayoutDataPropertyDescriptor) factory.getConstraintPropertyDescriptor(sf);
+						// Handle the case in which there is property descriptor defined 
+						if (layoutPD == null)
+							layoutPD = new LayoutDataPropertyDescriptor(null);
 					} else {
 						layoutPD = new LayoutDataPropertyDescriptor(null);
 					}

@@ -46,4 +46,10 @@
     </addedEObjects>      
         
   </event:AddMany>
+  <event:AddMany featureName="eAnnotations">    
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
+        value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FillLayoutPolicyFactory"/>
+    </addedEObjects>
+  </event:AddMany>  
 </xmi:XMI>
