@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 
@@ -20,22 +20,20 @@ import java.util.Vector;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 
 public class CodeTypeRef {
 
-protected   CompilationUnitDeclaration  fdeclCU = null ;
-protected   TypeDeclaration				fdeclType=null ;
-protected   IType							fType = null ;
-protected   ICompilationUnit				fCU = null ;
-protected   String						fName ;
-protected   IBeanDeclModel              	fBeanModel ;
-protected   Vector                      	fMethods = new Vector () ;
-protected   BeanSubclassComposition		fbeanComposition = null ;
+protected   TypeDeclaration			fdeclType=null ;
+protected   IType					fType = null ;
+protected   ICompilationUnit		fCU = null ;
+protected   String					fName ;
+protected   IBeanDeclModel			fBeanModel ;
+protected   Vector					fMethods = new Vector () ;
+protected   BeanSubclassComposition	fbeanComposition = null ;
 	
 public CodeTypeRef (String typeName, IBeanDeclModel model){
 	fName = typeName;
@@ -46,15 +44,11 @@ public CodeTypeRef (String typeName, IBeanDeclModel model){
 
 public CodeTypeRef (TypeDeclaration declType, IBeanDeclModel model) {
 	fdeclType = declType ;
-	fName = new String (declType.name) ;	
+	fName = org.eclipse.ve.internal.java.codegen.util.CodeGenUtil.resolve(declType.getName(), model);	
 	fBeanModel = model ;
 	fbeanComposition = model.getCompositionModel().getModelRoot() ;
 }	
 
-public CodeTypeRef (CompilationUnitDeclaration declCU, IBeanDeclModel model) {
-    this(declCU.types[0],model) ;	
-	fdeclCU = declCU ;
-}
 
 public TypeDeclaration getTypeDecl() {
 	return fdeclType ;
@@ -88,6 +82,13 @@ public Iterator getMethods() {
 
 public String getName(){
 	return fName;
+}
+
+public String getSimpleName() {
+	if (fName.indexOf('$')>=0)
+		   return fName.substring(fName.indexOf('$')+1);
+		else
+		   return fName;
 }
 
 public void dispose() {

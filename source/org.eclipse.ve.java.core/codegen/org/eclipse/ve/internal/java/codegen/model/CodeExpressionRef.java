@@ -11,25 +11,16 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.14 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.15 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 
-import java.util.*;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.compiler.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
-import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.core.BasicCompilationUnit;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
@@ -40,7 +31,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class CodeExpressionRef extends AbstractCodeRef {
 
 
-protected   Statement				fExpr			= null ;
+protected   Statement				fexpStmt			= null ;
 protected   CodeMethodRef			fMethod			= null ;
 protected   IExpressionDecoder		fDecoder		= null ;   
 protected   BeanPart				fBean			= null ;
@@ -104,22 +95,22 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method, int delta) {
 	super(-1,-1,null) ;
 
     int start, end ;
-    if (exp instanceof LocalDeclaration) {
-        // Local Declaration is built out of 3 expressions
-        start = ((LocalDeclaration)exp).declarationSourceStart+delta ;
-        end = ((LocalDeclaration)exp).declarationSourceEnd+delta ;
-    }
-    else {
-        start = exp.sourceStart+delta ;
-        end = exp.sourceEnd+delta ;
-    }
+//    if (exp instanceof VariableDeclarationExpression) {
+//        // Local Declaration is built out of 3 expressions
+//        start = ((VariableDeclarationExpression)exp).declarationSourceStart+delta ;
+//        end = ((VariableDeclarationExpression)exp).declarationSourceEnd+delta ;
+//    }
+//    else {
+        start = exp.getStartPosition()+delta ;
+        end = exp.getStartPosition()+exp.getLength()+delta ;
+//    }
         
 	ExpressionParser fCP = createExpressionParser(method.getContent(),
 	                                      start-method.getOffset(),
 	                                      end-start+1) ;
 
     fMethod = method ;
-    fExpr = exp ;
+    fexpStmt = exp ;
 	setState(STATE_SRC_LOC_FIXED, true);   
 	setContent(fCP) ;
 	setOffset(getContentParser().getFillerOff()) ;
@@ -133,7 +124,7 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method) {
 public CodeExpressionRef (CodeMethodRef method,BeanPart bean) {	
 	super(-1,-1,null) ;	        
 	fMethod = method ;
-	fExpr = null ;
+	fexpStmt = null ;
 	setBean(bean) ;
 }
 
@@ -262,99 +253,6 @@ protected boolean isDuplicate() {
 	return result ;
 }
 
-private class ExpressionRefVisitor extends ASTVisitor{
-	
-	private ITypeResolver resolver = null;
-	private List fqns = null;
-	
-	public ExpressionRefVisitor(ITypeResolver resolver){
-		this.resolver = resolver;
-		fqns = new ArrayList();
-	}
-
-	public List getEnvElements(){
-		return fqns;
-	}
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(TypeDeclaration, CompilationUnitScope)
-	 */
-	public boolean visit(
-		org.eclipse.jdt.internal.compiler.ast.TypeDeclaration typeDeclaration,
-		CompilationUnitScope scope) {
-			if(resolver!=null)
-				fqns.add(resolver.resolve(typeDeclaration.toString()));
-			return super.visit(typeDeclaration, scope);
-	}
-	
-	public void reset(){
-		fqns = new ArrayList();
-	}
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(QualifiedNameReference, BlockScope)
-	 */
-	public boolean visit(
-		QualifiedNameReference qualifiedNameReference,
-		BlockScope scope) {
-			if(resolver!=null)
-				fqns.add(resolver.resolve(qualifiedNameReference.toString()));
-		return super.visit(qualifiedNameReference, scope);
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(SingleNameReference, BlockScope)
-	 */
-	public boolean visit(
-		SingleNameReference singleNameReference,
-		BlockScope scope) {
-			if(resolver!=null)
-				fqns.add(resolver.resolve(singleNameReference.toString()));
-		return super.visit(singleNameReference, scope);
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.IAbstractSyntaxTreeVisitor#visit(AllocationExpression, BlockScope)
-	 */
-	public boolean visit(
-		AllocationExpression allocationExpression,
-		BlockScope scope) {
-				if(resolver!=null)
-					fqns.add(resolver.resolve(allocationExpression.type.toString()));
-		return super.visit(allocationExpression, scope);
-	}
-
-}
-
-public boolean isEquivalentChanged(ITypeResolver oldResolver, CodeExpressionRef newExp, ITypeResolver newResolver){
-	try {
-		if(isEquivalent(newExp)>-1){
-			if(getExpression()!=null && oldResolver!=null && newExp!=null && newExp.getExpression()!=null && newResolver!=null){
-					
-				ExpressionRefVisitor visitor = new ExpressionRefVisitor(oldResolver);
-				getExpression().traverse(visitor, null);
-				List oldEnv = visitor.getEnvElements();
-				visitor.reset();
-					
-				visitor = new ExpressionRefVisitor(newResolver);
-				newExp.getExpression().traverse(visitor, null);
-				List newEnv = visitor.getEnvElements();
-				visitor.reset();
-					
-				if(oldEnv!=null && newEnv!=null && oldEnv.size()==newEnv.size() && oldEnv.size()>0){
-					for(int i=0;i<oldEnv.size();i++)
-						if(!oldEnv.get(i).equals(newEnv.get(i)))
-							return true;
-						return false;
-				}
-			}
-		}else{
-			JavaVEPlugin.log("Comparision in CodeExpressionRef.isEquivalentChanged() should happen between equivalent expressions.", Level.WARNING); //$NON-NLS-1$
-			return true;
-		}
-	} catch (CodeGenException e) {
-	}
-	return true;
-}
-
 /**
  *  Decode this. expression 
  */
@@ -374,7 +272,7 @@ public  boolean  decodeExpression() throws CodeGenException {
       }
       
       if (isDuplicate()) {
-      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fExpr, Level.FINE) ; //$NON-NLS-1$
+      	JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Duplicate Expression"+fexpStmt, Level.FINE) ; //$NON-NLS-1$
       	return false ;
       }
     
@@ -421,6 +319,7 @@ public  String  generateSource(EStructuralFeature sf) throws CodeGenException {
       setFillerContent(BeanMethodTemplate.getInitExprFiller());
       try {
 	     refreshAST();
+	     getExpDecoder().setStatement(fexpStmt);
       }
       catch (Exception e1) {
 //      	JavaVEPlugin.log(e1) ;
@@ -442,8 +341,8 @@ public BeanPart getBean() {
 	return fBean ;
 }
 
-public Statement getExpression() {
-	return fExpr ;
+public Statement getExprStmt() {
+	return fexpStmt ;
 }
 
 
@@ -539,8 +438,8 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 		// extract new changes
 		setContent(exp.getParser()) ;
         updateLimboState(exp) ;
-        if (exp.getExpression() != null)
-		   setExpression(exp.getExpression());
+        if (exp.getExprStmt() != null)
+		   setExprStmt(exp.getExprStmt());
 		
 		// Update the VCE model
 		if((!isStateSet(STATE_EXP_IN_LIMBO)) && (!isStateSet(STATE_NO_MODEL))) { //((fState&STATE_EXP_IN_LIMBO)==0 && (fState&STATE_NO_OP)==0){
@@ -676,46 +575,30 @@ public  void insertContentToDocument() {
 	}
 }
 
-private CompilationUnitDeclaration getModelFromParser(
-	ProblemReporter reporter,
-	CompilationResult result,
-	BasicCompilationUnit cu){
-	Parser aParser = new Parser(reporter,true);
-	return aParser.parse(cu,result);	
-}
+/**
+ * In the case of a generated expresion (from a template), we need a ref. AST node
+ * for snippet analysis
+ * 
+ * @since 1.0.0
+ */
 public void refreshAST() {
-	if (fExpr == null || true) {
-
-		// Note:: Here we have an expressionRef, which has no AST statement. 
-		//        (AST statement is very important to 'decode()' an expressionRef
-		//         - it provides structural reference vital for decoding.)
-		//        This case arises when an expressionRef is created purely from
-		//        the model, and its code is inserted into the code - From then
-		//        on the expression 'cannot be decoded' because it has no AST
-		//        statement. Hence when code is inserted into the document, the
-		//        document is parsed so that the AST statement for the expression
-		//        just inserted can be found, and everything is stable.
-//TODO:  M7 Eclipse should provide support for this in AST		
-		if (getBean() != null && getBean().getModel() != null && getBean().getModel().getCompilationUnit() != null) {
-				StringBuffer sb = new StringBuffer();
-				sb.append("class Foo {\n void method() {\n") ;
-				sb.append(getContent()) ;
-				sb.append("\n}\n}") ;
-				
 		
-				BasicCompilationUnit scu =
-					new BasicCompilationUnit(sb.toString().toCharArray(),  new char[][] { {}
-				}, "Foo.java", (String) JavaCore.getOptions().get(CompilerOptions.OPTION_Encoding));
-				ProblemReporter reporter = new ProblemReporter(DefaultErrorHandlingPolicies.exitAfterAllProblems(), new CompilerOptions(), new DefaultProblemFactory(Locale.getDefault()));
-				CompilationResult result = new CompilationResult(scu, 1, 1, 20);
-				CompilationUnitDeclaration cudecl = getModelFromParser(reporter, result, scu);
-				if (cudecl.types[0].methods[1].statements!=null)
-                    setExpression(cudecl.types[0].methods[1].statements[0]) ;
-
-				
-		}
-
-	}
+		final Statement[] s = new Statement[] { null } ;    
+        ASTNode ast = AST.parse(AST.K_STATEMENTS, getContent().toCharArray(), 0, getContent().length(), null);
+        ASTVisitor visitor = new ASTVisitor() {
+			public void endVisit(ExpressionStatement node) {
+				s[0] = node;			
+			}
+			public void endVisit(VariableDeclarationStatement node) {
+				s[0] = node;
+			}
+		};
+		ast.accept(visitor);
+		
+        if (s[0] ==null)
+        	JavaVEPlugin.log("CodeExpressionRef.refreshAST(): could notrefresh "+getContent(),Level.WARNING);
+        else
+            fexpStmt = s[0];	
 }
 
 
@@ -756,7 +639,8 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		  if (getBean() != null && exp1.getBean() == null) return -1 ;
 		
 		boolean beanNameEquivalency = getBean().getSimpleName().equals(exp1.getBean().getSimpleName());
-		
+
+//TODO: Need to deal with Local Declerations		
 		String expc1 = exp1.getMethodNameContent();
 		String expc2 = getMethodNameContent();
 		boolean expEquivalency = expc1.equals(expc2);		
@@ -791,8 +675,8 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		        
 		    
 			try {                        
-				Object[] h = getExpressionDecoder().getArgsHandles((Statement)getExpression())  ;				
-				Object[] hc = exp1.getExpressionDecoder().getArgsHandles(exp1.getExpression())  ;				
+				Object[] h = getExpressionDecoder().getArgsHandles(getExprStmt())  ;				
+				Object[] hc = exp1.getExpressionDecoder().getArgsHandles(exp1.getExprStmt())  ;				
 				
 				if (thisSetProxy)
 				   getBean().setProxy(null) ;
@@ -818,7 +702,7 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 				   return 0; // Same expression, but needs update
 								
 			}	
-			catch (CodeGenException e) {
+			catch (Exception e) {
 				// It is possible that a feature is not available, but entered in the code
 				JavaVEPlugin.log("CodeExpressionRef.isEquivalent: could not compare :\n\t"+this+"\n\t"+exp1) ; //$NON-NLS-1$ //$NON-NLS-2$
                 return -1 ;
@@ -834,17 +718,18 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
  * ExpressionVisitor handles only MessageSend and Assignment.
  */
 public String getMethodNameContent(){
-	if(fExpr!=null){
-		if (fExpr instanceof MessageSend) {
-			MessageSend msg = (MessageSend) fExpr;
-			return new String(msg.selector);
+	if(fexpStmt!=null && fexpStmt instanceof ExpressionStatement){
+		Expression e = ((ExpressionStatement)fexpStmt).getExpression();
+		if (e instanceof MethodInvocation) {
+			MethodInvocation msg = (MethodInvocation) e;
+			return msg.getName().getIdentifier();
 		}
-		if (fExpr instanceof Assignment) {
-			Assignment assgn = (Assignment) fExpr;
-			if (assgn.expression instanceof AllocationExpression) {
-				AllocationExpression alloc = (AllocationExpression) assgn.expression;
+		if (e instanceof Assignment) {
+			Assignment assgn = (Assignment) e;
+			if (assgn.getRightHandSide() instanceof ClassInstanceCreation) {
+				ClassInstanceCreation alloc = (ClassInstanceCreation) assgn.getRightHandSide();
 				String allocS = alloc.toString();
-				return allocS.substring(0,allocS.indexOf(alloc.type.toString())).trim();
+				return allocS.substring(0,allocS.indexOf(alloc.getName().toString())).trim();
 			}
 		}
 	}
@@ -978,7 +863,7 @@ public CodeExpressionRef createShadow(CodeMethodRef mr, BeanPart bp) {
     shadow.setStateFrom(this) ;
     shadow.setState(STATE_SHADOW, true) ;
     
-    shadow.setExpression(getExpression()) ;
+    shadow.setExprStmt(getExprStmt()) ;
     
     // Delay the creation of a decoder.
     if (!bp.isProxy())
@@ -989,7 +874,7 @@ public CodeExpressionRef createShadow(CodeMethodRef mr, BeanPart bp) {
     shadow.primSetState(primGetState()) ;
     shadow.setState(STATE_SHADOW, true) ;
     
-    if (shadow.getExpression() == null)
+    if (shadow.getExprStmt() == null)
         shadow.setSF(getSF()) ;
     
     setShadowExp(shadow);
@@ -1004,8 +889,8 @@ protected IJVEDecoder primGetDecoder() {
 /**
  * @param statement
  */
-public void setExpression(Statement statement) {
-	fExpr = statement;
+public void setExprStmt(Statement statement) {
+	fexpStmt = statement;
 }
 
 public void setNoSrcExpression() {

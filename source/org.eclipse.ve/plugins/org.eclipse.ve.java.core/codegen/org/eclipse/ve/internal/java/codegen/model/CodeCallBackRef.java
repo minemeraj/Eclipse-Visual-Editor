@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
-import org.eclipse.jdt.internal.compiler.ast.IfStatement;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.IJVEDecoder;
@@ -43,7 +44,7 @@ public IJVEDecoder  getEventDecoder(){
 	
 	if (fDecoder != null) return fDecoder ;
 
-    if (PropertyChangedInnerStyleHelper.parsePropertyFromIfStatement((IfStatement)fExpr) != null)    
+    if (PropertyChangedInnerStyleHelper.parsePropertyFromIfStatement((IfStatement)fexpStmt) != null)    
       fDecoder = new PropertyEventDecoder() ;
     else
       fDecoder = new CallBackDecoder() ;    	

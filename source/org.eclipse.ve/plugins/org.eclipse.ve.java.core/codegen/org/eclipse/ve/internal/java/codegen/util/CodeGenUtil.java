@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.11 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-05 23:18:39 $ 
  */
 
 
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -60,37 +61,6 @@ import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 
 public class CodeGenUtil {
 		
-
-/**
- *  Extract the end resulted write method or public field access.
- */	
-static public String getWriteMethod(Statement expr)	{
-   if (expr == null) return null ;
-   // TODO  Must deal with non Literal also
-   if (expr instanceof MessageSend)
-       return new String (((MessageSend)expr).selector) ;
-   else if (expr instanceof Assignment) {
-       // public field access, e.g., gridBagConstraints.gridx = 0 ;
-       if (((Assignment)expr).lhs instanceof QualifiedNameReference) {
-           char[][] tokens = ((QualifiedNameReference)((Assignment)expr).lhs).tokens ;
-          return new String (tokens[tokens.length-1]) ;
-       }
-	   else if (((Assignment)expr).lhs instanceof SingleNameReference) {
-		 SingleNameReference lhs = (SingleNameReference) ((Assignment)expr).lhs ;
-		 return new String(lhs.token) ;
-	}
-   }
-   else if (expr instanceof LocalDeclaration) {
-       TypeReference tr = ((LocalDeclaration)expr).type ;
-       if (tr instanceof QualifiedTypeReference)
-           return "new " + tokensToString(((QualifiedTypeReference)tr).tokens) ; //$NON-NLS-1$
-       else {
-           // TODO  Need to resolve
-           return "new" ; //$NON-NLS-1$
-       }
-   }
-   return null ;
-}
 
 public static boolean isExactlyPresent(String main, String target){
 	if(main==null || target==null)
@@ -862,6 +832,20 @@ public static String expressionToString (Expression exp) {
 	StringBuffer sb = new StringBuffer() ;
 	exp.printExpression(4,sb) ;
 	return sb.toString();	
+}
+
+public static String resolve(Name toResolve, IBeanDeclModel bdm) {
+	if (toResolve.isQualifiedName())
+		return toResolve.toString();
+	else 
+		return bdm.resolve(toResolve.toString());
+}
+
+public static String resolve(Name toResolve, ITypeResolver resolver) {
+	if (toResolve.isQualifiedName())
+		return toResolve.toString();
+	else 
+		return resolver.resolve(toResolve.toString());
 }
 
 }

@@ -11,13 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IExpressionDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.logging.Level;
@@ -59,7 +59,7 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
  protected  boolean primReconcileCU(ICompilationUnit cu) {
  	try {
  	 if (!cu.isConsistent()) {
- 	     cu.reconcile() ;
+ 	     cu.reconcile(false,null) ;
  	     return true ;
  	 }
  	}

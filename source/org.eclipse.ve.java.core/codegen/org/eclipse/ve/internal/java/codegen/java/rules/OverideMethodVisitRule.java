@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: OverideMethodVisitRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -25,17 +26,8 @@ public class OverideMethodVisitRule implements IOverideMethodVisitRule {
 	/**
 	 *
 	 */
-	protected boolean sameContent(String st, char[] cArray) {
-		if (st == null || st.length() != cArray.length)
-			return false;
-		return st.equals(new String(cArray));
-	}
-
-	/**
-	 *
-	 */
-	public ISourceVisitor overideMethodVisit(AbstractMethodDeclaration method, IBeanDeclModel model) {
-		if (sameContent("initialize", method.selector)) { // Maybe do something different here, same for connFooFoo() //$NON-NLS-1$
+	public ISourceVisitor overideMethodVisit(MethodDeclaration method, IBeanDeclModel model) {
+		if ("initialize".equals(method.getName().getIdentifier())) { // Maybe do something different here, same for connFooFoo() //$NON-NLS-1$
 			return null;
 		}
 		return null;

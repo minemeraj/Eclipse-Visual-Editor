@@ -14,13 +14,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodParsingRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.EmptyStatement;
+import org.eclipse.jdt.core.dom.EmptyStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 /**
@@ -31,14 +32,14 @@ public class EventMethodParsingRule implements IEventMethodParsingRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule#ignoreAnonymousEventMethod(org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration)
 	 */
-	public boolean ignoreAnonymousEventMethod(AbstractMethodDeclaration m) {
-		if (m.statements == null) {
+	public boolean ignoreAnonymousEventMethod(MethodDeclaration m) {
+		if (m.getBody() == null) {
 			return true ;
 		}
 		else {
 			boolean result = true ;
-			for (int i = 0; i < m.statements.length; i++) {
-				if (!(m.statements[i] instanceof EmptyStatement)) {
+			for (int i = 0; i < m.getBody().statements().size(); i++) {
+				if (!(m.getBody().statements().get(i) instanceof EmptyStatement)) {
 					result = false ;
 					break ;
 				}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,9 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
-
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
@@ -39,56 +38,58 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 		super(bean, exp, owner);
 	}
 
-	protected boolean processEvent(MessageSend event) {
+	protected boolean processEvent(MethodInvocation event) {
 		
-		Expression exp = event.arguments[0] ;
+		Expression exp = (Expression) event.arguments().get(0) ;
 		cleanUpPreviousIfNedded() ;
 		int index = getInvocationIndex();
 //		EventInvocation ee = getNewEventInvocation(fbeanPart.getModel().getCompositionModel());
 //		ee.setEvent((BeanEvent) fEventDecorator.eContainer());
 		EventInvocation ee = (EventInvocation) fEventInvocation ;
-		if (exp instanceof QualifiedAllocationExpression) {
-			// Anonymous allocation
-			QualifiedAllocationExpression qe = (QualifiedAllocationExpression) exp;
-			JavaClass clazz = getAllocatedType(qe.type);
-			if (clazz == null || !clazz.isExistingType())
-				return false;
+		if (exp instanceof ClassInstanceCreation) {
+			ClassInstanceCreation qe = (ClassInstanceCreation) exp;
+			if (qe.getAnonymousClassDeclaration() != null) {
+				// Anonymous allocation
 
-			Listener l;
-			if (clazz.isInterface())
-				l = getAnonymousListener(null, new Object[] { clazz });
-			else
-				l = getAnonymousListener(clazz, null);
-			ee.setListener(l);
-			List impl = getAnonymousTypeEventMethods(qe.anonymousType);
-			for (Iterator itr = impl.iterator(); itr.hasNext();) {
-				Method m = (Method) itr.next();
-				// Anonymouse callback is not shared
-				addMethod(ee,m,false);
-			}
-			addInvocationToModel(ee, index);
-			return true;
-		}
-		else if (exp instanceof AllocationExpression) {
-			// Allocation of a new class
-			AllocationExpression ae = (AllocationExpression) exp;
-			JavaClass clazz = getAllocatedType(ae.type);
-			if (clazz == null)
-				return false;
-			Listener l = getIsClassListener(clazz);
-			if (l == null)
-				return false;
+				JavaClass clazz = getAllocatedType(qe.getName());
+				if (clazz == null || !clazz.isExistingType())
+					return false;
 
-			ee.setListener(l);
-			List impl = getExplicitTypeEventMethods(clazz);
-			for (Iterator itr = impl.iterator(); itr.hasNext();) {
-				Method m = (Method) itr.next();
-				// If it is an inner class, it is not parsed by this decoder and hence
-				// marked as shared
-				addMethod(ee,m,isInnerClass(clazz)) ;
+				Listener l;
+				if (clazz.isInterface())
+					l = getAnonymousListener(null, new Object[] { clazz });
+				else
+					l = getAnonymousListener(clazz, null);
+				ee.setListener(l);
+				List impl = getAnonymousTypeEventMethods(qe.getAnonymousClassDeclaration());
+				for (Iterator itr = impl.iterator(); itr.hasNext();) {
+					Method m = (Method) itr.next();
+					// Anonymouse callback is not shared
+					addMethod(ee, m, false);
+				}
+				addInvocationToModel(ee, index);
+				return true;
+			} else {
+				// Allocation of a new class
+				ClassInstanceCreation ae = (ClassInstanceCreation) exp;
+				JavaClass clazz = getAllocatedType(ae.getName());
+				if (clazz == null)
+					return false;
+				Listener l = getIsClassListener(clazz);
+				if (l == null)
+					return false;
+
+				ee.setListener(l);
+				List impl = getExplicitTypeEventMethods(clazz);
+				for (Iterator itr = impl.iterator(); itr.hasNext();) {
+					Method m = (Method) itr.next();
+					// If it is an inner class, it is not parsed by this decoder and hence
+					// marked as shared
+					addMethod(ee, m, isInnerClass(clazz));
+				}
+				addInvocationToModel(ee, index);
+				return true;
 			}
-			addInvocationToModel(ee,index);
-			return true;
 		}
 		return false;
 	}

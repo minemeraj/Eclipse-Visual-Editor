@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -26,6 +25,7 @@ import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
  
@@ -70,7 +70,16 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		
 	}
 	
-	protected PTExpression getParsedTree(Expression ast) {
+	/**
+	 * Convert an AST to resolved Parsed Tree
+	 * @param ast  (AST expression)
+	 * @param bdm
+	 * @param ref will update the list with the referenced instances not null
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static PTExpression getParsedTree(Expression ast, final IBeanDeclModel bdm, final List ref) {
 		class Resolver extends ParseTreeCreationFromAST.Resolver{
 			public PTExpression resolveName(Name name) {
 				String n=null;
@@ -79,7 +88,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 					// This could be a type, or a field access
 					// TODO:  this is a temporary fix, and will not deal with
 					//        factories call etc.
-					String r = fbeanPart.getModel().resolveType(n);
+					String r = CodeGenUtil.resolve(name, bdm); //	fbeanPart.getModel().resolveType(n);
 					if (!r.equals(n)) {
 						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
 						ptname.setName(r) ;
@@ -92,15 +101,16 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				else if (name instanceof SimpleName) {
 					// possibly a ref. to an instance variable
 					n = ((SimpleName)name).getIdentifier();
-					BeanPart bp = fbeanPart.getModel().getABean(n);
+					BeanPart bp = bdm.getABean(n);
 					if (bp!=null) {
 						PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 						IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
-						fReferences.add(o);
+						if (ref!=null)
+						   ref.add(o);
 						ptref.setObject(o);
 						return ptref;
 					}
-					n = fbeanPart.getModel().resolve(n);
+					n = CodeGenUtil.resolve(name, bdm); //fbeanPart.getModel().resolve(n);
 				}
 				if (n!=null) {
 					PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
@@ -110,7 +120,11 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				return null ;
 			}
 			public String resolveType(Type type) {
-				return fbeanPart.getModel().resolve(type.toString());
+				if (type instanceof SimpleType)
+				   return CodeGenUtil.resolve(((SimpleType)type).getName(), bdm);  //fbeanPart.getModel().resolve(type.toString());
+				else
+					//TBD
+					return null;
 			}
 		}		
 		Resolver r = new Resolver() ;
@@ -123,7 +137,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	public boolean decode() throws CodeGenException {
 		// TODO This is a temporary until we move to the new AST and use the converter
-		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST()));
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),fbeanPart.getModel(),fReferences));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		obj.setAllocation(alloc) ;
 		return true;

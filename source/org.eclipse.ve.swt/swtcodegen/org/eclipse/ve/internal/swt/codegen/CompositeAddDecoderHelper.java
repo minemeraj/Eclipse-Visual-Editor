@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:43:39 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:50 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -20,7 +20,9 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
@@ -93,32 +95,32 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAddedPart(MessageSend)
 	 */
-	protected BeanPart parseAddedPart(MessageSend exp) throws CodeGenException {
+	protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 		// TODO  Need to deal with multiple arguments, and nesting
 		
 		if (exp == null) return null ;
 		
 		BeanPart bp = null ;
 		
-		Expression[] args = exp.arguments ;
-		if (args.length < 1) throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
+		List args = exp.arguments() ;
+		if (args.size() < 1) throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
 		
 		// Parse the arguments to figure out which bean to add to this container
-		if (args[0] instanceof MessageSend)  {
+		if (args.get(0) instanceof MethodInvocation)  {
 			// Look to see of if this method returns a Bean
-			String selector = new String (((MessageSend)args[0]).selector) ;  
+			String selector = ((MethodInvocation)args.get(0)).getName().getIdentifier();  
 			bp = fOwner.getBeanModel().getBeanReturned(selector) ;       	
 		}
-		else if (args[0] instanceof SingleNameReference){
+		else if (args.get(0) instanceof SimpleName){
 			// Simple reference to a bean
-			String beanName = new String (((SingleNameReference)args[0]).token);
+			String beanName =((SimpleName)args.get(0)).getIdentifier();
 			bp = fOwner.getBeanModel().getABean(beanName) ;
 			if(bp==null)
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),beanName));
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
 		}
-		else if (args[0] instanceof AllocationExpression) {
-			String clazzName = fbeanPart.getModel().resolve(((AllocationExpression)args[0]).type.toString()) ;
+		else if (args.get(0) instanceof ClassInstanceCreation) {
+			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)args.get(0)).getName(), fbeanPart.getModel());
 			IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
 			JavaClass c = (JavaClass) obj.getJavaType() ;
 			if (c.isExistingType()) fAddedInstance = obj ;      
@@ -129,11 +131,11 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#parseAndAddArguments(Expression[])
 	 */
-	protected boolean parseAndAddArguments(Expression[] args) throws CodeGenException {
+	protected boolean parseAndAddArguments(List args) throws CodeGenException {
 		if (fAddedPart!= null || fAddedInstance != null) {
 			int index = -1 ;
-			if (args.length == 2 && args[1] instanceof IntLiteral) {
-				fAddedIndex = CodeGenUtil.expressionToString(args[1]);
+			if (args.size() == 2 && args.get(1) instanceof NumberLiteral) {
+				fAddedIndex = args.get(1).toString(); //CodeGenUtil.expressionToString(args[1]);
 				index = Integer.parseInt(fAddedIndex) ;
 			}          
 			if (fAddedPart!=null)

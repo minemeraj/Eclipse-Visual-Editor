@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.java.*;
 
@@ -68,40 +69,39 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.EventDecoderHelper#isValidArguments(org.eclipse.jdt.internal.compiler.ast.Expression[])
 	 */
-	protected boolean isValidArguments(Expression[] exps) {
-		boolean valid =  exps != null && exps.length>0 && exps.length<=2 ;
+	protected boolean isValidArguments(List exps) {
+		boolean valid =  exps != null && exps.size()>0 && exps.size()<=2 ;
 		if (!valid)
 		    CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Invalid Arguments",true) ; //$NON-NLS-1$
 		return valid ;
 	}
 	
-	protected Method getAddMethod (MessageSend event) {
+	protected Method getAddMethod (MethodInvocation event) {
 		
 		JavaClass beanClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(
 					fbeanPart.getType(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 		
 		List argsList = new ArrayList() ;
-		for (int i = 0; i < event.arguments.length; i++) {			
-			if (event.arguments[i] instanceof StringLiteral)
+		for (int i = 0; i < event.arguments().size(); i++) {			
+			if (event.arguments().get(i) instanceof StringLiteral)
 				   argsList.add("java.lang.String") ; //$NON-NLS-1$
-			else if (event.arguments[i] instanceof QualifiedAllocationExpression) {
-				String t = ((QualifiedAllocationExpression)event.arguments[i]).type.toString() ;
-				t = fbeanPart.getModel().resolve(t) ;
+			else if (event.arguments().get(i) instanceof ClassInstanceCreation) {
+				String t = CodeGenUtil.resolve(((ClassInstanceCreation)event.arguments().get(i)).getName(),
+						                       fbeanPart.getModel());
 				argsList.add(t) ;
 			}
-			else if (event.arguments[i] instanceof AllocationExpression){
-				AllocationExpression ae = (AllocationExpression)event.arguments[i] ;
-				String t = ae.type.toString() ;
-				t = fbeanPart.getModel().resolve(t) ;
-				if ((event.arguments.length ==1||event.arguments.length ==2)
-				        && ae.type instanceof SingleTypeReference){				
+			else if (event.arguments().get(i) instanceof ClassInstanceCreation){
+				ClassInstanceCreation ae = (ClassInstanceCreation)event.arguments().get(i) ;
+				String t = CodeGenUtil.resolve(ae.getName(), fbeanPart.getModel());				
+				if ((event.arguments().size() ==1||event.arguments().size() ==2)
+				        && ae.getName() instanceof SimpleName){				
 				    // Reference to an inner listener class
 				    argsList.add("java.beans.PropertyChangeListener") ; //$NON-NLS-1$	
 				}
 				else
 				   argsList.add(t) ;
 			}
-			else if (event.arguments[i] instanceof SingleNameReference) {
+			else if (event.arguments().get(i) instanceof SimpleName) {
 				// Just hard coded at this time
 				argsList.add("java.beans.PropertyChangeListener") ;		//$NON-NLS-1$				
 			}

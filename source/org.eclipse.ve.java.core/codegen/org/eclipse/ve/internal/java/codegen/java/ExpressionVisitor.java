@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
@@ -31,30 +31,27 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ExpressionVisitor extends SourceVisitor {
 	
-CodeMethodRef             fMethod = null ;
-CodeExpressionRef	        fExpression = null ;
+CodeMethodRef		fMethod = null ;
+CodeExpressionRef	fExpression = null ;
 	
 
-ExpressionVisitor(CodeMethodRef method,Statement stmt,IBeanDeclModel model,List reTryList) {
+ExpressionVisitor(CodeMethodRef method, Statement stmt,IBeanDeclModel model,List reTryList) {
 	super((ASTNode)stmt,model,reTryList) ;	
 	fMethod = method ;
+	try {
 	fExpression = new CodeExpressionRef (stmt,fMethod) ;
-//try {	
-//System.out.println("---"+fModel.getDocument().get().substring(fMethod.getOffset()+fExpression.getOffset(),fMethod.getOffset()+fExpression.getOffset()+fExpression.getLen())) ;	
-//}
-//catch (Throwable t) {
-//	System.out.println("--- Error on"+this) ;
-//}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 }
 
 /**
  *  Process a SingleNameReference, e.g., bean.setFoo()
  */
-BeanPart  processSingleNameReference (MessageSend stmt) { 
+BeanPart  processSingleNameReference (MethodInvocation stmt) { 
 	  // Check to see that the "bean" part is a part we are interested with
-	  String name = new String(((SingleNameReference)stmt.receiver).token);
-	  
-	  BeanPart b = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,name));//fMethod.getMethodHandle()+"^"+name);
+	  String name = ((SimpleName)stmt.getExpression()).getIdentifier();	  
+	  BeanPart b = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,name));
 	  if(b==null)
 	      b = fModel.getABean(name);	
    	  return b;
@@ -63,24 +60,30 @@ BeanPart  processSingleNameReference (MessageSend stmt) {
 /**
  *  Process a Reference to a MessageSend, e.g., getFooBean().setFoo()
  */
-BeanPart  processRefToMessageSend  (MessageSend stmt) {	   
+BeanPart  processRefToMessageSend  (MethodInvocation stmt) {	   
   	  	// Check to see if the Model already knows about 
-  	String selector=null ;
-    if (((MessageSend)stmt.receiver).receiver instanceof ThisReference) {
-     // VAJ typical pattern, we did not resolved what this method returns yet,
-     // postpone the parsing to later
-     if (fReTryLater != null) {
-     		fReTryLater.add(this) ;
-            JavaVEPlugin.log ("\t[Expression] - postponing: "+stmt, Level.FINE) ;        		 //$NON-NLS-1$
-       		return null ;
-     }
-     selector = new String (((MessageSend)stmt.receiver).selector) ;  	  	
-    }
-    
-    if (selector != null)
-  	  	   return fModel.getBeanReturned(selector) ;  	  	
-  	else
-  	       return null ;  	      	  	  		
+		String selector = ((MethodInvocation)stmt.getExpression()).getName().getIdentifier();
+//		if (stmt.getExpression() instanceof ThisExpression) {
+//			// VAJ typical pattern, we did not resolved what this method returns yet,
+//			// postpone the parsing to later
+//			if (fReTryLater != null) {
+//				fReTryLater.add(this);
+//				JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+//				return null;
+//			}
+//			selector = new String(((MethodInvocation) stmt.getExpression()).getName().getIdentifier());
+//		}
+//
+		BeanPart b = null;
+		if (selector != null) {
+			b = fModel.getBeanReturned(selector);
+			if (b==null && fReTryLater!=null) { 
+				fReTryLater.add(this);
+			    JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+			}
+		}
+		return b;
+		  	      	  	  		
 }
 
 /**
@@ -88,48 +91,48 @@ BeanPart  processRefToMessageSend  (MessageSend stmt) {
  *  if a BeanPart representing the type "this" was not created, 
  *  than create one.
  */
-BeanPart  processRefToThis  (MessageSend stmt) {	   
-    if (fModel.getABean(BeanPart.THIS_NAME)==null) return null ;
-    
-	IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(fModel).getRule(IThisReferenceRule.RULE_ID) ;
-	if (thisRule != null) {
-	   ISourceVisitor override = thisRule.overideThisReferenceVisit(fMethod.getDeclMethod(),stmt,fModel) ;
-	   if (override != null) {
-			override.visit() ;
-			return null ;
-	   } 
-	   if (thisRule.shouldProcess(fMethod.getDeclMethod(),stmt)) {
-	   	  BeanPart bean = null ;
-	   	  
-	   	  BeanPartFactory bpg = new BeanPartFactory(fModel,null) ;
-	   	  bean = bpg.createThisBeanPartIfNeeded(fMethod) ;	   	  
-	   	  return bean ;
-	   }
+BeanPart  processRefToThis  (MethodInvocation stmt) {	
+	BeanPart bean = fModel.getABean(BeanPart.THIS_NAME);
+
+	// This Bean Part should already be created at this point
+	if (bean != null) {
+		IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(fModel).getRule(IThisReferenceRule.RULE_ID);
+		if (thisRule != null) {
+			ISourceVisitor override = thisRule.overideThisReferenceVisit(fMethod.getDeclMethod(), stmt, fModel);
+			if (override != null) {
+				override.visit();
+				return null;
+			}
+			if (thisRule.shouldProcess(fMethod.getDeclMethod(),stmt)) {
+			  bean.addInitMethod(fMethod);
+			  return bean;
+			}
+		}
 	}
-	return null ;
+	return null;
 }
 	
 /**
  *  Figure out which BeanPart (if any) this expression is acting on.
  */
 protected void processAMessageSend() {
-      MessageSend stmt = (MessageSend) fExpression.getExpression() ;
+      MethodInvocation stmt = (MethodInvocation) ((ExpressionStatement)fExpression.getExprStmt()).getExpression() ;
       if (stmt == null) return ;
     
       // This is the bean that is being updated    
   	  BeanPart bean = null ;
   	  // A simple  bean.setFoo() like statement    	
-  	  if (stmt.receiver instanceof SingleNameReference)   
+  	  if (stmt.getExpression() instanceof SimpleName)   
    	  	  bean = processSingleNameReference(stmt) ;
   	  //  getFooBean().setFoo() like statement
-  	  else if (stmt.receiver instanceof MessageSend)  {
+  	  else if (stmt.getExpression() instanceof MethodInvocation)  {
   	  	  bean = processRefToMessageSend(stmt) ;
   	  	  // Check for postponed
   	  	  if (bean == null && fReTryLater != null) return ;  
   	  }
   	  // something like this.setFoo() -- look at the rule base if we should
   	  // process.
-  	  else if (stmt.receiver instanceof ThisReference)  
+  	  else if (stmt.getExpression()==null || stmt.getExpression() instanceof ThisExpression)  
   	  	bean = processRefToThis(stmt) ;
 	  	  	  	  	  	  
   	
@@ -173,40 +176,38 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
  *  Process a Send Message,
  */
 protected void processAssignmment() {
-	Assignment stmt = (Assignment) fExpression.getExpression();
+	Assignment stmt = (Assignment) ((ExpressionStatement)fExpression.getExprStmt()).getExpression();
 	BeanPart bean ;
 	// TODO Need to deal with ArrayTypeReference etc.	
-	if (stmt.lhs instanceof SingleNameReference) {
-		String name = new String(((SingleNameReference)stmt.lhs).token);
+	if (stmt.getLeftHandSide() instanceof SimpleName) {
+		String name = ((SimpleName)stmt.getLeftHandSide()).getIdentifier();
 		bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));//fMethod.getMethodHandle()+"^"+name);		
 		if(bean==null)
 			bean = fModel.getABean(name) ;
 		if (bean != null) {
 			fExpression.setBean(bean) ;
 			boolean initExpr = false ;
-			if (stmt.expression instanceof AllocationExpression || 
-			   (stmt.expression instanceof CastExpression && ((CastExpression)stmt.expression).expression instanceof AllocationExpression)) {
+			if (stmt.getRightHandSide() instanceof ClassInstanceCreation || 
+			   (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression)stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
 				// e.g. ivjTitledBorder = new Border()
 				// e.g. ivjTitledBorder = (TitledBorder) new Border()
 				initExpr = true ;
 			}
-			else if (stmt.expression instanceof MessageSend || 
-			           (stmt.expression instanceof CastExpression && ((CastExpression)stmt.expression).expression instanceof MessageSend)) {
+			else if (stmt.getRightHandSide() instanceof MethodInvocation || 
+			         (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression)stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
 				// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
 				// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
 				// Assume the MessageSend is a static that can be resolved by the target VM...
 				// need more work here.
 				// At this point, make sure this is a static method.
-				MessageSend m = (MessageSend) (stmt.expression instanceof MessageSend ? stmt.expression : ((CastExpression)stmt.expression).expression);
-				String resolvedReciver = null ;
-				if (m.receiver instanceof QualifiedNameReference)
-				   resolvedReciver = m.receiver.toString() ;
-				else
-				   resolvedReciver = fModel.resolve(m.receiver.toString()) ;
-			   // TODO This should be in a rule
-			   if (isStaticCall(resolvedReciver,new String(m.selector), (m.arguments==null?0:m.arguments.length))) {
+				MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide() : ((CastExpression)stmt.getRightHandSide()).getExpression());
+				if (m.getExpression() instanceof Name) {
+				String resolvedReciver = CodeGenUtil.resolve((Name)m.getExpression(), fModel);
+			   // TODO This should be in a rule: parse methodInvocation Initialization
+			   if (isStaticCall(resolvedReciver,m.getName().getIdentifier(), (m.arguments()==null?0:m.arguments().size()))) {
 			   	  initExpr = true ;
 			   }
+				}
 			}
 			if (initExpr) {
 			   bean.addInitMethod(fMethod) ;
@@ -218,18 +219,18 @@ protected void processAssignmment() {
 			}
 		}		
 	}
-	else if (stmt.lhs instanceof QualifiedNameReference) {
+	else if (stmt.getLeftHandSide() instanceof QualifiedName) {
 		// for field access (like gridbag constraints)
-		// TODO consider things like this.ivjFoo = new ()"
-	    char[][] tokens = ((QualifiedNameReference)stmt.lhs).tokens ;
-	    String bName = new String(tokens[tokens.length-2]) ;
+		
+	    //char[][] tokens = ((QualifiedNameReference)stmt.lhs).tokens ;
+	    String bName =   ((QualifiedName)stmt.getLeftHandSide()).getQualifier().toString();    
 	    bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,bName));//fMethod.getMethodHandle()+"^"+bName);	    
 	    if(bean==null)
 	    	bean = fModel.getABean(bName) ;
 	    if (bean != null) {
 	      fExpression.setBean(bean) ;
 	      bean.addRefExpression(fExpression) ;
-//	      bean.getModel().addMethodInitializingABean(fMethod) ;
+	      bean.getModel().addMethodInitializingABean(fMethod) ;
 	    }
 	}	
    else {   	 
@@ -240,14 +241,17 @@ protected void processAssignmment() {
 /**
  * Process a Local Decleration (typically of utility beans like GridBagConstraints)
  */
-protected void processDeclarations() {
+protected void processLocalDeclarations() {
     
-    LocalDeclaration stmt = (LocalDeclaration) fExpression.getExpression() ;   
-    if (stmt.initialization instanceof AllocationExpression ||
-	    stmt.initialization instanceof ArrayAllocationExpression ||  
-    	stmt.initialization instanceof CastExpression || 
-    	stmt.initialization instanceof MessageSend) {
-    	 String name = new String(stmt.name);
+	VariableDeclarationStatement stmt = (VariableDeclarationStatement) fExpression.getExprStmt() ;
+	//TODO: support multi variables per line
+	VariableDeclaration dec = (VariableDeclaration)stmt.fragments().get(0);
+    if (dec.getInitializer() instanceof ClassInstanceCreation ||
+	    dec.getInitializer() instanceof ArrayCreation ||  
+    	dec.getInitializer() instanceof CastExpression || 
+    	dec.getInitializer() instanceof MethodInvocation) {
+    	
+    	 String name = dec.getName().getIdentifier();
          
          BeanPart bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));  //(fMethod.getMethodHandle()+"^"+name)
          if(bean==null)
@@ -268,14 +272,19 @@ protected void processDeclarations() {
  */
 public void visit(){
 	
-	if (fExpression.getExpression() instanceof MessageSend)
-	   processAMessageSend () ;
-	else if (fExpression.getExpression() instanceof Assignment)
-	   processAssignmment () ;
-    else if (fExpression.getExpression() instanceof LocalDeclaration)
-       processDeclarations() ;
-    else
-       JavaVEPlugin.log ("\t[Expression] Visitor: *** did not process Expression:"+fVisitedNode, Level.FINE) ; //$NON-NLS-1$
+	if (fExpression.getExprStmt() instanceof ExpressionStatement) {
+			Expression exp = ((ExpressionStatement) fExpression.getExprStmt()).getExpression();
+			if (exp instanceof MethodInvocation)
+				processAMessageSend();
+			else if (exp instanceof Assignment)
+				processAssignmment();
+			else
+				JavaVEPlugin.log("\t[Expression] Visitor: *** did not process Expression:" + fVisitedNode, Level.FINE); //$NON-NLS-1$
+	} else 
+		if (fExpression.getExprStmt() instanceof VariableDeclarationStatement)
+			processLocalDeclarations();
+		else
+			JavaVEPlugin.log("\t[Expression] Visitor: *** did not process Expression:" + fVisitedNode, Level.FINE); //$NON-NLS-1$
 	   
 	   
 	// Need to fartehr analyze  - see Expression()

@@ -10,13 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Statement;
+
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.ve.internal.jcm.*;
@@ -46,18 +49,18 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 	}
 
 				
-		protected boolean processEvent(MessageSend event) {
+		protected boolean processEvent(MethodInvocation event) {
 			
-			Expression exp = event.arguments[0] ;
+			Expression exp = (Expression) event.arguments().get(0) ;
 			cleanUpPreviousIfNedded() ;
 			int index = getInvocationIndex();			
 //			EventInvocation ee = getNewEventInvocation(fbeanPart.getModel().getCompositionModel());
 //			ee.setEvent((BeanEvent) fEventDecorator.eContainer());
 			EventInvocation ee = (EventInvocation) fEventInvocation ;             
-			if (exp instanceof SingleNameReference) {
+			if (exp instanceof SimpleName) {
 				// Instance of Event
-				SingleNameReference nr = (SingleNameReference) exp;
-				JavaClass clazz = resolveInstance(nr.token);
+				SimpleName nr = (SimpleName) exp;
+				JavaClass clazz = resolveInstance(nr.getIdentifier().toCharArray());
 				if (clazz == null)
 					return false;
 				
@@ -78,9 +81,9 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 				addInvocationToModel(ee,index);
 				return true;
 			}
-			else if (exp instanceof AllocationExpression) {
-				AllocationExpression ae = (AllocationExpression) exp;
-				JavaClass clazz = resolveInstance(ae.type.toString().toCharArray());
+			else if (exp instanceof ClassInstanceCreation) {
+				ClassInstanceCreation ae = (ClassInstanceCreation) exp;
+				JavaClass clazz = resolveInstance(ae.getName().toString().toCharArray());
 				if (clazz == null)
 					return false;
 				Listener l = null;
@@ -233,8 +236,8 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 		fEventHandler = c ;
 		List mList = new ArrayList() ;				
 		for (Iterator iter = fbeanPart.getRefCallBackExpressions().iterator(); iter.hasNext();) {
-			CodeCallBackRef exp = (CodeCallBackRef) iter.next();
-			if (getInnerName(c).equals(exp.getMethod().getTypeRef().getName())) {
+			CodeCallBackRef exp = (CodeCallBackRef) iter.next();						
+			if (getInnerName(c).equals(exp.getMethod().getTypeRef().getSimpleName())) {
 				String mname = exp.getMethod().getMethodName() ;
 				for (Iterator iterator = fEventDecorator.getListenerMethods().iterator(); iterator.hasNext();) {
 					MethodProxy mp = (MethodProxy) iterator.next();

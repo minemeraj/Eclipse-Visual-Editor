@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -20,7 +20,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.internal.compiler.ast.*;
+
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
@@ -116,18 +119,20 @@ protected boolean isHardCodedMethod (String method) {
 protected void processHardCodedProperty(String method, Object bean) {
 }
 
-public EStructuralFeature getFeature (Statement expr) {
+public EStructuralFeature getFeature (Statement exprStmt) {
 	
 	if (fSF != null)
 		return fSF;
-	if (fRefObj == null || expr == null)
+	if (fRefObj == null || exprStmt == null || 
+	    !(exprStmt instanceof ExpressionStatement))
 		return null;
 
-	getMethodName(expr);
+	Expression expr = ((ExpressionStatement)exprStmt).getExpression();	
+	getMethodName(exprStmt);
 
-	Expression args[] = null;
-	if (expr instanceof MessageSend)
-		args = ((MessageSend) expr).arguments;
+	List args = null;
+	if (expr instanceof MethodInvocation)
+		args = ((MethodInvocation) expr).arguments();
 
 	if (isHardCodedMethod(fMethodName)) {
 		processHardCodedProperty(fMethodName, fRefObj);
@@ -143,9 +148,10 @@ public EStructuralFeature getFeature (Statement expr) {
 				if (m == null
 					|| !m.getName().equals(fMethodName)
 					|| args == null
-					|| (m.listParametersWithoutReturn().length != args.length))
+					|| (m.listParametersWithoutReturn().length != args.size()))
 					continue;
 
+				//TODO: Need to check argument types
 				fSF = (EStructuralFeature) pd.getEModelElement();
 				fSFname = fSF.getName();
 				fPD = pd;

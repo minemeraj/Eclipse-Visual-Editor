@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-23 19:55:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,7 +19,7 @@ import java.util.*;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.java.*;
@@ -39,16 +39,16 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 public class EventsParser {
 		
 	IBeanDeclModel				fModel ;
-	CompilationUnitDeclaration	fDom ;
+	CompilationUnit				fastDom ;
 	HashMap						faddListeners = new HashMap() ;
-	AbstractMethodDeclaration 	domMethods[] ;
+	MethodDeclaration 			domMethods[] ;
 	IMethod 					cuMethods[] ;
 	
 	
-	public EventsParser(IBeanDeclModel m, CompilationUnitDeclaration dom) {
+	public EventsParser(IBeanDeclModel m, CompilationUnit dom) {
 		fModel = m;
-		fDom = dom ;
-		domMethods = fDom.types[0].methods;
+		fastDom = dom ;
+		domMethods = ((TypeDeclaration)fastDom.types().get(0)).getMethods();
 		// TODO WARNING - CU maybe stale
 		cuMethods = TypeVisitor.getCUMethods(domMethods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
 	}
@@ -101,12 +101,12 @@ public class EventsParser {
 			if (rule.parseForEvents(domMethods[idx], b)) {
 				EventMethodVisitor v=null;
 				if (b.isInitMethod(domMethods[idx])) 
-				   v = new EventMethodVisitor(b, fModel, addSignitures, fDom); 
+				   v = new EventMethodVisitor(b, fModel, addSignitures, fastDom); 
 				else {
 				  try {
 					MethodDeclaration md = (MethodDeclaration) domMethods[idx];
 					CodeMethodRef mref = getMethodRef(md,cuMethods[idx]) ;
-					v = new EventMethodVisitor(md, mref, b, fModel, addSignitures, fDom);
+					v = new EventMethodVisitor(md, mref, b, fModel, addSignitures, fastDom);
 				}
 				catch (JavaModelException e) {}
 				}

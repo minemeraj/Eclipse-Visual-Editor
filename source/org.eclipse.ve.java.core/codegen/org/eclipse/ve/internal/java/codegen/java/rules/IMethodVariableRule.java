@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodVariableRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
@@ -30,7 +31,7 @@ static String RULE_ID = "ruleMethodVariable" ;	 //$NON-NLS-1$
 /**
  * Give the parser a hint if a local variable is to be ignored.
  */
-public boolean ignoreVariable(AbstractVariableDeclaration field, ITypeResolver resolver,IDiagramModelInstance di) ;
+public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver,IDiagramModelInstance di) ;
 	
 
 }

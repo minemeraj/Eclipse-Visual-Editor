@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-10 23:37:16 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:46 $ 
  */
 
 
@@ -21,8 +21,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.compiler.ast.MessageSend;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Statement;
+
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -50,10 +51,10 @@ protected boolean	addPointArg() throws CodeGenException {
 	if (fbeanPart.getEObject() == null || fFmapper.getMethodName() == null) throw new CodeGenException ("null EObject:"+fExpr) ;       //$NON-NLS-1$
 		
 	try {
-		if (((MessageSend) fExpr).arguments.length == 2) {
+		if (((MethodInvocation) getExpression()).arguments().size() == 2) {
 			fpointArgs = new int[2];
 			for (int i = 0; i < 2; i++)
-				fpointArgs[i] = Integer.parseInt(((MessageSend) fExpr).arguments[i].toString());
+				fpointArgs[i] = Integer.parseInt(((MethodInvocation) getExpression()).arguments().get(i).toString());
 
             IJavaInstance value = CodeGenUtil.createInstance(POINT_CLASS,fOwner.getCompositionModel()) ;	 //$NON-NLS-1$
             value.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("new "+POINT_CLASS+"("+Integer.toString(fpointArgs[0])+    //$NON-NLS-1$ //$NON-NLS-2$

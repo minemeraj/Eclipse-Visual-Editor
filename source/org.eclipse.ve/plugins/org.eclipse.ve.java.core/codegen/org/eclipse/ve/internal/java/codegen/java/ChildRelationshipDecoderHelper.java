@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +20,9 @@ import java.util.logging.Level;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -121,23 +123,23 @@ protected int findIndex(BeanPart toAdd, BeanPart target) {
 	return -1;
 }
 
-protected BeanPart parseAddedPart(MessageSend expr)  throws CodeGenException {
+protected BeanPart parseAddedPart(MethodInvocation expr)  throws CodeGenException {
     
      BeanPart added=null ;
      
     
-     Expression[] args = (expr).arguments ;
-     if (args==null || args.length != 1) throw new CodeGenException("No Arguments !!! " + expr) ; //$NON-NLS-1$
+     List args = expr.arguments() ;
+     if (args==null || args.size() != 1) throw new CodeGenException("No Arguments !!! " + expr) ; //$NON-NLS-1$
       
       // Parse the arguments to figure out which bean to add to this container
-     if (args[0] instanceof MessageSend)  {
+     if (args.get(0) instanceof MethodInvocation)  {
           // Look to see of if this method returns a Bean
-          String selector = new String (((MessageSend)args[0]).selector) ;  
+          String selector = ((MethodInvocation)args.get(0)).getName().getIdentifier() ;  
           added = fOwner.getBeanModel().getBeanReturned(selector) ;           
      }
-     else if (args[0] instanceof SingleNameReference){
+     else if (args.get(0) instanceof SimpleName){
             // Simple reference to a bean
-            String selector = new String (((SingleNameReference)args[0]).token);
+            String selector = ((SimpleName)args.get(0)).getIdentifier();
             added = fOwner.getBeanModel().getABean(selector) ;
             if(added == null)
             	added = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),selector));
@@ -155,9 +157,10 @@ protected boolean  addComponent () throws CodeGenException {
 	// TODO  Need to deal with multiple arguments, and nesting
 	
 	 BeanPart oldAddedPart = fAddedPart ;
-    if (!(fExpr instanceof MessageSend)) return false ;
+	 Expression exp = getExpression();
+    if (!(exp instanceof MethodInvocation)) return false ;
     
-    fAddedPart = parseAddedPart((MessageSend)fExpr)  ;
+    fAddedPart = parseAddedPart((MethodInvocation)exp)  ;
     
     if (oldAddedPart != null)
        if (fAddedPart != oldAddedPart) {
@@ -171,7 +174,7 @@ protected boolean  addComponent () throws CodeGenException {
     }	
     boolean parseOK = fAddedPart != null ;
 //    if (!parseOK)
-//	   CodeGenUtil.logParsingError(fExpr.toString(), fbeanPart.getInitMethod().getMethodName(), "Could not resolve setting instance",false) ; //$NON-NLS-1$ 
+//	   CodeGenUtil.logParsingError(fexpStmt.toString(), fbeanPart.getInitMethod().getMethodName(), "Could not resolve setting instance",false) ; //$NON-NLS-1$ 
 	return parseOK ;
 }
 
@@ -282,8 +285,8 @@ public void removeFromModel() {
 //	if(fFmapper!=null && fFmapper.getMethodName()!=null && fFmapper.getMethodName().equals(JTableDecoder.JTABLE_ADDCOLUMN_METHOD)){
 //		int indexOfChildInParent = 0;
 //		if(fAddedPart!=null){
-//			if(fFmapper.getFeature(fExpr).isMany()){
-//				List ccs = (List)fAddedPart.getBackRefs()[0].getEObject().eGet(fFmapper.getFeature(fExpr));
+//			if(fFmapper.getFeature(fexpStmt).isMany()){
+//				List ccs = (List)fAddedPart.getBackRefs()[0].getEObject().eGet(fFmapper.getFeature(fexpStmt));
 //				for(int i=0;i<ccs.size();i++){
 //					EObject cc = (EObject)ccs.get(i);
 //					if("ConstraintComponent".equals(cc.eClass().getName())) //$NON-NLS-1$
@@ -424,7 +427,8 @@ public Object[] getArgsHandles(Statement expr) {
     try {
       if (fAddedPart == null && expr != null) {
         // Brand new expression
-        BeanPart bp = parseAddedPart((MessageSend)expr) ;
+      	
+        BeanPart bp = parseAddedPart((MethodInvocation)getExpression(expr)) ;
         if (bp != null) 
           result = new Object[] { bp.getType()+"["+bp.getSimpleName()+"]" } ; //$NON-NLS-1$ //$NON-NLS-2$
        }
@@ -456,7 +460,7 @@ public Object[] getArgsHandles(Statement expr) {
 			if (fFmapper.getDecorator() != null)
 				methodName = fFmapper.getDecorator().getWriteMethod().getName();
 			if (methodName == null)
-				methodName = CodeGenUtil.getWriteMethod(fExpr);
+				methodName = AbstractFeatureMapper.getWriteMethod(fExpr);
 			if(methodName!=null)
 				return fFmapper.getPriorityIncrement(methodName) + super.getSFPriority();
 		}

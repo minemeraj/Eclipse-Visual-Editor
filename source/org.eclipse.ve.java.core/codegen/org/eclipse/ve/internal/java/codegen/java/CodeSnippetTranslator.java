@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -494,7 +494,9 @@ private int isExpressionPresentInOffenders(CodeExpressionRef exp, List offenders
 	}
 	return -1;
 }
-
+/**
+ * @deprecated
+ */
 private IBeanDeclModel build(EditDomain d){
 	// Try to compile the code snippet.
 	try{

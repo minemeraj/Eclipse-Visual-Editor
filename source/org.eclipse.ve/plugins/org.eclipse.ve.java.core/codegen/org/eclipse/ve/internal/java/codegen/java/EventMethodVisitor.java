@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 
@@ -37,27 +37,27 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class EventMethodVisitor extends MethodVisitor {
 
-	List 					   fESigs;
-	CompilationUnitDeclaration fDom ;
-	BeanPart				   fBean ;
-	String					   fPrefixConstraint = null ;   // Help ignore most setting expressions up front
+	List 					fESigs;
+	CompilationUnit 		fastDom ;
+	BeanPart				fBean ;
+	String					fPrefixConstraint = null ;   // Help ignore most setting expressions up front
 	final static String		fDefaultPrefix = "add" ; //$NON-NLS-1$
 
-	public EventMethodVisitor(BeanPart b, IBeanDeclModel model, List signitures, CompilationUnitDeclaration dom) {
+	public EventMethodVisitor(BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
 		this(b.getInitMethod().getDeclMethod(), b, model, signitures, dom);
 	}
 	
-	public EventMethodVisitor(AbstractMethodDeclaration method, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnitDeclaration dom) {
+	public EventMethodVisitor(MethodDeclaration method, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
 		this(method, b.getInitMethod(), b, model, signitures, dom) ;
 	}
 	/**
 	 * Overidde CodeMethodRef
 	 */	
-	public EventMethodVisitor(AbstractMethodDeclaration method, CodeMethodRef m, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnitDeclaration dom) {
+	public EventMethodVisitor(MethodDeclaration method, CodeMethodRef m, BeanPart b, IBeanDeclModel model, List signitures, CompilationUnit dom) {
 		super(method, model, null, m);
 		fBean = b ;
 		fESigs = signitures;
-		fDom = dom ;
+		fastDom = dom ;
 		boolean useDefault = true ;
 		for (int i=0; i<fESigs.size(); i++) {
 		    if (!((EventSetDecorator)fESigs.get(i)).getAddListenerMethod().getName().startsWith(fDefaultPrefix)) {
@@ -77,7 +77,7 @@ public class EventMethodVisitor extends MethodVisitor {
 				processAStatement(statements[i]);
 	}
 	
-	protected CodeMethodRef getMethodRef (AbstractMethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
+	protected CodeMethodRef getMethodRef (MethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
 		Iterator itr = fMethod.getTypeRef().getMethods() ;
 		while (itr.hasNext()) {
 		   CodeMethodRef m = (CodeMethodRef)itr.next() ;
@@ -88,29 +88,29 @@ public class EventMethodVisitor extends MethodVisitor {
 		return m ;
 	}
 	
-	protected void processMessageSend(MessageSend stmt) throws CodeGenException {
+	protected void processMessageSend(MethodInvocation stmt) throws CodeGenException {
 
 		// Traverse a method call again
-		if (stmt.receiver instanceof ThisReference && !(stmt.receiver instanceof SuperReference)) {
+		if (stmt.getExpression() instanceof ThisExpression && !(stmt.getExpression() instanceof SuperMethodInvocation)) {
 			EventMethodVisitor newVisitor = null;
-			if (stmt.arguments == null) {
+			if (stmt.arguments ().size()== 0) {
 				// No Arg method call (e.g initConnections()
-				String method = new String(stmt.selector);
-				AbstractMethodDeclaration methods[] = fDom.types[0].methods;
+				String method = stmt.getName().getIdentifier();
+				MethodDeclaration methods[] = ((TypeDeclaration)fastDom.types().get(0)).getMethods();
 				IMethod cuMethods[] = TypeVisitor.getCUMethods(methods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
 				int idx;
 				for (idx = 0; idx < methods.length; idx++) {
 					if (!(methods[idx] instanceof MethodDeclaration))
 						continue;
 					MethodDeclaration md = (MethodDeclaration) methods[idx];
-					if (md.arguments != null)
+					if (md.parameters().size()>0)
 						continue;
-					if (method.equals(new String(md.selector))) {
-						if (!cuMethods[idx].getElementName().equals(new String(md.selector)))
+					if (method.equals(md.getName().getIdentifier())) {
+						if (!cuMethods[idx].getElementName().equals(md.getName().getIdentifier()))
 							throw new CodeGenException("Not the same JCMMethod"); //$NON-NLS-1$
 						try {
 							CodeMethodRef mref = getMethodRef(md, fMethod.getTypeRef(), cuMethods[idx].getHandleIdentifier(), cuMethods[idx].getSourceRange(), cuMethods[idx].getSource());
-							newVisitor = new EventMethodVisitor(md, mref, fBean, fModel, fESigs, fDom);
+							newVisitor = new EventMethodVisitor(md, mref, fBean, fModel, fESigs, fastDom);
 						}
 						catch (JavaModelException e) {}
 						break;
@@ -127,27 +127,27 @@ public class EventMethodVisitor extends MethodVisitor {
 		// check it right now rather than allocating an ExpressionVisitor that will search
 		// Event signiture matches.
 		if (fPrefixConstraint != null) {
-			String selector = new String(stmt.selector);
+			String selector = stmt.getName().getIdentifier();
 			if (!selector.startsWith(fPrefixConstraint))
 				return;
 		}
 
-		if (stmt.receiver instanceof MessageSend) {
+		if (stmt.getExpression() instanceof MethodInvocation) {
 			// getBean().addXXX
 			// Check to see if the receiver is a bean we care about			
 			CodeMethodRef mref = fBean.getReturnedMethod();
-			MessageSend ms = (MessageSend) stmt.receiver;
+			MethodInvocation ms = (MethodInvocation) stmt.getExpression();
 			if (mref != null) {
-				if (mref.getMethodName().equals(new String(ms.selector))) {
-					new EventExpressionVisitor(fBean, fMethod, (Expression) stmt, fModel, fESigs, fDom).visit();
+				if (mref.getMethodName().equals(ms.getName().getIdentifier())) {
+					new EventExpressionVisitor(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom).visit();
 				}
 			}
 		}
-		else if (stmt.receiver instanceof SingleNameReference ||
-		          stmt.receiver instanceof ThisReference) {
+		else if (stmt.getExpression() instanceof SimpleName ||
+		          stmt.getExpression() instanceof ThisExpression) {
 			// ivjBean.addXXX()
-			if (fBean.getSimpleName().equals(stmt.receiver.toString())) {
-				new EventExpressionVisitor(fBean, fMethod, (Expression) stmt, fModel, fESigs, fDom).visit();
+			if (fBean.getSimpleName().equals(stmt.getExpression().toString())) {
+				new EventExpressionVisitor(fBean, fMethod, (Statement) stmt.getParent(), fModel, fESigs, fastDom).visit();
 			}
 		}
 		
@@ -170,11 +170,14 @@ public class EventMethodVisitor extends MethodVisitor {
 		// Synchronized
 		else if (stmt instanceof SynchronizedStatement)
 			processSynchStatement((SynchronizedStatement) stmt);
-	    else if (stmt instanceof MessageSend) 
-	        processMessageSend((MessageSend)stmt) ;
-				// Handle an Expression          
-		else if (stmt instanceof Expression)
-			new EventExpressionVisitor(fBean, fMethod, (Expression) stmt, fModel, fESigs, fDom).visit();
+		else if (stmt instanceof ExpressionStatement) {
+			ExpressionStatement es = (ExpressionStatement) stmt;
+			if (es.getExpression() instanceof MethodInvocation)
+				processMessageSend((MethodInvocation)es.getExpression()) ;
+			else
+//				new EventExpressionVisitor(fBean, fMethod,  stmt, fModel, fESigs, fastDom).visit();	
+				JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
+		}
 		else
 			JavaVEPlugin.log("\t[Event] MethodVisitor() skiping: " + stmt, Level.FINE); //$NON-NLS-1$
 	}

@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IReturnStmtRule.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.ReturnStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.ReturnStatement;
+
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.java.ISourceVisitor;
@@ -38,7 +39,7 @@ static String 	RULE_ID = "ruleReturnStatement" ;	 //$NON-NLS-1$
  * Unique method visits (like VAJ's "initialize()" method) can be used
  * @return ISourceVisitor - the object which will overide the method's visit
  */
-public ISourceVisitor   overideReturnVisit(AbstractMethodDeclaration method, ReturnStatement stmt, IBeanDeclModel model) ;
+public ISourceVisitor   overideReturnVisit(MethodDeclaration method, ReturnStatement stmt, IBeanDeclModel model) ;
 	
 
 }

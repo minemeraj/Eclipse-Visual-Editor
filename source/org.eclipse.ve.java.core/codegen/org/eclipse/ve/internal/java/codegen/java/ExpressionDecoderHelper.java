@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -182,5 +184,26 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 	public boolean canRefreshFromComposition() {
 		return true;
 	}
-
+	
+	/**
+	 * Two type statements are possible 
+	 * Local decleratioin, and Expression Statement 
+	 * @param stmt
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected Expression getExpression(Statement stmt) {
+		if (stmt==null) return null;
+		if (stmt instanceof ExpressionStatement)
+			return ((ExpressionStatement)stmt).getExpression();
+		else if (stmt instanceof VariableDeclarationStatement) {
+			VariableDeclaration vd = (VariableDeclaration)((VariableDeclarationStatement)stmt).fragments().get(0);
+			return vd.getInitializer();
+		}
+	    return null ;
+	}
+	protected Expression getExpression() {
+		return getExpression(fExpr);
+	}
 }

@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodCallBackVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 
 import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -32,7 +32,7 @@ public class EventMethodCallBackVisitor extends MethodVisitor {
 /**
  *
  */		
-public EventMethodCallBackVisitor (AbstractMethodDeclaration node, IBeanDeclModel model,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
+public EventMethodCallBackVisitor (MethodDeclaration node, IBeanDeclModel model,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
 	super(node,model,new ArrayList(), typeRef, methodHandle, range, content) ;	
 }
 
@@ -56,16 +56,16 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
 
 
 protected BeanPart getBeanPart(Expression exp) {
-	if (exp instanceof MessageSend) {
-		if (((MessageSend)exp).receiver instanceof ThisReference) {
-			String getter = new String (((MessageSend)exp).selector) ;
+	if (exp instanceof MethodInvocation) {
+		if (((MethodInvocation)exp).getExpression() instanceof ThisExpression) {
+			String getter = ((MethodInvocation)exp).getName().getIdentifier();
 			return  fModel.getBeanReturned(getter) ;
 		}
 	}
-	else if (exp instanceof QualifiedThisReference)
+	else if (exp instanceof ThisExpression)
 	         return fModel.getABean(BeanPart.THIS_NAME) ;
-	else if (exp instanceof SingleNameReference)
-	         return fModel.getABean(exp.toString()) ;
+	else if (exp instanceof SimpleName)
+	         return fModel.getABean(((SimpleName)exp).getIdentifier()) ;
     	         
 	return null ;
 }
@@ -73,27 +73,27 @@ protected BeanPart getBeanPart(Expression exp) {
 
 protected boolean processCondition(Expression condition, IfStatement stmt) {
 
-    boolean result = false ;
-	if (condition instanceof EqualExpression) {
-		EqualExpression ee = (EqualExpression) condition;
-		if (ee.left instanceof MessageSend) {
-			String selector = new String(((MessageSend) ee.left).selector);
-			if (selector.equals("getSource")) { //$NON-NLS-1$
-				// A e.getSource() method call on an if statement, check the target
-				BeanPart bp = getBeanPart(ee.right);
-				if (bp != null) {
-					new EventCallBackExpressionVisitor(bp, fMethod, stmt, fModel).visit();
-					return true ;
+	boolean result = false;
+	if (condition instanceof InfixExpression) {
+		InfixExpression ee = (InfixExpression) condition;
+		if (ee.getOperator().equals(InfixExpression.Operator.EQUALS)) {
+			if (ee.getLeftOperand() instanceof MethodInvocation) {
+				String selector = ((MethodInvocation) ee.getLeftOperand()).getName().getIdentifier();
+				if (selector.equals("getSource")) { //$NON-NLS-1$
+					// A e.getSource() method call on an if statement, check the target
+					BeanPart bp = getBeanPart(ee.getRightOperand());
+					if (bp != null) {
+						new EventCallBackExpressionVisitor(bp, fMethod, stmt, fModel).visit();
+						return true;
+					}
 				}
 			}
+		} else if (ee.getLeftOperand() instanceof InfixExpression) {
+			//evt.getSource()==Empty.this.getCompoundInterest1()&&(evt.getPropertyName().equals("principalAmount"))
+			return processCondition(ee.getLeftOperand(), stmt);
 		}
 	}
-	else if (condition instanceof BinaryExpression) {
-		BinaryExpression be = (BinaryExpression) condition;
-		if (processCondition(be.left,stmt)) return true ; // One of the if's will do ... at this point will not consider semantics
-		result = processCondition(be.right,stmt);
-	}
-	return result ;
+	return result;
 }
 
 /**
@@ -101,8 +101,8 @@ protected boolean processCondition(Expression condition, IfStatement stmt) {
  */	
 protected void	processIFStatement(IfStatement stmt) throws CodeGenException{
 	
-	if (stmt.condition instanceof BinaryExpression) 
-	   processCondition(stmt.condition,stmt) ;
+	if (stmt.getExpression() instanceof InfixExpression) 
+	   processCondition(stmt.getExpression(),stmt) ;
 }
 	
 

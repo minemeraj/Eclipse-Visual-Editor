@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:46 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,9 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -151,20 +153,20 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		BeanPart bp = null;
 
 		// Parse the arguments to figure out which bean to add to this container
-		if (arg instanceof MessageSend) {
+		if (arg instanceof MethodInvocation) {
 			// Look to see of if this method returns a Bean
-			String selector = new String(((MessageSend) arg).selector);
+			String selector = ((MethodInvocation) arg).getName().getIdentifier();
 			bp = fOwner.getBeanModel().getBeanReturned(selector);
-		} else if (arg instanceof SingleNameReference) {
+		} else if (arg instanceof SimpleName) {
 			// Simple reference to a bean
-			String selector = new String(((SingleNameReference) arg).token);
+			String selector = ((SimpleName) arg).getIdentifier();
 			bp = fOwner.getBeanModel().getABean(selector);
 			if (bp == null) {
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), selector));
 				//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+selector);
 			}
-		} else if (arg instanceof AllocationExpression) {
-			String clazzName = fbeanPart.getModel().resolve(((AllocationExpression) arg).type.toString());
+		} else if (arg instanceof ClassInstanceCreation) {
+			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)arg).getName(), fbeanPart.getModel());
 			IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
 			JavaClass c = (JavaClass) obj.getJavaType();
@@ -175,7 +177,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		return bp;
 	}
 
-	protected BeanPart parseAddedPart(MessageSend exp) throws CodeGenException {
+	protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 		// TODO  Need to deal with multiple arguments, and nesting
 
 		if (exp == null)
@@ -183,14 +185,14 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		BeanPart bp = null;
 
-		Expression[] args = exp.arguments;
+		List args = exp.arguments();
 
-		if (args.length >= 4)
-			bp = resolveAddedComponent(args[2]);
-		else if (args.length == 2)
-			bp = resolveAddedComponent(args[0]);
-		else if (args.length == 1)
-			bp = resolveAddedComponent(args[0]);
+		if (args.size() >= 4)
+			bp = resolveAddedComponent((Expression)args.get(2));
+		else if (args.size() == 2)
+			bp = resolveAddedComponent((Expression)args.get(0));
+		else if (args.size() == 1)
+			bp = resolveAddedComponent((Expression)args.get(0));
 		else
 			throw new CodeGenException("Bad Arguments !!! " + exp); //$NON-NLS-1$
 
@@ -202,7 +204,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fTitleInstance = null;
 		else if (arg instanceof StringLiteral) {
 			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			setInitString(fTitleInstance, new String(((StringLiteral) arg).source()));
+			setInitString(fTitleInstance, ((StringLiteral)arg).getLiteralValue());
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
 		}
 	}
@@ -211,7 +213,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		// TODO  Need to support local declarations
 		if (arg instanceof NullLiteral)
 			fIconInstance = null;
-		else if (arg instanceof AllocationExpression) {
+		else if (arg instanceof ClassInstanceCreation) {
 			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.ImageIcon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(arg.toString()));
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fIconInstance);
@@ -224,29 +226,29 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fToolTipInstance = null;
 		else if (arg instanceof StringLiteral) {
 			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			setInitString(fToolTipInstance, new String(((StringLiteral) arg).source()));
+			setInitString(fToolTipInstance, ((StringLiteral) arg).getLiteralValue());
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fToolTipInstance);
 		}
 
 	}
 
-	protected boolean parseAndAddArguments(Expression[] args) throws CodeGenException {
+	protected boolean parseAndAddArguments(List args) throws CodeGenException {
 		//  fAddedConstraintInstance = null ;
 		if (fAddedPart != null || fAddedInstance != null) {
 			// process the Title
 
-			if (args.length >= 4) {
-				processTitle(args[0]);
-				processIcon(args[1]);
-				processToolTip(args[3]);
-			} else if (args.length == 2) {
-				if (args[1] instanceof StringLiteral)
-					processTitle(args[1]);
+			if (args.size() >= 4) {
+				processTitle((Expression)args.get(0));
+				processIcon((Expression)args.get(1));
+				processToolTip((Expression)args.get(3));
+			} else if (args.size() == 2) {
+				if (args.get(1) instanceof StringLiteral)
+					processTitle((Expression)args.get(1));
 			}
 
 			int index = -1;
-			if (args.length == 5 && args[4] instanceof IntLiteral) {
-				fAddedIndex = CodeGenUtil.expressionToString(args[4]);
+			if (args.size() == 5 && args.get(4) instanceof NumberLiteral) {
+				fAddedIndex = args.get(4).toString();
 				index = Integer.parseInt(fAddedIndex);
 			}
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:30 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -19,7 +19,11 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+
 
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -56,25 +60,39 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			}
 			utilityClasses.add(iClass);
 		}
-		return utilityClasses;
+		return utilityClasses;	
 	}
-
-	public boolean ignoreVariable(AbstractVariableDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
-
-		//  Need to filter arrays, 
+	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+		//TODO:  Need to filter arrays, 
 		//
-		if (isUtilityVariable(field, resolver, di))
+		if (isUtilityVariable(field.getType(), resolver, di))
 			return false;
+		//TODO: support multi declerations
+		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
+	}
+	
+	public boolean ignoreVariable(VariableDeclarationStatement stmt, ITypeResolver resolver, IDiagramModelInstance di) {
+		//TODO:  Need to filter arrays, 
+		//
+		if (isUtilityVariable(stmt.getType(), resolver, di))
+			return false;
+		//TODO: support multi declerations
+		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
+	}
+	
+	
+	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IDiagramModelInstance di) {
 
+		
 		try {
-			// VAJava legacy
-			String name = String.valueOf(field.name);
+						
+			String name = decl.getName().getIdentifier();
 			if (name.startsWith(IInstanceVariableCreationRule.DEFAULT_VAR_PREFIX)) { //$NON-NLS-1$
 				// Ignore VCE connections
 				if (name.startsWith("ivjConn")) //$NON-NLS-1$
 					return true;
 				else {
-					String type = resolveType(field, resolver);
+					String type = resolveType(tp, resolver);
 					if (type == null)
 						return true;
 					if (type.indexOf("$") >= 0) //$NON-NLS-1$
@@ -85,7 +103,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 					return false;
 				}
 			} else {
-				String type = resolveType(field, resolver);
+				String type = resolveType(tp, resolver);
 				if (type == null)
 					return true;
 				String t = type.indexOf("$") >= 0 ? type.substring(type.indexOf("$") + 1) : type; //$NON-NLS-1$ //$NON-NLS-2$
@@ -105,28 +123,19 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		}
 	}
 
-	protected String getType(AbstractVariableDeclaration field) {
-		String t = null;
-		if (field.type instanceof SingleTypeReference)
-			t = new String(((SingleTypeReference) field.type).token);
-		else if (field.type instanceof QualifiedTypeReference) {
-			t = CodeGenUtil.tokensToString(((QualifiedTypeReference) field.type).tokens);
+	
+	protected String resolveType(Type t, ITypeResolver resolver) {		
+		if (t instanceof SimpleType) {
+			return CodeGenUtil.resolve(((SimpleType)t).getName(), resolver) ;
 		} else
 			return null;
-		return t;
-	}
-	protected String resolveType(AbstractVariableDeclaration field, ITypeResolver resolver) {
-		String theType = getType(field);
-		if (theType == null)
-			return null;
-		return resolver.resolve(getType(field));
 	}
 
 	/**
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isUtilityVariable(AbstractVariableDeclaration field, ITypeResolver resolver, IDiagramModelInstance di) {
+	protected boolean isUtilityVariable(Type tp, ITypeResolver resolver, IDiagramModelInstance di) {
 
 		// This will also clear the internalsCache
 		List utilClasses = getUtilityClasses(di);
@@ -134,12 +143,12 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		// Try to bypass resolving, and isAssignableFrom
 		if (internalsCache == null)
 			internalsCache = new HashMap(200);
-		Boolean internal = (Boolean) internalsCache.get(getType(field));
+		Boolean internal = (Boolean) internalsCache.get(resolveType(tp, resolver));
 		if (internal != null)
 			return internal.booleanValue();
 
-		String t = resolveType(field, resolver);
-		;
+		String t = resolveType(tp, resolver);
+		
 		if (t == null)
 			return false;
 		try {
@@ -147,7 +156,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			for (Iterator iterator = utilClasses.iterator(); iterator.hasNext();) {
 				JavaClass uc = (JavaClass) iterator.next();
 				if (uc.isAssignableFrom(iClass)) {
-					internalsCache.put(getType(field), Boolean.TRUE);
+					internalsCache.put(resolveType(tp,resolver), Boolean.TRUE);
 					return true;
 				}
 			}
@@ -155,7 +164,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + t, Level.FINE); //$NON-NLS-1$
 		}
 
-		internalsCache.put(getType(field), Boolean.FALSE);
+		internalsCache.put(resolveType(tp,resolver), Boolean.FALSE);
 		return false;
 	}
 	public static void clearCache() {
@@ -166,25 +175,28 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#getDefaultInitializationMethod(org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.jdt.internal.compiler.ast.TypeDeclaration)
 	 */
-	public String getDefaultInitializationMethod(AbstractVariableDeclaration f, ITypeResolver resolver, TypeDeclaration typeDec) {
-		if (f.initialization instanceof AllocationExpression || f.initialization instanceof ArrayAllocationExpression) {
-			String[] methods = VCEPrefContributor.getMethodsFromStore();
-			AbstractMethodDeclaration mDeclarations[] = typeDec.methods;
-			if (methods == null || methods.length == 0 || mDeclarations == null || mDeclarations.length == 0)
-				return null;
-			for (int i = 0; i < methods.length; i++) {
-				for (int j = 0; j < mDeclarations.length; j++) {
-					if (mDeclarations[j] instanceof MethodDeclaration) {
-						MethodDeclaration declaration = (MethodDeclaration) mDeclarations[j];
-						if (methods[i].equals(new String(declaration.selector))) {
-							fInitMethod = methods[i];
-							fInitMethodSet = true;
-							return fInitMethod;
+	public String getDefaultInitializationMethod(FieldDeclaration f, ITypeResolver resolver, TypeDeclaration typeDec) {
+		//TODO: deal with multi delerations
+		Expression init = ((VariableDeclaration) f.fragments().get(0)).getInitializer();
+		if (init != null) {
+			if (init instanceof ClassInstanceCreation || init instanceof ArrayCreation) {
+				String[] methods = VCEPrefContributor.getMethodsFromStore();
+				MethodDeclaration mDeclarations[] = typeDec.getMethods();
+				if (methods == null || methods.length == 0 || mDeclarations == null || mDeclarations.length == 0)
+					return null;
+				for (int i = 0; i < methods.length; i++) {
+					for (int j = 0; j < mDeclarations.length; j++) {
+						if (mDeclarations[j] instanceof MethodDeclaration) {
+							MethodDeclaration declaration = (MethodDeclaration) mDeclarations[j];
+							if (methods[i].equals(declaration.getName().getIdentifier())) {
+								fInitMethod = methods[i];
+								fInitMethodSet = true;
+								return fInitMethod;
+							}
 						}
 					}
 				}
 			}
-
 		}
 		return null;
 	}

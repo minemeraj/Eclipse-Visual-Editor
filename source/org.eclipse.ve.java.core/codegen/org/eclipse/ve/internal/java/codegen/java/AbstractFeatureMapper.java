@@ -11,13 +11,13 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
@@ -25,7 +25,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
-import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
@@ -102,7 +101,7 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 
 	protected String getMethodName(Statement exp) {
 		if (fMethodName == null)
-			fMethodName = CodeGenUtil.getWriteMethod(exp);
+			fMethodName = getWriteMethod(exp);
 		return fMethodName;
 	}
 
@@ -122,6 +121,55 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 	 */
 	public int getPriorityIncrement(String methodType) {
 		return 0;
+	}
+	
+	/**
+	 *  Extract the end resulted write method or public field access.
+	 * 
+	 * Only ExpressionStatement, VariableDeclarationStatement is supported
+	 * (moved from CodeGenUtil)
+	 */	
+	static public String getWriteMethod(Statement expr)	{
+		
+		Expression e = null;
+		if (expr instanceof ExpressionStatement)
+			e = ((ExpressionStatement) expr).getExpression();
+		else if (expr instanceof VariableDeclarationStatement) {
+			Type tr = ((VariableDeclarationStatement) expr).getType();
+			if (tr instanceof SimpleType) {
+				//TODO: need tor resolve a Simple name
+				return "new" + ((SimpleType) tr).getName().toString();
+				//return "new" + CodeGenUtil.resolve(((SimpleType)tr).getName(), ???)
+			}
+		}
+
+		if (e != null) {
+
+			if (expr == null)
+				return null;
+			// TODO Must deal with non Literal also
+			if (e instanceof MethodInvocation)
+				return ((MethodInvocation) e).getName().getIdentifier();
+			else if (e instanceof Assignment) {
+				// public field access, e.g., gridBagConstraints.gridx = 0 ;
+				if (((Assignment) e).getLeftHandSide() instanceof QualifiedName) {
+					return ((QualifiedName) ((Assignment) e).getLeftHandSide()).getName().getIdentifier();
+				} else if (((Assignment) e).getLeftHandSide() instanceof SimpleName) {
+					return ((SimpleName) ((Assignment) e).getLeftHandSide()).getIdentifier();
+				}
+			}
+			//		else if (expr instanceof LocalDeclaration) {
+			//			TypeReference tr = ((LocalDeclaration)expr).type ;
+			//			if (tr instanceof QualifiedTypeReference)
+			//				return "new " + tokensToString(((QualifiedTypeReference)tr).tokens) ;
+			// //$NON-NLS-1$
+			//			else {
+			//				// TODO Need to resolve
+			//				return "new" ; //$NON-NLS-1$
+			//			}
+			//		}
+		}
+		return null;
 	}
 
 }

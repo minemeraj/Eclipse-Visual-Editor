@@ -11,16 +11,16 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:30 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:46 $ 
  */
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
+
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.ChildRelationshipDecoderHelper;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-
 
 
 public class JFCChildRelationshipDecoderHelper extends ChildRelationshipDecoderHelper {

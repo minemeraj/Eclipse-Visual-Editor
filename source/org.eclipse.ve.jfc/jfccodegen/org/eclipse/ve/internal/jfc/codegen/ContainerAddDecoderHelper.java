@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:46 $ 
  */
 
 import java.util.*;
@@ -21,18 +21,18 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.PTExpression;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
-
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
@@ -231,7 +231,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		cleanProperty(fAddedConstraintInstance);
 	}
 
-	protected BeanPart parseAddedPart(MessageSend exp) throws CodeGenException {
+	protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException {
 		// TODO   Need to deal with multiple arguments, and nesting
 
 		if (exp == null)
@@ -239,24 +239,24 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		BeanPart bp = null;
 
-		Expression[] args = exp.arguments;
-		if (args.length < 1)
+		List args = exp.arguments();
+		if (args.size() < 1)
 			throw new CodeGenException("No Arguments !!! " + exp); //$NON-NLS-1$
 
 		// Parse the arguments to figure out which bean to add to this container
-		if (args[0] instanceof MessageSend) {
+		if (args.get(0) instanceof MethodInvocation) {
 			// Look to see of if this method returns a Bean
-			String selector = new String(((MessageSend) args[0]).selector);
+			String selector = ((MethodInvocation)args.get(0)).getName().getIdentifier();
 			bp = fOwner.getBeanModel().getBeanReturned(selector);
-		} else if (args[0] instanceof SingleNameReference) {
+		} else if (args.get(0) instanceof SimpleName) {
 			// Simple reference to a bean
-			String beanName = new String(((SingleNameReference) args[0]).token);
+			String beanName = ((SimpleName)args.get(0)).getIdentifier();
 			bp = fOwner.getBeanModel().getABean(beanName);
 			if (bp == null)
 				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
 			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
-		} else if (args[0] instanceof AllocationExpression) {
-			String clazzName = fbeanPart.getModel().resolve(((AllocationExpression) args[0]).type.toString());
+		} else if (args.get(0) instanceof ClassInstanceCreation) {
+			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)args.get(0)).getName(), fbeanPart.getModel()); 			
 			IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
 			JavaClass c = (JavaClass) obj.getJavaType();
@@ -275,7 +275,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		BeanPart oldAddedPart = fAddedPart;
 
-		fAddedPart = parseAddedPart((MessageSend) fExpr);
+		fAddedPart = parseAddedPart((MethodInvocation) ((ExpressionStatement)fExpr).getExpression());
 
 		if (oldAddedPart != null)
 			if (fAddedPart != oldAddedPart) {
@@ -286,7 +286,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			throw new CodeGenException("No Added Part"); //$NON-NLS-1$
 		clearPreviousIfNeeded();
 
-		Expression[] args = ((MessageSend) fExpr).arguments;
+		List args = ((MethodInvocation)((ExpressionStatement)fExpr).getExpression()).arguments();
 		return understandAddArguments(args);
 	}
 
@@ -307,70 +307,72 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		return new String(CharOperation.replace(noQualifiers, mayBeQualified.toCharArray(), fullyQualified.toCharArray()));
 
 	}
-	protected String resolveArgQualification(Expression[] args, String initString) {
+	protected String resolveArgQualification(List args, String initString) {
 		String result = initString;
 		if (args != null)
-			for (int i = 0; i < args.length; i++) {
-				if (args[i] instanceof AllocationExpression) {
-					AllocationExpression ae = (AllocationExpression) args[i];
-					String argType = fbeanPart.getModel().resolve(ae.type.toString());
-					result = addQualifier(result, ae.type.toString(), argType);
-					result = resolveArgQualification(ae.arguments, result);
+			for (int i = 0; i < args.size(); i++) {
+				if (args.get(i) instanceof ClassInstanceCreation) {
+					ClassInstanceCreation ae = (ClassInstanceCreation) args.get(i);
+					String argType = CodeGenUtil. resolve (ae.getName(),fbeanPart.getModel()); 
+                    PTExpression pt = ConstructorDecoderHelper.getParsedTree(ae,fbeanPart.getModel(),null); 					
+//					result = addQualifier(result, ae.type.toString(), argType);
+//					result = resolveArgQualification(ae.arguments, result);
 				}
 			}
 		return result;
 
 	}
-	protected IJavaObjectInstance parseAllocatedConstraint(AllocationExpression exp) {
+	protected IJavaObjectInstance parseAllocatedConstraint(ClassInstanceCreation exp) {
 		String type;
-		type = fbeanPart.getModel().resolve(exp.type.toString());
+		type = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()); //		fbeanPart.getModel().resolve(exp.type.toString());
 		// resolve class qualification 
-		String initString = addQualifier(exp.toString(), exp.type.toString(), type);
-		initString = resolveArgQualification(exp.arguments, initString);
+//		String initString = addQualifier(exp.toString(), exp.type.toString(), type);
+//		initString = resolveArgQualification(exp.arguments, initString);
+		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, fbeanPart.getModel(), null);
 		IJavaObjectInstance result = null;
 		try {
 			result = (IJavaObjectInstance) CodeGenUtil.createInstance(type, fbeanPart.getModel().getCompositionModel());
-			result.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
+			result.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(pt));
 		} catch (CodeGenException e) {
 		}
 
 		return result;
 	}
 
-	protected boolean understandAddArguments(Expression[] args) throws CodeGenException {
+	protected boolean understandAddArguments(List args) throws CodeGenException {
 		boolean defaultConstraintFound = false;
 		int indexValuePosition = -1;
 		fAddedConstraintInstance = null;
 		fisAddedConstraintSet = false;
 		if (fAddedPart != null || fAddedInstance != null) {
 			// TODO  Deal with all signitures of add()
-			if (args.length >= 2) {
+			if (args.size() >= 2) {
 				// Process all arguments to determine which is constraint and which is index.
-				for (int arg = 1; arg < args.length; arg++) {
+				for (int arg = 1; arg < args.size(); arg++) {
 					// Check to see if there is layout manager constraint
-					if (args[arg] instanceof MessageSend) {
-						MessageSend msgSnd = (MessageSend) args[arg];
-						if (msgSnd.receiver instanceof MessageSend) {
+					if (args.get(arg) instanceof MethodInvocation) {
+						MethodInvocation msgSnd = (MethodInvocation) args.get(arg);
+						if (msgSnd.getExpression() instanceof MethodInvocation) {
 							// check for getFooBean().getName() - our default           
-							String method = new String(msgSnd.selector);
+							String method = msgSnd.getName().getIdentifier();
 							if (!(ContainerDecoder.DEFAULT_CONSTRAINT.indexOf(method) < 0)) {
 								defaultConstraintFound = false;
 								continue;
 							}
 						}
-						if (msgSnd.receiver instanceof ThisReference) {
+						if (msgSnd.getExpression()==null || msgSnd.getExpression() instanceof ThisExpression) {
 							// Things like getCurrentIndex() or getDefaultConstraint();
 						}
 					} else //  This is a Temporary solution !!!! we need to better fit for param. number for semantics
-						if (args[arg] instanceof StringLiteral) {
+						if (args.get(arg) instanceof StringLiteral) {
 							defaultConstraintFound = true;
-							fAddedConstraint = fnonResolvedAddedConstraint = args[arg].toString();
-						} else if (args[arg] instanceof IntLiteral) {
+							fAddedConstraint = fnonResolvedAddedConstraint = args.get(arg).toString();
+						} else if (args.get(arg) instanceof NumberLiteral) {
 							indexValueFound = true;
 							indexValuePosition = arg;
-						} else if (args[arg] instanceof SingleNameReference) {
+						} else if (args.get(arg) instanceof SimpleName) {
 							// A Variable - like a bean name
-							String beanName = new String(((SingleNameReference) args[arg]).token);
+							String beanName = ((SimpleName)args.get(arg)).getIdentifier();
 
 							BeanPart cbp =
 								fbeanPart.getModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
@@ -383,21 +385,21 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 								fisAddedConstraintSet = fAddedConstraint != null;
 								cbp.addToJVEModel();
 							}
-						} else if (args[arg] instanceof QualifiedNameReference) {
+						} else if (args.get(arg) instanceof QualifiedName) {
 							// Something dot separated - like a fqn class name, or a static variable.
 							// Since chances are that it is a static variable like Button.NoRTH it 
 							// should become the defaultConstraint if one is not found already.
 							if (!defaultConstraintFound) {
 								defaultConstraintFound = true;
-								fnonResolvedAddedConstraint = args[arg].toString();
-								fAddedConstraint = fbeanPart.getModel().resolve(fnonResolvedAddedConstraint);
+								fnonResolvedAddedConstraint = args.get(arg).toString();
+								fAddedConstraint = CodeGenUtil.resolve((Name)args.get(arg),fbeanPart.getModel()); 
 							}
-						} else if (args[arg] instanceof NullLiteral) {
+						} else if (args.get(arg) instanceof NullLiteral) {
 							// TODO  Arg index should be consulted
 							defaultConstraintFound = true;
 							fAddedConstraint = fnonResolvedAddedConstraint = null;
-						} else if (args[arg] instanceof AllocationExpression) {
-							fAddedConstraintInstance = parseAllocatedConstraint((AllocationExpression) args[arg]);
+						} else if (args.get(arg) instanceof ClassInstanceCreation) {
+							fAddedConstraintInstance = parseAllocatedConstraint((ClassInstanceCreation) args.get(arg));
 						}
 				}
 			}
@@ -407,7 +409,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 				int index = -1;
 				if (indexValueFound)
-					index = Integer.parseInt((CodeGenUtil.expressionToString(args[indexValuePosition])));
+					//index = Integer.parseInt((CodeGenUtil.expressionToString(args[indexValuePosition])));
+					index = Integer.parseInt(args.get(indexValuePosition).toString());
 				EObject CC = getNewCC(fbeanPart.getModel().getCompositionModel());
 				if (defaultConstraintFound) {
 					fisAddedConstraintSet = true;
@@ -422,7 +425,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 					CC.eSet(CodeGenUtil.getConstraintFeature(CC), fAddedConstraintInstance);
 				}
 				if (indexValueFound) {
-					fAddedIndex = CodeGenUtil.expressionToString(args[indexValuePosition]);
+					//fAddedIndex = CodeGenUtil.expressionToString(args[indexValuePosition]);
+					fAddedIndex = args.get(indexValuePosition).toString();
 				}
 				// Now add it to the model
 				if (fAddedPart != null)
@@ -714,7 +718,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		try {
 			if (fAddedPart == null && expr != null) {
 				// Brand new expression
-				BeanPart bp = parseAddedPart((MessageSend) expr);
+				BeanPart bp = parseAddedPart((MethodInvocation)getExpression());
 				if (bp != null)
 					result = new Object[] { bp.getType() + "[" + bp.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (fAddedPart != null) {

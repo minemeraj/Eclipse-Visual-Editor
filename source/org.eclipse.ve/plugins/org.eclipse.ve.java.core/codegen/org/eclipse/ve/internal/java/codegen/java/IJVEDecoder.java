@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IJVEDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
+
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -61,6 +63,7 @@ public interface IJVEDecoder {
 	// BDM will adapt an instance using this adapter
 	public ICodeGenAdapter createCodeGenInstanceAdapter(BeanPart bp) ;
 	public ICodeGenAdapter createThisCodeGenInstanceAdapter(BeanPart bp) ;
+	public void setStatement(Statement s);
    
 
 }

@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:50 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.internal.compiler.ast.Expression;
-import org.eclipse.jdt.internal.compiler.ast.Statement;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.codegen.java.AbstractFeatureMapper;
  
@@ -41,7 +40,7 @@ public class CompositeFeatureMapper extends AbstractFeatureMapper {
 		return fSF ;		
 	}
 	
-	public String getMethodName(Expression expr) {
+	public String getMethodName(Statement expr) {
 		String name = super.getMethodName(expr) ;
 		if (name == null) 
 			name = "????????" ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
  */
 
 import java.util.*;
@@ -21,7 +21,9 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule;
@@ -32,18 +34,17 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 public class TypeVisitor extends SourceVisitor {
 	
 
-	CodeTypeRef fType = null ;
-	
-	char[] content = null;
+	CodeTypeRef fType = null ;	
 	String[] methodHandles = null;
 	
 	boolean forceJDOMUsage = false;
+	char[]	content = null;  // is set when JDOM is not set
 	Map  fInstanceDeclaredBeans = new HashMap() ;
 	
-public TypeVisitor (TypeDeclaration node, IBeanDeclModel model, char[] content, String[] methodHandles, List reTryList, boolean forceJDOMUsage) {
-	this(node,model,reTryList,forceJDOMUsage) ;	
-	this.content = content;
+public TypeVisitor (TypeDeclaration node, IBeanDeclModel model, char [] content, String[] methodHandles, List reTryList, boolean forceJDOMUsage) {
+	this(node,model,reTryList,forceJDOMUsage) ;		
 	this.methodHandles = methodHandles;
+	this.content = content;
 }
 
 public TypeVisitor (TypeDeclaration node, IBeanDeclModel model,List reTryList, boolean forceJDOMUsage) {
@@ -63,14 +64,14 @@ public TypeVisitor (CodeTypeRef tr, TypeDeclaration node, IBeanDeclModel model,L
  *  Build a JCMMethod array which corresponds to the parsed methods array
  *  @return  Array of IMethods
  */
-public static  IMethod[]  getCUMethods(AbstractMethodDeclaration aMethods[], IMethod[] elements, IBeanDeclModel model) {
+public static  IMethod[]  getCUMethods(MethodDeclaration aMethods[], IMethod[] elements, IBeanDeclModel model) {
 
 	// Assumes order is the same
 	ArrayList   methods = new ArrayList() ;
 	if (elements == null || elements.length == 0) return null ;
 	// Pad the array with these 
 	for (int i=0; i<aMethods.length; i++) {
-		String Name = new String (aMethods[i].selector) ;
+		String Name = new String (aMethods[i].getName().getIdentifier()) ;
 		int j,Prev = 0 ;
 		// Deal with duplicate names
 		int dupCount = 0 ;
@@ -104,14 +105,14 @@ protected void createThisIfNecessary() {
     
         
     IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(fModel).getRule(IThisReferenceRule.RULE_ID) ;
-    String typeName = fModel.resolveThis() ;
+    
     String superName = null ;
-    if (fType.getTypeDecl().superclass != null)
-      superName = fModel.resolve(CodeGenUtil.tokensToString(fType.getTypeDecl().superclass.getTypeName())) ;
+    if (fType.getTypeDecl().getSuperclass() != null)
+      superName = CodeGenUtil.resolve(fType.getTypeDecl().getSuperclass(),fModel) ;
     ResourceSet rs = fModel.getCompositionModel().getModelResourceSet() ;
     // The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
     // So, try the super first    
-    if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(typeName,rs))) {
+    if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(fType.getName(),rs))) {
         BeanPartFactory bpg = new BeanPartFactory(fType.getBeanModel(),null) ;
         // No Init method yet.
 	   	bpg.createThisBeanPartIfNeeded(null) ;	 
@@ -130,9 +131,9 @@ public void addFieldToMap(BeanPart bp, String method) {
 	l.add(bp) ;
 }
 
-protected void visitAMethod(AbstractMethodDeclaration node, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
-	String mName = new String(node.selector) ;
-	MethodVisitor v = new MethodVisitor(node,model,reTryList,typeRef,methodHandle,	range,content) ;
+protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
+	String mName = method.getName().getIdentifier();
+	MethodVisitor v = new MethodVisitor(method,model,reTryList,typeRef,methodHandle,	range,content) ;
 	// Check to see if the rule gave us an init method up front
 	if (fInstanceDeclaredBeans.get(mName) != null) {
 		Iterator itr = ((List)fInstanceDeclaredBeans.get(mName)).iterator() ;
@@ -144,7 +145,7 @@ protected void visitAMethod(AbstractMethodDeclaration node, IBeanDeclModel model
 
 public void visit()  {
 	// First look a instance variables 
-	FieldDeclaration[] fields = fType.getTypeDecl().fields;
+	FieldDeclaration[] fields = fType.getTypeDecl().getFields();
 	IInstanceVariableRule instVarRule = (IInstanceVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IInstanceVariableRule.RULE_ID) ;
 	if (fields != null) 
 		for (int i=0 ; i<fields.length; i++) {
@@ -157,15 +158,13 @@ public void visit()  {
 			  addFieldToMap(bp, overidInitMethod) ;
 			  bp.setInstanceInstantiation(true) ;
 			}
-			   
-			
 		}
   
      
 	createThisIfNecessary() ;
 
 	// Assume method's order is the same
-	AbstractMethodDeclaration[] methods = fType.getTypeDecl().methods;
+	MethodDeclaration[] methods = fType.getTypeDecl().getMethods();
 	if (forceJDOMUsage) {
 		// No compilation unit... depend on jdom solely
 		if(methods==null || methods.length==0)
@@ -174,8 +173,7 @@ public void visit()  {
 			int methodHandleUseCount = 0;
 			for(int i=0; i<methods.length; i++){
 				if(	(methods[i]!=null) &&
-					(methods[i] instanceof MethodDeclaration || 
-					 methods[i] instanceof ConstructorDeclaration)){
+					(methods[i] instanceof MethodDeclaration)){
 					String thisMethodHandle = ""; //$NON-NLS-1$
 					if (methods[i] instanceof MethodDeclaration) {
 						thisMethodHandle = methodHandles[methodHandleUseCount];
@@ -187,8 +185,8 @@ public void visit()  {
 					// the declaration Source starts, and the declaration source ends are 
 					// being modified. This is due to inconsistency between JDOM and JDT.
 					visitAMethod(methods[i], fModel, fReTryLater, fType, thisMethodHandle, // null,
-								 getSourceRange(methods[i].declarationSourceStart,methods[i].declarationSourceEnd), 
-								 new String(content).substring(methods[i].declarationSourceStart, methods[i].declarationSourceEnd)) ;
+								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()), 
+								 String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()));
 				}
 			}
 		}catch(Exception e){
@@ -206,15 +204,14 @@ public void visit()  {
 			for (; i < methods.length ; i++){
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 
-					(methods[i] instanceof MethodDeclaration ||
-					 methods[i] instanceof ConstructorDeclaration)) {
+					methods[i] instanceof MethodDeclaration ) {
 					visitAMethod(methods[i],fModel,fReTryLater,fType,((IMethod)cuMethods[i]).getHandleIdentifier(),
 								cuMethods[i].getSourceRange(),
 								cuMethods[i].getSource()) ;
 				}
 			}
-		}catch (JavaModelException e) {
-			JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].selector)+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+		}catch (Exception e) {
+			JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }
