@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-06 21:21:12 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-07 18:02:39 $ 
  */
 
 import java.util.ArrayList;
@@ -220,7 +220,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		openPropertiesViewIfRequired = createCheckBox(openComposite, VCEMessages.getString("PreferencePage.OpenView.Properties"), 0); //$NON-NLS-1$
 		try {
-			fPropertiesViewImage = CDEPlugin.getImageFromPlugin(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.ui").getPlugin(), "icons/full/cview16/prop_ps.gif");	//$NON-NLS-1$
+			fPropertiesViewImage = CDEPlugin.getImageFromPlugin(Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.ui").getPlugin(), "icons/full/eview16/prop_ps.gif");	//$NON-NLS-1$
 		} catch (CoreException e1) {
 		} 
 		createLabel(openComposite, null, fPropertiesViewImage);
