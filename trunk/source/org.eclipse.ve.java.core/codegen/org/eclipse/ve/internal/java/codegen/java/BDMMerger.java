@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.22 $  $Date: 2004-08-20 13:44:06 $ 
+ *  $Revision: 1.23 $  $Date: 2004-09-03 22:03:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -92,11 +92,41 @@ public class BDMMerger {
 			merged = merged && mergeAllBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			merged = merged && updateFreeForm() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
+			merged = merged && clean() ;
 		}
 		needToRedecodeExpressions.clear();
 		return merged ;
 	}
 	
+	/**
+	 * Things which might have gotten bad during the merge need to be cleaned up -
+	 * like bad expressions etc.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	private boolean clean() {
+		boolean cleaned = true;
+		if(mainModel.getBeans()!=null){
+			Iterator beanItr = mainModel.getBeans().iterator();
+			while (beanItr.hasNext()) {
+				BeanPart bp = (BeanPart) beanItr.next();
+				List badExpressions = bp.getBadExpressions();
+				if(badExpressions!=null && badExpressions.size()>0){
+					for (int badExpCount = 0; badExpCount < badExpressions.size(); badExpCount++) {
+						CodeExpressionRef exp = (CodeExpressionRef) badExpressions.get(badExpCount);
+						badExpressions.remove(exp);
+						exp.dispose();
+						badExpCount--;
+					}
+				}
+			}
+		}
+		return cleaned;
+	}
+
 	/**
 	 * Even though a majority of methods in the main BDM  are created when a new bean 
 	 * is created, there could be methods in the main BDM which do not init any bean - 
@@ -433,8 +463,42 @@ public class BDMMerger {
 		updateMethodOffsetAndContent(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
 		updateReturnMethod(mainBeanPart, updatedBeanPart);
 		boolean update = updateCallBackExpressions(mainBeanPart, updatedBeanPart);
+		update = update && updateParentExpressions(mainBeanPart, updatedBeanPart);
 		update = update && updateRegularAndEventExpressions(mainBeanPart, updatedBeanPart);
 		return update ;
+	}
+
+	/**
+	 * Parent expressions are those expressions which actually belong to the passed in 'mainBeanPart',
+	 * but which physically exist in the parent's method. Ex: createComposite(); - Here the expression 
+	 * is for the 'composite' bean - but it exists in the parent's method like 'createShell'.
+	 * The beans in the main BDM will not be having any parent expressions as they would already have
+	 * been processed by the initial load (processing parent expressions removes them from the beanparts).
+	 * Since there will only be additions from the new BDM, we will try to add the parent expressions of
+	 * the new BDM to the main BDM. 
+	 * 
+	 * @param mainBeanPart
+	 * @param updatedBeanPart
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean updateParentExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
+		boolean updated = true;
+		List updatedParentExpressions = new ArrayList(updatedBeanPart.getParentExpressons());
+		for (int uc = 0; uc < updatedParentExpressions.size(); uc++) {
+			CodeExpressionRef updateParentExpression = (CodeExpressionRef) updatedParentExpressions.get(uc);
+			if(		updateParentExpression!=null && updateParentExpression.getExprStmt()!=null &&
+					updateParentExpression.getMethod()!=null &&
+					updateParentExpression.getMethod().getMethodHandle()!=null){
+				CodeMethodRef newExpMethod = mainModel.getMethod(updateParentExpression.getMethod().getMethodHandle());
+				if(newExpMethod!=null){
+					CodeExpressionRef newExp = new CodeExpressionRef(updateParentExpression.getExprStmt(), newExpMethod);
+					mainBeanPart.addParentExpression(newExp);
+				}
+			}
+		}
+		return updated;
 	}
 
 	protected boolean processEquivalentExpressions(final CodeExpressionRef mainExp, final CodeExpressionRef newExp, int equivalencyLevel){
