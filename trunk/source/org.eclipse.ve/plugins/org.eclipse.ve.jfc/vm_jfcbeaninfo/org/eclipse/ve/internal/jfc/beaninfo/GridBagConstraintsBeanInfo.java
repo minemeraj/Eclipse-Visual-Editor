@@ -14,7 +14,7 @@ import java.awt.GridBagConstraints;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagConstraintsBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:52:42 $ 
  */
 
 
@@ -33,47 +33,47 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("gridx", GridBagConstraints.class.getField("gridx"), new Object[] {
+				createFieldPropertyDescriptor("gridx", GridBagConstraints.class.getField("gridx"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.gridx"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.gridx.Desc"), //$NON-NLS-1$						
 				}),
-				createFieldPropertyDescriptor("gridy", GridBagConstraints.class.getField("gridy"), new Object[]{
+				createFieldPropertyDescriptor("gridy", GridBagConstraints.class.getField("gridy"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.gridy"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.gridy.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("gridwidth", GridBagConstraints.class.getField("gridwidth"), new Object[] {
+				createFieldPropertyDescriptor("gridwidth", GridBagConstraints.class.getField("gridwidth"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.gridwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.gridwidth.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("gridheight", GridBagConstraints.class.getField("gridheight"), new Object[]{
+				createFieldPropertyDescriptor("gridheight", GridBagConstraints.class.getField("gridheight"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.gridheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.gridheight.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("weightx", GridBagConstraints.class.getField("weightx"), new Object[]{
+				createFieldPropertyDescriptor("weightx", GridBagConstraints.class.getField("weightx"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.weightx"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.weightx.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("weighty", GridBagConstraints.class.getField("weighty"), new Object[]{
+				createFieldPropertyDescriptor("weighty", GridBagConstraints.class.getField("weighty"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.weighty"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.weighty.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("anchor", GridBagConstraints.class.getField("anchor"), new Object[]{
+				createFieldPropertyDescriptor("anchor", GridBagConstraints.class.getField("anchor"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.anchor"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.anchor.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("fill", GridBagConstraints.class.getField("fill"), new Object[]{
+				createFieldPropertyDescriptor("fill", GridBagConstraints.class.getField("fill"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.fill"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.fill.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("ipadx", GridBagConstraints.class.getField("ipadx"), new Object[]{
+				createFieldPropertyDescriptor("ipadx", GridBagConstraints.class.getField("ipadx"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.ipadx"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.ipadx.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("ipady", GridBagConstraints.class.getField("ipady"), new Object[]{
+				createFieldPropertyDescriptor("ipady", GridBagConstraints.class.getField("ipady"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.ipady"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.ipady.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("insets", GridBagConstraints.class.getField("insets"), new Object[]{
+				createFieldPropertyDescriptor("insets", GridBagConstraints.class.getField("insets"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resconstraints.getString("gridbagconstraints.insets"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resconstraints.getString("gridbagconstraints.insets.Desc"), //$NON-NLS-1$											
 				}),

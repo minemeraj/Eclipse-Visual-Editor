@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.*;
@@ -211,7 +211,7 @@ public String[] getAvailableRegions() {
 		IJavaObjectInstance constraintString = (IJavaObjectInstance)constraintsValue.eGet(sfConstraintConstraint);
 		// We know the constraints value should be a bean so we can use its toString to get the string value
 		IBeanProxy cp = BeanProxyUtilities.getBeanProxy(constraintString, true);
-		String constraint = cp != null ? cp.toBeanString() : "";
+		String constraint = cp != null ? cp.toBeanString() : ""; //$NON-NLS-1$
 		result.remove(constraint);
 		// Also need to remove the constraint's equivalent constraint if it's there
 		//  (i.e. If orientation is left to right, "West" and "BEFORE_LINE_BEGINS" are the same and needs to be removed)

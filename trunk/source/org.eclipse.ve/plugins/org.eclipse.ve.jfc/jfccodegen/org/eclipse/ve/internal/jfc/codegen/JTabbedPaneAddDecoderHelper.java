@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-25 23:07:53 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-05 21:53:07 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -458,7 +458,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		String initString = null;
 		if (e instanceof StringLiteral) {
 			StringLiteral string = (StringLiteral) e;
-			initString = "\""+string.getLiteralValue()+"\"";
+			initString = "\""+string.getLiteralValue()+"\""; //$NON-NLS-1$ //$NON-NLS-2$
 		}else if(e instanceof NullLiteral) {
 			initString = null;
 		}else if(e!=null){

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-03-21 22:48:09 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-04-05 21:53:36 $
  */
 import java.util.*;
 
@@ -274,7 +274,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		super.deactivate();
 	}
 
-	private static final String FREEFORM_EDITPOLICY = "free_form editpolicy";
+	private static final String FREEFORM_EDITPOLICY = "free_form editpolicy"; //$NON-NLS-1$
 
 	/**
 	 * createInputPolicies method comment.

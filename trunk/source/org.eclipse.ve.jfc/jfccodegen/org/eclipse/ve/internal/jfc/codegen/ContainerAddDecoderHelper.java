@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-01 22:18:01 $ 
+ *  $Revision: 1.20 $  $Date: 2005-04-05 21:53:07 $ 
  */
 
 import java.util.*;
@@ -319,7 +319,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fbeanPart.getModel(), null);
 		IJavaObjectInstance result = null;
 		try {
-			result = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.Object", fbeanPart.getModel().getCompositionModel());
+			result = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.Object", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			result.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(pt));
 		} catch (CodeGenException e) {
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 21:53:36 $ 
  */
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,8 +44,8 @@ public class JTextComponentProxyAdapter extends ComponentProxyAdapter {
 	public JTextComponentProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart"));
-		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd"));
+		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart")); //$NON-NLS-1$
+		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd")); //$NON-NLS-1$
 	}
 	/* (non-Javadoc)
 	 * Need to reinstanciate the bean when the selectionStart or selectionEnd is reset

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.21 $  $Date: 2005-02-18 22:02:40 $ 
+ *  $Revision: 1.22 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.List;
@@ -134,7 +134,7 @@ public static IBeanProxy getJSplitPaneOrientationHorizontal(ProxyFactoryRegistry
 	
 	if (constants.jsplitpaneOrientation_HORIZONTAL == null) {
 		try {
-			constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane").getFieldProxy("HORIZONTAL_SPLIT").get(null);
+			constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane").getFieldProxy("HORIZONTAL_SPLIT").get(null); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (ThrowableProxy e) {
 			JavaVEPlugin.log(e, Level.WARNING);
 		}
@@ -478,10 +478,10 @@ public static boolean getBoxLayoutAxis(IBeanProxy boxlayoutProxy) {
 	
 	if (constants.getBoxLayoutAxisFieldProxy == null) {
 		IBeanTypeProxy boxlayoutType = boxlayoutProxy.getTypeProxy();
-		constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getDeclaredFieldProxy("axis");
+		constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getDeclaredFieldProxy("axis"); //$NON-NLS-1$
 		try {
 			constants.getBoxLayoutAxisFieldProxy.setAccessible(true);
-			constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null);
+			constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null); //$NON-NLS-1$
 		} catch (Exception e) {
 			JavaVEPlugin.getPlugin().getLogger().log(e);
 		}
@@ -776,7 +776,7 @@ public static void invoke_set_ComponentAndParentBean_Manager(IBeanProxy aCompone
 	if (constants.setComponentAndParentMethodProxy == null) {
 		constants.setComponentAndParentMethodProxy = aComponentManager.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 			"setComponentAndParent", //$NON-NLS-1$
-			new String[] {"java.awt.Component","java.awt.Container"} //$NON-NLS-1$
+			new String[] {"java.awt.Component","java.awt.Container"} //$NON-NLS-1$ //$NON-NLS-2$
 		);
 	}
 	constants.setComponentAndParentMethodProxy.invokeCatchThrowableExceptions(aComponentManager, new IBeanProxy[] {visualComponentBeanProxy, parentContainerBeanProxy});	

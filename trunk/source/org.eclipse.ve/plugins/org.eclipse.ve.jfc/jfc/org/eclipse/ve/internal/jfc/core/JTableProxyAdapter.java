@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:04 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.Iterator;
@@ -53,7 +53,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 				IBeanTypeProxy previewTypeProxy =
 					getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.PreviewTableModel");	//$NON-NLS-1$
 				try {
-					getBeanProxy().getTypeProxy().getMethodProxy("setModel", "javax.swing.table.TableModel").invoke(getBeanProxy(), previewTypeProxy.newInstance());
+					getBeanProxy().getTypeProxy().getMethodProxy("setModel", "javax.swing.table.TableModel").invoke(getBeanProxy(), previewTypeProxy.newInstance()); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (ThrowableProxy exc) {
 					JavaVEPlugin.log(exc, Level.WARNING);
 				}

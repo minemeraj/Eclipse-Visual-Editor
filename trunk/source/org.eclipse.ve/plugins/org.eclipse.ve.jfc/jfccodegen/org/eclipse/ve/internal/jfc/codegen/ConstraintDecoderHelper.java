@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-01 22:18:01 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-05 21:53:07 $ 
  */
 
 
@@ -212,7 +212,7 @@ protected boolean	addConstraintFeature(boolean addToEMFmodel) throws CodeGenExce
 			} else
 			if ((exp.arguments().size() == 1) && (exp.arguments().get(0) instanceof StringLiteral)) {
 				// TODO Havent found a case where this is true - but leaving it here for the time being
-				String newConstraint = "\""+exp.arguments().get(0).toString()+"\"";
+				String newConstraint = "\""+exp.arguments().get(0).toString()+"\""; //$NON-NLS-1$ //$NON-NLS-2$
 				EObject target = fbeanPart.getEObject();
 				EStructuralFeature sf = fFmapper.getFeature(null);
 				if(target.eIsSet(sf)){

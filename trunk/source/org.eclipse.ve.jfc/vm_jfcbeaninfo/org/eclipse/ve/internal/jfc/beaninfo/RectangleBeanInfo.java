@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 21:52:42 $ 
  */
 package org.eclipse.ve.internal.jfc.beaninfo;
 
@@ -32,10 +32,10 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("x", Rectangle.class.getField("x"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("y", Rectangle.class.getField("y"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("width", Rectangle.class.getField("width"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("height", Rectangle.class.getField("height"), EMPTY_ARGS)
+				createFieldPropertyDescriptor("x", Rectangle.class.getField("x"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("y", Rectangle.class.getField("y"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("width", Rectangle.class.getField("width"), EMPTY_ARGS), //$NON-NLS-1$ //$NON-NLS-2$
+				createFieldPropertyDescriptor("height", Rectangle.class.getField("height"), EMPTY_ARGS) //$NON-NLS-1$ //$NON-NLS-2$
 		};
 	} catch (SecurityException e) {
 		handleException(e);

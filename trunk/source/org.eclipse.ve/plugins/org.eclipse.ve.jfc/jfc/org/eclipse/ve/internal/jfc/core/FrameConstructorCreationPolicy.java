@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FrameConstructorCreationPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 21:53:36 $ 
  */
 
 import java.util.*;
@@ -48,7 +48,7 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 			 */
 			public void execute() {
 				JavaClass javaClass = (JavaClass) aCreateRequest.getNewObjectType();
-				JavaClass frameClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("java.awt.Frame", javaClass);
+				JavaClass frameClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("java.awt.Frame", javaClass); //$NON-NLS-1$
 				// Look at the constructors to see whether there is a null constructor or not
 				// If so then just leasve the allocation alone.
 				// Remember that the absence of any contructors means that there is an implicit null constructor
@@ -77,7 +77,7 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 				if (hasNullConstructor)
 					return;
 				// Create the frame argument constructor
-				PTClassInstanceCreation newFrame = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Frame", null);
+				PTClassInstanceCreation newFrame = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Frame", null); //$NON-NLS-1$
 				PTClassInstanceCreation newExpr = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(javaClass.getQualifiedNameForReflection(), Collections.singletonList(newFrame));
 				IJavaObjectInstance newJavaObject = (IJavaObjectInstance) aCreateRequest.getNewObject();
 				ApplyAttributeSettingCommand applycommand = new ApplyAttributeSettingCommand();
