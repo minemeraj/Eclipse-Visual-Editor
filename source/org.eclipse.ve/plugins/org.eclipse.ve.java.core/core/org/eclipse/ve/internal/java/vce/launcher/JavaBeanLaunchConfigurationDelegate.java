@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-21 22:12:02 $ 
  */
 
 
@@ -132,9 +132,12 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	args = args + " -Dvce.launcher.class=" + javaBeanName; //$NON-NLS-1$
 	// Set the look and feel to the one the user specified in the configuration
 	String lookAndFeelClass = configuration.getAttribute(VCEPreferences.SWING_LOOKANDFEEL, ""); //$NON-NLS-1$
+	if(lookAndFeelClass.equals("")){
+		lookAndFeelClass = VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.SWING_LOOKANDFEEL);		
+	}
 	if ( !lookAndFeelClass.equals("") ) { //$NON-NLS-1$
 		args = args + " -Dvce.launcher.lookandfeel=" + lookAndFeelClass; //$NON-NLS-1$
-	}			
+	} 
 	String locale = configuration.getAttribute(LOCALE, ""); //$NON-NLS-1$
 	if ( !locale.equals("")) { //$NON-NLS-1$
 		args = args + " -Dlocale=" + locale; //$NON-NLS-1$
