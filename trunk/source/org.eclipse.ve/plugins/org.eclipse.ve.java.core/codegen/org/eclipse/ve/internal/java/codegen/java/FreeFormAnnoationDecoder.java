@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2004-07-02 00:32:45 $ 
+ *  $Revision: 1.11 $  $Date: 2004-07-09 21:32:17 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -95,8 +95,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 	        	      fft.setPosition(null);
 	        	}
 	            fContent = fft.toString() ;
+	        }else{
+	        	// NOT modelled, and NO constraint - atleast put the //@jve:decl-index=0:
+	        	fContent = fft.toString();
 	        }
-	        
         }else{
         	fContent = "";
         }
