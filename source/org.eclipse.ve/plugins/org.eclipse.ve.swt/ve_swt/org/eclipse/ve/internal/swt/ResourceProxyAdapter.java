@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.6 $ $Date: 2004-05-19 23:04:11 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2004-07-12 16:17:56 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -80,17 +80,17 @@ public class ResourceProxyAdapter extends BeanProxyAdapter {
 	}
 
 	public void releaseBeanProxy() {
-		if (isBeanProxyInstantiated()) {
-			JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(),
+		if(this.fOwnsProxy) {
+			if (isBeanProxyInstantiated()) {
+				JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(),
 					new DisplayManager.DisplayRunnable() {
-
 						public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
 							IBeanProxy resourceBeanProxy = getBeanProxy();
 							IMethodProxy disposeWidgetMethodProxy = resourceBeanProxy.getTypeProxy().getMethodProxy("dispose");
 							disposeWidgetMethodProxy.invoke(resourceBeanProxy);
 							return null;
 						}
-					});
+				});			}
 		}
 		super.releaseBeanProxy();
 	}
