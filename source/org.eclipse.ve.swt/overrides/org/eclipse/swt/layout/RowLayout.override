@@ -60,11 +60,11 @@
       </eAnnotations>
     </addedEObjects>          
 
-    <addedEObjects xsi:type="ecore:EReference" name="marginBotton" eType="org.eclipse.jem.java:JavaDataType java:/#int"
+    <addedEObjects xsi:type="ecore:EReference" name="marginBottom" eType="org.eclipse.jem.java:JavaDataType java:/#int"
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginBotton"/>
+        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginBottom"/>
       </eAnnotations>
     </addedEObjects>              
     

@@ -20,7 +20,8 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.*;
@@ -84,7 +85,7 @@ protected void createLayoutEditPolicy() {
 		if(layoutPolicyFactory != null) {
 			layoutPolicy = layoutPolicyFactory.getLayoutEditPolicy(getContainerPolicy());
 		} else if(layoutPolicyFactory == null){
-			layoutPolicy = new UnknownLayoutInputPolicy(getContainerPolicy());			
+			layoutPolicy = new DefaultLayoutEditPolicy(getContainerPolicy());			
 		}
 	}
 	if(layoutPolicy != null){
