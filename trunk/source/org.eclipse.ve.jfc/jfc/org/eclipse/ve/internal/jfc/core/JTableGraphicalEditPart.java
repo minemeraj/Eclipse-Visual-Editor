@@ -11,30 +11,25 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-20 09:13:12 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-20 23:03:50 $ 
  */
 
 import java.util.*;
-import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDELayoutEditPolicy;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 
@@ -48,7 +43,7 @@ private Adapter jTableAdapter = new EditPartAdapterRunnable() {
 	}
 	
 	public void notifyChanged(Notification notification) {
-		if (notification.getFeature() == getSFColumns()) {
+		if (notification.getFeature() == sfColumns) {
 			queueExec(JTableGraphicalEditPart.this);
 		} 
 	}
@@ -70,9 +65,8 @@ public void deactivate() {
 	((EObject) getModel()).eAdapters().remove(jTableAdapter);
 }
 protected void createEditPolicies(){
-	EditDomain domain = EditDomain.getEditDomain(this);
-	EStructuralFeature SF_TABLE_COLUMNS = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), JFCConstants.SF_JTABLE_COLUMNS);	
-	installEditPolicy(EditPolicy.LAYOUT_ROLE, new CDELayoutEditPolicy(new JavaContainerPolicy(SF_TABLE_COLUMNS,domain))); //$NON-NLS-1$	
+	EditDomain domain = EditDomain.getEditDomain(this);	
+	installEditPolicy(EditPolicy.LAYOUT_ROLE, new CDELayoutEditPolicy(new JavaContainerPolicy(sfColumns,domain)));	
 	super.createEditPolicies();
 }
 protected JTableComponentListener getJTableComponentListener() {
@@ -103,13 +97,6 @@ private void refreshColumns(){
 	}
 }
 
-private EStructuralFeature getSFColumns(){
-	if(sfColumns == null){
-		sfColumns = JavaInstantiation.getSFeature(getBean().eResource().getResourceSet(), JFCConstants.SF_JTABLE_COLUMNS);
-	}
-	return sfColumns;
-}
-
 protected List getModelChildren() {
 	return Collections.EMPTY_LIST;
 //  TODO - TableColumn graphical edit part not completed yet - JRW
@@ -124,5 +111,14 @@ protected EditPart createChild(Object child) {
 	TableColumnGraphicalEditPart result = new TableColumnGraphicalEditPart();
 	result.setModel(child);
 	return result;
+}
+
+/*
+ * @see EditPart#setModel(Object)
+ */
+public void setModel(Object model) {
+	super.setModel(model);
+	JavaClass modelType = (JavaClass) ((EObject) model).eClass();
+	sfColumns = JavaInstantiation.getSFeature(((EObject) model).eClass().eResource().getResourceSet(), JFCConstants.SF_JTABLE_COLUMNS);
 }
 }
