@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-05 16:25:16 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -308,6 +308,10 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			// Set the look and feel to be the save one in the configuration, otherwise the default
 			String lookAndFeel = config.getAttribute(VCEPreferences.SWING_LOOKANDFEEL,""); //$NON-NLS-1$
 			if ( lookAndFeel.equals("")) { //$NON-NLS-1$
+				// If the configuration has no look and feel, default to the one in the preferences
+				lookAndFeel = VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.SWING_LOOKANDFEEL);
+			}
+			if (lookAndFeel.equals("")){
 				fLookAndFeelList.setSelection(0);
 			} else {
 				// Match the look and feel class against the list of known ones
