@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-29 19:53:16 $ 
+ *  $Revision: 1.12 $  $Date: 2004-06-30 20:59:20 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -334,7 +334,7 @@ protected IMethod getReturnMethod(ICompilationUnit cu, BeanPart bp){
 				if(	returnType!=null &&
 						!returnType.equals("void") &&
 						bp.getReturnedMethod().getMethodName().equals(methods[mc].getElementName()) &&
-						bp.getType().equals(bp.getModel().resolveType(returnType))){
+						bp.getType().equals(bp.getModel().resolve(returnType))){
 					returnMethod = methods[mc];
 					break;
 				}
