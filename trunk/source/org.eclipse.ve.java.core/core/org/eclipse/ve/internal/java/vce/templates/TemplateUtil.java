@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-09 23:08:08 $ 
+ *  $Revision: 1.9 $  $Date: 2004-07-08 21:20:32 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -41,6 +41,8 @@ public class TemplateUtil {
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
     private static List fPlatformJRE = null ;
     private static boolean DEV_MODE = Platform.inDevelopmentMode();    
+    private static HashMap fFilePath = new HashMap();
+    private static HashMap fClassLoaders = new HashMap();
 	
     /**
      * Get the path for file within the given bundle.
@@ -51,7 +53,13 @@ public class TemplateUtil {
      * @since 1.0.0
      */
 	static public String getPathForBundleFile (String bundleName, String relativePath) {
-		return getPathForBundleFile(Platform.getBundle(bundleName), relativePath);
+		String key = bundleName+":"+relativePath;
+		String result;
+		if ((result=(String)fFilePath.get(key))==null) {
+		 result =  getPathForBundleFile(Platform.getBundle(bundleName), relativePath);
+		 fFilePath.put(key,result) ;
+		}
+		return result;
 	}
 	
 	/**
@@ -227,8 +235,13 @@ public class TemplateUtil {
     
 	  if (url == null) return null ;
 	  
+	  try {
+		// class (if it were a resource file)
+		  url = Platform.resolve(url);
+	  } catch (IOException e) {}
+	  
 	  String path = url.getFile();          // string representing location of this
-											   // class (if it were a resource file)
+
 										
 	  if (path.startsWith("/") && path.charAt(2) == ':') { //$NON-NLS-1$
 			 // could be something like /C:/com/ibm/etools/TheClass.class
@@ -291,10 +304,15 @@ public class TemplateUtil {
 		// The plugin class loader is now deprecated. Since this method is used
 		// extensively in the generator pattern here, we will instead fluff one 
 		// up that goes to the bundle to load the classes.
-		Bundle b = Platform.getBundle(plugin);
-		if (b != null) {
-			return new SpecialClassLoader(b);
+		
+		ClassLoader cl = (ClassLoader) fClassLoaders.get(plugin);
+		if (cl==null) {
+			Bundle b = Platform.getBundle(plugin);
+		    if (b != null) {
+			    cl = new SpecialClassLoader(b);
+			    fClassLoaders.put(plugin, cl);
+		    }
 		}
-		return null ;		
+		return cl ;		
 	}
 }
