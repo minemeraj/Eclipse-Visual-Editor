@@ -11,11 +11,10 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-07 18:25:51 $ 
+ *  $Revision: 1.11 $  $Date: 2004-05-08 01:19:01 $ 
  */
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EClassifier;
@@ -124,9 +123,36 @@ protected BeanPart processFieldAccess (MethodInvocation stmt) {
 	}
 	return null;
 }
+
+/**
+ * 
+ * @param stmt
+ * @return all the beans that could be potentially targets for this expression.
+ *  Asscume createFoo() {
+ *         C = new Composite (parent)
+ *         B = new Button(C)
+ *  }
+ *  both C, B are initialized by createFoo()
+ * 
+ */
+protected BeanPart[] processCreateMethod(MethodInvocation stmt) {
+	
+	    ArrayList beans = new ArrayList();	
+		List l = fModel.getBeans();
+		for (int i = 0; i < l.size(); i++) {
+			BeanPart bp = (BeanPart) l.get(i);
+			if (bp.getInitMethod() != null) {
+				String iMethod = bp.getInitMethod().getMethodName();
+				if (iMethod.equals(stmt.getName().getIdentifier())) {
+					beans.add(bp) ;
+				}
+			}
+		}
+		return  (BeanPart[]) beans.toArray(new BeanPart[beans.size()]);
+}
 	
 /**
- *  Figure out which BeanPart (if any) this expression is acting on.
+ * Figure out which BeanPart (if any) this expression is acting on.
  */
 protected void processAMessageSend() {
       MethodInvocation stmt = (MethodInvocation) ((ExpressionStatement)fExpression.getExprStmt()).getExpression() ;
@@ -147,8 +173,27 @@ protected void processAMessageSend() {
   	  	bean = processFieldAccess(stmt);
   	  // something like this.setFoo() -- look at the rule base if we should
   	  // process.
-  	  else if (stmt.getExpression()==null || stmt.getExpression() instanceof ThisExpression)  
+  	  else if (stmt.getExpression() instanceof ThisExpression)  
   	  	bean = processRefToThis(stmt) ;
+  	  else if (stmt.getExpression()==null) {
+  	      // either a method invocation for creating a child (e.g, creatFoo(), or access to this.setFoo()
+  	  	  // Try to see if the method invocation refer to an init method
+  	  	  BeanPart[] bs = processCreateMethod(stmt) ;
+  	  	  if (bs.length==0) { 
+  	  	    if (fReTryLater!=null) {
+  	  	        // We may have not processed the target's create method 
+				fReTryLater.add(this);
+			    JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
+		    }
+		    else
+		       bean = processRefToThis(stmt);
+		  }
+		  else {
+		  	for (int i = 0; i < bs.length; i++) {
+					bs[i].addParentExpression(fExpression);				
+			}
+		  }
+  	  }
 	  	  	  	  	  	  
   	
   	  if (bean != null) {

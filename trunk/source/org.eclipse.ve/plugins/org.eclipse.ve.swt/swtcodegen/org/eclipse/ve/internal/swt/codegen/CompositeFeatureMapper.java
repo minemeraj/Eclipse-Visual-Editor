@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeFeatureMapper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-08 01:19:05 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -36,7 +36,7 @@ public class CompositeFeatureMapper extends AbstractFeatureMapper {
 			return null ;
 		getMethodName(expr)  ;
 		fSF = ((EObject)fRefObj).eClass().getEStructuralFeature(CompositeDecoder.ADD_METHOD_SF_NAME) ;
-		fSFname = fMethodName ;
+		fSFname = fSF.getName() ;
 		return fSF ;		
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.16 $  $Date: 2004-04-22 20:51:31 $ 
+ *  $Revision: 1.17 $  $Date: 2004-05-08 01:19:01 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -53,6 +53,7 @@ public class BeanPart {
 	ArrayList		fEventInitMethods = new ArrayList() ;
 	ArrayList		fCallBackExpressions = new ArrayList() ;
 	ArrayList		fNoSrcExpressions = new ArrayList();
+	ArrayList		fparentExpressions = new ArrayList() ;     // Expressions that needs to move to a parent
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
 	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
@@ -399,7 +400,6 @@ public Collection getRefCallBackExpressions() {
 public Collection getNoSrcExpressions() {
 	return new ArrayList(fNoSrcExpressions);
 }
-
 
 
 /**
@@ -769,6 +769,47 @@ public boolean isEquivalent(BeanPart b) {
 	}
 	public void removeNoSrcExpresion(CodeExpressionRef exp) {		
 			fNoSrcExpressions.remove(exp);
+	}
+	
+	/**
+	 * During parsing, it is possible that a parent was not resolved
+	 * yet, so its expression (e.g., createFoo()) is tucked here.
+	 * Once the constructor resolves the parent, creatFoo() will be moved to it.
+	 * @param exp
+	 */
+	public void addParentExpression (CodeExpressionRef exp) {
+		if (!fparentExpressions.contains(exp)) 
+			fparentExpressions.add(exp) ;		
+	}
+	public List getParentExpressons () {
+		return fparentExpressions;
+	}
+	public void resolveParentExpressions(BeanPart parent) {
+		if (parent != null) {
+			for (int i = 0; i < fparentExpressions.size(); i++) {
+				CodeExpressionRef e = (CodeExpressionRef) fparentExpressions.get(i);
+				if (e.getMethod() == parent.getInitMethod() &&
+					!e.isStateSet(CodeExpressionRef.STATE_EXIST)) {
+					e.setBean(parent);
+					parent.addRefExpression(e);
+					boolean ok = false;
+					try {
+						e.setArguments(new Object[] {this} );
+						ok = e.decodeExpression();
+					} catch (CodeGenException e1) {
+					}
+					if (!ok) {
+						e.getMethod().removeExpressionRef(e);
+						e.getBean().removeRefExpression(e);
+						e.getBean().addBadExpresion(e);
+						JavaVEPlugin.log(
+								"BeanPart.resolveParentExpressions() : Did not Decoded: "
+										+ e, Level.FINE); //$NON-NLS-1$
+					}
+				} 
+			}
+		}
+		fparentExpressions.clear();		
 	}
 	
 	public void removeAllBadExpressions(){

@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: TryCatchMethodTemplate.javajet,v $
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  */
  
  // This Method is expected to generate a getter-like method skelaton 
@@ -22,16 +22,7 @@
 	private <%=info.freturnType%> <%=info.fmethodName%>() {
 		if (<%=info.finitBeanName%> == null) {
 			try {
-				<%=info.finitBeanName%> = new <%=info.finitBeanType%>(<%
-				boolean first = true ;
-				// Generate constructor arguments, if needed
-				if (info.finitBeanArgs != null) 
-				   for (int i=0; i<info.finitBeanArgs.length; i++) {
-				      if (!first) {%>, <%
-				      }
-				      first=false;
-				      %><%=info.finitBeanArgs[i]%><%
-				   }%>);
+				<%=info.finitBeanName%> = <%=info.finitbeanInitString%>;
 			}
 			catch (java.lang.Throwable e) {
 				// TODO: Something

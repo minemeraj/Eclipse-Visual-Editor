@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.17 $  $Date: 2004-05-08 01:19:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -229,6 +229,21 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		return IJavaFeatureMapper.PRIORITY_CONSTRUCTOR;
 	}
 	
+	/**
+	 * 
+	 * @return 3 for GlobalBlobal, 2 for Global local, and 1 for local local.
+	 */
+	public static int getDefaultBeanPriority(BeanPart b) {
+		if (b.isInstanceVar()) {
+			if (b.getReturnedMethod() != null)
+				return 3;
+			else
+				return 2;			
+		}
+		else
+			return 1;		
+	}
+	
 	/* 
 	 * Determines the index priority for the constructor expressions.
 	 * NOTE: Since the hierarchy of the beans should be known for the 
@@ -240,19 +255,20 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	protected int getIndexPriority() {
 		if(fbeanPart!=null){
-			// TODO Warning: Hierarchy of beans is assumed to be known at this point, 
-			// to figure out constructor expression index priority.
-			BeanPart obj = fbeanPart;
-			int parentCount = 0;
-			if (fbeanPart.getReturnedMethod() != fbeanPart.getInitMethod()) {
-				// Let the constructor of the returned bean have a higher priority
-				parentCount++;
-			}
-			while(obj!=null){
-				parentCount++;
-				obj = CodeGenUtil.determineParentBeanpart(obj);
-			}
-			return Integer.MAX_VALUE - parentCount;
+//			// TODO Warning: Hierarchy of beans is assumed to be known at this point, 
+//			// to figure out constructor expression index priority.
+//			BeanPart obj = fbeanPart;
+//			int parentCount = 0;
+//			if (fbeanPart.getReturnedMethod() != fbeanPart.getInitMethod()) {
+//				// Let the constructor of the returned bean have a higher priority
+//				parentCount++;
+//			}
+//			while(obj!=null){
+//				parentCount++;
+//				obj = CodeGenUtil.determineParentBeanpart(obj);
+//			}
+//			return Integer.MAX_VALUE - parentCount;
+			return getDefaultBeanPriority(fbeanPart);
 		}
 		return super.getIndexPriority();
 	}

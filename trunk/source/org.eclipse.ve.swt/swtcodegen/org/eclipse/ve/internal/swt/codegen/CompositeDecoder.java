@@ -10,15 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-23 23:15:53 $ 
+ *  $Revision: 1.10 $  $Date: 2004-05-08 01:19:05 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
+import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.java.* ;
  
 /**
  * @author Gili Mendel
@@ -94,5 +96,19 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 			return false ;
 		else
 		    return super.isPriorityCacheable();
+	}
+	protected void initialFeatureMapper() {
+		super.initialFeatureMapper() ;
+		fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
+		if (fFeatureMapper.getFeature(fExpr) == null) {
+			// not a regular property, but given that it was parsed in... this could be
+			// a control feature
+			String method = AbstractFeatureMapper.getWriteMethod(fExpr);
+			if (method!=null) {
+				if (method.indexOf(ADD_METHOD_PREFIX)>=0) {
+					fFeatureMapper = getAppropriateFeatureMapper(ADD_METHOD_SF_NAME) ;
+				}
+			}			
+		}
 	}
 }

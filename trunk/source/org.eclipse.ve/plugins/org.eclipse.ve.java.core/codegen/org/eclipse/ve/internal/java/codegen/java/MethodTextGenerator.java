@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.15 $  $Date: 2004-04-29 21:06:33 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-08 01:19:01 $ 
  */
 
 import java.util.*;
@@ -333,7 +333,7 @@ public String toString() {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#setBeanInitArgs(java.lang.String[])
 	 */
-	public void setBeanInitArgs(String[] fbeanInitArgs) {
+	public void setBeanInitString(String str) {
 		// TODO Auto-generated method stub
 
 	}

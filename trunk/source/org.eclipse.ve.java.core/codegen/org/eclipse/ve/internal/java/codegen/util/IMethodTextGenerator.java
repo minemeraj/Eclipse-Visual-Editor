@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-29 21:06:33 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-08 01:19:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -73,7 +73,7 @@ public interface IMethodTextGenerator {
 	 * 
 	 * @since 1.0.0
 	 */
-	public void setBeanInitArgs(String[] fbeanInitArgs) ;
+	public void setBeanInitString(String str) ;
 
 	/**
 	 * Optionally set the arguments that are part of the method's signiture.

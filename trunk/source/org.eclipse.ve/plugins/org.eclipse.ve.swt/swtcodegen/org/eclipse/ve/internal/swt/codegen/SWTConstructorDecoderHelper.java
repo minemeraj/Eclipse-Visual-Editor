@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-23 23:15:53 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-08 01:19:05 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
+import java.util.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -144,6 +145,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 				createControlFeature();								
 			}
 		}
+		if (getParent()!=null) {
+			// our parent may have called us with createFoo() ... 
+			// during parsing time we could not resolve who is the parent... now is the time
+			fbeanPart.resolveParentExpressions(getParent());
+		}
 		return (result);
 	}
 	
@@ -165,16 +171,26 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		return result;
 	}
 	
+	public static int getIndexPriority(BeanPart bean, List sieblings) {
+		int priority =  getDefaultBeanPriority(bean);		 
+		  for (int i = 0; i < sieblings.size(); i++) 
+			if (sieblings.get(i).equals(bean.getEObject())) {
+				priority += sieblings.size()-i;
+				break;
+			}
+		return priority;
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
 	protected int getIndexPriority() {
-		// The following will determine proirities according to parent dependencies
-		int priority = super.getIndexPriority();
-		// add also the context for which we are added (z order) as controls
-		int index = getControlIndex();
-		if (index>=0)
-			priority -=index;
+		List controls = Collections.EMPTY_LIST;
+		if (getParent()!=null)
+			controls = (List)getParent().getEObject().eGet(getControlSF());
+		// use a common method
+		int priority = getIndexPriority(fbeanPart, controls) ;
 		return priority;
 	}
 	

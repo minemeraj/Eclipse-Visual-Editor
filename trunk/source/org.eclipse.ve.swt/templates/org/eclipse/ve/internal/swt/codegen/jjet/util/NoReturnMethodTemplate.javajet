@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: NoReturnMethodTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a method skelaton with no returns and no arguments
@@ -20,16 +20,7 @@
 %>
 	 *
 	 */    
-	private void <%=info.fmethodName%> () {
-		<%=info.finitBeanName%> = new <%=info.finitBeanType%> (<%
-		boolean first = true ;
-		// Generate constructor arguments, if needed
-		if (info.finitBeanArgs != null) 
-		   for (int i=0; i<info.finitBeanArgs.length; i++) {
-		      if (!first) {%>, <%
-		      }
-		      first=false;
-		      %><%=info.finitBeanArgs[i]%><%
-		   }%>);		   
+	private void <%=info.fmethodName%>() {
+		<%=info.finitBeanName%> = <%=info.finitbeanInitString%>;		   
 	}
  
