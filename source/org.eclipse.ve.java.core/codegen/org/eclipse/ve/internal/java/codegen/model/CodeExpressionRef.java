@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.40 $  $Date: 2005-02-25 23:07:45 $ 
+ *  $Revision: 1.41 $  $Date: 2005-04-04 23:11:29 $ 
  */
 
 
@@ -831,7 +831,13 @@ public String getMethodNameContent(){
 			if (assgn.getRightHandSide() instanceof ClassInstanceCreation) {
 				ClassInstanceCreation alloc = (ClassInstanceCreation) assgn.getRightHandSide();
 				String allocS = alloc.toString();
-				return allocS.substring(0,allocS.indexOf(alloc.getName().toString())).trim();
+				String content = allocS.substring(0,allocS.indexOf(alloc.getName().toString())).trim();
+				if(assgn.getLeftHandSide() instanceof QualifiedName){
+					QualifiedName qn = (QualifiedName) assgn.getLeftHandSide();
+					if(qn.getName()!=null)
+						content = qn.getName().toString()+"."+content;
+				}
+				return content;
 			}
 		}
 	}
