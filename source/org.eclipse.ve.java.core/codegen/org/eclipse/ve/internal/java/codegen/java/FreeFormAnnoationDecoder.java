@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-17 20:28:01 $ 
+ *  $Revision: 1.9 $  $Date: 2004-06-29 19:54:27 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -36,7 +36,8 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 
-     FreeFormAnnotationTemplate fFFtemplate = null ;        
+     FreeFormAnnotationTemplate fFFtemplate = null ;
+     protected boolean visual = true;
 
     /**
      * Constructor for FreeFormAnnoationDecoder.
@@ -55,6 +56,22 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
         
     }
     
+    public boolean isVisualOnFreeform(){
+    	IField f = null;
+		synchronized (fBeanpart.getModel().getDocumentLock()) {
+			f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
+		}
+		if (f == null) 
+			return false ;
+        ExpressionParser p = new ExpressionParser(f);
+        String comment = p.getComment();
+        // when absolutely no comment is present (handcoded), we should 
+        // just allow the component to show up on the FF
+        if(comment==null || comment.length()<1)
+        	return true;
+        return AnnotationDecoderAdapter.isBeanVisible(comment);          
+    }
+    
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
         Rectangle constraint = (Rectangle) getAnnotationValue() ;
         boolean isModelled = false;
@@ -69,11 +86,6 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 	        FreeFormAnnotationTemplate fft = getFFtemplate() ;
 	        if (constraint != null) 
 	        	fft.setPosition(new Point(constraint.x,constraint.y)) ;
-	        else
-	        	fft.setPosition(null);
-	        
-	        fft.setParseable(!isModelled);
-	        
 	        fContent = fft.toString() ;
         }else{
         	fContent = "";

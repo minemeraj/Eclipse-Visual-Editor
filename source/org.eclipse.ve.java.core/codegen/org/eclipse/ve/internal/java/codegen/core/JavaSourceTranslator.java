@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.38 $  $Date: 2004-06-03 14:39:30 $ 
+ *  $Revision: 1.39 $  $Date: 2004-06-29 19:52:30 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -290,7 +290,9 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		if(allEvents.size()==1){
 			try {
 				DocumentEvent de = ((DocumentEvent)allEvents.get(0));
-				if(	de.getText().length()==workingCopy.getSourceRange().getLength())
+				if(		de.getText()!=null && workingCopy!=null && 
+						workingCopy.getSourceRange()!=null && 
+						de.getText().length()==workingCopy.getSourceRange().getLength())
 					return;
 			} catch (JavaModelException e) {}
 		}
@@ -754,7 +756,7 @@ void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenExcepti
 	        throw new CodeGenException ("this Already initialized") ; //$NON-NLS-1$
 	   bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
 	}
-	else if(bp.getContainer()==null && bp.isInstanceVar())
+	else if(bp.getContainer()==null && bp.isInstanceVar() && bp.getFFDecoder().isVisualOnFreeform())
 	   bsc.getComponents().add(bp.getEObject()) ; 
 }
 
