@@ -222,6 +222,7 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		<echo message="${eclipse.home}/"/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
 	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/core.jar"/>
 
