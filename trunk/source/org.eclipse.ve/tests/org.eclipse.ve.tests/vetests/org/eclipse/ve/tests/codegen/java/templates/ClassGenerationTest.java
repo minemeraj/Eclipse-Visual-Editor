@@ -10,24 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ClassGenerationTest.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-13 18:04:04 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-13 18:14:20 $ 
  */
 package org.eclipse.ve.tests.codegen.java.templates;
 
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 
 import org.eclipse.jem.tests.JavaProjectUtil;
 
@@ -37,23 +29,25 @@ import org.eclipse.ve.internal.java.codegen.util.DefaultClassGenerator;
 
 /**
  * The idea is to generate a .java target file from a .javajet template
- * This .javajet will be translated to a .java template, when compiled to a .class template
+ * This .javajet will be translated to a .java template, then compiled to a .class template
  * that will generate the target .java file.
  * 
  * a .javajet template will be a resource in your plugin.  During development, if your plugin
- * has the JavaJet nature, a build it will generate .java and .class versions of your .javajet template.  
- * The .class version of the template will be used by your code to generate the template's content 
+ * has the JavaJet nature, a build process will generate .java and .class versions of your .javajet template.  
+ * The .class version is used to generate the template's content ... .java target. 
  *   e.g.,               org.eclipse.ve.java.core/codegen/org/eclipse/ve/internal/java/codegen/jjet/util
  *         is not in CVS... it is generated on the fly by a JavaJet builder using templates from 
  *                       org.eclipse.ve.java.core/templates/org/eclipse/ve/internal/java/codegen/jjet/util
  * 
  * In run time, if the org.eclipse.ve.java.core/codegen/org/eclipse/ve/internal/java/codegen/jjet/util is not available
- * or if the time stamp of the .javajet is newer from the .jar or .class version of the javajet CodeGen will
- * regenerate the .java and .class version of the template using the JDT.  Dynamically generated .class template  will
- * be stored in the .medadata area for the org.eclipse.ve.java.core plugin under a JavaJet directory
+ * or if the time stamp of the .javajet is newer from the .jar or .class version of the .javajet CodeGen will
+ * regenerate the .java and .class versions of the template using the JDT.  Dynamically generated .class templates will
+ * be stored in the .medadata area of the org.eclipse.ve.java.core plugin under the JavaJet directory
  * 
- * In this example, we do not use the JavaJet build to pre build any .java or .class versions of the template
- * We did put the template that is used in this test as a resource under the template directory of the plugin
+ * In this test, we did not set the IDE JavaJet builder to pre build any .java or .class versions of the template
+ * We did put the template that is used in this test as a resource under the template directory of the plugin and
+ * rely on CodeGen to dynamically generate the .java and .class versions of the template.  See org.eclipse.ve.java.core
+ * on how to set a JavaJet nature 
  *   
  * 
  * @since 1.0.0
@@ -110,6 +104,7 @@ public class ClassGenerationTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
+		// Create a JavaProject to put our class in
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject prg;
 		IPath path = new Path(ProjectName);
