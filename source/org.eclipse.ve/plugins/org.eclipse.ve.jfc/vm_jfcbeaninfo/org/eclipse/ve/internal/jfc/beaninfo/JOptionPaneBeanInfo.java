@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JOptionPaneBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-31 17:09:23 $ 
  */
 
 import java.beans.*;
@@ -874,7 +874,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JOptionPaneMessages.getString("value.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JOptionPaneMessages.getString("value.Desc"), //$NON-NLS-1$
 	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      	BOUND, Boolean.TRUE	      	
+	      	BOUND, Boolean.TRUE,
+			PREFERRED, Boolean.TRUE
 	    		}
 	    	),
 	    	// wantsInput
