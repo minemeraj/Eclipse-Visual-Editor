@@ -10,7 +10,6 @@
    <runtime>
       <library name="propertysheet.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.propertysheet"/>
       </library>
    </runtime>
    <requires>

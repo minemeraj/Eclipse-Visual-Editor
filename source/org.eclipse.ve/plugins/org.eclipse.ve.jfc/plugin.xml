@@ -10,15 +10,12 @@
    <runtime>
       <library name="jfc.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.jfc.core"/>
       </library>
       <library name="jfccommon.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.jfc.common"/>
       </library>
       <library name="jfccodegen.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.jfc.codegen"/>
       </library>
    </runtime>
    <requires>

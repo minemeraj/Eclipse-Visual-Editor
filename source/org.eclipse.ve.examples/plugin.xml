@@ -10,11 +10,9 @@
    <runtime>
       <library name="dept.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.examples.cdm"/>
       </library>
       <library name="javaexamples.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.examples.java"/>
       </library>
    </runtime>
    <requires>

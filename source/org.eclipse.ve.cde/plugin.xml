@@ -10,11 +10,9 @@
    <runtime>
       <library name="cdm.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.cde"/>
       </library>
       <library name="cde.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.cdm"/>
       </library>
    </runtime>
    <requires>

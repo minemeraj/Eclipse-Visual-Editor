@@ -10,15 +10,12 @@
    <runtime>
       <library name="core.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.java,org.eclipse.ve.internal.jcm"/>
       </library>
       <library name="codegen.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.java.codegen"/>
       </library>
       <library name="common.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.ve.internal.java.common"/>
       </library>
    </runtime>
    <requires>
