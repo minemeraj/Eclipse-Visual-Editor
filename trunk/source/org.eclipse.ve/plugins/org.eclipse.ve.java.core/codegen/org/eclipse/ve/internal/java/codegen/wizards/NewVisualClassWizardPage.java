@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.8 $  $Date: 2004-07-30 16:13:51 $ 
+ *  $Revision: 1.9 $  $Date: 2004-07-30 20:08:50 $ 
  */
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
- * @author JoeWin
+ * @author JoeWin, pmuldoon
  */
 public class NewVisualClassWizardPage extends NewClassWizardPage {
 

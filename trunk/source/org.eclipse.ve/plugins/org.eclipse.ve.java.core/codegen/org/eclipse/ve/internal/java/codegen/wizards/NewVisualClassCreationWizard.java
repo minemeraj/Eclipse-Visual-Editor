@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.17 $  $Date: 2004-07-30 16:13:51 $ 
+ *  $Revision: 1.18 $  $Date: 2004-07-30 20:08:50 $ 
  */
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
 /**
- * @author JoeWin
+ * @authors JoeWin, pmuldoon
  */
 public class NewVisualClassCreationWizard extends NewElementWizard implements IExecutableExtension{
 	
