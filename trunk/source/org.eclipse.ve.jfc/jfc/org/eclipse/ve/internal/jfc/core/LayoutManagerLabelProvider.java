@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 23:37:32 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -34,7 +34,7 @@ public class LayoutManagerLabelProvider extends LabelProvider implements INeedDa
 		IBeanProxy beanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) element, JavaEditDomainHelper.getResourceSet(editDomain));
 		if (beanProxy != null) {
 			String qualifiedName = getQualifiedName(element);
-			return LayoutManagerCellEditor.getDisplayName(qualifiedName);
+			return LayoutManagerCellEditor.getDisplayName(editDomain, qualifiedName);
 		} else {
 			return VisualMessages.getString("Layout.NullLayout"); //$NON-NLS-1$
 		}
