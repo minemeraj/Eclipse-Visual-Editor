@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-26 19:31:52 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -64,7 +64,8 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	protected List javaObjects; // Store the java objects on the free form that match the search class
 	protected List javaObjectLabels;
 	protected int selection = -1;
-	private String[] items;	
+	private String[] items;
+	private boolean allowCreation = true; // By default a ... button is there, although this can be overridden with initialiation data	
 	
 	public TypeReferenceCellEditor(Composite parent){
 		super(parent);
@@ -92,12 +93,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 					editDomain);
 			editPolicy.setContainer(beanComposition);
 			Command createCommand = editPolicy.getCreateCommand(newJavaInstance,null);
-			createCommand.execute();
-
-			// Create an annotation for it right now so it gets onto the free form
-//			AnnotationEMF emfAnnotation = CDMFactory.eINSTANCE.createAnnotationEMF();
-//			emfAnnotation.setAnnotates(newJavaInstance);
-//			beanComposition.getAnnotations().add(emfAnnotation);
+			editDomain.getCommandStack().execute(createCommand);
 			
 			return newJavaInstance;
 		}
@@ -180,10 +176,13 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		editDomain = (EditDomain) anObject;
 	}
 	public void setInitializationData(IConfigurationElement element, String data, Object object){
-		// Use this to set the class name passed in
+		// The string passed in determines whether or not the editor creates the ... button allowing new instances 
+		// to be created, or whether it just allows selection of existing ones
+		// As an example, nextFocusableComponent on JComponent lets you point to another component, but not add one, whereas
+		// model on JTable would let you add new models as well as attach to existing ones
 		if ( object instanceof String ) {
-			// TODO get results from Joe if this is even necessary now.
-//			qualifiedClassName = (String)object;
+			// TODO - not yet coded.  Superclass makes this difficult, need to think about it - JRW
+			allowCreation = Boolean.getBoolean((String)object);
 		}
 	}	
 	
