@@ -92,7 +92,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		}		
 		childValidated(this);
 	}
-
+	
 	protected void removeControl(IJavaObjectInstance aControl) throws ReinstantiationNeeded {
 		// Dispose the control
 		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(aControl);
