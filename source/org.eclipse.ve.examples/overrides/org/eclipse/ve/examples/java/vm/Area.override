@@ -5,7 +5,7 @@
     xmlns:event="event.xmi">
   <event:Add  featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.examples.java/icons/canvas16.gif"/>
+      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.examples/icons/canvas16.gif"/>
     </addedEObjects>
   </event:Add>
   <event:Add  featureName="eStructuralFeatures">
