@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-11-16 18:52:56 $ 
+ *  $Revision: 1.10 $  $Date: 2004-11-16 19:45:10 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -123,9 +123,10 @@ public class EventMethodVisitor extends MethodVisitor {
 				// This was not an event, stop processing
 				return;
 			}
-			if (newVisitor != null)
+			if (newVisitor != null){
 				newVisitor.setProgressMonitor(getProgressMonitor());
 				newVisitor.visit();
+			}
 		}
 
 		// Most listeners will start with addXXX.  If this is the case for this bean's events
