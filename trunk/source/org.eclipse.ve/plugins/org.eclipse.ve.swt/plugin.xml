@@ -275,7 +275,6 @@
     
   <extension point="org.eclipse.jem.beaninfo.registrations">
     <registration 
-      container="SWT_CONTAINER"
       plugin="org.eclipse.ui.workbench">
       <override
         package="org.eclipse.ui.part"
@@ -301,13 +300,13 @@
    <category
          defaultExpand="true"
          id="org.eclipse.ve.rcp.cat"
-         name="RCP"
+         name="%NewStyleComponent.RCP"
          priority="50"/>
    <visualElement
          category="org.eclipse.ve.rcp.cat"
          contributor="org.eclipse.ve.internal.jface.RCPViewClassCreationSourceContributor"
          icon="icons/full/clcl16/rcp_app.gif"
-         name="View"
+         name="%NewStyleComponent.View"
          type="org.eclipse.ui.part.ViewPart"/>
   </extension>   
 
