@@ -310,13 +310,14 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="%jveeditor Visual Editor"
-            default="false"
-            icon="icons/full/obj16/javavisualeditor_obj.gif"
-            extensions="java"
-            contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
+            symbolicFontName="org.eclipse.jdt.ui.editors.textfont"
             class="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart"
-            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+            icon="icons/full/obj16/javavisualeditor_obj.gif"
+            default="false"
+            contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
+            name="%jveeditor Visual Editor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"
+            extensions="java">
       </editor>
    </extension>
 <!-- =============================================================================== -->
