@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-04-07 17:38:51 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-07 18:25:51 $ 
  */
 
 import java.util.Iterator;
@@ -111,6 +111,19 @@ BeanPart  processRefToThis  (MethodInvocation stmt) {
 	}
 	return null;
 }
+
+protected BeanPart processFieldAccess (MethodInvocation stmt) {
+	FieldAccess f = (FieldAccess) stmt.getExpression();
+	if (f.getExpression() instanceof ThisExpression) {
+		// this.ivjFoo.sendMethod()
+		String name = f.getName().getIdentifier();
+		BeanPart b =  fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,name));
+		  if(b==null)
+		      b = fModel.getABean(name);			
+		return b;		
+	}
+	return null;
+}
 	
 /**
  *  Figure out which BeanPart (if any) this expression is acting on.
@@ -130,6 +143,8 @@ protected void processAMessageSend() {
   	  	  // Check for postponed
   	  	  if (bean == null && fReTryLater != null) return ;  
   	  }
+  	  else if (stmt.getExpression() instanceof FieldAccess)
+  	  	bean = processFieldAccess(stmt);
   	  // something like this.setFoo() -- look at the rule base if we should
   	  // process.
   	  else if (stmt.getExpression()==null || stmt.getExpression() instanceof ThisExpression)  
@@ -179,8 +194,10 @@ protected void processAssignmment() {
 	Assignment stmt = (Assignment) ((ExpressionStatement)fExpression.getExprStmt()).getExpression();
 	BeanPart bean ;
 	// TODO Need to deal with ArrayTypeReference etc.	
-	if (stmt.getLeftHandSide() instanceof SimpleName) {
-		String name = ((SimpleName)stmt.getLeftHandSide()).getIdentifier();
+	Expression lhs = stmt.getLeftHandSide();
+	if (lhs instanceof SimpleName || 
+	    (lhs instanceof FieldAccess && ((FieldAccess)lhs).getExpression() instanceof ThisExpression)) {
+		String name = lhs instanceof SimpleName ?((SimpleName)lhs).getIdentifier(): ((FieldAccess)lhs).getName().getIdentifier();
 		bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));//fMethod.getMethodHandle()+"^"+name);		
 		if(bean==null)
 			bean = fModel.getABean(name) ;
