@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.java.codegen.wizards;
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.10 $  $Date: 2004-11-12 19:45:12 $ 
+ *  $Revision: 1.11 $  $Date: 2004-11-12 21:48:03 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Hashtable;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -80,30 +81,15 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 			return;
 		if ( object instanceof String ) {
 			setInitializationData(element.getDeclaringExtension().getNamespace(), (String) object);
-		}else {
-			IConfigurationElement[] wizardChildren = element.getChildren();
-			if(wizardChildren!=null && wizardChildren.length>0){
-				for (int wcc = 0; wcc < wizardChildren.length; wcc++) {
-					if("class".equals(wizardChildren[wcc].getName())){
-						IConfigurationElement[] classChildren = wizardChildren[wcc].getChildren();
-						if(classChildren!=null && classChildren.length>0){
-							String pluginName=element.getDeclaringExtension().getNamespace();
-							String exampleClassName=null, containerPlugin=null, containerName=null;
-							for (int ccc = 0; ccc < classChildren.length; ccc++) {
-								String[] attrNames = classChildren[ccc].getAttributeNames();
-								if("exampleFile".equals(attrNames[0])){
-									exampleClassName = classChildren[ccc].getAttribute("exampleFile");
-								}else if("classpathContainerPlugin".equals(attrNames[0])){
-									containerPlugin = classChildren[ccc].getAttribute("classpathContainerPlugin");
-								}else if("classpathContainerName".equals(attrNames[0])){
-									containerName = classChildren[ccc].getAttribute("classpathContainerName");
-								}
-							}
-							setInitializationData(pluginName, exampleClassName, containerPlugin, containerName);
-						}
-					}
-				}
-			}
+		}else if(object instanceof Hashtable){
+			Hashtable hash = (Hashtable) object;
+			if(hash.containsKey("exampleFile"))
+				fExampleClassName = (String) hash.get("exampleFile");
+			if(hash.containsKey("classpathContainerPlugin"))
+				fContainerPlugin = (String) hash.get("classpathContainerPlugin");
+			if(hash.containsKey("classpathContainerName"))
+				fContainerName = (String) hash.get("classpathContainerName");
+			setInitializationData(element.getDeclaringExtension().getNamespace(), fExampleClassName, fContainerPlugin, fContainerName);
 		}
 	}
 	
