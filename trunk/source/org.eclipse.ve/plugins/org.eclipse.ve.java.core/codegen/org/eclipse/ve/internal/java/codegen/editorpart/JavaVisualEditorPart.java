@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.44 $  $Date: 2004-06-10 18:27:35 $ 
+ *  $Revision: 1.45 $  $Date: 2004-06-11 19:22:51 $ 
  */
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
@@ -50,6 +51,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
@@ -166,6 +168,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected OpenActionGroup openActionGroup;
 	
 	protected SelectionServiceListener selectionServiceListener = new SelectionServiceListener();
+	
+	// allow threads to wait until JVE has loaded
+	protected Object loadCompleteSync = new Object();
+	protected volatile boolean isLoadPending = true;
 
 	public JavaVisualEditorPart() {
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
@@ -879,6 +885,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				 * @see java.lang.Runnable#run()
 				 */
 				public void run() {
+					setLoadIsPending(true);
 					setRootModel(null);
 					if (++recycleCntr < 3) {
 						// We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
@@ -1357,8 +1364,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				}
 			
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
+					setLoadIsPending(false);
 					return canceled();
+				}
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
@@ -1367,8 +1376,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
+					loadCompleteSync.notifyAll();
 					return canceled();
+				}
 				
 				DiagramData dd = modelBuilder.getModelRoot();
 				if (dd != null) {
@@ -1411,11 +1422,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							setReloadEnablement(true);	// Because it was disabled.														
 						}
 					});
+					setLoadIsPending(false);
 					return canceled();
 				}
 			
 			} catch (final Exception x) {
 				noLoadPrompt(x);
+				setLoadIsPending(false);
 				return canceled();
 			}
 			
@@ -1430,6 +1443,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 			
 			monitor.done();
+			setLoadIsPending(false);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
 
@@ -2094,5 +2108,48 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void setStatusLineMessage(String msg) {
 		if (msg != null || !statusMsgSet)
 		   super.setStatusLineMessage(msg);
+	}
+	protected void setLoadIsPending(boolean flag) {
+		synchronized (loadCompleteSync) {
+			if (flag) {
+				isLoadPending=true;
+			}
+			else {
+				isLoadPending=false;
+				loadCompleteSync.notifyAll();				
+			}
+		}
+	}
+	// allow a thread to wait, if needed until JVE finished to load
+	public void waitIfLoading(Display disp) {
+		if (disp==null) {
+			// Sleep until load is complete
+		 synchronized (loadCompleteSync) {			
+			while (isLoadPending)
+				try {
+					loadCompleteSync.wait();
+				} catch (InterruptedException e) {}
+		 }
+		}
+		else {
+			try {
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						monitor.beginTask("Waiting for JVE to refresh", 100);
+						 synchronized (loadCompleteSync) {			
+							while (isLoadPending)
+								try {
+									loadCompleteSync.wait();
+								} catch (InterruptedException e) {}
+						 }
+						 monitor.done();
+					}
+				});
+			} catch (InvocationTargetException e) {
+				JavaVEPlugin.log(e.getCause());
+			} catch (InterruptedException e) {}
+		}
+		
+		
 	}
 }
