@@ -28,13 +28,13 @@ plugin@org.eclipse.ve.jfc=N20040218_a,:pserver:anonymous@dev.eclipse.org:/home/t
 plugin@org.eclipse.ve.swt=N20040218_a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.tests=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.doc=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.sdk=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
+plugin@org.eclipse.ve.sdk=N20040218a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
 feature@org.eclipse.jem=N20040218_a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.tests=N20040218_a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
-feature@org.eclipse.ve=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
+feature@org.eclipse.ve=N20040218a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=N20040218_a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
 feature@org.eclipse.ve.tests=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
-feature@org.eclipse.ve.sdk=N20040218,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
+feature@org.eclipse.ve.sdk=N20040218a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
