@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.15 $  $Date: 2004-02-05 19:20:39 $ 
+ *  $Revision: 1.16 $  $Date: 2004-02-17 21:28:48 $ 
  */
 
 import java.util.*;
@@ -534,7 +534,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
  *  
  */
 public void removeBeanPart (BeanPart bean) {
-	
+	boolean jdtChangesMade = false ; // MethodRef offsets not being updated - hence check.
 	fBeanModel.aboutTochangeDoc();
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
 	if (bean.isInstanceVar()) { 	  
@@ -544,6 +544,7 @@ public void removeBeanPart (BeanPart bean) {
 		  JavaVEPlugin.log("\tRemoving Field: "+f, MsgLogger.LOG_FINE) ; //$NON-NLS-1$
 //		  String handle = (f.getHandleIdentifier()) ;
 		  f.delete(true,null) ;
+		  jdtChangesMade = true;
 		}
 		catch (JavaModelException e) {} 
 	  }
@@ -607,6 +608,7 @@ public void removeBeanPart (BeanPart bean) {
 				String handle = mr.getMethodHandle();
 				JavaVEPlugin.log("\tRemoving JCMMethod: " + handle, MsgLogger.LOG_FINE); //$NON-NLS-1$
 				m.delete(true, null);
+				jdtChangesMade = true;
 			}
 			else
 				JavaVEPlugin.log("deleteBeanPart: method is not in source: " + bean.getUniqueName(), MsgLogger.LOG_FINE); //$NON-NLS-1$
@@ -615,7 +617,13 @@ public void removeBeanPart (BeanPart bean) {
 	}
 	else
 	   itr = bean.getRefExpressions().iterator();
-	   
+	
+	// Changes made directly to JDT - the methods need to 
+	// refresh their offsets and code got moved.
+	if(jdtChangesMade){
+		fBeanModel.refreshMethods();
+	}
+	
 	ArrayList deleteList = new ArrayList();
 	while (itr != null && itr.hasNext()) {
 		CodeExpressionRef e = (CodeExpressionRef) itr.next();
