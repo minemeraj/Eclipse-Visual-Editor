@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 12:05:24 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -37,11 +39,10 @@ public static final String LAYOUT_POLICY_FACTORY_CLASSNAME_KEY = "org.eclipse.ve
  */
 ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep);
 /**
- * Return the layout input policy for this Layout manager.
- * This should be a class that implements IInputPolicy.
- * Creation date: (10/23/00 2:25:22 PM)
+ * Return the GEF visual edit policy for this Layout manager.
  */
-Class getLayoutInputPolicyClass();
+EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy);
+
 /**
  * Return the layout policy helper for this Layout manager.
  * Creation date: (10/23/00 2:25:22 PM)

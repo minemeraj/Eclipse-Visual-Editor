@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-01 19:16:49 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 12:05:19 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
@@ -46,11 +47,9 @@ public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy cp) {
 		return new UnknownLayoutSwitcher(cp);
 	}
-	/**
-	 * getLayoutInputPolicyClass method comment.
-	 */
-	public Class getLayoutInputPolicyClass() {
-		return UnknownLayoutInputPolicy.class;
+	
+	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
+		return new UnknownLayoutInputPolicy(containerPolicy);
 	}
 
 	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy cp) {

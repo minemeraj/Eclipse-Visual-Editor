@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-04 12:05:24 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -86,28 +86,5 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
 	}
 	return null;
 }
-/**
- * @param policy
- * @return EditPolicy
- * Try to instantiate the layoutInputPolicyClass using first a constructor with an argument of the ContainerPolicy and if that fails
- * a null constructor
- * @since 1.0.0
- */
-public static EditPolicy getLayoutPolicy(Class layoutInputPolicyClass, org.eclipse.ve.internal.cde.core.ContainerPolicy policy) {
-	EditPolicy layoutPolicy = null;
-	try {
-		// See if there is a ctor that takes an IContainerInputPolicyHelper, and if there is,
-		// use that ctor with the helper assigned to this view object.
-		Constructor ctor = null;
-		ctor = MethodHelper.findCompatibleConstructor(layoutInputPolicyClass, new Class[] { policy.getClass()});
-		if (ctor != null)
-			layoutPolicy = (EditPolicy) ctor.newInstance(new Object[] { policy });
-		else
-			layoutPolicy = (EditPolicy) layoutInputPolicyClass.newInstance();
-	} catch (Throwable e) {
-		JavaVEPlugin.log("Unable to create the layout policy", Level.WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(e, Level.WARNING);
-	}
-	return layoutPolicy;
 }
-}
+
