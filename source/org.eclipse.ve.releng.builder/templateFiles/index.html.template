@@ -18,7 +18,10 @@
       <p>These downloads are provided under the <a href="http://www.eclipse.org/legal/notice.html">Eclipse.org 
         Software User Agreement</a>.</p>
       <p>To view the build notes for this build click <a href="buildNotes.php">here</a>.<br>
-        To view the test results and compile logs for this build click <a href="testResults.php">here</a>.<BR></td>
+        To view the test results and compile logs for this build click <a href="testResults.php">here</a>.<BR>
+ To view the map file entries 
+for this build click
+click <A href="directory.txt">here</A>.<BR></td>
   </tr>
 </table>
 <table border=0 cellspacing=5 cellpadding=2 width="100%" >
