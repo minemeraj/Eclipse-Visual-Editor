@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
-<title>Eclipse Tools Project</title>
+<title>Visual Editor Project - Download</title>
 </head>
 <body>
 &nbsp; 
@@ -27,12 +27,12 @@
   </tr>
 </table>
 <ul>
-  <li>Eclipse build <a href="@eclipseURL@/index.php">@eclipseBuildID@</a> (<A
-		href="@eclipseZipURL@">zip</A>)</li>
-	<LI>EMF build <A href="@emfURL@">@emfBuildID@</A> (<A
-		href="@emfZipURL@">zip</A>)</LI>
-	<LI>GEF Build <A href="@gefURL@">@gefBuildID@</A> (<A
-		href="@gefZipURL@">zip</A>)</LI>
+  <li>Eclipse build @eclipseBuildID@: (<a href="@eclipseURL@/index.php">build page</a>) (<A
+		href="@eclipseZipURL@">zip download</A>)</li>
+	<LI>EMF build @emfBuildID@: (<A href="@emfURL@">build page</A>) (<A
+		href="@emfZipURL@">zip download</A>)</LI>
+	<LI>GEF Build @gefBuildID@: (<A href="@gefURL@/index.php">build page</A>) (<A
+		href="@gefZipURL@">zip download</A>)</LI>
 </ul> 
 <table border=0 cellspacing=5 cellpadding=2 width="100%" >
   <tr> 
