@@ -189,7 +189,8 @@
             name="%configType.name Java Bean"
             delegate="org.eclipse.ve.internal.java.vce.launcher.JavaBeanLaunchConfigurationDelegate"
             modes="run, debug"
-            id="org.eclipse.ve.java.core.launcher.JavaBean">
+            id="org.eclipse.ve.java.core.launcher.JavaBean"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector">
          <fileExtension
                default="false"
                extension="java">

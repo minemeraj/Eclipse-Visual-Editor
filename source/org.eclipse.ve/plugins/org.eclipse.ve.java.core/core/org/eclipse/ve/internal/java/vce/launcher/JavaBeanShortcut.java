@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-04 16:50:17 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -199,7 +199,6 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(type.getElementName())); 
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, type.getFullyQualifiedName());
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, type.getJavaProject().getElementName());
-			wc.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
 			// TODO: remove swt hack
 			if (isSWTProject(type.getJavaProject())) {
 				wc.setAttribute("isSWT", true); //$NON-NLS-1$
