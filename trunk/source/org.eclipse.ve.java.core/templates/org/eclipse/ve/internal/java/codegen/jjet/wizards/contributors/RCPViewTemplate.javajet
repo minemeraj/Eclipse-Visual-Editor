@@ -1,0 +1,64 @@
+<%@ jet 
+	skeleton="VisualClassSourceWizardSkeleton.java" 
+	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
+	class="RCPViewSourceGenerator" %>
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+import ;
+
+public class <%=typeName%> extends org.eclipse.ui.part.ViewPart {
+
+	public static final String ID = "<%=superClassName%>.<%=typeName%>"; // TODO Needs to be whatever is mentioned in plugin.xml
+	
+	private org.eclipse.swt.widgets.Composite top = null;
+	private org.eclipse.swt.widgets.Tree tree = null;
+	private org.eclipse.swt.widgets.Table table = null;
+	
+	public void createPartControl(org.eclipse.swt.widgets.Composite parent) {
+		org.eclipse.swt.layout.GridLayout gridLayout1 = new org.eclipse.swt.layout.GridLayout();
+		top = new org.eclipse.swt.widgets.Composite(parent, org.eclipse.swt.SWT.NONE);		   
+		createTree();
+		createTable();
+		top.setLayout(gridLayout1);
+		gridLayout1.numColumns = 1;
+	}
+
+	/**
+	 * This method initializes tree	
+	 *
+	 */    
+	private void createTree() {
+		org.eclipse.swt.layout.GridData gridData2 = new org.eclipse.swt.layout.GridData();
+		tree = new org.eclipse.swt.widgets.Tree(top, org.eclipse.swt.SWT.NONE);		   
+		gridData2.grabExcessHorizontalSpace = true;
+		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData2.grabExcessVerticalSpace = true;
+		tree.setLayoutData(gridData2);
+	}
+
+	/**
+	 * This method initializes table	
+	 *
+	 */    
+	private void createTable() {
+		org.eclipse.swt.layout.GridData gridData3 = new org.eclipse.swt.layout.GridData();
+		table = new org.eclipse.swt.widgets.Table(top, org.eclipse.swt.SWT.NONE);		   
+		org.eclipse.swt.widgets.TableColumn tableColumn1 = new org.eclipse.swt.widgets.TableColumn(table, org.eclipse.swt.SWT.NONE);
+		org.eclipse.swt.widgets.TableColumn tableColumn2 = new org.eclipse.swt.widgets.TableColumn(table, org.eclipse.swt.SWT.NONE);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayoutData(gridData3);
+		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData3.grabExcessHorizontalSpace = true;
+		gridData3.grabExcessVerticalSpace = true;
+		tableColumn1.setWidth(60);
+		tableColumn1.setText("Column 1");
+		tableColumn2.setWidth(60);
+		tableColumn2.setText("Column 2");
+	}
+}
