@@ -9,32 +9,7 @@
     xmlns:org.eclipse.jem.java="java.xmi" 
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:event="event.xmi">
-  <event:AddMany  featureName="eStructuralFeatures">
-  
-    <addedEObjects xsi:type="ecore:EReference" name="width" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
-            key="rowdata.width" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
-        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
-        	key="rowdata.width.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
-      </eAnnotations>
-    </addedEObjects>  
-    
-    <addedEObjects xsi:type="ecore:EReference" name="height" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
-            key="rowdata.height" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
-        <descriptionString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
-        	key="rowdata.height.Desc" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
-      </eAnnotations>
-    </addedEObjects>  
-
-  </event:AddMany>
-  
+      
   <event:Add  featureName="eAnnotations">
   	<addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         modelled="true"/>
