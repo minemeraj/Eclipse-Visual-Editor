@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-23 19:55:30 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-05 22:07:37 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1173,7 +1173,7 @@ private   void clearModel(boolean vceModel) {
    }
 	}
 	catch (Exception e) {
-		JavaVEPlugin.log(e,Level.FINE) ;
+		JavaVEPlugin.log(e,Level.WARNING) ;
 	}
 }
 
