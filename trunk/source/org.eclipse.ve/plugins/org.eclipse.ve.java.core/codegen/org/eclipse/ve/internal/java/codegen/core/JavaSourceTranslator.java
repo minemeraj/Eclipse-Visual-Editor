@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.29 $  $Date: 2004-04-15 19:42:12 $ 
+ *  $Revision: 1.30 $  $Date: 2004-04-20 21:57:43 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -118,7 +118,8 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		// to load from scratch anyhow
 		fSrcSync.stallProcessing();
 		try {
-			fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true);
+			if (fBeanModel!=null) 
+			 fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true);
 		} catch (CodeGenException e) {}
 		fireReloadIsNeeded();
  
@@ -399,7 +400,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 				// We have to call takeCurrentSnapShot to clear events properly
 				boolean reloadRequired = takeCurrentSnapshot(lockManager, allDocEvents, workingCopy) ;
 				synchronized (JavaSourceTranslator.this) {
-				        reloadRequired |= (fBeanModel == null) && !floadInProgress ;
+				        reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;
 				}
 				if (reloadRequired) {
 					Reload(fDisplay, monitor);
@@ -591,10 +592,15 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 			}
 			fireProcessingPause(fdisconnected);
 			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
+			fireParseError(false);
 		} catch (CodeGenSyntaxError e) {
-			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.
+			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.			
+		} finally {
+			synchronized (l) {
+				floadInProgress = false ;
+			}			
 		}
-		fireParseError(false);
+		
 		
 		pm.done();
 }
