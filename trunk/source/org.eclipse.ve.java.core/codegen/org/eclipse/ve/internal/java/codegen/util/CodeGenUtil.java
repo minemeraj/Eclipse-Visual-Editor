@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.17 $  $Date: 2004-04-02 16:34:43 $ 
+ *  $Revision: 1.18 $  $Date: 2004-04-08 22:36:49 $ 
  */
 
 
@@ -663,7 +663,7 @@ public static Annotation getAnnotation (EObject obj) {
 	// annotation from the object. But at this point we don't have access to the edit domain.
 	//
 	// Instead we know it is EMF format, so we copy the code from AnnotationLinkagePolicy here to do it.
-
+    if (obj==null) return null;
 	AnnotationEMF.ParentAdapter a = (AnnotationEMF.ParentAdapter) EcoreUtil.getExistingAdapter(obj, AnnotationEMF.ParentAdapter.PARENT_ANNOTATION_ADAPTER_KEY);
 	return a != null ? a.getParentAnnotation() : null;
 }
