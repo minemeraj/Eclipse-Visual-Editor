@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-01 21:25:25 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-22 22:43:04 $ 
  */
 
 
@@ -22,10 +22,15 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EContentsEList;
+import org.eclipse.gef.*;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
+
+import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 /**
  * Utilities for CDE functions that are not found in a more logical place.
@@ -288,5 +293,127 @@ public class CDEUtilities {
 			return mc.getHoldState();
 		else
 			return IModelChangeController.READY_STATE;
+	}
+	
+	/**
+	 * Editpart name path. This is used to reach a specific editpart via the model names of the editparts from top to 
+	 * bottom to reach the desired editpart. This is used to allow query of current selected edit part, getting it
+	 * into name format, and then after a reload using the name path to try to find the specified edit part again.
+	 * Can't just use the editpart itself because after reload it will be a physically different editpart.
+	 * <p>
+	 * This would be used only in models where the name in compositions may not be unique. If they were unique, then
+	 * the editpart can be found directly. Though it can be used in unique models too, it would just add overhead.
+	 * <p>
+	 * There is a possibility that some editpart models may not have a name. In that case we will use index into the
+	 * parent. Hopefully that will work well.
+	 *  
+	 * @since 1.0.0
+	 */
+	public static class EditPartNamePath {
+		/**
+		 * Path of names to reach specified editpart from top editpart. First entry will be child of top editpart.
+		 * Top editpart is the contents of the root edit part.
+		 */
+		public String[] namePath;
+	}
+	
+	/**
+	 * Return the path to the editpart from the top editpart.
+	 * 
+	 * @param ep
+	 * @param domain
+	 * @return the path (through names) to the editpart, or <code>null</code> if this is the top editpart (defined as root editpart contents).
+	 * @throws IllegalArgumentException if editpart is not active.
+	 * 
+	 * @since 1.0.0
+	 */
+	public static EditPartNamePath getEditPartNamePath(EditPart ep, EditDomain domain) {
+		if (!ep.isActive())
+			throw new IllegalArgumentException("editpart must be active.");
+		
+		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
+		List path = new ArrayList();
+		EditPart top = ep.getRoot().getContents();
+		for (; ep != top; ep = ep.getParent()) {
+			Annotation a = policy.getAnnotation(ep.getModel());
+			if (a != null) {
+				String name = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				if (name != null && name.length() > 0) {
+					path.add(name);
+					continue;
+				}
+			}
+			// No name set, or no annotation, use index into parent.
+			EditPart parent = ep.getParent();
+			if (parent != top)
+				path.add('{'+String.valueOf(parent.getChildren().indexOf(ep))+'}');
+			else
+				break;	// Might as well get out, same test as for loop, so why redo it.
+		}
+		
+		if (path.isEmpty())
+			return null;	// It is the top editpart.
+		
+		EditPartNamePath result = new EditPartNamePath();
+		result.namePath = new String[path.size()];
+		// Since it was built bottom up, but we want it top down, we go in reverse.
+		int pi = 0;
+		for (int i = path.size()-1; i >= 0 ; i--) {
+			result.namePath[pi++] = (String) path.get(i);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Find the edit part given by the path from the given root editpart.
+	 * 
+	 * @param path the path, or <code>null</code> if root contents.
+	 * @param viewer the viewer to search in
+	 * @param domain
+	 * @return the editpart or <code>null</code> if editpart can't be found.
+	 * 
+	 * @since 1.0.0
+	 */
+	public static EditPart findEditpartFromNamePath(EditPartNamePath path, EditPartViewer viewer, EditDomain domain) {
+		EditPart ep = viewer.getContents();		
+		if (path == null)
+			return ep;
+		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
+		String[] namePath = path.namePath;
+nextName:	
+		for (int i = 0; i < namePath.length; i++) {
+			List children = ep.getChildren();	
+			String name = namePath[i];
+			if (name.charAt(0) != '{' || name.charAt(name.length()-1) != '}') {
+				// Standard name.
+				for (int j = 0; j < children.size(); j++) {
+					EditPart child = (EditPart) children.get(j);
+					Annotation a = policy.getAnnotation(child.getModel());
+					if (a != null) {
+						String childName = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+						if (name.equals(childName)) {
+							ep = child;	// Found it
+							continue nextName;
+						}
+					}
+				}
+			} else {
+				// Using index format.
+				String indexString = name.substring(1, name.length()-1);
+				try {
+					int index = Integer.parseInt(indexString);
+					if (index < children.size()) {
+						ep = (EditPart) children.get(index); // Found it.
+						continue nextName;
+					}
+				} catch (NumberFormatException e) {
+				}
+			}
+			
+			return null;	// If it got here, then it didn't find it at this level, so it is no longer available.
+		}
+		
+		return ep;
 	}
 }
