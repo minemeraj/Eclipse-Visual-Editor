@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 public class ColorPropertyEditor implements PropertyEditor, INeedData {
@@ -81,13 +80,8 @@ public class ColorPropertyEditor implements PropertyEditor, INeedData {
 	}
 
 	public String getText() {
-		// Return a textual representation of the Color
-		// If we don't have a color but we do have a java object instance then use this
-		if(color != null){
-			return color.toString();
-		} else if (fExistingValue != null) {
-			// Get the toString() of the target VM color
-			return BeanProxyUtilities.getBeanProxy(fExistingValue).toBeanString();
+		if(fExistingValue != null){
+			return ColorJavaClassLabelProvider.getText(fExistingValue);			
 		} else {
 			return ""; //$NON-NLS-1$
 		}

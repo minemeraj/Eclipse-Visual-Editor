@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 23:43:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -43,7 +43,7 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 					&& ((PTMethodInvocation) ((PTMethodInvocation) exp).getReceiver()).getName().equals("getFontRegistry")) { //$NON-NLS-1$
 				PTExpression arg = (PTExpression) ((PTMethodInvocation) exp).getArguments().get(0);
 				StringBuffer fontLabelBuffer = new StringBuffer();
-				fontLabelBuffer.append("JFace, "); //$NON-NLS-1$
+				fontLabelBuffer.append("JFace FontRegistry, "); //$NON-NLS-1$
 				fontLabelBuffer.append(((PTMethodInvocation) exp).getName());
 				fontLabelBuffer.append(','); //$NON-NLS-1$
 				fontLabelBuffer.append(' '); //$NON-NLS-1$

@@ -10,16 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 23:43:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
@@ -29,12 +28,12 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class ColorCustomPropertyEditor extends Composite {
 	
@@ -129,8 +128,7 @@ public class ColorCustomPropertyEditor extends Composite {
 	private boolean isSystem = false;
 	private boolean changeInProcess = false;
 	private boolean isJFace = false;
-	private int jfaceColorSelection;
-
+	private int basicColorSelection, systemColorSelection, jfaceColorSelection;
 	
 	private static final int NAMED_SWATCH_SIZE = 10;
 	private static final int NAMED_LIST_HEIGHT = 175;
@@ -193,20 +191,74 @@ public class ColorCustomPropertyEditor extends Composite {
 	
 		createPreviewPanel();
 		GridData previewGD = new GridData();
-		initStringLabel = new Label(this, SWT.NONE);
 		previewGD.verticalAlignment = GridData.CENTER;
 		previewGD.horizontalAlignment = GridData.FILL;
 		previewGD.grabExcessHorizontalSpace = true;
 		previewGD.grabExcessVerticalSpace = false;
-		initStringLabel.setText(""); //$NON-NLS-1$
-		initStringLabel.setLayoutData(gridData3);
-		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
 		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		preview.setLayoutData(previewGD);
-//		this.pack();
+
+		initStringLabel = new Label(this, SWT.NONE);
+		initStringLabel.setText(""); //$NON-NLS-1$
+		initStringLabel.setLayoutData(gridData3);
+		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
+		
+		updateSelections();
 	}
 	
+
+	/*
+	 * Based on the current existing color value, select the appropriate tab and table selection. 
+	 */
+	private void updateSelections() {
+		if (fExistingValue != null && fExistingValue.getAllocation() instanceof ParseTreeAllocation) {
+			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) fExistingValue.getAllocation();
+			PTExpression exp = ptAlloc.getExpression();
+			if (exp instanceof PTMethodInvocation && ((PTMethodInvocation) exp).getReceiver() instanceof PTMethodInvocation) {
+				PTExpression arg = (PTExpression) ((PTMethodInvocation) exp).getArguments().get(0);
+				String methodName = ((PTMethodInvocation) ((PTMethodInvocation) exp).getReceiver()).getName();
+				if (methodName.equals("getColorRegistry") && isJFaceProject()) { //$NON-NLS-1$
+					// set the JFace page
+					for (int i = 0; i < jfaceColorValues.length; i++) {
+						if (jfaceColorValues[i].equals(value)) {
+							jfaceColorTable.setSelection(i);
+							isJFace = true;
+							tabFolder.setSelection(2);
+							break;
+						}
+					}
+				} else if (methodName.equals("getDefault")) { //$NON-NLS-1$
+					if (arg instanceof PTFieldAccess) {
+						int selection = -1;
+						String fieldname = ((PTFieldAccess) arg).getField().replaceAll("COLOR_", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						for (int i = 0; selection == -1 && i < basicColorConstants.length; i++) {
+							if (fieldname.equals(basicColorConstants[i])) {
+								selection = i;
+								basicTable.setSelection(selection);
+								basicColorSelection = i;
+								isNamed = true;
+								isBasic = true;
+							}
+						}
+						for (int i = 0; selection == -1 && i < systemColorConstants.length; i++) {
+							if (fieldname.equals(systemColorConstants[i])) {
+								selection = i;
+								systemTable.setSelection(selection);
+								systemColorSelection = i;
+								isNamed = true;
+								isSystem = true;
+							}
+						}
+						if (isNamed)
+							tabFolder.setSelection(0);
+					}
+				}
+			}
+		}
+		updateLabelInitializationString();
+	}
+
 	private void createTabFolder() {
 		GridData tabGD = new GridData();
 		tabFolder = new TabFolder(this, SWT.NONE);
@@ -239,8 +291,6 @@ public class ColorCustomPropertyEditor extends Composite {
 		rowLayout.pack = true;
 		rowLayout.justify = true;
 		
-		int selection = -1;
-		
 		initializeColorImages(namedValueComposite.getDisplay());
 		
 		basicGroup = new Group(namedValueComposite, SWT.NONE);
@@ -256,12 +306,6 @@ public class ColorCustomPropertyEditor extends Composite {
 			ti.setText(basicColorNames[i]);
 			ti.setData(new Integer(i));
 			ti.setImage(basicColorImages[i]);
-			if (value.equals(basicColorValues[i])) {
-				selection = i;
-			}
-		}
-		if ( selection != -1 ) {
-			basicTable.setSelection(selection);
 		}
 		RowData bRD = new RowData();
 		bRD.width = NAMED_LIST_WIDTH;
@@ -284,6 +328,7 @@ public class ColorCustomPropertyEditor extends Composite {
 					if (value < basicColorValues.length) {
 						changeInProcess = true;
 						setColor(basicColorValues[value], true);
+						basicColorSelection = value;
 						systemTable.deselectAll();
 						deSelectJFaceColorTable();
 						updateSpinnersFromColor();
@@ -330,6 +375,7 @@ public class ColorCustomPropertyEditor extends Composite {
 					if (value < systemColorValues.length) {
 						changeInProcess = true;
 						setColor(systemColorValues[value], true);
+						systemColorSelection = value;
 						basicTable.deselectAll();
 						deSelectJFaceColorTable();
 						updateSpinnersFromColor();
@@ -393,7 +439,6 @@ public class ColorCustomPropertyEditor extends Composite {
 				}
 			}
 		});	
-//		rgbComposite.pack();
 	}
 	
 	private void createRGBPanel() {		
@@ -810,21 +855,10 @@ public class ColorCustomPropertyEditor extends Composite {
 			if (!isNamed) {
 				result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			} else if (isBasic) {
-				for (int i = 0; i < basicColorValues.length; i++) {
-					if (value.getRGB().equals(basicColorValues[i].getRGB())) {
-						result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-						break;
-					}
-				}
+				result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (isSystem) {
-				for (int i = 0; i < systemColorValues.length; i++) {
-					if (value.getRGB().equals(systemColorValues[i].getRGB())) {
-						result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-						break;
-					}
-				}
-			} else if (isJFace) {
-				return "org.eclipse.jface.resource.JFaceResources.getColorRegistry().get(" + jfaceColorInitStrings[jfaceColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			} else if (isJFace) { return "org.eclipse.jface.resource.JFaceResources.getColorRegistry().get(" + jfaceColorInitStrings[jfaceColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			}
 		}
@@ -858,12 +892,8 @@ public class ColorCustomPropertyEditor extends Composite {
 			ti.setData(new Integer(i));
 			ti.setImage(jfaceColorImages[i]);
 			if (value.equals(jfaceColorValues[i])) {
-//				selection = i;
 			}
 		}
-//		if ( selection != -1 ) {
-//			jfaceColorTable.setSelection(selection);
-//		}
 		jfaceColorTable.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				changeSelection((Table)e.widget);
@@ -909,19 +939,9 @@ public class ColorCustomPropertyEditor extends Composite {
 		if (!isNamed) {
 			result = "new Color(Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else if (isBasic) {
-			for (int i = 0; i < basicColorValues.length; i++) {
-				if (value.getRGB().equals(basicColorValues[i].getRGB())) {
-					result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + basicColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				}
-			}
+			result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (isSystem) {
-			for (int i = 0; i < systemColorValues.length; i++) {
-				if (value.getRGB().equals(systemColorValues[i].getRGB())) {
-					result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + systemColorConstants[i] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					break;
-				}
-			}
+			result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (isJFace) {
 			String jfaceConstantName = jfaceColorInitStrings[jfaceColorSelection].replaceAll("org.eclipse.jface.preference.JFacePreferences", //$NON-NLS-1$
 					"JFacePreferences"); //$NON-NLS-1$
