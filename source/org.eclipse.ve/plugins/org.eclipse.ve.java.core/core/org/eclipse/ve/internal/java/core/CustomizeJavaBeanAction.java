@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-19 20:17:40 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -59,9 +59,9 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		setId(ACTION_ID);
 		setText(JavaMessages.getString("Action.CustomizeJavaBean.Text")); //$NON-NLS-1$
 		setToolTipText(JavaMessages.getString("Action.CustomizeJavaBean.ToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/etool16/customizebean_co.gif")); //$NON-NLS-1$
-		setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dtool16/customizebean_co.gif")); //$NON-NLS-1$
-		setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/ctool16/customizebean_co.gif")); //$NON-NLS-1$
+		setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif")); //$NON-NLS-1$
+		setHoverImageDescriptor(getImageDescriptor());
+		setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif")); //$NON-NLS-1$
 	}
 	public void run() {
 		try {

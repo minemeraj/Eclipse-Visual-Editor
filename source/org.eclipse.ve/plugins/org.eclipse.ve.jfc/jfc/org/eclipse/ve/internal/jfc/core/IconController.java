@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IconController.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:43:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-19 20:17:47 $ 
  */
 
 import java.io.File;
@@ -167,7 +167,7 @@ public class IconController {
     
 
     static{
-    	noMemoryIcon = CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/nomemory.gif" ); //$NON-NLS-1$
+    	noMemoryIcon = CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/cview16/nomemory.gif" ); //$NON-NLS-1$
         	
 		errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK);        	
 		warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(org.eclipse.ui.ISharedImages.IMG_OBJS_WARN_TSK);        			

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-19 18:32:40 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-19 20:17:40 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -99,7 +99,9 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		markAsPartListener(reloadAction);
 		
 		customizeAction = new LabelRetargetAction(CustomizeJavaBeanAction.ACTION_ID, ""); //$NON-NLS-1$
-		customizeAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/etool16/customizebean_co.gif")); //$NON-NLS-1$
+		customizeAction.setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif")); //$NON-NLS-1$
+		customizeAction.setHoverImageDescriptor(customizeAction.getImageDescriptor());
+		customizeAction.setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif")); //$NON-NLS-1$)
 		customizeAction.setEnabled(false);
 		markAsPartListener(customizeAction);
 		

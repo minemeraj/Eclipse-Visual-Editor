@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 17:52:12 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-19 20:17:40 $ 
  */
 
 import java.text.Collator;
@@ -37,13 +37,12 @@ import org.eclipse.jem.internal.beaninfo.*;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.jcm.*;
-
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.Method;
+
+import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+
+import org.eclipse.ve.internal.jcm.*;
 
 public class AddEventWizard extends Wizard {
 	
@@ -108,24 +107,12 @@ public class AddEventWizard extends Wizard {
 		
 		AddEventWizardPage(){
 			super("Add Event"); //$NON-NLS-1$
-		}
-		private Image fImage;
-		public Image getImage(){
-				if(fImage == null) {
-					fImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/wizban/javavisualeditor_wiz.gif"); //$NON-NLS-1$					
-				}
-				return fImage;
-		}			
-		public void dispose(){
-			super.dispose();
-			if (fImage != null) fImage.dispose();
+			setImageDescriptor(JavaVEPlugin.getWizardTitleImageDescriptor());
+			setTitle(JavaMessages.getString("AddEventWizard.Title")); //$NON-NLS-1$)
 		}
 		public IWizardPage getNextPage() {
 			return null;
 		}
-		public String getTitle(){
-			return JavaMessages.getString("AddEventWizard.Title"); //$NON-NLS-1$
-		}		
 		public void createControl(Composite parent){
 				Composite c = new Composite(parent,SWT.NONE);
 				setControl(c);			
