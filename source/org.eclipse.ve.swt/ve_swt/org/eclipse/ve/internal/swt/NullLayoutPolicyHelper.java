@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
@@ -24,19 +23,16 @@ import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.rules.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 ;
 /**
  * Null layout policy helper.
- *
- * Note: Constraints should be of the type NullConstraint declared
- * in here. It will be converted properly later.
- * Creation date: (11/10/00 11:55:27 AM)
- * @author: Peter Walker
  */
-public class NullLayoutPolicyHelper implements ILayoutPolicyHelper {
-	
-	protected ContainerPolicy policy;
+public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
+
 	
 /**
  * Constraint object to be passed into this class.
@@ -55,12 +51,8 @@ public static class NullConstraint {
 	}
 }
 
-public NullLayoutPolicyHelper(ContainerPolicy ep) {
-	setContainerPolicy(ep);
-}
-
-public void setContainerPolicy(ContainerPolicy policy) {
-	this.policy = policy;
+public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
+	super(ep);
 }
 
 /**
@@ -110,33 +102,6 @@ public Command getCreateChildCommand(Object childComponent, Object parent, Objec
 	command.append(createContributionCmd);
 
 	return command.unwrap();
-}
-
-public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
-
-	Command addContributionCmd = policy.getAddCommand(childrenComponents, position);
-	if (addContributionCmd == null || !addContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be added.
-		
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	command.append(getChangeConstraintCommand(childrenComponents, constraints));
-	command.append(addContributionCmd);
-
-	return command.unwrap();
-}
-
-public Command getOrphanChildrenCommand(List children) {
-	
-	// Now get the orphan command for the children.
-	Command orphanContributionCmd = policy.getOrphanChildrenCommand(children);
-	if (orphanContributionCmd == null || !orphanContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be orphaned		
-
-	RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
-	cb.append(orphanContributionCmd);	
-	cancelConstraints(cb, children);
-	return cb.getCommand();
-
 }
 
 protected void cancelConstraints(CommandBuilder cb, List children) {
@@ -193,14 +158,5 @@ protected Command createChangeConstraintCommand(IJavaObjectInstance child, NullC
 		return null;
 	return cmd;
 }
-
-	/**
-	 * @see com.ibm.etools.jbcf.visual.ILayoutPolicyHelper#getOrphanConstraintsCommand(List)
-	 */
-	public Command getOrphanConstraintsCommand(List children) {
-		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
-		cancelConstraints(cb, children);
-		return cb.getCommand();
-	}
 
 }
