@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.30 $  $Date: 2005-03-15 21:48:45 $ 
+ *  $Revision: 1.31 $  $Date: 2005-03-23 17:21:01 $ 
  */
 
 
@@ -798,7 +798,7 @@ public static MethodGeneratorFactory getMethodTextFactory (org.eclipse.ve.intern
 public static boolean propertyCleanup(EObject target, EStructuralFeature sf) { 
    if (target.eIsSet(sf)) {
    	 EObject p = (EObject) target.eGet(sf) ;
-   	 if (p.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
+   	 if (p!=null && p.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
    	     ((MemberContainer) p.eContainer()).getProperties().remove(p);
    	     return true;
    	 }
