@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-26 23:07:50 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-01 21:25:25 $ 
  */
 
 
@@ -296,6 +296,7 @@ protected DefaultEditDomain createEditDomain(){
 		
 		private int compoundChangeCount = 0;
 		private int holdState = READY_STATE;
+		private String holdMsg = null;
 		
 		/* (non-Javadoc)
 		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#inTransaction()
@@ -352,16 +353,23 @@ protected DefaultEditDomain createEditDomain(){
 		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#getHoldMsg()
 		 */
 		public String getHoldMsg() {
-			return "";
+			return holdMsg;
 		}
 
 		/* (non-Javadoc)
 		 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#setHoldState(int)
 		 */
-		public void setHoldState(int stateFlag) {
+		public void setHoldState(int stateFlag, String msg) {
 			holdState = stateFlag;
+			if (holdState != READY_STATE)
+				if (msg != null)
+					holdMsg = msg;
+				else
+					holdMsg = "Editor cannot be changed at this time.";
+			else
+				holdMsg = null;
 		}
-});
+	});
 	return dom;
 }
 

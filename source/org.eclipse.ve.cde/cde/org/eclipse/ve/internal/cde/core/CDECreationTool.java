@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
+ * Copyright (c)  2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,70 +9,79 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: CDECreationTool.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.2 $ $Date: 2004-04-01 21:25:25 $
  */
+package org.eclipse.ve.internal.cde.core;
 
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.*;
-import org.eclipse.gef.requests.*;
+import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
+ * This is the base Creation Tool that all CDE editors should use. It does: <bl>
+ * <li>Uses CDECreateRequest so that CDE tools can add info to the request for later policies to use.
+ * <li>Will use the Cursor out of the CDECreateRequest so that edit policies can return their specific cursor to use.
+ * <li>Uses the CDEUtilities.calculateCursor to return the appropriate cursor for the state of the domain.
+ * <li>Dispose of the cursor from the CDECreateRequest when no longer needed. </bl>
+ * 
  * @author JoeWin
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public abstract class CDECreationTool extends CreationTool {
-	protected Cursor editPolicyCursor;	
-	protected CDECreationTool(CreationFactory aFactory){
+
+	protected Cursor editPolicyCursor;
+
+	protected CDECreationTool(CreationFactory aFactory) {
 		super(aFactory);
 	}
-	protected CDECreationTool(){
+
+	protected CDECreationTool() {
 	}
-	
-	protected Request createTargetRequest(){
+
+	protected Request createTargetRequest() {
 		CreateRequest request = new CDECreateRequest();
 		request.setFactory(getFactory());
 		return request;
-	}	
+	}
 
-	protected void showTargetFeedback(){
+	protected void showTargetFeedback() {
 		super.showTargetFeedback();
-		Object cursor = ((CDECreateRequest)getTargetRequest()).get(Cursor.class);
-		if ( cursor instanceof Cursor ){
-			editPolicyCursor = (Cursor)cursor;
+		Object cursor = ((CDECreateRequest) getTargetRequest()).get(Cursor.class);
+		if (cursor instanceof Cursor) {
+			editPolicyCursor = (Cursor) cursor;
 		}
 	}
-	protected Cursor getEditPolicyCursor(){
-		if ( editPolicyCursor != null ) {
+
+	protected Cursor getEditPolicyCursor() {
+		if (editPolicyCursor != null) {
 			return editPolicyCursor;
 		} else {
 			return getDefaultCursor();
 		}
 	}
-	/**
-	 * Determines (and returns) the appropriate cursur.
-	 */
-	protected Cursor calculateCursor(){
+
+
+	protected Cursor calculateCursor() {
+		Cursor result = CDEUtilities.calculateCursor((EditDomain) getDomain());
+		if (result != null)
+			return result;
 		Command command = getCurrentCommand();
 		if (command == null || !command.canExecute()) {
-			return getDisabledCursor(); 
+			return getDisabledCursor();
 		} else {
 			return getEditPolicyCursor();
 		}
 	}
-	protected void eraseTargetFeedback(){
+
+	protected void eraseTargetFeedback() {
 		super.eraseTargetFeedback();
-		Object cursor = ((CDECreateRequest)getTargetRequest()).get(Cursor.class);
-		if ( cursor == null && editPolicyCursor != null ) {
+		Object cursor = ((CDECreateRequest) getTargetRequest()).get(Cursor.class);
+		if (cursor == null && editPolicyCursor != null) {
 			setCursor(getDefaultCursor());
-			editPolicyCursor.dispose();			
-			editPolicyCursor = null;		
+			editPolicyCursor.dispose();
+			editPolicyCursor = null;
 		}
-	}	
+	}
 }

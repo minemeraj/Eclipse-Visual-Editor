@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IModelChangeController.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-01 21:25:25 $ 
  */
 
 /**
@@ -75,11 +75,12 @@ public interface IModelChangeController {
 	/**
 	 * To set it to a particular hold state.
 	 * 
-	 * @param stateFlag
+	 * @param stateFlag state to set it to. If <code>READY_STATE</code>, the msg will be ignored and will be reset to <code>null</code>.
+	 * @param msg a msg to associate with the hold state. If <code>null</code>, then use a default msg.
 	 * 
 	 * @since 1.0.0
 	 */
-	public void setHoldState(int stateFlag);
+	public void setHoldState(int stateFlag, String msg);
 	
 	/**
 	 * Return the status of the hold state
@@ -100,11 +101,14 @@ public interface IModelChangeController {
 	 */
 	public int getHoldState();
 	
+
 	/**
-	 * Return the current hold msg.
-	 * @deprecated no hold msg stored anymore.
+	 * Return the hold msg associated with the current hold state, or <code>null</code> if ready state.
+	 * @return msg or <code>null</code> if in ready state.
+	 * 
+	 * @since 1.0.0
 	 */
-	public String getHoldMsg() ;
+	public String getHoldMsg();
 	
 	/**
 	 * Tests to see if the model controller is currently processing a transaction

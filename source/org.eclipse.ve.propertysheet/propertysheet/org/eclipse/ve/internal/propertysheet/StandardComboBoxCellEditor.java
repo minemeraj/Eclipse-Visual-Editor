@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: StandardComboBoxCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:10 $ 
  */
 
 
@@ -63,7 +63,7 @@ public void setItems(String[] displayStrings, Object[] items) {
  * it isn't it will return a generic invalid value message.
  */
 protected String isCorrectObject(Object value) {
-	if (value == null || doGetIndex(value) != sNoSelection)
+	if (value == null || doGetIndex(value) != NO_SELECTION)
 		return null;
 		
 	return PropertysheetMessages.getString(MessageFormat.format(PropertysheetMessages.NOT_VALID, new Object[] {value}));
@@ -102,7 +102,7 @@ protected int doGetIndex(Object value){
 		}
 	}
 			
-	return sNoSelection;
+	return NO_SELECTION;
 }
 
 

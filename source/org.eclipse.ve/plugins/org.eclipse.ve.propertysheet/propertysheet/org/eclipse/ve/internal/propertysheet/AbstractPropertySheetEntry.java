@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:10 $ 
  */
 
 
@@ -171,8 +171,15 @@ public void addPropertySheetEntryListener(IPropertySheetEntryListener listener) 
  */
 public final void applyEditorValue() {
 	// Check if editor has a valid value
-	if (editor == null || !isEditorActivated() || !editor.isValueValid())
+	if (editor == null || !isEditorActivated())
 		return;
+	// Check if editor has a valid value
+	if (!editor.isValueValid()) {
+		setErrorText(editor.getErrorMessage());
+		return;
+	} else {
+		setErrorText(null);
+	}
 
 	Object newValue = editor.getValue();
 	applyNewValue(newValue);
@@ -440,10 +447,7 @@ public CellEditor getEditor(Composite parent) {
 
 	if (editor == null) {
 		editor = fDescriptors[0].createPropertyEditor(parent);
-		if (editor != null && areNullsInvalid()) {
-			// Nulls aren't valid, so add in the no nulls validator.
-			editor.setValidator(new NoNullsValidator(editor.getValidator()));
-		}			
+		processEditorValidator(editor);			
 		if (editor != null)
 			editor.addListener(cellEditorListener);					
 	}
@@ -451,6 +455,19 @@ public CellEditor getEditor(Composite parent) {
 	setupEditor();
 	
 	return editor;
+}
+
+/**
+ * This method is for processing the validator. It allows adding more validators to the editor. Subclass to do this,
+ * but always call super.processEditorValidator() too.
+ * 
+ * @since 1.0.0
+ */
+protected void processEditorValidator(CellEditor cellEditor) {
+	if (cellEditor != null && areNullsInvalid()) {
+		// Nulls aren't valid, so add in the no nulls validator.
+		cellEditor.setValidator(new NoNullsValidator(cellEditor.getValidator()));
+	}
 }
 
 /*

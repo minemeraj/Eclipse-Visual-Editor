@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFCreationTool.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:25 $ 
  */
 
 import org.eclipse.emf.ecore.EClass;
@@ -26,7 +26,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 
 /**
- * CDE Creation Tool. It exposes the EditDomain and
+ * CDE EMF Creation Tool. It exposes the EditDomain and
  * if a factory implements IDomainedFactory, it will set
  * the domain into the factory when activated.
  * @version 	1.0
