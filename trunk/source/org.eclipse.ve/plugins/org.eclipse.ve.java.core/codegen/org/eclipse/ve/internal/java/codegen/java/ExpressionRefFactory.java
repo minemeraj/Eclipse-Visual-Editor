@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.20 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.21 $  $Date: 2004-09-08 18:18:58 $ 
  */
 
 import java.util.Iterator;
@@ -64,16 +64,29 @@ public void insertContentToDocument() throws CodeGenException {
  * @since 1.0.0
  */
 public CodeExpressionRef createInitExpression() {
-	CodeMethodRef mr = fBeanPart.getInitMethod() ;   	
-	CodeExpressionRef exp = new CodeExpressionRef(mr,fBeanPart) ;
+	
+	IJavaObjectInstance obj = (IJavaObjectInstance)fBeanPart.getEObject();	
+	ExpressionRefFactory f = new ExpressionRefFactory(fBeanPart, ObjectDecoder
+			.getAllocationFeature(obj));
+	CodeExpressionRef exp;
+	try {
+		// Give the decoder the option to adapt
+		// The problem is that the decoder may not have all the information
+		// it needs... e.g., allocation feature is there, but no parent child feature yet.
+		exp = f.createFromJVEModel(null);
+	} catch (CodeGenException e1) {
+		JavaVEPlugin.log(e1);
+		return null;
+	}
 	exp.clearState();
+	exp.setNoSrcExpression(false);
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
 
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
 	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
 	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 	    
-	IJavaObjectInstance obj = (IJavaObjectInstance)fBeanPart.getEObject();
+	
 	InitExpressionGenerator gen = new InitExpressionGenerator(fBeanPart.getEObject(),fBeanPart.getModel());
 	gen.setInitbeanName(fBeanPart.getSimpleName());
 	gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports()));
