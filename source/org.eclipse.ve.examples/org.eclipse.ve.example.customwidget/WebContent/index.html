@@ -42,7 +42,9 @@ anyone wishing to employ similar techniques.<br>
 </p>
 <p class="summary">This tutorial covers an example where a user has a
 custom widget that they wish to extend the visual editor to have
-specific builder behavior for. <br>
+specific builder behavior for.&nbsp; It covers topics such as extending
+the Visual Editor's palette, building a BeanInfo class and working with
+EMF .override files to introduce custom editor behavior.<br>
 </p>
 <p><b>Gili Mendel, IBM<br>
 Joe Winchester, IBM<br>
@@ -326,7 +328,8 @@ comment line code generated for the setText(String) method<br>
  style="color: rgb(153, 0, 0);"> private void </span>createMyCustomPrompter()
 {<br>
 &nbsp; myCustomPrompter = <span style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
-SWT.NONE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <br>
+SWT.<span style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <br>
 &nbsp; myCustomPrompter.setText(<span style="color: rgb(51, 51, 255);">"Text
 Value"</span>);<br>
 }</td>
@@ -336,7 +339,8 @@ void</span> createMyCustomPrompter() {</span><br
  style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp; myCustomPrompter = <span
  style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
-SWT.NONE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br
+SWT.<span style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br
  style="font-family: monospace;">
       <span style="font-family: monospace;"></span><span
  style="font-family: monospace;">&nbsp; myCustomPrompter.setText(<span
@@ -575,9 +579,10 @@ plugin itself, but instead as a raw <span style="font-style: italic;">File</span
 The reason for this is that the inclusion of the runtime code in the
 plugin is not for the benefit of Eclipse and it will never be loaded by
 the Visual Editor into the Eclipse JVM.&nbsp; The user of the plugin
-will configure their Java project to use the custom prompter <span
- style="color: rgb(204, 0, 0);">&lt;&lt;need description of this&gt;&gt;</span>
-and the visual editor will insert the JAR into the -classpath of the VM
+will configure their Java project to use the custom prompter which is
+described in the later section <a href="#Using_a_classpath_container">Using
+a classpath container</a>, <span style="color: rgb(204, 0, 0);"></span>and
+the visual editor will insert the JAR into the -classpath of the VM
 that it uses to host the Java classes that make up the user's classes.<br>
 The second way to ensure that the <span style="font-style: italic;">customwidgets.jar</span>
 is included in the plugin that avoids having to export to the file
@@ -1147,64 +1152,222 @@ A BeanInfo class is responsible for describing the list of properties
 used by a tool such as the Visual Editor, and also their edit time
 behavior.&nbsp; This is done by specializing the method<span
  style="font-family: monospace;"> PropertyDescriptor[]
-getPropertyDescriptors()</span>.<br>
-<p>To do so we will create a
-<a href="http://java.sun.com/products/javabeans/docs/spec.html">BeanInfo</a>
-class.&nbsp; BeanInfo provides a generic manner to describe a JavaBean
-in Java.&nbsp; <br>
-To denote that the type property is an enum, we used the following code
-in<a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java?cvsroot=Tools_Project"></a></p>
-<pre>	public PropertyDescriptor[] getPropertyDescriptors() {<br>		<br>		try {		<br>			PropertyDescriptor[] result = new PropertyDescriptor[2]; <br>		<br>			result[0] = new PropertyDescriptor("text",MyCustomPrompter.class);<br>			result[1] = new PropertyDescriptor("<b><font
- color="#0000ff">type</font></b>",MyCustomPrompter.class);<br>		<br>			result[1].setValue("<font
- color="#0000ff">enumerationValues</font>", new Object[] {<br>					"<font
- color="#0000ff">Dots</font>", new Integer(<font color="#0000ff">MyCustomPrompter.DOTS</font>), "<font
- color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</font>",<br>					"<font
- color="#0000ff">More</font>", new Integer(<font color="#0000ff">MyCustomPrompter.MORE</font>), "<font
- color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.MORE</font>",<br>					"<font
- color="#0000ff">Open</font>", new Integer(<font color="#0000ff">MyCustomPrompter.OPEN</font>), "<font
- color="#0000ff">org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.OPEN</font>"							      			<br>			});<br>			<br>			return result;<br>		} catch (IntrospectionException e) {			<br>			e.printStackTrace();<br>			return null;<br>		}<br>	}<br></pre>
-<p>The BeanInfo class above overrids the <i>getPropertyDescriptors</i>
-method.&nbsp; It exposes two properties, <b><i>text</i></b>, and <b><i>type</i></b>.&nbsp;
-for the <i><b>type</b></i> property the method uses a key/value pair
-denoting VE enumeration values.&nbsp; An enumeration value is a
-3-topple: label (text), value, and the code to generate for that
-enum.&nbsp; For example, the "<font color="#0000ff">Dots</font>" label,
-will use the value of the public fields DOTS, and will generate the
-<font face="Arial"><i>org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS</i>
-when the Dots is selected.</font></p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">Overriding
-the <i>getPropertyDescriptors</i> method by itself will export only
-the <i><b>text</b></i> and <i><b>type</b></i> properties.&nbsp; We
-typically need to make some of the super classes properties visible as
-well (for such thing as the <i>size</i>, <i>bound</i>, <i>focus</i>,
-<i>font</i> etc.).&nbsp; To re-export the same properties,&nbsp;
-MyCustomPrompterBeanInfo&nbsp; also overrides the <i>
-getAdditionalBeanInfo</i> method as following</p>
-<blockquote>
-  <pre>	public BeanInfo[] getAdditionalBeanInfo() {<br>		try{<br>			return new BeanInfo[]{Introspector.getBeanInfo(Control.class)}; <br>		} catch (IntrospectionException e){<br>			return new BeanInfo[0];<br>		}<br>	}<br></pre>
-</blockquote>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">Before
-you re-launch your application after placing the BeanInfo in the plugin
-you need to re-export the <b> <i>customwidgets.jar</i></b> (see <a
- href="#The_Custom_Widget">The Custom Widget</a>) so that it includes
-the new BeanInfo class.</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">If you
-are reading this before a VE1.1 release build, you may have to do a
-Project-&gt;clean, close, and reopen the java project that you are
-using the <i>
-MyCustomPrompter</i> class so that the introspector clear its beaninfo
-cache.</p>
-<p>
-&nbsp;</p>
-<p>
-Notice the way the property sheet renders the <b><i>type</i></b>
-property with the BeanInfo comparing to the previous <a href="#Figure">figure</a>.</p>
-<p class="PictureParagraph"><img border="0" src="images/index.53.jpg"></p>
-<p>&nbsp;</p>
+getPropertyDescriptors()</span>.&nbsp; The method returns an array of <span
+ style="font-family: monospace;">java.beans.PropertyDescriptor</span>
+objects, each one representing an item that will appear as a row in the
+Properties view and containing information about its display name, the
+Java get and set method associated with the property, as well as the
+rules for how the property shoud be edited.&nbsp; The specification
+allows support for editing behavior is provided by having a <span
+ style="font-family: monospace;">java.beans.PropertyEditor</span>
+defined against the <span style="font-family: monospace;">PropertyDescriptor</span>,
+and while the Visual Editor will work correctly if a <span
+ style="font-family: monospace;">PropertyEditor </span>class has been
+defined it also supports a shorthand notation for describing a list of
+enumerated values because this pattern occurs frequently in widget
+libraries (for example orientation properties on scroll bars, alignment
+values on layout constraints, etc...) and is the pattern used by the
+MyCustomPrompter's <span style="font-style: italic;">type </span>property.&nbsp;
+This shorthand notation involves defining a key value pair on the
+PropertyDescriptor, the key of which is the string literal <span
+ style="font-style: italic;">enumerationValues </span>and the value of
+which is an array of tri values.&nbsp; The structure of the array is a
+repeating set of <span style="font-weight: bold;">displayName, value,
+initializationString</span>.&nbsp; The displayName is the user visible
+string shown to the user in the Properties view, the value is the
+actual object that identifies the trivalue against a live property
+setting, and the initializationString is the fully qualified code
+fragment that is generated as argument to the property's set
+method.&nbsp; This is illustrated below in the method <span
+ style="font-family: monospace;">getPropertyDescriptors() </span>for
+the class <span style="font-family: monospace;">MyCustomPrompterBeanInfo</span>.<br>
+<pre>  <span style="color: rgb(153, 0, 0);">public </span>PropertyDescriptor[] getPropertyDescriptors() {<br>		<br>    <span
+ style="color: rgb(153, 0, 0);">try </span>{		<br>      PropertyDescriptor[] result = <span
+ style="color: rgb(153, 0, 0);">new </span>PropertyDescriptor[2]; <br>		<br>      result[0] = <span
+ style="color: rgb(153, 0, 0);">new </span>PropertyDescriptor(<span
+ style="color: rgb(51, 51, 255);">"text"</span>,MyCustomPrompter.class);<br>      result[1] = <span
+ style="color: rgb(153, 0, 0);">new </span>PropertyDescriptor<span
+ style="font-weight: bold;">(<span style="color: rgb(51, 51, 255);">"type"</span></span>,MyCustomPrompter.class);<br>		<br>      result[1].setValue(<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"><span
+ style="color: rgb(51, 51, 255);">"enumerationValues"</span>, <span
+ style="color: rgb(153, 0, 0);">new </span>Object[] {<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">    <span
+ style="color: rgb(51, 51, 255);">"Dots"</span>, <span
+ style="color: rgb(153, 0, 0);">new </span>Integer(MyCustomPrompter.<span
+ style="color: rgb(51, 51, 255); font-style: italic;">DOTS</span>), <span
+ style="color: rgb(51, 51, 255);">"org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.DOTS"</span>,<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif">    <span
+ style="color: rgb(51, 51, 255);">"More"</span>, <span
+ style="color: rgb(153, 0, 0);">new </span>Integer(MyCustomPrompter.<span
+ style="color: rgb(51, 51, 255); font-style: italic;">MORE</span>), <span
+ style="color: rgb(51, 51, 255);">"org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.MORE"</span>,<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">    <span
+ style="color: rgb(51, 51, 255);">"Open"</span>, <span
+ style="color: rgb(153, 0, 0);">new </span>Integer(MyCustomPrompter.<span
+ style="color: rgb(51, 51, 255); font-style: italic;">OPEN</span>), <span
+ style="color: rgb(51, 51, 255);">"org.eclipse.ve.example.customwidget.prompter.MyCustomPrompter.OPEN"</span>							      			<br>      });<br>			<br>      <span
+ style="color: rgb(153, 0, 0);">return </span>result;<br>    } <span
+ style="color: rgb(153, 0, 0);">catch </span>(IntrospectionException e) {			<br>      e.printStackTrace();<br>      <span
+ style="color: rgb(153, 0, 0);">return null</span>;<br>    }<br>}<br></pre>
+<p>The getPropertyDescriptors() method returns an array of two
+properties; <span style="font-style: italic;">text </span>and <span
+ style="font-style: italic;">type.&nbsp; </span>The <span
+ style="font-style: italic;">type </span>property has a key value pair
+assigned to it with a key of <img style="width: 24px; height: 13px;"
+ alt="" src="images/tag1.gif"> <span style="font-style: italic;">enumerationValues
+</span>and a value that is an array of nine elements.&nbsp; These nine
+elements represent the three enumerated values defined as a
+tri-values.&nbsp; The first of these is for the value 0 and is defined
+as <span style="font-weight: bold;">displayName,value,initString</span>
+of&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> "Dots", 0, "0".&nbsp; Instead of hard coding
+the 0 however they are coded to be the dynamic lookups of the actual
+value from the static constant, allowing the constant to internally
+change without requiring BeanInfo modification.&nbsp; The other two
+values <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_3.gif"> "More" and <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
+"Open" are defined as tri-values for the 4th, 5th and 6th elements of
+the array and the 7th, 8th and 9th respectively.<br>
+</p>
+<p>The <span style="font-family: monospace;">getPropertyDescriptors()</span>
+method returns a fully inclusive set of property descriptors for the
+JavaBean.&nbsp; For <span style="font-family: monospace;">MyCustomPrompter
+</span>the user experience the tutorial wants is that the inherited
+properties such as background, foreground, size, etc.. are present on
+the class.&nbsp; To achieve this rather than having the <span
+ style="font-family: monospace;">getPropertyDescriptors()</span> method
+collect the full list of all desired properties, the JavaBeans
+specification allows for the method <span
+ style="font-family: monospace;">BeanInfo[] getAdditionalBeanInfo()</span>
+to be specialized.&nbsp; This returns an array of <span
+ style="font-family: monospace;">BeanInfo </span>classes whose
+properties are merged together with the result of <span
+ style="font-family: monospace;">getPropertyDescriptors() </span>to
+create the complete list.<br>
+</p>
+<pre>  <span style="color: rgb(153, 0, 0);">public </span>BeanInfo[] getAdditionalBeanInfo(){	<br>    <span
+ style="color: rgb(153, 0, 0);">try</span>{<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">   <span
+ style="color: rgb(153, 0, 0);">return new</span> BeanInfo[]{Introspector.<span
+ style="font-style: italic;">getBeanInfo</span>(Control.<span
+ style="color: rgb(153, 0, 0);">class</span>)}; <br>    } <span
+ style="color: rgb(153, 0, 0);">catch </span>(IntrospectionException e){<br>    <span
+ style="color: rgb(153, 0, 0);">return new</span> BeanInfo[0];<br>  }<br></pre>
+<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
+ alt="Note: " height="13" width="62">To create the array of BeanInfo
+classes representing the set of descriptors to merge one technique
+might be to write the code <span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">return new</span> BeanInfo[]
+{CompositeBeanInfo.<span style="color: rgb(153, 0, 0);">class</span>,
+ControlBeanInfo.<span style="color: rgb(153, 0, 0);">class</span>,
+WidgetBeanInfo.<span style="color: rgb(153, 0, 0);">class</span>}</span>.&nbsp;
+However doing so would be an attempt to hard code the names of the
+BeanInfo classes that may currently be associated with the superclass
+chain of <span style="font-family: monospace;">MyCustomPrompter </span>but
+would fail if new BeanInfo classes were introduced or removed.&nbsp;
+The preferred technique for picking up inherited properties is with the
+statement <span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">return new</span>
+BeanInfo[]{Introspector.<span style="font-style: italic;">getBeanInfo</span>(Composite.<span
+ style="color: rgb(153, 0, 0);">class</span>)</span> where the argument
+to the <span style="font-style: italic; font-family: monospace;">getBeanInfo</span><span
+ style="font-family: monospace;">(Class aClass) </span>method is the
+current bean's superclass.&nbsp; Rather than using <span
+ style="font-family: monospace;">Composite </span>as the starting
+point for merging inherited properties which is the immediate
+superclass of <span style="font-family: monospace;">MyCustomPrompter</span>,
+<img style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">&nbsp;
+<span style="font-family: monospace;">w</span>is used instead.&nbsp;
+The reason for this is that while <span style="font-family: monospace;">MyCustomPrompter
+</span>extends Composite it does this more for physical reasons so it
+can have its three child controls (the <span
+ style="font-family: monospace;">Label</span>, <span
+ style="font-family: monospace;">Text </span>and <span
+ style="font-family: monospace;">Button</span>), however as a black box
+custom class it itself doesn't want to inherit the behavior of <span
+ style="font-family: monospace;">Composite </span>such as the ability
+to have its layout changed.&nbsp; For this reason it is logically a
+subclass of <span style="font-family: monospace;">Control</span>.<br>
+<h3>Testing the enumerated values for <span style="font-style: italic;">type</span></h3>
+<p>Having updated <span style="font-family: monospace;">MyCustomPrompterBeanInfo.java</span>
+this must be re-exported to the <span style="font-style: italic;">customwidgets.jar
+</span>file.&nbsp; The customwidgets.jar in the plugin is the one that
+the <span style="font-style: italic;">Custom Prompter </span>classpath
+container uses in its build path, and if the step of re-creating the <span
+ style="font-style: italic;">customwidgets.jar </span>file is not done
+when you launch the Eclipse Application you will be using the old
+version of the code.&nbsp; Currently Eclipse 3.1 does not support
+classpath container entries pointing to folder structures otherwise the
+RegisteredClassPathContainer could be coded to automatically look back
+into the directory structure of the development environment that
+launched it so for now don't forget to keep re-creating the <span
+ style="font-style: italic;">customwidgets.jar </span>file each time
+any of its contents have changed.<br>
+</p>
+<img src="images/note.gif" alt="Note: " height="13" width="62"> The
+Visual Editor caches information about a class and under some builds
+prior to VE 1.1 there are some issues with the cache going stale and
+not being automatically refreshed.&nbsp; If this occurs you can
+manually recycle the cache by selecting <span
+ style="font-weight: bold;">Project &gt; Clean </span>and also
+manually removing the directory <span style="font-style: italic;">org.eclipse.ve.beaninfo/cache</span>
+from the workbench directory.&nbsp; <br>
+<br>
+The changes to the <span style="font-family: monospace;">MyCustomPrompterBeanInfo
+</span>should mean that the <span style="font-style: italic;">type </span>property
+is now rendered with its display name rather than just the raw <span
+ style="font-family: monospace;">int </span>value.&nbsp; The
+Properties view also will create a drop down list of the three
+allowable values.&nbsp; The figure below shows the list of the three
+values and when one is selected the argument to the <span
+ style="font-family: monospace;">setType(int) </span>method will be
+generated with the initializationString as defined in the <span
+ style="font-family: monospace;">BeanInfo </span>array.<br>
+<br>
+<img style="width: 910px; height: 804px;" alt=""
+ src="images/index.53.jpg"><br>
+<br>
+The BeanInfo mechanism provides one technique to override default edit
+behavior for a Java class.&nbsp; The Visual Editor uses BeanInfo
+classes internally for many of its customizations and it recognizes
+externally created BeanInfo classes according to the JavaBeans
+specification.<br>
+<br>
+Some kinds of customzation are not possible through the BeanInfo
+mechanism because while it provides a powerful way to describe edit
+time behavior and shape for a class the Visual Editor need to be able
+to export some of its innermost extension points to the creator of the
+Java class, and the BeanInfo mechanism is designed to provide a
+portable way of customizing a Java class that can be transported easily
+between different IDEs and tools.&nbsp; For example, the next exercise
+in the tutorial is to override the behavior that occurs when the <span
+ style="font-style: italic;">text </span>property is edited to launch
+a dialog editor.&nbsp; This dialog editor will be written using the SWT
+and implement Eclipse specific interfaces, so describing it on the
+BeanInfo would violate the idea that BeanInfo classes are portable (as
+Eclipse interfaces and the SWT are not necessarily available to other
+visual design tools).<br>
+<br>
+For this reason the Visual Editor a separate mechanism to extend a
+class's edit time behavior that is done through <span
+ style="font-style: italic;">override </span>files<span
+ style="font-style: italic;">. </span>This works in conjunction with
+the BeanInfo mechanism and provides the ability to leverage any Eclipse
+IDE or Visual Editor specific behavior for a class.<span
+ style="font-weight: bold;"><span style="font-weight: bold;"><span
+ style="font-weight: bold;"></span></span></span><br>
+<h2>The Override mechanism</h2>
+<p>At the heart of the Visual Editor is an EMF model that describes a
+class being edited.&nbsp; This model describes the instances<br>
+<br>
+</p>
+<p><br>
+</p>
 <h2><a name="Creating_A_SWT_cell_editor">Creating A SWT cell editor</a></h2>
 <p>&nbsp;</p>
 <p>The <i>MyCustomPrompter</i> class has a String property named <b><i>text</i></b>.&nbsp;
