@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-02 15:57:29 $ 
+ *  $Revision: 1.11 $  $Date: 2004-07-10 19:41:25 $ 
  */
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -176,9 +177,14 @@ public void setData(Object data){
 		if (sources[0] instanceof IJavaObjectInstance) {
 			// if the source is the container, set the container
 			container = (IJavaObjectInstance) sources[0];
-		} else {
-			// if the source is the ConstraintComponent, get the constraint's container
-			container = (IJavaObjectInstance) ((EObject)sources[0]).eContainer();
-		}
+		} else if (sources[0] instanceof EObject){
+			EStructuralFeature sfConstraintComponent = JavaInstantiation.getReference(JavaEditDomainHelper.getResourceSet(fEditDomain), JFCConstants.SF_CONSTRAINT_COMPONENT);
+			if (sfConstraintComponent.getEContainingClass().isInstance(sources[0])) {
+				// if the source is the ConstraintComponent, get the constraint's component. This is who the layout will be applied to.
+				container = (IJavaObjectInstance) ((EObject)sources[0]).eGet(sfConstraintComponent);
+			} else
+				container = null;
+		} else
+			container = null;
 	}
 }
