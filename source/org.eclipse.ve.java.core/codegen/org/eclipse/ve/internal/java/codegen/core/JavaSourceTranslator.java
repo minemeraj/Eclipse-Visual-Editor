@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.14 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.15 $  $Date: 2004-03-30 14:42:55 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -339,18 +339,7 @@ IJVEStatus fMsgRenderer = null;
 			if (monitor != null && monitor.isCanceled())
 				return;
 
-			IModelChangeController controller = (IModelChangeController) fEDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 			try {
-				synchronized (controller) {
-					// It is possible that multi work elements stagger, and we do not want
-					// a later work element, to cache, an UnRestored state.
-					if (fSetHold++ == 0) {
-						fHoldMsg = controller.getHoldMsg();
-						fHold = controller.isHoldChanges();
-					}
-					controller.setHoldChanges(true, null);
-				}
-
 				if (monitor != null && monitor.isCanceled())
 					return;
 
@@ -413,12 +402,6 @@ IJVEStatus fMsgRenderer = null;
 			} finally {
 				if (fBeanModel != null)
 					fireSnippetProcessing(false);
-				synchronized (controller) {
-					if (--fSetHold <= 0) {
-						controller.setHoldChanges(fHold, fHoldMsg);
-						fSetHold = 0;
-					}
-				}
 			}
 		}
   }
@@ -1117,8 +1100,9 @@ public synchronized void disconnect(boolean clearVCEModel) {
         
     if (fSrcSync != null) // fWorkingCopy may not be null yet if called from dispose
        fWorkingCopy.disconnect() ;
+   
+    fSrcSync = null;
     
-       
     fdisconnected=true ;
     for (int i = 0; i < fListeners.size(); i++) {
        ((IBuilderListener)fListeners.get(i)).parsingPaused(fdisconnected);
@@ -1174,7 +1158,7 @@ public boolean isReloadPending() {
  * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#startTransaction()
  */
 public void startTransaction() {
-	// TODO do what you need to do.
+	fSrcSync.getLockMgr().setGUIUpdating(true);
 }
 
 /**
@@ -1189,7 +1173,7 @@ public void commit() {
 		fBeanModel.deleteDesignatedBeans() ;
 		fBeanModel.docChanged();
 	}
-      	 		      	 			                    
+	fSrcSync.getLockMgr().setGUIUpdating(false);
     JavaVEPlugin.log("JavaSourceTranslator: commit",Level.FINEST) ;         //$NON-NLS-1$
 }
 /**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenLockManager.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-23 19:55:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-30 14:42:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -22,6 +22,7 @@ public class CodegenLockManager implements ICodegenLockManager {
 
 	private int readonlyRequestCount = 0;
 	private boolean threadScheduled = false;
+	private boolean isGUIUpdating = false;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager#setGUIReadonly(boolean)
@@ -55,4 +56,16 @@ public class CodegenLockManager implements ICodegenLockManager {
 		return threadScheduled;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager#isGUIUpdating()
+	 */
+	public boolean isGUIUpdating() {
+		return isGUIUpdating;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager#setGUIUpdating(boolean)
+	 */
+	public void setGUIUpdating(boolean updating) {
+		isGUIUpdating = updating;
+	}
 }
