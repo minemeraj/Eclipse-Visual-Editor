@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 17:27:14 $ 
  */
 package org.eclipse.ve.internal.jfc.beaninfo;
 
@@ -29,6 +29,8 @@ public class FontPropertyEditor extends JPanel {
 	private static java.util.ResourceBundle resabtedit = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.vceedit");  //$NON-NLS-1$
 	private Font fontValue;
 
+	private final static Font DEFAULT_VALUE = new Font("Dialog", Font.PLAIN, 12); //$NON-NLS-1$
+		
 	private final static String[] styleNames = { resabtedit.getString("plain"), resabtedit.getString("bold"), resabtedit.getString("italic"), resabtedit.getString("bold_italic") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private final static Integer[] sizeArray = { new Integer(8), new Integer(10), new Integer(12), new Integer(14), new Integer(18), new Integer(24), new Integer(36), new Integer(48), new Integer(72) };
 	
@@ -52,7 +54,7 @@ public class FontPropertyEditor extends JPanel {
 	 * 
 	 */
 	public FontPropertyEditor() {
-        this(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
+        this(null);
 	}
 	
 	public FontPropertyEditor(Font startFont) {
@@ -256,6 +258,7 @@ public class FontPropertyEditor extends JPanel {
                 public void valueChanged(ListSelectionEvent e) {
                 	String newName = (String)getNamesList().getSelectedValue();
                 	if ( newName != null ) {
+                		checkNull();
                 	    fontValue = new Font( newName, fontValue.getStyle(), fontValue.getSize() );
                 	    if ( ! searchSelect ) {
                 	    	nameSelect = true;
@@ -323,6 +326,7 @@ public class FontPropertyEditor extends JPanel {
                 public void valueChanged(ListSelectionEvent e) {
                 	String newStyle = (String)getStylesList().getSelectedValue();
                 	if ( newStyle != null ) {
+                		checkNull();
                 	    fontValue = new Font( fontValue.getName(), getStyleFromName( newStyle ), fontValue.getSize() );
                 	    updatePreview();
                 	    getStylesText().setText( newStyle );
@@ -375,7 +379,8 @@ public class FontPropertyEditor extends JPanel {
 			sizeText.getDocument().addDocumentListener( new DocumentListener() {
                 public void updateFont() {
 					Integer newSize = new Integer( getSizeText().getValue() );
-                    fontValue = new Font( fontValue.getName(), fontValue.getStyle(), newSize.intValue() );
+					checkNull();
+					fontValue = new Font( fontValue.getName(), fontValue.getStyle(), newSize.intValue() );
                     Integer selectedSize = (Integer)getSizeList().getSelectedValue();
             	    if ( selectedSize == null || ! selectedSize.equals( newSize ) ) {            	    	
             	    	if ( getPointSizes().contains(newSize) ) {
@@ -418,6 +423,7 @@ public class FontPropertyEditor extends JPanel {
                 public void valueChanged(ListSelectionEvent e) {
                 	Integer newSize = (Integer)getSizeList().getSelectedValue();
                 	if ( newSize != null ) {
+                		checkNull();
                 	    fontValue = new Font( fontValue.getName(), fontValue.getStyle(), newSize.intValue() );
                 	    if ( newSize.intValue() != getSizeText().getValue() ) {
                 	    	getSizeText().setValue( newSize.intValue() );
@@ -492,10 +498,7 @@ public class FontPropertyEditor extends JPanel {
 			if (newFont.getSize() < 1) {
 				newFont = newFont.deriveFont((float)1.0);
 			}
-			getNamesList().clearSelection();
-			selectFontName(fontValue.getName());
-		    getStylesList().setSelectedValue(getNameFromStyle(fontValue.getStyle()), true);
-   		    getSizeText().setValue(fontValue.getSize());
+			initializeFields();
 		} else {
 			getNamesList().clearSelection();
 			getStylesList().clearSelection();
@@ -503,6 +506,13 @@ public class FontPropertyEditor extends JPanel {
 		}
 		updatePreview();
     }
+	
+	private void initializeFields() {
+		getNamesList().clearSelection();
+		selectFontName(fontValue.getName());
+	    getStylesList().setSelectedValue(getNameFromStyle(fontValue.getStyle()), true);
+		getSizeText().setValue(fontValue.getSize());
+	}
     
     /**
      * Select a given font name on the list (ignoring case)
@@ -517,6 +527,13 @@ public class FontPropertyEditor extends JPanel {
 				getNamesList().setSelectedValue(temp, true);
 				break;
 			}
+		}
+	}
+	
+	private void checkNull() {
+		if (fontValue == null) {
+			fontValue = DEFAULT_VALUE;
+			initializeFields();
 		}
 	}
 
