@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-21 15:19:56 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 
 /**
@@ -463,16 +462,9 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 				return null;	// Don't allow it to cross.
 		}
 			
-		InverseMaintenanceAdapter inverseAdapter = createInverseAdapter();
+		InverseMaintenanceAdapter inverseAdapter = new InverseMaintenanceAdapter(allowCrossDoc);
 		newValue.eAdapters().add(inverseAdapter);
 		return inverseAdapter;
-	}
-	
-	/*
-	 * Override to create a different type of InverseMaintenanceAdapter
-	 */
-	protected InverseMaintenanceAdapter createInverseAdapter() {
-		return new InverseMaintenanceAdapter(allowCrossDoc);
 	}
 	
 	/*
@@ -554,10 +546,14 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	 * Propagate to settings if not already propagated and not contained in a resource.
 	 */
 	public final void propagate() {
+//		propagated = true;
 		if (isPropagated())
 			return;
-		if (getTarget() instanceof EObject && ((EObject) getTarget()).eResource() != null)
+		if (getTarget() instanceof EObject && ((EObject) getTarget()).eResource() != null) {
+			long l = System.currentTimeMillis();			
 			primPropagate();
+			System.out.println("Time to propogate inverse = " + (System.currentTimeMillis() - l));
+		}
 	}
 	
 	/*
@@ -572,8 +568,34 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 
 		setPropagated(true);
 		
-		// Need to setup all of the backpointers.
-		EObject obj = (EObject) getTarget();
+		
+		// 	Need to setup all of the backpointers.
+		// 	Most of the EMF model implements FeatureValueProvider so we expect this
+		if(getTarget() instanceof FeatureValueProvider){
+			FeatureValueProvider obj = (FeatureValueProvider) getTarget();
+			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
+				public void isSet(EStructuralFeature feature, Object value) {
+					if(feature instanceof EReference){
+						EReference ref = (EReference)feature;
+						if(ref.isMany()){
+							Iterator bitr = ((InternalEList)value).basicIterator();
+							while(bitr.hasNext()){
+								handleAddRef( ref , (EObject) bitr.next());
+							}								
+						} else {
+							handleAddRef(ref, (EObject) value);
+						}
+					}
+				}
+			});
+		} else {
+			eObjectPropagate();
+		}				
+	}
+	
+	private void eObjectPropagate(){
+		
+		EObject obj = (EObject)getTarget();
 		List allSFs = obj.eClass().getEAllStructuralFeatures();
 		Iterator itr = allSFs.iterator();
 		while (itr.hasNext()) {
