@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.59 $  $Date: 2004-08-24 14:47:32 $ 
+ *  $Revision: 1.60 $  $Date: 2004-08-24 20:04:40 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -355,10 +355,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				acquiredLock = true;
 				if (root.eResource() == null || root.eResource().getResourceSet() == null) 
 					return; // This root has already been released. Means probably another reload in progress.
-			}
-			
-			if(primaryViewer != null){
-				primaryViewer.getRootEditPart().deactivate();
 			}
 
 			Iterator itr = editDomain.getViewers().iterator();
