@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultGraphicalEditPartFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 20:41:41 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -31,7 +31,7 @@ public class DefaultGraphicalEditPartFactory extends AbstractEditPartFactory {
 	}
 
 	public EditPart createEditPart(EditPart parentEP, Object modelObject) {
-		String epClassString = modelObject instanceof EObject ? policy.getGraphViewClassname(((EObject) modelObject).eClass()) : "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultGraphicalEditPart";
+		String epClassString = modelObject instanceof EObject ? policy.getGraphViewClassname(((EObject) modelObject).eClass()) : "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultGraphicalEditPart"; //$NON-NLS-1$
 		return createEditPart(epClassString, modelObject);
 	}
 }

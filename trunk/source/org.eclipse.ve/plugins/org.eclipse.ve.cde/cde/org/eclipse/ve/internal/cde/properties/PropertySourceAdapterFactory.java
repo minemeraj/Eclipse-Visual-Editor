@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertySourceAdapterFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 20:43:22 $ 
  */
 
 import java.text.MessageFormat;
@@ -91,7 +91,7 @@ public class PropertySourceAdapterFactory extends AdapterFactoryImpl {
 			} catch (Exception e) {
 				String msg =
 					MessageFormat.format(
-						CDEMessages.getString("Object.noinstantiate_EXC_"),
+						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
 						new Object[] { fDefaultPropertySourceClass });
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 			}

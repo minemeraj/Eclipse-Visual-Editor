@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: SelectionCreationToolEntryImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-02 20:42:29 $ 
  */
 import java.text.MessageFormat;
 import java.util.List;
@@ -91,11 +91,11 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 		try {
 			return (ISelector) CDEPlugin.createInstance(null, selectorClassName);
 		} catch (InstantiationException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { selectorClassName });
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { selectorClassName }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		} catch (ClassCastException e) {
 			String msg =
-				MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { selectorClassName, ISelector.class });
+				MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { selectorClassName, ISelector.class }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		} catch (Exception e) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$

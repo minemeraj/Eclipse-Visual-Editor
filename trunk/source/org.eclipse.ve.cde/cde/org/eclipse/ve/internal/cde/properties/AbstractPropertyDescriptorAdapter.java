@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:15 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-02 20:43:22 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -61,7 +61,7 @@ public abstract class AbstractPropertyDescriptorAdapter extends AdapterImpl impl
 			CDEPlugin.setInitializationData(provider, data, initData);
 			return provider;
 		} catch (Exception exc) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz });
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
 		}
 		return null;
@@ -92,7 +92,7 @@ public abstract class AbstractPropertyDescriptorAdapter extends AdapterImpl impl
 			if (validator != null)
 				editor.setValidator(validator);
 		} catch (Exception exc) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz, target });
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz, target }); //$NON-NLS-1$
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
 		}
 		return editor;
