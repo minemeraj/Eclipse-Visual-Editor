@@ -11,14 +11,13 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowDistributeBoxAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-20 20:04:04 $ 
  */
 
 import org.eclipse.gef.ui.actions.EditorPartAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class ShowDistributeBoxAction extends EditorPartAction {
@@ -48,17 +47,6 @@ public class ShowDistributeBoxAction extends EditorPartAction {
 		DistributeController dc = DistributeController.getDistributeController(getEditorPart());
 		dc.setBoxVisible(isChecked());
 	}
-	/**
-	 * Sets the editor.
-	 */
-	public void setEditorPart(IEditorPart part) {
-		super.setEditorPart(part);
-		if (getEditorPart() != null) {
-			DistributeController dc = DistributeController.getDistributeController(getEditorPart());
-			setChecked(dc != null ? dc.isBoxVisible() : false);
-		}		
-		refresh();
-	}
 	
 	/**
 	 * @see org.eclipse.gef.ui.actions.EditorPartAction#calculateEnabled()
@@ -78,6 +66,12 @@ public class ShowDistributeBoxAction extends EditorPartAction {
 	public void setWorkbenchPart(IWorkbenchPart part) {
 		// To work around GEF's refusal to do the right thing and leave it public.
 		super.setWorkbenchPart(part);
+		// If the controller says the box is visible, make sure it is
+		if (getEditorPart() != null) {
+			DistributeController dc = DistributeController.getDistributeController(getEditorPart());
+			if (dc != null)
+				if ( (!isChecked() && dc.isBoxVisible()) || (isChecked() && !dc.isBoxVisible()) )
+					setChecked(dc != null ? dc.isBoxVisible() : false);
+		}		
 	}	
-
 }
