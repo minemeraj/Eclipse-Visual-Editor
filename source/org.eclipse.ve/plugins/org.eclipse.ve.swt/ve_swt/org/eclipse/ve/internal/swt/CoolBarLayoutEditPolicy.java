@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-20 22:39:14 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-25 15:46:05 $ 
  */
 
 import org.eclipse.gef.*;
@@ -49,13 +49,6 @@ public class CoolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
 		if (orphanContributionCmd == null)
 			return UnexecutableCommand.INSTANCE; // It can't be created.
 		return orphanContributionCmd;
-	}
-
-	/**
-	 * getMoveChildCommand method comment. We don't perform move/resize since we don't know how.
-	 */
-	protected Command getMoveChildrenCommand(Request request) {
-		return null;
 	}
 
 	/**
