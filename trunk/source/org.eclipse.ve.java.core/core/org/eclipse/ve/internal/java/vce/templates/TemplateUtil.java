@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-09 23:08:08 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.*;
 import org.eclipse.osgi.util.ManifestElement;
@@ -41,7 +40,7 @@ public class TemplateUtil {
     private final static HashMap fClassPathMap = new HashMap() ;  // cache class path
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
     private static List fPlatformJRE = null ;
-    private static boolean DEV_MODE = InternalPlatform.getDefault().getEnvironmentInfoService().inDevelopmentMode();	// TODO When in 5/17 Eclipse, change to use Platform.inDevelopmentMode().    
+    private static boolean DEV_MODE = Platform.inDevelopmentMode();    
 	
     /**
      * Get the path for file within the given bundle.
