@@ -11,22 +11,19 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-23 23:19:41 $ 
+ *  $Revision: 1.11 $  $Date: 2005-03-18 18:27:48 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.*;
-
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
+import org.eclipse.ve.internal.java.visual.DimensionJavaClassCellEditor;
 /**
  * Windows need explicit disposing when the proxy is disposed
  */
