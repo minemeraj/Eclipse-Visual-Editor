@@ -8,8 +8,34 @@
 		<!--copy the runtimes to install for testing, excluding the JUnit plug-in tests-->
 		<copy file="${buildDirectory}/../emf.zip" todir="${executionDir}" />
 		<copy file="${buildDirectory}/../gef.zip" todir="${executionDir}" />
-		<get src="${eclipseLinuxGTKZipURL}" dest="${testBase}/eclipse-SDK.zip" usetimestamp="true"/>		
-		<copy file="${testBase}/eclipse-SDK.zip" todir="${executionDir}" />
+		<property name="zipname" value="eclipse-SDK.zip"/>
+		<antcall target="download"/>
+		<copy file="${testBase}/${zipname}" todir="${executionDir}" />
+	</target>
+
+	<target name="testurl">
+		<property file="${testBase}/${zipname}.properties"/>
+		<condition property="sameurl">
+			<and>
+				<isset property="downurl"/>
+				<equals arg1="${downurl}" arg2="${eclipseLinuxGTKZipURL}"/>
+			</and>
+		</condition>
+	</target>
+				
+	<target name="outofdate" unless="sameurl" depends="testurl">	
+		<delete>
+			<fileset dir="${testBase}">
+			    <include name="${zipname}"/>
+			</fileset>
+		</delete>
+	</target>
+		
+	<target name="download" depends="outofdate">
+		<get src="${eclipseLinuxGTKZipURL}" dest="${testBase}/${zipname}" usetimestamp="true"/>
+		<propertyfile file="${testBase}/${zipname}.properties">
+			<entry key="downurl" value="${eclipseLinuxGTKZipURL}"/>
+		</propertyfile>
 	</target>
 
 	<target name="noDefault"/>
