@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.57 $  $Date: 2005-02-16 22:04:15 $ 
+ *  $Revision: 1.58 $  $Date: 2005-02-16 22:05:57 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -565,7 +565,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 				fBeanModel = null;
 			}
 		}
-		fireStatusChanged(CodegenMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
+		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
 
 		fFile = input.getFile();		
 				
