@@ -19,6 +19,7 @@ public class SWTConstants {
 		SF_CONTROL_LOCATION,
 		SF_CONTROL_SIZE,
 		SF_CONTROL_LAYOUTDATA,		
+		SF_DECORATIONS_TEXT,		
 		SF_COMPOSITE_LAYOUT,
 		SF_COMPOSITE_CONTROLS,
 		
@@ -74,10 +75,12 @@ public class SWTConstants {
 	static {
 		SF_CONTROL_BOUNDS = URI.createURI("java:/org.eclipse.swt.widgets#Control/bounds");		 //$NON-NLS-1$
 		SF_CONTROL_LOCATION = URI.createURI("java:/org.eclipse.swt.widgets#Control/location");		 //$NON-NLS-1$
-		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$					
+		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$							
 		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$		
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
+		
+		SF_DECORATIONS_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/text");		 //$NON-NLS-1$
 		
 		SF_FILL_LAYOUT_MARGIN_HEIGHT = URI.createURI("java:/org.eclipse.swt.layout#FillLayout/marginHeight");    //$NON-NLS-1$
 		SF_FILL_LAYOUT_MARGIN_WIDTH = URI.createURI("java:/org.eclipse.swt.layout#FillLayout/marginWidth");    //$NON-NLS-1$
