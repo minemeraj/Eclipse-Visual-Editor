@@ -7,7 +7,7 @@
  */
 
 
-echo "Hello, world!";
+echo "Hello, world -- this is version 2!";
 
 if (!($f2=fopen("public/tests2.new","w+")))
                   exit("Unable to open file.");
