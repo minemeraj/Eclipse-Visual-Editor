@@ -11,21 +11,24 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-24 21:06:06 $ 
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.*;
-import org.eclipse.jem.java.impl.JavaClassImpl;
-import org.eclipse.jem.java.impl.JavaRefFactoryImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.*;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IJavaCellEditor;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 /**
@@ -33,21 +36,24 @@ import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
  * user can pick one.
  */
 public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData {
+	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.swt.LayoutCellEditor";
+	public static final int CLASSNAMES_INDEX = 0;
+	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
 	
-	protected static String[] fItems = new String[]{
-		"null" , "FillLayout" , "FormLayout" , "GridLayout" , "RowLayout"
-	};
-	protected static String[] fClassNames = new String[] {
-		"","org.eclipse.swt.layout.FillLayout",  "org.eclipse.swt.layout.FormLayout" , "org.eclipse.swt.layout.GridLayout", "org.eclipse.swt.layout.RowLayout"
-	};
+//	protected static String[] fItems = new String[]{
+//		"null" , "FillLayout" , "FormLayout" , "GridLayout" , "RowLayout"
+//	};
+//	protected static String[] fClassNames = new String[] {
+//		"","org.eclipse.swt.layout.FillLayout",  "org.eclipse.swt.layout.FormLayout" , "org.eclipse.swt.layout.GridLayout", "org.eclipse.swt.layout.RowLayout"
+//	};
 /**
  * This method shows a list of available layout manager classes from which the 
  * user can pick one.
  * For now the list is hard coded
  */
 public LayoutCellEditor(Composite aComposite){
-	super(aComposite,fItems);
+	super(aComposite, null);
 }
 /**
  * Return an EMF class that represents the constraint bean
@@ -55,9 +61,9 @@ public LayoutCellEditor(Composite aComposite){
 protected Object doGetObject(int index) {
 	if (index == sNoSelection || index == 0)
 		return null;
-	String layoutManagerClassName = fClassNames[index];
+	String layoutClassName = getLayoutItems(fEditDomain)[CLASSNAMES_INDEX][index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
-	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
+	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutClassName, rset);
 	return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 }
 
@@ -67,10 +73,11 @@ protected int doGetIndex(Object anObject){
 	if (anObject == null) {
 		return 0;
 	} else if (anObject instanceof IJavaObjectInstance) {
+		String [] classNames = getLayoutItems(fEditDomain)[CLASSNAMES_INDEX];
 		String qualifiedClassName = ((IJavaObjectInstance)anObject).getJavaType().getQualifiedName();
 		// Look for this class name in our known list 
-		for(int i=1 ; i<fClassNames.length ; i++){
-			if (qualifiedClassName.equals(fClassNames[i])){
+		for(int i=1 ; i<classNames.length ; i++){
+			if (qualifiedClassName.equals(classNames[i])){
 				return i;
 			}
 		}
@@ -79,8 +86,6 @@ protected int doGetIndex(Object anObject){
 }
 
 public String getJavaInitializationString() {
-	// TODO Are there some managers that aren't default ctor'd. If so, we need a different way 
-	// of getting the initialization string. This is only used for the customizer stuff.
 	Object v = doGetValue();
 	if (v == null)
 		return "null"; //$NON-NLS-1$
@@ -89,11 +94,12 @@ public String getJavaInitializationString() {
 		return "new " + jv.getJavaType().getQualifiedName() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
-public static String getDisplayName(String className){
+public static String getDisplayName(EditDomain editDomain, String className){
 	String dispName = null;
-	for(int i=0;i<fClassNames.length;i++){
-		if(fClassNames[i].equals(className)){
-			dispName = fItems[i];
+	String [] [] layoutinfo = getLayoutItems(editDomain);
+	for(int i=0;i<layoutinfo[CLASSNAMES_INDEX].length;i++){
+		if(layoutinfo[CLASSNAMES_INDEX][i].equals(className)){
+			dispName = layoutinfo[DISPLAYNAMES_INDEX][i];
 			break;
 		}
 	}
@@ -108,5 +114,57 @@ public String isCorrectObject(Object anObject){
 }
 public void setData(Object data){
 	fEditDomain = (EditDomain) data;
+	setItems(getLayoutItems(fEditDomain)[DISPLAYNAMES_INDEX]);
+}
+/**
+ * Get the SWT layout class names and display names from the annotations for the
+ * SWT interface org.eclipse.swt.widgets.Layout (Layout.override). Look for only those
+ * annotations with a source value of "org.eclipse.ve.LayoutInfo"
+ * 
+ * Each annotation contains two key/value pairs: key =
+ * org.eclipse.ve.internal.swt.layoutClass value = the actual layout class
+ * name (e.g. org.eclipse.swt.widgets.RowLayout)
+ * 
+ * key = org.eclipse.ve.internal.swt.layoutDisplayName value = the display name to
+ * be one of the items in the combo box list (e.g. RowLayout)
+ * 
+ * Populate the combo box items with the display names.
+ */
+public static String [][] getLayoutItems(EditDomain editDomain) {
+ // TODO - need to figure out how we NLS all the xmi override information for the layout display names
+	if (editDomain == null)
+		return null;
+	String[][] layoutLists = (String[][]) editDomain.getData(EDITDOMAINKEY_ITEMS_LIST);
+	if (layoutLists == null) {
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(editDomain);
+		JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Layout", rset);
+		if (javaClass != null) {
+			List classNames = new ArrayList();
+			List displayNames = new ArrayList();
+			List annotations = ((JavaClass) javaClass).getEAnnotations();
+			for (int i = 0; i < annotations.size(); i++) {
+				if (((EAnnotation) annotations.get(i)).getSource().equals("org.eclipse.ve.LayoutInfo")) {
+					EMap details = ((EAnnotation) annotations.get(i)).getDetails();
+					String layoutClassName = (String) details.get("org.eclipse.ve.internal.swt.layoutClass");
+					String layoutDisplayName = (String) details.get("org.eclipse.ve.internal.swt.layoutDisplayName");
+					if (layoutClassName != null && layoutDisplayName != null) {
+						classNames.add(layoutClassName);
+						displayNames.add(layoutDisplayName);
+					}
+				}
+			}
+			if (classNames.size() > 0) {
+				layoutLists = new String [2][];
+				layoutLists[CLASSNAMES_INDEX] = new String[classNames.size() + 1];
+				layoutLists[CLASSNAMES_INDEX][0] = "";
+				layoutLists[DISPLAYNAMES_INDEX]  = new String[displayNames.size() + 1];
+				layoutLists[DISPLAYNAMES_INDEX][0] = "null";
+				System.arraycopy(classNames.toArray(new String [classNames.size()]), 0, layoutLists[CLASSNAMES_INDEX], 1, classNames.size());
+				System.arraycopy(displayNames.toArray(new String [displayNames.size()]), 0, layoutLists[DISPLAYNAMES_INDEX], 1, displayNames.size());
+				editDomain.setData(EDITDOMAINKEY_ITEMS_LIST, layoutLists);
+			}
+		}
+	}
+	return layoutLists;
 }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" 
+    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:org.eclipse.jem.java="java.xmi" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:event="event.xmi">
+  <event:AddMany featureName="eAnnotations">
+	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
+		<details key="org.eclipse.ve.internal.swt.layoutClass"
+			value="org.eclipse.swt.layout.FillLayout"/>
+		<details key="org.eclipse.ve.internal.swt.layoutDisplayName"
+			value="FillLayout"/>
+	</addedEObjects>
+	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
+		<details key="org.eclipse.ve.internal.swt.layoutClass"
+			value="org.eclipse.swt.layout.FormLayout"/>
+		<details key="org.eclipse.ve.internal.swt.layoutDisplayName"
+			value="FormLayout"/>
+	</addedEObjects>
+	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
+		<details key="org.eclipse.ve.internal.swt.layoutClass"
+			value="org.eclipse.swt.layout.GridLayout"/>
+		<details key="org.eclipse.ve.internal.swt.layoutDisplayName"
+			value="GridLayout"/>
+	</addedEObjects>
+	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
+		<details key="org.eclipse.ve.internal.swt.layoutClass"
+			value="org.eclipse.swt.layout.RowLayout"/>
+		<details key="org.eclipse.ve.internal.swt.layoutDisplayName"
+			value="RowLayout"/>
+	</addedEObjects>
+  </event:AddMany>
+
+</xmi:XMI>
