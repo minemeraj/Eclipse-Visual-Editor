@@ -11,13 +11,13 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContentsGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-10 21:04:27 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-16 17:54:37 $ 
  */
 
 import org.eclipse.draw2d.*;
-import org.eclipse.gef.*;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.tools.DeselectAllTracker;
 /**
  * CDE Contents (Freeform surface) Graphical Edit Part.
@@ -26,7 +26,7 @@ import org.eclipse.gef.tools.DeselectAllTracker;
  * freeform surface, such as positioning, zooming, ...
  */
 
-public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart implements LayerManager {
+public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart  {
 		
 /**
  * Set the figure's layout manager to be an XYFlowLayout.
@@ -45,10 +45,6 @@ protected IFigure createFigure() {
 		// Need to return a de-selection tracker for the contents edit part
 		// so the free form doesn't scroll to position 0,0
 		return new DeselectAllTracker(this);
-	}
-	
-	public IFigure getLayer(Object key) {
-		return super.getLayer(key);
 	}
 
 }
