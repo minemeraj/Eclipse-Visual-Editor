@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.ve.tests"
+      label="%featureName"
+      version="0.5.0"
+      provider-name="%featureProvider"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://update.eclipse.org/updates"/>
+   </url>
+
+   <requires>
+      <import feature="org.eclipse.ve" version="0.5.0"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.ve.tests"
+         download-size="0"
+         install-size="0"
+         version="0.5.0"/>
+
+</feature>
