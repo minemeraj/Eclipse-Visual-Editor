@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-02 17:39:05 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,7 +51,7 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 		addPage(fPage);
 		fPage.init(getSelection());
 		fPage.setSuperClass("javax.swing.JFrame",false); //$NON-NLS-1$
-		fPage.setTypeName(fExampleClassName,false);
+		fPage.setTypeName(fExampleClassName,true);
 		fPage.setPluginName(fPluginName) ;
 	}	
 
@@ -70,9 +70,13 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 	
 	public void setInitializationData(IConfigurationElement element,String string,Object object){
 		if ( object instanceof String ) {
-			fPluginName = element.getDeclaringExtension().getNamespace();
-			fExampleClassName = (String) object;
+			setInitializationData(element.getDeclaringExtension().getNamespace(), (String) object);
 		}			
+	}
+	
+	public void setInitializationData(String pluginName, String exampleClassName){
+		fPluginName = pluginName;
+		fExampleClassName = exampleClassName;
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#canRunForked()
