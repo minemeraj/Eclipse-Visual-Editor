@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-07 14:30:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-07 16:05:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -120,8 +120,11 @@ protected void mergeStyleBits(List propertyDescriptors, EClass eClass){
 		String[] initStrings = (String[])sweetValues[1];	
 		Integer[] values = (Integer[])sweetValues[2];
 		
-		// If there is just one value then add another with a name of NONE and value of -1
+		// If there is just one value then change this to be ON and add another one with OFF
+		// The propertyName is also changed to be the first name
+		// This is for style bits like SWT.BORDER that become called "BORDER" with "ON" and "OFF";
 		if(names.length == 1){
+			propertyName = names[0];
 			names = new String[] { "true" , "false" };
 			initStrings = new String[] { initStrings[0] , "" };
 			values = new Integer[] { values[0] , new Integer(-1) };
