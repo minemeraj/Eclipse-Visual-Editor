@@ -25,5 +25,9 @@
   <includes id="org.eclipse.jem.source" version="1.0.0" />  
   <includes id="org.eclipse.ve.source" version="1.0.0" /> 
  
-  
+  <plugin
+      id="org.eclipse.ve.sdk"
+      download-size="0"
+      install-size="0"
+      version="1.0.0"/>
 </feature>
