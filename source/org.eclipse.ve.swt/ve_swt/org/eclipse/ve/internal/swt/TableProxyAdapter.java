@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-03-16 23:03:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-21 20:02:04 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,11 +18,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
+
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+
 import org.eclipse.ve.internal.java.core.*;
 
 /**
@@ -33,20 +34,29 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 
 	protected IMethodProxy headHeightMethodProxy;
 
-	protected IMethodProxy removeColumnMethodProxy;
-
 	private EReference sf_columns;
 
 	public TableProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
 
+	/*
+	 * Iterate over the table columns to reinstantiate them on the Table.
+	 */
+	protected void applyColumns() {
+		List columns = (List) ((EObject) getTarget()).eGet(sf_columns);
+		Iterator iter = columns.iterator();
+		while (iter.hasNext()) {
+			IJavaObjectInstance column = (IJavaObjectInstance) iter.next();
+			IBeanProxyHost columnBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(column);
+			columnBeanProxyHost.instantiateBeanProxy();
+		}
+	}
+
 	protected void applied(EStructuralFeature as, Object newValue, int position) {
 		super.applied(as, newValue, position);
 		if (as == sf_columns) {
-			IBeanProxyHost valueProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) newValue);
-			valueProxyHost.instantiateBeanProxy();
-			revalidateBeanProxy();
+			reapplyColumns();
 		} else {
 			super.applied(as, newValue, position);
 		}
@@ -54,8 +64,7 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 
 	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
 		if (sf == sf_columns && oldValue instanceof IJavaObjectInstance) {
-			IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)oldValue);
-			controlProxyHost.releaseBeanProxy();
+			removeColumn((IJavaObjectInstance) oldValue);
 			revalidateBeanProxy();
 		} else
 			super.canceled(sf, oldValue, position);
@@ -73,12 +82,52 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 			return (IIntegerBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-					IIntegerBeanProxy intProxy = (IIntegerBeanProxy)getHeaderHeightMethodProxy().invoke(getBeanProxy());
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) getHeaderHeightMethodProxy().invoke(getBeanProxy());
 					return intProxy;
 				}
 			});
 		} else
 			return null;
+	}
+
+	public void releaseBeanProxy() {
+		// Need to release all of the table columns. This is because they will be implicitly disposed anyway when super
+		// gets called because the target VM will dispose them as children
+		List columns = (List) ((IJavaObjectInstance) getTarget()).eGet(sf_columns);
+		Iterator iter = columns.iterator();
+		while (iter.hasNext()) {
+			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) iter.next());
+			if (value != null)
+				value.releaseBeanProxy();
+		}
+		super.releaseBeanProxy();
+	}
+
+	protected void reapplyColumns() {
+		removeColumns();
+		applyColumns();
+		revalidateBeanProxy();
+	}
+
+	protected void removeColumn(IJavaObjectInstance aColumn) {
+		// Dispose the column
+		IBeanProxyHost columnProxyHost = BeanProxyUtilities.getBeanProxyHost(aColumn);
+		columnProxyHost.releaseBeanProxy();
+	}
+
+	/*
+	 * Remove all of the columns from the Table.
+	 */
+	protected void removeColumns() {
+		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
+			return;
+
+		List columns = (List) ((EObject) getTarget()).eGet(sf_columns);
+		Iterator iter = columns.iterator();
+		while (iter.hasNext()) {
+			removeColumn((IJavaObjectInstance) iter.next());
+		}
+		revalidateBeanProxy();
 	}
 
 	public void setTarget(Notifier newTarget) {
@@ -88,16 +137,4 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 		}
 	}
 
-	public void releaseBeanProxy() {
-		// Need to release all of the table columns.  This is because they will be implicitly disposed anyway when super
-		// gets called because the target VM will dispose them as children
-		List columns = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_columns);
-		Iterator iter = columns.iterator();
-		while(iter.hasNext()){
-			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)iter.next());
-			if (value != null)
-				value.releaseBeanProxy();
-		}
-		super.releaseBeanProxy();
-	}
 }
