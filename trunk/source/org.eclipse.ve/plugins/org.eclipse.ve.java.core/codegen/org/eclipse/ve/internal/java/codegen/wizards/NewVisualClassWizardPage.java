@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.5 $  $Date: 2004-07-15 13:01:44 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-16 16:22:18 $ 
  */
 
 import java.util.HashMap;
@@ -92,7 +92,8 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		styleTreeViewer.setLabelProvider(new StyleTreeLabelProvider());
 		styleTreeViewer.setSorter(new TreePrioritySorter());
 		setTreeState();
-		styleTreeViewer.setSelection(new StructuredSelection(selectedElement), true);
+		if (selectedElement != null)	// we may have no selected element initially
+			styleTreeViewer.setSelection(new StructuredSelection(selectedElement), true);
 
 		styleTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
