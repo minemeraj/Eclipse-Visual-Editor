@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-16 20:29:43 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-20 15:58:49 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -181,7 +181,7 @@ public abstract class AbstractCompositeDecoder extends SWTControlDecoder {
 	protected boolean isMethodNamePresent(String methodName) {
 		String method = null;
 		if (fFeatureMapper != null)
-			if (fFeatureMapper.getDecorator() != null)
+			if (fFeatureMapper.getDecorator() != null && fFeatureMapper.getDecorator().getWriteMethod() !=null)
 				method = fFeatureMapper.getDecorator().getWriteMethod().getName();
 			else
 				// Specelized Feature mappers may be able to get it anyhow.

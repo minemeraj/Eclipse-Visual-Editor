@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-20 15:58:42 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -24,7 +24,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
  *  An IFeatureMapper is a IExpressionDecoder helper which comes
  *  to provide java method to PropertyDecorator/SF mapping (and vice versa)
  */
-public interface IJavaFeatureMapper {
+public interface IJavaFeatureMapper  {
 	
 	public static String  CONSTRAINT_FEATURE_NAME = "constraints" ; //$NON-NLS-1$
 	public static String  COMPONENT_FEATURE_NAME = "components" ; //$NON-NLS-1$
