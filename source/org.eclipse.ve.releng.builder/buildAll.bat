@@ -43,6 +43,8 @@ if x%1==x-ftp set ftpUser=-DftpUser=%2 && ftpPassword=-DftpPassword=%3 && shift 
 set buildType=%1 && shift && goto processcmdlineargs
 
 :run
+if x%buildType%==x goto usage
+
 %vm% -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml %target% %bootclasspath% -DmapVersionTag=%mapVersionTag% -DbuildType=%buildType% %buildID% %ftpUser% %ftpPassword%
 goto end
 
