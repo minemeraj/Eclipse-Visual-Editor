@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-24 21:30:11 $ 
  */
 
 import java.util.*;
@@ -261,7 +261,11 @@ class EventsInvocationAndListenerEditPolicy extends AbstractEditPolicy {
 						PropertyChangeEventInvocation propChangeEventInvocation = (PropertyChangeEventInvocation)propertyEvent.eContainer();
 						// Remove the PropertyEvent from the event invocation
 						// We don't delete the event invocation, and this way the listener being added still remains in the model, tree and JavaSource
-						propChangeEventInvocation.getProperties().remove(propertyEvent);
+						// Bugzilla Bug 47367 - If there is more than one property event for the same listener being deleted together
+						// this caused an NPE so we need to check for null
+						if(propChangeEventInvocation != null){
+							propChangeEventInvocation.getProperties().remove(propertyEvent);							
+						}
 					}
 				};
 				return result;						
