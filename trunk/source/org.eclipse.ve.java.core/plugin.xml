@@ -478,8 +478,11 @@
             parentCategory="org.eclipse.ui.Examples"
             id="org.eclipse.ve.java.core.examples">
       </category>
-      <wizard
+<!--
+   Eclipse 3.1 - not sure how to fix this but removed the following statement from after the <wizard statement
             javatype="true"
+-->
+      <wizard
             name="%visualclass"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
             category="org.eclipse.jdt.ui.java"
