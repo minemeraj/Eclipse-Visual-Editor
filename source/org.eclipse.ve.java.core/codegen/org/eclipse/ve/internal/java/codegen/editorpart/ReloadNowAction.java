@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadNowAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -29,7 +29,7 @@ public class ReloadNowAction extends Action {
 	/**
 	 * Action ID for Reload action.
 	 */
-	public static final String RELOADNOW_ACTION_ID = "org.eclipse.ve.java.core.ReloadNow";
+	public static final String RELOADNOW_ACTION_ID = "org.eclipse.ve.java.core.ReloadNow"; //$NON-NLS-1$
 
 	protected ReloadAction.IReloadCallback reloadCallback;
 	

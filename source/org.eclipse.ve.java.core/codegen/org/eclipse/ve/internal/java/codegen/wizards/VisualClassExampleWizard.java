@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.wizards;
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -77,18 +77,18 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 	}
 	
 	public void setInitializationData(IConfigurationElement element,String string,Object object){
-		if(!"class".equals(string))
+		if(!"class".equals(string)) //$NON-NLS-1$
 			return;
 		if ( object instanceof String ) {
 			setInitializationData(element.getDeclaringExtension().getNamespace(), (String) object);
 		}else if(object instanceof Hashtable){
 			Hashtable hash = (Hashtable) object;
-			if(hash.containsKey("exampleFile"))
-				fExampleClassName = (String) hash.get("exampleFile");
-			if(hash.containsKey("classpathContainerPlugin"))
-				fContainerPlugin = (String) hash.get("classpathContainerPlugin");
-			if(hash.containsKey("classpathContainerName"))
-				fContainerName = (String) hash.get("classpathContainerName");
+			if(hash.containsKey("exampleFile")) //$NON-NLS-1$
+				fExampleClassName = (String) hash.get("exampleFile"); //$NON-NLS-1$
+			if(hash.containsKey("classpathContainerPlugin")) //$NON-NLS-1$
+				fContainerPlugin = (String) hash.get("classpathContainerPlugin"); //$NON-NLS-1$
+			if(hash.containsKey("classpathContainerName")) //$NON-NLS-1$
+				fContainerName = (String) hash.get("classpathContainerName"); //$NON-NLS-1$
 			setInitializationData(element.getDeclaringExtension().getNamespace(), fExampleClassName, fContainerPlugin, fContainerName);
 		}
 	}

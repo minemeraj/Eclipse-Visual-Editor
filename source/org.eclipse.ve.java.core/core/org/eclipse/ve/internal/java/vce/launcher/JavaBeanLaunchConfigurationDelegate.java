@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 
@@ -131,22 +131,22 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// Now add in ours.
 	
 	// TODO: remove SWT hack
-	if (configuration.getAttribute("isSWT", false)) {
+	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
 		// Add in the SWT lib if the user hasn't added it already
-		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) {
-			String swtLib = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(Platform.getBundle("org.eclipse.swt"), "$os$");
+		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) { //$NON-NLS-1$
+			String swtLib = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(Platform.getBundle("org.eclipse.swt"), "$os$"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (swtLib != null) {
 				// chop off the beginning / if there is one on Windows
 				if (Platform.getOS().equals(Platform.OS_WIN32) && swtLib.charAt(0) == '/') {
 					swtLib = swtLib.substring(1);
 				}
-				args.append(" -Djava.library.path=\"" + swtLib + "\"");
-				launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME;
+				args.append(" -Djava.library.path=\"" + swtLib + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+				launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 			}
 		}
 	}
 	
-	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$
+	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	// We always launch the program javaBeansLauncher on the target VM and we give it details about which JavaBean to test,
 	// which look and feel to use, etc... in arguments, e.g. to test the java.awt.Button the args would be
@@ -156,7 +156,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	args.append(" -Dvce.launcher.class=" + javaBeanName); //$NON-NLS-1$
 	// Set the look and feel to the one the user specified in the configuration
 	String lookAndFeelClass = configuration.getAttribute(VCEPreferences.SWING_LOOKANDFEEL, ""); //$NON-NLS-1$
-	if(lookAndFeelClass.equals("")){
+	if(lookAndFeelClass.equals("")){ //$NON-NLS-1$
 		lookAndFeelClass = VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.SWING_LOOKANDFEEL);		
 	}
 	if ( !lookAndFeelClass.equals("") ) { //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SwingApplicationSourceContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 package org.eclipse.ve.internal.java.codegen.wizards.contributors;
@@ -42,7 +42,7 @@ public boolean needsFormatting() {
  * @see org.eclipse.ve.internal.java.core.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
  */
 public URL getTemplateLocation() {
-	return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/SwingApplicationSourceTemplate.javajet"));
+	return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/SwingApplicationSourceTemplate.javajet")); //$NON-NLS-1$
 }
 
 

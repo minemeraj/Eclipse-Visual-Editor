@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanSearchEngine.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -66,17 +66,17 @@ public class JavaBeanSearchEngine {
 					else if (method.getNumberOfParameters() == 1) {
 						// Possible SWT control.
 						String parmType = Signature.toString(method.getParameterTypes()[0]);
-						if ("Composite".equals(parmType) || "org.eclipse.swt.widgets.Composite".equals(parmType)) {
-							if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control"))
+						if ("Composite".equals(parmType) || "org.eclipse.swt.widgets.Composite".equals(parmType)) { //$NON-NLS-1$ //$NON-NLS-2$
+							if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control")) //$NON-NLS-1$ //$NON-NLS-2$
 								return true;
 						}
 					} else if (method.getNumberOfParameters() == 2) {
 						// Possible SWT control.
 						String[] parmTypes = method.getParameterTypes();
-						if ("int".equals(Signature.toString(parmTypes[1]))) {
+						if ("int".equals(Signature.toString(parmTypes[1]))) { //$NON-NLS-1$
 							String p1Type = Signature.toString(parmTypes[0]);
-							if ("Composite".equals(p1Type) || "org.eclipse.swt.widgets.Composite".equals(p1Type)) {
-								if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control"))
+							if ("Composite".equals(p1Type) || "org.eclipse.swt.widgets.Composite".equals(p1Type)) { //$NON-NLS-1$ //$NON-NLS-2$
+								if (inheritsFrom(type, "org.eclipse.swt.widgets", "Control")) //$NON-NLS-1$ //$NON-NLS-2$
 									return true;
 							}
 						}

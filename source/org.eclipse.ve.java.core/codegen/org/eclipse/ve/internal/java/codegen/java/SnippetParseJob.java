@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -45,7 +45,7 @@ public class SnippetParseJob extends ReverseParserJob {
 	private IEditorUpdateState		editorState;
 	private List 					docEvents;
     private EditDomain fEditDomain;
-    public static final String SNIPPET = "SNIPPET";
+    public static final String SNIPPET = "SNIPPET"; //$NON-NLS-1$
 	
 	/**
 	 * @param file

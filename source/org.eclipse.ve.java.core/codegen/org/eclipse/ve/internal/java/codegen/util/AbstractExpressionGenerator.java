@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -40,7 +40,7 @@ public abstract class AbstractExpressionGenerator {
 	protected   String			finitbeanType = null;
 	protected	String			finitbeanName = null ;		// Initialized Bean
 	protected   String[]		finitbeanArgs = null ;		// Init constructor args.
-	protected	String			fIndent = "\t";
+	protected	String			fIndent = "\t"; //$NON-NLS-1$
 	
 	
 	
@@ -81,7 +81,7 @@ public abstract class AbstractExpressionGenerator {
 	protected abstract AbstractExpressionGenerator.ExprInfo getInfo();
 
 	public String toString() {
-		return super.toString() + ": " + finitbeanName ;
+		return super.toString() + ": " + finitbeanName ; //$NON-NLS-1$
 	}
 
 

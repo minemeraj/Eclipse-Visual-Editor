@@ -18,7 +18,7 @@ import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.11 $  $Date: 2005-03-07 22:54:31 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-05 22:48:22 $ 
  */
 /**
  * @version 	1.0
@@ -34,8 +34,8 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     
     public final static String ANNOTATION_PREFIX = "  "+ANNOTATION_START ; //$NON-NLS-1$
     
-    String positionString = "";
-    String parseString = "";
+    String positionString = ""; //$NON-NLS-1$
+    String parseString = ""; //$NON-NLS-1$
     
     /**
      * Constructor for FreeFormAnnotationTemplate.
@@ -52,7 +52,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     
     public void setPosition (Point point) {
     	if(point==null)
-    		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\"";
+    		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\""; //$NON-NLS-1$
     	else
     		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
                    "\""+Integer.toString(point.x)+","+Integer.toString(point.y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -287,7 +287,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
 	protected String determineContent() {
 		String content = parseString;
 		if(content!=null && content.length()>0 && positionString!=null && positionString.length()>0)
-			content = content + "," ;
+			content = content + "," ; //$NON-NLS-1$
 		content = content + positionString;
 		return content;
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -199,15 +199,15 @@ public class TypeResolver {
 	private static final Map STANDARD;
 	static {
 		STANDARD = new HashMap();
-		STANDARD.put("int", new ResolvedType(null, "int"));
-		STANDARD.put("float", new ResolvedType(null, "float"));
-		STANDARD.put("double", new ResolvedType(null, "double"));
-		STANDARD.put("short", new ResolvedType(null, "short"));
-		STANDARD.put("long", new ResolvedType(null, "long"));
-		STANDARD.put("boolean", new ResolvedType(null, "boolean"));
-		STANDARD.put("byte", new ResolvedType(null, "byte"));
-		STANDARD.put("char", new ResolvedType(null, "char"));
-		STANDARD.put("void", new ResolvedType(null, "void"));
+		STANDARD.put("int", new ResolvedType(null, "int")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("float", new ResolvedType(null, "float")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("double", new ResolvedType(null, "double")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("short", new ResolvedType(null, "short")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("long", new ResolvedType(null, "long")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("boolean", new ResolvedType(null, "boolean")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("byte", new ResolvedType(null, "byte")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("char", new ResolvedType(null, "char")); //$NON-NLS-1$ //$NON-NLS-2$
+		STANDARD.put("void", new ResolvedType(null, "void")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/*
@@ -485,13 +485,13 @@ public class TypeResolver {
 		this.importDecls = new ArrayList(importDecls.length+1);
 		boolean javalangExists = false;
 		for (int i = 0; i < importDecls.length; i++) {
-			if (importDecls[i].getElementName().equals("java.lang.*"))
+			if (importDecls[i].getElementName().equals("java.lang.*")) //$NON-NLS-1$
 				javalangExists = true;
 			this.importDecls.add(new ImportDecl(importDecls[i], javaProject));
 		}
 		if (!javalangExists) {
 			// Finally add the java.lang.* implicit.
-			this.importDecls.add(new ImportDecl("java.lang"));
+			this.importDecls.add(new ImportDecl("java.lang")); //$NON-NLS-1$
 		}
 	}
 	
@@ -509,13 +509,13 @@ public class TypeResolver {
 		boolean javalangExists = false;
 		for (int i = 0; i < size; i++) {
 			ImportDeclaration importDeclaration = (ImportDeclaration) importDecls.get(i);
-			if (importDeclaration.isOnDemand() && importDeclaration.getName().getFullyQualifiedName().equals("java.lang"))
+			if (importDeclaration.isOnDemand() && importDeclaration.getName().getFullyQualifiedName().equals("java.lang")) //$NON-NLS-1$
 				javalangExists = true;
 			this.importDecls.add(new ImportDecl(importDeclaration, javaProject));
 		}
 		if (!javalangExists) {
 			// Finally add the java.lang.* implicit.
-			this.importDecls.add(new ImportDecl("java.lang"));
+			this.importDecls.add(new ImportDecl("java.lang")); //$NON-NLS-1$
 		}
 	}	
 	
@@ -764,7 +764,7 @@ public class TypeResolver {
 	 */
 	private synchronized void addImport(IImportDeclaration iid) {
 		String importName = iid.isOnDemand() ? iid.getElementName().substring(0, iid.getElementName().length()-2) : iid.getElementName();
-		if (iid.isOnDemand() && importName.equals("java.lang"))
+		if (iid.isOnDemand() && importName.equals("java.lang")) //$NON-NLS-1$
 			return;	// We already have java.lang.
 		for (int i = 0; i < importDecls.size(); i++) {
 			ImportDecl id = (ImportDecl) importDecls.get(i);
@@ -789,7 +789,7 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public synchronized void addImport(String importName, boolean onDemand) {
-		if (onDemand && importName.equals("java.lang"))
+		if (onDemand && importName.equals("java.lang")) //$NON-NLS-1$
 			return;	// We already have java.lang.
 		for (int i = 0; i < importDecls.size(); i++) {
 			ImportDecl id = (ImportDecl) importDecls.get(i);
@@ -851,7 +851,7 @@ public class TypeResolver {
 					IImportDeclaration iid = (IImportDeclaration) imports[i];
 					// Get the element name, strip off ".*" if necessary.
 					String importName = iid.isOnDemand() ? iid.getElementName().substring(0, iid.getElementName().length()-2) : iid.getElementName();
-					if (iid.isOnDemand() && importName.equals("java.lang"))
+					if (iid.isOnDemand() && importName.equals("java.lang")) //$NON-NLS-1$
 						javalangExists = true;
 					// See if this import is currently in the list.
 					boolean movedit = false;
@@ -874,7 +874,7 @@ public class TypeResolver {
 					// It wasn't explicit in the new container so we need to move it over.
 					for (int i = 0; i < importDecls.size(); i++) {
 						ImportDecl id = (ImportDecl) importDecls.get(i);
-						if (id.isOnDemand() && id.getFullyQualifiedName().equals("java.lang")) {
+						if (id.isOnDemand() && id.getFullyQualifiedName().equals("java.lang")) { //$NON-NLS-1$
 							newContainer.add(id);
 							importDecls.remove(i);
 							break;
@@ -947,13 +947,13 @@ public class TypeResolver {
 		// There is no import container now, so clear everything from the old except java.lang.
 		for (Iterator itr = namesToResolvedTypes.values().iterator(); itr.hasNext();) {
 			ResolvedType rt = (ResolvedType) itr.next();
-			if (rt.resolvedThru instanceof ImportDecl && !((ImportDecl) rt.resolvedThru).getFullyQualifiedName().equals("java.lang"))
+			if (rt.resolvedThru instanceof ImportDecl && !((ImportDecl) rt.resolvedThru).getFullyQualifiedName().equals("java.lang")) //$NON-NLS-1$
 				itr.remove();	// This was resolved thru an import decl, so it goes away.
 		}
 		// Find the java.lang, keep it out, then clear and add it back.
 		ImportDecl jl = null;
 		for (int i = 0; i < importDecls.size(); i++) {
-			if (((ImportDecl) importDecls.get(i)).getFullyQualifiedName().equals("java.lang")) {
+			if (((ImportDecl) importDecls.get(i)).getFullyQualifiedName().equals("java.lang")) { //$NON-NLS-1$
 				jl = (ImportDecl) importDecls.get(i);
 				break;
 			}
@@ -1409,7 +1409,7 @@ public class TypeResolver {
 	 * and the most right will be first.
 	 */
 	private NamesList decomposeName(String name) {
-		StringTokenizer st = new StringTokenizer(name, ".");
+		StringTokenizer st = new StringTokenizer(name, "."); //$NON-NLS-1$
 		NamesList names = new NamesList(st.countTokens());
 		while (st.hasMoreTokens()) {
 			names.add(0, st.nextToken());
@@ -1494,7 +1494,7 @@ public class TypeResolver {
 			int dims = at.getDimensions();
 			int rdims = dims;
 			while (dims-- > 0) {
-				st.append("[]");
+				st.append("[]"); //$NON-NLS-1$
 			}
 			return new ResolvedArrayType(finalType, rdims, st.toString());
 		} else if (type.isQualifiedType()) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -160,7 +160,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		// Insert code to print the receiver here.
 		// This implementation forwards the message to super.
 		// You may replace or supplement this.
-		return (super.toString() + ":\n\t" + fExpr != null ? fExpr.toString() : "?"); //$NON-NLS-1$
+		return (super.toString() + ":\n\t" + fExpr != null ? fExpr.toString() : "?"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

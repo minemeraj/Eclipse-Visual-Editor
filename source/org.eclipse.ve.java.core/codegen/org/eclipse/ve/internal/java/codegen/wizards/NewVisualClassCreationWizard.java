@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.24 $  $Date: 2005-04-04 22:19:22 $ 
+ *  $Revision: 1.25 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	protected void updateContributor(VisualElementModel elementModel) {
 		if (elementModel != null && elementModel.getConfigElement() != null) {
 			IConfigurationElement celm = elementModel.getConfigElement();
-			if ((celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0)) {
+			if ((celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0)) { //$NON-NLS-1$ //$NON-NLS-2$
 				try {
 					contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
 					if (contributor != null) {
@@ -299,7 +299,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		// Store the selected VisualElementModel if one is selected.
 		if (fPage.getSelectedElement() != null)
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, getSelectedElementStringValue(fPage.getSelectedElement()));
-		monitor.beginTask("",300);
+		monitor.beginTask("",300); //$NON-NLS-1$
 		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor
 		// Check for a class path container or plugin id this extension needs in this source folder
 		if (fPage.getSelectedElement() != null && (fPage.getSelectedElement().getContainer() != null || fPage.getSelectedElement().getPluginId() != null)) {
@@ -323,7 +323,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @since 1.0.0
 	 */
 	protected void verifyProjectClassPath(VisualElementModel elementModel, IProgressMonitor monitor) {
-		monitor.beginTask("", 100);
+		monitor.beginTask("", 100); //$NON-NLS-1$
 		try {
 			if (elementModel == null)
 				return;
@@ -428,8 +428,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	}
 	protected String getSelectedElementStringValue (VisualElementModel vem) {
 		if (vem != null) {
-			return vem.getCategory() + "-" + vem.getName() + "-" + fPage.getSuperClass(); 
+			return vem.getCategory() + "-" + vem.getName() + "-" + fPage.getSuperClass();  //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

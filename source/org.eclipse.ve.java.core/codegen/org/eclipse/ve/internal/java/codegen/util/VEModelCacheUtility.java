@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -79,7 +79,7 @@ public class VEModelCacheUtility {
 	
 	protected static IPath getCachedPath(IFile f) {
 		IPath savedPath = getCacheDirectory(f).append(f.getProjectRelativePath());
-		return savedPath.removeLastSegments(1).append(savedPath.lastSegment().substring(0,savedPath.lastSegment().indexOf('.'))+".xmi");
+		return savedPath.removeLastSegments(1).append(savedPath.lastSegment().substring(0,savedPath.lastSegment().indexOf('.'))+".xmi"); //$NON-NLS-1$
 	}
 	
 	public static URI getCacheURI (IFile f) {

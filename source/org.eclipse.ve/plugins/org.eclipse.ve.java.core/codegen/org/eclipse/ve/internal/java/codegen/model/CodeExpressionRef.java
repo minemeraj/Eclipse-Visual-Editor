@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.41 $  $Date: 2005-04-04 23:11:29 $ 
+ *  $Revision: 1.42 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 
@@ -638,11 +638,11 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 						String iname = cuImports[j].getElementName();
 						// check to see if this is a a.b.c.* type of an import
 						boolean star = false ;
-						StringTokenizer tk = new StringTokenizer(iname,".");
+						StringTokenizer tk = new StringTokenizer(iname,"."); //$NON-NLS-1$
 						String lastSeg = iname ;
 						while (tk.hasMoreElements())
 							lastSeg=tk.nextToken();
-						if (lastSeg == "*") {
+						if (lastSeg == "*") { //$NON-NLS-1$
 							star = true;
 							iname = iname.substring(0,iname.length()-lastSeg.length());
 						}
@@ -706,7 +706,7 @@ public void refreshAST() {
 		
         if (s[0] ==null) {
         	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-        		JavaVEPlugin.log("CodeExpressionRef.refreshAST(): could notrefresh "+getContent(),Level.WARNING);
+        		JavaVEPlugin.log("CodeExpressionRef.refreshAST(): could notrefresh "+getContent(),Level.WARNING); //$NON-NLS-1$
         } else
             fexpStmt = s[0];	
 }
@@ -835,7 +835,7 @@ public String getMethodNameContent(){
 				if(assgn.getLeftHandSide() instanceof QualifiedName){
 					QualifiedName qn = (QualifiedName) assgn.getLeftHandSide();
 					if(qn.getName()!=null)
-						content = qn.getName().toString()+"."+content;
+						content = qn.getName().toString()+"."+content; //$NON-NLS-1$
 				}
 				return content;
 			}

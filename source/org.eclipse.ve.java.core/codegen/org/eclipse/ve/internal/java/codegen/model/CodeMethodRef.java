@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.24 $  $Date: 2005-04-04 19:33:59 $ 
+ *  $Revision: 1.25 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.util.*;
@@ -736,7 +736,7 @@ public void restore() {
 				return;
 			}
 		}
-		JavaVEPlugin.log("should not be here",Level.SEVERE);
+		JavaVEPlugin.log("should not be here",Level.SEVERE); //$NON-NLS-1$
 	}
 	
 }

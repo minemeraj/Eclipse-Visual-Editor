@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.22 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.23 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.util.Map;
@@ -38,8 +38,8 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
 	public static final String VE_BUILDER_ID = "org.eclipse.ve.java.core.vebuilder"; //$NON-NLS-1$
-	public static final String VE_CACHE_ROOT_NAME = ".cache";
-	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME); 
+	public static final String VE_CACHE_ROOT_NAME = ".cache"; //$NON-NLS-1$
+	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME);  //$NON-NLS-1$
 	public static final String VE_PROJECT_MODEL_CACHE_ROOT = VE_CACHE_ROOT_NAME+"/emfmodel"; //$NON-NLS-1$ 
 	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
 	// ID of the registrations extension point.

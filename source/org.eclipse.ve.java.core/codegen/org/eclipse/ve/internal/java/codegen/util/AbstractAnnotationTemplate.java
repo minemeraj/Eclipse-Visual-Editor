@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: AbstractAnnotationTemplate.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-05 22:48:22 $ 
  */
 /**
  * @version 	1.0
@@ -21,7 +21,7 @@ public abstract class AbstractAnnotationTemplate {
     
 	
 final public static String ANNOTATION_SEPERATOR = ":";	//$NON-NLS-1$
-final public static String ANNOTATION_SIG 	=	"@jve"+ANNOTATION_SEPERATOR ;
+final public static String ANNOTATION_SIG 	=	"@jve"+ANNOTATION_SEPERATOR ; //$NON-NLS-1$
 // TODO No Support, yet for multi line def, so just stick it here
 final public static String VISUAL_INFO_DECL    = "decl-index=" ; //$NON-NLS-1$
 final public static String VISUAL_INFO_TYPE	=	VISUAL_INFO_DECL+"0" ; //$NON-NLS-1$

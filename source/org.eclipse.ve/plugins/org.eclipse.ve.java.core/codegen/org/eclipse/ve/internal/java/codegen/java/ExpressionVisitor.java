@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.21 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.22 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -351,7 +352,7 @@ protected void processLocalDeclarations() {
  *  Go for it
  */
 public void visit(){
-	getProgressMonitor().subTask(fMethod.getTypeRef().getSimpleName()+" : "+fMethod.getMethodName()+"()"+" : "+fExpression.getCodeContent());
+	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("ExpressionVisitor.TypeMethodExpression"), new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fExpression.getCodeContent()})); //$NON-NLS-1$
 	if (fExpression.getExprStmt() instanceof ExpressionStatement) {
 			Expression exp = ((ExpressionStatement) fExpression.getExprStmt()).getExpression();
 			if (exp instanceof MethodInvocation)

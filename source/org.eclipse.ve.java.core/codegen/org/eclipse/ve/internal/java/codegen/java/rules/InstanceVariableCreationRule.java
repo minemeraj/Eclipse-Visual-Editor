@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-05 22:48:23 $ 
  */
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.*;
@@ -67,7 +67,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	 * @since 1.0.0
 	 */
 	public static boolean getDefaultBooleanValue(EClassifier aClass, EStructuralFeature sf){
-		EAnnotation decr = ClassDecoratorFeatureAccess.getDecoratorWithFeature(aClass, "codegen.CodeGenHelperClass", sf);
+		EAnnotation decr = ClassDecoratorFeatureAccess.getDecoratorWithFeature(aClass, "codegen.CodeGenHelperClass", sf); //$NON-NLS-1$
 		if(decr!=null){
 			Boolean visual = (Boolean) decr.eGet(sf);
 			if(visual!=null)
@@ -94,7 +94,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	public static boolean isModelled(EClassifier aClass, ResourceSet rs){
 		if (rs == null || aClass == null)
 			return false;
-		return getDefaultBooleanValue(aClass, getStructuralFeatureNamed("modelled", rs));
+		return getDefaultBooleanValue(aClass, getStructuralFeatureNamed("modelled", rs)); //$NON-NLS-1$
 	}
 	
 	public static String addPrefix(String pre, String name) {

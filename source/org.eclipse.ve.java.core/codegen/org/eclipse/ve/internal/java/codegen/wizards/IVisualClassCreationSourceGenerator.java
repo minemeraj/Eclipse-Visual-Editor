@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 /*
  *  $RCSfile: IVisualClassCreationSourceGenerator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:22 $ 
  */
 
 /**
@@ -40,11 +40,11 @@ public interface IVisualClassCreationSourceGenerator {
 	 * @return
 	 */
     // pmuldoon: Added hashmap constants, and argumentMatrix argument
-    public static final String CREATE_MAIN = "createMain";
+    public static final String CREATE_MAIN = "createMain"; //$NON-NLS-1$
     
-    public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors";
+    public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors"; //$NON-NLS-1$
     
-    public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract";
+    public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract"; //$NON-NLS-1$
     
     public String generateSource(String typeName, String superClassName,
             HashMap argumentMatrix);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-15 00:08:40 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -90,7 +90,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 					editDomain);
 			editPolicy.setContainer(beanComposition);
 			
-			CompoundCommand createAndSetVisualCommand = new CompoundCommand("Create instance and set visual command");
+			CompoundCommand createAndSetVisualCommand = new CompoundCommand("Create instance and set visual command"); //$NON-NLS-1$
 			
 			Command createCommand = editPolicy.getCreateCommand(newJavaInstance,null);
 			createAndSetVisualCommand.add(createCommand);

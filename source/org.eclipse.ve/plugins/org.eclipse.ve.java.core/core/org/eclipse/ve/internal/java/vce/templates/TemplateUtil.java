@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -53,7 +53,7 @@ public class TemplateUtil {
      * @since 1.0.0
      */
 	static public String getPathForBundleFile (String bundleName, String relativePath) {
-		String key = bundleName+":"+relativePath;
+		String key = bundleName+":"+relativePath; //$NON-NLS-1$
 		String result;
 		if ((result=(String)fFilePath.get(key))==null) {
 		 result =  getPathForBundleFile(Platform.getBundle(bundleName), relativePath);
@@ -104,7 +104,7 @@ public class TemplateUtil {
 			if (elements != null) {
 				for (int i = 0; i < elements.length; i++) {
 					String name = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(bundle, elements[i].getValue());
-					if (!name.equals(".")) {
+					if (!name.equals(".")) { //$NON-NLS-1$
 						list.add(getCorrectPath(name));
 					}
 				}
@@ -114,11 +114,11 @@ public class TemplateUtil {
 			// assumed that when in dev mode, that the plugins are local, so that when we resolve the URL
 			// from getEntry that it will be a file type url.
 			if (DEV_MODE) {
-				URL bin = bundle.getEntry("bin/");
+				URL bin = bundle.getEntry("bin/"); //$NON-NLS-1$
 				if (bin != null) {
 					try {
 						bin = Platform.resolve(bin);
-						if (bin.getProtocol() == "file") {
+						if (bin.getProtocol() == "file") { //$NON-NLS-1$
 							String path = getCorrectPath(bin.getFile());
 							if (!list.contains(path))
 								list.add(bin.getFile());
@@ -194,7 +194,7 @@ public class TemplateUtil {
 			if (detectedLocation != null) {
 
 				// Create a standin for the detected VM and add it to the result collector
-				String vmID = String.valueOf("1");
+				String vmID = String.valueOf("1"); //$NON-NLS-1$
 				detectedVMStandin = new VMStandin(vmTypes[i], vmID);
 				if (detectedVMStandin != null) {
 					detectedVMStandin.setInstallLocation(detectedLocation);

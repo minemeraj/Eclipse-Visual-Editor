@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-05 22:48:22 $ 
  */
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -39,31 +39,31 @@ public class VisualElementModel {
 
 	public String getName() {
 		if (configElement != null)
-			return configElement.getAttribute("name");
+			return configElement.getAttribute("name"); //$NON-NLS-1$
 		return null;
 	}
 
 	public String getSuperClass() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("type");
+			return configElement.getAttributeAsIs("type"); //$NON-NLS-1$
 		return null;
 	}
 
 	public String getCategory() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("category");
+			return configElement.getAttributeAsIs("category"); //$NON-NLS-1$
 		return null;
 	}
 
 	public String getContainer() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("container");
+			return configElement.getAttributeAsIs("container"); //$NON-NLS-1$
 		return null;
 	}
 	
 	public String getPluginId() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("pluginId");
+			return configElement.getAttributeAsIs("pluginId"); //$NON-NLS-1$
 		return null;
 	}
 
@@ -73,7 +73,7 @@ public class VisualElementModel {
 
 	public String getIconFile() {
 		if (configElement != null)
-			return configElement.getAttributeAsIs("icon");
+			return configElement.getAttributeAsIs("icon"); //$NON-NLS-1$
 		return null;
 	}
 
@@ -87,6 +87,6 @@ public class VisualElementModel {
 	}
 
 	public String toString() {
-		return "category: " + getCategory() + ", name: " + getName() + ", type: " + getSuperClass();
+		return "category: " + getCategory() + ", name: " + getName() + ", type: " + getSuperClass(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

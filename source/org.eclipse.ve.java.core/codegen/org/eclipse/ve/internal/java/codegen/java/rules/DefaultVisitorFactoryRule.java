@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultVisitorFactoryRule.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 22:48:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -36,15 +36,15 @@ public class DefaultVisitorFactoryRule implements IVisitorFactoryRule {
 	protected EObject codegenHelperClass = null;
 	
 	protected final static String 
-		SF_TYPE_VISITOR = "typeVisitor",
-		SF_METHOD_VISITOR = "methodVisitor",
-		SF_EVENT_METHOD_CALLBACK_VISITOR = "eventMethodCallBackVisitor",
-		SF_EVENT_METHOD_VISITOR = "eventMethodVisitor",
-		SF_EVENT_HANDLER_VISITOR = "eventHandlerVisitor",
-		SF_RETURN_STMT_VISITOR = "returnStmtVisitor",
-		SF_EXPRESSION_VISITOR = "expressionVisitor",
-		SF_EVENT_EXPRESSION_VISITOR = "eventExpressionVisitor",
-		SF_EVENT_CALLBACK_EXPRESSION_VISITOR = "eventCallBackExpressionVisitor";
+		SF_TYPE_VISITOR = "typeVisitor", //$NON-NLS-1$
+		SF_METHOD_VISITOR = "methodVisitor", //$NON-NLS-1$
+		SF_EVENT_METHOD_CALLBACK_VISITOR = "eventMethodCallBackVisitor", //$NON-NLS-1$
+		SF_EVENT_METHOD_VISITOR = "eventMethodVisitor", //$NON-NLS-1$
+		SF_EVENT_HANDLER_VISITOR = "eventHandlerVisitor", //$NON-NLS-1$
+		SF_RETURN_STMT_VISITOR = "returnStmtVisitor", //$NON-NLS-1$
+		SF_EXPRESSION_VISITOR = "expressionVisitor", //$NON-NLS-1$
+		SF_EVENT_EXPRESSION_VISITOR = "eventExpressionVisitor", //$NON-NLS-1$
+		SF_EVENT_CALLBACK_EXPRESSION_VISITOR = "eventCallBackExpressionVisitor"; //$NON-NLS-1$
 	
 	protected EStructuralFeature getSF(String sfName){
 		EStructuralFeature sf = (EStructuralFeature) sfCache.get(sfName);

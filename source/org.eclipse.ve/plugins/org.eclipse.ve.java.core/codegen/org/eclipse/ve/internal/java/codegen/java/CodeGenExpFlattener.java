@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -74,9 +74,9 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    		else if (alloc instanceof ParseTreeAllocation)
 		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
 		    	} else {
-		    		getStringBuffer().append("new ");
+		    		getStringBuffer().append("new "); //$NON-NLS-1$
 		    		getStringBuffer().append(handleQualifiedName(((JavaHelpers)obj).getJavaName())); 
-		    		getStringBuffer().append("()");
+		    		getStringBuffer().append("()"); //$NON-NLS-1$
 		    	}
 		    }
 			return false;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -49,7 +49,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 	
 	private CustomizeLayoutWindowAction alignmentWindowAction;
 
-	public final static String STATUS_FIELD_CATEGORY = "JVE_STATUS_FIELD";
+	public final static String STATUS_FIELD_CATEGORY = "JVE_STATUS_FIELD"; //$NON-NLS-1$
 	private StatusLineContributionItem statusField = new StatusLineContributionItem(STATUS_FIELD_CATEGORY);
 	 
 	public JavaVisualEditorActionContributor() {
@@ -93,7 +93,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		palDropdownAction.setEnabled(false);
 		markAsPartListener(palDropdownAction);
 		
-		reloadAction = new LabelRetargetAction(ReloadAction.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX);
+		reloadAction = new LabelRetargetAction(ReloadAction.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX); //$NON-NLS-1$
 		// dbk use ReloadAction.PAUSE_IMAGE_DESCRIPTOR		
 		reloadAction.setHoverImageDescriptor(ReloadAction.PAUSE_IMAGE_DESCRIPTOR);
 		reloadAction.setEnabled(false);

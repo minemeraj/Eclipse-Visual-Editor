@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-05 22:48:23 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -113,19 +113,19 @@ public void initBeanProxy() {
 	// TODO Should Only instantiate this and components, but we may not be a BeanSubclassComposition. Need a better
 	// way of handling this.
 	if (getTarget() instanceof BeanSubclassComposition) {
-		TimerTests.basicTest.startStep("Init this");
+		TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
 		TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
 		TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
 		initSetting(((BeanSubclassComposition) getTarget()).getThisPart());
 		TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
 		TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
-		TimerTests.basicTest.stopStep("Init this");
+		TimerTests.basicTest.stopStep("Init this"); //$NON-NLS-1$
 	}
 
 	// Next run the components.
 	List components = ((BeanComposition) getTarget()).getComponents();
 	for (int i = 0; i < components.size(); i++) {
-		String step = "init#"+i;
+		String step = "init#"+i; //$NON-NLS-1$
 		TimerTests.basicTest.startStep(step);
 		TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
 		TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);

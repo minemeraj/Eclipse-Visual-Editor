@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-05 22:48:23 $ 
  */
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	
 	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, TypeResolver resolver, IVEModelInstance di) {
 		String name = decl.getName().getIdentifier();
-		if (name.startsWith("ivj")) {
+		if (name.startsWith("ivj")) { //$NON-NLS-1$
 			// Ignore VCE connections
 			if (name.startsWith("ivjConn")) //$NON-NLS-1$
 				return true;
