@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.19 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.20 $  $Date: 2005-02-15 23:35:53 $ 
  */
 
 import java.util.*;
@@ -137,7 +137,7 @@ protected BeanPart processFieldAccess (MethodInvocation stmt) {
  *  both C, B are initialized by createFoo()
  * 
  */
-protected BeanPart[] processCreateMethod(MethodInvocation stmt) {
+protected BeanPart[] processCreateMethod(MethodInvocation stmt, boolean canRetry) {
 	
 	    ArrayList beans = new ArrayList();	
 		List l = fModel.getBeans();
@@ -149,11 +149,12 @@ protected BeanPart[] processCreateMethod(MethodInvocation stmt) {
 					beans.add(bp) ;
 				}
 			}
-			else {
-				// If we got here, than not all beans were processed yet
-				// we will have to come back on the 2nd reTry
-				return new BeanPart[0];
-			}
+			else 
+			   if (canRetry){
+					// If we got here, than not all beans were processed yet
+					// we will have to come back on the 2nd reTry
+					return new BeanPart[0];
+			   }			
 		}
 		return  (BeanPart[]) beans.toArray(new BeanPart[beans.size()]);
 }
@@ -193,7 +194,7 @@ protected void processAMessageSend() {
   	  else if (stmt.getExpression()==null) {
   	      // either a method invocation for creating a child (e.g, creatFoo(), or access to this.setFoo()
   	  	  // Try to see if the method invocation refer to an init method
-  	  	  BeanPart[] bs = processCreateMethod(stmt) ;
+  	  	  BeanPart[] bs = processCreateMethod(stmt, fReTryLater!=null) ;
   	  	  if (bs.length==0) { 
   	  	    if (fReTryLater!=null) {
   	  	        // We may have not processed the target's create method 
