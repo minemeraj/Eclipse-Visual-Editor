@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.32 $  $Date: 2005-03-08 23:21:53 $ 
+ *  $Revision: 1.33 $  $Date: 2005-04-01 20:57:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -477,6 +477,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			int idx = type.lastIndexOf('.');
 			if (idx>=0)
 				type = type.substring(idx+1);
+			type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
 			sb.append(type+" ");
 		}
 		sb.append(fbeanPart.getSimpleName());
