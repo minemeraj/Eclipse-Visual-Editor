@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-20 09:03:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-20 23:03:49 $ 
  */
 
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
@@ -109,7 +109,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		child.removeEditPolicy(CONSTRAINT_REFRESH_POLICY);
 	}
 	
-	public class ConstraintRefreshPolicy extends AbstractEditPolicy implements IVisualComponentListener {
+	protected class ConstraintRefreshPolicy extends AbstractEditPolicy implements IVisualComponentListener {
 		IVisualComponent visualComponent;
 		
 		protected Display getDisplay() {
