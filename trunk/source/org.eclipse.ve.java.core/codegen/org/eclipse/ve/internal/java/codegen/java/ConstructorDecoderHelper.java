@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-30 00:17:23 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-07 17:38:51 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.search.LocalVariableDeclarationMatch;
+import org.eclipse.jdt.internal.compiler.ast.LocalDeclaration;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -64,9 +66,18 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		sb.append(";\n}\n}") ;
 				
 		CompilationUnit cu = AST.parseCompilationUnit(sb.toString().toCharArray());
-		Assignment e = (Assignment)((ExpressionStatement)((TypeDeclaration)cu.types().get(0)).getMethods()[0].getBody().statements().get(0)).getExpression();
-		
-		return e.getRightHandSide();
+		Statement s = (Statement)((TypeDeclaration)cu.types().get(0)).getMethods()[0].getBody().statements().get(0);
+		if (s instanceof ExpressionStatement) {
+			Expression e = ((ExpressionStatement)s).getExpression();
+			if (e instanceof Assignment)
+			   return ((Assignment)e).getRightHandSide();
+			else
+				return null ;
+		}
+		else if (s instanceof VariableDeclarationStatement)
+			return ((VariableDeclarationFragment)((VariableDeclarationStatement)s).fragments().get(0)).getInitializer();
+		else
+			return null;
 		
 	}
 	
