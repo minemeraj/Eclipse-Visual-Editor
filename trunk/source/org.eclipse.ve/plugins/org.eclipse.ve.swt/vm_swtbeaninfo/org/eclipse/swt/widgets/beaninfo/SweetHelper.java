@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SweetHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-12 18:50:31 $ 
+ *  $Revision: 1.5 $  $Date: 2004-07-29 21:26:45 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -32,17 +32,23 @@ public static void mergeSuperclassStyleBits(BeanDescriptor descriptor){
 	Map styleBitsMap = getStyleBitsMap(descriptor);
 	// Get the style bits from the superclass
 	Class superclass = descriptor.getBeanClass().getSuperclass();
-	try {
-		BeanInfo superclassBeanInfo = Introspector.getBeanInfo(superclass,superclass.getSuperclass());
-		while(superclassBeanInfo.getBeanDescriptor().getValue(STYLE_BITS_ID) == null){
-			superclassBeanInfo = Introspector.getBeanInfo(superclass.getSuperclass(),superclass.getSuperclass().getSuperclass()); 			 
-		}
-		mergeStyleBits(styleBitsMap,superclassBeanInfo);
-	} catch (IntrospectionException e) {
-		e.printStackTrace();
+	if (superclass != null) {
+		try {
+			BeanInfo superclassBeanInfo = Introspector.getBeanInfo(superclass, superclass.getSuperclass());
+			while (superclassBeanInfo.getBeanDescriptor().getValue(STYLE_BITS_ID) == null) {
+				superclass = superclass.getSuperclass();
+				if (superclass == null)
+					break;
+				superclassBeanInfo = Introspector.getBeanInfo(superclass);
+			}
+			if (superclass != null) {
+				mergeStyleBits(styleBitsMap, superclassBeanInfo);
+				setStyleBits(descriptor,styleBitsMap);
+			}
+		} catch (IntrospectionException e) {
+			e.printStackTrace();
+		} 
 	}	
-	setStyleBits(descriptor,styleBitsMap);
-	
 }
 
 private static void setStyleBits(BeanDescriptor descriptor, Map styleBitsMap) {

@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class TabItemBeanInfoX extends IvjBeanInfo {
+public class TabItemBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle TabItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.tabitem");  //$NON-NLS-1$
 

@@ -10,7 +10,7 @@ import java.beans.*;
 
 import org.eclipse.swt.SWT;
 
-public class ToolItemBeanInfoX extends IvjBeanInfo {
+public class ToolItemBeanInfo extends IvjBeanInfo {
 
 private static java.util.ResourceBundle ToolItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.toolitem");  //$NON-NLS-1$
 
