@@ -23,6 +23,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
+import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
+
 /**
  * @author JoeWin
  *
@@ -46,11 +48,33 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	
 	public Command getCreateCommand(Object child, Object positionBeforeChild) {
 		Command result = super.getCreateCommand(child, positionBeforeChild);
-		IJavaObjectInstance javaChild = (IJavaObjectInstance)child;
-		// If we already have a java allocation then just continue.  This could be because the palette prototype instance defined one
-		// otherwise create one based on the parent composite and a style bit of SWT.NONE
+		final IJavaObjectInstance javaChild = (IJavaObjectInstance)child;
+		// If we already have a java allocation then check to see whether it is a prototype instance with a 
+		// {parentComposite} that needs substituting with the real parent
 		if(javaChild.getAllocation() != null){
-			return result;
+			Command insertCorrectParentCommand = new AbstractCommand(){
+				public void execute() {
+					if(javaChild.getAllocation() != null){
+						PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
+						if(expression instanceof PTClassInstanceCreation){
+							PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
+							if(classInstanceCreation.getArguments().size() == 2){
+								Object firstArgument = classInstanceCreation.getArguments().get(0);
+								if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
+									PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+									parentRef.setObject((IJavaObjectInstance)getContainer());
+									classInstanceCreation.getArguments().remove(0);
+									classInstanceCreation.getArguments().add(0,parentRef);
+								}
+							}
+						} 			
+					}
+				}
+				protected boolean prepare() {
+					return true;
+				}
+			};
+			return insertCorrectParentCommand.chain(result);
 		} else {
 			return createInitStringCommand((IJavaObjectInstance)child).chain(result);
 		}

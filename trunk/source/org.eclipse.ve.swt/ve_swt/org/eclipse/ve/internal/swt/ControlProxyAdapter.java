@@ -207,23 +207,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		return (imSupport != null && imSupport.hasImageListeners());
 	}
 	protected void primInstantiateBeanProxy() {
-		// Palette prototypes might have the first argument set to name {parentContainer}
-		// If so swop this out with the parent
-		// TODO - Need to talk to Rich.  The ControlProxyAdapter should NOT make explicit assumptions about the type of expressions
-		PTExpression expression = ((ParseTreeAllocation)getJavaObject().getAllocation()).getExpression();
-		if(expression instanceof PTClassInstanceCreation){
-			PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
-			if(classInstanceCreation.getArguments().size() == 2){
-				Object firstArgument = classInstanceCreation.getArguments().get(0);
-				if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
-					PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-					parentRef.setObject(getParentComposite(getJavaObject()));
-					classInstanceCreation.getArguments().remove(0);
-					classInstanceCreation.getArguments().add(0,parentRef);
-				}
-			}
-		}
-		
 		// SWT controls get inserted at a position in a composite.  The way this occurs is that
 		// they get disposed and re-created, so we need to manage the control manager and who it is attached to
 		super.primInstantiateBeanProxy();
