@@ -11,6 +11,7 @@
 package org.eclipse.ve.tests.perf;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
 import java.util.*;
 
 import junit.extensions.TestSetup;
@@ -161,9 +162,9 @@ public class PerfSuite extends TestSetup {
 		JavaProjectUtil.setAutoBuild(oldAutoBuildingState);
 
 		joinAutoBuild();
-		//		if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
-		//			System.out.println("-- uploaded successfully -- ");
-		//		}
+				if (PerformanceMonitorUtil.getMonitor().upload("Scenario 179 " + DateFormat.getDateInstance().format(new Date()))) {
+					System.out.println("-- uploaded successfully -- ");
+				}
 		System.out.println("-- performance suite complete --");
 	}
 
