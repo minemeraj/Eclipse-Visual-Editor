@@ -7,19 +7,18 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.SWT;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.PTExpression;
-import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class WidgetProxyAdapter extends BeanProxyAdapter {
@@ -131,8 +130,20 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 				PTExpression expression = ((ParseTreeAllocation)getJavaObject().getAllocation()).getExpression();
 				if(expression instanceof PTClassInstanceCreation){
 					PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation)expression;
-					if(classInstanceCreation.getArguments().size() == 2){
-						PTExpression styleExpression = (PTExpression)classInstanceCreation.getArguments().get(1);
+					int numberOfArguments = classInstanceCreation.getArguments().size();
+					PTExpression styleExpression = null;
+					// Shell has a single argument for style
+					if (numberOfArguments == 1 ) {
+						JavaHelpers shell = Utilities.getJavaClass("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) target).eResource().getResourceSet());
+						if (shell.isAssignableFrom(((IJavaObjectInstance) target).getJavaType())) {
+								// Shell that already have a style argument
+							styleExpression = (PTExpression) classInstanceCreation.getArguments().get(0);		
+						}
+					}
+				    else if (numberOfArguments == 2)
+				    	styleExpression = (PTExpression) classInstanceCreation.getArguments().get(1);
+					
+					if(styleExpression!=null){						
 						try {
 							styleBeanProxy = BasicAllocationProcesser.instantiateWithString(
 									styleExpression.toString(), 
