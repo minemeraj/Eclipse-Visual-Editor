@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:35:34 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-13 21:43:50 $ 
  */
 
 import java.util.ArrayList;
@@ -42,8 +42,6 @@ public class CustomizeLayoutWindowAction extends Action {
 	protected final static String WINDOW_TITLE = CDEMessages.getString("CustomizeLayoutWindow.title"); //$NON-NLS-1$
 	
 	protected static final String CUSTOMIZE_LAYOUT_PAGE_KEY = "customizeLayoutPage_Key"; //$NON-NLS-1$
-	
-	private static CustomizeLayoutWindowAction INSTANCE = null;
 	
 	/**
 	 * Add an Layout customization page class to the viewer. The page will be brought to front on the Layout tab whenever it's 
@@ -129,19 +127,18 @@ public class CustomizeLayoutWindowAction extends Action {
 		}
 	}
 	
-	public static void showCustomizeLayoutWindow() {
-		if (INSTANCE != null) {
-			// Need to farm off to ui thread because this will cause a UI update.
-			INSTANCE.workbenchWindow.getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (!INSTANCE.isChecked()) {
-						INSTANCE.setChecked(true);
-						INSTANCE.run();
-					} else {
-						INSTANCE.fDialog.getShell().forceActive();
-					}
-				}
-			});
+	/**
+	 * Used by OpenCustomLayoutObjectActionDelegate to open the 
+	 * layout window when selected from popup menu.
+	 * 
+	 * @since 1.0.0
+	 */
+	void showCustomizeLayoutWindow() {
+		if (!isChecked()) {
+			setChecked(true);
+			run();
+		} else {
+			fDialog.getShell().forceActive();
 		}
 	}
 	
@@ -207,7 +204,6 @@ public class CustomizeLayoutWindowAction extends Action {
 		this.contributor = contributor;
 		workbenchWindow.getSelectionService().addSelectionListener(selListener);
 		workbenchWindow.getPartService().addPartListener(alignmentWindowPartListener);
-		INSTANCE = this;
 	}
 	
 	private void setTooltip() {
