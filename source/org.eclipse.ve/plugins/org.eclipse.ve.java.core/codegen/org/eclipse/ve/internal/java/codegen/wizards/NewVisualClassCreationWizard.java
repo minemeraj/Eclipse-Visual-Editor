@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-26 15:30:49 $ 
  */
 
 import java.io.IOException;
@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
@@ -395,4 +396,21 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		}
 	}
 
+	/*(non-Javadoc)
+	 *
+	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getSchedulingRule()
+	 */
+	protected ISchedulingRule getSchedulingRule() {
+		// TODO WARNING ! - should return fPage.getModifiedResource();
+		IType enclosing= fPage.getEnclosingType();
+		if (enclosing != null) {
+			return enclosing.getResource();
+		}
+		IPackageFragment pack= fPage.getPackageFragment();
+		if (pack != null) {
+			return pack.getCompilationUnit(fPage.getTypeName() + ".java").getResource(); //$NON-NLS-1$
+		}
+		return null;
+	}
+	
 }
