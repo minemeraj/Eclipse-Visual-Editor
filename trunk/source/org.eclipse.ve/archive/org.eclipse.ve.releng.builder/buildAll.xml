@@ -172,7 +172,7 @@
 	<target name="pushftp" unless="nopush" if="ftppush">
 		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 		<echo message="FTP to: ${remoteDirectory}/${buildLabel}"/>	
-	  	<ftp server="download.eclipse.org"
+	  	<ftp server="download1.eclipse.org"
        		userid="${ftpUser}"
 		      password="${ftpPassword}"
 			remotedir="${remoteDirectory}">
@@ -182,7 +182,7 @@
 		</ftp>
 		
 		<!-- There may not be anything in buildnotes. ftp won't create directory in that case. But we must have one. -->
-	  	<ftp server="download.eclipse.org"
+	  	<ftp server="download1.eclipse.org"
        		userid="${ftpUser}"
 		      password="${ftpPassword}"
 			action="mkdir"
@@ -200,7 +200,7 @@
 		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**"/>
 		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**"/>				
 		<exec dir="${buildDirectory}" executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats ${buildLabel} versync@download.eclipse.org::eclipseVeTools/${remoteDirectory}" />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${buildLabel} versync@download1.eclipse.org::eclipseVeTools/${remoteDirectory}" />
 		</exec>
 	</target>
 	
@@ -239,7 +239,7 @@
 		
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats versync@download1.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
 		</exec>
 
 		<!-- Now run the update process -->
@@ -262,7 +262,7 @@
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml"/>
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site.xml"/>		
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site.xml versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml.bak " />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site.xml versync@download1.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml.bak " />
 		</exec>
 		
 		<!-- Now push the updates themselves back. -->
@@ -272,7 +272,7 @@
 		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**"/>				
 		
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site/ versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}" />
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site/ versync@download1.eclipse.org::eclipseVeTools/${updateRemoteDirectory}" />
 		</exec>
 
 	</target>
