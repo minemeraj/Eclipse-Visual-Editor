@@ -10,19 +10,19 @@
  *******************************************************************************/
 
 
-package org.eclipse.ve.internal.swt.codegen.jjet.util;
+package org.eclipse.ve.internal.java.codegen.jjet.util;
 
-import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
-import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
+import org.eclipse.ve.internal.java.codegen.util.DefaultMethodInvocationGenerator;
+import org.eclipse.ve.internal.java.codegen.util.IMethodInvocationTemplate;
 
 /*********************************************************************
  * This class was generated automatically from a javajet template.
  * !!!!!!!!!!!!!!! DO NOT MAKE CHANGES TO THIS CLASS !!!!!!!!!!!!!!!!!
  * 
  *********************************************************************/
-public class MethodSkelaton implements IMethodTemplate {
+public class MethodInvocationSkelaton implements IMethodInvocationTemplate {
 	
- public String generateMethod(AbstractMethodTextGenerator.MethodInfo info)  {
+ public String generateMethod(DefaultMethodInvocationGenerator.InvocationInfo info)  {
 		return null ;		
  }	
 

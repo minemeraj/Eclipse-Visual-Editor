@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-27 01:12:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:08 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -18,9 +18,9 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.ve.internal.java.codegen.java.AbstractMethodTextGenerator;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  
@@ -35,6 +35,8 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 
 	public static final String METHOD_TEMPLATE_CLASS_NAME = "NoArgNoReturnMethodTemplate" ; //$NON-NLS-1$
 	public static final String METHOD_TEMPLATE_NAME = METHOD_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;
+	public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
+	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
 	
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
 
@@ -73,5 +75,19 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 		return null;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator#getBasePlugin()
+	 */
+	protected String getBasePlugin() {
+		return BASE_PLUGIN ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator#getTemplatePath()
+	 */
+	protected String getTemplatePath() {
+		return TEMPLATE_PATH ;
+	}
 
 }

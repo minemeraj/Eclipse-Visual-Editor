@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTNoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-27 01:12:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:08 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -64,6 +64,7 @@ public class SWTNoArgNoReturnMethodTextGenerator extends NoArgNoReturnMethodText
 		if (alloc != null && alloc instanceof ParseTreeAllocation) {
 			ParseTreeAllocation pt = (ParseTreeAllocation) alloc ;
 			PTExpression exp =  pt.getExpression() ;
+			// TODO: this is a temporary hack until we model emf referenced PTEs
 			if (exp instanceof TemporaryPTE) {
 				TemporaryPTE t = (TemporaryPTE) exp ;
 				IJavaObjectInstance parent = t.getParent() ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-27 01:12:06 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-28 00:47:03 $ 
  */
 
 
@@ -386,6 +386,15 @@ public synchronized boolean  decodeExpression() throws CodeGenException {
 protected ExpressionParser createExpressionParser(String sourceSnippet, int expOffset, int expLen) {
    return new ExpressionParser(sourceSnippet,expOffset, expLen) ;
 }
+
+protected String removeWhiteSpace(String s) {
+	int i = 0 ;
+	for (;i<s.length();i++) {
+		if (!Character.isWhitespace(s.charAt(i)))
+			break ;
+	}
+	return s.substring(i) ;
+}
  
 /**
  *  Generate this. expression 
@@ -399,6 +408,7 @@ public synchronized String  generateSource(EStructuralFeature sf) throws CodeGen
       String result = getExpressionDecoder().generate(sf,fArguments) ; 
       if (result == null) return result ;
       
+      result = removeWhiteSpace(result);
       // The jdt parser does not include the ";" or comments as part of the expression.
       String e = ExpressionTemplate.getExpression(result) ;
       ExpressionParser p = createExpressionParser(BeanMethodTemplate.getInitExprFiller()+result,

@@ -10,11 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTemplate.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:03 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
-import org.eclipse.ve.internal.java.codegen.java.AbstractMethodTextGenerator;
  
 /**
  * @author Gili Mendel

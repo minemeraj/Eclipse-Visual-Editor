@@ -9,18 +9,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: IMethodTemplate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $RCSfile: IMethodInvocationTemplate.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
-
  
 /**
  * @author Gili Mendel
  * @since 1.0.0
  */
-public interface IMethodTemplate {
+public interface IMethodInvocationTemplate {
 
-	public String generateMethod(AbstractMethodTextGenerator.MethodInfo info) ;
+	public String generateMethod(DefaultMethodInvocationGenerator.InvocationInfo info) ;
 
 }

@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-27 01:12:06 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
  */
-package org.eclipse.ve.internal.java.codegen.java;
+package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.List;
 
@@ -22,8 +22,6 @@ import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
 import org.eclipse.ve.internal.java.vce.templates.*;
  
 /**
@@ -33,8 +31,7 @@ import org.eclipse.ve.internal.java.vce.templates.*;
 public abstract class AbstractMethodTextGenerator implements IMethodTextGenerator {
 	
 	public final static String  JAVAJET_EXT = ".javajet" ; //$NON-NLS-1$
-    public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
-	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
+
 
 	protected	IBeanDeclModel	fModel ;
 	protected	EObject			fComponent ;	
@@ -103,14 +100,14 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		if (fMethodTemplate != null) return fMethodTemplate ;
 		
 		try {
-			List list = TemplateUtil.getPluginAndPreReqJarPath(BASE_PLUGIN);
+			List list = TemplateUtil.getPluginAndPreReqJarPath(getBasePlugin());
 			list.addAll(TemplateUtil.getPlatformJREPath());
 			String[] classPath = (String[]) list.toArray(new String[list.size()]);
-			String   templatePath = TemplateUtil.getPluginInstallPath(BASE_PLUGIN, TEMPLATE_PATH) ;
+			String   templatePath = TemplateUtil.getPluginInstallPath(getBasePlugin(), getTemplatePath()) ;
 			
 			fMethodTemplate = (IMethodTemplate)
 				TemplateObjectFactory.getClassInstance(classPath, new String[] {templatePath}, 
-				name, TemplateUtil.getClassLoader(BASE_PLUGIN),
+				name, TemplateUtil.getClassLoader(getBasePlugin()),
 				className,null) ;
 		}
 		catch (TemplatesException e) {
@@ -154,5 +151,8 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	public void setComments(String[] comments) {
 		fComments = comments;
 	}
+	
+	protected abstract String getBasePlugin() ;	
+	protected abstract String getTemplatePath() ;
 
 }

@@ -1,0 +1,24 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: DefaultMethodInvocationTemplate.javajet,v $
+ *  $Revision: 1.1 $
+ */
+ 
+ // This Method is expected to generate a method invocation expression
+ // see DefaultMethodInvocationGenerator.InvocationInfo for more information regarding the info structure
+  
+%><%@ jet skeleton="MethodInvocationSkelaton.java" 
+        package="org.eclipse.ve.internal.java.codegen.jjet.util" 
+        class="DefaultMethodInvocationTemplate"
+%>
+	<%=info.fmethodName%> (<%
+		boolean first = true ;
+		// Generate arguments, if needed
+		if (info.fmethodArguments != null) 
+		   for (int i=0; i<info.fmethodArguments.length; i++) {
+		      if (!first) {%>, <%
+		      }
+		      first=false;
+		      %><%=info.fmethodArguments[i]%><%
+		   }  // Note, need the \n at the end of an expression%>);
