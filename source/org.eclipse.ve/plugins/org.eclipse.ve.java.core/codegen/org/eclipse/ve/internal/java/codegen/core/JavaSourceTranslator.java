@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.26 $  $Date: 2004-04-08 18:15:49 $ 
+ *  $Revision: 1.27 $  $Date: 2004-04-09 23:04:44 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -383,7 +383,9 @@ IDiagramSourceDecoder fSourceDecoder = null;
 					}
 
 					// only one updater can be touching the model at any time.
-					synchronized(JavaSourceTranslator.this){
+					//TODO: Can not lock here the JavaTranslator because isBusy() may be called
+					//      recursivly
+					synchronized(JavaSourceTranslator.this.fWorkingCopy.getDocLock()){
 
 						// TODO Adapters will not react for GUI deltas !!!
 						if (fBeanModel!=null)
@@ -526,8 +528,9 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 		// loadModel is not synchronized as to
 		// not block calls to isBusy(), pause() and such while the loadModel is going on
 		pm.beginTask("", 100);
-		pm.subTask("Loading model from source code");
-		synchronized (this) {
+		pm.subTask("Loading model from source code");	
+		Object l = fWorkingCopy==null? new Object() : fWorkingCopy.getDocLock();
+		synchronized (l) {
 			floadInProgress = true;
 			if (fVEModel != null) {
 				if (fBeanModel != null && !fdisconnected) {
@@ -542,7 +545,7 @@ public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeG
 
 		fFile = input.getFile();
 		try {
-			synchronized (this) {   // only one thread is to update the model				
+			synchronized (l) {   // only one thread is to update the model				
 			    decodeDocument(fFile, pm);					    
 				floadInProgress = false;
 				fmodelLoaded = true;
