@@ -11,11 +11,9 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-21 22:51:23 $ 
  */
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
@@ -26,7 +24,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -75,6 +72,10 @@ protected EObject add(EObject toAdd, BeanPart target, int index) {
          // fAddedIndex may inforce an insert mathod, vs. and add method
          //  fAddedIndex = Integer.toString(i) ;
     }
+    if (toAdd.eContainer()==null){
+    	//  not in the model yet ... no Bean Part
+       fbeanPart.getInitMethod().getCompMethod().getProperties().add(toAdd);
+    }
 
    CodeGenUtil.eSet(target.getEObject(), 
                            fFmapper.getFeature(null), 
@@ -113,27 +114,32 @@ protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException 
 	if (args.size() < 1) throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
       
       // Parse the arguments to figure out which bean to add to this container
-      if (args.get(0) instanceof MethodInvocation)  {
+      if (args.get(getAddedPartArgIndex(args.size())) instanceof MethodInvocation)  {
       	// Look to see of if this method returns a Bean
-      	String selector = ((MethodInvocation)args.get(0)).getName().getIdentifier();  
+      	String selector = ((MethodInvocation)args.get(getAddedPartArgIndex(args.size()))).getName().getIdentifier();  
       	bp = fOwner.getBeanModel().getBeanReturned(selector) ;       	
       }
-      else if (args.get(0) instanceof SimpleName){
+      else if (args.get(getAddedPartArgIndex(args.size())) instanceof SimpleName){
             // Simple reference to a bean
-            String beanName = ((SimpleName)args.get(0)).getIdentifier();
+            String beanName = ((SimpleName)args.get(getAddedPartArgIndex(args.size()))).getIdentifier();
             bp = fOwner.getBeanModel().getABean(beanName) ;
             if(bp==null)
             	bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),beanName));
             	//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
       }
-      else if (args.get(0) instanceof ClassInstanceCreation) {
-      	Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
-      	if (resolved == null)
+      else if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
+      	if (fAddedInstance==null) {
+      	  Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(getAddedPartArgIndex(args.size()))).getName());
+      	  if (resolved == null)
       		return null;
-      	 String clazzName = resolved.getName();
+      	  String clazzName = resolved.getName();
       	  IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
       	  JavaClass c = (JavaClass) obj.getJavaType() ;
-      	  if (c.isExistingType()) fAddedInstance = obj ;      
+      	  if (c.isExistingType()) {
+      	  	fAddedInstance = obj ;
+      	    fAddedInstance.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null));
+      	  }      	  
+      	}
       }
 	return bp ;
 }
@@ -292,7 +298,7 @@ protected IJavaObjectInstance[] getComponentArguments(EObject root) {
 	protected EObject getRootObject(boolean cache) {
 		if (fRootObj != null && cache)
 			return fRootObj;
-		if (fAddedPart != null) fAddedInstance = fAddedPart.getEObject() ;		
+		if (fAddedPart != null) fAddedInstance = (IJavaObjectInstance) fAddedPart.getEObject() ;		
 		// No actual MetaRoot ... so return null, if are not added to our parent
 		EObject targetRoot = fbeanPart.getEObject();
 		if (fAddedInstance != null &&
@@ -382,6 +388,12 @@ protected IJavaObjectInstance[] getComponentArguments(EObject root) {
 			}
 		}
 		return shouldCommit;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#getAddedPartArgIndex()
+	 */
+	protected int getAddedPartArgIndex(int argsSize) {		
+		return 0;
 	}
 
 }

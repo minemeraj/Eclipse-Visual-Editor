@@ -11,26 +11,23 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-21 22:51:21 $ 
  */
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
-import org.eclipse.ve.internal.java.codegen.util.*;
 
+import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 /**
  *  This helper comes to help build a specialize add, which take arguments for other objects.
@@ -39,7 +36,7 @@ import org.eclipse.ve.internal.java.core.BeanUtilities;
 public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
 
 	protected BeanPart fAddedPart = null;
-	protected EObject fAddedInstance = null;
+	protected IJavaObjectInstance fAddedInstance = null;
 	protected EObject fRootObj = null; // The root object that hold all object. 
 	protected String fAddedIndex = null;
 	protected boolean indexValueFound = false;
@@ -161,7 +158,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			return fRootObj;
 
 		if (fAddedPart != null)
-			fAddedInstance = fAddedPart.getEObject();
+			fAddedInstance = (IJavaObjectInstance) fAddedPart.getEObject();
 		EObject targetRoot = null;
 		if (fAddedInstance != null) {
 			targetRoot =
@@ -211,16 +208,28 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 	}
 
 	protected abstract BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException;
+	protected abstract int		getAddedPartArgIndex(int totalArgs);
 	
 	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args){
-		boolean beanPartChanged = oldAddedPart!=newAddedPart;
-		if(!beanPartChanged){
-			if(newAddedPart!=null)
-				beanPartChanged = !newAddedPart.isInJVEModel();
+		boolean addedInstanceChanged = oldAddedPart!=newAddedPart;
+		if(!addedInstanceChanged){
+			// We may be added a property (e.g., add(new Foo(), x, y z)		
+			if (fRootObj!=null) {
+				if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
+				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
+				   JavaAllocation astAlloc = getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null);
+				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
+				   if (!curAllocation.equals(astAllocation)) {
+				   	fAddedInstance.setAllocation(astAlloc);
+				   	addedInstanceChanged = true;
+				   }
+				}
+			}
 			else
-				beanPartChanged = !fbeanPart.getInitMethod().getCompMethod().getProperties().contains(newAddedInstance);
+				addedInstanceChanged = fAddedInstance != null;												
+	
 		}
-		return beanPartChanged;
+		return addedInstanceChanged;
 	}
 
 	/**
@@ -304,7 +313,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		if (isMySigniture()) {			
 			fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
 			if (fAddedPart!=null) {
-			   fAddedInstance = fAddedPart.getEObject();
+			   fAddedInstance = (IJavaObjectInstance)fAddedPart.getEObject();
 				fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
 				fbeanPart.addChild(fAddedPart) ;
 			   return true; 			   
@@ -485,5 +494,13 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			}
 		}
 		return true;
+	}
+	
+	protected JavaAllocation getAllocation (Expression exp, List ref) {
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		   JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+		 		  ConstructorDecoderHelper.getParsedTree(exp,
+		 		  expOfMethod,fbeanPart.getModel(),ref));
+		return alloc;
 	}
 }

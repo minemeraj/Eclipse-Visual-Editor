@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.60 $  $Date: 2005-02-21 14:41:29 $ 
+ *  $Revision: 1.61 $  $Date: 2005-02-21 22:51:21 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -575,6 +575,7 @@ public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) 
     
     changeController.endTransaction(IModelChangeController.LOADING_PHASE);
 }
+ 
 /**
  *  Decode the expression (code) impact on the bean (part)
  */
@@ -741,8 +742,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		      }
 		      catch (Exception e) {
 		      	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
-		      		JavaVEPlugin.log("Skipping expression: "+codeRef,Level.WARNING) ; //$NON-NLS-1$
-		      		JavaVEPlugin.log(e,Level.WARNING) ;
+		      		JavaVEPlugin.log("Skipping expression: "+codeRef.getCodeContent()+"*****"+e.getCause()==null?e.getMessage():e.getCause().getMessage(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$		      		
 		      	}
 		        badExprssions.add(codeRef) ;	
 		      }
@@ -838,7 +838,8 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 		    
 			builder.setDiagram(fVEModel) ;
 			fBeanModel = builder.build() ;
-			fBeanModel.setSourceSynchronizer(fSrcSync) ;	
+			if (fBeanModel!=null)
+			   fBeanModel.setSourceSynchronizer(fSrcSync) ;	
 			TimerTests.basicTest.stopStep("Parsing"); //$NON-NLS-1$
 			
 			TimerTests.basicTest.startStep("Decoding"); //$NON-NLS-1$
@@ -852,7 +853,9 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 		floadInProgress = false ;
 		throw e;
     }
-    finally {    	
+    finally {    
+    	if (fBeanModel!=null && fBeanModel.getCompositionModel()!=null)
+    		fBeanModel.getCompositionModel().loadFromCacheComplete();
 		floadInProgress = false ;
 		fSrcSync.getUpdateStatus().setBottomUpProcessing(false);	
 		fSrcSync.resumeProcessing();
