@@ -1,71 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?NLS TYPE="org.eclipse.help.contexts"?>
-<toc label="Visual Editor for Java User Guide" topic="topics/calign.html">
-   <topic label="Using the Visual Editor for Java">
-      <topic label="Visually editing Java applications">
-         <topic label="Aligning components" href="topics/calign.html"/>
-         <topic label="Null layout manager" href="topics/cnullay.html"/>
-         <topic label="Containers and layout managers" href="topics/ccontlay.html"/>
-         <topic label="Flow layout manager" href="topics/cflowlay.html"/>
-         <topic label="Border layout manager" href="topics/cbordlay.html"/>
+<toc label="Visual Editor for Java User Guide" topic="topics/tve_overview.html">
+   <anchor id="anchor0000"/>
+   <topic label="Using the visual editor for Java" href="topics/tve_overview.html">
+      <anchor id="anchor0010"/>
+      <topic label="About the visual editor for Java" href="topics/cve_overview.html">
+         <anchor id="anchor0015"/>
+         <topic label="The visual editor Design and Source views" href="topics/cve_designsource.html"/>
+         <topic label="The visual editor design palette" href="topics/cve_palette.html"/>
+         <topic label="The visual editor Properties view" href="topics/cve_propertiesview.html"/>
+         <topic label="The Java Beans view" href="topics/cve_javabeansview.html"/>
+         <topic label="Source code generation in the visual editor" href="topics/cve_codegen.html">
+            <topic label="Source code generated and parsed by the visual editor" href="topics/cve_codestyle.html"/>
+            <topic label="How the visual editor synchronizes code" href="topics/cve_codesync.html"/>
+         </topic>
+         <topic label="How it works: the visual editor and Java Beans" href="topics/cve_javabeans.html"/>
+         <topic label="Setting visual editor preferences" href="topics/tve_prefs.html">
+            <topic label="Customizing the appearance of the visual editor" href="topics/tve_prefsappearance.html"/>
+            <topic label="Making the visual editor the default Java editor" href="topics/tve_prefsdefault.html"/>
+            <topic label="Specifying visual editor preferences for code generation" href="topics/tve_prefscodegen.html"/>
+         </topic>
+         <anchor id="anchor0020"/>
       </topic>
-      <topic label="Launching the Visual Editor for Java" href="topics/tjvelaunch.html">
-         <topic label="Visual Editor's Java beans" href="topics/tjvelivebeans.html"/>
-         <topic label="The Java bean launcher" href="topics/ttstjava.html"/>
-         <topic label="Visual Editor for Java" href="topics/coverview.html"/>
-         <topic label="Changing the default Java editor" href="topics/tjvechgdefault.html"/>
-         <topic label="Customizing the appearance of the Visual Editor" href="topics/tjvecustom.html"/>
+      <anchor id="anchor0030"/>
+      <topic label="Developing Java classes with the visual editor" href="topics/tve_developing.html">
+         <anchor id="anchor0040"/>
+         <topic label="Opening an existing Java class in the visual editor" href="topics/tve_class_open.html"/>
+         <topic label="Creating a new Java visual class" href="topics/tve_class_create.html"/>
+         <topic label="Adding a component to a class" href="topics/tve_component_add.html"/>
+         <topic label="Reordering components in a class" href="topics/tve_component_reorder.html"/>
+         <topic label="Deleting components from a class" href="topics/tve_component_delete.html"/>
+         <topic label="Resizing visual components" href="topics/tve_component_resize.html"/>
+         <topic label="Changing component properties" href="topics/tve_component_properties.html">
+            <topic label="Directly editing items in the Design view" href="topics/tve_propertyeditdesign.html"/>
+         </topic>
+         <anchor id="anchor0110"/>
+         <topic label="Laying out components using the visual editor" href="topics/tve_layout_overview.html">
+            <topic label="Using null layout" href="topics/tve_layout_null.html"/>
+            <topic label="Aligning components using X/Y alignment" href="topics/tve_align_xy.html"/>
+            <topic label="Specifying a layout manager" href="topics/tve_layout_manager.html"/>
+            <topic label="Layout managers and containers" href="topics/cve_layoutmanagers.html"/>
+            <topic label="Swing and AWT layout managers" href="topics/cve_swinglayout.html">
+               <topic label="Using BorderLayout" href="topics/tve_swinglayout_border.html"/>
+               <topic label="Using GridBag layout" href="topics/tve_swinglayout_gridbag.html">
+                  <topic label="Showing the grid for GridBag layout" href="topics/tve_swinglayout_gridbag1.html"/>
+                  <topic label="Adding or moving components within GridBag layout" href="topics/tve_swinglayout_gridbag2.html"/>
+                  <topic label="Adjusting fill, anchor, and inset constraints in GridBag layout" href="topics/tve_swinglayout_gridbag3.html"/>
+                  <topic label="Spanning components across GridBag rows and columns" href="topics/tve_swinglayout_gridbag4.html"/>
+               </topic>
+               <topic label="Using GridLayout (AWT)" href="topics/tve_swinglayout_grid.html"/>
+               <topic label="Using BoxLayout" href="topics/tve_swinglayout_box.html"/>
+               <topic label="Using CardLayout" href="topics/tve_swinglayout_card.html"/>
+               <topic label="Using FlowLayout" href="topics/tve_swinglayout_flow.html"/>
+            </topic>
+            <topic label="SWT layout managers" href="topics/cve_swtlayout.html">
+               <topic label="Using FillLayout" href="topics/tve_swtlayout_fill.html"/>
+               <topic label="Using FormLayout" href="topics/tve_swtlayout_form.html"/>
+               <topic label="Using GridLayout (SWT)" href="topics/tve_swtlayout_grid.html"/>
+               <topic label="Using RowLayout" href="topics/tve_swtlayout_row.html"/>
+            </topic>
+         </topic>
+         <anchor id="anchor0120"/>
+         <topic label="Working with Swing in the visual editor" href="topics/tve_swingoverview.html">
+            <anchor id="anchor0125"/>
+            <topic label="Changing the Swing look and feel" href="topics/tve_swinglookchange.html"/>
+            <topic label="Adding a new Swing look and feel" href="topics/tve_swinglookadd.html"/>
+            <topic label="JTable and its columns" href="topics/cve_swing_jtable.html"/>
+            <topic label="JSplitPane and its components" href="topics/cve_swing_jsplitpane.html"/>
+            <topic label="JTabbedPane and its pages" href="topics/cve_swing_jtabbedpane.html"/>
+            <anchor id="anchor0050"/>
+         </topic>
+         <anchor id="anchor0130"/>
+         <topic label="Working with SWT in the visual editor" href="topics/tve_swtoverview.html">
+            <anchor id="anchor0135"/>
+            <topic label="SWT programmer refererence" href="../org.eclipse.platform.doc.isv/guide/swt.htm">
+               <topic label="Widgets" href="../org.eclipse.platform.doc.isv/guide/swt_widgets.htm">
+                  <topic label="Controls" href="../org.eclipse.platform.doc.isv/guide/swt_widgets_controls.htm"/>
+                  <topic label="Events" href="../org.eclipse.platform.doc.isv/guide/swt_widgets_events.htm"/>
+                  <topic label="Custom widgets" href="../org.eclipse.platform.doc.isv/guide/swt_widgets_custom.htm"/>
+               </topic>
+               <topic label="Layouts" href="../org.eclipse.platform.doc.isv/guide/swt_layouts.htm">
+                  <topic label="FillLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_fill.htm"/>
+                  <topic label="RowLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_row.htm"/>
+                  <topic label="FormLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_form.htm"/>
+                  <topic label="GridLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_grid.htm"/>
+                  <topic label="StackLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_stack.htm"/>
+                  <topic label="Custom Layouts" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_custom.htm"/>
+               </topic>
+               <topic label="Threading issues" href="../org.eclipse.platform.doc.isv/guide/swt_threading.htm"/>
+               <topic label="Error handling" href="../org.eclipse.platform.doc.isv/guide/swt_error.htm"/>
+               <topic label="Graphics" href="../org.eclipse.platform.doc.isv/guide/swt_graphics.htm"/>
+            </topic>
+         </topic>
+         <anchor id="anchor0140"/>
+         <topic label="Handling events with the visual editor" href="topics/tve_events.html">
+            <topic label="Events, listeners, and adapter classes" href="topics/cve_events.html"/>
+            <topic label="Viewing events for a component" href="topics/tve_events_view.html"/>
+            <topic label="Adding events to a component" href="topics/tve_events_add.html"/>
+            <topic label="Deleting events from a component" href="topics/tve_events_delete.html"/>
+            <topic label="Viewing the source for an event" href="topics/tve_events_viewsource.html"/>
+         </topic>
+         <anchor id="anchor0150"/>
+         <topic label="Using externalized text strings with the visual editor" href="topics/tve_external_strings.html"/>
+         <topic label="Dragging and dropping with the keyboard in the visual editor" href="topics/tve_dragdrop.html"/>
+         <anchor id="anchor0170"/>
       </topic>
-      <topic label="Composing classes visually" href="topics/tjveovrvw.html">
-         <topic label="Writing a customizer" href="topics/tjvecustomizer.html"/>
-         <topic label="Using a customizer to change Java bean properties" href="topics/tjvelcustomizer.html"/>
-         <topic label="Adding a visual bean" href="topics/tjveaddbean.html"/>
-         <topic label="Editing a visual bean" href="topics/tjveedit.html"/>
-         <topic label="Deleting a visual bean" href="topics/tjvedelete.html"/>
+      <anchor id="anchor0175"/>
+      <topic label="Testing and debugging in the visual editor" href="topics/tve_testdebug.html">
+         <anchor id="anchor0180"/>
+         <topic label="Running a Java bean or application" href="topics/tve_run.html"/>
+         <topic label="Configuring options for running a Java bean or application" href="topics/tve_run_config.html"/>
+         <topic label="Debugging a visual Java bean or application" href="topics/tve_debug.html"/>
+         <topic label="Advanced options for debugging Java beans" href="topics/cve_debug_advanced.html"/>
+         <topic label="Testing and deploying applets" href="topics/tve_test_applets.html"/>
+         <topic label="Java bean exceptions" href="topics/cve_exceptions.html"/>
+         <anchor id="anchor0190"/>
       </topic>
-      <topic label="Specifying the location of BeanInfo classes" href="topics/tspcloc.html">
-         <topic label="Keeping beans and BeanInfo classes in different projects" href="topics/tsprj.html"/>
-         <topic label="Keeping beans and BeanInfo classes in the same package" href="topics/tsmpsmp.html"/>
-         <topic label="Keeping beans and BeanInfo classes in different packages in the same project" href="topics/tsmpdfp.html"/>
-         <topic label="Keeping BeanInfo classes in a JAR file" href="topics/tinjar.html"/>
+      <anchor id="anchor0200"/>
+      <topic label="Extending the visual editor" href="topics/tve_extending.html">
+         <anchor id="anchor0210"/>
+         <topic label="Customizers for Java bean properties" href="topics/cve_customizers.html"/>
+         <topic label="Using a customizer to change properties" href="topics/tve_propertycustomizer.html"/>
+         <topic label="BeanInfo classes and introspection" href="topics/cve_beaninfo.html">
+            <topic label="BeanInfo classes for JRE classes" href="topics/cve_beaninfo_jre.html"/>
+            <topic label="Tips for writing BeanInfo classes for the visual editor" href="topics/cve_beaninfo_ve.html"/>
+            <topic label="Controlling BeanInfo information for plug-in developers" href="topics/tve_beaninfo.html"/>
+         </topic>
+         <topic label="Specifying the location of BeanInfo classes" href="topics/tve_beaninfo_location.html">
+            <topic label="Keeping beans and BeanInfo classes in different projects" href="topics/tve_beaninfo_diffproj.html"/>
+            <topic label="Keeping beans and BeanInfo classes in the same package" href="topics/tve_beaninfo_samepkg.html"/>
+            <topic label="Keeping beans and BeanInfo classes in different packages in the same project" href="topics/tve_beaninfo_diffpkg.html"/>
+            <topic label="Keeping BeanInfo classes in a JAR file" href="topics/tve_beaninfo_jar.html"/>
+            <topic label="Explicitly defining the location of BeanInfo classes" href="topics/tve_beaninfo_locationdefine.html"/>
+         </topic>
+         <anchor id="anchor0220"/>
       </topic>
-      <topic label="Other parent-child relationships">
-         <topic label="Swing look and feel" href="topics/clookandfeel.html"/>
-         <topic label="JTable and its columns" href="topics/cjtable.html"/>
-         <topic label="JSplitPane and its components" href="topics/cjspltpane.html"/>
-         <topic label="JTabbedPane and its pages" href="topics/cjtabpane.html"/>
-         <topic label="Swing windows with a content pane" href="topics/cswing.html"/>
-      </topic>
-      <topic label="Properties view" href="topics/cpropvw.html">
-         <topic label="Property editors" href="topics/cpropdialog.html"/>
-         <topic label="Enumerated lists" href="topics/cpropenum.html"/>
-      </topic>
-      <topic label="Viewing all beans in a class" href="topics/tjvejbview.html">
-         <topic label="Reordering Java beans" href="topics/tjvejborder.html"/>
-         <topic label="Viewing and changing bean properties" href="topics/tjveviewprop.html"/>
-      </topic>
-      <topic label="Code generation" href="topics/ccodegen.html">
-         <topic label="Code synchronization" href="topics/ccodesync.html"/>
-         <topic label="Style of generated source" href="topics/cstylegendsrc.html"/>
-         <topic label="Source code patterns" href="topics/csrcpat.html"/>
-         <topic label="Event handling" href="topics/csrcevent.html"/>
-         <topic label="Externalized strings" href="topics/cextstring.html"/>
-         <topic label="Metadata and migrating from VisualAge for Java" href="topics/cmetamig.html"/>
-      </topic>
-      <topic label="Testing and debugging visual beans">
-         <topic label="Identifying Java bean exceptions" href="topics/tjbeaninved.html"/>
-         <topic label="Debugging Java beans" href="topics/tjbeandebug.html"/>
-         <topic label="Testing applets" href="topics/tjveapplet.html"/>
-         <topic label="Testing a Java bean" href="topics/ttstdbg.html"/>
-      </topic>
-      <topic label="BeanInfo classes and introspection" href="topics/cbeaninf.html">
-         <topic label="BeanInfo classes for JRE classes" href="topics/rspcJRE.html"/>
-         <topic label="BeanInfo classes for the Visual Editor for Java" href="topics/rwrtbnf.html"/>
-         <topic label="Controlling BeanInfo information for plug-in developers" href="topics/tcntbnf.html"/>
-         <topic label="Explicitly defining the location of BeanInfo classes" href="topics/tdfnkey.html"/>
-      </topic>
-      <topic label="Reference">
-         <topic label="Dragging and Dropping without using the mouse" href="topics/rdraganddrop.html"/>
-      </topic>
+      <anchor id="anchor0230"/>
+      <topic label="Migrating code from VisualAge for Java for use in the visual editor" href="topics/tve_migrating_vaj.html"/>
+      <topic label="Limitations for the Visual Editor for Java" href="topics/rve_limitations.html"/>
+      <anchor id="anchor0240"/>
    </topic>
+   <anchor id="anchor9999"/>
 </toc>
