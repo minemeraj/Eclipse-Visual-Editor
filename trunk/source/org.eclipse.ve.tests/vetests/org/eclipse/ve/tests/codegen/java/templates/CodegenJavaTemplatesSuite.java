@@ -11,7 +11,7 @@ package org.eclipse.ve.tests.codegen.java.templates;
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenJavaTemplatesSuite.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:38:46 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-13 18:04:04 $ 
  */
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 public class CodegenJavaTemplatesSuite extends TestSuite {
 
-	private static Class testsList[] = { TemplateObjectFactoryTest.class };
+	private static Class testsList[] = { TemplateObjectFactoryTest.class, ClassGenerationTest.class };
 	public static String pkgName = "org.eclipse.ve.tests.codegen.java.templates";
 
 	/**
