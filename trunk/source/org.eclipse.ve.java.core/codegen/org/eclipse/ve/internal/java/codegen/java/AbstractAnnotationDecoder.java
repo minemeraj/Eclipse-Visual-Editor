@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-02-23 19:55:52 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cdm.*;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -131,8 +132,11 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
             if (adapter == null) throw new CodeGenException ("No Adapter") ; //$NON-NLS-1$
             vi.eAdapters().add(adapter) ;
         }
+        
         val.setKey(fAnnotationKey);
-        vi.getKeyedValues().add(val) ;
+        if(vi.getKeyedValues().containsKey(fAnnotationKey))
+        	vi.getKeyedValues().removeKey(fAnnotationKey);
+       	vi.getKeyedValues().add(val) ;
     }
     
     /*

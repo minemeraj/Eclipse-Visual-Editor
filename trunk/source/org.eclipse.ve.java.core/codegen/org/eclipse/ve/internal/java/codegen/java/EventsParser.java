@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-23 19:55:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,6 +23,7 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.java.*;
+
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventProcessingRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -48,6 +49,7 @@ public class EventsParser {
 		fModel = m;
 		fDom = dom ;
 		domMethods = fDom.types[0].methods;
+		// TODO WARNING - CU maybe stale
 		cuMethods = TypeVisitor.getCUMethods(domMethods, CodeGenUtil.getMethods(fModel.getCompilationUnit()), fModel);
 	}
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-23 19:55:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -100,7 +100,10 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 			public String toString() {
 				return "Shadow - "+super.toString() ; //$NON-NLS-1$
 			}
-			public ICompilationUnit getWorkingCopy(boolean forceReconcile) { return null; }
+			public ICompilationUnit getWorkingCopy(boolean forceReconcile) {
+				// TODO Warning - should not be required. This provider is only for resolving
+				return referenceCU; 
+			}
 			public IFileEditorInput getEditor() { return null; }
 			public IFile getFile() { return null; }
 			public IDocument getDocument() { return null; }

@@ -11,17 +11,21 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: IBackGroundWorkStrategy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-23 19:56:12 $ 
  */
 
-import org.eclipse.jface.text.IDocumentListener;
+import java.util.List;
+
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swt.widgets.Display;
+
+import org.eclipse.ve.internal.java.codegen.core.ICodegenLockManager;
 
 
 public interface IBackGroundWorkStrategy {
 	
-	public void run(Display disp, IDocumentListener docListener,
-  	                Object[] items,
+	public void run(Display disp, ICompilationUnit workingCopy,
+					ICodegenLockManager lockManager, List allDocumentEventsList, 
   	                ICancelMonitor monitor) ;
 
 }

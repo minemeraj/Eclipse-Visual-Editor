@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-23 19:55:52 $ 
  */
 
 import java.util.Iterator;
@@ -319,23 +319,24 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 *  Get the initialization string currently held in the composition model
 	 */
 	protected String primGetInitString() {
-
 		Object currentVal = fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));
-		fPropInstance = (IJavaInstance) currentVal;
-		if (currentVal != null) {
-			if (currentVal instanceof IJavaObjectInstance)
-				return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel()));
-			else if (currentVal instanceof IJavaDataTypeInstance)
-				return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel());
+		if (currentVal instanceof IJavaInstance) {
+			fPropInstance = (IJavaInstance) currentVal;
+			if (currentVal != null) {
+				if (currentVal instanceof IJavaObjectInstance)
+					return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel()));
+				else if (currentVal instanceof IJavaDataTypeInstance)
+					return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel());
 
-		} else { // Is it a null value ??
-			EObject eobj = fbeanPart.getEObject();			
-			Iterator itr = ((JavaClass)eobj.eClass()).getAllProperties().iterator();
-			// TODO  
-			while (itr.hasNext()) {
-				EStructuralFeature sf = (EStructuralFeature) itr.next();
-				if (eobj.eIsSet(sf) && sf.equals(fFmapper.getFeature(null)))
-					return NULL_STRING;
+			} else { // Is it a null value ??
+				EObject eobj = fbeanPart.getEObject();			
+				Iterator itr = ((JavaClass)eobj.eClass()).getAllProperties().iterator();
+				// TODO  
+				while (itr.hasNext()) {
+					EStructuralFeature sf = (EStructuralFeature) itr.next();
+					if (eobj.eIsSet(sf) && sf.equals(fFmapper.getFeature(null)))
+						return NULL_STRING;
+				}
 			}
 		}
 		return null;
