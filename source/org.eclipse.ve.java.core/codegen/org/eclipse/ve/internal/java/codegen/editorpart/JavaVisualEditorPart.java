@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.25 $  $Date: 2004-04-09 19:46:56 $ 
+ *  $Revision: 1.26 $  $Date: 2004-04-14 21:05:58 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -96,7 +96,8 @@ import org.eclipse.ve.internal.cde.properties.*;
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
-import org.eclipse.ve.internal.java.codegen.core.*;
+import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
+import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
@@ -150,6 +151,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JavaOutlinePage beansListPage;
 	
 	protected String currentStatusMessage = "";
+	
+	protected  boolean statusMsgSet = false;  // do we have error/info on the status bar
 	
 	/*
 	 *  Registry of just the graphical ones (i.e. not in common with text editor) that need to be accessed by action contributor. 
@@ -500,7 +503,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								if (tool.createTool() instanceof CreationTool ){
 									msg = MessageFormat.format(CodegenEditorPartMessages.getString("JVEActionContributor.Status.Creating(label)"), new Object[]{tool.getLabel()}); //$NON-NLS-1$
 								}
-								getEditorSite().getActionBars().getStatusLineManager().setMessage(msg);									
+								setStatusMsg(getEditorSite().getActionBars(),msg,null);																
 							}
 						});
 					}
@@ -1928,7 +1931,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			else if (part instanceof IViewPart)
 				actionBars = ((IViewPart) part).getViewSite().getActionBars();
 				
-			actionBars.getStatusLineManager().setMessage((Image) null, null); // Clear the status bar as we try and show any errors for the selected JavaBean
+			setStatusMsg(actionBars,null,null); // Clear the status bar as we try and show any errors for the selected JavaBean
 			// Only try and drive the source editor selection if one edit part is selected
 			// If more than one is selected then don't bother 
 			if (selection.size() == 1 && selection.getFirstElement() instanceof EditPart) {
@@ -1941,7 +1944,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						if (errNotifier.getErrorStatus() != IErrorNotifier.ERROR_NONE) {
 							Iterator errors = errNotifier.getErrors().iterator();
 							IErrorHolder.ErrorType error = (IErrorHolder.ErrorType) errors.next();
-							actionBars.getStatusLineManager().setMessage(error.getImage(), error.getMessage());
+							setStatusMsg(actionBars,error.getMessage(),error.getImage());
 						}
 					}
 				}
@@ -2056,5 +2059,26 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			select(SELECT_JVE, ei, null);
 		} else if (model instanceof Notifier)
 			select(SELECT_JVE, (Notifier) model, null);								
+	}
+	
+	protected void setStatusMsg (IActionBars bars, String msg, Image icon) {
+		if (msg==null || bars==null) {
+			statusMsgSet=false;			
+		}
+		else
+			statusMsgSet=true;		
+		
+		bars.getStatusLineManager().setMessage(icon, msg);		
+	}
+	
+	
+
+	/** 
+	 *  Overide 
+	 *  The JavaEditor will erase our error msg on a post selection
+	 */
+	protected void setStatusLineMessage(String msg) {
+		if (msg != null || !statusMsgSet)
+		   super.setStatusLineMessage(msg);
 	}
 }
