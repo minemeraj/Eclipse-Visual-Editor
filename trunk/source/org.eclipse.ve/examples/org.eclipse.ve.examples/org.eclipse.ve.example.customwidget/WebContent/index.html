@@ -1456,6 +1456,9 @@ values and when one is selected the argument to the <span
 generated with the initializationString as defined in the <span
  style="font-family: monospace;">BeanInfo </span>array.<br>
 <br>
+<span style="color: rgb(255, 0, 0);">&lt;&lt;Figure below is too large
+- needs to be max width so it can display itself printing - JRW&gt;&gt;</span><br>
+<br>
 <img style="width: 910px; height: 804px;" alt=""
  src="images/index.53.jpg"><br>
 <br>
@@ -1679,16 +1682,16 @@ meta object that the Visual Editor uses.&nbsp; This is done with a
 </p>
 <pre>    &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br><img
  style="width: 24px; height: 13px;" alt=""
- src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif">   &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br>        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;<br>    <br><img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"> &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>      xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br>      xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;<br>    <br><img
  style="width: 24px; height: 13px;" alt=""
- src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">  &lt;event:Add featureName="eStructuralFeatures"&gt;<br>       &lt;addedEObjects xsi:type="ecore:EReference" <img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif">   &lt;event:Add featureName="eStructuralFeatures"&gt;<br>        &lt;addedEObjects xsi:type="ecore:EReference" <img
  style="width: 24px; height: 13px;" alt=""
  src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif">name="text" unsettable="true"&gt;<br><img
  style="width: 24px; height: 13px;" alt=""
- src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">      &lt;eAnnotations<img
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">       &lt;eAnnotations<img
  style="width: 24px; height: 13px;" alt=""
  src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif"> xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          <br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">        cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;<br>       &lt;/addedEObjects&gt;<br>     &lt;/event:Add&gt;   <br><br>   &lt;/xmi:XMI&gt;<br></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">         cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;<br>        &lt;/addedEObjects&gt;<br>      &lt;/event:Add&gt;   <br><br>    &lt;/xmi:XMI&gt;<br></pre>
 <p>The header of a .override file declares the namespaces of the EMF
 packages used.&nbsp; Two packages are required to define the objects
 required for the CustomLabelEditor, the&nbsp;<img
@@ -1896,15 +1899,19 @@ Examples of its usage are shown below:<br>
 </p>
 <pre><span style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
  style="color: rgb(51, 51, 255);">"java.lang.Boolean"</span>, aResourceSet, <span
- style="color: rgb(51, 51, 255);">"Boolean.TRUE"</span>);  // Create a Boolean.TRUE instance<br><span
+ style="color: rgb(51, 51, 255);">"Boolean.TRUE"</span>);  <span
+ style="color: rgb(0, 153, 0);">// Create a Boolean.TRUE instance</span><br><span
  style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
  style="color: rgb(51, 51, 255);">"java.awt.Color"</span>, aResourceSet , <span
- style="color: rgb(51, 51, 255);">"java.awt.Color.red"</span>);  // Create an instance of the AWT color red<br><span
+ style="color: rgb(51, 51, 255);">"java.awt.Color.red"</span>);  <span
+ style="color: rgb(0, 153, 0);">// Create an instance of the AWT color red</span><br><span
  style="color: rgb(153, 0, 0);"></span>BeanUtilities.createJavaObject(<span
  style="color: rgb(51, 51, 255);">"boolean"</span>, aResourceSet, <span
- style="color: rgb(51, 51, 255);">"true"</span>);  // Create an instance of the primitive boolean true<br>BeanUtilities.createJavaObject(<span
+ style="color: rgb(51, 51, 255);">"true"</span>);  <span
+ style="color: rgb(0, 153, 0);">// Create an instance of the primitive boolean true</span><br>BeanUtilities.createJavaObject(<span
  style="color: rgb(51, 51, 255);">"java.lang.String"</span>, aResourceSet, <span
- style="color: rgb(51, 51, 255);">"\\"Hello World\\""</span>); // Create an instance of the String "Hello World"<br></pre>
+ style="color: rgb(51, 51, 255);">"\\"Hello World\\""</span>); <span
+ style="color: rgb(0, 153, 0);">// Create an instance of the String "Hello World"</span><br></pre>
 <p><img
  src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
  alt="Note: " height="13" width="62"> The third argument to the method
@@ -2142,15 +2149,19 @@ paths and is the design principle that allows the Visual Editor to be
 extended to support new target environment and topologies other than
 just pure Java.&nbsp; However at some point the Visual Editor does need
 to transport objects back from the target JVM to Eclipse.&nbsp; An
-example of this is that having got an IBeanProxy for a rectangle result
-to the getBounds() method this must be converted in its four
+example of this is that having got an <span
+ style="font-family: monospace;">IBeanProxy </span>for a rectangle
+result
+to the <span style="font-family: monospace;">getBounds() </span>method
+this must be converted in its four
 constituient int values so that a draw2D rectangle can be created for
 the GEF figure.&nbsp; Likewise the Properties view shows the user the
 values of the target VM objects.&nbsp; The point at which an object on
 the target VM can be retrieved within the Eclipse workbench is when it
 is a primitive object or a java.lang peer of a primitive or a String
-instance.&nbsp; This is done by having four subinterfaces of IBeanProxy
-in the package org.eclipse.jem.internal.proxy.core.<br>
+instance.&nbsp; This is done by having four subinterfaces of <span
+ style="font-family: monospace;">IBeanProxy
+</span>in the package <span style="font-family: monospace;">org.eclipse.jem.internal.proxy.core</span>.<br>
 <br>
 <table cellpadding="2" cellspacing="2" border="1"
  style="text-align: left; width: 50%;">
@@ -2259,21 +2270,14 @@ in the package org.eclipse.jem.internal.proxy.core.<br>
  style="font-family: monospace;">number numberValue()</span><br>
       </td>
     </tr>
-    <tr>
-      <td style="vertical-align: top;">IIntegerBeanProxy<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
   </tbody>
 </table>
 <br>
 <img
  src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/note.gif"
  alt="Note: " height="13" width="62"> It is possible to register custom
-sub instances of IBeanProxy for plugin specific objects and this occurs
+sub instances of <span style="font-family: monospace;">IBeanProxy </span>for
+plugin specific objects and this occurs
 with <span style="font-style: italic;">org.eclipse.ve.jfc </span>plugin
 that has introduces the types <span style="font-family: monospace;">IPointBeanProxy</span>,<span
  style="font-family: monospace;"> IRectangleBeanProxy</span> and <span
@@ -2338,84 +2342,377 @@ is overriden to ignore the argument and call&nbsp;<img
 <span style="font-family: monospace;">super.updateContents()</span>
 with the actual String.<br>
 </p>
-<p style="color: rgb(153, 0, 0);">&lt;&lt; edit up to here - JRW
-&gt;&gt;&nbsp;
+<h3>Testing the <span style="font-style: italic;">text </span>dialog
+cell editor</h3>
+To create the curstom <span style="font-style: italic;">text </span>editor
+several steps were involved:<br>
+<br>
+<ul>
+  <li>Use the extension point <span style="font-style: italic;">org.eclipse.ve.jem.beaninfo.registrations</span>
+to
+declare the /override folder structure associated with the
+PrompterContainer for the Java package org.eclipse.ve.examples.prompter</li>
+  <li>Create a <span style="font-style: italic;">MyCustomPrompter.override</span>
+file in the /overrides directory
+that added a BasePropertyDecorator to the EReference for the <span
+ style="font-style: italic;">text </span>structural feature.</li>
+  <li>Set the <span style="font-style: italic;">cellEditorClassname </span>property
+of the BasePropertyDecorator to be the class
+org.eclipse.ve.examples.CustomLabelEditor</li>
+  <li>Create the <span style="font-family: monospace;">CustomLabelEditor
+    </span>class extending the JFace abstract
+    <span style="font-family: monospace;">DialogEditorClass </span>(and
+implementing the interface <span style="font-family: monospace;">INeedData
+    </span>to ensure
+it is given the Visual Editor's EditDomain)</li>
+  <li>Override the method <span style="font-family: monospace;">openDialogBox(Control
+aControl)</span> on
+    <span style="font-family: monospace;">CustomLabelEditor </span>to
+open an inner subclass of <span style="font-family: monospace;">TextDialogEditor</span></li>
+  <li>The <span style="font-family: monospace;">TextDialogEditor </span>contains
+a content pane which allows the <span style="font-style: italic;">text
+    </span>property to be edited - this
+is a subclass of <span style="font-family: monospace;">Composite </span>called
+    <span style="font-family: monospace;">LabelDialogContent</span></li>
+  <li>To render the property correctly in CustomLabelEditor the method<span
+ style="font-family: monospace;">
+doSetValue(Object)</span> and <span style="font-family: monospace;">updateContents(value)</span>
+is overriden and the
+target VM string retrieved and displayed</li>
+</ul>
+<br>
+To test the <span style="font-style: italic;">text </span>property
+start the runtime Eclipse workbench, drop an instance of <span
+ style="font-family: monospace;">MyCustomPrompter </span>onto a <span
+ style="font-family: monospace;">Shell </span>or <span
+ style="font-family: monospace;">Composite </span>and select and edit
+the <span style="font-style: italic;">text </span>property.&nbsp; If
+it fails and has the default String label and cell editor look in the<span
+ style="font-style: italic;"> .log </span>file in the .metadata
+directory of the target workbench for any syserr output.&nbsp; These
+will typically be because some XMI syntax in the .override file was
+entered incorrectly.&nbsp; If there is no output then it is possible
+that the definition of the beaninfo.registrations extension point is
+incorrect, and for this debug the <span style="font-family: monospace;">BeanInfoClassAdapter
+</span>class to see that the .override file being searched for.&nbsp; <br>
+<br>
+The next step of the tutorial will create a special GEF edit part for
+MyCustomPrompter that instead of just drawing an image of the live
+custom control, renders some text and icon on top of the graphic.<br>
+<h2><a name="Overriding_a_GEF_edit_part">Supplying a custom GEF edit
+part<br>
+</a></h2>
+<p>Classes implement the interface <span
+ style="font-family: monospace;">org.eclipse.gef.GraphicalEditPart</span>
+act as mediators between a model object and the draw2D API that renders
+the object onto the GEF canvas.&nbsp; The edit part to use for a given <span
+ style="font-family: monospace;">IJavaInstance </span>(the model
+object) by the Visual Editor is obtained from the <span
+ style="font-family: monospace;">ClassDescriptorDecorator </span>that
+annotates its JavaClass.&nbsp; If no explicitly defined <span
+ style="font-family: monospace;">ClassDescriptorDecorator </span>can
+be found, or the one found doesn't have a graphical edit part class
+defined, then the inheritance chain of the EMF <span
+ style="font-family: monospace;">JavaClass </span>(that shadows the
+Java type hierarchy) is searched until a graphical edit part class name
+is found.&nbsp; In the absence of any override for MyCustomPrompter the
+Visual Editor will pick up the inherited edit part class <span
+ style="font-family: monospace;">CompositeGraphicalEditPart </span>because
+<span style="font-family: monospace;">MyCustomPrompter </span>extends <span
+ style="font-family: monospace;">Composite</span>.<br>
 </p>
-<h2><a name="Overriding_a_GEF_edit_part">Overriding a GEF edit part</a></h2>
-<p>&nbsp;</p>
-<p>Since the MyCustomPrompter is a SWT Composite, VE will use the
-default Composite GEF edit part.&nbsp; In this tutorial we are going to
-override the edit part that VE will use for the prompter.&nbsp; This
-edit part will not do much, but add to the prompter's image an <font
- color="#0000ff">icon</font>, and some <font color="#0000ff">text</font>
-on top of the screen scrape image of the prompter.&nbsp; The new class
-<a
- href="../src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">CustomWidgetGraphicalEditPart.java</a>
-adds this logic as following:</p>
-<pre>public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {<br><br>	protected IFigure createFigure() {<br><br>		<font
- color="#0000ff">ImageFigure figure = (ImageFigure) super.createFigure();</font><br>		<font
- color="#0000ff">Label customFigure </font>= <font color="#0000ff">new Label("VE Rules",CustomwidgetPlugin.getCustomImage());</font><br>		customFigure.setForegroundColor(ColorConstants.red);<br>		customFigure.setTextPlacement(PositionConstants.SOUTH);<br>		// ImageFigure has no layout, so we will have to explicitly set the size().<br>		// To get a prefered size (before we hoop up to the hierarchy), Label will need a Font<br>		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());<br>		customFigure.setSize(customFigure.getPreferredSize());<br><br>		<font
- color="#0000ff">figure.add(customFigure);</font><br><br>		return figure;<br>	}<br><br>}<br></pre>
-<p>The edit part extends the default Control editpart.&nbsp; The reason
-we did not extend the default composite one, is that we do not want to
-allow one to "drop" anything into our prompter (this widget is still a
-Composite).&nbsp; All we do here, is add a Label figure to the main
-(screen scraped) figure.</p>
-<p>Now that we have a custom edit part we will tell VE to use it by
-updating the
-<a
- href="../overrides/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.override">MyCustomPrompter.override</a>
-file as following;</p>
-<pre>    <br>  &lt;event:AddMany featureName="eAnnotations"&gt;<br>	  &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br>	    <font
- color="#0000ff">graphViewClassname</font>="<font color="#ff0000">org.eclipse.ve.example.customwidget</font>/<font
- color="#0000ff">org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart</font>"&gt;<br>	  &lt;/addedEObjects&gt; <br>	  <br>	  <font
- color="#c0c0c0">&lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"<br>           expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   </font>              <br>  &lt;/event:AddMany&gt;   <br> <br></pre>
-<p>We are annotating the class itself with a <i>ClassDescriptorDecorator</i>.&nbsp;
-A <i>ClassDescriptorDecorator</i> has a <i>graphViewClassname</i>
-property.&nbsp; It uses the &lt;plugin_name&gt;/&lt;class_name&gt;
-format.</p>
+<p>This section of the tutorial will build a custom graphical edit part
+named
+org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart.&nbsp;
+This will be declared in the MyCustomPrompter.override file as being
+the graphical edit part class to use, and the class will be specialized
+to create the draw2D desired effects.<br>
+</p>
+<p>MyCustomPrompter.override should be updated as below.<br>
+</p>
+<pre><span style="color: rgb(192, 192, 192);">   <span
+ style="color: rgb(153, 153, 153);"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);"></span><span
+ style="color: rgb(153, 153, 153);"><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"></span><span
+ style="color: rgb(153, 153, 153);">     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif"> &lt;event:Add featureName="eAnnotations"&gt;<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">     graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>      &lt;/addedEObjects&gt; <br>    &lt;/event:Add&gt;<br>    <br><span
+ style="color: rgb(153, 153, 153);"><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">          cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">    &lt;/event:Add&gt;   </span><br
+ style="color: rgb(153, 153, 153);"><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">  &lt;/xmi:XMI&gt;</span></pre>
+<p>To specify that <span style="font-family: monospace;">BasePropertyDecorator
+</span>as annotating the <span style="font-style: italic;">type </span>structural
+feature (as was done for the CustomLabelEditor earlier) an&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+event:Add was created for the EMF feature <span
+ style="font-style: italic;">eStructuralFeature</span><span
+ style="font-style: italic;">s</span>.&nbsp; This represents the
+features or properties on the JavaClass, and the decorator was then
+defined as annotating the feature.&nbsp; To annotate the actual
+JavaClass (as opposed to one of its specific features) an&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"> <span
+ style="font-family: monospace;">event:Add</span> is created directly
+on the <span style="font-style: italic;">eAnnotations </span>feature
+as a top level element in the XMI.&nbsp; Because the file name is <span
+ style="font-style: italic;">MyCustomPrompter.override</span> the
+Visual Editor will process this as an addition to the annotations of
+the EMF definition of the <span style="font-family: monospace;">MyCustomPrompter
+</span>class.<br>
+</p>
+<p>The class being added as an annotation to MyCustomPrompter is an
+instance of&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_3.gif">
+org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator.&nbsp;
+As described earlier<span style="color: rgb(204, 0, 0);"> &lt;&lt;Add
+anchor ref&gt;&gt; </span>the XMI describes this as <span
+ style="font-style: italic;">EMFPackageName:EMFClassName</span> which
+corresponds to the EMF registered package <span
+ style="font-family: monospace;">org.eclipse.ve.internal.cde.decorators.DecoratorsPackage</span>.&nbsp;&nbsp;
+A common coding error with XMI is to declare the element for an
+annotation assuming that it is the packageName:className without having
+the namespace definition&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag1.gif"> at the top of the XMI file.&nbsp; <br>
+</p>
+<p><br>
+ClassDescriptorDecorator stores the name of the graphical edit part to
+use by GEF with the syntax of pluginName/qualifiedClassName. For this
+tutorial the edit part created is called <span
+ style="font-family: monospace;">org.eclipse.ve.example.CustomWidgetGraphicalEditPart</span>
+and in the plugin name <span style="font-style: italic;">org.eclipse.ve.example.,customwidget</span>.
+<br>
+</p>
+<p> the method responsible for creating the draw2D figure shown on the
+GEF canvas is createFigure() and this is overriden to place a draw2L
+label on top of the inherited behavior (an image of the live
+visual).&nbsp; The method is shown below and the full class list is
+available at<a
+ href="../src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">CustomWidgetGraphicalEditPart.java</a>.<br>
+</p>
+<pre><span style="color: rgb(153, 0, 0);">public class</span> CustomWidgetGraphicalEditPart <span
+ style="color: rgb(153, 0, 0);">extends </span><span
+ style="color: rgb(153, 0, 0);"><img style="width: 24px; height: 13px;"
+ alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"></span><span
+ style="color: rgb(153, 0, 0);"> </span>ControlGraphicalEditPart {<br><br>  <span
+ style="color: rgb(153, 0, 0);">protected </span>IFigure createFigure() {<br><br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_2.gif"> ImageFigure figure = (ImageFigure) super.createFigure();<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"> Label customFigure = <span
+ style="color: rgb(153, 0, 0);">new</span> Label(<span
+ style="color: rgb(51, 51, 255);">"VE Rules"</span>,CustomwidgetPlugin.getCustomImage());<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif"> customFigure.setForegroundColor(ColorConstants.red);<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> customFigure.setTextPlacement(PositionConstants.SOUTH);<br>   <span
+ style="color: rgb(0, 153, 0);"> // ImageFigure has no layout, so we will have to explicitly set the size().</span><br
+ style="color: rgb(0, 153, 0);"><span style="color: rgb(0, 153, 0);">    // To get a prefered size (before we look up the hierarchy), Label will need a Font</span><br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());<br>    customFigure.setSize(customFigure.getPreferredSize());<br><br>    figure.add(customFigure);<br><br>    <span
+ style="color: rgb(153, 0, 0);">return </span>figure;<br>    }<br>  }<br></pre>
+<p>Although <span style="font-family: monospace;">MyCustomPrompter </span>extends
+<span style="font-family: monospace;">Composite </span>and the Visual
+Editor uses the class <span style="font-family: monospace;">CompositeGraphicalEditPart
+</span>for visually edited composites, the <span
+ style="font-family: monospace;">CustomWidgetGraphicalEditPart </span>is
+defined as extending <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> <span style="font-family: monospace;">ControlGraphicalEditPart</span>.&nbsp;
+This is because <span style="font-family: monospace;">CompositeGraphicalEditPart
+</span>contains all of the GEF behaviof to allow dropping of child
+controls and dealing with layout management, and while <span
+ style="font-family: monospace;">MyCustomPrompter </span>physically
+extends <span style="font-family: monospace;">Composite </span>to
+enable it to have child controls our usage of it is as a closed black
+box that can't accept more child controls and logically extends <span
+ style="font-family: monospace;">Control</span>'s behavior.&nbsp; <br>
+</p>
+<p>The inherited implementation from <span
+ style="font-family: monospace;">ControlGraphicalEditPart </span>returns
+the class<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> <span style="font-family: monospace;">ImageFigure</span>.&nbsp;
+This has the logic required to render a picture of the live
+control.&nbsp; To this figure we add a draw2D Label that has an icon <img
+ style="width: 16px; height: 16px;" alt="" src="images/custom.gif"> and
+the text <span style="color: rgb(255, 0, 0);">VE Rules</span> drawn in
+red.&nbsp; The Label is <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_3.gif"> created with the text and image and its&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">
+foreground color and details about how t&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+place the text (below the icon) are specified.&nbsp; The size of the
+figure is set to its preferred size, and because this involves
+calculating using the fontMetrics to determine the width of the label's
+text the font must be&nbsp;<img style="width: 24px; height: 13px;"
+ alt="" src="images/tag_6.gif"> explicitly set to the value it will
+acquire when it is added to the parent.&nbsp; Having complete the
+creation of the Label it is added as a child of the <span
+ style="font-family: monospace;">ImageFigure</span>.<br>
+</p>
+<p>To test the CustomWidgetGraphicalEditPart launch the Eclipse
+workbench target and verify the the image of a MyCustomPrompter class
+now renders itself with an image of the live visual covered with the <span
+ style="color: rgb(255, 0, 0);">VE R</span><span
+ style="color: rgb(255, 0, 0);">ules </span>text and icon <img
+ style="width: 16px; height: 16px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/custom.gif"></p>
+<img style="border: 1px solid ; width: 539px; height: 277px;" alt=""
+ src="images/index.25.jpg">
+<p>&nbsp;The next step in the tutorial is to look at how to affect the
+code generation subsystem of the Visual Editor. <br>
+</p>
+<h2><a name="Overriding_an_Expression_Decoder">Custom code generation
+for the <span style="font-style: italic;">text </span>property<br>
+</a></h2>
+<p>&nbsp;The code generation subsystem is responsible for parsing a
+.java file when it is opened by the Visual Editor and building up the
+graph of IJavaInstance objects that represent the model of the visual
+class.&nbsp; It does this by working with the JDT's Abstract Syntax
+Tree (AST) that represents a set of fine grained nodes for every
+compilable fragment of Java source.&nbsp; For every AST expression that
+is modeled by the Visual Editor (not all source represents code
+constructs that the Visual Editor is interested in showing to the user
+or collecting in its model) there is an expression decoder.&nbsp;&nbsp;
+The decoder has two helper classes; a feature mapper and a decoder
+helper.<br>
+</p>
+<p>The feature mapper is responsible for tying together a source code
+expression in the actual Java file to a modelled feature in the Visual
+Editor's EMF model and vice-versa. <br>
+</p>
+<p>The decoder helper has knowledge of how to parse AST expressions and
+build up the Visual Editor model, as well as how to generate source
+code from the model.&nbsp; <br>
+</p>
+<p>The task of the decoder is largely a delegate to determine which
+feature mapper and decoder helper to use for a given source code
+expression<br>
+</p>
 <p>
-&nbsp;</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">If you
-are reading this before a VE1.1 release build, you may have to do a
-Project-&gt;clean, close, and reopen the java project that you are
-using the <i>
-MyCustomPrompter</i> class so that the introspector clear its beaninfo
-cache.</p>
-<p>&nbsp;</p>
-<p>The new edit part will render the Prompter figure with the new Label
-figure (text and icon) as following:</p>
-<p class="PictureParagraph">
-<img border="0" src="images/index.25.jpg" class="PictureStyle"></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2><a name="Overriding_an_Expression_Decoder">Overriding an Expression
-Decoder</a></h2>
-<p>&nbsp;</p>
-<p>Since the <i>MyCustomPrompter</i> is a SWT Composite, VE will use
-the default Composite Decoder to handle the reverse parse, and code
-generation needs for the MyCustomPrompter class.&nbsp; For every source
-code (AST) expression that is modeled,&nbsp; VE will use an instance of
-an expression Decoder.&nbsp; The Decoder uses two helpers: a <i>feature</i>
-mapper, and a <i>decoder</i> helper.&nbsp; The <i>feature</i> mapper
-is the guy that maps a source code expression to a VE (EMF) model
-feature and vice versa.&nbsp; The decoder helper is a specific helper
-that knows how to reverse parse (AST) expressions into the VE model, as
-well as generate source code from the VE model.&nbsp; The role if the
-Decoder itself is to figure out which mapper and helper to use for a
-given expression.</p>
-<p>&nbsp;</p>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">Decoders
-to not generate AST trees because in many cases the source code is
-generated from a JavaJet (JSP like) templates.&nbsp; These templates
-can potentially be modified by users and picked up by VE on the fly.</p>
-<p>In this tutorial we will use a simple Decoder. It will add a comment
-when generating a <i>setText</i> expression (as a result of changing
-the <i><b>text</b></i> property is changed for a MyCustomPrompter
-instance).&nbsp; We will first create the
-<a
+<img src="images/note.gif" alt="Note: " height="13" width="62">
+Decoders
+to not generate AST nodes directly because in many cases the Java
+source is
+created instead from a JavaJet templates.&nbsp; These templates
+can be modified by users and recognized by the Visual Editor and will
+be covered in more detail in a specific tutorial covering the code
+generation subsystem.<br>
+</p>
+<p>This tutotrial will create a decoder helper that adds a comment<span
+ style="font-family: monospace; color: rgb(0, 153, 0);"> // Prompter
+Text Property</span> to the line of Java code generated for the
+setText(String aString) method of the <span style="font-style: italic;">text
+</span>property.</p>
+<p><span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">private
+void</span> createMyCustomPrompter() {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; myCustomPrompter = <span
+ style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
+SWT.<span style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;"></span><span
+ style="font-family: monospace;">&nbsp; myCustomPrompter.setText(<span
+ style="color: rgb(51, 51, 255);">"Text value"</span>); <span
+ style="color: rgb(0, 153, 0);">// Prompter Text Property </span></span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}<br>
+</span></p>
+<p>The class created to do this is <span
+ style="font-family: monospace;">org.eclipse.ve.examples.customwidget.CustomPrompterDecoderHelper</span>.&nbsp;&nbsp;
+This is declared in the <span style="font-style: italic;">MyCustomPrompter.override
+</span>file as annotating the <span style="font-family: monospace;">JavaClass
+</span>definition for <span style="font-family: monospace;">MyCustomPrompter
+</span>so the Visual Editor uses it.<br>
+</p>
+<pre><span style="color: rgb(192, 192, 192);">   <span
+ style="color: rgb(153, 153, 153);"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);"></span><span
+ style="color: rgb(153, 153, 153);"></span><span
+ style="color: rgb(153, 153, 153);">      xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
+ style="color: rgb(153, 153, 153);"><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_3.gif"></span><span
+ style="color: rgb(153, 153, 153);"> </span>  xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
+ style="color: rgb(153, 153, 153);"><br
+ style="color: rgb(153, 153, 153);"></span><span
+ style="color: rgb(153, 153, 153);">      xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
+ style="color: rgb(153, 153, 153);"><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>     <span
+ style="color: rgb(153, 153, 153);"> &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">        graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt; </span><br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass"<img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_4.gif">source="codegen.CodeGenHelperClass"<br><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_5.gif">     expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   <br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br>    <br><span
+ style="color: rgb(153, 153, 153);">    &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">          cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">      &lt;/addedEObjects&gt;</span><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">    &lt;/event:Add&gt;   </span><br
+ style="color: rgb(153, 153, 153);"><br
+ style="color: rgb(153, 153, 153);"><span
+ style="color: rgb(153, 153, 153);">  &lt;/xmi:XMI&gt;</span></pre>
+<p>Earlier when just the single ClassDecriptorDecorator was added as an
+annotation to MyCustomPrompter the XMI tag<span
+ style="font-style: italic;"> </span>used in the .override file was <span
+ style="font-style: italic;">&lt;event:Add&gt;</span>.&nbsp; This is
+the syntax to add a single object, however because a second annotation
+now needs to be added the file is changed to use the&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"> <span
+ style="font-style: italic;"><span style="font-style: italic;"><img
+ style="width: 24px; height: 13px;" alt=""
+ src="file:///C:/Eclipse_3_1_M5a/eclipse/workspaces/dev_03_09/org.eclipse.ve.example.customwidget/WebContent/images/tag_6.gif"></span></span><span
+ style="font-style: italic;">&lt;event:AddMany&gt; </span>element for
+the two decorators.&nbsp; The decorator added is a CodeGenHelperClass
+and this is done through adding&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"> the
+namespace for codeGenHelper in the XMI package declarations and an
+xsi:type of <span style="font-style: italic;">namespace:CodeGenHelperClass
+</span>with symtax&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_4.gif"> <span style="font-style: italic;">source="codegen.CodeGenHelperClass</span>".&nbsp;
+The expression decoder is stored in the expDecoder feature of the
+CodeGenHelperClass and defined with the syntax of&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
+pluginName/qualifiedClassName.<br>
+</p>
+<p><br>
+<span style="font-family: monospace;"></span></p>
+<p> <a
  href="../src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java">CustomPrompterDecoderHelper.java</a>
 helper.&nbsp; </p>
 <pre>public class CustomPrompterDecoderHelper extends SimpleAttributeDecoderHelper {<br>	<br>	/* (non-Javadoc)<br>	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])<br>	 */<br>	public String generate(Object[] noArgs) throws CodeGenException {		<br>		<font

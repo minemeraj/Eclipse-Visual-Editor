@@ -34,12 +34,8 @@ public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
 		Label customFigure = new Label("VE Rules",CustomwidgetPlugin.getCustomImage());
 		customFigure.setForegroundColor(ColorConstants.red);
 		customFigure.setTextPlacement(PositionConstants.SOUTH);
-		// ImageFigure has no layout, so we will have to explicitly set the size().
-		// To get a prefered size (before we hoop up to the hierarchy), Label will need a Font
-		customFigure.setFont(((GraphicalEditPart)getParent()).getFigure().getFont());
-		customFigure.setSize(customFigure.getPreferredSize());
-
 		figure.add(customFigure);
+//		customFigure.setSize(customFigure.getPreferredSize());		
 
 		return figure;
 	}
