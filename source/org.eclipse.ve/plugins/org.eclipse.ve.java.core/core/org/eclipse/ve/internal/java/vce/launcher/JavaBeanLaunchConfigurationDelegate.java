@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-30 15:20:08 $ 
  */
 
 
@@ -136,8 +136,8 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) {
 			String swtLib = ProxyPlugin.getPlugin().localizeFromBundle(Platform.getBundle("org.eclipse.swt"), "$os$");
 			if (swtLib != null) {
-				// chop off the beginning / if there is one
-				if (swtLib.charAt(0) == '/') {
+				// chop off the beginning / if there is one on Windows
+				if (Platform.getOS().equals(Platform.OS_WIN32) && swtLib.charAt(0) == '/') {
 					swtLib = swtLib.substring(1);
 				}
 				args.append(" -Djava.library.path=\"" + swtLib + "\"");

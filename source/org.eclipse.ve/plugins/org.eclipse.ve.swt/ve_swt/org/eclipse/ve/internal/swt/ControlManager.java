@@ -3,6 +3,7 @@ package org.eclipse.ve.internal.swt;
 import java.io.DataInputStream;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -103,7 +104,11 @@ public void setControlBeanProxy(IBeanProxy aControlBeanProxy){
  		try {
 			if (fControlManagerProxy == null) {
 				// Get a new instance of a control manager proxy on the target VM				
-				IBeanTypeProxy componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.ControlManager"); //$NON-NLS-1$
+				IBeanTypeProxy componentManagerType = null;
+				if(Platform.OS_WIN32.equals(Platform.getOS()))
+					componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.win32.Win32ControlManager"); //$NON-NLS-1$
+				else if(Platform.WS_GTK.equals(Platform.getWS()))
+					componentManagerType = fControlBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.GTKControlManager"); //$NON-NLS-1$
 				fControlManagerProxy = componentManagerType.newInstance();
 				// Register a callback link between the target VM and us so that we get called back by it
 				// when the control moves or is resized

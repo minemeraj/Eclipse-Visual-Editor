@@ -4,15 +4,13 @@ import java.io.DataOutputStream;
 
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
 import org.eclipse.jem.internal.proxy.common.*;
 
-public class ControlManager implements ICallback , ControlListener {
+public abstract class ControlManager implements ICallback , ControlListener {
 	
 	public static final int 
 		CO_RESIZED = 1,
@@ -173,13 +171,16 @@ public class ControlManager implements ICallback , ControlListener {
 		});
 		return location[0];	
 	}
+	
+	public abstract IImageCapture getImageCapturer();
+	
 	public void captureImage(){
 		Environment.getDisplay().syncExec(new Runnable(){
 			public void run(){
 				try{
 					final DataOutputStream outputStream = new DataOutputStream(fServer.requestStream(fCallbackID,0));
 					//----					
-					ImageCapture grabber = new ImageCapture();
+					IImageCapture grabber = getImageCapturer();
 					//----
 					Image image = grabber.getImage(fControl,true);
 					final ImageData imageData = image.getImageData();
