@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
+    nsURI="http:///org/eclipse/ve/internal/jcm.ecore" nsPrefix="org.eclipse.ve.internal.jcm">
+  <eClassifiers xsi:type="ecore:EClass" name="BeanDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
+    <eAttributes name="beanProxyClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BeanFeatureDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
+    <eAttributes name="beanProxyMediatorName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="childFeature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BeanComposition" eSuperTypes="../../org.eclipse.ve.cde/model/cdm.ecore#//DiagramData #//MemberContainer">
+    <eReferences name="components" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        upperBound="-1"/>
+    <eReferences name="listenerTypes" eType="#//ListenerType" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractEventInvocation" abstract="true">
+    <eReferences name="callbacks" eType="#//Callback" upperBound="-1" containment="true"/>
+    <eReferences name="listener" eType="#//Listener" eOpposite="#//Listener/listenedBy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListenerType">
+    <eReferences name="extends" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"/>
+    <eReferences name="implements" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"
+        upperBound="-1"/>
+    <eReferences name="is" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//JavaClass"/>
+    <eReferences name="listeners" eType="#//Listener" upperBound="-1" containment="true"
+        eOpposite="#//Listener/listenerType"/>
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="thisPart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MemberContainer">
+    <eReferences name="properties" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        upperBound="-1" containment="true"/>
+    <eReferences name="members" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Listener">
+    <eReferences name="listenedBy" eType="#//AbstractEventInvocation" upperBound="-1"
+        eOpposite="#//AbstractEventInvocation/listener"/>
+    <eReferences name="listenerType" eType="#//ListenerType" transient="true" eOpposite="#//ListenerType/listeners"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Callback">
+    <eReferences name="method" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//Method"
+        lowerBound="1"/>
+    <eAttributes name="sharedScope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventInvocation" eSuperTypes="#//AbstractEventInvocation">
+    <eReferences name="event" eType="ecore:EClass ../../org.eclipse.jem.beaninfo/model/beaninfo.ecore#//BeanEvent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyChangeEventInvocation" eSuperTypes="#//AbstractEventInvocation">
+    <eReferences name="addMethod" eType="ecore:EClass ../../com.ibm.etools.java.core/rose/java.ecore#//Method"
+        lowerBound="1"/>
+    <eReferences name="properties" eType="#//PropertyEvent" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyEvent">
+    <eAttributes name="propertyName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="useIfExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BeanSubclassComposition" eSuperTypes="#//BeanComposition">
+    <eReferences name="thisPart" eType="ecore:EClass ../../org.eclipse.jem/model/instance.ecore#//IJavaObjectInstance"
+        lowerBound="1" containment="true"/>
+    <eReferences name="methods" eType="#//JCMMethod" upperBound="-1" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JCMMethod" eSuperTypes="#//MemberContainer">
+    <eReferences name="initializes" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        upperBound="-1"/>
+    <eReferences name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

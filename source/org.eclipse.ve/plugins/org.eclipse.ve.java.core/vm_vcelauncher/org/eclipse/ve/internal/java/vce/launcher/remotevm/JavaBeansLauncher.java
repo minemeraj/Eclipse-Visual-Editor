@@ -1,0 +1,223 @@
+package org.eclipse.ve.internal.java.vce.launcher.remotevm;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: JavaBeansLauncher.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ */
+
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.*;
+
+import javax.swing.*;
+/**
+ * This class is designed to help test VCE generated JavaBeans
+ * It is called by JavaBeansLauncher in the IDE and launches clases for testing based on a set of 
+ * hard coded rules.  It may be made extensible through a plugin point based on class type
+ * for some future release
+ */
+public class JavaBeansLauncher {
+	
+	public static Point OFF_SCREEN = new Point(-10000,-10000);
+	public static Point ON_SCREEN = new Point(0,0);
+	
+public static void main(String[] args){
+
+	String nameOfClassToLaunch = System.getProperty("vce.launcher.class"); //$NON-NLS-1$
+	// Set the look and feel if required	
+	String lookAndFeelArg = System.getProperty("vce.launcher.lookandfeel"); //$NON-NLS-1$
+	// <default> means don't change the L&F from the one the JVM has used
+	if (lookAndFeelArg != null && !(lookAndFeelArg.equals(""))){ //$NON-NLS-1$
+		try { 
+			UIManager.setLookAndFeel(lookAndFeelArg);
+		} catch ( Exception exc ) {
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.SettingLookAndFeel_ERROR_"), new Object[] {lookAndFeelArg})); //$NON-NLS-1$
+			exc.printStackTrace();
+		}
+	}
+	// Set the locale
+	String localeArg = System.getProperty("locale"); //$NON-NLS-1$
+	if ( localeArg != null && !(localeArg.equals(""))){ //$NON-NLS-1$
+		// We must tokenize the locale to create one with the three arg constructor
+		StringTokenizer tokenizer = new StringTokenizer(localeArg,"_"); //$NON-NLS-1$
+		String language = ""; //$NON-NLS-1$
+		String country = ""; //$NON-NLS-1$
+		String variant = ""; //$NON-NLS-1$
+		if ( tokenizer.hasMoreElements() ) {
+			language = tokenizer.nextToken();
+		}
+		if ( tokenizer.hasMoreElements() ) {
+			country = tokenizer.nextToken();
+		}
+		if ( tokenizer.hasMoreElements() ) {
+			country = tokenizer.nextToken();
+		}
+		Locale locale = new Locale(language,country,variant);
+		Locale.setDefault(locale);
+	}
+		
+	// Try a number of different ways to launch the JavaBean
+	try {
+		Class aClass = Class.forName(nameOfClassToLaunch);
+		// Hard code the types of classes we can launch as JavaBeans
+		if ( Applet.class.isAssignableFrom(aClass) ) {
+			String projectURL = System.getProperty("vce.launcher.projecturl"); //$NON-NLS-1$
+			launchApplet(aClass,projectURL);
+			return;
+		}
+		// Specific test for a Dialog needs to occur here
+		// And for things like FileDialog that take arguments of a Frame		
+		Constructor ctor = aClass.getDeclaredConstructor(null);
+		// Make sure we can intantiate it in case the class it not public
+		ctor.setAccessible(true);
+		Object javaBean = ctor.newInstance(null);
+		// If the JavaBean is an instance of a Frame then we should make it visible
+		if ( javaBean instanceof Window ) {
+			launchWindow((Window)javaBean,(Component)javaBean,((Component)javaBean).getSize());
+		} else if ( javaBean instanceof JComponent ) {
+			launchJComponent((JComponent)javaBean);
+		} else if ( javaBean instanceof Component ) {
+			launchComponent((Component)javaBean);
+		}
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+	} catch ( ClassNotFoundException exc ){
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.UnableToLoad_ERROR_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+		System.exit(0);
+	} catch ( NoSuchMethodException exc ) {
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.NoDefaultConstructor_ERROR_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+		System.exit(0);		
+	} catch ( InstantiationException exc ) {
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InstantiationException_ERROR_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+		exc.printStackTrace();
+		System.exit(0);		
+	} catch ( InvocationTargetException exc ) {
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+		exc.printStackTrace();	
+		System.exit(0);			
+	} catch ( IllegalAccessException exc ) {
+		System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+		exc.printStackTrace();		
+		System.exit(0);		
+	}
+}
+protected static void launchJComponent(JComponent aJComponent){
+	JFrame frame = new JFrame(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchJComponent"), new Object[]{aJComponent.getClass().getName()})); //$NON-NLS-1$
+	Dimension aComponentSize = aJComponent.getSize();
+	frame.getContentPane().add(aJComponent);
+	launchWindow(frame,aJComponent,aComponentSize);
+}
+protected static void launchWindow(Window aWindow,Component aComponent, Dimension aComponentSize){
+	if ( aWindow instanceof JFrame) {
+		((JFrame)aWindow).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	} else if ( aWindow instanceof JDialog) {	
+		((JDialog)aWindow).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}	
+	// Make sure when the window is closing we exit
+	aWindow.addWindowListener(new WindowAdapter(){
+		public void windowClosing(WindowEvent anEvent){
+			System.exit(0);
+		}
+	});
+	aWindow.setLocation(OFF_SCREEN);
+	aWindow.setVisible(true);	
+	sizeWindow(aWindow,aComponent,aComponentSize);	
+	aWindow.setLocation(ON_SCREEN);
+	aWindow.validate();
+}
+protected static void launchComponent(Component aComponent){
+	Frame frame = new Frame(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchComponent"), new Object[]{aComponent.getClass().getName()})); //$NON-NLS-1$
+	// After adding the component to the frame its size is changed.  We must get the size on construction
+	// so that the overall window can be sized correctly
+	Dimension aComponentSize = aComponent.getSize();
+	frame.add(aComponent);
+	launchWindow(frame,aComponent,aComponentSize);
+}
+protected static void sizeWindow(Window aWindow, Component aComponent, Dimension componentSize){
+	// Size the frame based on the configuration settings
+	String pack = System.getProperty("pack"); //$NON-NLS-1$
+	if ( pack != null && pack.equals("true")){ //$NON-NLS-1$
+		aWindow.pack();			
+	} else if ( aComponent == aWindow ){
+		// If the window is the component then don't do anything
+	} else {
+		// For AWT and Swing we have to get the inset of the window ( that is the border and the title
+		// bar and adjust by these )
+		Insets insets = aWindow.getInsets();		
+		componentSize.width += insets.left + insets.right;
+		componentSize.height += insets.top + insets.bottom;
+		aWindow.setSize(componentSize);
+	}
+}
+protected static void launchApplet(Class anAppletClass, String projectLocation){
+	
+	// Get the applet parms - first see how many there are
+	String numberOfParmsString = System.getProperty("appletparmsnumber"); //$NON-NLS-1$
+	Map appletParms = new HashMap();	
+	// The parms come in names and values separately, e.g.
+	// -Dappletparmname0=ABC and -Dappletparmvalue=DEF
+	if ( numberOfParmsString != null ) {
+		int numberOfParms = Integer.parseInt(numberOfParmsString);
+		for ( int i=1 ; i<=numberOfParms ; i++ ){
+			String name = System.getProperty("appletparmname" + i); //$NON-NLS-1$
+			String value = System.getProperty("appletparmvalue" + i); //$NON-NLS-1$
+			appletParms.put(name,value);
+		}
+	}
+	
+	// Concatenate the project location and applet class name 
+	Object object = null;
+	try {
+		Constructor ctor = anAppletClass.getDeclaredConstructor(null);
+		ctor.setAccessible(true);
+		object = ctor.newInstance(null);
+	} catch ( Exception exc ) {
+		exc.printStackTrace();
+	}
+	final Applet applet = (Applet)object;
+	Frame frame = null;
+	if ( applet instanceof JApplet ) {
+		frame = new JAppletFrame(VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchApplet"),(JApplet) applet,appletParms); //$NON-NLS-1$
+		((JFrame)frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	} else {
+		frame = new AppletFrame (VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchApplet"),applet,appletParms); //$NON-NLS-1$
+	    frame.addWindowListener (new WindowAdapter(){
+			public void windowClosing (WindowEvent event){
+				applet.stop();
+				applet.destroy();
+				System.exit(0);
+			}
+		});
+	}
+
+	// This needs though to get the applet arguments into the running applet
+	// that are specified in the IDE and come across as VM arguments
+	applet.init();
+	Dimension aComponentSize = applet.getSize();	
+	frame.setLocation(OFF_SCREEN);
+	frame.setVisible(true);
+	if ( aComponentSize.width == 0 && aComponentSize.height == 0 ) {
+		aComponentSize = new Dimension(250,250);
+	}
+	sizeWindow(frame,applet,aComponentSize);	
+	frame.setLocation(ON_SCREEN);
+	// Start the applet
+	applet.start();			
+	System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.AppletStarted_INFO_"), new Object[]{anAppletClass.getName()}));	 //$NON-NLS-1$
+	// To get the applet launcher to show the components we must do a invalidate and layout correctly
+	frame.validate();
+}
+}

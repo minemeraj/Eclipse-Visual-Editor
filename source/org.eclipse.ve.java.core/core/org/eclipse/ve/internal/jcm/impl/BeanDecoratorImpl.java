@@ -1,0 +1,387 @@
+package org.eclipse.ve.internal.jcm.impl;
+/*******************************************************************************
+ * Copyright (c)  2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: BeanDecoratorImpl.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ */
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.impl.EAnnotationImpl;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
+import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
+import org.eclipse.ve.internal.jcm.BeanDecorator;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Bean Decorator</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#getKeyedValues <em>Keyed Values</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#getBeanProxyClassName <em>Bean Proxy Class Name</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @generated
+ */
+public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator {
+	
+	/*
+	 * This method is here only because generation of KeyedValueHolders implementations
+	 * have an import for MapEntryImpl, even though never actually used. This gets rid
+	 * of the unused import warning that would occur after every generation.
+	 */
+	private static MapEntryImpl dummy() {
+		return null;
+	}	
+
+	/**
+	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKeyedValues()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap keyedValues = null;
+
+	/**
+	 * The default value of the '{@link #getBeanProxyClassName() <em>Bean Proxy Class Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanProxyClassName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String BEAN_PROXY_CLASS_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getBeanProxyClassName() <em>Bean Proxy Class Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanProxyClassName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String beanProxyClassName = BEAN_PROXY_CLASS_NAME_EDEFAULT;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 */
+	protected BeanDecoratorImpl() {
+		super();
+		setSource(this.getClass().getName());		
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected EClass eStaticClass() {
+		return JCMPackage.eINSTANCE.getBeanDecorator();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 */
+	public EMap getKeyedValues() {
+		if (keyedValues == null) {
+			dummy();	// Here just to get rid of non-used method warning.
+			keyedValues = KeyedValueHolderHelper.createKeyedValuesEMap(this, JCMPackage.BEAN_DECORATOR__KEYED_VALUES);
+		}
+		return keyedValues;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getBeanProxyClassName() {
+		return beanProxyClassName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBeanProxyClassName(String newBeanProxyClassName) {
+		String oldBeanProxyClassName = beanProxyClassName;
+		beanProxyClassName = newBeanProxyClassName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME, oldBeanProxyClassName, beanProxyClassName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+		if (featureID >= 0) {
+			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+					return ((InternalEList)getEAnnotations()).basicAdd(otherEnd, msgs);
+				case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+					if (eContainer != null)
+						msgs = eBasicRemoveFromContainer(msgs);
+					return eBasicSetContainer(otherEnd, JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT, msgs);
+				default:
+					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
+			}
+		}
+		if (eContainer != null)
+			msgs = eBasicRemoveFromContainer(msgs);
+		return eBasicSetContainer(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+		if (featureID >= 0) {
+			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+					return ((InternalEList)getEAnnotations()).basicRemove(otherEnd, msgs);
+				case JCMPackage.BEAN_DECORATOR__DETAILS:
+					return ((InternalEList)getDetails()).basicRemove(otherEnd, msgs);
+				case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+					return eBasicSetContainer(null, JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT, msgs);
+				case JCMPackage.BEAN_DECORATOR__CONTENTS:
+					return ((InternalEList)getContents()).basicRemove(otherEnd, msgs);
+				case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
+					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+				default:
+					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
+			}
+		}
+		return eBasicSetContainer(null, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+		if (eContainerFeatureID >= 0) {
+			switch (eContainerFeatureID) {
+				case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+					return ((InternalEObject)eContainer).eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
+				default:
+					return eDynamicBasicRemoveFromContainer(msgs);
+			}
+		}
+		return ((InternalEObject)eContainer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+				return getEAnnotations();
+			case JCMPackage.BEAN_DECORATOR__SOURCE:
+				return getSource();
+			case JCMPackage.BEAN_DECORATOR__DETAILS:
+				return getDetails();
+			case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+				return getEModelElement();
+			case JCMPackage.BEAN_DECORATOR__CONTENTS:
+				return getContents();
+			case JCMPackage.BEAN_DECORATOR__REFERENCES:
+				return getReferences();
+			case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
+				return getKeyedValues();
+			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
+				return getBeanProxyClassName();
+		}
+		return eDynamicGet(eFeature, resolve);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eSet(EStructuralFeature eFeature, Object newValue) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+				getEAnnotations().clear();
+				getEAnnotations().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__SOURCE:
+				setSource((String)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__DETAILS:
+				getDetails().clear();
+				getDetails().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+				setEModelElement((EModelElement)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__CONTENTS:
+				getContents().clear();
+				getContents().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__REFERENCES:
+				getReferences().clear();
+				getReferences().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
+				getKeyedValues().clear();
+				getKeyedValues().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
+				setBeanProxyClassName((String)newValue);
+				return;
+		}
+		eDynamicSet(eFeature, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eUnset(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+				getEAnnotations().clear();
+				return;
+			case JCMPackage.BEAN_DECORATOR__SOURCE:
+				setSource(SOURCE_EDEFAULT);
+				return;
+			case JCMPackage.BEAN_DECORATOR__DETAILS:
+				getDetails().clear();
+				return;
+			case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+				setEModelElement((EModelElement)null);
+				return;
+			case JCMPackage.BEAN_DECORATOR__CONTENTS:
+				getContents().clear();
+				return;
+			case JCMPackage.BEAN_DECORATOR__REFERENCES:
+				getReferences().clear();
+				return;
+			case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
+				getKeyedValues().clear();
+				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
+				setBeanProxyClassName(BEAN_PROXY_CLASS_NAME_EDEFAULT);
+				return;
+		}
+		eDynamicUnset(eFeature);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(EStructuralFeature eFeature) {
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case JCMPackage.BEAN_DECORATOR__EANNOTATIONS:
+				return eAnnotations != null && !eAnnotations.isEmpty();
+			case JCMPackage.BEAN_DECORATOR__SOURCE:
+				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+			case JCMPackage.BEAN_DECORATOR__DETAILS:
+				return details != null && !details.isEmpty();
+			case JCMPackage.BEAN_DECORATOR__EMODEL_ELEMENT:
+				return getEModelElement() != null;
+			case JCMPackage.BEAN_DECORATOR__CONTENTS:
+				return contents != null && !contents.isEmpty();
+			case JCMPackage.BEAN_DECORATOR__REFERENCES:
+				return references != null && !references.isEmpty();
+			case JCMPackage.BEAN_DECORATOR__KEYED_VALUES:
+				return keyedValues != null && !keyedValues.isEmpty();
+			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
+				return BEAN_PROXY_CLASS_NAME_EDEFAULT == null ? beanProxyClassName != null : !BEAN_PROXY_CLASS_NAME_EDEFAULT.equals(beanProxyClassName);
+		}
+		return eDynamicIsSet(eFeature);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+		if (baseClass == KeyedValueHolder.class) {
+			switch (derivedFeatureID) {
+				case JCMPackage.BEAN_DECORATOR__KEYED_VALUES: return CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+		if (baseClass == KeyedValueHolder.class) {
+			switch (baseFeatureID) {
+				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES: return JCMPackage.BEAN_DECORATOR__KEYED_VALUES;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (beanProxyClassName: ");
+		result.append(beanProxyClassName);
+		result.append(')');
+		return result.toString();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.ecore.InternalEObject#eObjectForURIFragmentSegment(java.lang.String)
+	 */
+	public EObject eObjectForURIFragmentSegment(String uriFragmentSegment) {
+		EObject eo = KeyedValueHolderHelper.eObjectForURIFragmentSegment(this, uriFragmentSegment);
+		return eo == KeyedValueHolderHelper.NOT_KEYED_VALUES_FRAGMENT ? super.eObjectForURIFragmentSegment(uriFragmentSegment) : eo;
+	}	
+
+} //BeanDecoratorImpl
