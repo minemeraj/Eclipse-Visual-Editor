@@ -50,10 +50,12 @@ parseMapTags() {
 		downbase=yes ;
 		mkdir relengMaps ;
 		mv tempmaps/baseTag relengMaps/baseTag ;
+		mv -f tempmaps/basePDE.properties relengMaps/basePDE.properties ;
 	elif diff -b -q tempmaps/baseTag relengMaps/baseTag ; then echo ;
 	else
 		downbase=yes ;
-		mv tempmaps/baseTag relengMaps/baseTag;
+		mv -f tempmaps/baseTag relengMaps/baseTag;
+		mv -f tempmaps/basePDE.properties relengMaps/basePDE.properties ;		
 	fi
 
 	if [ ! -e relengMaps/veTag ] ; then
@@ -63,7 +65,7 @@ parseMapTags() {
 	elif diff -b -q tempmaps/veTag relengMaps/veTag ; then echo ;
 	else
 		downve=yes ;
-		mv tempmaps/veTag relengMaps/veTag
+		mv -f tempmaps/veTag relengMaps/veTag
 	fi		
 
 	rm -rf tempmaps
