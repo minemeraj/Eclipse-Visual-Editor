@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-19 12:20:47 $ 
+ *  $Revision: 1.10 $  $Date: 2004-03-19 14:51:47 $ 
  */
 
 import java.util.*;
@@ -371,7 +371,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 									eClass,
 									ClassDescriptorDecorator.class,
 									PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-						if(decorator.getKeyedValues() != null){
+						if(decorator != null){
 							String prototypeFactoryName = (String)decorator.getKeyedValues().get(PrototypeFactory.PROTOTYPE_FACTORY_KEY);
 							prototypeFactory = (PrototypeFactory) CDEPlugin.createInstance(null,prototypeFactoryName);
 						}
@@ -492,7 +492,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 			try{
 				TypeInfo ti = (TypeInfo) selected;
 				
-				boolean isDefaultConstructorRequired = true;
+				boolean isDefaultConstructorSearchRequired = true;
 				// The base set of rules is that classes can only be instantiated if they have default constructors
 				// Some classes however (such as SWT controls) don't conform to this, however can still be created
 				// The base ClassDescriptorDecorator has a key of "org.eclipse.ve.internal.PrototypeFactory" that returns a class name
@@ -505,7 +505,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 						ClassDescriptorDecorator.class,
 						PrototypeFactory.PROTOTYPE_FACTORY_KEY);
 				if(decorator != null) {
-					isDefaultConstructorRequired = false;
+					isDefaultConstructorSearchRequired = false;
 				}
 				
 				IType type = ti.resolveType(getJavaSearchScope());
@@ -519,7 +519,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				boolean isAnyConstructorPresent = false;
 				
 				// If we don't need a default constructor skip the searching of the methods for one
-				if(!isDefaultConstructorRequired){
+				if(!isDefaultConstructorSearchRequired){
 					IMethod[] methods = type.getMethods();
 					for(int m=0;m<methods.length;m++){
 						if(methods[m].isConstructor() &&
@@ -532,7 +532,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 							isAnyConstructorPresent=true;
 					}
 				}
- 				boolean constructorError = isDefaultConstructorRequired && !isPublicNullConstructorPresent && isAnyConstructorPresent;
+ 				boolean constructorError = isDefaultConstructorSearchRequired && !isPublicNullConstructorPresent && isAnyConstructorPresent;
 				
 				if(constructorError){
 					if(message.length()>0)
