@@ -1,2 +1,3 @@
 jbcfswtvm.jar=/org.eclipse.ve.swt/bin
 vm/swtbeaninfo.jar=/org.eclipse.ve.swt/bin/
+jbcfjfacevm.jar=/org.eclipse.ve.swt/bin
