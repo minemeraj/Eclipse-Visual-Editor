@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-11 14:05:54 $ 
+ *  $Revision: 1.10 $  $Date: 2004-04-01 00:51:21 $ 
  */
 
 import java.util.*;
@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -522,13 +524,25 @@ protected static Comparator getDefaultBeanOrderComparator(){
 			}
 		}
 		
+		protected boolean isReferenced (BeanPart parent, BeanPart reference) {
+			EStructuralFeature sfs[] = InverseMaintenanceAdapter.getReferencesFrom(parent.getEObject(), reference.getEObject());
+			if (sfs!=null && sfs.length>0)
+				return true ;
+			else
+				return false;
+		}
+		
 		protected int getImportanceCount(BeanPart main, BeanPart subMain){
-			if(isAChildOf(main, subMain))
+			
+			if(isAChildOf(main, subMain))				
 				return Integer.MAX_VALUE;
+			else if (isReferenced(main, subMain)) // if main ref. subMain, subMain must come first
+				return Integer.MIN_VALUE;
 			int parentCount = getParentCount(main);
 			int hasChildren = getConstraintCount(main);
 			return - hasChildren - parentCount;
 		}
+		
 		
 		protected boolean isAChildOf(BeanPart parent, BeanPart reference){
 			Iterator children = parent.getChildren();

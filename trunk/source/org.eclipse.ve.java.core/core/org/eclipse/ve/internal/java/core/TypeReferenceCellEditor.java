@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-26 19:31:52 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-01 00:51:21 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -19,8 +19,6 @@ import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -31,8 +29,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -42,12 +38,12 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
-import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.BeanComposition;
+import org.eclipse.ve.internal.jcm.JCMFactory;
 
 import org.eclipse.ve.internal.java.choosebean.*;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.ve.internal.propertysheet.ISourced;
  
 /**
  * Cell editor to show base components (i.e. ones that are members of the BeanSubclassComposition and not members
@@ -55,7 +51,7 @@ import org.eclipse.ve.internal.propertysheet.ISourced;
  * if one wanted is not on the BeanComposition.
  * @since 1.0.0
  */
-public class TypeReferenceCellEditor extends DialogCellEditor implements INeedData , ISourced , IExecutableExtension {
+public class TypeReferenceCellEditor extends DialogCellEditor implements INeedData, IExecutableExtension {
 
 	CCombo combo;
 	private EditDomain editDomain;
@@ -137,10 +133,11 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 			combo.select(javaObjects.indexOf(value));
 		}
 	}
-	public void setSources(Object[] sources, IPropertySource[] propertySources, IPropertyDescriptor[] descriptors){
-		// Find the Composition ( the free form surface top level object )
-		EObject firstSource = (EObject)sources[0];
-		beanComposition = (BeanSubclassComposition) EcoreUtil.getObjectByType(firstSource.eResource().getContents(), JCMPackage.eINSTANCE.getBeanSubclassComposition());		
+
+	
+	public void setData(Object anObject){
+		editDomain = (EditDomain) anObject;
+		beanComposition = (BeanComposition) editDomain.getDiagramData();		
 		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
 		javaObjects = new ArrayList();
 		javaObjectLabels = new ArrayList();
@@ -167,13 +164,24 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		// Now we know the children set the items
 		items = new String[javaObjectLabels.size()];
 		System.arraycopy(javaObjectLabels.toArray(),0,items,0,items.length);
+		//TODO: need to make this more efficient
+		Arrays.sort(items);
+		List a = new ArrayList() ;
+		for (int i = 0; i < items.length; i++) {			
+			for (int j = 0; j < javaObjectLabels.size(); j++) {
+				if (items[i].equals(javaObjectLabels.get(j))) {
+					a.add(javaObjects.get(j));
+					break;
+				}
+			}
+			
+		}
+		javaObjects = a;
 		// The list items is the stuff to get added to the list
 		combo.setItems(items);
+
 		
-	}
-	
-	public void setData(Object anObject){
-		editDomain = (EditDomain) anObject;
+		
 	}
 	public void setInitializationData(IConfigurationElement element, String data, Object object){
 		// The string passed in determines whether or not the editor creates the ... button allowing new instances 

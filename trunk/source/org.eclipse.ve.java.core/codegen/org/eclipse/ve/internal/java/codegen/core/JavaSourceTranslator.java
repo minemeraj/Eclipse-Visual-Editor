@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.15 $  $Date: 2004-03-30 14:42:55 $ 
+ *  $Revision: 1.16 $  $Date: 2004-04-01 00:51:21 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -416,6 +416,7 @@ IJVEStatus fMsgRenderer = null;
 /**
  * Bean parts that needs to be on the FF and not, will be added
  * @param disp, if need to run async.
+ * @deprecated
  */  
 protected synchronized void refreshFreeFrom(Display disp) {
        
