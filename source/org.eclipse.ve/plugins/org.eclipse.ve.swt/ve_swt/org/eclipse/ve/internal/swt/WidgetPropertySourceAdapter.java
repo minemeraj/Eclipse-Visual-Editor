@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-26 19:31:48 $ 
+ *  $Revision: 1.13 $  $Date: 2004-05-13 12:27:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -347,8 +347,11 @@ public void setPropertyValue(Object feature, Object val) {
 					} else {
 						fieldAccess.setField(propertyID.getInitString(val));
 					}
-					// We need the BeanProxy and code gen to refresh itself so do a touch on the allocation
-					getJavaObjectInstance().setAllocation(parseTreeAllocation);
+					// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
+					// and set the Java Object instance with this new allocation.
+					ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+					newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
+					getJavaObjectInstance().setAllocation(newParseTreeAlloc);
 				} else {
 					if(unset){
 						// We are unsetting a value, however it is not in the same family as an existing value that is set
@@ -366,7 +369,11 @@ public void setPropertyValue(Object feature, Object val) {
 						classInstanceCreation.getArguments().remove(1);
 						classInstanceCreation.getArguments().add(inFixExpression);
 					}
-					getJavaObjectInstance().setAllocation(parseTreeAllocation);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly 	
+					// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
+					// and set the Java Object instance with this new allocation.
+					ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+					newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
+					getJavaObjectInstance().setAllocation(newParseTreeAlloc);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly 	
 				}
 			} else if (secondConstructionArgument instanceof PTInfixExpression){
 				PTInfixExpression inFix = (PTInfixExpression)secondConstructionArgument;
@@ -426,7 +433,11 @@ public void setPropertyValue(Object feature, Object val) {
 						}
 					}
 				}
-				getJavaObjectInstance().setAllocation(parseTreeAllocation);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly				
+				// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
+				// and set the Java Object instance with this new allocation.
+				ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+				newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
+				getJavaObjectInstance().setAllocation(newParseTreeAlloc);	 				
 			}
 		}
 	}
