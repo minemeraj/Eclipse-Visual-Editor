@@ -51,10 +51,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
 	 */
 	protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws AllocationException {
-		final AllocationException[] allocExc = new AllocationException[1];
 		try {
 			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
 					// TODO Need a better way to get a parent in if parent is null. (i.e. on
 					// freeform. Then we can use
 					// the standard allocation mechanism.
@@ -68,8 +67,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 						try {
 							return superBeanProxyAllocation(allocation);
 						} catch (AllocationException e) {
-							allocExc[0] = e;
-							return "allocationexception";
+							throw new RunnableException(e);
 						}
 					} else {
 						// or else are on the free form
@@ -93,12 +91,11 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					return createControlProxy.newInstance(new IBeanProxy[] { compositeBeanProxy, zeroBeanProxy });
 				}
 			});
-			if (result instanceof String)
-				throw allocExc[0];
-			else
-				return (IBeanProxy) result;
+			return (IBeanProxy) result;
 		} catch (ThrowableProxy e) {
 			throw new AllocationException(e);
+		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+			throw (AllocationException) e.getCause();	// We know it is an allocation exception because that is the only runnable exception we throw.
 		}
 	}
 	
@@ -135,10 +132,11 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	 * so it's usually 2,2 if there is SWT.BORDER, or could be 4,29 for a shell with trim
 	 */
 	public Rectangle getClientBox(){
-		if(fControlManager == null){
-			initializeControlManager();
-		}
-		return fControlManager.getClientBox();
+		initializeControlManager();
+		if (fControlManager != null)
+			return fControlManager.getClientBox();
+		else
+			return new Rectangle(0,0,0,0);
 	}
 	
 	public Point getLocation() {
@@ -173,19 +171,21 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			}
 	}
 	protected void initializeControlManager() {
-		// Create an instance of com.ibm.etools.jbcf.visual.vm.ComponentManager on the target VM
-		if (fControlManager == null) {
-			fControlManager = new ControlManager();
-			// Having created the ComponentManager in the IDE transfer all existing people listening to us
-			// to the component listener
-			if(fControlListeners != null){
-				Iterator listeners = fControlListeners.iterator();
-				while (listeners.hasNext()) {
-					fControlManager.addComponentListener((IVisualComponentListener) listeners.next());
-				}				
+		if (isBeanProxyInstantiated()) {
+			// Create an instance of com.ibm.etools.jbcf.visual.vm.ComponentManager on the target VM
+			if (fControlManager == null) {
+				fControlManager = new ControlManager();
+				// Having created the ComponentManager in the IDE transfer all existing people listening to us
+				// to the component listener
+				if (fControlListeners != null) {
+					Iterator listeners = fControlListeners.iterator();
+					while (listeners.hasNext()) {
+						fControlManager.addComponentListener((IVisualComponentListener) listeners.next());
+					}
+				}
+				fControlManager.setControlBeanProxy(getBeanProxy());				
 			}
 		}
-		fControlManager.setControlBeanProxy(getBeanProxy());
 
 	}	
 	
@@ -205,23 +205,26 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public boolean hasImageListeners() {
 		return (imSupport != null && imSupport.hasImageListeners());
 	}
-	protected void primInstantiateBeanProxy() {
-		// SWT controls get inserted at a position in a composite.  The way this occurs is that
-		// they get disposed and re-created, so we need to manage the control manager and who it is attached to
-		super.primInstantiateBeanProxy();
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#setupBeanProxy(org.eclipse.jem.internal.proxy.core.IBeanProxy)
+	 */
+	protected void setupBeanProxy(IBeanProxy beanProxy) {
+		super.setupBeanProxy(beanProxy);
 		initializeControlManager();
 		// TODO This needs to be queued so that in the situation where a composite
 		// does a recycle of a number of controls there is just a single refresh 
-		if (imSupport != null) refreshImage();
+		if (imSupport != null) refreshImage();		
 	}
-	
 	public void invalidateImage() {
 		// TODO Auto-generated method stub
 	}
 	public void refreshImage() {
-		if(fControlManager == null) initializeControlManager();
-		fControlManager.captureImage();
-		imSupport.fireImageChanged(fControlManager.getImageData());
+		initializeControlManager();
+		if (fControlManager != null) {
+			fControlManager.captureImage();
+			imSupport.fireImageChanged(fControlManager.getImageData());
+		}
 	}
 	public void removeImageListener(IImageListener listener) {
 		imSupport.removeImageListener(listener);

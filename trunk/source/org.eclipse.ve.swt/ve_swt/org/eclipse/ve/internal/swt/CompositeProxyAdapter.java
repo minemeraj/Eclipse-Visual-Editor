@@ -1,10 +1,5 @@
 package org.eclipse.ve.internal.swt;
-/*
- * Licensed Material - Property of IBM 
- * (C) Copyright IBM Corp. 2002 - All Rights Reserved. 
- * US Government Users Restricted Rights - Use, duplication or disclosure 
- * restricted by GSA ADP Schedule Contract with IBM Corp. 
- */
+
 
 import java.util.Iterator;
 import java.util.List;
@@ -104,19 +99,15 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	public void childValidated(ControlProxyAdapter childProxy) {
 		// Hold up layout processing if we are executing a HoldProcessingCommand
         if (!holding()) {
-            try {
-                // We are the top with no parents, do a layout() on us
-                invokeSyncExec(new DisplayManager.DisplayRunnable() {
+            // We are the top with no parents, do a layout() on us
+            invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 
-                    public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-                        // Call the layout() method
-                        return layoutMethodProxy().invoke(getBeanProxy());
-                    }
-                });
-                if (imSupport != null) refreshImage();
-            } catch (ThrowableProxy e) {
-                SwtPlugin.getDefault().getLogger().log(e);
-            }
+                public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                    // Call the layout() method
+                    return layoutMethodProxy().invoke(getBeanProxy());
+                }
+            });
+            if (imSupport != null) refreshImage();
             if (parentProxyAdapter != null) super.childValidated(childProxy);
         }
 	}	

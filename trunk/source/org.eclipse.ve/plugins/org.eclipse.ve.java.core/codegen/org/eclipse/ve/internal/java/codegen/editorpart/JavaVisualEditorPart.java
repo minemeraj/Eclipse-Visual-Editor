@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.29 $  $Date: 2004-04-23 20:35:20 $ 
+ *  $Revision: 1.30 $  $Date: 2004-04-27 21:35:21 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -669,15 +669,56 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
-			if (d != null) {
-				editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
-				setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
+			try {
+				if (d != null) {
+					editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
+					setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
+				}
+				loadingFigureController.showLoadingFigure(false);
+				ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID); // Now it can be enabled.
+				rla.setEnabled(true);
+				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
+			} catch (RuntimeException e) {
+				noLoadPrompt(e);
+				throw e;
 			}
-			loadingFigureController.showLoadingFigure(false);			
-			ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
-			rla.setEnabled(true);
-			modelChangeController.setHoldState(IModelChangeController.READY_STATE, null);	// Restore to allow updates.
 		}
+	}
+	
+	/*
+	 * Put up a not loaded prompt. Called if any errors during loading has been detected.
+	 */
+	protected void noLoadPrompt(final Exception e) {
+		// If we are disposed, then it doesn't matter what the error is. This can occur because we closed
+		// while loading and there is no way to stop this thread when that occurs. We don't want main thread
+		// to just wait until this thread finishes when closing because that holds everything up when we don't
+		// really care. This way we let it throw an exception because something was in a bad state and just
+		// don't put up a message.
+		// It is slightly possible that we are shutting down whole app and so shell no longer exists,
+		// so we treat that as disposed too.
+		if (!isDisposed() && getSite().getShell() != null) {
+			getSite().getShell().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (isDisposed())
+						return;
+					
+					loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
+					processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
+					ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
+					rla.setEnabled(true);	// Because it was disabled.							
+					
+					String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
+					String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
+					Shell shell = getSite().getShell();
+					if (e instanceof CoreException)
+						ErrorDialog.openError(shell, title, msg, ((CoreException) e).getStatus());
+					else
+						ErrorDialog.openError(shell, title, msg, new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName(), e));
+				}
+			});
+			JavaVEPlugin.log(e);
+		}
+		
 	}
 
 	protected void createXMLTextViewerControl(Composite parent) {
@@ -1271,38 +1312,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 			
 			} catch (final Exception x) {
-				// If we are disposed, then it doesn't matter what the error is. This can occur because we closed
-				// while loading and there is no way to stop this thread when that occurs. We don't want main thread
-				// to just wait until this thread finishes when closing because that holds everything up when we don't
-				// really care. This way we let it throw an exception because something was in a bad state and just
-				// don't put up a message.
-				// It is slightly possible that we are shutting down whole app and so shell no longer exists,
-				// so we treat that as disposed too.
-				if (!isDisposed() && getSite().getShell() != null) {
-					getSite().getShell().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (isDisposed())
-								return;
-							String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
-							String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
-							Shell shell = getSite().getShell();
-							if (x instanceof CoreException)
-								ErrorDialog.openError(shell, title, msg, ((CoreException) x).getStatus());
-							else
-								ErrorDialog.openError(shell, title, msg, new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), 0, x.getLocalizedMessage() != null ? x.getLocalizedMessage() : x.getClass().getName(), x));
-						}
-					});
-					JavaVEPlugin.log(x);
-					getSite().getShell().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
-							processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
-							ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
-							rla.setEnabled(true);	// Because it was disabled.							
-						}
-					});					
-					return Status.CANCEL_STATUS;
-				}
+				noLoadPrompt(x);
+				return Status.CANCEL_STATUS;
 			}
 			
 			monitor.done();

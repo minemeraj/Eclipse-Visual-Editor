@@ -16,32 +16,33 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
 	 */
 	protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws AllocationException {
-		AllocationException[] allocExc = new AllocationException[1];
-		Object result = invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				try {
-					IBeanProxy shellProxy = superBeanProxyAllocation(allocation);
-					// Position the shell off screen for the moment
-					// TODO this needs to be done properly so that the location can be set in the model and ignored
-					// likewise for the visibility
-					IIntegerBeanProxy intBeanProxy =
-						displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-5000);
-					IMethodProxy setlocationMethodProxy =
-						shellProxy.getTypeProxy().getMethodProxy("setLocation", new String[] {"int", "int"});
-					setlocationMethodProxy.invoke(shellProxy, new IBeanProxy[] {intBeanProxy, intBeanProxy});
-		
-					IMethodProxy openMethodProxy = shellProxy.getTypeProxy().getMethodProxy("open");
-					openMethodProxy.invoke(shellProxy);
-					return shellProxy;			
-				} catch (AllocationException e) {
-					return "allocationexception";
+		try {
+			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
+
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+					try {
+						IBeanProxy shellProxy = superBeanProxyAllocation(allocation);
+						// Position the shell off screen for the moment
+						// TODO this needs to be done properly so that the location can be set in the model and ignored
+						// likewise for the visibility
+						IIntegerBeanProxy intBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-5000);
+						IMethodProxy setlocationMethodProxy = shellProxy.getTypeProxy().getMethodProxy("setLocation", new String[] { "int", "int"});
+						setlocationMethodProxy.invoke(shellProxy, new IBeanProxy[] { intBeanProxy, intBeanProxy});
+
+						IMethodProxy openMethodProxy = shellProxy.getTypeProxy().getMethodProxy("open");
+						openMethodProxy.invoke(shellProxy);
+						return shellProxy;
+					} catch (AllocationException e) {
+						throw new RunnableException(e);
+					}
 				}
-			}
-		});
-		if (result instanceof String)
-			throw allocExc[0];
-		else
+			});
 			return (IBeanProxy) result;
+		} catch (ThrowableProxy e) {
+			throw new AllocationException(e);
+		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+			throw (AllocationException) e.getCause();	// Because we only put allocation exceptions into the cause.
+		}
 	}
 
 }

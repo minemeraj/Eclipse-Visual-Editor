@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-26 18:16:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-27 21:35:23 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -20,6 +20,7 @@ import java.util.Stack;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ICallback;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
  
 /**
  * This class is for managing the display.
@@ -38,7 +39,48 @@ public class DisplayManager {
 		// TODO These need to go into a Common that is available to both IDE and remote vm.
 		protected static final int RUN_EXEC = 0;
 		
+		/**
+		 * This is to be thrown by syncExec runnables to indicate that a special exception
+		 * has occurred. syncExec will throw this RunnableException, which wrappers the real
+		 * exception, through the getCause() method, when syncExec is finished. Users can then
+		 * get the real cause out of it.
+		 *  
+		 * @since 1.0.0
+		 * @see Throwable#getCause()
+		 */
+		public static class RunnableException extends Exception {
+		
+			/**
+			 * @param cause
+			 * 
+			 * @since 1.0.0
+			 */
+			public RunnableException(Throwable cause) {
+				super(cause);
+			}
+		};
+		
+		/*
+		 * This RunnableRuntimeException, which wrappers the real
+		 * runtime exception, through the getCause() method, when syncExec is finished, will be thrown
+		 * if a RuntimeException occurs during the syncExec runnable processing.
+		 * <package-protected> because only DisplayManager accesses it. 
+		 * @since 1.0.0
+		 * @see Throwable#getCause()
+		 */		
+		static class RunnableRuntimeException extends Exception {
+			/**
+			 * @param cause
+			 * 
+			 * @since 1.0.0
+			 */
+			public RunnableRuntimeException(Throwable cause) {
+				super(cause);
+			}			
+		}
+		
 		IBeanProxy displayExecProxy;
+		Exception exception;
 		
 		/*
 		 * Set the displayExec proxy for this runnable.
@@ -49,6 +91,17 @@ public class DisplayManager {
 		 */
 		void setDisplayExecProxy(IBeanProxy displayExecProxy) {
 			this.displayExecProxy = displayExecProxy;
+		}
+		
+		/*
+		 * Return the runnable exception, if one thrown.
+		 * <package-protected> because only DisplayManager should get this. 
+		 * @return runnable exception, or <code>null</code> if no runnable exception thrown.
+		 * 
+		 * @since 1.0.0
+		 */
+		Exception getException() {
+			return exception;
 		}
 		
 		/* (non-Javadoc)
@@ -63,7 +116,12 @@ public class DisplayManager {
 						return run(parm);
 					} catch (ThrowableProxy e) {
 						return e;
-					}	
+					} catch (RunnableException e) {
+						exception = e;	// This is a specific exception that users wants to go through. Considered a good return for the callback.
+					} catch (RuntimeException e) {
+						exception = new RunnableRuntimeException(e);	
+						throw e;	// This is a shouldn't occur exception, so log as runnable so can be rethrown later, but also rethrow here so that it will be logged too.
+					}
 				}
 			} finally {
 				// Clean up. This is a one-shot deal.
@@ -103,10 +161,12 @@ public class DisplayManager {
 		 * of the display on the proxy vm.
 		 *  
 		 * @param displayProxy A proxy to the actual Display object that this runnable is executing on.
-		 * @return An IBeanProxy or a simple object like String  or Integer to return from a syncExec call or <code>null</code> if nothing to return.
+		 * @return An IBeanProxy or IBeanProxy[] to return from a syncExec call or <code>null</code> if nothing to return.
 		 * @since 1.0.0
+		 * @throws ThrowableProxy if a remote vm error occurred
+		 * @throws RunnableException if any other special exception occurs that needs to be sent back to called, if syncExec, wrapper it in a RunnableException.
 		 */
-		public abstract Object run(IBeanProxy displayProxy) throws ThrowableProxy;
+		public abstract Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException;
 
 	}
 	
@@ -362,14 +422,17 @@ public class DisplayManager {
 
 	/**
 	 * Do a syncExec on the default display.
+	 * 
 	 * @param registry
 	 * @param runnable
 	 * @return result of the runnable
 	 * @throws ThrowableProxy
 	 * 
 	 * @since 1.0.0
+	 * @see DisplayManager#syncExec(IBeanProxy, DisplayRunnable)
+	 * @see DisplayManager.DisplayRunnable.RunnableException
 	 */
-	public static Object syncExec(ProxyFactoryRegistry registry, DisplayRunnable runnable) throws ThrowableProxy {
+	public static Object syncExec(ProxyFactoryRegistry registry, DisplayRunnable runnable) throws ThrowableProxy, RunnableException {
 		return syncExec(null, runnable, registry);
 	}
 	
@@ -379,12 +442,14 @@ public class DisplayManager {
 	 * 
 	 * @param displayProxy The display to syncExec onto. It must be set, it cannot be <code>null</code>.
 	 * @param runnable
-	 * @return result of the runnable
-	 * @throws ThrowableProxy
+	 * @return result of the runnable. It will be either a IBeanProxy, IBeanProxy[], or <code>null</code>.
+	 * @throws ThrowableProxy if there was an exception thrown on the remote vm.
+	 * @throws RunnableException if there was expected type of exception on this side in the runnable.
 	 * 
 	 * @since 1.0.0
+	 * @see DisplayManager.DisplayRunnable.RunnableException
 	 */
-	public static Object syncExec(IBeanProxy displayProxy, DisplayRunnable runnable) throws ThrowableProxy {
+	public static Object syncExec(IBeanProxy displayProxy, DisplayRunnable runnable) throws ThrowableProxy, RunnableException {
 		return syncExec(displayProxy, runnable, displayProxy.getProxyFactoryRegistry());
 	}
 	
@@ -400,7 +465,7 @@ public class DisplayManager {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected static Object syncExec(IBeanProxy displayProxy, DisplayRunnable runnable, ProxyFactoryRegistry registry) throws ThrowableProxy {
+	protected static Object syncExec(IBeanProxy displayProxy, DisplayRunnable runnable, ProxyFactoryRegistry registry) throws ThrowableProxy, DisplayRunnable.RunnableException {
 		Constants constants = Constants.getConstants(registry);
 		IBeanProxy inSyncProxy = constants.getTheadSyncDisplay();
 		if (inSyncProxy != null && displayProxy == null) 
@@ -415,7 +480,12 @@ public class DisplayManager {
 				displayExecProxy = null; // Ended well, so runnable took care of clean up.
 				if (result instanceof ThrowableProxy)
 					throw (ThrowableProxy) result;
-				return result;
+				else if (runnable.getException() instanceof DisplayRunnable.RunnableRuntimeException)
+					throw (RuntimeException) runnable.getException().getCause();	// Runnable runtime exception occurred.
+				else if (runnable.getException() != null)
+					throw (DisplayRunnable.RunnableException) runnable.getException();	// Runnable exception occurred.
+				else
+					return result;
 			} finally {
 				if (displayExecProxy != null) {
 					registry.getCallbackRegistry().deregisterCallback(displayExecProxy);
@@ -424,7 +494,11 @@ public class DisplayManager {
 			}
 		} else {
 			// We are in the UI callback for the same display, so just execute the runnable.
-			return runnable.run(displayProxy);
+			try {
+				return runnable.run(displayProxy);
+			} catch (ThrowableProxy e) {
+				throw e;
+			}
 		}
 	}
 	
@@ -436,6 +510,7 @@ public class DisplayManager {
 	 * @throws ThrowableProxy
 	 * 
 	 * @since 1.0.0
+	 * @see DisplayManager#syncExec(IBeanProxy, DisplayRunnable)
 	 */
 	public static void asyncExec(ProxyFactoryRegistry registry, DisplayRunnable runnable) throws ThrowableProxy {
 		asyncExec(null, runnable, registry);

@@ -7,9 +7,12 @@ package org.eclipse.jem.internal.proxy.swt;
  */
 
 
-import org.eclipse.jem.internal.proxy.core.*;
+import java.util.logging.Level;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
+
+import org.eclipse.ve.internal.swt.SwtPlugin;
 
 /**
  * Standard SWT Constants
@@ -115,17 +118,43 @@ public IBeanProxy getDisplayProxy() {
 	return displayProxy;
 }
 
-public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) throws ThrowableProxy {
+/**
+ * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * 
+ * @param registry the proxy registry to identify the vm to talk to.
+ * @param runnable the runnable to execute
+ * @return the result, an <code>IBeanProxy</code>, <code>null</code>, or a String, Boolean, or Number.
+ * @throws ThrowableProxy if a remote vm error occurred.
+ * @throws RunnableException if either a RuntimeException, or another specifically caught exception had occurred on this side.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) throws ThrowableProxy, RunnableException {
 	JavaStandardSWTBeanConstants constants = getConstants(registry);
 	return DisplayManager.syncExec(constants.getDisplayProxy(), runnable);
 }
 
+/**
+ * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * <p>
+ * This one will catch and log all exceptions, either on this side or the VM side. It will return <code>null</code> in this case.
+ * 
+ * @param registry the proxy registry to identify the vm to talk to.
+ * @param runnable the runnable to execute
+ * @return the result, an <code>IBeanProxy</code>, <code>null</code>. If there were any exceptions, <code>null</code> will also be returned.
+ * 
+ * @since 1.0.0
+ */
 public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) {
 	try {
 		return invokeSyncExec(registry, runnable);
 	} catch (ThrowableProxy e) {
-		JavaVEPlugin.getPlugin().getLogger().log(e);
-		return null;
+		SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		SwtPlugin.getDefault().getLogger().log(e.getCause(), Level.WARNING);
 	}
+	return null;
 }
 }

@@ -18,46 +18,40 @@ public ResourceProxyAdapter(IBeanProxyDomain domain) {
  * that ensures it is evaluated on the Display thread
  */
 protected IBeanProxy basicInitializationStringAllocation(final String aString, final IBeanTypeProxy targetClass) throws IAllocationProcesser.AllocationException {
-	final IAllocationProcesser.AllocationException[] allocExcept = new IAllocationProcesser.AllocationException[1];
 	try {
 		Object result = JavaStandardSWTBeanConstants.invokeSyncExec(getBeanProxyDomain().getProxyFactoryRegistry(), new DisplayManager.DisplayRunnable() {
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
 				try {
 					return ResourceProxyAdapter.super.basicInitializationStringAllocation(aString, targetClass);
 				} catch (AllocationException e) {
-					allocExcept[0] = e;
-					return "allocationException";
+					throw new RunnableException(e);
 				}
 			}
 		});
-		if (result instanceof String)
-			throw allocExcept[0];
-		else
-			return (IBeanProxy) result;
+		return (IBeanProxy) result;
 	} catch (ThrowableProxy e) {
 		throw new IAllocationProcesser.AllocationException(e);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		throw (IAllocationProcesser.AllocationException) e.getCause();
 	}
 }
 
 protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws IAllocationProcesser.AllocationException {
-	final IAllocationProcesser.AllocationException[] allocExcept = new IAllocationProcesser.AllocationException[1];
 	try {
 		Object result = JavaStandardSWTBeanConstants.invokeSyncExec(getBeanProxyDomain().getProxyFactoryRegistry(), new DisplayManager.DisplayRunnable() {
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
 				try {
 					return ResourceProxyAdapter.super.beanProxyAllocation(allocation);
 				} catch (AllocationException e) {
-					allocExcept[0] = e;
-					return "allocationException";
+					throw new RunnableException(e);
 				}
 			}
 		});
-		if (result instanceof String)
-			throw allocExcept[0];
-		else
-			return (IBeanProxy) result;
+		return (IBeanProxy) result;
 	} catch (ThrowableProxy e) {
 		throw new IAllocationProcesser.AllocationException(e);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		throw (IAllocationProcesser.AllocationException) e.getCause();
 	}
 }
 
