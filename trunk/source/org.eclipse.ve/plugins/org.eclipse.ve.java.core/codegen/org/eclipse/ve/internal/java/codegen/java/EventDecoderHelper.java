@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -252,7 +252,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      * Search the JDT model for a type associated with c
      */
 	IType getInnerType(JavaClass c) throws JavaModelException {
-		ICompilationUnit cu = fbeanPart.getModel().getWorkingCopyProvider().getSharedWorkingCopy();
+		ICompilationUnit cu = fbeanPart.getModel().getCompilationUnit();
 		IType[] types = cu.getAllTypes();
 		IType cType = null;
 		String cName = c.getName() ;
@@ -271,7 +271,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      * Search the JDT model for a type associated with c
      */
 	IType getMainType() throws JavaModelException {
-		ICompilationUnit cu = fbeanPart.getModel().getWorkingCopyProvider().getSharedWorkingCopy();
+		ICompilationUnit cu = fbeanPart.getModel().getCompilationUnit();
         return cu.getTypes()[0] ;
 	}
 	

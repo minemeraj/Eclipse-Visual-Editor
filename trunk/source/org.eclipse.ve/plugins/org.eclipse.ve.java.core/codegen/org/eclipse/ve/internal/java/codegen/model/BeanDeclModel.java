@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -21,15 +21,19 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
-import org.eclipse.jface.text.IDocument;
+//  The following will suport a working copy for the working copy
+//import org.eclipse.jdt.internal.core.BufferManager;
+
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -50,12 +54,22 @@ public class BeanDeclModel implements IBeanDeclModel {
 	List						fEventHandlers = new ArrayList() ;  // CodeEventHandlerRef list
 	CompilationUnitDeclaration	fJDOM = null  ;                     // Root of the JDOM
 	IWorkingCopyProvider		fWorkCopyP = null ;
+//  The following will suport a working copy for the working copy
+//	ICompilationUnit			fworkingWC = null ;					// Will be used as a temporary working copy for the working copy	
 	JavaSourceSynchronizer      fSrcSync = null ;
 	IDiagramModelInstance		fCompositionModel = null ;
 	String                      fLineSeperator = null ;
 	int                         fState = BDM_STATE_DOWN ;
 	ICodeGenStatus				fStatus = null ;
 	EditDomain					fDomain = null ; 
+	
+//  The following will suport a working copy for the working copy	
+//	WorkingCopyOwner			fworkingWCowner = new WorkingCopyOwner() {		
+//			BufferManager d= new BufferManager();
+//			public IBuffer createBuffer(ICompilationUnit workingCopy) {
+//				return d.createBuffer(workingCopy);
+//			}
+//	     };
 	
 /**
  * 
@@ -352,32 +366,37 @@ public void setSourceSynchronizer(JavaSourceSynchronizer sync) {
 	fSrcSync = sync ;	
 }
 
-public ICompilationUnit getCompilationUnit() {
-	if (fWorkCopyP != null)
-	    return fWorkCopyP.getLocalWorkingCopy() ;
-	else
-	    return null ;
+
+/**
+ * During updates, the first call to this method will create
+ * a working copy to THE working copy.
+ */
+public synchronized ICompilationUnit getCompilationUnit() {
+	if(fWorkCopyP!=null) {
+//  The following will suport a working copy for the working copy		
+//		if (isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
+//			return getWorkingWorkingCopy() ;
+//		else
+		    return fWorkCopyP.getWorkingCopy(true);
+	}
+	return null ;
 }
 
-public IDocument getDocument() {
-	if (fWorkCopyP != null)
-	    return fWorkCopyP.getLocalDocument() ;
-	else
-	    return null ;	
+public IBuffer getDocumentBuffer () {	
+	if(fWorkCopyP!=null)
+		try {
+			return getCompilationUnit().getBuffer();
+		} catch (JavaModelException e) {}
+	return null ;
 }
 
 public Object getDocumentLock() {
-	return fWorkCopyP.getLocalDocLock() ;
+	return fWorkCopyP.getDocLock() ;
 }
 
 public IWorkingCopyProvider getWorkingCopyProvider() {
 	return fWorkCopyP ;
 }
-
-public void updateJavaSource (String elementHandle) {
-	fSrcSync.updateSharedFromLocal(elementHandle) ;	
-}
-
 
 
 /**
@@ -571,7 +590,7 @@ public void updateBeanNameChange(BeanPart bp) {
 	public String resolveSingleNameReference(String selector, int location) {
 		return ASTHelper.resolveSingleNameReference(
 			selector, location,
-			getWorkingCopyProvider().getSharedDocument().get());
+			getWorkingCopyProvider().getDocument().get());
 	}
 
 	/**
@@ -591,14 +610,14 @@ public void updateBeanNameChange(BeanPart bp) {
 	}
 		
 	private void updateMethodOffset(CodeMethodRef sMethod, CodeMethodRef m, int docOff, int delta) {
-		if (sMethod.equals(m)) {
+		if (sMethod != null && sMethod.equals(m)) {
+
 			// Expression encapsulated in this method
-			m.updateExpressionsOffset(docOff, delta) ;
-		}
-		else if (m.getOffset()<docOff) 
-		    return ; // Beyond the content of this method
+			m.updateExpressionsOffset(docOff, delta);
+		} else if (m.getOffset() < docOff)
+			return; // Beyond the content of this method
 		else {
-			m.setOffset(m.getOffset()+delta) ;				
+			m.setOffset(m.getOffset() + delta);
 		}
 	}
 	
@@ -629,6 +648,8 @@ public void updateBeanNameChange(BeanPart bp) {
 		  updateMethodOffset(sourceMethod, (CodeMethodRef)m.next(), docOff, delta) ;
 	}
 	
+
+	
 	public CodeMethodRef getMethod(String handle) {
 		Iterator itr = getAllMethods() ;
 		while (itr.hasNext()) {
@@ -637,5 +658,95 @@ public void updateBeanNameChange(BeanPart bp) {
 			   return m ;
 		}
 		return null ;			
+	}	
+
+	/**
+	 * When updating the BDM (top down), changes will be made to a temporary
+	 * working copy, and then commited once to THE working copy.  This will avoid unecessary
+	 * notification on the WC buffer changes while decoders are generating code.
+	 * e.g., change from null to GridBag layout, will invoke many decoders.
+	 * 
+	 * @return a working copy for THE working copy
+	 * 
+	 * @since 1.0.0
+	 */
+//  The following will suport a working copy for the working copy	
+//	protected ICompilationUnit getWorkingWorkingCopy() {
+//		if (fworkingWC != null) return fworkingWC;
+//		
+//		try {
+//			fworkingWC = (ICompilationUnit) fWorkCopyP.getWorkingCopy(true).getWorkingCopy(fworkingWCowner,null,null) ;
+//			return (fworkingWC) ;
+//		} catch (JavaModelException e) {
+//			JavaVEPlugin.log(e) ;
+//		}
+//		
+//		
+//		return null ;
+//	}
+	/**
+	 * 
+	 * A call to this method will disable CodeGen's listening to changes on the CU document.
+	 * This is before a top down driven change is started.  A call to docChanged() must follow
+	 * when the change has completed. 
+	 * 
+	 * @since 1.0.0
+	 */
+	public synchronized void aboutTochangeDoc() {
+		if (isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT)) 
+			  return ;
+		try {
+			setState(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT, true) ;
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e) ;
+		}
+		if (fSrcSync!=null) {
+			fSrcSync.suspendDocListener() ;
+		}
+	}
+	
+	public synchronized void docChanged() {
+		if (isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT)) {
+//  The following will suport a working copy for the working copy			
+//			if (fworkingWC != null) {
+//				try {
+//					// need to commit changes made to the working copy of THE working copy
+//					fworkingWC.commit(true,null) ;
+//					fworkingWC.destroy() ;
+//					fworkingWC=null ;
+//				} catch (JavaModelException e1) {
+//					JavaVEPlugin.log(e1);
+//				}
+//			}
+			fSrcSync.resumeDocListener() ;
+			try {
+				setState(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT, false) ;
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e);
+			}
+		}
+	}
+	
+	public void refreshMethods () {
+		try {
+			if (!getCompilationUnit().isConsistent()) 
+				   getCompilationUnit().reconcile() ;
+		}
+		catch (JavaModelException e) {}
+		IType mainType = CodeGenUtil.getMainType(getCompilationUnit());
+		HashMap map = new HashMap() ;
+		try {
+			IMethod[] mtds = mainType.getMethods() ;
+			for (int i = 0; i < mtds.length; i++) {
+				map.put(mtds[i].getHandleIdentifier(),mtds[i]) ;
+			}
+			Iterator itr = getAllMethods();
+			while (itr.hasNext()) {
+				CodeMethodRef m = (CodeMethodRef) itr.next();
+				m.refreshIMethod((IMethod)map.get(m.getMethodHandle())) ;			
+			}
+		} catch (JavaModelException e1) {
+			JavaVEPlugin.log(e1, MsgLogger.LOG_WARNING);
+		}
 	}
 }

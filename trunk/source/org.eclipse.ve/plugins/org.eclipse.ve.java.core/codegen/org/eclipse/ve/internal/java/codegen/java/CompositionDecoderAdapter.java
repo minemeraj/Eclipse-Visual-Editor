@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -170,7 +170,7 @@ public String toString() {
 			// from the SharedWorkingCopy. If it was our local WCP, then the IType would not match and
 			// would be not found in the TypesView. If we didn't return anything, then the PackagesView and
 			// the TypesView would go blank.
-			return CodeGenUtil.getMainType(fbeanModel.getWorkingCopyProvider().getSharedWorkingCopy());
+			return CodeGenUtil.getMainType(fbeanModel.getCompilationUnit());
 		}
 		return null;
 	}

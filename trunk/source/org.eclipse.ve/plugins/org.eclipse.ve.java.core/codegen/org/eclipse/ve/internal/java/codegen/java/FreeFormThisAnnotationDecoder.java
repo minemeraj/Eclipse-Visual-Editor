@@ -11,16 +11,16 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import org.eclipse.jdt.core.*;
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jface.text.BadLocationException;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.internal.core.MsgLogger;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author gmendel
@@ -193,14 +193,10 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
           }
               
 
-          try {
-	              fBeanpart.getModel().getDocument().replace(curSR.getOffset(),len,newSrc) ;
-	              JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
-          }
-          catch (BadLocationException e) {
-        	    JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;   
-          }
-          fBeanpart.getModel().updateJavaSource(fBeanpart.getFieldDeclHandle()) ;
+          fBeanpart.getModel().getDocumentBuffer().replace(curSR.getOffset(),len,newSrc) ;
+		  // update offsets
+		  fBeanpart.getModel().driveExpressionChangedEvent(null, curSR.getOffset(), newSrc.length()-len) ;
+		  JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
         }
         catch (Exception e) {
             JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;

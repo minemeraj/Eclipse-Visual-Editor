@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.util.*;
@@ -20,15 +20,16 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jface.text.*;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.internal.core.MsgLogger;
+
+import org.eclipse.ve.internal.jcm.JCMFactory;
+import org.eclipse.ve.internal.jcm.JCMMethod;
+
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.jcm.JCMFactory;
-import org.eclipse.ve.internal.jcm.JCMMethod;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 public class CodeMethodRef extends AbstractCodeRef {
@@ -40,7 +41,6 @@ protected   ArrayList                   fExpressions = new ArrayList() ;
 protected   ArrayList					 fEventExpressions = new ArrayList() ;
 protected	 String                      fMethodHandle = null ;  // Unique handle in a class
 protected   String                      fMethodName ;
-protected   DocListener                 fdocListener=null ;
 protected   Object                      fSync ;
 protected   IBeanDeclModel              fModel = null ;
 protected   JCMMethod					 fcompMethod = null ;
@@ -49,136 +49,22 @@ protected	 boolean					 fStaleOffset = false ;
 	
 
 
-    /* This class will keep the expression's offset in sync with the doc. */
-    class DocListener implements IDocumentListener {
-        
-        IDocument       fDoc = null ;
-        boolean        fActive = false ;
-  	
-  	public void documentAboutToBeChanged(DocumentEvent event) {}
-  	
-  	private void refresh() {
-		ICompilationUnit cu = fModel.getCompilationUnit() ;		
-		try {
-			if (!cu.isConsistent())		     
-				cu.reconcile() ; 
-			if (fMethodHandle == null) 
-				throw new RuntimeException ("No JCMMethod Handle") ; //$NON-NLS-1$
-			/* Make sure we reflect the latest context of the method */
-			IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());
-			IMethod fMethod = CodeGenUtil.getMethod(mainType, getMethodHandle());
-			if(fMethod==null)
-				return;
-			// No need to reconcile, we just did.
-			IMethod mArray[] = mainType.findMethods(fMethod) ;
-			if (mArray == null || mArray.length == 0) {
-				org.eclipse.ve.internal.java.core.JavaVEPlugin.log("CodeMethodRef$DocListener.refresh(), No method found; "+fMethod,MsgLogger.LOG_FINE) ; //$NON-NLS-1$
-				return ;
-			}
-			fMethod = mArray[0] ;
-			if(fMethod!=null)
-				setOffset(fMethod.getSourceRange().getOffset()) ;
-		}catch (Exception e) {}
-	}
-	
-	public void documentChanged(DocumentEvent event) {
-        if (!fActive) return ;
-        
-		// TODO  Need to deal with removal of elements
-		if(fModel==null)
-			return;
-		else
-		    if (fModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT)) {
-		    	// Controlled update to the document; offset will be updated explicitly
-		    	// later on
-		    	fStaleOffset = true ;
-		    	return ;
-		    }
-		    
-		IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());
-		IMethod fMethod = CodeGenUtil.getMethod(mainType, getMethodHandle());
-		if(fMethod==null)
-			return;
-		synchronized (fSync) {
-			if (fExpressions == null || event.getOffset() > getOffset()+getLen()) 
-				return ;
-			// No need to synchronize here, as the instigator of this change had to sync.
-			// System.out.println ("CodeMethodRef-documentChanged("+fMethodName+"): Off("+event.getOffset()+"), Len("+event.getLength()+")") ;		
-			refresh() ;		   		 
-			if (event.getOffset() <= getOffset()) {
-				if (event.getOffset()+event.getLength()>getOffset()) {
-					// TODO  Handle cases where change due to event goes past this method definition. 
-					// Delta spans this method.
-					/************************************************************** fix */
-					return ;
-				}else{
-					// Delta a prefix, bu totally outside this method		 	
-				}
-			}else{
-				//  Delta is within this method, need to update expression's offset.		 		 		 	      		 	
-				int delta = (event.getText()==null) ? 0 : event.getText().length();
-				delta -= event.getLength();
-				Iterator itr = getAllExpressions() ;			  
-				while (itr.hasNext()) {
-					CodeExpressionRef exp = (CodeExpressionRef) itr.next() ;
-					// If this expression has updated the document, skip it
-					if (exp.isStateSet(CodeExpressionRef.STATE_UPDATING_SOURCE) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) 
-						continue ;
-					if (exp.getOffset()+getOffset() >= event.getOffset())
-						exp.setOffset(exp.getOffset()+delta) ;				
-		  		}
-			}
-			try {
-				setOffset(fMethod.getSourceRange().getOffset()) ;
-				setContent(fMethod.getSource()) ;
-			}catch(JavaModelException e) {
-				JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-			}			
-		}
-	}
-	
-	
-	public void  connectToDocument() {
-		if(fDoc == null && fTypeRef.getBeanModel().getDocument()!=null) {
-            fDoc = fTypeRef.getBeanModel().getDocument() ;
-			fDoc.addDocumentListener(this) ;
-            fActive = true ;
-        }
-	}
-	
-	public void  disconnectFromDocument() {
-        if (fDoc != null) {
-			fDoc.removeDocumentListener(this) ;
-            fDoc = null ;
-            fActive = false ;
-        }
-	}  	  	
-  }
-
-public CodeMethodRef (AbstractMethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
+    public CodeMethodRef (AbstractMethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
 	super(range.getOffset(),range.getLength(),content) ;
 	fSync = this ;
-	fTypeRef = tRef ;	      
-	connectToDoc() ;
+	fTypeRef = tRef ;	      	
 	setMethodHandle(methodHandle) ;
 	setDeclMethod(method) ;
 	tRef.addRefMethod(this)	 ;
 }
 
-public void connectToDoc() {
-    if (fdocListener == null) {
-        fdocListener = new DocListener() ;
-        fdocListener.connectToDocument() ;
-    }
-}
 
 public CodeMethodRef (CodeTypeRef tr,String mName) {
 	super() ;	
 	fSync = this ;
 	fTypeRef = tr ;
 	tr.addRefMethod(this) ;
-	fMethodName=mName ;
-	connectToDoc() ;
+	fMethodName=mName ;	
 }
 
 public CodeMethodRef (CodeTypeRef tr,String mName, JCMMethod cMethod) {
@@ -715,20 +601,9 @@ protected static Comparator getDefaultMethodComparator(){
 	};
 }
 
-public synchronized void aboutToDispose() {
-	if (fdocListener != null)
-	   fdocListener.disconnectFromDocument() ;	
-}
 
-
-public void disconnectFromDoc() {
-    if (fdocListener != null)
-       fdocListener.disconnectFromDocument() ;
-    fdocListener = null ;
-}
 
 public synchronized void dispose() {
-	disconnectFromDoc() ;
 	
 	if (fModel != null) {
 		Iterator itr = fModel.getBeansInitilizedByMethod(this).iterator();
@@ -789,34 +664,28 @@ public synchronized void deleteFromComposition () {
 
 public ICodeGenSourceRange getTargetSourceRange() {
     if (fModel == null) return null ;
-    ISourceRange sr = fModel.getWorkingCopyProvider().getSharedSourceRange(getMethodHandle()) ;
+    ISourceRange sr = fModel.getWorkingCopyProvider().getSourceRange(getMethodHandle()) ;
     CodeGenSourceRange result = new CodeGenSourceRange(sr) ;
     if (sr != null)
-        result.setLineOffset(fModel.getWorkingCopyProvider().getSharedLineNo(result.getOffset())) ;
+        result.setLineOffset(fModel.getWorkingCopyProvider().getLineNo(result.getOffset())) ;
     return result ;
 }
 
 public ICodeGenSourceRange getHighlightSourceRange() {
-    if (fModel == null || fModel.getWorkingCopyProvider()==null) 
-    	return null ;
-    try{
-	    ICompilationUnit cu = fModel.getWorkingCopyProvider().getSharedWorkingCopy();
-	    IType[] types = cu.getTypes();
-	    IMethod mtd = null;
-	    for(int i=0;types!=null&&i<types.length;i++)
-	    	if(CodeGenUtil.getMethod(types[i],getMethodHandle())!=null)
-	    		mtd = CodeGenUtil.getMethod(types[i],getMethodHandle());
-	    if(mtd==null)
-	    	return null;
-	    int start = mtd.getNameRange().getOffset();
-	    int end = mtd.getSourceRange().getOffset()+mtd.getSourceRange().getLength();
-	    start = cu.getSource().lastIndexOf('\n', start)+1;
-	    CodeGenSourceRange result = new CodeGenSourceRange(start, end-start) ;
-	    result.setLineOffset(fModel.getWorkingCopyProvider().getSharedLineNo(result.getOffset())) ;
-	    return result ;
-    }catch(JavaModelException e){
-    	return null;
-    }
+    if (fModel == null || fModel.getWorkingCopyProvider() == null)
+			return null;
+		try {
+			IMethod mtd = (IMethod) fModel.getWorkingCopyProvider().getElement(getMethodHandle());
+			if (mtd != null) {
+				int start = mtd.getNameRange().getOffset();
+				int end = mtd.getSourceRange().getOffset() + mtd.getSourceRange().getLength();
+				start = fModel.getCompilationUnit().getSource().lastIndexOf('\n', start) + 1;
+				CodeGenSourceRange result = new CodeGenSourceRange(start, end - start);
+				result.setLineOffset(fModel.getWorkingCopyProvider().getLineNo(result.getOffset()));
+				return result;
+			}
+		} catch (JavaModelException e) {}
+		return null;
 }
 
 public void setModel(IBeanDeclModel model) {
@@ -830,23 +699,30 @@ public void refreshIMethod(){
 	    }
 	    catch (JavaModelException e) {}
 		IType mainType = CodeGenUtil.getMainType(fModel.getCompilationUnit());
-		IMethod fMethod = CodeGenUtil.getMethod(mainType, getMethodHandle());
-		if(fMethod==null)
-			return;		
-		if(fMethod!=null){
-			setOffset(fMethod.getSourceRange().getOffset()) ;
-			setContent(fMethod.getSource());
-		}
-		connectToDoc() ;
+		IMethod m = CodeGenUtil.getMethod(mainType, getMethodHandle());
+		refreshIMethod(m);
 	}catch(Exception e){
 		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
 	}
 }
+
+public void refreshIMethod(IMethod m) {
+	try {
+		if(m!=null){
+			setOffset(m.getSourceRange().getOffset()) ;
+			setContent(m.getSource());
+		}
+	} catch (JavaModelException e) {
+		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+	}			
+}
+
+
 public String _debugExpressions() {
     
     StringBuffer sb = new StringBuffer() ;
     int mOffset = getOffset() ;
-    String   doc = fModel.getDocument().get() ;
+    String   doc = fModel.getDocumentBuffer().getContents() ;
     Iterator itr = getExpressions() ;
     while (itr.hasNext()) {
         CodeExpressionRef exp = (CodeExpressionRef)itr.next() ;

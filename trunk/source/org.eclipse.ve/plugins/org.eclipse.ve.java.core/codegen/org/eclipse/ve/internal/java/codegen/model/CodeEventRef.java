@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 00:00:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -35,19 +35,13 @@ public class CodeEventRef extends CodeExpressionRef {
 	protected	IEventDecoder				fDecoder     = null ; 
 
 	public CodeEventRef(Statement exp, CodeMethodRef method, CompilationUnitDeclaration dom) {
-		super(exp, method);
+		super(exp, method);		
 	}
 	
 	public CodeEventRef (CodeMethodRef method,BeanPart bean) {	
-	   super(method,bean) ;
+	   super(method,bean) ;	        	   
     }
 
-	/**
-	 * Sets the dom.
-	 * @param dom The dom to set
-	 */
-	public void setDom(CompilationUnitDeclaration dom) {
-	}
 
 	/**
 	*  setters/getters
@@ -313,12 +307,12 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	/* (non-Javadoc)
 	 * @see com.ibm.etools.jbcf.codegen.model.CodeExpressionRef#refreshFromJOM(com.ibm.etools.jbcf.codegen.model.CodeExpressionRef, boolean)
 	 */
-	public synchronized void refreshFromJOM(CodeExpressionRef exp, boolean updateDocumentContents) {
+	public synchronized void refreshFromJOM(CodeExpressionRef exp) {
 		// Reset the event invocation - it may instigate a decoder to reset its helper
 		if (exp.getExpression() != null)
 			setExpression(exp.getExpression());
 		setEventInvocation(((CodeEventRef)exp).getEventInvocation()) ;
-		super.refreshFromJOM(exp, updateDocumentContents);
+		super.refreshFromJOM(exp);
 	}
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -80,7 +80,7 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 				field,
 				ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 		bdm = beanDecoderAdapter.getBeanPart().getModel();
-		type = CodeGenUtil.getMainType(bdm.getWorkingCopyProvider().getSharedWorkingCopy());
+		type = CodeGenUtil.getMainType(bdm.getWorkingCopyProvider().getWorkingCopy(true));
 		EditDomain domain = EditDomain.getEditDomain(ep);
 		rule = (IInstanceVariableCreationRule) domain.getRuleRegistry().getRule(IInstanceVariableCreationRule.RULE_ID);
 			

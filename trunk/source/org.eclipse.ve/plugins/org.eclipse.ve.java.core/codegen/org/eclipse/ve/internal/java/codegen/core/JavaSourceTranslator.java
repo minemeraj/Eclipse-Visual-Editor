@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -51,25 +51,25 @@ public class JavaSourceTranslator implements IDiagramSourceDecoder, IDiagramMode
 	
 
 
-JavaBeanModelBuilder       fJavaModelBldr = null ;         
-IBeanDeclModel             fBeanModel ;
-IDiagramModelInstance      fCompositionModel = null ;
-IWorkingCopyProvider       fWorkingCopy = null ;
-JavaSourceSynchronizer     fSrcSync = null ;
+JavaBeanModelBuilder    fJavaModelBldr = null ;         
+IBeanDeclModel          fBeanModel ;
+IDiagramModelInstance   fCompositionModel = null ;
+IWorkingCopyProvider    fWorkingCopy = null ;
+JavaSourceSynchronizer  fSrcSync = null ;
 int						fSrcSyncDelay = JavaSourceSynchronizer.DEFAULT_SYNC_DELAY ;
-String                     fRSuri = null ;
-IFile                      fFile = null ;
-char[][]				   fPackageName = null ;
-TransientErrorManager      fTransientErrorManager = new TransientErrorManager();
-IJVEStatus                 fMsgRrenderer = null ;
-EditDomain 			       fEDomain = null ;
-final ArrayList		   fTranslatorListeners = new ArrayList() ;
+String                  fRSuri = null ;
+IFile                   fFile = null ;
+char[][]				fPackageName = null ;
+TransientErrorManager   fTransientErrorManager = new TransientErrorManager();
+IJVEStatus              fMsgRrenderer = null ;
+EditDomain 			    fEDomain = null ;
+final ArrayList		  	fTranslatorListeners = new ArrayList() ;
 private static boolean  fSnippetProcessingInProgress = false ;
-boolean                   fdisconnected = true ;
-boolean				   fpauseRoundTripping = false ;
+boolean                 fdisconnected = true ;
+boolean				   	fpauseRoundTripping = false ;
 private boolean fModelLoaded = false;
-public static String     fPauseSig = CodegenMessages.getString("JavaSourceTranslator.Round_Tripping_is_Paused_1") ;  //$NON-NLS-1$
-public static int        fCommitAndFlushNestGuard = 0 ;
+public static String    fPauseSig = CodegenMessages.getString("JavaSourceTranslator.Round_Tripping_is_Paused_1") ;  //$NON-NLS-1$
+public static int       fCommitAndFlushNestGuard = 0 ;
 
 BeanSubclassComposition fRoot = null;
 Resource fResource = null;
@@ -82,66 +82,6 @@ String fUri;
 
 
   /**
-   *  This is the strategy for updating the shared Java document after
-   *  a change in the local document.
-   */	
-  class  LocalToSharedUpdater implements IBackGroundWorkStrategy {
-  	ICancelMonitor    fMonitor = null ;
-  	IDocumentListener fDocListener = null ;
-  	
-  	public void run(Display disp, IDocumentListener docListener,
-  	                Object[] items,
-  	                ICancelMonitor monitor) {
-  		fMonitor = monitor ;
-  		fDocListener = docListener ;
-  		
-  		
-  		if (items == null) return ;
-  		
-  		final List handles = new ArrayList() ;
-  		ICompilationUnit cu = fBeanModel.getCompilationUnit() ;  		
-  		for (int i=0 ; i<items.length; i++) {
-  			if (((SynchronizerWorkItem)items[i]).isSharedToLocalUpdate()) throw new IllegalArgumentException("Shared To Local work Item") ; //$NON-NLS-1$
-  			String handle =((SynchronizerWorkItem)items[i]).getChangedElementHandle() ; 
-  			handles.add(handle) ;
-  			// During updates, methods did not refresh since they did not want to call cu.reconcile
-  			CodeMethodRef m = fBeanModel.getMethod(handle) ;
-  			IJavaElement elm = WorkingCopyProvider.getElement(handle, cu) ;
-			if (m != null && elm instanceof IMethod) {
-				IMethod Im = (IMethod) elm;
-				try {
-					m.setContent(Im.getSource());
-					Iterator itr = m.getAllExpressions();
-					while (itr.hasNext()) {
-						CodeExpressionRef e = (CodeExpressionRef) itr.next();
-						e.refreshAST();
-					}
-				}
-				catch (JavaModelException e) {}
-			}	
-  		}  			
-  		if ((monitor!= null && monitor.isCanceled()) ||
-  		    handles.isEmpty()) return ; 
-  	
-  		  disp.syncExec(new Runnable() {
-			      public void run() {	
-			      	  try {	
-			      	    synchronized (fBeanModel.getDocumentLock()) {		
-		                         fWorkingCopy.UpdateDeltaToShared(fMonitor,fDocListener,handles,false) ;
-			      	    }
-			      	  }
-			      	  catch (CodeGenException e) {
-		                      JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
-		                    }
-			      }
-		  }) ;	
-		  
-		  if(fTransientErrorManager!=null)
-		  	fTransientErrorManager.handleLocalToSharedChanged(fBeanModel,monitor);
-  	}           			
-  }
- 
-   /**
    *  This is the strategy for updating the shared Java document after
    *  a change in the local document.
    */	
@@ -191,7 +131,7 @@ String fUri;
 		// Take a closer look, and see if new fields, or new initMetod were added
 		// Note that this will pick up changes to imports.
 		JavaBeanModelBuilder modelBldr =
-			new JavaBeanShadowModelBuilder(fEDomain,CodeGenUtil.getRefWorkingCopyProvider(fWorkingCopy.getSharedWorkingCopy()), fWorkingCopy.getFile().getLocation().toFile().toString(), null);
+			new JavaBeanShadowModelBuilder(fEDomain,CodeGenUtil.getRefWorkingCopyProvider(fWorkingCopy.getWorkingCopy(false)), fWorkingCopy.getFile().getLocation().toFile().toString(), null);
 		modelBldr.setDiagram(fCompositionModel);
 		IBeanDeclModel bdm = null;
 		try {
@@ -230,13 +170,13 @@ String fUri;
 			SynchronizerWorkItem elm = (SynchronizerWorkItem) items[i];
 			if (elm.isImport()){
 				ITypeResolver sharedResolver = fBeanModel;
-				final CodegenTypeResolver localCodegenResolver = new CodegenTypeResolver(CodeGenUtil.getMainType(fWorkingCopy.getLocalWorkingCopy()));
+				final CodegenTypeResolver localCodegenResolver = new CodegenTypeResolver(CodeGenUtil.getMainType(fWorkingCopy.getWorkingCopy(true)));
 				ITypeResolver localResolver = new ITypeResolver() {
 					public String resolve(String unresolved) {
 						return localCodegenResolver.resolveTypeComplex(unresolved);
 					}
 					public String resolveThis() {
-						return localCodegenResolver.resolveTypeComplex(CodeGenUtil.getMainType(fWorkingCopy.getLocalWorkingCopy()).getElementName());
+						return localCodegenResolver.resolveTypeComplex(CodeGenUtil.getMainType(fWorkingCopy.getWorkingCopy(true)).getElementName());
 					}
 				};
 				List mainBeans = fBeanModel.getBeans();
@@ -379,7 +319,7 @@ String fUri;
 				
 				IModelChangeController controller = (IModelChangeController) fEDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);				    
 				try {
-					we.refreshContents(fWorkingCopy.getSharedWorkingCopy());
+					we.refreshContents(fWorkingCopy.getWorkingCopy(true));
 					CodeSnippetTranslator translator =
 						new CodeSnippetTranslator(
 							we.getSourceCode(),
@@ -1061,7 +1001,7 @@ pm.beginTask(CodegenMessages.getString("JavaSourceTranslator.ProgressMonitor.Sav
 
     
     
-    Vector  changedElements = new Vector () ;
+ 
     try {     
 //    	// workingCU =(ICompilationUnit) fBeanModel.getCompilationUnit().getWorkingCopy() ;
 //    	workingCU = fWorkingCopy.getLocalWorkingCopy() ;
@@ -1081,7 +1021,7 @@ pm.beginTask(CodegenMessages.getString("JavaSourceTranslator.ProgressMonitor.Sav
 //    	   JavaVEPlugin.log("No Update is needed to the Java Working Copy") ;
 //    	    
 //    	//fWorkingCopy.UpdateDeltaToShared(pm,changedElements,true)   ;  		
-    	fWorkingCopy.UpdateDeltaToShared(null,null,changedElements,true)   ;  		
+//    	fWorkingCopy.UpdateDeltaToShared(null,null,changedElements,true)   ;  		
     	
     	// The big red Reload button
     	reloadFromScratch(Display.getCurrent(),null) ;
@@ -1266,11 +1206,10 @@ public synchronized void reConnect(IFile file) {
 	    fWorkingCopy = new WorkingCopyProvider(file) ;		    
     }
     else if (fdisconnected)
-       fWorkingCopy.reconnect(file) ;
+       fWorkingCopy.connect(file) ;
        
     if (fSrcSync == null) {
 	   fSrcSync = new JavaSourceSynchronizer(fWorkingCopy,this) ;
-	   fSrcSync.setLocalUpdatingSharedStrategy(new LocalToSharedUpdater());
 	   fSrcSync.setSharedUpdatingLocalStrategy(new SharedToLocalUpdater()) ;
 	   fSrcSync.setDelay(fSrcSyncDelay) ;
 	   fSrcSync.setStatus(fMsgRrenderer) ;
@@ -1319,7 +1258,6 @@ public synchronized void disconnect(boolean clearVCEModel) {
 public synchronized void dispose() {
 	
 	if (fSrcSync != null) {
-		fSrcSync.setLocalUpdatingSharedStrategy(null) ;
 		fSrcSync.setSharedUpdatingLocalStrategy(null) ;
 		commitAndFlush(false);
 		fSrcSync.uninstall() ;
@@ -1460,8 +1398,10 @@ public void commitAndFlush(ISynchronizerListener listener, String marker) {
     
     // First commit
     
-    if (fBeanModel != null)
+    if (fBeanModel != null) {
       fBeanModel.deleteDesignatedBeans() ;
+      fBeanModel.docChanged();
+    }
     
     if (listener == null) return ;
     

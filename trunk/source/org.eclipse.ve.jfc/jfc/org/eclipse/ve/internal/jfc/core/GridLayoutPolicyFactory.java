@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:29 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -49,6 +49,6 @@ public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 * @see ILayoutPolicyFactory#getLayoutManagerInstance(EditDomain)
 	 */
 	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
-		return BeanUtilities.createJavaObject(javaClass, rset, null);
+		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 	}
 }

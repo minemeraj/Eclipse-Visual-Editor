@@ -11,21 +11,22 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:29 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
  */
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IField;
+
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jface.text.BadLocationException;
 
 import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 import org.eclipse.ve.internal.cdm.model.Rectangle;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @version 	1.0
@@ -129,7 +130,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
           ExpressionParser p = new ExpressionParser(f);
           int    srcStart = p.getCodeOff();
           int    srcLen   = p.getCodeLen();
-          String src = fBeanpart.getModel().getDocument().get().substring(srcStart+srcLen+1) ;
+          String src = fBeanpart.getModel().getDocumentBuffer().getContents().substring(srcStart+srcLen+1) ;
           String newSrc = null ;
           int start, len ;
           
@@ -185,14 +186,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
           }
               
 
-          try {
-	              fBeanpart.getModel().getDocument().replace(start,len,newSrc) ;
-	              JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
-          }
-          catch (BadLocationException e) {
-        	    JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;   
-          }
-          fBeanpart.getModel().updateJavaSource(fBeanpart.getFieldDeclHandle()) ;
+          fBeanpart.getModel().getDocumentBuffer().replace(start,len,newSrc) ;
+		  // update offsets
+		  fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length()-len) ;
+		  JavaVEPlugin.log(newSrc, MsgLogger.LOG_FINE) ;
         }
         catch (Exception e) {
             JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
