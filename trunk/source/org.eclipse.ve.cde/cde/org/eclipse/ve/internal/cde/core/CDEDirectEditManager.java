@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.swt;
 /*
- *  $RCSfile: ControlDirectEditManager.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:49 $
+ *  $RCSfile: CDEDirectEditManager.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-03-21 22:48:08 $ 
  */
+package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -24,23 +24,12 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Text;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
-
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-
-public class ControlDirectEditManager extends DirectEditManager {
+public abstract class CDEDirectEditManager extends DirectEditManager {
 
 	private Font scaledFont;
 	private EStructuralFeature sfProperty;
 
-	public ControlDirectEditManager(
-		ControlGraphicalEditPart source,
-		Class editorType,
-		CellEditorLocator locator,
-		EStructuralFeature property) {
+	public CDEDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator, EStructuralFeature property) {
 		super(source, editorType, locator);
 		sfProperty = property;
 	}
@@ -49,7 +38,7 @@ public class ControlDirectEditManager extends DirectEditManager {
 	 * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
 	 */
 	protected void bringDown() {
-		//This method might be re-entered when super.bringDown() is called.
+		// This method might be re-entered when super.bringDown() is called.
 		Font disposeFont = scaledFont;
 		scaledFont = null;
 		super.bringDown();
@@ -59,21 +48,8 @@ public class ControlDirectEditManager extends DirectEditManager {
 
 	protected void initCellEditor() {
 		String initialText = ""; //$NON-NLS-1$
-
-		// retrieve the property's value from the model
-		IJavaObjectInstance component = (IJavaObjectInstance) getEditPart().getModel();
-		if (component.eIsSet(sfProperty)) {
-			IJavaObjectInstance textObj = (IJavaObjectInstance) component.eGet(sfProperty);
-			if (textObj != null) {
-				// Get the value from the remote vm of the externalized string
-				try {
-					IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost(component);
-					IBeanProxy propProxy = host.getBeanPropertyProxyValue(sfProperty);
-					initialText = ((IStringBeanProxy) propProxy).stringValue();
-				} catch (Exception e) {
-				}
-			}
-		}
+		if (sfProperty != null)
+			initialText = getPropertyValue(sfProperty);
 		getCellEditor().setValue(initialText);
 		Text text = (Text) getCellEditor().getControl();
 		IFigure figure = ((GraphicalEditPart) getEditPart()).getFigure();
@@ -86,5 +62,17 @@ public class ControlDirectEditManager extends DirectEditManager {
 
 		text.setFont(scaledFont);
 		text.selectAll();
+
 	}
+
+	/**
+	 * <P>
+	 * Gets the string value of the property specified by the structure feature sfProperty.
+	 * @param sfProperty
+	 * @return a String value 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected abstract String getPropertyValue(EStructuralFeature sfProperty);
+
 }
