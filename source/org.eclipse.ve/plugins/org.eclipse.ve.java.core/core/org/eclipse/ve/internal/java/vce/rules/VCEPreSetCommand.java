@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-29 23:44:51 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-11 14:48:36 $ 
  */
 
 import java.util.*;
@@ -58,7 +58,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 		PROPERTY = 0,
 		LOCAL = 1,				// Local definition
 		GLOBAL_GLOBAL = 2,		// Global definition, global initialization
-		GLOBAL_PARENT = 3;		// Global definition, initialized as part of the parent initialization
+		GLOBAL_LOCAL = 3;		// Global definition, initialized as part of the parent initialization
 
 	protected EditDomain domain;
 	protected EObject target;
@@ -140,8 +140,8 @@ public class VCEPreSetCommand extends CommandWrapper {
 			handleAnnotation(value, memberBldr);	// Need to handle annotation first.
 			if (m == null || settingType == GLOBAL_GLOBAL) {
 				m = promoteGlobal(cbld, memberBldr, value);
-			} else if(settingType == GLOBAL_PARENT){
-				promoteGlobalParent(cbld,memberBldr,value,m);
+			} else if(settingType == GLOBAL_LOCAL){
+				m = promoteGlobalLocal(cbld,memberBldr,value,m);
 			} else {
 				m = promoteLocal(cbld, memberBldr, value, m);
 			}	
@@ -158,12 +158,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 			// Walk up containment until we find a method, or we get to the top, but don't go beyond <members> containment. The
 			// one that is at <members> should have an initialize method. Where we stop we need to create an initializes.
 			m = findInitializesMethod(value,cbld);
-			if(m != null) return m;
-			// We reached BeanSubclassComposition, so the top guy should of had an init method.
-//			if(settingType == GLOBAL_GLOBAL){
-//				m = createInitMethod(cbld, oldV);	// Create a method to initialize the JavaBean
 		}
-		
 		return m;
 	}
 
@@ -186,6 +181,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 				return initMethod;
 			}  
 		}
+
+		// We reached BeanSubclassComposition, so the top guy should of had an init method.
+		initMethod = createInitMethod(cbld, oldV);	// Create a method to initialize the JavaBean	
 		return initMethod;
 	}
 
@@ -214,7 +212,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Promote to local, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */	
-	protected JCMMethod promoteGlobalParent(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+	protected JCMMethod promoteGlobalLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
 		// The initializes method is from the argument
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		// The member is added to the composition
@@ -249,12 +247,15 @@ public class VCEPreSetCommand extends CommandWrapper {
 		
 	
 	private EClass classAWTComponent;
+	private EClass classSWTShell;	
 	private EClass classSWTControl;	// TODO Hack for SWT, needs to be done by some kind of contribution SWT makes to the VE and not hard coded here	
 	
 	protected void initialize() {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		classAWTComponent = (EClass) rset.getEObject(URI.createURI("java:/java.awt#Component"), true); //$NON-NLS-1$
-		classSWTControl = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Control"), true); //$NON-NLS-1$		
+		classSWTControl = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Control"), true); //$NON-NLS-1$
+		classSWTShell = (EClass) rset.getEObject(URI.createURI("java:/org.eclipse.swt.widgets#Shell"), true); //$NON-NLS-1$		
+		
 //		classJLabel = (EClass) rset.getEObject(URI.createURI("java:/javax.swing#JLabel"), true);		
 	}
 	
@@ -264,8 +265,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 	protected int settingType(EObject property) {
 		if (classAWTComponent.isInstance(property))
 			return GLOBAL_GLOBAL;				// Hard code AWT components to be global and globally initialized (in their own getJavaBean() method)
+		else if(classSWTShell != null && classSWTShell.isInstance(property))
+			return GLOBAL_GLOBAL;
 		else if (classSWTControl != null && classSWTControl.isInstance(property))
-			return GLOBAL_PARENT;				// Hard code SWT controls to be globally declared and initialized in their parent method
+			return GLOBAL_LOCAL;				// Hard code SWT controls to be globally declared and initialized in their parent method
 		else
 			return PROPERTY;
 	}
@@ -342,6 +345,8 @@ public class VCEPreSetCommand extends CommandWrapper {
 				case LOCAL:
 					promoteLocal(cbld, cbld, value, m);
 					break;
+				case GLOBAL_LOCAL:
+					promoteGlobalLocal(cbld, cbld ,value,m);
 				case PROPERTY:
 					// Make sure it is a <properties> of the requested member container.
 					cbld.applyAttributeSetting(m, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
