@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-14 18:25:02 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-20 20:49:16 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.search.LocalVariableDeclarationMatch;
-import org.eclipse.jdt.internal.compiler.ast.LocalDeclaration;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;

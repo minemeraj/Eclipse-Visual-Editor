@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-18 20:35:22 $ 
+ *  $Revision: 1.12 $  $Date: 2004-04-20 20:48:51 $ 
  */
 
 import java.util.Iterator;
@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
 
@@ -204,17 +205,15 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
     protected boolean dealwithInternalBean(ClassInstanceCreation exp) {
         
         try {
-          String unresolved = exp.getName().toString(); //CodeGenUtil.tokensToString(exp.type.getTypeName());
+        	
+          JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
+          		ConstructorDecoderHelper.getParsedTree(exp,fbeanPart.getModel(),null));
+
           String resolved = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()) ; 
-          
-          String origInitString = exp.toString() ;
-          int start = origInitString.indexOf(unresolved);
-          int end = start + unresolved.length();
-          String newInitString = origInitString.substring(0, start)+resolved+origInitString.substring(end, origInitString.length());
           EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
         
           IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved, fbeanPart.getModel().getCompositionModel()) ;
-          attr.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(newInitString));
+          attr.setAllocation(alloc);
           
           EObject target = fbeanPart.getEObject() ;
           CodeGenUtil.propertyCleanup(target,sf) ;
@@ -305,6 +304,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	/**
 	 * This is a temporary workaround to the fact that we need to set
 	 * a constructor on a BoxLayout
+	 * @deprecated  we are using PT now, should not use this anymore
 	 */
 	private String boxLayoutOveride(String st) {
 		int index =  st.indexOf("(,") ; //$NON-NLS-1$
@@ -326,7 +326,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			fPropInstance = (IJavaInstance) currentVal;
 			if (currentVal != null) {
 				if (currentVal instanceof IJavaObjectInstance)
-					return boxLayoutOveride(CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel()));
+					return CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel());
 				else if (currentVal instanceof IJavaDataTypeInstance)
 					return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel());
 
