@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.4 $  $Date: 2004-10-27 17:37:12 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -129,4 +129,10 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 		return labelProviderNotifier != null ? labelProviderNotifier.getLabelProvider().getText(getModel()) : CDEEmfMessages.getString("DefaultTreeEditPart.getText.NoLabelProvider"); //$NON-NLS-1$
 	}
 
+	/**
+	 * @return Returns the labelDecorator.
+	 */
+	public ILabelDecorator getLabelDecorator() {
+		return labelDecorator;
+	}
 }
