@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.2 $ $Date: 2004-08-25 20:08:20 $
+ * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.3 $ $Date: 2004-10-01 15:26:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -141,6 +141,9 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(tabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, pd);
 		}
 		IPropertyDescriptor[] theirs = controlPS.getPropertyDescriptors();
+		IPropertyDescriptor[] wrappedTheirs = new IPropertyDescriptor[theirs.length];
+		for (int i = 0; i < theirs.length; i++)
+			wrappedTheirs[i] = new RuledWrapperedPropertyDescriptor(tabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, theirs[i]);
 		//Save the ID's for later compares.
 		myDescriptors = new ArrayList(wi);
 		for (int i = 0; i < wi; i++) {
@@ -148,8 +151,8 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 		}
 		// Finally build the complete list.
 		IPropertyDescriptor[] finalList = new IPropertyDescriptor[theirs.length + wi];
-		System.arraycopy(theirs, 0, finalList, 0, theirs.length);
-		System.arraycopy(wrappedMine, 0, finalList, theirs.length, wi);
+		System.arraycopy(wrappedTheirs, 0, finalList, 0, wrappedTheirs.length);
+		System.arraycopy(wrappedMine, 0, finalList, wrappedTheirs.length, wi);
 		return finalList;
 	}
 }
