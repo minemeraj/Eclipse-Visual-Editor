@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JFCLauncher.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-03 21:55:30 $ 
  */
 
 import java.applet.Applet;
@@ -37,8 +37,8 @@ public class JFCLauncher implements ILauncher {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
 	 */
-	public boolean supportsLaunching(Class clazz, Object javaBean) {
-		return (javaBean instanceof Applet || javaBean instanceof Window || javaBean instanceof JComponent || javaBean instanceof Component);
+	public boolean supportsLaunching(Class clazz) {
+		return (JComponent.class.isAssignableFrom(clazz) || Component.class.isAssignableFrom(clazz) || Window.class.isAssignableFrom(clazz) || Applet.class.isAssignableFrom(clazz));
 	}
 
 	/* (non-Javadoc)

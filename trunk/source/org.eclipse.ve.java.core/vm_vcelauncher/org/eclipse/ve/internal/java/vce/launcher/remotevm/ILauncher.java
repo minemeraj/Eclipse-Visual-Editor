@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ILauncher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-18 13:56:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-09-03 21:55:30 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  
@@ -21,6 +21,6 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  */
 public interface ILauncher {
 
-	public boolean supportsLaunching(Class clazz, Object bean);
+	public boolean supportsLaunching(Class clazz);
 	public void launch(Class clazz, Object bean, String[] args);
 }
