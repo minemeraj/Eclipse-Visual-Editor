@@ -12,17 +12,23 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.6 $  $Date: 2005-03-08 23:41:02 $ 
+ *  $Revision: 1.7 $  $Date: 2005-03-17 18:44:59 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.io.File;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoAdapterFactory;
+import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.beaninfo.core.BeanInfoCacheController;
+import org.eclipse.jem.internal.java.beaninfo.IIntrospectionAdapter;
  
 
 /**
@@ -163,9 +169,30 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		   // TODO: This is a temporary hack to delete BeanInfo cache
 		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(getProject()).toFile(),false);
 		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(null).toFile(),false);
+		   markInMemoryBeaninfoStale(getProject());// Mark in-memory beaninfo stale
 		}		
 		monitor.done();
 		currentProjectPath=null;
 		currentMonitor=null;
+	}
+	
+	/*
+	 * Cleaning the meta directories is not enough - beaninfo is already loaded into the 
+	 * memory and it needs to be marked stale also. This API will mark all in-memory 
+	 * beaninfo of the project stale.
+	 */
+	private void markInMemoryBeaninfoStale(IProject project) {
+		try {
+			BeaninfoNature beaninfoNature = (BeaninfoNature) project.getNature(BeaninfoNature.NATURE_ID);
+			if(beaninfoNature!=null && beaninfoNature.getResourceSet()!=null){
+				AdapterFactory adapterFactory = EcoreUtil.getAdapterFactory(beaninfoNature.getResourceSet().getAdapterFactories(), IIntrospectionAdapter.ADAPTER_KEY);
+				if (adapterFactory instanceof BeaninfoAdapterFactory) {
+					BeaninfoAdapterFactory beaninfoAdapterFactory = (BeaninfoAdapterFactory) adapterFactory;
+					beaninfoAdapterFactory.markAllStale();
+				}
+			}
+		} catch (CoreException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
 	}
 }
