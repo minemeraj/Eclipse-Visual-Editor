@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-01 18:52:24 $ 
  */
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -118,5 +119,24 @@ public class BeanUtilities {
 		EStructuralFeature containerSF = aBean.eContainmentFeature();
 		return containerSF.getName().equals("thisPart"); //$NON-NLS-1$
 
+	}
+
+	/**
+	 * @param javaObjectInstance
+	 * @param featureName
+	 * Return the feature value.  Either is is set in the EMF model so we get it
+	 * or else we go to the target VM
+	 * 
+	 * @since 1.0.0
+	 */
+	public static IJavaInstance getFeatureValue(IJavaObjectInstance javaObject, String featureName) {
+		EStructuralFeature feature = javaObject.eClass().getEStructuralFeature(featureName);
+		Object featureValue = javaObject.eGet(feature);
+		if(featureValue != null){
+			return (IJavaInstance)featureValue;
+		} else {
+			IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(javaObject);
+			return beanProxyHost.getBeanPropertyValue(feature);
+		}
 	}
 }
