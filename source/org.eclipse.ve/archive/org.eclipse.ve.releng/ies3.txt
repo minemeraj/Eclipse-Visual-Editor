@@ -1,3 +1,2 @@
-VE-SDK-I20040521.zip=http://download.eclipse.org/tools/ve/downloads/iesdrops/I-I20040521-200405211636/ | | | sdk | ve
-VE-runtime-I20040521.zip=http://download.eclipse.org/tools/ve/downloads/iesdrops/I-I20040521-200405211636/ | | | runtime | ve
-
+VE-SDK-I20040603.zip=http://download.eclipse.org/tools/ve/downloads/I-I20040603-200406031136/ | | | sdk | ve
+VE-runtime-I20040603.zip=http://download.eclipse.org/tools/ve/downloads/I-I20040603-200406031136/ | | | runtime | ve
