@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 18:49:50 $ 
+ *  $Revision: 1.5 $  $Date: 2004-09-08 18:46:48 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -624,7 +624,11 @@ public class JavaVisualEditorVMController {
 						processChangedReferencedProject(element.getProject());
 						break;
 					case IJavaElementDelta.CHANGED:
-						if (isClasspathResourceChange(delta)) {
+						if ((delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
+							// Treat as a project removed.
+							processRemovedProject(element.getProject());
+							processChangedReferencedProject(element.getProject());
+						} else if (isClasspathResourceChange(delta)) {
 							// This means this project's .classpath file was changed. This is a major
 							// change (though it could be simply attach source), so to be on the safe
 							// side process any referenced project like an add or remove. Plus the project
