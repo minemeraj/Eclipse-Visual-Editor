@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-29 15:22:25 $ 
  */
 
 import org.eclipse.swt.graphics.*;
@@ -151,9 +151,16 @@ public static void getPixels(ImageData imageData, int x, int y,
 		return;
 	}
 }	
+
 /**
- * mixAlphaWithinRegion: Mix in the alpha value using the given background color within the
- * region specified. Answer the new mixed in ImageData
+ * Mix alpha into region.
+ * @param fromImageData
+ * @param region
+ * @param alpha alpha, 0.0 to 1.0.
+ * @param backColor background (show this color when alpha is 0.0, show 50% of this color when alpha is .5)
+ * @return new ImageData
+ * 
+ * @since 1.0.0
  */
 public static ImageData mixAlphaWithinRegion(ImageData fromImageData, Region region, 
 														double alpha, RGB backColor) {
@@ -345,6 +352,281 @@ public static ImageData mixAlphaWithinRegion(ImageData fromImageData, Region reg
 	return new ImageData(fromImageData.width, fromImageData.height, depth, palette, 
 							fromImageData.scanlinePad, toData);
 }
+
+/**
+ * Mix alpha into region. Also crosshatch the region. The crosshatch will be at a 45 degree angle from
+ * top left to lower right, and will be 5 pixels apart.
+ * @param fromImageData
+ * @param region
+ * @param alpha alpha, 0.0 to 1.0.
+ * @param backColor background (show this color when alpha is 0.0, show 50% of this color when alpha is .5)
+ * @param crossHatchColor color to use for the crosshatch lines. This color will not go through lightening.
+ * @return new ImageData
+ * 
+ * @since 1.0.0
+ */
+public static ImageData mixAlphaAndCrossHatchWithinRegion(ImageData fromImageData, Region region, 
+											double alpha, RGB backColor, RGB crossHatchColor) {
+	// We are using the alpha formula that Java uses:
+	// The formula is applied to each color component individually (Red, Green, Blue).
+	//   Cn = Co*a + Cb*(1-a)
+	//     Cn = New Color component
+	//     Co = Old Color component (from the image data)
+	//     a = The alpha value
+	//     Cb = Background Color component
+	//
+	// The alpha is in float, but we will be using integer arithmetic, so appropriate 
+	// conversions will be made. We will need to find the appropriate fraction. We'll do 
+	// that by turning it into a percentage. We will use the integer arithmetic on the 
+	// Co*a side. We'll use the float for figuring out the Cb*(1-a) side since that side 
+	// is constant.
+	double cba = 1 - alpha; //	The Cb alpha multiplier
+	int redCba = (int) (backColor.red * cba + .5); // Symetric round
+	int greenCba = (int) (backColor.green * cba + .5);
+	int blueCba = (int) (backColor.blue * cba + .5);
+	// Figure out the alpha numerator, the denominator will be 100.
+	int aNum = (int) (alpha * 100. + .5); 
+
+	// Now go through the data, converting as necessary
+	PaletteData palette = fromImageData.palette;
+	boolean isDirect = palette.isDirect;
+	RGB[] colors = palette.getRGBs();
+	byte[] fromData = fromImageData.data;
+	byte[] toData = new byte[fromData.length];
+	// Copy over so that only changes need to be individually saved.
+	System.arraycopy(fromData, 0, toData, 0, fromData.length); 
+	int depth = fromImageData.depth;
+	int bytesPerLine = fromImageData.bytesPerLine;
+
+	// We will traverse one row at a time. We will only traverse the rows within
+	// the outer bounds of the region since those are the only rows that could
+	// require changing. We will go through the row one point at a time testing
+	// if it is in the region. If so, we will merge in the alpha, otherwise we will
+	// leave it unchanged. Inside this bounds we will do
+	// individual tests because there could be independent areas not within any
+	// of the rectangles of the region but still within the bounds of the region.
+	// Intersect it with the bounds of the image so that we never leave the image
+	// because the Region could be outside of the image bounds.
+	Rectangle outerBounds = region.getBounds().intersection(
+						new Rectangle(0, 0, fromImageData.width, fromImageData.height));
+	if (depth == 1) {
+		// Do nothing for depth == 1 because that is just black and white and alpha
+		// and crosshatching makes little sense for this.
+	} else {
+		// Need three hatchPixels because some only use one number, some use two, and others use three parts.
+		int hatchPixel = 0;
+		int hatchPixel1 = 0;
+		int hatchPixel2 = 0;
+		if (depth == 4 || depth == 8) {
+			// Need to compute hatch color using palette.
+			hatchPixel = getNearestColorIndex(crossHatchColor.red, crossHatchColor.green, crossHatchColor.blue, colors);
+			
+		} else if (depth == 16) {
+			if (isDirect) {
+				// See below for why we do this weird manipulation.
+				hatchPixel = (crossHatchColor.green << 5 | crossHatchColor.blue);
+				hatchPixel1 = (crossHatchColor.red << 2 | crossHatchColor.green >>> 3);
+			} else {
+				// See below for why we do this weird manipulation.				
+				int hatchColorIndex = getNearestColorIndex(crossHatchColor.red, crossHatchColor.green, 
+						crossHatchColor.blue, colors);
+				hatchPixel = hatchColorIndex;
+				hatchPixel1 = hatchColorIndex >>> 8;
+			}
+		} else if (depth == 24 || depth == 32) {
+			if (isDirect) {
+				// See below for why we do this weird manipulation.								
+				hatchPixel = crossHatchColor.blue;
+				hatchPixel1 = crossHatchColor.green;
+				hatchPixel2 = crossHatchColor.red;
+			} else {
+				// See below for why we do this weird manipulation.								
+				int hatchColorIndex = getNearestColorIndex(crossHatchColor.red, crossHatchColor.green, 
+						crossHatchColor.blue, colors);
+				hatchPixel = hatchColorIndex;
+				hatchPixel1 = hatchColorIndex >>> 8;
+				hatchPixel2 = hatchColorIndex >>> 16;
+			}
+
+		}
+		int y = outerBounds.y;
+		int endY = outerBounds.y + outerBounds.height;
+		int lineStartHatch = 0;	// The X coor to start the hatch for the line. This will be increased by 1 each line at module 5.
+		for (; y < endY; y++) {
+			int nextHatch = lineStartHatch;
+			lineStartHatch = (lineStartHatch+1) % 5;
+			if (depth == 4) {
+				// Depth == 4 means we must have an indexed palette, can't get RGB into 4 bits
+				int x = outerBounds.x;
+				int index = (y * bytesPerLine) + (x >> 1);
+				boolean isUpperNibble = (outerBounds.x & 0x1) == 0;
+				int endX = x + outerBounds.width;
+				for (; x < endX; x++) {
+					boolean hatchIt = x == nextHatch;
+					if (hatchIt)
+						nextHatch += 5;
+					if (region.contains(x, y)) {
+						// We need to convert this pixel
+						int pixel;
+						if (isUpperNibble)
+							pixel = (toData[index] & 0xFF) >>> 4;
+						else
+							pixel = toData[index] & 0x0F;
+						RGB color = colors[pixel];
+						if (!hatchIt) {
+							int red = (color.red * aNum) / 100 + redCba;
+							int green = (color.green * aNum) / 100 + greenCba;
+							int blue = (color.blue * aNum) / 100 + blueCba;
+							pixel = getNearestColorIndex(red, green, blue, colors);
+						} else
+							pixel = hatchPixel;
+						if (isUpperNibble)
+							toData[index] = (byte)((toData[index] & 0x0F) 
+											| (byte)(pixel << 4));
+						else
+							toData[index] = (byte) ((toData[index] & 0xF0) | (byte) pixel);
+					}
+					if (!isUpperNibble)
+						index++; // We just passed the lower nibble, go to next byte
+					isUpperNibble = !isUpperNibble; // Flipping to other nibble
+				}
+				continue; // Go to next row
+			}
+			if (depth == 8) {
+				// Depth == 8 means we must have an indexed palette, can't get RGB into 8 bits
+				int x = outerBounds.x;
+				int index = (y * bytesPerLine) + x;
+				int endX = x + outerBounds.width;
+				for (; x < endX; x++) {
+					boolean hatchIt = x == nextHatch;
+					if (hatchIt)
+						nextHatch += 5;					
+					if (region.contains(x, y)) {
+						// We need to convert this pixel
+						RGB color = colors[toData[index] & 0xFF];
+						int red = (color.red * aNum) / 100 + redCba;
+						int green = (color.green * aNum) / 100 + greenCba;
+						int blue = (color.blue * aNum) / 100 + blueCba;
+						if (!hatchIt)
+							toData[index] = (byte)getNearestColorIndex(red, green, 
+												blue, colors);
+						else
+							toData[index] = (byte)hatchPixel;
+					}
+					index++;
+				}
+				continue; // Go to next row
+			}
+			if (depth == 16) {
+				// Depth == 16 can be either indexed or Direct
+				int x = outerBounds.x;
+				int index = (y * bytesPerLine) + (x * 2);
+				int endX = x + outerBounds.width;
+				for (; x < endX; x++) {
+					boolean hatchIt = x == nextHatch;
+					if (hatchIt)
+						nextHatch += 5;										
+					if (region.contains(x, y)) {
+						int red, green, blue;
+						if (isDirect) {
+							if (!hatchIt) {
+								// Can get RGB right out of the pixel. Since data is stored 
+								// least significant byte first (i.e. Intel(R) format), the 
+								// colors can be found as:
+								//    xxxBBBBB xxxxxxxx
+								//    GGGxxxxx xxxxxxgg
+								//    xxxxxxxx xRRRRRxx
+								// Which if loaded into a register would be: xRRRRRggGGGBBBBB
+								blue = ((toData[index] & 0x1F) * aNum) / 100 + blueCba;
+								green = (((toData[index] & 0xFF) >>> 5 | (toData[index + 1] & 0x03) << 3) * aNum) / 100 + greenCba;
+								red = (((toData[index + 1] & 0xFF) >>> 2) * aNum) / 100 + redCba;
+								toData[index] = (byte) (green << 5 | blue);
+								toData[index + 1] = (byte) (red << 2 | green >>> 3);
+							} else {
+								toData[index] = (byte) hatchPixel;
+								toData[index + 1] = (byte) hatchPixel1;								
+							}
+						} else {
+							if (!hatchIt) {
+								RGB color = colors[(toData[index] & 0xFF) + ((toData[index + 1] & 0xFF) << 8)];
+								red = (color.red * aNum) / 100 + redCba;
+								green = (color.green * aNum) / 100 + greenCba;
+								blue = (color.blue * aNum) / 100 + blueCba;
+								int newColorIndex = getNearestColorIndex(red, green, blue, colors);
+								toData[index] = (byte) newColorIndex;
+								toData[index + 1] = (byte) (newColorIndex >>> 8);
+							} else {
+								toData[index] = (byte) hatchPixel;
+								toData[index + 1] = (byte) hatchPixel1;								
+							}
+						}
+					}
+					index += 2;
+				}
+				continue; // Go to next row					
+			}
+			if (depth == 24 || depth == 32) {
+				// Depth == 24 or 32 can be either indexed or Direct
+				int byteDepth = depth == 32 ? 4 : 3;
+				int x = outerBounds.x;
+				int index = (y * bytesPerLine) + (x * byteDepth);
+				int endX = x + outerBounds.width;
+				for (; x < endX; x++) {
+					boolean hatchIt = x == nextHatch;					
+					if (hatchIt)
+						nextHatch += 5;															
+					if (region.contains(x, y)) {
+						int red, green, blue;
+						if (isDirect) {
+							if (!hatchIt) {
+								// Can get RGB right out of the pixel. The only difference 
+								// between 23 and 32 is that 32 has an extra byte of zeroes 
+								// attached. The number of bits and locations of the colors 
+								// are the same. The data is stored as: (Stored in Intel(R) 
+								// format, least significant first).
+								//   Byte 0: Blue
+								//   Byte 1: Green
+								//   Byte 2: Red
+								blue = ((toData[index] & 0xFF) * aNum) / 100 + blueCba;
+								green = ((toData[index + 1] & 0xFF) * aNum) / 100 + greenCba;
+								red = ((toData[index + 2] & 0xFF) * aNum) / 100 + redCba;
+								toData[index] = (byte) blue;
+								toData[index + 1] = (byte) green;
+								toData[index + 2] = (byte) red;
+							} else {
+								toData[index] = (byte) hatchPixel;
+								toData[index + 1] = (byte) hatchPixel1;
+								toData[index + 2] = (byte) hatchPixel2;								
+							}
+						} else {
+							if (!hatchIt) {
+								RGB color = colors[(toData[index] & 0xFF) + ((toData[index + 1] & 0xFF) << 8) + ((toData[index + 2] & 0xFF) << 16)];
+								red = (color.red * aNum) / 100 + redCba;
+								green = (color.green * aNum) / 100 + greenCba;
+								blue = (color.blue * aNum) / 100 + blueCba;
+								int newColorIndex = getNearestColorIndex(red, green, blue, colors);
+								toData[index] = (byte) newColorIndex;
+								toData[index + 1] = (byte) (newColorIndex >>> 8);
+								toData[index + 2] = (byte) (newColorIndex >>> 16);
+							} else {
+								toData[index] = (byte) hatchPixel;
+								toData[index + 1] = (byte) hatchPixel1;
+								toData[index + 2] = (byte) hatchPixel2;								
+							}
+						}
+					}
+					index += byteDepth;
+				}
+				continue; // Go to next row					
+			}
+		}
+	}
+
+	// We've created the new byte array, now create the new ImageData
+	return new ImageData(fromImageData.width, fromImageData.height, depth, palette, 
+							fromImageData.scanlinePad, toData);
+}
+
 /**
  * This method doesn't appear on ImageData, but it should. But even so, they have bugs for
  * depths greater than 8.
