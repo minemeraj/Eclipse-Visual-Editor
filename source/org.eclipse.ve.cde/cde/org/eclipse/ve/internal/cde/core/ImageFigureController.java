@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageFigureController.java,v $
- *  $Revision: 1.4 $  $Date: 2004-07-29 15:52:46 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-03 20:06:30 $ 
  */
 
 package org.eclipse.ve.internal.cde.core;
@@ -57,6 +57,13 @@ public class ImageFigureController {
 	private byte refreshState = NO_REFRESH_PENDING; // Flag for refresh state
 
 	private boolean crossHatch; // Should we crosshatch the lightened area.
+	private static final RGB DEFAULT_LIGHTEN_RGB = new RGB(255,255,255);
+	private RGB lightenColor = DEFAULT_LIGHTEN_RGB;
+	private static final RGB DEFAULT_CROSSHATCH_COLOR = new RGB(128,128,128);
+	private RGB crossHatchColor = DEFAULT_CROSSHATCH_COLOR;
+	
+	private double DEFAULT_ALPHA = .5;
+	private double alpha = DEFAULT_ALPHA;
 
 	private static final byte NO_REFRESH_PENDING = 0x0, // No refresh pending.
 			RECREATE_IMAGE = 0x1, // Recreate the image
@@ -228,10 +235,10 @@ public class ImageFigureController {
 						}
 
 						if (!isCrossHatch())
-							lightenImageData = ImageDataHelper.mixAlphaWithinRegion(imageData, region, .5, new RGB(255, 255, 255));
+							lightenImageData = ImageDataHelper.mixAlphaWithinRegion(imageData, region, .25, lightenColor);
 						else
-							lightenImageData = ImageDataHelper.mixAlphaAndCrossHatchWithinRegion(imageData, region, .5, new RGB(255, 255, 255),
-									new RGB(255, 175, 175));
+							lightenImageData = ImageDataHelper.mixAlphaAndCrossHatchWithinRegion(imageData, region, .25, lightenColor,
+									getCrossHatchColor());
 					} finally {
 						region.dispose();
 					}
@@ -269,6 +276,7 @@ public class ImageFigureController {
 		synchronized (this) {
 			if (lightenFigures == null)
 				lightenFigures = new ArrayList(2);
+			if(lightenFigures.indexOf(fig) != -1) return; // If the figure is already being lightened then don't do it again
 			lightenFigures.add(fig); // Add to our watched list
 			if (fig != figure) {
 				// If the fig is this same fig, no need to listen because we already
@@ -372,6 +380,10 @@ public class ImageFigureController {
 			}
 		}
 	}
+	
+	public boolean hasUnlightenedFigures(){
+		return unlightenFigures == null ? false : unlightenFigures.size() > 0;
+	}
 
 	/**
 	 * Set to crosshatch any lightened area. It will only crosshatch lightened areas, it won't crosshatch regular areas.
@@ -393,5 +405,56 @@ public class ImageFigureController {
 	public boolean isCrossHatch() {
 		return crossHatch;
 
+	}
+
+	/**
+	 * @param lightenColor The lightenColor to set.
+	 */
+	public void setLightenColor(RGB lightenColor) {
+		if (lightenColor == null)
+			this.lightenColor = DEFAULT_LIGHTEN_RGB;
+		else
+			this.lightenColor = lightenColor;
+	}
+
+	/**
+	 * @return Returns the lightenColor.
+	 */
+	public RGB getLightenColor() {
+		return lightenColor;
+	}
+
+	/**
+	 * @param crossHatchColor The crossHatchColor to set.
+	 */
+	public void setCrossHatchColor(RGB crossHatchColor) {
+		if (crossHatchColor == null)
+			this.crossHatchColor = DEFAULT_CROSSHATCH_COLOR;
+		else
+			this.crossHatchColor = crossHatchColor;
+	}
+
+	/**
+	 * @return Returns the crossHatchColor.
+	 */
+	public RGB getCrossHatchColor() {
+		return crossHatchColor;
+	}
+
+	/**
+	 * @param alpha The alpha to set.
+	 */
+	public void setAlpha(double alpha) {
+		if (alpha < 0.0 || alpha > 1.0)
+			this.alpha = DEFAULT_ALPHA;
+		else
+			this.alpha = alpha;
+	}
+
+	/**
+	 * @return Returns the alpha.
+	 */
+	public double getAlpha() {
+		return alpha;
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2004-06-29 19:22:09 $ 
+ *  $Revision: 1.20 $  $Date: 2004-08-03 20:06:32 $ 
  */
 
 import java.util.*;
@@ -50,10 +50,8 @@ import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
  */
 public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost {
 	
-public static final String BEANVALIDATOR = "org.eclipse.ve.jfc.beanvalidator";
 	private IBeanProxy fBeanProxy;	// It should be accessed only through accessors, even subclasses.
 	private boolean inInstantiation = false;	// Are we in instantiation. If so, reinstantiate has special processing.
-	private IBeanValidator fBeanValidator;
 	
 	// If a reinstantiation is needed, then this exception will be thrown and caught.
 	// If in instantiation, it will then try again. This is needed because if reinstantiation is required while
@@ -308,7 +306,6 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
 			primApplyBeanFeature(sf, propDecor, featureDecor, settingBeanProxy);
 			clearError(sf);		
 			revalidateBeanProxy();			
-			getBeanValidator().validate(sf);
 		}
 	} catch (ReinstantiationNeeded e) {
 		throw e;	
@@ -990,29 +987,12 @@ public int getErrorStatus(){
 	if (fInstantiationError != null){
 		return ERROR_SEVERE;
 	} 
-	
-	// Find the property error that is the most severe
 	ErrorType mostSeverePropertyError = getMostSeverPropertyError();
-	
-	// Find the additional error that is the most severe;
-	ErrorType mostSevereAdditionalError = null;
-	Iterator errors = getBeanValidator().getErrors().iterator();
-	while(errors.hasNext()){
-		ErrorType error = (ErrorType)errors.next();
-		if(mostSevereAdditionalError == null){
-			mostSevereAdditionalError = error;
-			continue;
-		} else if (mostSevereAdditionalError.severity > error.severity){
-			mostSevereAdditionalError = error;
-		}
-	}
-	
-	// Return the most severe status out of property or additional error
-	if(mostSeverePropertyError == null && mostSevereAdditionalError == null) return ERROR_NONE;
-	if(mostSeverePropertyError == null && mostSevereAdditionalError != null) return mostSevereAdditionalError.severity;
-	if(mostSevereAdditionalError == null && mostSeverePropertyError != null) return mostSeverePropertyError.severity;	
-	return Math.max(mostSevereAdditionalError.severity,mostSeverePropertyError.severity);
-	
+	if(mostSeverePropertyError != null){
+		return mostSeverePropertyError.severity;
+	} else {
+		return IErrorHolder.ERROR_NONE;
+	}	
 }
 public ErrorType getMostSeverPropertyError(){
 	// See whether any of the featuer errors are warning or information
@@ -1053,13 +1033,7 @@ public List getErrors(){
 		result.add(new IErrorNotifier.ExceptionError(fInstantiationError,ERROR_SEVERE));
 		return result;
 	}
-	
-	// There may be errors within the bean validator.  Collect these in the result set
-	Iterator validationErrors = fBeanValidator.getErrors().iterator();
-	while(validationErrors.hasNext()){
-		result.add(validationErrors.next());
-	}
-	
+		
 	// If the Bean was able to have been applied then it could have property errors, return these
 	if( fInstantiationError == null ) {
 		Iterator iter = keyedErrors.values().iterator();
@@ -1074,34 +1048,6 @@ public List getErrors(){
 
 	return result;	
 }
-protected IBeanValidator getBeanValidator(){
-	
-	if(fBeanValidator == null){
-		BeanDecorator beanDecorator = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(getJavaObject().eClass(),BeanDecorator.class,BEANVALIDATOR);
-		if(beanDecorator != null){
-		String validatorClassName = (String)beanDecorator.getKeyedValues().get(BEANVALIDATOR);
-			try {
-				fBeanValidator = (IBeanValidator) CDEPlugin.createInstance(null,validatorClassName);
-			} catch (Exception e) {
-				// 	TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			// 		Create a bean validator
-			fBeanValidator = new BeanValidator();
-		}
-		fBeanValidator.setJavaInstance(getJavaObject());
-		fBeanValidator.validateAll();		
-		fBeanValidator.addErrorListener(new IBeanValidator.ErrorListener(){
-			public void errorStatusChanged() {
-				fireErrorStatusChanged();
-			}
-		});
-
-	}
-	return fBeanValidator;
-}
-
 /**
  * Set ownership of the proxy.
  * @see IBeanProxyHost

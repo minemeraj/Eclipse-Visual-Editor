@@ -7,7 +7,7 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-07-27 15:34:00 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2004-08-03 20:06:34 $
  */
 import java.util.*;
 
@@ -23,6 +23,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -81,7 +82,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			fig.setBorder(new OutlineBorder());
 		fig.setOpaque(!transparent);
 		if (!transparent) {
-			imageFigureController = new ImageFigureController();
+			imageFigureController = new ImageFigureController();			
 			imageFigureController.setImageFigure(fig);
 		}
 		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
@@ -388,16 +389,53 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	/**
 	 * Lighten this figure excluding the child figures
 	 */
-	public void lightenExcluding(List textFieldEditParts) {
-		if(true)return;
-		// Get the figures for each of the edit parts
-		imageFigureController.addLightenFigure(getFigure());
-		Iterator editParts = textFieldEditParts.iterator();
-		while(editParts.hasNext()){
-			IFigure figure = ((GraphicalEditPart)editParts.next()).getFigure();
-			figure.setOpaque(true);
-			figure.setBackgroundColor(ColorConstants.yellow);
-//			imageFigureController.removeLightenFigure(figure);
+	public void emphasizeChildren(List childEditParts) {		
+		if (imageFigureController != null) {
+			// Lighten our figure
+			imageFigureController.addLightenFigure(getFigure());
+			Iterator editParts = childEditParts.iterator();
+			while (editParts.hasNext()) {
+				// Get the figures for each of the edit parts and add them to a set to unlighten				
+				IFigure figure = ((GraphicalEditPart) editParts.next()).getFigure();
+				imageFigureController.addUnlightenFigure(figure);
+			}
 		}
+	}
+
+	public void unEmphasizeChildren(List childEditParts){
+		if(imageFigureController != null){
+			// Get the figures for each of the edit parts and remove them from the set that is holding onto the ligten set
+			Iterator editParts = childEditParts.iterator();
+			while (editParts.hasNext()) {
+				// Get the figures for each of the edit parts and add them to a set to unlighten				
+				IFigure figure = ((GraphicalEditPart) editParts.next()).getFigure();
+				imageFigureController.removeUnLightenFigure(figure);
+			}			
+			// If there are no children being lightened then unlighten the overall figure
+			if (!imageFigureController.hasUnlightenedFigures()){
+				imageFigureController.removeLightenFigure(getFigure());
+			}
+		}
+	}
+	
+	public void unEmphasizeChild(GraphicalEditPart childEditPart){
+		if(imageFigureController != null){
+			IFigure figure = childEditPart.getFigure();
+			imageFigureController.removeUnLightenFigure(figure);
+			// If there are no children being lightened then unlighten the overall figure
+			if (!imageFigureController.hasUnlightenedFigures()){
+				imageFigureController.removeLightenFigure(getFigure());
+			}			
+		}
+	}
+	
+	public void setLightenColor(RGB lightenColor) {
+		if (imageFigureController != null)
+			imageFigureController.setLightenColor(lightenColor);
+	}
+	
+	public void setLightenCrossHatch(boolean crossHatch) {
+		if (imageFigureController != null)
+			imageFigureController.setCrossHatch(crossHatch);
 	}
 }
