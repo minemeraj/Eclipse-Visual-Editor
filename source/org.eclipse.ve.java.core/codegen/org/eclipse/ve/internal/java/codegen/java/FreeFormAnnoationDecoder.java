@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-02 19:46:32 $ 
  */
 import java.util.logging.Level;
 
@@ -185,11 +185,9 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
               len = end+1 ;                
           }
               
-          fBeanpart.getModel().aboutTochangeDoc();
           fBeanpart.getModel().getDocumentBuffer().replace(start,len,newSrc) ;
 		  // update offsets
 		  fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length()-len) ;
-		  fBeanpart.getModel().docChanged();
 		  JavaVEPlugin.log(newSrc, Level.FINE) ;
         }
         catch (Exception e) {
