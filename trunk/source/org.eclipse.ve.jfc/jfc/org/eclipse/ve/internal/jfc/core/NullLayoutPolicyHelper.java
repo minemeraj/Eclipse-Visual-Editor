@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-17 23:34:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-02 21:22:14 $ 
  */
 
 import java.util.*;
@@ -29,6 +29,8 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * Null layout policy helper.
@@ -40,7 +42,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
  */
 public class NullLayoutPolicyHelper implements ILayoutPolicyHelper, IActionFilter {
 	
-	protected ContainerPolicy policy;
+	protected VisualContainerPolicy policy;
 	
 /**
  * Constraint object to be passed into this class.
@@ -59,14 +61,14 @@ public static class NullConstraint {
 	}
 }
 
-public NullLayoutPolicyHelper(ContainerPolicy ep) {
+public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
 	setContainerPolicy(ep);
 }
 
 public NullLayoutPolicyHelper() {
 }
 
-public void setContainerPolicy(ContainerPolicy policy) {
+public void setContainerPolicy(VisualContainerPolicy policy) {
 	this.policy = policy;
 }
 
