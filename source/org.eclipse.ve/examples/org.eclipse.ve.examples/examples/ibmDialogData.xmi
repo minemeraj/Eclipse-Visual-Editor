@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.ve.internal.cdm:DiagramData xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore">
+  <diagrams id="org.eclipse.ve.internal.cdm.primarydiagram" visualInfos="//@annotations.0/@visualInfos.0"/>
+  <annotations xsi:type="org.eclipse.ve.internal.cdm:AnnotationGeneric" annotatesID="dept:EJB">
+    <visualInfos diagram="//@diagrams.0">
+      <keyedValues xsi:type="org.eclipse.ve.internal.cdm:KeyedConstraint" value="147,142,-1,-1" key="org.eclipse.ve.internal.cdm.model.visualconstraintkey"/>
+    </visualInfos>
+  </annotations>
+</org.eclipse.ve.internal.cdm:DiagramData>

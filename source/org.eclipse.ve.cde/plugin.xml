@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.cde"
+   name="%pluginName"
+   version="0.5.0"
+   provider-name="%providerName"
+   class="org.eclipse.ve.internal.cde.core.CDEPlugin">
+
+   <runtime>
+      <library name="cdm.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.cde"/>
+      </library>
+      <library name="cde.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.ve.internal.cdm"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ve.propertysheet" export="true"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" export="true"/>
+      <import plugin="org.eclipse.gef" export="true"/>
+   </requires>
+
+
+<!--
+    This extension point allows customization of adapter to use for IPropertyDescriptor to be specified by
+    the decorator type on the structural feature. The process will be:
+    1) If there is a PropertyDescriptorInformation decorator, that takes priority.
+    2) A test will be made for each of the typeClass from the extension point, on the first "isInstance" test
+       that is sucessful, the adapter class specified will be used. It is assumed that none of these
+       typeClass decorators that are in the extension point inherit from each other. This is because the isInstance
+       test would pick up the first one found, and the order in the list is indeterminate. It will use standard
+       extension point class instance creation of the adapter class, e.g. it may have initialization parms.
+    3) If none found, then it will use DecoratedPropertyDescriptorAdapter.
+	<extension point="org.eclipse.ve.cde.adapter" >
+	   <adapter typeclass="org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator" adapterclass="org.eclipse.ve.internal.cde.core.property.DecoratatedPropertyDescriptorAdapter">"/>
+	</extension>
+-->
+   <extension-point id="adapter" name="Descriptor Adapter by Decorator Type"/>
+
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http:///org/eclipse/ve/internal/cdm.ecore"
+            class="org.eclipse.ve.internal.cdm.CDMPackage">
+      </package>
+      <package
+            uri="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+            class="org.eclipse.ve.internal.cde.decorators.DecoratorsPackage">
+      </package>
+      <package
+            uri="http:///org/eclipse/ve/internal/cde/palette.ecore"
+            class="org.eclipse.ve.internal.cde.palette.PalettePackage">
+      </package>
+      <package
+            uri="http:///org/eclipse/ve/internal/cde/utility.ecore"
+            class="org.eclipse.ve.internal.cde.utility.UtilityPackage">
+      </package>
+   </extension>
+
+</plugin>

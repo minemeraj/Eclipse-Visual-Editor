@@ -1,0 +1,1324 @@
+
+(object Petal
+    version    	45
+    _written   	"Rose 7.6.0109.2314"
+    charSet    	0)
+
+(object Class_Category "decorators"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "org.eclipse.ve.internal.cde")))
+    quid       	"3B98DDE603CA"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "BasePropertyDecorator"
+	    quid       	"3B97A42E002E"
+	    documentation 	"This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3DDAB0F803BE"
+		    supplier   	"Logical View::ecore::EAnnotation"
+		    quidu      	"3D98A1C701AB"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "cellEditorValidatorClassnames"
+		    quid       	"3B97C487002B"
+		    stereotype 	"0..*"
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "labelProviderClassname"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3B97C4A602ED"
+		    documentation 	"Label Provider Classname. If set, but is null, then that means there explicitly isn't one and don't use default."
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "cellEditorClassname"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3B97C4BC0186"
+		    documentation 	"Cell Editor Classname. If set, but is null, then that means there explicitly isn't one and don't use default."
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "nullInvalid"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3BB0F43A01D5"
+		    documentation 	
+|Are null settings invalid. If this is true, then they will be prevented. If this is false, then the cell editor and validator will be used to determine if null is valid or not.
+|
+|The search order will be find it explicitly set on:
+|  1) The BasePropertyDescriptor on the feature, then if not set,
+|  2) The BasePropertyDescriptor on the class, then if not set,
+|  3) use false as the value.
+		    
+		    type       	"boolean"
+		    exportControl 	"Public")
+		(object ClassAttribute "entryExpandable"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3BC46F000140"
+		    documentation 	
+|If this returns true, then the entry will expand in the property sheet if 
+|there are child entries. If this returns false then it won't expand. This is useful when the cell editor handles the complete customization
+|and it is not desired to allow sub-property customization.
+|
+|The search order will be find it explicitly set on:
+|  1) The BasePropertyDescriptor on the feature, then if not set,
+|  2) The BasePropertyDescriptor on the class, then if not set,
+|  3) use true as the value.
+		    
+		    type       	"boolean"
+		    exportControl 	"Public")))
+	(object Class "PropertySourceAdapterInformation"
+	    quid       	"3B98D8BD0370"
+	    documentation 	
+|This is the information required to establish a PropertySourceAdapter.
+|
+|This will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3DDAB102003D"
+		    supplier   	"Logical View::ecore::EAnnotation"
+		    quidu      	"3D98A1C701AB"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "propertySourceAdapterClassname"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3B98D8D5036B"
+		    documentation 	"Adapter classname. If explicitly set to null (versus not set, which is a default of null, isSet will return true, but value will be null), then this means there is no PropertySourceAdapter for this class, ever."
+		    type       	"String"
+		    exportControl 	"Public")))
+	(object Class "PropertyDescriptorDecorator"
+	    quid       	"3B97C532029E"
+	    documentation 	"This is the decorator for a StructuralFeature to supply the information for editing this property."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3B97C8E202C4"
+		    supplier   	"Logical View::decorators::BasePropertyDecorator"
+		    quidu      	"3B97A42E002E")
+		(object Inheritance_Relationship
+		    quid       	"3B994205016D"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "designtimeProperty"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"3B9A22400345"
+		    documentation 	"Whether this property is designtime. If not explicitly set, then ignore this setting. If true then it is shown only on property sheet and not available for connections. If false, then it is available only for connections and not on property sheet."
+		    type       	"boolean")
+		(object ClassAttribute "alwaysIncompatible"
+		    quid       	"3B9A78EF034E"
+		    documentation 	"If true, then when multiple selections of this property is made, they will be considered incompatible."
+		    type       	"boolean")))
+	(object Class "PropertyDescriptorInformation"
+	    quid       	"3B98DF2B0273"
+	    documentation 	
+|This is the information required to establish a PropertyDescriptorAdapter or a PropertyDescriptor.
+|
+|This will be decorating a RefStructuralFeature to indicate what  PropertyDescriptorAdapter or PropertyDescscriptor  to use for this feature.
+|
+|It depends upon whether the type flag is Adapter is true. If the flag is true, then an adapter will be created once for the feature.
+|
+|If the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a RefObject and a RefStructuralFeature or one that takes just a RefObject. The RefObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3DDAB7200298"
+		    supplier   	"Logical View::ecore::EAnnotation"
+		    quidu      	"3D98A1C701AB"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "adapter"
+		    quid       	"3BBA0FEF0310"
+		    type       	"boolean"
+		    initv      	"true"
+		    exportControl 	"Public")
+		(object ClassAttribute "propertyDescriptorClassname"
+		    quid       	"3BBA10050181"
+		    type       	"String"
+		    exportControl 	"Public")))
+	(object Class "FeatureDescriptorDecorator"
+	    quid       	"3B9941440288"
+	    documentation 	"This descriptor decorator for any kind of feature. It contains info that is generalized to features."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3DDAB0FD01DA"
+		    supplier   	"Logical View::ecore::EAnnotation"
+		    quidu      	"3D98A1C701AB"))
+	    operations 	(list Operations
+		(object Operation "isFiltered"
+		    quid       	"3B9A2264018E"
+		    documentation 	"Answer whether this filter flag passed in is in this features filterFlags."
+		    parameters 	(list Parameters
+			(object Parameter "flag"
+			    quid       	"3B9A228602AF"
+			    type       	"String"))
+		    result     	"boolean"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "hidden"
+		    quid       	"3B9941EB02BA"
+		    type       	"boolean"
+		    exportControl 	"Public")
+		(object ClassAttribute "helpContextIdsString"
+		    quid       	"3B9941F70375"
+		    stereotype 	"0..*"
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "preferred"
+		    quid       	"3B9A1F0C03BE"
+		    type       	"boolean"
+		    exportControl 	"Public"))
+	    abstract   	TRUE)
+	(object Class "ClassDescriptorDecorator"
+	    quid       	"3BAA6C38014E"
+	    documentation 	"The descriptor decorator for a class. Currently it adds nothing over FeatureDescriptorDecortor."
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3C598ED70070"
+		    supplier   	"Logical View::CDM::KeyedValueHolder"
+		    quidu      	"3B3CBBFB0013")
+		(object Inheritance_Relationship
+		    quid       	"3DDBC7C80207"
+		    stereotype 	"extend"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "customizerClassname"
+		    quid       	"39FDAFD501D8"
+		    documentation 	
+|Classname string of the Customizer class.
+|
+|The format of the string is "classname:initdata" or "plugin/classname:initdata"
+		    
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")
+		(object ClassAttribute "treeViewClassname"
+		    quid       	"3C51AE3C0160"
+		    documentation 	
+|Classname of the TreeView EditPart.
+|
+|The format of the string is "classname:initdata" or "plugin/classname:initdata"
+		    
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")
+		(object ClassAttribute "graphViewClassname"
+		    quid       	"3C51AE7601F0"
+		    documentation 	
+|Classname of the GraphView EditPart.
+|
+|The format of the string is "classname:initdata" or "plugin/classname:initdata"
+		    
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")
+		(object ClassAttribute "modelAdapterClassname"
+		    quid       	"3C543B2702B0"
+		    documentation 	
+|Classname of the Model Adapter. This is the class that either implements all of the interfaces required by the model adapter, or it should be an IAdaptable that will return such adapters. See IModelAdapterFactory.
+|
+|The format of the string is "classname:initdata" or "plugin/classname:initdata"
+		    
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "defaultPalette"
+		    quid       	"39FDB076039C"
+		    documentation 	
+|The default palette to use for this class if not specified by other means. It is in the form a MOF reference, i.e. "filename#id of palette".
+		    
+		    type       	"String"
+		    exportControl 	"Public"
+		    Containment 	"By Value")
+		(object ClassAttribute "labelProviderClassname"
+		    quid       	"3C599FAA0359"
+		    documentation 	
+|The classname for the label provider to be used for objects of the class that this decorator decorates. This label provider will be used in cases other than property sheet. In that case the labelProvider from the BasePropertyDecorator on this class will be used. (Though the default if there is no BasePropertyDecorator will be to use the string from this label provider, but not the image).
+|
+|The format of the string is "classname:initdata" or "plugin/classname:initdata"
+		    
+		    type       	"String"
+		    exportControl 	"Public")))
+	(object Association "L"
+	    quid       	"3B9A20EA00CC"
+	    documentation 	"This is a reference to a string for the category. It is a shared reference because more than one feature should share a category. By making it a shared reference, they can all share the exact same copy."
+	    roles      	(list role_list
+		(object Role "categoryString"
+		    quid       	"3B9A20EA03E3"
+		    label      	"categoryString"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$0"
+		    quid       	"3B9A20EB0005"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288")))
+	(object Association "$UNNAMED$1"
+	    quid       	"3B9A218002F9"
+	    documentation 	
+|This is a shared multi-valued reference to the filter flags. This is a  shared reference because there will be more than one feature that would be using a particular filter flag and this way they can all share the exact same flags without duplicating them.
+|
+|Note:
+|"decoratorscde.xmi#EXPERTFLAG" can be referenced to set this feature to an expert feature. It will always be available.
+	    
+	    roles      	(list role_list
+		(object Role "filterFlagStrings"
+		    quid       	"3B9A218101B0"
+		    label      	"filterFlagStrings"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$2"
+		    quid       	"3B9A218101BA"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288")))
+	(object Association "$UNNAMED$3"
+	    quid       	"3DDAB5AD01CC"
+	    roles      	(list role_list
+		(object Role "displayNameString"
+		    quid       	"3DDAB5AE0245"
+		    label      	"displayNameString"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$4"
+		    quid       	"3DDAB5AE0247"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288"
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$5"
+	    quid       	"3DDAB63B0194"
+	    roles      	(list role_list
+		(object Role "descriptionString"
+		    quid       	"3DDAB63C0362"
+		    label      	"descriptionString"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$6"
+		    quid       	"3DDAB63C036C"
+		    supplier   	"Logical View::decorators::FeatureDescriptorDecorator"
+		    quidu      	"3B9941440288"
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$7"
+	    quid       	"3DDAB76A001D"
+	    roles      	(list role_list
+		(object Role "graphic"
+		    quid       	"3DDAB76A02B2"
+		    label      	"graphic"
+		    supplier   	"Logical View::utility::Graphic"
+		    quidu      	"39FDB19703B6"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$8"
+		    quid       	"3DDAB76A02BC"
+		    supplier   	"Logical View::decorators::ClassDescriptorDecorator"
+		    quidu      	"3BAA6C38014E"
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Decorators"
+	    quid       	"3B97A4090049"
+	    title      	"Decorators"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	1825
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::decorators::BasePropertyDecorator" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(480, 640)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(38, 477)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	884
+			justify    	0
+			label      	"BasePropertyDecorator")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B97A42E002E"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(38, 533)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	6
+			max_width  	881)
+		    width      	902
+		    height     	348
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::decorators::PropertyDescriptorDecorator" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(480, 1168)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(199, 1073)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"PropertyDescriptorDecorator")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B97C532029E"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(199, 1129)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	559)
+		    width      	580
+		    height     	212
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::decorators::PropertySourceAdapterInformation" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2368, 576)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(1972, 480)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	792
+			justify    	0
+			label      	"PropertySourceAdapterInformation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B98D8BD0370"
+		    compartment 	(object Compartment
+			Parent_View 	@3
+			location   	(1972, 536)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	790)
+		    width      	810
+		    height     	214
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritTreeView "" @4
+		    location   	(480, 905)
+		    line_color 	3342489
+		    fill_color 	13434879
+		    supplier   	@1
+		    vertices   	(list Points
+			(480, 905)
+			(480, 814)))
+		(object InheritView "" @5
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3B97C8E202C4"
+		    client     	@2
+		    supplier   	@1
+		    line_style 	3
+		    origin_attachment 	(480, 1062)
+		    terminal_attachment 	(480, 905)
+		    drawSupplier 	@4)
+		(object ClassView "Class" "Logical View::decorators::PropertyDescriptorInformation" @6
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(3280, 576)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(2926, 458)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	708
+			justify    	0
+			label      	"PropertyDescriptorInformation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B98DF2B0273"
+		    compartment 	(object Compartment
+			Parent_View 	@6
+			location   	(2926, 514)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	705)
+		    width      	726
+		    height     	258
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @7
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2608, 1056)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@7
+			location   	(2416, 1008)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	384
+			justify    	0
+			label      	"KeyedValueHolder")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	16777088
+		    quidu      	"3B3CBBFB0013"
+		    width      	402
+		    height     	118
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::ecore::EAnnotation" @8
+		    ShowCompartmentStereotypes 	TRUE
+		    location   	(1296, 144)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@8
+			location   	(1169, 75)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	254
+			justify    	0
+			label      	"EAnnotation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3D98A1C701AB"
+		    width      	272
+		    height     	160
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritTreeView "" @9
+		    location   	(1295, 315)
+		    line_color 	3342489
+		    fill_color 	13434879
+		    supplier   	@8
+		    vertices   	(list Points
+			(1295, 315)
+			(1295, 224)))
+		(object InheritView "" @10
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB0F803BE"
+		    client     	@1
+		    supplier   	@8
+		    line_style 	3
+		    origin_attachment 	(765, 466)
+		    terminal_attachment 	(765, 315)
+		    drawSupplier 	@9)
+		(object InheritView "" @11
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB102003D"
+		    client     	@3
+		    supplier   	@8
+		    line_style 	3
+		    origin_attachment 	(2368, 469)
+		    terminal_attachment 	(2368, 315)
+		    drawSupplier 	@9)
+		(object ClassView "Class" "Logical View::utility::AbstractString" @12
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1328, 1776)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@12
+			location   	(1187, 1704)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	282
+			justify    	0
+			label      	"AbstractString")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	16776960
+		    quidu      	"39EF148B02BA"
+		    width      	300
+		    height     	168
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::decorators::FeatureDescriptorDecorator" @13
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(1424, 656)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@13
+			location   	(1065, 506)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	718
+			justify    	0
+			label      	"FeatureDescriptorDecorator")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B9941440288"
+		    compartment 	(object Compartment
+			Parent_View 	@13
+			location   	(1065, 564)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	5
+			max_width  	715)
+		    width      	736
+		    height     	324
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @14
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3B994205016D"
+		    client     	@2
+		    supplier   	@13
+		    line_style 	0)
+		(object InheritView "" @15
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB0FD01DA"
+		    client     	@13
+		    supplier   	@8
+		    line_style 	3
+		    origin_attachment 	(1423, 494)
+		    terminal_attachment 	(1423, 315)
+		    drawSupplier 	@9)
+		(object AssociationViewNew "L" @16
+		    location   	(1146, 1222)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3B9A20EA00CC"
+		    roleview_list 	(list RoleViews
+			(object RoleView "categoryString" @17
+			    Parent_View 	@16
+			    location   	(-278, 566)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @18
+				Parent_View 	@17
+				location   	(1132, 1510)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	280
+				justify    	0
+				label      	"+categoryString"
+				pctDist    	0.545824
+				height     	104
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3B9A20EA03E3"
+			    client     	@16
+			    supplier   	@12
+			    line_style 	0
+			    label      	(object SegLabel @19
+				Parent_View 	@17
+				location   	(1070, 1450)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.390211
+				height     	144
+				orientation 	1))
+			(object RoleView "$UNNAMED$0" @20
+			    Parent_View 	@16
+			    location   	(-278, 566)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3B9A20EB0005"
+			    client     	@16
+			    supplier   	@13
+			    vertices   	(list Points
+				(1146, 1222)
+				(1065, 975)
+				(1239, 818))
+			    line_style 	0)))
+		(object AssociationViewNew "$UNNAMED$1" @21
+		    location   	(1629, 1253)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3B9A218002F9"
+		    roleview_list 	(list RoleViews
+			(object RoleView "filterFlagStrings" @22
+			    Parent_View 	@21
+			    location   	(205, 597)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @23
+				Parent_View 	@22
+				location   	(1610, 1452)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	301
+				justify    	0
+				label      	"+filterFlagStrings"
+				pctDist    	0.360112
+				height     	83
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3B9A218101B0"
+			    client     	@21
+			    supplier   	@12
+			    line_style 	0
+			    label      	(object SegLabel @24
+				Parent_View 	@22
+				location   	(1531, 1570)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.641191
+				height     	74
+				orientation 	0))
+			(object RoleView "$UNNAMED$2" @25
+			    Parent_View 	@21
+			    location   	(205, 597)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3B9A218101BA"
+			    client     	@21
+			    supplier   	@13
+			    vertices   	(list Points
+				(1629, 1253)
+				(1705, 1120)
+				(1522, 818))
+			    line_style 	0)))
+		(object AssociationViewNew "$UNNAMED$3" @26
+		    location   	(1253, 1242)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB5AD01CC"
+		    roleview_list 	(list RoleViews
+			(object RoleView "displayNameString" @27
+			    Parent_View 	@26
+			    location   	(-171, 586)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @28
+				Parent_View 	@27
+				location   	(1305, 1064)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	362
+				justify    	0
+				label      	"+displayNameString"
+				pctDist    	-0.379398
+				height     	76
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB5AE0245"
+			    client     	@26
+			    supplier   	@12
+			    line_style 	0
+			    label      	(object SegLabel @29
+				Parent_View 	@27
+				location   	(1277, 1114)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	-0.274826
+				height     	41
+				orientation 	0))
+			(object RoleView "$UNNAMED$4" @30
+			    Parent_View 	@26
+			    location   	(-171, 586)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB5AE0247"
+			    client     	@26
+			    supplier   	@13
+			    vertices   	(list Points
+				(1253, 1242)
+				(1225, 1040)
+				(1339, 818))
+			    line_style 	0)))
+		(object AssociationViewNew "$UNNAMED$5" @31
+		    location   	(1432, 1220)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB63B0194"
+		    roleview_list 	(list RoleViews
+			(object RoleView "descriptionString" @32
+			    Parent_View 	@31
+			    location   	(8, 564)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @33
+				Parent_View 	@32
+				location   	(1430, 980)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	324
+				justify    	0
+				label      	"+descriptionString"
+				pctDist    	-0.499306
+				height     	2
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB63C0362"
+			    client     	@31
+			    supplier   	@12
+			    vertices   	(list Points
+				(1432, 1220)
+				(1433, 1280)
+				(1344, 1691))
+			    line_style 	0
+			    label      	(object SegLabel @34
+				Parent_View 	@32
+				location   	(1486, 1256)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.074615
+				height     	53
+				orientation 	0))
+			(object RoleView "$UNNAMED$6" @35
+			    Parent_View 	@31
+			    location   	(8, 564)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB63C036C"
+			    client     	@31
+			    supplier   	@13
+			    line_style 	0)))
+		(object InheritView "" @36
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB7200298"
+		    client     	@6
+		    supplier   	@8
+		    line_style 	3
+		    origin_attachment 	(3280, 447)
+		    terminal_attachment 	(3280, 315)
+		    drawSupplier 	@9)
+		(object ClassView "Class" "Logical View::utility::Graphic" @37
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2512, 2032)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@37
+			location   	(2424, 1960)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	176
+			justify    	0
+			label      	"Graphic")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39FDB19703B6"
+		    width      	194
+		    height     	168
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::decorators::ClassDescriptorDecorator" @38
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2496, 1552)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@38
+			location   	(2181, 1344)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	630
+			justify    	0
+			label      	"ClassDescriptorDecorator")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3BAA6C38014E"
+		    compartment 	(object Compartment
+			Parent_View 	@38
+			location   	(2181, 1400)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	7
+			max_width  	627)
+		    width      	648
+		    height     	438
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @39
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3C598ED70070"
+		    client     	@38
+		    supplier   	@7
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$7" @40
+		    location   	(2506, 1859)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3DDAB76A001D"
+		    roleview_list 	(list RoleViews
+			(object RoleView "graphic" @41
+			    Parent_View 	@40
+			    location   	(-6, 307)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @42
+				Parent_View 	@41
+				location   	(2401, 1896)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	158
+				justify    	0
+				label      	"+graphic"
+				pctDist    	0.379747
+				height     	107
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB76A02B2"
+			    client     	@40
+			    supplier   	@37
+			    line_style 	0
+			    label      	(object SegLabel @43
+				Parent_View 	@41
+				location   	(2576, 1899)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.481013
+				height     	69
+				orientation 	0))
+			(object RoleView "$UNNAMED$8" @44
+			    Parent_View 	@40
+			    location   	(-6, 307)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3DDAB76A02BC"
+			    client     	@40
+			    supplier   	@38
+			    line_style 	0)))
+		(object InheritView "" @45
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	(object SegLabel @46
+			Parent_View 	@45
+			location   	(1976, 1102)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	10
+			anchor_loc 	1
+			nlines     	1
+			max_width  	450
+			justify    	0
+			label      	"<<extend>>"
+			pctDist    	0.430053
+			height     	11
+			orientation 	1)
+		    line_color 	3342489
+		    quidu      	"3DDBC7C80207"
+		    client     	@38
+		    supplier   	@13
+		    line_style 	0)))))

@@ -1,0 +1,66 @@
+package org.eclipse.ve.internal.cde.core;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: DiagramFigureGraphicalEditPart.java,v $
+ *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ */
+
+import java.util.List;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+
+import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.cdm.DiagramFigure;
+/**
+ * GraphicalEditPart for a DiagramFigure where DiagramFigures are its children.
+ */
+public abstract class DiagramFigureGraphicalEditPart extends AbstractGraphicalEditPart {
+
+	protected List getModelChildren() {
+		DiagramFigure diagramFigure = (DiagramFigure) getModel();
+		return diagramFigure.getChildFigures();
+	}
+
+	public void activate() {
+		super.activate();
+		((DiagramFigure) getModel()).eAdapters().add(diagramAdapter);
+	}
+
+	public void deactivate() {
+		super.deactivate();
+		((DiagramFigure) getModel()).eAdapters().remove(diagramAdapter);
+	}
+	
+	protected DiagramFigureAdapter diagramAdapter = createModelAdapter();
+
+	protected class DiagramFigureAdapter extends AdapterImpl {
+		/*
+		 * This method may be overridden for more notifications, but super.notifyChanged() must be called from subclasses.
+		 */
+		public void notifyChanged(Notification msg) {
+			if (msg.getFeatureID(DiagramFigure.class) == CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES)
+				refreshChildren();
+		}		
+	}
+	
+	/*
+	 * This may be overridden to return a subclass of DiagramAdapter.
+	 */
+	protected DiagramFigureAdapter createModelAdapter() {
+		// Create an adaptor that is used to listen to changes from the
+		// MOF model object.  The MOF notifications are used by this edit part to stay updated.
+		return new DiagramFigureAdapter();
+	}	
+
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.ve.internal.cdm:DiagramData xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore">
+  <diagrams name="Christmas Lunch">
+    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="companyurl" value="ibm.cdmcmp"/>
+    <figures type="entree">
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="food" value="Chicken Pie"/>
+      <keyedValues xsi:type="org.eclipse.ve.internal.cdm:KeyedConstraint" value="240,80,-1,-1" key="org.eclipse.ve.internal.cdm.model.visualconstraintkey"/>
+      <childFigures type="employee">
+        <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="employee" value="Fred the first"/>
+      </childFigures>
+    </figures>
+    <figures type="entree">
+      <keyedValues xsi:type="org.eclipse.ve.internal.cdm:KeyedConstraint" value="274,248,-1,-1" key="org.eclipse.ve.internal.cdm.model.visualconstraintkey"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="food" value="Ham Sandwich"/>
+      <childFigures type="employee">
+        <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="employee" value="Peter Stalker"/>
+      </childFigures>
+      <childFigures type="employee">
+        <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="employee" value="Margaret Thatcher"/>
+      </childFigures>
+    </figures>
+  </diagrams>
+</org.eclipse.ve.internal.cdm:DiagramData>
