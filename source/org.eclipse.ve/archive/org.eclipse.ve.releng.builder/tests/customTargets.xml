@@ -165,6 +165,7 @@
 	</exec>
 	
 	<!-- create top level testing directory-->    
+	<delete dir="${workingDirectory}/ve-testing"/>
     <mkdir dir="${workingDirectory}/ve-testing" />
 	
 	<!--compile the tool used to generate the test.properties file, then run it.-->
