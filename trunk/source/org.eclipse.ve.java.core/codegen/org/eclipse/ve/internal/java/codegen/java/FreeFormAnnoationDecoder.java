@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.18 $  $Date: 2005-02-16 21:12:28 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -58,9 +58,9 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     
     public boolean isVisualOnFreeform(){
     	IField f = null;
-		synchronized (fBeanpart.getModel().getDocumentLock()) {
-			f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
-		}
+		
+		f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
+		
 		if (f == null) 
 			return false ;
         ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
@@ -148,8 +148,7 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
      * @see IAnnotationDecoder#decode()
      */
     public boolean decode() throws CodeGenException {
-
-      synchronized (fBeanpart.getModel().getDocumentLock()) {
+      
         IField f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(),
                                               fBeanpart.getModel().getCompilationUnit()) ;
         
@@ -166,7 +165,6 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
             JavaVEPlugin.log(e, Level.WARNING) ;
             return false ;
         }
-     }     
     }
     
 	public boolean restore() throws CodeGenException {
@@ -175,60 +173,57 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     
     
     public void reflectMOFchange() {
+		
+		IField f = CodeGenUtil.getField(fBeanpart.getFieldDeclHandle(), fBeanpart.getModel().getCompilationUnit());
+		if (f == null)
+			return;
 
-		synchronized (fBeanpart.getModel().getDocumentLock()) {
-			IField f = CodeGenUtil.getField(fBeanpart.getFieldDeclHandle(), fBeanpart.getModel().getCompilationUnit());
-			if (f == null)
-				return;
+		try {
+			ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
+			int srcStart = p.getCodeOff();
+			int srcLen = p.getCodeLen();
+			String src = fBeanpart.getModel().getDocumentBuffer().getContents().substring(srcStart + srcLen + 1);
+			String newSrc = null;
+			int start, len;
 
-			try {
-				ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
-				int srcStart = p.getCodeOff();
-				int srcLen = p.getCodeLen();
-				String src = fBeanpart.getModel().getDocumentBuffer().getContents().substring(srcStart + srcLen + 1);
-				String newSrc = null;
-				int start, len;
-
-				// We want to keep start withing the range of the def., so that the JModel will pick up the comment
-				start = srcStart + srcLen + 1; // ;'s are not part of the <CodeOff, CodeOff+CodeLen>
-				String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel());
-				if (curAnnotation == null) {
-					// Brand New Anotation 
-					newSrc = generate(null, null);
-					if (newSrc == null || newSrc.length() == 0) {
-						if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-							JavaVEPlugin.log(fBeanpart.getUniqueName() + " No FF annotation.", Level.WARNING); //$NON-NLS-1$
-						return;
-					}
-					newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
-					// Just append the comment at the end of the line
-					int end = FreeFormAnnotationTemplate.getEOL(src, 0);
-					int pSpaces = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, end);
-					start = start + pSpaces;
-					len = end - pSpaces;
-					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-						JavaVEPlugin.log(fBeanpart.getUniqueName() + " Creating FF annotation", Level.FINE); //$NON-NLS-1$
-				} else {
-					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-						JavaVEPlugin.log(fBeanpart.getUniqueName() + " Updating FF annotation", Level.FINE); //$NON-NLS-1$
-					int s = FreeFormAnnotationTemplate.getAnnotationStart(src);
-					s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
-					int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s, fBeanpart.getModel());
-					newSrc = generate(null, null);
-					if (newSrc != null && newSrc.length() > 0)
-						newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
-					start = start + s;
-					len = end - s + 1;
+			// We want to keep start withing the range of the def., so that the JModel will pick up the comment
+			start = srcStart + srcLen + 1; // ;'s are not part of the <CodeOff, CodeOff+CodeLen>
+			String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel());
+			if (curAnnotation == null) {
+				// Brand New Anotation 
+				newSrc = generate(null, null);
+				if (newSrc == null || newSrc.length() == 0) {
+					if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+						JavaVEPlugin.log(fBeanpart.getUniqueName() + " No FF annotation.", Level.WARNING); //$NON-NLS-1$
+					return;
 				}
-
-				fBeanpart.getModel().getDocumentBuffer().replace(start, len, newSrc);
-				// update offsets
-				fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length() - len);
-				JavaVEPlugin.log(newSrc, Level.FINE);
-			} catch (Exception e) {
-				JavaVEPlugin.log(e, Level.WARNING);
+				newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
+				// Just append the comment at the end of the line
+				int end = FreeFormAnnotationTemplate.getEOL(src, 0);
+				int pSpaces = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, end);
+				start = start + pSpaces;
+				len = end - pSpaces;
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log(fBeanpart.getUniqueName() + " Creating FF annotation", Level.FINE); //$NON-NLS-1$
+			} else {
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log(fBeanpart.getUniqueName() + " Updating FF annotation", Level.FINE); //$NON-NLS-1$
+				int s = FreeFormAnnotationTemplate.getAnnotationStart(src);
+				s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
+				int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s, fBeanpart.getModel());
+				newSrc = generate(null, null);
+				if (newSrc != null && newSrc.length() > 0)
+					newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
+				start = start + s;
+				len = end - s + 1;
 			}
-		}
 
+			fBeanpart.getModel().getDocumentBuffer().replace(start, len, newSrc);
+			// update offsets
+			fBeanpart.getModel().driveExpressionChangedEvent(null, start, newSrc.length() - len);
+			JavaVEPlugin.log(newSrc, Level.FINE);
+		} catch (Exception e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
 	}
 }

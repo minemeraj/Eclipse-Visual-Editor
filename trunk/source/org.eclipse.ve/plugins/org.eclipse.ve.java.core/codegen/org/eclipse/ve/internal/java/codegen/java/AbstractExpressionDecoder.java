@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.15 $  $Date: 2005-02-16 21:12:28 $ 
  */
 import java.util.logging.Level;
 
@@ -89,7 +89,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	 * Make sure a IJavaFeatureMapper, and a IExpressionDecoderHelper have been
 	 * allocated to the specific expression at hand. 
 	 */
-	protected synchronized boolean Initialize() {
+	protected  boolean Initialize() {
 
 		if (fFeatureMapper == null)
 			initialFeatureMapper();

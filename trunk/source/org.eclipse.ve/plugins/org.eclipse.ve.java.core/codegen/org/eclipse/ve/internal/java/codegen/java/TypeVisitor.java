@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.*;
@@ -149,6 +149,8 @@ public void visit()  {
 	IInstanceVariableRule instVarRule = (IInstanceVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IInstanceVariableRule.RULE_ID) ;
 	if (fields != null) 
 		for (int i=0 ; i<fields.length; i++) {
+			if (progressMonitor.isCanceled())
+				return ;
 			// Should we skip this field ??
 			if (instVarRule!=null && instVarRule.ignoreVariable(fields[i],fModel.getResolver(),fModel.getCompositionModel())) continue ;
 			BeanPart bp = new BeanPart(fields[i]) ;
@@ -172,6 +174,8 @@ public void visit()  {
 		
 		int methodHandleUseCount = 0;
 		for(int i=0; i<methods.length; i++){
+			if (progressMonitor.isCanceled())
+				return ;
 			try {
 				if(	(methods[i]!=null) &&
 					(methods[i] instanceof MethodDeclaration) &&
@@ -203,6 +207,8 @@ public void visit()  {
 			throw new RuntimeException("methods length error") ; //$NON-NLS-1$
 		int i=0 ;		
 		for (; i < methods.length ; i++){
+			if (progressMonitor.isCanceled())
+				return ;
 			try {
 				// Visit each method with the correct visitor
 				if ( cuMethods[i] != null && 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.38 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.39 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 
@@ -497,23 +497,21 @@ public  void refreshFromJOM(CodeExpressionRef exp){
 
 
 public  void updateDocument(ExpressionParser newParser) {
-	if (isStateSet(STATE_NO_SRC)) return ;
-	synchronized (fBean.getModel().getDocumentLock()) {
-		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
-		int off = getOffset();
-		int len = getLen();
+	if (isStateSet(STATE_NO_SRC)) return ;	
+	setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
+	int off = getOffset();
+	int len = getLen();
 
-		setContent(newParser) ;
+	setContent(newParser) ;
 
-		getMethod().refreshIMethod();
-		int docOff = off + getMethod().getOffset();
-		String newContent = getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
-		updateDocument(docOff,len,newContent);
+	getMethod().refreshIMethod();
+	int docOff = off + getMethod().getOffset();
+	String newContent = getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
+	updateDocument(docOff,len,newContent);
 
-		setOffset(off);
-		setState(STATE_UPDATING_SOURCE, false); 
-		setState(STATE_EXP_NOT_PERSISTED,false);
-	}
+	setOffset(off);
+	setState(STATE_UPDATING_SOURCE, false); 
+	setState(STATE_EXP_NOT_PERSISTED,false);	
 }
 
 public  void updateDocument(boolean updateSharedDoc) {
@@ -522,55 +520,54 @@ public  void updateDocument(boolean updateSharedDoc) {
      
           
 	StringBuffer trace = new StringBuffer() ;
-	trace.append("CodeExpressionRef.updateDocument():\n") ; //$NON-NLS-1$
-	synchronized (fBean.getModel().getDocumentLock()) {
-		setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
-		int off = getOffset() ;
-		int len = getLen() ;
-		String prevContent = getContent()==null ? "" : getContent() ;	  	   //$NON-NLS-1$
-		trace.append(prevContent) ;	  
-		try {	  
-			refreshFromComposition() ;
-		}catch (CodeGenException e) {
-			JavaVEPlugin.log(e, Level.WARNING) ;
+	trace.append("CodeExpressionRef.updateDocument():\n") ; //$NON-NLS-1$	
+	setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
+	int off = getOffset() ;
+	int len = getLen() ;
+	String prevContent = getContent()==null ? "" : getContent() ;	  	   //$NON-NLS-1$
+	trace.append(prevContent) ;	  
+	try {	  
+		refreshFromComposition() ;
+	}catch (CodeGenException e) {
+		JavaVEPlugin.log(e, Level.WARNING) ;
+		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
+		return ;
+	}
+    
+    boolean isExpInLimbo = false;
+    boolean prevContentFoundInCode = false;
+    
+    if (updateSharedDoc && isStateSet(STATE_EXP_IN_LIMBO) && !isStateSet(STATE_NO_SRC)) {
+        // updating an expression in Limbo, just re-create a good one for now.
+        isExpInLimbo = true;
+        if(getMethod().getContent().indexOf(prevContent)==off)
+        	prevContentFoundInCode = true;
+        if(!prevContentFoundInCode){
+            setOffset(off) ;
+            insertContentToDocument() ;
+        }
+   	    setState(STATE_EXP_IN_LIMBO,false) ;
+    }
+    
+	if(((!isExpInLimbo) || (isExpInLimbo && prevContentFoundInCode))&&
+		 !isStateSet(STATE_NO_SRC)){
+		// Do we need to update the document ?
+		if (getContent() != null && prevContent.equals(getContent()))  {
+			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+				JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, Level.FINE) ; //$NON-NLS-1$
 			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
 			return ;
 		}
-        
-        boolean isExpInLimbo = false;
-        boolean prevContentFoundInCode = false;
-        
-        if (updateSharedDoc && isStateSet(STATE_EXP_IN_LIMBO) && !isStateSet(STATE_NO_SRC)) {
-            // updating an expression in Limbo, just re-create a good one for now.
-            isExpInLimbo = true;
-            if(getMethod().getContent().indexOf(prevContent)==off)
-            	prevContentFoundInCode = true;
-            if(!prevContentFoundInCode){
-	            setOffset(off) ;
-	            insertContentToDocument() ;
-            }
-	   	    setState(STATE_EXP_IN_LIMBO,false) ;
-        }
-        
-		if(((!isExpInLimbo) || (isExpInLimbo && prevContentFoundInCode))&&
-			 !isStateSet(STATE_NO_SRC)){
-    		// Do we need to update the document ?
-    		if (getContent() != null && prevContent.equals(getContent()))  {
-    			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-    				JavaVEPlugin.log ("CodeExpressionRef.updateDocument() : No change - "+prevContent, Level.FINE) ; //$NON-NLS-1$
-    			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
-    			return ;
-    		}
+
+		int docOff = off+getMethod().getOffset() ;
+		String newContent = ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) ? "" : getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
+		trace.append("\t changed to: \n") ; //$NON-NLS-1$
+		trace.append(newContent+"\n") ;	       //$NON-NLS-1$
+		updateDocument(docOff,len,newContent) ;
+    }
+	setOffset(off) ;
+	setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
 	
-    		int docOff = off+getMethod().getOffset() ;
-    		String newContent = ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) ? "" : getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
-    		trace.append("\t changed to: \n") ; //$NON-NLS-1$
-    		trace.append(newContent+"\n") ;	       //$NON-NLS-1$
-    		updateDocument(docOff,len,newContent) ;
-        }
-		setOffset(off) ;
-		setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
-	}
 	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 		JavaVEPlugin.log(trace.toString(), Level.FINE) ;
 
@@ -661,13 +658,11 @@ public  void insertContentToDocument() {
 	if (isStateSet(STATE_NO_SRC) || isStateSet(STATE_DELETE)) return ;
 	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 		JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
-	synchronized (fBean.getModel().getDocumentLock()) {
 		// mark a controlled update (Top-Down)		
 		setState(STATE_UPDATING_SOURCE, true); 
 		int docOff = getOffset()+getMethod().getOffset() ;
 		updateDocument(docOff, 0, getContent()) ;		
-		setState(STATE_UPDATING_SOURCE, false); 
-	}
+		setState(STATE_UPDATING_SOURCE, false); 	
 }
 
 /**

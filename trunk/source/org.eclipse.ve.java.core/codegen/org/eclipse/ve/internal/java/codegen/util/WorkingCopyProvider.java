@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -44,8 +45,6 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 	IFile fFile = null; // the file itself
 
 	boolean fdisconnected;
-
-	Object fdocLock = new Object();
 
 	TypeResolver internalResolver = null;
 
@@ -85,10 +84,6 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 			return primGetWorkingCopy();
 		else
 			return fCU;
-	}
-
-	public Object getDocLock() {
-		return fdocLock;
 	}
 
 	/**
@@ -157,8 +152,7 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 	 */
 	public synchronized void dispose() {
 		disconnect();
-		fFile = null;
-		fdocLock = null;
+		fFile = null;		
 	}
 
 	/**
@@ -189,8 +183,7 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 				return;
 		} else
 			disconnect();
-
-		fdocLock = new Object();
+		
 		fFile = file;
 
 		getEditor();
@@ -289,6 +282,14 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 
 	public String toString() {
 		return "WCP [" + fFile + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider#getDocumentLock()
+	 */
+	public Object getDocumentLock() {
+		return ((ISynchronizable)getDocument()).getLockObject();
 	}
 
 }

@@ -10,16 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShadowModelBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -51,8 +53,8 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 	 * @param filePath
 	 * @param packageName
 	 */
-	public JavaBeanShadowModelBuilder(EditDomain d, IWorkingCopyProvider wcpArg, String filePath, char[][] packageName) {
-		this(d, filePath, packageName);
+	public JavaBeanShadowModelBuilder(EditDomain d, IWorkingCopyProvider wcpArg, String filePath, char[][] packageName, IProgressMonitor monitor) {
+		this(d, filePath, packageName, monitor);
 
 		ICompilationUnit wcp = wcpArg.getWorkingCopy(false);
 		fWCP = createPseudoWorkingCopyProvider(wcp, wcpArg.getResolver());
@@ -102,10 +104,6 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 				return null;
 			}
 
-			public Object getDocLock() {
-				return null;
-			}
-
 			public void disconnect() {
 			}
 
@@ -126,14 +124,18 @@ public class JavaBeanShadowModelBuilder extends JavaBeanModelBuilder {
 			public IJavaElement getElement(String handle) {
 				return null;
 			}
+			
+			public Object getDocumentLock() {
+				return null;
+			}
 
 		};
 
 		return wcp;
 	}
 
-	public JavaBeanShadowModelBuilder(EditDomain d, String fileName, char[][] packageName) {
-		super(d, fileName, packageName, new NullProgressMonitor());
+	public JavaBeanShadowModelBuilder(EditDomain d, String fileName, char[][] packageName, IProgressMonitor monitor) {
+		super(d, fileName, packageName, monitor);
 	}
 
 	protected IBeanDeclModel createDefaultModel(EditDomain d) {

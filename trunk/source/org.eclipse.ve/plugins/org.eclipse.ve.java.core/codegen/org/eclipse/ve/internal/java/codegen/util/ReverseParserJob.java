@@ -12,11 +12,12 @@
  *  Created Jan 11, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReverseParserJob.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import org.eclipse.core.internal.runtime.InternalPlatform;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 
@@ -29,17 +30,23 @@ import org.eclipse.jem.internal.proxy.common.ICallbackRunnable;
  */
 public abstract class ReverseParserJob extends Job {
 	
-	public static String    REVERSE_PARSE_JOB_NAME = "Visual Editor reverse parser";
+	public static String    REVERSE_PARSE_JOB_NAME = Messages.getString("ReverseParserJob.0"); //$NON-NLS-1$
 	public static int       DEFAULT_PRIORITY = Thread.MIN_PRIORITY+1;	
+	private Object			family;
 	
 	protected ICallbackRunnable callback ;
 	
-	public ReverseParserJob () {
-		this(REVERSE_PARSE_JOB_NAME);
+	public ReverseParserJob (IFile file) {
+		this(file,REVERSE_PARSE_JOB_NAME);
 	}
 	
-	public ReverseParserJob (String name) {
+	public static Object getJobFamily(IFile file) {
+		return (REVERSE_PARSE_JOB_NAME+":"+file.getLocation().toString()).intern(); //$NON-NLS-1$
+	}
+	
+	public ReverseParserJob (IFile file, String name) {
 		super(name);
+		family = getJobFamily(file);
 		setPriority(Job.DECORATE);				
 	}
 	protected IStatus run(IProgressMonitor monitor) {
@@ -56,7 +63,7 @@ public abstract class ReverseParserJob extends Job {
 	protected abstract IStatus doRun(IProgressMonitor monitor);
 	
 	public boolean belongsTo(Object family) {		
-		return family==REVERSE_PARSE_JOB_NAME;
+		return family==this.family;
 	}
 	
 	/**
@@ -65,19 +72,19 @@ public abstract class ReverseParserJob extends Job {
 	 * 
 	 * @since 1.1.0
 	 */
-	public static Job[] getReverseParserJobs() {
-		return InternalPlatform.getDefault().getJobManager().find(REVERSE_PARSE_JOB_NAME);
+	public static Job[] getReverseParserJobs(IFile file) {
+		return InternalPlatform.getDefault().getJobManager().find(getJobFamily(file));
 	}
 	
-	public static void cancelJobs () {
-		Job[] jobs = getReverseParserJobs();
+	public static void cancelJobs (IFile file) {
+		Job[] jobs = getReverseParserJobs(file);
 		for (int i = 0; i < jobs.length; i++) {
 			jobs[i].cancel();
 		}
 	}
 	
-	public static void join(IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {		
-		InternalPlatform.getDefault().getJobManager().join(REVERSE_PARSE_JOB_NAME, monitor);
+	public static void join(IFile file, IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {		
+		InternalPlatform.getDefault().getJobManager().join(getJobFamily(file), monitor);
 	}
 
 }
