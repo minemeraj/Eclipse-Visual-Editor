@@ -5,6 +5,7 @@ PATH=.:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin:/usr/X11R6/bin:`pwd`/../linux;e
 LD_ASSUME_KERNEL=2.2.5
 LD_LIBRARY_PATH=.
 USERNAME=`whoami`
+xhost +127.0.0.1
 Xvfb :42 -screen 0 1024x768x24 -ac &
 sleep 3
 Xnest :43 -display :42 -depth 24 &
