@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.6 $  $Date: 2004-10-12 20:20:19 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-14 16:16:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -99,6 +99,7 @@ public class JavaVisualEditorVMController {
 	protected abstract static class CreateRegistry extends Job {
 
 		protected String vmName;
+		protected int threadPriority = Thread.NORM_PRIORITY;
 
 		protected CreateRegistry(String name, String vmName) {
 			super(name);
@@ -111,6 +112,12 @@ public class JavaVisualEditorVMController {
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			
+			// If this is the job for starting the spare VM, reduce the thread priority.
+			Thread jobThread = getThread();
+			int originalPriorty = jobThread.getPriority();
+			if (threadPriority != Thread.NORM_PRIORITY)
+				jobThread.setPriority(Thread.MIN_PRIORITY);
+
 			ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
 
 				
@@ -165,6 +172,9 @@ public class JavaVisualEditorVMController {
 				// Wrapper the exception in a status so that when we join we can get the original exception back.
 				return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 16, e.getStatus().getMessage(), e);
 			}
+			// Restore thread priority to original priority if previously set because of spare vm
+			if (threadPriority != Thread.NORM_PRIORITY)
+				getThread().setPriority(originalPriorty);
 			return Status.OK_STATUS;
 
 		}
@@ -317,6 +327,11 @@ public class JavaVisualEditorVMController {
 				createJob = new CreateSpareRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"));
 				createJob.setSystem(true);	// Don't want to interrupt user with these being generated. They happen all of the time.
 			}
+			// If the delay is for the spare remote vm, set the job thread priority low (see CreateRegistry.run(IProgressMonitor))
+			if (delay == START_JOB_DELAY)
+				createJob.threadPriority = Thread.MIN_PRIORITY;
+			else
+				createJob.threadPriority = Thread.NORM_PRIORITY;
 			createJob.schedule(delay);
 		}
 		
