@@ -10,14 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-13 20:30:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
-import  org.eclipse.core.runtime.Preferences;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -38,7 +39,7 @@ public class DefaultMethodTextGenerator extends AbstractMethodTextGenerator {
 	
 	
 	
-	public final static  String[] ignoredFeatures = { "allocation" };
+	public final static  String[] ignoredFeatures = { JavaInstantiation.ALLOCATION };
 												
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
 	Boolean fgenerateTryCatchBlock = null ;
