@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.3 $  $Date: 2005-01-13 21:02:41 $ 
+ *  $Revision: 1.4 $  $Date: 2005-01-14 15:44:10 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -36,8 +36,6 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.VEModelCacheUtility;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-import com.yourkit.api.Controller;
- 
 /**
  * @author Gili Mendel
  * @since 1.0.0
