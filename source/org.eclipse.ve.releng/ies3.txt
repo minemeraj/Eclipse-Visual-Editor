@@ -1,0 +1,2 @@
+VE-runtime-I20040415.zip=http://download.eclipse.org/tools/ve/downloads/drops/I-I20040415-200404151247/ | | | runtime
+VE-SDK-I20040415.zip=http://download.eclipse.org/tools/ve/downloads/drops/I-I20040415-200404151247/ | | | sdk
