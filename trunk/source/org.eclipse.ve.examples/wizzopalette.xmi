@@ -3,7 +3,7 @@
   <palette:CategoryCmp xmi:id="cat1">
     <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="Wizzo Widgets"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.examples.java/icons/shape.gif">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.examples/icons/shape.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry1obj"
           creationClassURI="java:/com.abc.wizzowidgets#Shape"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shape"/>
