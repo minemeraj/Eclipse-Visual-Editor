@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -170,7 +170,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
 	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
 	
-	replacePropertyDescriptor(newPDs, "layout", null, new Object[] { 
+	replacePropertyDescriptor(newPDs, "layout", null, new Object[] {  //$NON-NLS-1$
 		DESIGNTIMEPROPERTY, Boolean.FALSE,
 		}
 	);

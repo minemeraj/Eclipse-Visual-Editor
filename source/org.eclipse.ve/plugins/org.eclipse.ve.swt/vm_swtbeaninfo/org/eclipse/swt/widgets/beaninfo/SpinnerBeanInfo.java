@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SpinnerBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-23 22:07:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -103,7 +103,7 @@ public class SpinnerBeanInfo extends IvjBeanInfo {
 		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
 
 		// hide layout property
-		replacePropertyDescriptor(newPDs, "layout", null, new Object[] {
+		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { //$NON-NLS-1$
 			DESIGNTIMEPROPERTY, Boolean.FALSE,
 		}
 		);

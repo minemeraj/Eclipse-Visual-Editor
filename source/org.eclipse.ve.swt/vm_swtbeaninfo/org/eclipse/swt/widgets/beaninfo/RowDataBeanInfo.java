@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: RowDataBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,11 +33,11 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("width", RowData.class.getField("width"), new Object[]{
+				createFieldPropertyDescriptor("width", RowData.class.getField("width"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowdata.width"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowdata.width.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("height", RowData.class.getField("height"), new Object[]{
+				createFieldPropertyDescriptor("height", RowData.class.getField("height"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("rowdata.height"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("rowdata.height.Desc"), //$NON-NLS-1$							
 				}),				

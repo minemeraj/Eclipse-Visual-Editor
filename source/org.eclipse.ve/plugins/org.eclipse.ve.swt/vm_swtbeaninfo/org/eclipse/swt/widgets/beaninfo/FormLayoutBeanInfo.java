@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FormLayoutBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,15 +33,15 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("marginWidth", FormLayout.class.getField("marginWidth"), new Object[]{
+				createFieldPropertyDescriptor("marginWidth", FormLayout.class.getField("marginWidth"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formlayout.marginwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formlayout.marginwidth.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginHeight", FormLayout.class.getField("marginHeight"), new Object[] {
+				createFieldPropertyDescriptor("marginHeight", FormLayout.class.getField("marginHeight"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formlayout.marginheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formlayout.marginheight.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("spacing", FormLayout.class.getField("spacing"), new Object[]{
+				createFieldPropertyDescriptor("spacing", FormLayout.class.getField("spacing"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("formlayout.spacing"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("formlayout.spacing.Desc"), //$NON-NLS-1$							
 				}),

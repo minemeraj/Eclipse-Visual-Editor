@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -93,7 +93,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 	 * Return a List of model objects whose type is Shell
 	 */
 	protected List getShells() {
-		JavaHelpers shellClass = Utilities.getJavaType("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) thisEditPart.getModel()).eResource()
+		JavaHelpers shellClass = Utilities.getJavaType("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) thisEditPart.getModel()).eResource() //$NON-NLS-1$
 				.getResourceSet());
 		List freeformParts = thisEditPart.getParent().getChildren();
 		List shellList = new ArrayList(1);
@@ -179,7 +179,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 				// Create new allocation and set the model in order to trigger the notifications to force code generation
 				JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 				RuledCommandBuilder cb = new RuledCommandBuilder(EditDomain.getEditDomain(thisEditPart));
-				cb.applyAttributeSetting((EObject) thisModel, thisModel.eClass().getEStructuralFeature("allocation"), alloc);
+				cb.applyAttributeSetting((EObject) thisModel, thisModel.eClass().getEStructuralFeature("allocation"), alloc); //$NON-NLS-1$
 				command = cb.getCommand();
 				command.execute();
 			}
@@ -219,7 +219,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			mainComposite.setLayout(new GridLayout(2, false));
 
 			Label label1 = new Label(mainComposite, SWT.NONE);
-			label1.setText("Select which Shell to use as a parent:");
+			label1.setText(SWTMessages.getString("ChangeParentShellObjectActionDelegate.Desc.Label")); //$NON-NLS-1$
 			GridData gd = new GridData();
 			gd.horizontalSpan = 2;
 			label1.setLayoutData(gd);
@@ -255,7 +255,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			} else {
 				initialIndex = 0;
 			}
-			selectionList.add("<none>");
+			selectionList.add(SWTMessages.getString("ChangeParentShellObjectActionDelegate.None")); //$NON-NLS-1$
 			for (int i = 0; i < shellList.size(); i++) {
 				IJavaObjectInstance shellModel = (IJavaObjectInstance) shellList.get(i);
 				AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
@@ -288,7 +288,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 		 */
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText("Change Parent");
+			newShell.setText(SWTMessages.getString("ChangeParentShellObjectActionDelegate.Shell.title")); //$NON-NLS-1$
 		}
 	}
 }

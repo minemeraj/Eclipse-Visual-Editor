@@ -54,7 +54,7 @@ public class ToolBarBeanInfo extends IvjBeanInfo {
 
 	protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
 		PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
-		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { DESIGNTIMEPROPERTY, Boolean.FALSE,});
+		replacePropertyDescriptor(newPDs, "layout", null, new Object[] { DESIGNTIMEPROPERTY, Boolean.FALSE,}); //$NON-NLS-1$
 		return newPDs;
 	}
 

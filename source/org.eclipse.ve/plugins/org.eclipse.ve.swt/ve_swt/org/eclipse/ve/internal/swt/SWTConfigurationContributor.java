@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-04 22:25:51 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.net.URL;
@@ -42,7 +42,7 @@ import org.eclipse.ve.internal.jface.JFaceColorProxyRegistration;
  */
 public class SWTConfigurationContributor extends ConfigurationContributorAdapter {
 	
-	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	
+	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	 //$NON-NLS-1$
 	
 	protected IJavaProject javaProject;
 	protected IConfigurationContributionInfo fConfigContributionInfo;
@@ -69,13 +69,13 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
  		  // Get the location of the swt dll in the workbench path and add it.
 		  // we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
-		  controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		  controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
 			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController
 			
 			// Assume target's have the same platform/architecture/overrides
-			URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$"));
+			URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$")); //$NON-NLS-1$ //$NON-NLS-2$
 			IPath idePath = new Path(ide.getFile());
 			final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
 			
@@ -83,9 +83,9 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 			IFragmentModel[] frags = pm.getFragments();			
 			URL os = null;
 			for (int i = 0; i < frags.length; i++) {
-				if (frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) {
+				if (frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
 					// swt fragment					
-					if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl")) 
+					if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
 						continue; // skip the nl ones
 					os = frags[i].getResourceURL(relPath.toPortableString());
 					if (os!=null){					   
@@ -93,7 +93,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 					}
 				}
 			}
-            final String msg = "Could not resolve the SWT dll on the PDE target";
+            final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
             final URL osURL = os;
             ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
@@ -109,7 +109,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		
 		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
 		if(Platform.WS_GTK.equals(Platform.getWS())){
-			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -126,7 +126,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 			Map map = config.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, (Map) null);
 			if(map == null) 
 				map = new HashMap(1);
-			map.put("DISPLAY", "DISPLAY:0:0");				
+			map.put("DISPLAY", "DISPLAY:0:0");				 //$NON-NLS-1$ //$NON-NLS-2$
 			config.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, map);
 		}
 	}
@@ -190,10 +190,10 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		// [70275] Need a marker if VM is less than 1.4.2 because of a bug with beaninfo.
 		if (javaProject != null) {
 			boolean versOk = true;	// Default is true, and if for some reason can't parse the version, then it will still be true because we don't know.
-			IBeanProxy version = registry.getMethodProxyFactory().getInvokable("java.lang.System", "getProperty", new String[] {"java.lang.String"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith("java.version"));
+			IBeanProxy version = registry.getMethodProxyFactory().getInvokable("java.lang.System", "getProperty", new String[] {"java.lang.String"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith("java.version")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			if (version instanceof IStringBeanProxy) {
 				// We got the version
-				StringTokenizer versTokens = new StringTokenizer(((IStringBeanProxy) version).stringValue(), "._");
+				StringTokenizer versTokens = new StringTokenizer(((IStringBeanProxy) version).stringValue(), "._"); //$NON-NLS-1$
 				if (versTokens.hasMoreTokens()) {
 					try {
 						Integer v = Integer.valueOf(versTokens.nextToken());
@@ -224,9 +224,9 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 					*/
 					public void run(IProgressMonitor monitor) throws CoreException {
 						if (fversok) {
-							removeMarker(SWTMessages.getString("Marker.BuildPathNot142"));
+							removeMarker(SWTMessages.getString("Marker.BuildPathNot142")); //$NON-NLS-1$
 						} else {
-							createMarker(SWTMessages.getString("Marker.BuildPathNot142"));
+							createMarker(SWTMessages.getString("Marker.BuildPathNot142")); //$NON-NLS-1$
 						}
 					}
 				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-05 21:40:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -24,7 +24,7 @@ import org.eclipse.jem.internal.instantiation.PTExpression;
  */
 public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
 
-	private final String[] TRIM_STRINGS = new String[] {SWT_TYPE_ID, "SHELL_TRIM"};
+	private final String[] TRIM_STRINGS = new String[] {SWT_TYPE_ID, "SHELL_TRIM"}; //$NON-NLS-1$
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.swt.WidgetPropertySourceAdapter#getChangedAllocation(org.eclipse.jem.internal.instantiation.PTExpression, org.eclipse.ve.internal.swt.WidgetPropertySourceAdapter.StyleBitPropertyID, int)
 	 */

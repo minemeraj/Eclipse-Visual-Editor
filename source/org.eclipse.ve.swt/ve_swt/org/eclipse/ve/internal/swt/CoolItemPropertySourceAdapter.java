@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.5 $ $Date: 2005-02-16 00:59:17 $
+ * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.6 $ $Date: 2005-04-05 21:40:17 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -110,35 +110,35 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 			if (pd.getId() instanceof EStructuralFeature) {
 				String displayname;
 				String fn = ((EStructuralFeature) pd.getId()).getName();
-				if ("text".equals(fn)) {
-					displayname = "coolItemText";
+				if ("text".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemText"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("image".equals(fn)) {
-					displayname = "coolItemImage";
+				} else if ("image".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemImage"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("toolTipText".equals(fn)) {
-					displayname = "coolItemToolTipText";
+				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemToolTipText"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("preferredSize".equals(fn)) {
-					displayname = "coolItemPreferredSize";
+				} else if ("preferredSize".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemPreferredSize"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("minimumSize".equals(fn)) {
-					displayname = "coolItemMinimumSize";
+				} else if ("minimumSize".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemMinimumSize"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("size".equals(fn)) {
-					displayname = "coolItemSize";
+				} else if ("size".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemSize"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("bounds".equals(fn)) {
-					displayname = "coolItemBounds";
+				} else if ("bounds".equals(fn)) { //$NON-NLS-1$
+					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemBounds"); //$NON-NLS-1$
 					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
 					continue;
-				} else if ("control".equals(fn))
+				} else if ("control".equals(fn)) //$NON-NLS-1$
 					// don't show control property
 					continue;
 			}

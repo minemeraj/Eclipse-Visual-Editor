@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
  */
 
 
@@ -33,19 +33,19 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("type", FillLayout.class.getField("type"), new Object[] {
+				createFieldPropertyDescriptor("type", FillLayout.class.getField("type"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("filllayout.type"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("filllayout.type.Desc"), //$NON-NLS-1$						
 				}),
-				createFieldPropertyDescriptor("marginWidth", FillLayout.class.getField("marginWidth"), new Object[]{
+				createFieldPropertyDescriptor("marginWidth", FillLayout.class.getField("marginWidth"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("filllayout.marginwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("filllayout.marginwidth.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("marginHeight", FillLayout.class.getField("marginHeight"), new Object[] {
+				createFieldPropertyDescriptor("marginHeight", FillLayout.class.getField("marginHeight"), new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("filllayout.marginheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("filllayout.marginheight.Desc"), //$NON-NLS-1$							
 				}),
-				createFieldPropertyDescriptor("spacing", FillLayout.class.getField("spacing"), new Object[]{
+				createFieldPropertyDescriptor("spacing", FillLayout.class.getField("spacing"), new Object[]{ //$NON-NLS-1$ //$NON-NLS-2$
 						DISPLAYNAME, resbundle.getString("filllayout.spacing"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("filllayout.spacing.Desc"), //$NON-NLS-1$							
 				}),
