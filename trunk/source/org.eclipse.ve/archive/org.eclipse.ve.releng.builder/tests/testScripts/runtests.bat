@@ -23,6 +23,7 @@ set ANT_CMD_LINE_ARGS=
 REM ****************************************************************
 REM
 REM Delete previous Eclipse installation and workspace
+REM (This is the Eclipse that controls the test. The test will start another Eclipse.
 REM
 REM ****************************************************************
 if EXIST eclipse rmdir /S /Q eclipse
@@ -34,10 +35,8 @@ REM Install Eclipse and org.eclipse.test plugin
 REM
 REM ****************************************************************
 
-unzip -qq -o eclipse-SDK-*.zip -d target
-unzip -qq -o emf_*.zip -d target/eclipse
-unzip -qq -o GEF-runtime-*.zip -d target/eclipse
-unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test* -d target
+unzip -qq -o eclipse-SDK-*.zip
+unzip -qq -o -C VE-junit-tests*.zip */plugins/org.eclipse.test*
 
 
 :processcmdlineargs
@@ -62,7 +61,7 @@ set tests=%tests% %1 && shift && goto processcmdlineargs
 :setup
 REM ****************************************************************
 REM
-REM	Setup up the test (target) VE 
+REM	Setup up the test (target) GEF SDK
 REM
 REM	** if -noclean set, Eclipse will be re-installed only if the 
 REM	directory target\eclipse does not exist.  If this directory
