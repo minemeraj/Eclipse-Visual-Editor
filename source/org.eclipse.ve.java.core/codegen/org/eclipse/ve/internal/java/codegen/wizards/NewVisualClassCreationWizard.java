@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.13 $  $Date: 2004-06-28 23:15:59 $ 
+ *  $Revision: 1.14 $  $Date: 2004-07-09 22:52:01 $ 
  */
 
 import java.io.IOException;
@@ -59,8 +59,9 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @param className
 	 * @param monitor
 	 */
-	protected void updateContributor(String className, IProgressMonitor monitor){
-		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), "newStyleComponent"); //$NON-NLS-1$
+	protected void updateContributor(String className, IProgressMonitor monitor) {
+		IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),
+				"newStyleComponent"); //$NON-NLS-1$
 		IExtension[] extensions = exp.getExtensions();
 		IType superClass = null;
 		try {
@@ -68,20 +69,22 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		} catch (JavaModelException e2) {
 			JavaVEPlugin.log(e2, Level.FINEST);
 		}
-		if(extensions!=null && extensions.length>0 && superClass!=null){
+		if (extensions != null && extensions.length > 0 && superClass != null) {
 			boolean contributorFound = false;
-			for(int ec=0;ec<extensions.length && !contributorFound;ec++){
+			for (int ec = 0; ec < extensions.length && !contributorFound; ec++) {
 				IConfigurationElement[] configElms = extensions[ec].getConfigurationElements();
-				for(int cc=0;cc<configElms.length && !contributorFound;cc++){
+				for (int cc = 0; cc < configElms.length && !contributorFound; cc++) {
 					IConfigurationElement celm = configElms[cc];
 					try {
 						String typeName = celm.getAttribute("type"); //$NON-NLS-1$
-						if(superClass.getFullyQualifiedName().equals(typeName)){
-							contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
-							if(contributor!=null){
-								contributorBundleName = extensions[ec].getNamespace();
+						if (superClass.getFullyQualifiedName().equals(typeName)) {
+							if (celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0) {
+								contributor = (IVisualClassCreationSourceContributor) celm.createExecutableExtension("contributor"); //$NON-NLS-1$
+								if (contributor != null) {
+									contributorBundleName = extensions[ec].getNamespace();
+								}
+								contributorFound = true;
 							}
-							contributorFound = true;
 						}
 					} catch (CoreException e) {
 						JavaVEPlugin.log(e, Level.FINEST);

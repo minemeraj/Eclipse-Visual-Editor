@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.ve.java.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.ve.java.core" id="newStyleComponent" name="%newStyleComponentName"/>
+         <meta.schema plugin="org.eclipse.ve.java.core" id="newStyleComponent" name="Registration of new visual class styles and component extensions"/>
       </appInfo>
       <documentation>
          This extension point is used to register new visual class styles and component extensions. New styles and components appear as choices within the &quot;Style&quot; treeview of the Visual Class Creation Wizard, and are typically used to create new style classes for the Visual Editor.
@@ -96,7 +96,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="contributor" type="string" use="required">
+         <attribute name="contributor" type="string">
             <annotation>
                <documentation>
                   
