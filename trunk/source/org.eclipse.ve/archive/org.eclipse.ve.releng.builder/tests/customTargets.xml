@@ -110,6 +110,9 @@
 <!-- Steps to do before running the build.xmls for the elements being built. -->
 <!-- ===================================================================== -->
 <target name="preProcess">
+	<replace dir="${buildDirectory}/plugins" value="${timestamp}" token="@build@">
+		<include name="**/about.mappings" />
+	</replace>
 </target>
 
 <!-- ===================================================================== -->
@@ -196,13 +199,13 @@
 	
  	<!-- rezip the JUnit plugin tests -->
 	<exec dir="${workingDirectory}" executable="zip">
-			<arg line="-r -q GEF-junit-tests-${buildId}.zip eclipse"/>
+			<arg line="-r -q VE-junit-tests-${buildId}.zip eclipse"/>
 	</exec>	
  
 	<delete dir="${workingDirectory}/eclipse" includeEmptyDirs="true" />
  	
  	<!--Copy scripts and doc used in the automated testing to the testing directory-->
-    <copy todir="${workingDirectory}/gef-testing">
+    <copy todir="${workingDirectory}/ve-testing">
      	<fileset dir="${buildDirectory}/plugins/org.eclipse.test" includes="testframework.html,JUNIT.XSL" />
     </copy>
     <copy todir="${workingDirectory}/ve-testing">
