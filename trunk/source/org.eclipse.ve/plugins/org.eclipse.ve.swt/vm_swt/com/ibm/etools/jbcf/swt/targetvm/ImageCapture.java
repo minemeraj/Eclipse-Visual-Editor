@@ -41,6 +41,7 @@ public class ImageCapture {
 				childCorner.x = childCorner.x + clientOrigin.x;
 				childCorner.y = childCorner.y + clientOrigin.y;
 				myImageGC.drawImage(childImage,childCorner.x,childCorner.y);
+				childImage.dispose();
 			}
 			myImageGC.dispose();
 		}
