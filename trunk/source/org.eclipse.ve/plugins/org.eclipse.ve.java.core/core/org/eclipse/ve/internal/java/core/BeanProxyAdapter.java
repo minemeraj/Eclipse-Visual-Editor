@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-06 20:48:16 $ 
+ *  $Revision: 1.9 $  $Date: 2004-02-06 22:52:35 $ 
  */
 
 import java.util.*;
@@ -740,7 +740,7 @@ public Map getOriginalSettingsTable() {
  * Decide which method to use based on how much information we have.
  * If we have an initialization string use it
  */
-public final synchronized IBeanProxy instantiateBeanProxy() {
+public final /* TODO synchronized */ IBeanProxy instantiateBeanProxy() {
 	// Synchronize the creation with apply/cancel so that no changes are done during
 	// creation, and no creation is tried while a creation is in progress.
 	if (!isBeanProxyInstantiated()){

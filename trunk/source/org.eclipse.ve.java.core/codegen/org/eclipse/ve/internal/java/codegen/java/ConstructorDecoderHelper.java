@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-06 22:52:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -100,6 +100,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						ptref.setObject(o);
 						return ptref;
 					}
+					n = fbeanPart.getModel().resolve(n);
 				}
 				if (n!=null) {
 					PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
