@@ -188,6 +188,7 @@
          contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
          name="Application">
 			</visualElement>
+<!-- 7/16/04 paw - Disabled Composite in new visual class wizard in M2 until we decide how to handle this
 			<visualElement
          type="org.eclipse.swt.widgets.Composite"
          icon="icons/full/clcl16/composite_obj.gif"
@@ -195,6 +196,7 @@
          contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
          name="Composite">
 			</visualElement>
+-->
   </extension>   
 
 </plugin>
