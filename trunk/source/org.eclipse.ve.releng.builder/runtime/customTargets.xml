@@ -164,7 +164,7 @@
 </target>
 
 <target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-	<get src="${eclipseURL}/eclipse-SDK-${eclipseBuildID}-win32.zip" dest="${buildDirectory}/../eclipse-SDK.zip"/>
+	<get src="${eclipseURL}" dest="${buildDirectory}/../eclipse-SDK.zip"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq eclipse-SDK.zip"/>
    	</exec>
@@ -178,7 +178,7 @@
 </target>
 
 <target name="getEMF" unless="emfExists" depends="getBaseInit">
-	<get src="${emfURL}/emf_${emfBuildID}.zip" dest="${buildDirectory}/../emf.zip"/>
+	<get src="${emfURL}" dest="${buildDirectory}/../emf.zip"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq emf.zip -d ${buildDirectory}"/>
    	</exec>
@@ -186,7 +186,7 @@
 </target>
 
 <target name="getGEF" unless="gefExists" depends="getBaseInit">
-	<get src="${gefURL}/GEF-runtime-${gefBuildID}.zip" dest="${buildDirectory}/../gef.zip"/>
+	<get src="${gefURL}" dest="${buildDirectory}/../gef.zip"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq gef.zip -d ${buildDirectory}"/>
    	</exec>
