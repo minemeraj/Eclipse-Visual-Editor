@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-29 21:06:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -292,4 +292,10 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		generateForSetFeatures(bp) ;							
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#generateMain()
+	 */
+	public String generateMain(String className) {		
+		return null;
+	}
 }
