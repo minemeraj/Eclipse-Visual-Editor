@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:45 $ 
  */
 
 import java.io.InputStream;
@@ -202,8 +202,11 @@ public Object calledBack(int msgID, IBeanProxy parm){
 public Object calledBack(int msgID, Object[] parms){
 	return null;
 }
+public Object calledBack(int msgID, Object parm){
+	throw new RuntimeException("A window launcher has been called back incorrectly"); //$NON-NLS-1$
+}
 public void calledBackStream(int msgID, InputStream is){
-	throw new RuntimeException("A windlow launcher has been called back incorrectly"); //$NON-NLS-1$
+	throw new RuntimeException("A window launcher has been called back incorrectly"); //$NON-NLS-1$
 }
 public void dispose(){
 	fWindowLauncherProxy.getProxyFactoryRegistry().getCallbackRegistry().deregisterCallback(fWindowLauncherProxy);

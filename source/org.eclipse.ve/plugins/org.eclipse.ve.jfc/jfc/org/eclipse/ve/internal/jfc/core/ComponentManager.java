@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-04 21:25:42 $ 
  */
 
 import org.eclipse.draw2d.geometry.*;
@@ -73,7 +73,7 @@ public void setRelativeParentComponentBeanProxy(IBeanProxy aContainerBeanProxy){
 		BeanAwtUtilities.invoke_set_RelativeParent_Manager(fComponentManagerProxy, aContainerBeanProxy);	
 }
 
-public Object calledBack(int msgID, IBeanProxy parm){
+public Object calledBack(int msgID, Object parm){
 	switch ( msgID ) {		
 		case Common.CL_HIDDEN :
 			componentHidden();
@@ -86,6 +86,10 @@ public Object calledBack(int msgID, IBeanProxy parm){
 			break;
 	}
 	return null;
+}
+
+public Object calledBack(int msgID, IBeanProxy parm){
+	throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
 }
 public void calledBackStream(int msgID, java.io.InputStream is){
 	throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
