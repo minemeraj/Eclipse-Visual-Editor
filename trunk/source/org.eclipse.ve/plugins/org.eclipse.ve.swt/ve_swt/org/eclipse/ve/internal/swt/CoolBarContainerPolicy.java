@@ -12,10 +12,10 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-25 18:16:18 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-25 20:08:20 $ 
  */
 
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -188,4 +188,46 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 		return getDeleteCoolItemCommand(child).chain(super.getDeleteDependentCommand(child));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getOrphanChildrenCommand(java.util.List)
+	 */
+	public Command getOrphanChildrenCommand(List children) {
+		return getOrphanCoolItemCommand(children).chain(super.getOrphanChildrenCommand(children));
+	}
+
+	private Command getOrphanCoolItemCommand(final List children) {
+		Command orphanCoolItemCommand = new CommandWrapper() {
+
+			protected boolean prepare() {
+				return true;
+			}
+
+			public void execute() {
+				// Remove the TabItems from the TabFolder. The controls of the TabItems will
+				// still be left to be handles by the new parent.
+				List items = new ArrayList(children.size());
+				Iterator itr = children.iterator();
+				while (itr.hasNext()) {
+					EObject item = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_coolbarItems, sf_coolItemControl,
+							(EObject) itr.next());
+					items.add(item);
+				}
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+				cb.cancelAttributeSettings((EObject) getContainer(), sf_coolbarItems, items); // Delete the TabItems under rule control so that they
+																							  // will go away.
+				cb.setApplyRules(false);
+				command = cb.getCommand();
+				command.execute();
+			}
+		};
+		return orphanCoolItemCommand;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#primAddCommand(java.util.List, java.lang.Object, org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.primAddCommand(children, positionBeforeChild, containmentSF).chain(getCreateCoolItemCommand(children.get(0),(EObject)positionBeforeChild));
+	}
 }
