@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.14 $  $Date: 2004-10-04 20:29:04 $ 
+ *  $Revision: 1.15 $  $Date: 2005-01-25 16:14:39 $ 
  */
 
 import java.util.ArrayList;
@@ -34,6 +34,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
@@ -82,6 +84,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	
 	private Button openPropertiesViewIfRequired;
 	private Button openJavaBeansViewIfRequired;
+	private Button noverifyCheckbox;
 
 	private TableItem currentLookAndFeelItem;
 
@@ -577,7 +580,17 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStyleID = VCEPreferences.getStyleID();
 
 		populateStylesTable(stylesTable, styleInfo, fStyleID);
-
+		
+		filler = createLabel(stylesComposite, "", null); //$NON-NLS-1$
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan=2;
+		filler.setLayoutData(gd);
+		noverifyCheckbox = new Button(stylesComposite, SWT.CHECK);
+		noverifyCheckbox.setText(VCEMessages.getString("VCEPreferencePage.NoverifyCheckbox.text")); //$NON-NLS-1$
+		noverifyCheckbox.setSelection(ProxyPlugin.getPlugin().getPluginPreferences().getBoolean(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY));
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan=2;
+		noverifyCheckbox.setLayoutData(gd);
 	}
 
 	public static void initializeBasicLookAndFeelItems(Table table) {
@@ -767,6 +780,9 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		fStore.setValue(VCEPreferences.JVE_PATTERN_STYLE_ID, fStyleID);
 		
+		ProxyPlugin.getPlugin().getPluginPreferences().setValue(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY, noverifyCheckbox.getSelection());
+		ProxyPlugin.getPlugin().savePluginPreferences();
+		
 		saveContributorSettings();
 		
 		VCEPreferences.getPlugin().savePluginPreferences();
@@ -820,6 +836,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openJavaBeansViewIfRequired.setSelection(true);
 		//	requireIVJforComponents.setSelection(false) ;
 		
+		noverifyCheckbox.setSelection(ProxyPlugin.getPlugin().getPluginPreferences().getDefaultBoolean(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY));
 		restoreDefaultStyle();
 
 	}
