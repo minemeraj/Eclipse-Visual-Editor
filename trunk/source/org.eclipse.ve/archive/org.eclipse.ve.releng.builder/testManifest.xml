@@ -2,10 +2,10 @@
 <topLevel>
 <zipTypes>
 	<zipType name="SDK">
-		<platform id="SDK" name="AWT/Swing: Win32/Linux, SWT: Win32" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
+		<platform id="SDK" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux" fileName='&lt;a href="VE-SDK-@build@.zip">VE-SDK-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Runtime">
-		<platform id="RUN" name="AWT/Swing: Win32/Linux, SWT: Win32" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
+		<platform id="RUN" name="AWT/Swing: Win32/Linux, SWT: Win32/Linux-GTK" fileName='&lt;a href="VE-runtime-@build@.zip">VE-runtime-@build@.zip&lt;/a>'></platform>
 	</zipType>
 	<zipType name="Examples">
 		<platform id="EX" name="All" fileName='&lt;a href="VE-examples-@build@.zip">VE-examples-@build@.zip&lt;/a>'></platform>
