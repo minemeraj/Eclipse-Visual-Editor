@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-20 14:55:59 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-21 16:15:58 $ 
  */
 
 import java.io.IOException;
@@ -327,15 +327,6 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		}
 		fPage.createType(monitor); // use the full progress monitor
 		
-		ICompilationUnit cu= fPage.getCreatedType().getCompilationUnit();
-		if (cu.isWorkingCopy())
-			cu = (ICompilationUnit) cu.getOriginal(cu);
-		if (cu != null) {
-			IResource resource= cu.getResource();
-			selectAndReveal(resource);
-			openResource(resource);
-		}	
-
 		updateContributor(fPage.getSuperClass(), monitor);
 		if(contributor!=null){
 			applyContributor(fPage.getCreatedType(), fPage.getSuperClass(), monitor);
@@ -394,5 +385,22 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		if(data instanceof String){
 			superClassName = (String)data;		
 		}
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
+	 */
+	public boolean performFinish() {
+		boolean res =super.performFinish();
+		if(res){
+			ICompilationUnit cu= fPage.getCreatedType().getCompilationUnit();
+			if (cu.isWorkingCopy())
+				cu = (ICompilationUnit) cu.getOriginal(cu);
+			if (cu != null) {
+				IResource resource= cu.getResource();
+				selectAndReveal(resource);
+				openResource(resource);
+			}
+		}
+		return res;
 	}
 }
