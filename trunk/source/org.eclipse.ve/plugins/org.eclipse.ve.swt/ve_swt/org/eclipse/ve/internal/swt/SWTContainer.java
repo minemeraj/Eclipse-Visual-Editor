@@ -25,7 +25,10 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private final static String[][] jfaceLibraries = new String[][] {
 			{ "org.eclipse.jface", "jface.jar" },
-			{ "org.eclipse.core.runtime", "runtime.jar" },			
+			{ "org.eclipse.jface.text", "jfacetext.jar" },
+			{ "org.eclipse.core.runtime", "runtime.jar" },
+			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" },
+			{ "org.eclipse.osgi", "osgi.jar" }
 	};
 	
 	public SWTContainer(IPath containerPath){
