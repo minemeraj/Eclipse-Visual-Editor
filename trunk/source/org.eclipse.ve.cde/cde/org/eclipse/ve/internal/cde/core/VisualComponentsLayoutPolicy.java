@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-20 23:03:49 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-24 17:55:52 $ 
  */
 
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
@@ -166,8 +166,10 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 					Rectangle bounds = (Rectangle) parent.getLayoutManager().getConstraint(child);
 					if (bounds != null) {
 						bounds = bounds.getCopy();
-						bounds.setLocation(x, y);	
-						parent.setConstraint(child, bounds);					
+						bounds.x = x;
+						bounds.y = y;
+						constrain(bounds,parent);
+						parent.setConstraint(child, bounds);				
 					}
 				}
 			});
@@ -184,9 +186,9 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 					Rectangle bounds = (Rectangle) parent.getLayoutManager().getConstraint(child);
 					if (bounds != null) {
 						bounds = bounds.getCopy();
-						Dimension size = new Dimension(width,height);
-						constrain(size,parent);
-						bounds.setSize(size);
+						bounds.width = width;
+						bounds.height = height;
+						constrain(bounds,parent);
 						parent.setConstraint(child, bounds);
 					}
 				}
@@ -205,10 +207,11 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 	}
 
 	/**
-	 * Constraint the size - specialized in subclasses that want to override the figure dimensions 
+	 * Constraint the size - specialized in subclasses that want to override the figure dimensions to do things like custom clipping or making the figure large enough to be
+	 * selectable even when it has a small size.  An example of this is JScrollPane where the child can sometimes be unselectable with a 0 preferred size
 	 * @since 1.0.0
 	 */
-	protected void constrain(Dimension size, IFigure parentFigure){
+	protected void constrain(Rectangle bounds, IFigure parentFigure){
 		
 	}
 
