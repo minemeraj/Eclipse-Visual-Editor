@@ -22,6 +22,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
@@ -30,41 +31,13 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	protected List fControlListeners = null; // Listeners for IComponentNotification.
 	protected ControlManager fControlManager; // The listener on the IDE	
 	protected ImageNotifierSupport imSupport;	
-	public ControlProxyAdapter parentProxyAdapter;
 	public IMethodProxy environmentFreeFormHostMethodProxy;
+	protected CompositeProxyAdapter parentProxyAdapter;
 
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);				
 	}
 	
-//	protected void primInstantiateBeanProxy() {
-//		setBeanProxy((IBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-//			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-//				// Create the control with the constructor of its parent composite
-//				IJavaObjectInstance control = (IJavaObjectInstance)getTarget();
-//				IJavaObjectInstance composite = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference)JavaInstantiation.getSFeature(control.eResource().getResourceSet(),SWTConstants.SF_COMPOSITE_CONTROLS)); 
-//				IBeanProxy compositeBeanProxy = null;
-//				// The parent composite either comes because we are logically owned by a composite
-//				if(composite != null){
-//					compositeBeanProxy = BeanProxyUtilities.getBeanProxy(composite);
-//				} else {
-//					// or else are on the free form
-//					compositeBeanProxy = getEnvironmentFreeFormHostFieldProxy().get(getEnvironmentBeanTypeProxy());
-//				}
-//				// Get the constructor to create the control, new Control(Composite,int);
-//				IBeanTypeProxy compositeBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Composite");
-//				IBeanTypeProxy intBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");			
-//				// Get the class of the control
-//				IBeanTypeProxy controlBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(((JavaClass)control.getJavaType()).getJavaName()); 
-//				// Now we have the control type and the argument types, get the constructor
-//				IConstructorProxy createControlProxy = controlBeanTypeProxy.getConstructorProxy(new IBeanTypeProxy[] {compositeBeanTypeProxy,intBeanTypeProxy});
-//				// Create a proxy for the value zero
-//				IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
-//				return createControlProxy.newInstance(new IBeanProxy[] {compositeBeanProxy,zeroBeanProxy});
-//			}
-//		}));
-//	}	
-
 	/**
 	 * Use to call BeanProxyAdapter's beanProxyAllocation.
 	 */
@@ -84,12 +57,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					// the standard allocation mechanism.
 					// Create the control with the constructor of its parent composite
 					IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
-									IJavaObjectInstance composite =
-										(IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
-											control,
-											(EReference) JavaInstantiation.getSFeature(
-												control.eResource().getResourceSet(),
-												SWTConstants.SF_COMPOSITE_CONTROLS));
+					IJavaObjectInstance composite = getParentComposite(control);
 					IBeanProxy compositeBeanProxy = null;
 					// The parent composite either comes because we are logically owned by a
 					// composite
@@ -131,6 +99,14 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		}
 	}
 	
+	protected IJavaObjectInstance getParentComposite(IJavaObjectInstance control) {
+		return (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
+			control,
+			(EReference) JavaInstantiation.getSFeature(
+				control.eResource().getResourceSet(),
+				SWTConstants.SF_COMPOSITE_CONTROLS));		
+	}
+
 	private IMethodProxy getEnvironmentFreeFormHostMethodProxy(){
 		if(environmentFreeFormHostMethodProxy == null){
 			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost");
@@ -157,7 +133,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	 */
 	public Rectangle getClientBox(){
 		if(fControlManager == null){
-			createControlManager();
+			initializeControlManager();
 		}
 		return fControlManager.getClientBox();
 	}
@@ -189,11 +165,11 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				fControlManager.addComponentListener(aListener);
 			} else {
 				if (getBeanProxy() != null && getBeanProxy().isValid()) {
-					createControlManager(); // Create the control listener on the bean and add all
+					initializeControlManager(); // Create the control listener on the bean and add all
 				}
 			}
 	}
-	protected void createControlManager() {
+	protected void initializeControlManager() {
 		// Create an instance of com.ibm.etools.jbcf.visual.vm.ComponentManager on the target VM
 		if (fControlManager == null) {
 			fControlManager = new ControlManager();
@@ -208,6 +184,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		}
 		fControlManager.setControlBeanProxy(getBeanProxy());
 	}	
+	
+	
 	public synchronized void removeComponentListener(IVisualComponentListener aListener) {
 		// Remove from the local list and the proxy list.
 		fControlListeners.remove(aListener);
@@ -223,11 +201,18 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public boolean hasImageListeners() {
 		return (imSupport != null && imSupport.hasImageListeners());
 	}
+	protected void primInstantiateBeanProxy() {
+		// SWT controls get inserted at a position in a composite.  The way this occurs is that
+		// they get disposed and re-created, so we need to manage the control manager and who it is attached to
+		super.primInstantiateBeanProxy();
+		initializeControlManager();
+	}
+	
 	public void invalidateImage() {
 		// TODO Auto-generated method stub
 	}
 	public void refreshImage() {
-		if(fControlManager == null) createControlManager();
+		if(fControlManager == null) initializeControlManager();
 		fControlManager.captureImage();
 		imSupport.fireImageChanged(fControlManager.getImageData());
 	}
@@ -260,12 +245,14 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					}
 				}
 			}
-		});				
+		});
+		childValidated(this);		
 	}
-	public void setParentProxyHost(ControlProxyAdapter aParentControlProxyAdapter){
-		parentProxyAdapter = aParentControlProxyAdapter;
-	}	
 	
+	public void childValidated(ControlProxyAdapter childProxy) {
+		parentProxyAdapter.childValidated(childProxy);
+	}
+		
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
 		// Make sure the FreeFormControlHostAdapter exists
@@ -280,5 +267,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			}
 			
 		}
+	}
+
+	public void setParentProxyHost(CompositeProxyAdapter adapter) {
+		parentProxyAdapter = adapter;
 	}
 }

@@ -83,6 +83,8 @@ protected void createLayoutEditPolicy() {
 		// If we have one then try to get the EditPolicy from it
 		if(layoutPolicyFactory != null && layoutPolicyFactory.getLayoutInputPolicyClass() != null){
 			layoutPolicy = VisualUtilities.getLayoutPolicy(layoutPolicyFactory.getLayoutInputPolicyClass(),getContainerPolicy());
+		} else if(layoutPolicyFactory == null){
+			layoutPolicy = new UnknownLayoutInputPolicy(getContainerPolicy());			
 		}
 	}
 	if(layoutPolicy != null){

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 10:31:58 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-01 19:16:49 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -84,5 +84,16 @@ public Command getOrphanConstraintsCommand(List children) {
 public void setContainerPolicy(VisualContainerPolicy policy) {
 	this.policy = policy;
 }		
+
+/**
+ * Apply the corresponding constraint to each child.
+ * The child is the Control itself
+ */
+public Command getChangeConstraintCommand(List children, List constraints) {
+	
+	// TODO Need to figure out what we do here - JRW
+	return UnexecutableCommand.INSTANCE;
+}
+
 	
 }
