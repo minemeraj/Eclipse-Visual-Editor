@@ -24,7 +24,7 @@
 				
 		<!--The eclipse SDK must exist before this script is executed-->
 		<exec dir="." executable="tar">
-			<arg line="-C ${install} -xzf eclipse-SDK*.zip"/>
+			<arg line="-C ${install} -xzf ./eclipse-SDK*.zip"/>
 	    </exec>
 	
 		<exec dir="." executable="unzip">
