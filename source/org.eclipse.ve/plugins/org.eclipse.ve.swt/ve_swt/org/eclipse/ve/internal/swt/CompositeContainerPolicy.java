@@ -61,6 +61,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			javaChild = aChild;
 		}
 		public void execute() {
+			//TODO need to use commandBuilder/commnds for setting features
 			if(javaChild.getAllocation() != null){
 				IJavaObjectInstance correctParent = (IJavaObjectInstance)getContainer();
 				PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
@@ -73,10 +74,18 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 							parentRef.setObject(correctParent);
 							classInstanceCreation.getArguments().remove(0);
 							classInstanceCreation.getArguments().add(0,parentRef);
+							// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+							ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+							newAlloc.setExpression(expression);								
+							javaChild.setAllocation(newAlloc);
 						} else if (firstArgument instanceof PTInstanceReference){
 							PTInstanceReference instanceReference = (PTInstanceReference)firstArgument;
 							if(instanceReference.getObject() != correctParent){
 								instanceReference.setObject(correctParent);
+								// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+								ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+								newAlloc.setExpression(expression);								
+								javaChild.setAllocation(newAlloc);
 							}
 						}
 					}
