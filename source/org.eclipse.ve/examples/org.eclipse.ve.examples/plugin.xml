@@ -105,40 +105,7 @@
             path="platform:/plugin/org.eclipse.ve.examples/overrides/org/eclipse/ve/examples/java/vm">
       </override>
    </extension>
-<!-- The following extension points add the BDK JavaBeans to the palette and also to the Add Container wizard -->
-   <extension
-         point="org.eclipse.jdt.ui.classpathContainerPage">
-      <classpathContainerPage
-            name="%beanDeveloperKit"
-            class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:BDK"
-            id="org.eclipse.ve.examples.java.classpathcontainerpage.bdk">
-      </classpathContainerPage>
-   </extension>
-   <extension
-         point="org.eclipse.ve.java.core.registrations">
-      <variable
-            path="BDK"
-            palettecats="platform:/plugin/org.eclipse.ve.examples/bdk/bdkpalette.xmi">
-         <extend
-               runtime="bdk/juggler.jar">
-         </extend>
-         <extend
-               runtime="bdk/jelly.jar">
-         </extend>
-         <extend
-               runtime="bdk/select.jar">
-         </extend>
-         <extend
-               runtime="bdk/molecule.jar">
-         </extend>
-         <extend
-               runtime="bdk/test.jar">
-         </extend>
-      </variable>
-   </extension>
-<!-- as well as set up the bean info extension correctly so the BeanInfo classes are found by the introspector -->
-<!-- The following extension points add the wizzo widgets JavaBeans to the palette and also to the Add Container wizard -->
-<!-- End of extension points to define BDK beans -->
+
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <variable
