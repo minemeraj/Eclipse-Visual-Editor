@@ -486,6 +486,7 @@
             name="%visualclass"
             icon="icons/full/ctool16/newvisualclass_wiz.gif"
             category="org.eclipse.jdt.ui.java"
+            javatype="true"
             class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard"
             id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard">
          <description>
