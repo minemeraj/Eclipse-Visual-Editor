@@ -9,10 +9,16 @@
 
 	<target name="init">
 		<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
+		<condition property="urlzipset">
+			<and>
+				<isset property="url"/>
+				<isset property="zipname"/>
+			</and>
+		</condition>
 <echo>zipname=${zipname} url=${url}</echo>
 	</target>
 
-	<target name="testurl" if="url,zipname">
+	<target name="testurl" if="urlzipset" depends="init">
 <echo>zipname=${zipname} url=${url}</echo>		
 		<property file="${buildDirectory}/../${zipname}.properties"/>
 		<condition property="sameurl">
@@ -24,7 +30,7 @@
 		<echo>sameurl=${sameurl} downurl=${downurl}</echo>
 	</target>
 				
-	<target name="outofdate" if="zipname" unless="sameurl" depends="testurl">	
+	<target name="outofdate" if="zipname" unless="sameurl" depends="init,testurl">	
 <echo>zipname=${zipname} url=${url}</echo>
 		<delete>
 			<fileset dir="${buildDirectory}/..">
@@ -33,7 +39,7 @@
 		</delete>
 	</target>
 		
-	<target name="download" if="url,zipname" depends="outofdate">
+	<target name="download" if="urlzipset" depends="init,outofdate">
 <echo>zipname=${zipname} url=${url}</echo>
 		<get src="${url}" dest="${buildDirectory}/../${zipname}" usetimestamp="true"/>
 		<propertyfile file="${buildDirectory}/../${zipname}.properties">
@@ -41,7 +47,7 @@
 		</propertyfile>
 	</target>
 	
-	<target name="extract" if="url,zipname" depends="init,download">
+	<target name="extract" if="urlzipset" depends="init,download">
 <echo>zipname=${zipname} url=${url}</echo>
 		<exec dir="${buildDirectory}/.." executable="unzip">
 			<arg line="-o -qq ${zipname}"/>
