@@ -218,6 +218,17 @@
          </description>
       </wizard>
       <wizard
+            name="%Visual.Class.JDialog.Contrib.Name"
+            icon="icons/full/clcl16/dialog_obj.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swing"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:javax.swing.JDialog"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.JDialog">
+         <description>
+            %Visual.Class.JDialog.Contrib.Desc
+         </description>
+      </wizard>
+      
+      <wizard
             name="%Visual.Class.JPanel.Name"
             icon="icons/full/ctool16/newpanel_wiz.gif"
             category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swing"
@@ -245,6 +256,16 @@
             id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Frame">
          <description>
             %Visual.Class.Frame.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.Dialog.Contrib.Name"
+            icon="icons/full/clcl16/dialog_obj.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.awt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:java.awt.Dialog"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Dialog">
+         <description>
+            %Visual.Class.Dialog.Contrib.Desc
          </description>
       </wizard>
       <wizard
