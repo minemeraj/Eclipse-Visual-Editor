@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2004-11-05 20:08:15 $ 
+ *  $Revision: 1.28 $  $Date: 2004-11-19 23:22:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -37,7 +37,6 @@ import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
  * @since 1.0.0
  */
 public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
-	
 	protected List fReferences = new ArrayList() ;
 	
 
@@ -74,6 +73,184 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			return null;
 		
 	}
+
+	public static class CGParseTreeCreationFromAST extends ParseTreeCreationFromAST {
+
+		private CGParseTreeCreationFromAST(ParseTreeCreationFromAST.Resolver resolver) {
+			super(resolver);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST#visit(org.eclipse.jdt.core.dom.MethodInvocation)
+		 */
+		public boolean visit(MethodInvocation node) {
+			// Override to try to handle special resolution of methods to local EObject instances.
+			// Doing it here instead of in superclass because general parse tree creation doesn't have a concept of
+			// resolving method invocations in any special way.
+			Expression receiver = node.getExpression();
+			if ((receiver == null || receiver.getNodeType() == ASTNode.THIS_EXPRESSION) && node.arguments().isEmpty()) {
+				PTExpression exp = ((CGResolver) resolver).resolveMethodInvocation(node.getName());
+				if (exp != null) {
+					expression = exp;
+					return false;
+				}
+			}
+			return super.visit(node);
+		}
+	}
+
+	public static class CGResolver extends ParseTreeCreationFromAST.Resolver{
+		
+		private IBeanDeclModel bdm;
+		private List ref;
+		private CodeMethodRef expMethodRef;
+		
+		public CGResolver(CodeMethodRef expMethodRef, IBeanDeclModel bdm, List ref) {
+			this.expMethodRef = expMethodRef;
+			this.bdm = bdm;
+			this.ref = ref;
+		}
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveName(org.eclipse.jdt.core.dom.Name)
+		 */
+		public PTExpression resolveName(Name name) {
+			if (name instanceof QualifiedName) {
+				// This could be a type, or a field access.
+				// First check if first qualifier is a known bean part.
+				Name firstq = name;
+				while (firstq.isQualifiedName()) {
+					firstq = ((QualifiedName) firstq).getQualifier();
+				}
+				
+				PTExpression exp = resolveToBean((SimpleName) firstq);	// See if we can resolve it.
+				if (exp != null) {
+					// It was an access to a bean part, so the rest must be a field access to it.
+					// Now we will walk back up creating field accesses.
+					while (firstq.getParent() instanceof Name) {
+						firstq = (Name) firstq.getParent();
+						exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, ((QualifiedName) firstq).getName().getIdentifier());
+					}
+					return exp;
+				}
+				
+				// First was not a bean part, so it must be type/field access.
+				FieldResolvedType r = bdm.getResolver().resolveWithPossibleField(name);					
+				if (r != null) {
+					PTName ptname = InstantiationFactory.eINSTANCE.createPTName(r.resolvedType.getName());					
+					if (r.fieldAccessors.length == 0) {
+						// Just a type.
+						return ptname;
+					}
+					// It is a field access. Put the resolved PTName as the receiver of the field access.
+					// Now we will walk back up creating field accesses.
+					exp = ptname;
+					for (int i = 0; i < r.fieldAccessors.length; i++) {
+						exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, r.fieldAccessors[i]);
+					}
+					return exp;
+				}
+			}
+			else if (name instanceof SimpleName) {
+				// Possibly a reference to a known beanpart.
+				PTExpression exp = resolveToBean((SimpleName) name);	// See if we can resolve it.
+				if (exp != null)
+					return exp;	// It is a known BeanPart.
+				
+				// See if it is a type.
+				Resolved r = bdm.getResolver().resolveType(name);
+				if (r != null)
+					return InstantiationFactory.eINSTANCE.createPTName(r.getName());
+			}
+			return null;
+		}
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Type)
+		 */
+		public String resolveType(Type type) {
+			Resolved r = bdm.getResolver().resolveType(type);
+			return r != null ? r.getName() : null;
+		}
+		
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
+		 */
+		public String resolveType(Name name) {
+			Resolved r = bdm.getResolver().resolveType(name);
+			return r != null ? r.getName() : null;
+		}
+		
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveThis()
+		 */
+		public PTExpression resolveThis() {
+			BeanPart bp = bdm.getABean(BeanPart.THIS_NAME);
+			if (bp != null)
+				return createBeanPartExpression(ref, bp);
+			else 
+				return InstantiationFactory.eINSTANCE.createPTThisLiteral();
+		}
+		
+		/*
+		 * See if the simple name can be resolved down to a bean, either a local
+		 * variable or global. Return null if not.
+		 */
+		private PTExpression resolveToBean(SimpleName name) {
+			BeanPart bp = bdm.getABean(name.getIdentifier());
+			if (bp!=null)
+				return createBeanPartExpression(ref, bp);
+			
+			// possibly a ref. to a local variable - check bean with unique name
+			if(expMethodRef!=null){
+				String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, name.getIdentifier());
+				bp = bdm.getABean(uniqueName);
+				if (bp!=null) 
+					return createBeanPartExpression(ref, bp);
+			}
+			return null;
+		}
+		
+		/**
+		 * Create the bean part expression for this bean part.
+		 * @param ref
+		 * @param bp
+		 * @return
+		 * 
+		 * @since 1.0.2
+		 */
+		private PTInstanceReference createBeanPartExpression(final List ref, BeanPart bp) {
+			PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+			IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
+			if (ref!=null && !ref.contains(o))
+			    ref.add(o);
+			ptref.setObject(o);
+			return ptref;
+		}
+
+		/**
+		 * Called locally in codegen parser to resolve the method name. If the 
+		 * method name resolves to a bean's getter, then return a PTExpression for it,
+		 * else return null if it can't be handled.
+		 * 
+		 * @param methodName
+		 * @return an Expression to replace the invocation, or <code>null</code> if not resolvable.
+		 * 
+		 * @since 1.0.2
+		 */
+		public PTExpression resolveMethodInvocation(SimpleName methodName) {
+			BeanPart bp = bdm.getBeanReturned(methodName.getIdentifier());
+			if (bp != null)
+				return createBeanPartExpression(ref, bp);
+			else
+				return null;
+		}
+	}		
+
 	
 	/**
 	 * Convert an AST to resolved Parsed Tree
@@ -89,168 +266,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * 
 	 * @since 1.0.0
 	 */
-	public  static PTExpression getParsedTree(Expression ast, final CodeMethodRef expMethodRef, final IBeanDeclModel bdm, final List ref) {
-		class CGResolver extends ParseTreeCreationFromAST.Resolver{
-			/*
-			 *  (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveName(org.eclipse.jdt.core.dom.Name)
-			 */
-			public PTExpression resolveName(Name name) {
-				if (name instanceof QualifiedName) {
-					// This could be a type, or a field access.
-					// First check if first qualifier is a known bean part.
-					Name firstq = name;
-					while (firstq.isQualifiedName()) {
-						firstq = ((QualifiedName) firstq).getQualifier();
-					}
-					
-					PTExpression exp = resolveToBean((SimpleName) firstq);	// See if we can resolve it.
-					if (exp != null) {
-						// It was an access to a bean part, so the rest must be a field access to it.
-						// Now we will walk back up creating field accesses.
-						while (firstq.getParent() instanceof Name) {
-							firstq = (Name) firstq.getParent();
-							exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, ((QualifiedName) firstq).getName().getIdentifier());
-						}
-						return exp;
-					}
-					
-					// First was not a bean part, so it must be type/field access.
-					FieldResolvedType r = bdm.getResolver().resolveWithPossibleField(name);					
-					if (r != null) {
-						PTName ptname = InstantiationFactory.eINSTANCE.createPTName(r.resolvedType.getName());					
-						if (r.fieldAccessors.length == 0) {
-							// Just a type.
-							return ptname;
-						}
-						// It is a field access. Put the resolved PTName as the receiver of the field access.
-						// Now we will walk back up creating field accesses.
-						exp = ptname;
-						for (int i = 0; i < r.fieldAccessors.length; i++) {
-							exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(exp, r.fieldAccessors[i]);
-						}
-						return exp;
-					}
-				}
-				else if (name instanceof SimpleName) {
-					// Possibly a reference to a known beanpart.
-					PTExpression exp = resolveToBean((SimpleName) name);	// See if we can resolve it.
-					if (exp != null)
-						return exp;	// It is a known BeanPart.
-					
-					// See if it is a type.
-					Resolved r = bdm.getResolver().resolveType(name);
-					if (r != null)
-						return InstantiationFactory.eINSTANCE.createPTName(r.getName());
-				}
-				return null;
-			}
-			
-			/*
-			 *  (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Type)
-			 */
-			public String resolveType(Type type) {
-				Resolved r = bdm.getResolver().resolveType(type);
-				return r != null ? r.getName() : null;
-			}
-			
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveType(org.eclipse.jdt.core.dom.Name)
-			 */
-			public String resolveType(Name name) {
-				Resolved r = bdm.getResolver().resolveType(name);
-				return r != null ? r.getName() : null;
-			}
-			
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST.Resolver#resolveThis()
-			 */
-			public PTExpression resolveThis() {
-				BeanPart bp = bdm.getABean(BeanPart.THIS_NAME);
-				if (bp != null)
-					return createBeanPartExpression(ref, bp);
-				else 
-					return InstantiationFactory.eINSTANCE.createPTThisLiteral();
-			}
-			
-			/*
-			 * See if the simple name can be resolved down to a bean, either a local
-			 * variable or global. Return null if not.
-			 */
-			private PTExpression resolveToBean(SimpleName name) {
-				BeanPart bp = bdm.getABean(name.getIdentifier());
-				if (bp!=null)
-					return createBeanPartExpression(ref, bp);
-				
-				// possibly a ref. to a local variable - check bean with unique name
-				if(expMethodRef!=null){
-					String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, name.getIdentifier());
-					bp = bdm.getABean(uniqueName);
-					if (bp!=null) 
-						return createBeanPartExpression(ref, bp);
-				}
-				return null;
-			}
-			
-			/**
-			 * Create the bean part expression for this bean part.
-			 * @param ref
-			 * @param bp
-			 * @return
-			 * 
-			 * @since 1.0.2
-			 */
-			private PTInstanceReference createBeanPartExpression(final List ref, BeanPart bp) {
-				PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-				IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
-				if (ref!=null && !ref.contains(o))
-				    ref.add(o);
-				ptref.setObject(o);
-				return ptref;
-			}
-
-			/**
-			 * Called locally in codegen parser to resolve the method name. If the 
-			 * method name resolves to a bean's getter, then return a PTExpression for it,
-			 * else return null if it can't be handled.
-			 * 
-			 * @param methodName
-			 * @return an Expression to replace the invocation, or <code>null</code> if not resolvable.
-			 * 
-			 * @since 1.0.2
-			 */
-			public PTExpression resolveMethodInvocation(SimpleName methodName) {
-				BeanPart bp = bdm.getBeanReturned(methodName.getIdentifier());
-				if (bp != null)
-					return createBeanPartExpression(ref, bp);
-				else
-					return null;
-			}
-		}		
-		CGResolver r = new CGResolver() ;
-		ParseTreeCreationFromAST parser = new ParseTreeCreationFromAST(r) {
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST#visit(org.eclipse.jdt.core.dom.MethodInvocation)
-			 */
-			public boolean visit(MethodInvocation node) {
-				// Override to try to handle special resolution of methods to local EObject instances.
-				// Doing it here instead of in superclass because general parse tree creation doesn't have a concept of
-				// resolving method invocations in any special way.
-				Expression receiver = node.getExpression();
-				if ((receiver == null || receiver.getNodeType() == ASTNode.THIS_EXPRESSION) && node.arguments().isEmpty()) {
-					PTExpression exp = ((CGResolver) resolver).resolveMethodInvocation(node.getName());
-					if (exp != null) {
-						expression = exp;
-						return false;
-					}
-				}
-				return super.visit(node);
-			} 
-		};
+	public  static PTExpression getParsedTree(Expression ast, CodeMethodRef expMethodRef, IBeanDeclModel bdm, List ref) {
+		ParseTreeCreationFromAST parser = new CGParseTreeCreationFromAST(new CGResolver(expMethodRef, bdm, ref));
 		return parser.createExpression(ast);
 	}
 	
