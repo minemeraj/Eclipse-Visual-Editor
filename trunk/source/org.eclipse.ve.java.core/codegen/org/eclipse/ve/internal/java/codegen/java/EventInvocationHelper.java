@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-20 15:18:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,17 +22,13 @@ import java.util.*;
 
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
-
-import org.eclipse.jem.java.Method;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaParameter;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule;
@@ -198,13 +194,11 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 			if (exps.get(0) instanceof ClassInstanceCreation) {
 				ClassInstanceCreation e = (ClassInstanceCreation) exps.get(0);
 				String type = CodeGenUtil.resolve(e.getName(),fbeanPart.getModel()); 
-				StringBuffer b = new StringBuffer(type) ;
-				if (type.indexOf("Adapter") >= 0) {   //$NON-NLS-1$
-				    b.replace(type.indexOf("Adapter"), type.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
-				}
-				if (!p.getJavaType().getQualifiedName().equals(type) &&
-				    !p.getJavaType().getQualifiedName().equals(b.toString()))
-					result = false;
+				JavaHelpers jclazz = JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getEObject());
+				if (jclazz != null && p.getJavaType().isAssignableFrom(jclazz))
+				  result = true ;
+				else
+				  result = false ;
 			}
 		}
 		return result;
