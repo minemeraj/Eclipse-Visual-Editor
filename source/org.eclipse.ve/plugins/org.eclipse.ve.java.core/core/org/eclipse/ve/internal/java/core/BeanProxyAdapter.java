@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.32 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.33 $  $Date: 2005-02-21 14:42:25 $ 
  */
 
 import java.util.*;
@@ -33,7 +33,9 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.*;
 
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.IModelChangeController;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
@@ -1058,6 +1060,10 @@ public void invalidateBeanProxy() {
  * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#validateBeanProxy()
  */
 public void validateBeanProxy() {
+}
+
+protected IModelChangeController getModelChangeController(){
+    return (IModelChangeController)getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
 }
 
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.7 $  $Date: 2005-02-21 14:41:07 $ 
  */
 
 import java.util.*;
@@ -329,6 +329,5 @@ public class EditDomain extends DefaultEditDomain {
 			((DirectSelectionInput)getEditorPart()).modelSelected(model);
 		}
 	}
-	
 
 }

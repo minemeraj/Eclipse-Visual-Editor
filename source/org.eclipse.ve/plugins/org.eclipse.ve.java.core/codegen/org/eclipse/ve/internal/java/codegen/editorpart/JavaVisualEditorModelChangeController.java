@@ -10,9 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorModelChangeController.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-02-21 14:41:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.text.IRewriteTarget;
@@ -37,7 +45,10 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 	// won't collide with changes from the UI thread.
 	private int compoundChangeCount = 0;
 	private int holdState = READY_STATE;
-	private String holdMsg = null;	
+	private String holdMsg = null;
+    private List runnables;		// Runnables to be queued to run when all transactions are complete
+    private Map uniqueRunnables;	// Runnables to be run only once per key when all transactions are complete
+    private List phases = new Vector(); 
 
 	public JavaVisualEditorModelChangeController(JavaVisualEditorPart part, IDiagramModelBuilder modelBuilder) {
 		this.modelBuilder = modelBuilder;
@@ -47,7 +58,7 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#inTransaction()
 	 */
-	public synchronized boolean inTransaction() {
+	public boolean inTransaction() {
 		return compoundChangeCount > 0;
 	}
 	
@@ -83,7 +94,6 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 	 * @see org.eclipse.ve.internal.cde.core.IModelChangeController#run(Runnable, boolean)
 	 */	
 	public boolean run(Runnable runnable, boolean updatePS) {
-		Assert.isTrue(Display.getCurrent() != null);
 		
 		if (getHoldState() != IModelChangeController.READY_STATE)
 			return false;	// Not in position to execute.
@@ -120,6 +130,7 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 				// needs to be under compound change too.
 				IRewriteTarget rewriteTarget = (IRewriteTarget) this.part.getAdapter(IRewriteTarget.class);
 				rewriteTarget.endCompoundChange();
+				executeAsyncRunnables();
 			}
 		}
 	}
@@ -154,4 +165,103 @@ class JavaVisualEditorModelChangeController implements IModelChangeController {
 		else
 			holdMsg = null;
 	}
+	
+	private List getRunnables(){
+	    if(runnables == null){
+	        runnables = new ArrayList();
+	    }
+	    return runnables;
+	}
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#asyncExec(java.lang.Runnable)
+     */
+    public void asyncExec(Runnable aRunnable) {
+        
+        if (inTransaction()){
+            getRunnables().add(aRunnable);
+        } else {
+            Display.getDefault().asyncExec(aRunnable);
+        }
+        
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#beginTransaction()
+     */
+    public void beginTransaction(Object phase) {
+        compoundChangeCount++;
+        phases.add(phase);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#endTransaction()
+     */
+    public synchronized void endTransaction(Object phase) {
+        if(phases.indexOf(phase) != -1){
+            compoundChangeCount--;
+            if(compoundChangeCount <= 0){
+                executeAsyncRunnables();
+            }
+            phases.remove(phase);
+        }
+    }
+    
+    private void executeAsyncRunnables(){
+        Iterator iter = getRunnables().iterator();
+        while(iter.hasNext()){
+            ((Runnable)iter.next()).run();
+        }        
+		// The unique runnables are not executed from the map
+        // they are run from the List because things must be done in request order so the
+        // map is just a way of ensuring uniqueness
+        runnables = new Vector();
+        uniqueRunnables = new HashMap();
+    }
+    
+    private Map getUniqueRunnables(){
+        if(uniqueRunnables == null){
+            uniqueRunnables = new HashMap(50);
+        }
+        return uniqueRunnables;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#asyncExec(java.lang.Runnable, java.lang.Object)
+     */
+    public void asyncExec(Runnable aRunnable, Object once) {
+      
+        if (inTransaction()){
+            if (getUniqueRunnables().get(once) == null){
+                getUniqueRunnables().put(once,aRunnable);
+                getRunnables().add(aRunnable);
+            }
+        } else {
+            Display.getDefault().asyncExec(aRunnable);
+        }        
+       
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#asyncExec(java.lang.Runnable, java.lang.Object)
+     */
+    public void asyncExec(Runnable aRunnable, Object once, Object excludingPhase) {
+        
+        if(phases.indexOf(excludingPhase) == -1){
+            asyncExec(aRunnable,once);
+        }       
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.internal.cde.core.IModelChangeController#asyncExec(java.lang.Runnable, java.lang.Object, java.lang.Object[])
+     */
+    public void asyncExec(Runnable aRunnable, Object once, Object[] excludingPhases) {
+
+        for (int i = 0; i < excludingPhases.length; i++) {
+            if(phases.indexOf(excludingPhases[i]) != -1){
+                return;
+            }
+        }
+        asyncExec(aRunnable,once);        
+    }    
 }

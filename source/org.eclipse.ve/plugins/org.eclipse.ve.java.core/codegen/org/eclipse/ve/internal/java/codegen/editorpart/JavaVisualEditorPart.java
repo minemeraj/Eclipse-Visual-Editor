@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.84 $  $Date: 2005-02-17 23:05:47 $ 
+ *  $Revision: 1.85 $  $Date: 2005-02-21 14:42:06 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -829,6 +829,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			try {
+			    IModelChangeController modelChangeController = (IModelChangeController)editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+			    modelChangeController.beginTransaction(IModelChangeController.INIT_VIEWERS);			    
+			    
 				TimerTests.basicTest.startStep("Initialize Viewers"); //$NON-NLS-1$
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(118);
@@ -856,6 +859,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				throw e;
 			}
 			finally {
+			    modelChangeController.endTransaction(IModelChangeController.INIT_VIEWERS);			    
 				bumpUIPriority(false,null);
 			}
 		}
@@ -1542,7 +1546,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		protected IStatus run(IProgressMonitor monitor) {
 			int curPriority = Thread.currentThread().getPriority();
+		    IModelChangeController changeController = (IModelChangeController) editDomain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);			
 			try {				
+			    changeController.beginTransaction(IModelChangeController.SETUP_PHASE);			    			   
+			    
 				Thread.currentThread().setPriority(curPriority+BRING_UP_PRIORITY_BUMP);
 				if (DO_TIMER_TESTS)
 					TimerTests.basicTest.testState(true);
@@ -1688,6 +1695,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 			finally {
 				Thread.currentThread().setPriority(curPriority);
+			    changeController.endTransaction(IModelChangeController.SETUP_PHASE);				
 			}
 			
 			if (rebuildPalette && !monitor.isCanceled()) {

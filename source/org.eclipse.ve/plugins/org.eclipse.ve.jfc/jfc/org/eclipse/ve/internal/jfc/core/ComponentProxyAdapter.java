@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.15 $  $Date: 2005-02-21 14:43:13 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -861,19 +861,23 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	 */
 	public void invalidateBeanProxy() {
 		if (getVisualComponentBeanProxy() != null) {
-			// Invalidate the component bean
-			IBeanProxy componentBean = getVisualComponentBeanProxy();
-			BeanAwtUtilities.invoke_invalidate(componentBean);
-			// Go up the chain and invalidate all of the parents that have image listeners.
-			IComponentProxyHost parentBean = this;
-			while (parentBean != null) {
-				if (parentBean.hasImageListeners())
-					parentBean.invalidateImage();
-				parentBean = parentBean.getParentComponentProxyHost();
-			}
-			
-			// Now let the parent know
-			childInvalidated(this);
+		    getModelChangeController().asyncExec(new Runnable(){
+		        public void run(){				    
+					// Invalidate the component bean
+					IBeanProxy componentBean = getVisualComponentBeanProxy();
+					BeanAwtUtilities.invoke_invalidate(componentBean);
+					// Go up the chain and invalidate all of the parents that have image listeners.
+					IComponentProxyHost parentBean = ComponentProxyAdapter.this;
+					while (parentBean != null) {
+						if (parentBean.hasImageListeners())
+							parentBean.invalidateImage();
+						parentBean = parentBean.getParentComponentProxyHost();
+					}
+					
+					// Now let the parent know
+					childInvalidated(ComponentProxyAdapter.this);		            
+		        }
+		    },this,new Integer[] {IModelChangeController.SETUP_PHASE,IModelChangeController.INIT_VIEWERS});
 		}
 	}
 	
@@ -886,7 +890,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			// that all of the refresh requests are queued up and only the first one
 			// will actually run. The rest will see a valid refresh is in progress and
 			// not do anything.
-			Display.getDefault().asyncExec(new Runnable() {
+		    IModelChangeController modelChangeController = (IModelChangeController) getBeanProxyDomain().getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+		    
+			modelChangeController.asyncExec(new Runnable() {
 				public void run() {
 					if (isBeanProxyInstantiated()) {
 						// Still live at when invoked later.
