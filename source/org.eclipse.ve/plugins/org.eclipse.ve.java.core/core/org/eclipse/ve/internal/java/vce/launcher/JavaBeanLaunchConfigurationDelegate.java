@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-12 15:58:26 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-18 13:56:08 $ 
  */
 
 
@@ -38,6 +38,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	
 	static String LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JavaBeansLauncher"; //$NON-NLS-1$
+	static String JFC_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JFCLauncher"; //$NON-NLS-1$
 	static String SWT_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.SWTLauncher"; //$NON-NLS-1$
 	static String PACK = " PACK"; //$NON-NLS-1$
 	static String LOCALE = "LOCALE"; //$NON-NLS-1$
@@ -92,12 +93,8 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 		
 		VMRunnerConfiguration runConfig;
 		// Create VM config
-		// TODO: remove swt
-		if (configuration.getAttribute("isSWT", false)) {
-			runConfig = new VMRunnerConfiguration(SWT_LAUNCHER_TYPE_NAME, newClassPath);
-		} else {
-			runConfig = new VMRunnerConfiguration(LAUNCHER_TYPE_NAME, newClassPath);
-		}
+		runConfig = new VMRunnerConfiguration(LAUNCHER_TYPE_NAME, newClassPath);
+
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
 		runConfig.setVMArguments(execArgs.getVMArgumentsArray());
 		runConfig.setWorkingDirectory(workingDirName);
@@ -129,6 +126,8 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// First get any of the user requested ones.
 	StringBuffer args = new StringBuffer(super.getVMArguments(configuration));
 	
+	String launchersList = JFC_LAUNCHER_TYPE_NAME;	
+	
 	// Now add in ours.
 	
 	// TODO: remove SWT hack
@@ -142,9 +141,12 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 					swtLib = swtLib.substring(1);
 				}
 				args.append(" -Djava.library.path=\"" + swtLib + "\"");
+				launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME;
 			}
 		}
 	}
+	
+	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$
 	
 	// We always launch the program javaBeansLauncher on the target VM and we give it details about which JavaBean to test,
 	// which look and feel to use, etc... in arguments, e.g. to test the java.awt.Button the args would be
