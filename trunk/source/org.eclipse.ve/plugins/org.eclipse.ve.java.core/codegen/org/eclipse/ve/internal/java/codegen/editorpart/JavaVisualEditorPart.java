@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.71 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.72 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2378,5 +2378,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		
 		
+	}
+	public void doSave(IProgressMonitor progressMonitor) {
+		progressMonitor.beginTask("Saving "+getEditorInput().getName(),100);
+		super.doSave(new SubProgressMonitor(progressMonitor, 50));
+		modelBuilder.doSave(new SubProgressMonitor(progressMonitor,50));
+		progressMonitor.done();		
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: JCMFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import org.eclipse.emf.ecore.EFactory;
@@ -104,6 +104,15 @@ public interface JCMFactory extends EFactory{
 	 * @generated
 	 */
 	JCMMethod createJCMMethod();
+
+	/**
+	 * Returns a new object of class '<em>Java Cache Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Java Cache Data</em>'.
+	 * @generated
+	 */
+	JavaCacheData createJavaCacheData();
 
 	/**
 	 * Returns the package supported by this factory.

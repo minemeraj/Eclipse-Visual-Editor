@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-27 15:34:11 $ 
+ *  $Revision: 1.10 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 
@@ -201,9 +201,15 @@ public interface IDiagramModelBuilder  {
      * @since 1.0.0
      */
     public void removeIBuilderListener(IBuilderListener l);
-    
 
-    
+    /**
+     * Denotes that a save operation is being executed.  An implementor may descide to 
+     * store a processed cache, to improve a consequence load.
+     * @param monitor
+     * 
+     * @since 1.0.0
+     */
+    public void doSave(IProgressMonitor monitor);
     
 }
 

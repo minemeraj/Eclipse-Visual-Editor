@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.46 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.47 $  $Date: 2005-01-05 18:41:43 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -708,7 +708,7 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        }
        else {  // a this part
           if (obj != null) {
-             ((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.getString("CodegenMessages.ThisPart.uriID"), new Object[] {fVEModel.getURI()})) ; //$NON-NLS-1$
+             ((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.getString("CodegenMessages.ThisPart.uriID"), new Object[] {fVEModel.getFile().getName()})) ; //$NON-NLS-1$
              // If no annotation, the PS will not allow you to edit the name in composition
              annotatedName = null ;
           }
@@ -913,7 +913,9 @@ public void decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGen
 	
 
 	
-    reConnect(sourceFile) ;    	
+    reConnect(sourceFile) ; 
+    if (fVEModel.isFromCache())
+    	return;
 		
 			
     VETimerTests.basicTest.startStep("Parsing");			
@@ -1090,7 +1092,7 @@ public synchronized void reConnect(IFile file) {
        fSrcSync.connect() ;
     
     try {
-		fVEModel.createEmptyComposition();
+		fVEModel.createComposition();
 	} catch (CodeGenException e) {		
 		JavaVEPlugin.log(e);
 	}
@@ -1327,7 +1329,12 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 	 * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#getThisTypeName()
 	 */
 	public String getThisTypeName() {
-		IType type = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit());
-		return type.getFullyQualifiedName();
+	// Gili	IType type = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit());
+	// Gili	return type.getFullyQualifiedName();
+		String className=fVEModel.getFile().getProjectRelativePath().toString();
+		return className.substring(0,className.indexOf('.')).replace('/','.');
+	}
+	public void doSave(IProgressMonitor monitor) {
+		VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
 	}
 }

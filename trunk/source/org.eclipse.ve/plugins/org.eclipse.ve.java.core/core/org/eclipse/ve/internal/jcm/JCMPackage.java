@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-05 18:41:43 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -928,6 +928,71 @@ public interface JCMPackage extends EPackage{
 	int KEYED_INSTANCE_LOCATION_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.impl.JavaCacheDataImpl <em>Java Cache Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.jcm.impl.JavaCacheDataImpl
+	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getJavaCacheData()
+	 * @generated
+	 */
+	int JAVA_CACHE_DATA = 14;
+
+	/**
+	 * The feature id for the '<em><b>Names To Beans</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_CACHE_DATA__NAMES_TO_BEANS = 0;
+
+	/**
+	 * The number of structural features of the the '<em>Java Cache Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_CACHE_DATA_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.impl.NamesToBeansImpl <em>Names To Beans</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.jcm.impl.NamesToBeansImpl
+	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getNamesToBeans()
+	 * @generated
+	 */
+	int NAMES_TO_BEANS = 15;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMES_TO_BEANS__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMES_TO_BEANS__VALUE = 1;
+
+	/**
+	 * The number of structural features of the the '<em>Names To Beans</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMES_TO_BEANS_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.ve.internal.jcm.InstanceLocation <em>Instance Location</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -935,7 +1000,7 @@ public interface JCMPackage extends EPackage{
 	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getInstanceLocation()
 	 * @generated
 	 */
-	int INSTANCE_LOCATION = 14;
+	int INSTANCE_LOCATION = 16;
 
 
 	/**
@@ -946,7 +1011,7 @@ public interface JCMPackage extends EPackage{
 	 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getLinkType()
 	 * @generated
 	 */
-	int LINK_TYPE = 15;
+	int LINK_TYPE = 17;
 
 
 	/**
@@ -1291,6 +1356,60 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	EAttribute getKeyedInstanceLocation_Value();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.JavaCacheData <em>Java Cache Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Java Cache Data</em>'.
+	 * @see org.eclipse.ve.internal.jcm.JavaCacheData
+	 * @generated
+	 */
+	EClass getJavaCacheData();
+
+	/**
+	 * Returns the meta object for the map '{@link org.eclipse.ve.internal.jcm.JavaCacheData#getNamesToBeans <em>Names To Beans</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Names To Beans</em>'.
+	 * @see org.eclipse.ve.internal.jcm.JavaCacheData#getNamesToBeans()
+	 * @see #getJavaCacheData()
+	 * @generated
+	 */
+	EReference getJavaCacheData_NamesToBeans();
+
+	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Names To Beans</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Names To Beans</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyType="java.lang.String" valueType="org.eclipse.emf.ecore.EObject" 
+	 * @generated
+	 */
+	EClass getNamesToBeans();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getNamesToBeans()
+	 * @generated
+	 */
+	EAttribute getNamesToBeans_Key();
+
+	/**
+	 * Returns the meta object for the reference '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getNamesToBeans()
+	 * @generated
+	 */
+	EReference getNamesToBeans_Value();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.ve.internal.jcm.InstanceLocation <em>Instance Location</em>}'.
