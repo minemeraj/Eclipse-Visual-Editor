@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.eclipse.ve.example.customwidget"
+   name="Customwidget Plug-in"
+   version="1.0.0"
+   provider-name=""
+   class="org.eclipse.ve.example.customwidget.CustomwidgetPlugin">
+
+   <runtime>
+      <library name="customwidget.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.swt" export="*"/>
+      <import plugin="org.eclipse.ve.java.core"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ve.cde"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ve.propertysheet"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.jem.proxy"/>
+      <import plugin="org.eclipse.jem.beaninfo"/>
+      <import plugin="org.eclipse.jem"/>
+      <import plugin="org.eclipse.jem.workbench"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="com.ibm.wtp.common.util"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ve.swt"/>
+   </requires>
+   
+ <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            name="Custom Prompter"
+            class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"
+            id="org.eclipse.ve.tutorial1.CustomPrompter">
+      </classpathContainerPage>
+   </extension>  
+   
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"
+            id="org.eclipse.ve.tutorial1.CustomPrompter">
+      </classpathContainerInitializer>
+   </extension>   
+   
+  <extension
+         point="org.eclipse.ve.java.core.registrations">
+      <registration
+            container="org.eclipse.ve.tutorial1.CustomPrompter"
+            description="Custom Prompter">
+         <library runtime="customwidgets.jar"/>
+      </registration>
+   </extension> 
+   
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            container="org.eclipse.ve.tutorial1.CustomPrompter"
+            categories="customprompter.xmi"/>
+   </extension>   
+
+   <extension
+         point="org.eclipse.jem.beaninfo.registrations">
+      <registration
+            container="org.eclipse.ve.tutorial1.CustomPrompter">
+         <override
+               package="org.eclipse.ve.example.customwidget.prompter"
+               path="overrides/org/eclipse/ve/example/customwidget/prompter">
+         </override>
+      </registration>     
+    </extension>
+
+</plugin>
