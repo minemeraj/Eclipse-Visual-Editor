@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:03 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-25 16:04:50 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,9 +34,9 @@ public static String getText(IJavaInstance element){
 		// Get the description of the Font.  This comes from getting the FontData
 		// and its name, style and size and formatting these.  To save lots of 
 		// target VM traffic a single static helper method exists on the utility class
-		// com.ibm.etools.jbcf.swt.targetvm.Environment.getFontLabel(Font aFont)
+		// org.eclipse.ve.internal.swt.targetvm.Environment.getFontLabel(Font aFont)
 		IBeanProxy fontBeanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
-		IBeanTypeProxy environmentBeanTypeProxy = fontBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment");
+		IBeanTypeProxy environmentBeanTypeProxy = fontBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment");
 		IMethodProxy getFontLabelMethodProxy = environmentBeanTypeProxy.getMethodProxy("getFontLabel", new IBeanTypeProxy[] {fontBeanProxy.getTypeProxy()});
 		IStringBeanProxy fontLabelBeanProxy = (IStringBeanProxy) getFontLabelMethodProxy.invoke(environmentBeanTypeProxy,fontBeanProxy);
 		return fontLabelBeanProxy.stringValue();			

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-27 21:35:23 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-25 16:04:50 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -261,7 +261,7 @@ public class DisplayManager {
 		
 		private IBeanTypeProxy getDisplayExecType() {
 			if (displayExecType == null)
-				displayExecType = displayType.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.DisplayExec");
+				displayExecType = displayType.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.DisplayExec");
 			return displayExecType;
 		}
 

@@ -69,7 +69,7 @@ public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isReg
 	rectangleXProxy = rectangleTypeProxy.getFieldProxy("x");//$NON-NLS-1$
 	rectangleYProxy = rectangleTypeProxy.getFieldProxy("y");//$NON-NLS-1$
 	
-	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment"); //$NON-NLS-1$
+	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$
 }
 /**
  * getPointXFieldProxy method comment.
