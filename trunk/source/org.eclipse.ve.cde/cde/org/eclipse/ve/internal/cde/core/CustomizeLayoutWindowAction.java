@@ -10,8 +10,8 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: AlignmentWindowAction.java,v $
- *  $Revision: 1.3 $  $Date: 2003-11-21 17:16:51 $ 
+ *  $RCSfile: CustomizeLayoutWindowAction.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
 import java.util.ArrayList;
@@ -29,61 +29,100 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.*;
 
 /**
- * This action on the toolbar controls whether the alignment dialog is up or not.
+ * This action on the toolbar controls whether the customize layout dialog is up or not.
  */
-public class AlignmentWindowAction extends Action {
+public class CustomizeLayoutWindowAction extends Action {
 
-	public static String ACTION_ID = "AlignmentWindowAction"; //$NON-NLS-1$
+	public static String ACTION_ID = "CustomizeLayoutWindowAction"; //$NON-NLS-1$
 	protected static Point fDialogLoc;
-	protected AlignmentWindow fDialog;
+	protected CustomizeLayoutWindow fDialog;
 	protected IWorkbenchWindow workbenchWindow;
 	protected IEditorPart editorPart;
 	protected IEditorActionBarContributor contributor;
-	protected final static String WINDOW_TITLE = CDEMessages.getString("AlignmentWindow.title"); //$NON-NLS-1$
+	protected final static String WINDOW_TITLE = CDEMessages.getString("CustomizeLayoutWindow.title"); //$NON-NLS-1$
 	
-	protected static final String ALIGNMENT_TAB_KEY = "alignmentTab_Key"; //$NON-NLS-1$
+	protected static final String CUSTOMIZE_LAYOUT_PAGE_KEY = "customizeLayoutPage_Key"; //$NON-NLS-1$
+	
 	/**
-	 * Add an AlignmentTab page class to the edit domain. Used to determine which alignment pages to put up.
+	 * Add an Layout customization page class to the viewer. The page will be brought to front on the Layout tab whenever it's 
+	 * handleSelectionChanged() method returns true on a given selection.
 	 * 
-	 * @param dom	EditDomain to add to.
-	 * @param tabClass	tabClass to add (if already there, not added twice). Must be a subclass of AlignmentTabPage.
+	 * @param layoutPage Layout tab's pageClass to add (if already there, not added twice). Must be a subclass of CustomizeLayoutPage.
+	 * @param viewer EditPartViewer to add to.
 	 */
-	public static void addAlignmentTab(EditPartViewer viewer, Class tabClass) {
+	public static void addLayoutCustomizationPage(EditPartViewer viewer, Class layoutPage) {
 		Object odom = viewer.getEditDomain();
 		if (odom instanceof EditDomain) {
 			EditDomain dom = (EditDomain) odom;
-			if (!AlignmentTabPage.class.isAssignableFrom(tabClass))
-				throw new IllegalArgumentException(tabClass.toString());		
-			AlignmentTabController tabs = (AlignmentTabController) dom.getViewerData(viewer, ALIGNMENT_TAB_KEY);
-			if (tabs == null) {
-				tabs = new AlignmentTabController();
-				dom.setViewerData(viewer, ALIGNMENT_TAB_KEY, tabs);
+			if (!CustomizeLayoutPage.class.isAssignableFrom(layoutPage))
+				throw new IllegalArgumentException(layoutPage.toString());		
+			CustomizeLayoutPageController pages = (CustomizeLayoutPageController) dom.getViewerData(viewer, CUSTOMIZE_LAYOUT_PAGE_KEY);
+			if (pages == null) {
+				pages = new CustomizeLayoutPageController();
+				dom.setViewerData(viewer, CUSTOMIZE_LAYOUT_PAGE_KEY, pages);
 			}
-			tabs.add(tabClass);
+			pages.addLayoutPage(layoutPage);
 		}
 	}
 	
-	protected static class AlignmentTabController {
-		private AlignmentWindowAction alignWindowAction;
-		private List tabClasses = new ArrayList(1);
+	/**
+	 * Add an Component customization page class to the viewer. The page will be brought to front on the Component tab whenever it's 
+	 * handleSelectionChanged() method returns true on a given selection.
+	 * 
+	 * @param componentPage Component tab's pageClass to add (if already there, not added twice). Must be a subclass of CustomizeLayoutPage.
+	 * @param viewer EditPartViewer to add to.
+	 */
+	public static void addComponentCustomizationPage(EditPartViewer viewer, Class componentPage) {
+		Object odom = viewer.getEditDomain();
+		if (odom instanceof EditDomain) {
+			EditDomain dom = (EditDomain) odom;
+			if (!CustomizeLayoutPage.class.isAssignableFrom(componentPage))
+				throw new IllegalArgumentException(componentPage.toString());		
+			CustomizeLayoutPageController pages = (CustomizeLayoutPageController) dom.getViewerData(viewer, CUSTOMIZE_LAYOUT_PAGE_KEY);
+			if (pages == null) {
+				pages = new CustomizeLayoutPageController();
+				dom.setViewerData(viewer, CUSTOMIZE_LAYOUT_PAGE_KEY, pages);
+			}
+			pages.addComponentPage(componentPage);
+		}
+	}
+	
+	protected static class CustomizeLayoutPageController {
+		private CustomizeLayoutWindowAction customizeLayoutWindowAction;
+		private List layoutClasses = new ArrayList(1);
+		private List componentClasses = new ArrayList(1);
 
-		public void setAlignWindowAction(AlignmentWindowAction alignWindowAction) {
-			this.alignWindowAction = alignWindowAction;
+		public void setCustomizeLayoutWindowAction(CustomizeLayoutWindowAction alignWindowAction) {
+			this.customizeLayoutWindowAction = alignWindowAction;
 		}
 
-		public AlignmentWindowAction getAlignWindowAction() {
-			return alignWindowAction;
+		public CustomizeLayoutWindowAction getCustomizeLayoutWindowAction() {
+			return customizeLayoutWindowAction;
 		}
 
-		public List getTabClasses() {
-			return tabClasses;
+		public List getLayoutClasses() {
+			return layoutClasses;
+		}
+
+		public List getComponentClasses() {
+			return componentClasses;
 		}
 		
-		public void add(Class tabClass) {
-			if (!tabClasses.contains(tabClass)) {
-				tabClasses.add(tabClass);
-				if (getAlignWindowAction() != null)
-					getAlignWindowAction().updateTabs(tabClass);
+		public void addLayoutPage(Class layoutClass) {
+			if (layoutClass != null && !layoutClasses.contains(layoutClass)) {
+				layoutClasses.add(layoutClass);
+				if (getCustomizeLayoutWindowAction() != null) {
+					getCustomizeLayoutWindowAction().updateLayoutTab(layoutClass);
+				}
+			}
+		}
+		
+		public void addComponentPage(Class componentClass) {
+			if (componentClass != null && !componentClasses.contains(componentClass)) {
+				componentClasses.add(componentClass);
+				if (getCustomizeLayoutWindowAction() != null) {
+					getCustomizeLayoutWindowAction().updateComponentTab(componentClass);
+				}
 			}
 		}
 	}	
@@ -130,8 +169,8 @@ public class AlignmentWindowAction extends Action {
 		}
 	};
 	
-	public AlignmentWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
-		super(CDEMessages.getString("AlignmentWindowAction.label"), IAction.AS_CHECK_BOX); //$NON-NLS-1$
+	public CustomizeLayoutWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
+		super(CDEMessages.getString("CustomizeLayoutWindowAction.label"), IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		setId(ACTION_ID);
 		setImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$
@@ -154,21 +193,27 @@ public class AlignmentWindowAction extends Action {
 	}
 	
 	private void setTooltip() {
-		setToolTipText(isChecked() ? CDEMessages.getString("AlignmentWindowAction.tooltip.hide") : CDEMessages.getString("AlignmentWindowAction.tooltip.show")); //$NON-NLS-1$ //$NON-NLS-2$
+		setToolTipText(isChecked() ? CDEMessages.getString("CustomizeLayoutWindowAction.tooltip.hide") : CDEMessages.getString("CustomizeLayoutWindowAction.tooltip.show")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
-
-	/*
-	 * Update the tabs in the dialog with a new tab.
-	 */
-	protected void updateTabs(final Class tabClass) {
+		
+	protected void updateLayoutTab(final Class layoutPageClass) {
 		// Need to farm off to ui thread because this will cause a UI update.
 		workbenchWindow.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (fDialog != null)
-					fDialog.addTabPage(tabClass);
+					fDialog.addLayoutCustomizationPage(layoutPageClass);
 			}
 		});
+	}
+	
+	protected void updateComponentTab(final Class componentPageClass) {
+		// Need to farm off to ui thread because this will cause a UI update.
+		workbenchWindow.getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (fDialog != null)
+					fDialog.addComponentCustomizationPage(componentPageClass);
+			}
+		});		
 	}
 	
 	/*
@@ -210,7 +255,7 @@ public class AlignmentWindowAction extends Action {
 	};
 
 	/*
-	 * This is <package-protected> because only AlignmentWindow should access it.
+	 * This is <package-protected> because only CustomizeLayoutWindow should access it.
 	 */
 	ISelectionProvider getSelectionProvider() {
 		return selectionProvider;
@@ -241,12 +286,12 @@ public class AlignmentWindowAction extends Action {
 			}
 		} else {
 			if (fDialog == null) {
-				fDialog = new AlignmentWindow(workbenchWindow.getShell(), this);
+				fDialog = new CustomizeLayoutWindow(workbenchWindow.getShell(), this);
 				if (fDialogLoc == null) {
 					// Get the persisted position of the dialog
 					Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
-					int x = preferences.getInt(CDEPlugin.ALIGNMENTWINDOW_X);
-					int y = preferences.getInt(CDEPlugin.ALIGNMENTWINDOW_Y);
+					int x = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
+					int y = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
 					fDialog.setLocation(new Point(x, y));
 					fDialogLoc = fDialog.getLocation();
 				} else {
@@ -278,8 +323,8 @@ public class AlignmentWindowAction extends Action {
 	protected void persistPreferences() {
 		if (fDialogLoc != null) {
 			Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
-			preferences.setValue(CDEPlugin.ALIGNMENTWINDOW_X, fDialogLoc.x);
-			preferences.setValue(CDEPlugin.ALIGNMENTWINDOW_Y, fDialogLoc.y);
+			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X, fDialogLoc.x);
+			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y, fDialogLoc.y);
 		}
 	}
 	

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: GridDataTabPage.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-07 12:46:42 $ 
+ *  $RCSfile: GridLayoutComponentPage.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:31 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -51,11 +51,11 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
- * This Tab page resides on the Alignment window notebook along with the X/Y tab page (and whatever else gets added later)
- * It shows and allows selection of the "alignment" and "grab" properties of an SWT GridData object which is
+ * This layout page resides on the Customize Layout window's Components tab
+ * It shows and allows selection of the "alignment", "span" and "grab" properties of an SWT GridData object which is
  * the constraint on a component that is a child of a container that uses a GridLayout as it's layout manager. 
  */
-public class GridDataTabPage extends AlignmentTabPage {
+public class GridLayoutComponentPage extends CustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
 	
 	private final static String resAlignmentPrefix = "AlignmentAction."; //$NON-NLS-1$
@@ -561,7 +561,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(2, false));
 		
-		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Alignment"), 2, 0, 0); //$NON-NLS-1$
+		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Alignment"), 2, 0, 0); //$NON-NLS-1$
 		GridData gd1 = new GridData(GridData.FILL_VERTICAL);
 		gd1.verticalSpan = 2;
 		alignmentGroup.setLayoutData(gd1);
@@ -578,16 +578,16 @@ public class GridDataTabPage extends AlignmentTabPage {
 			ac.fill(alignmentGrid);
 		}
 		
-		Group fillGroup = createGroup(alignmentGroup, SWTMessages.getString("GridDataTabPage.Fill"), 1, 0, 0); //$NON-NLS-1$
+		Group fillGroup = createGroup(alignmentGroup, SWTMessages.getString("GridLayoutComponentPage.Fill"), 1, 0, 0); //$NON-NLS-1$
 		for (int i = 0; i < fillActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
 
-		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Span"), 2, 0, 0); //$NON-NLS-1$
+		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Span"), 2, 0, 0); //$NON-NLS-1$
 		createSpanControl(spanGroup);
 		
-		Group grabGroup = createGroup(mainComposite, SWTMessages.getString("GridDataTabPage.Grab"), 2, 0, 0); //$NON-NLS-1$
+		Group grabGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Grab"), 2, 0, 0); //$NON-NLS-1$
 		for (int i = 0; i < grabActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(grabActions[i]);
 			ac.fill(grabGroup);
@@ -608,7 +608,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 	
 	protected void createSpanControl(Group spanGroup) {
 		Label horizontalLabel = new Label(spanGroup, SWT.NONE);
-		horizontalLabel.setText(SWTMessages.getString("GridDataTabPage.SpanHorizontal")); //$NON-NLS-1$
+		horizontalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanHorizontal")); //$NON-NLS-1$
 		
 		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
 		horizontalSpanSpinner.setMinimum(1);
@@ -616,7 +616,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 		horizontalSpanSpinner.setEnabled(true);
 		
 		Label verticalLabel = new Label(spanGroup, SWT.NONE);
-		verticalLabel.setText(SWTMessages.getString("GridDataTabPage.SpanVertical")); //$NON-NLS-1$
+		verticalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanVertical")); //$NON-NLS-1$
 		
 		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
 		verticalSpanSpinner.setMinimum(1);
@@ -692,28 +692,28 @@ public class GridDataTabPage extends AlignmentTabPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getImage()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getImage()
 	 */
 	public Image getImage() {
 		return null;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getText()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getText()
 	 */
 	public String getText() {
-		return SWTMessages.getString("GridDataTabPage.Grid"); //$NON-NLS-1$
+		return SWTMessages.getString("GridLayoutComponentPage.Grid"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getToolTipText()
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return SWTMessages.getString("GridDataTabPage.ToolTipText"); //$NON-NLS-1$
+		return SWTMessages.getString("GridLayoutComponentPage.ToolTipText"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
 	 * 
 	 * The editorpart changed. Pass this on to the AnchorActions and fillActions 
 	 * and reset the resource set and structural features.
@@ -730,13 +730,13 @@ public class GridDataTabPage extends AlignmentTabPage {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
+	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
 	 * 
 	 * The selection list has changed, enable/disable and check/uncheck the AnchorActions based on whether the
 	 * components selected have the same parent, the parent's layout is a GridBagLayout, and whether the anchor
 	 * property values are equal.
 	 */
-	protected void handleSelectionChanged(ISelection oldSelection) {
+	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
@@ -774,7 +774,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 						handleSelectionChangedForAlignmentActions(editparts);
 						handleSelectionChangedForGrabActions(editparts);
 						handleSelectionChangedForSpanSpinners(editparts);
-						return;
+						return true;
 					}
 				}
 			}
@@ -783,7 +783,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 		enableAlignmentActions(false);
 		enableGrabActions(false);
 		enableSpanSpinners(false);
-		return;
+		return false;
 	}
 	
 	/*
@@ -995,7 +995,7 @@ public class GridDataTabPage extends AlignmentTabPage {
 			}
 		}
 		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
-		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "GridLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "org.eclipse.swt.layout.GridLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		}
 		return false;

@@ -10,23 +10,26 @@ package org.eclipse.ve.internal.cde.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: AlignmentXYTabPage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $RCSfile: AlignmentXYComponentPage.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
+import java.util.List;
+
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gef.*;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 
 /**
  * This is the dialog that appears when the user selects Alignment
  */
-public class AlignmentXYTabPage extends AlignmentTabPage {
+public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 
 	private AlignmentAction fAlignLeftAction = new AlignmentAction(AlignmentCommandRequest.LEFT_ALIGN);
 	private AlignmentAction fAlignRightAction = new AlignmentAction(AlignmentCommandRequest.RIGHT_ALIGN);
@@ -53,27 +56,6 @@ public class AlignmentXYTabPage extends AlignmentTabPage {
 		fDistributeHorizontalAction.setSelectionProvider(selectionProvider);
 		fDistributeVerticalAction.setSelectionProvider(selectionProvider);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getImage()
-	 */
-	public Image getImage() {
-		return null;	// No image for the tab
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getText()
-	 */
-	public String getText() {
-		return CDEMessages.getString("XYAlignmentTab.label"); //$NON-NLS-1$
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.AlignmentTabPage#getToolTipText()
-	 */
-	public String getToolTipText() {
-		return CDEMessages.getString("XYAlignmentTab.tooltip"); //$NON-NLS-1$
-	}	
 
 	public Control getControl(Composite parent) {
 		Composite group = new Composite(parent, SWT.NONE);
@@ -108,17 +90,77 @@ public class AlignmentXYTabPage extends AlignmentTabPage {
 
 	}
 
-	protected void handleSelectionChanged(ISelection oldSelection) {
-		fAlignLeftAction.update();
-		fAlignCenterAction.update();
-		fAlignRightAction.update();
-		fAlignTopAction.update();
-		fAlignMiddleAction.update();
-		fAlignBottomAction.update();
-		fMatchWidthAction.update();
-		fMatchHeightAction.update();
-		fDistributeHorizontalAction.update();
-		fDistributeVerticalAction.update();
+	protected boolean handleSelectionChanged(ISelection oldSelection) {
+		ISelection newSelection = getSelection();
+		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
+			List editparts = ((IStructuredSelection) newSelection).toList();
+			EditPart firstParent;
+			boolean enableAll = true;
+			if (editparts.get(0) instanceof EditPart && ((EditPart) editparts.get(0)).getParent() != null) {
+				firstParent = ((EditPart) editparts.get(0)).getParent();
+				// Check the parent to ensure its layout policy is an XYLayout
+				if (isValidParent(firstParent)) {
+					EditPart ep = (EditPart) editparts.get(0);
+					/*
+					 * Need to iterate through the selection list and ensure each selection is:
+					 * - an EditPart
+					 * - they share the same parent
+					 * - it's parent has a XYLayout as it's layout manager
+					 */
+					for (int i = 1; i < editparts.size(); i++) {
+						if (editparts.get(i) instanceof EditPart) {
+							ep = (EditPart) editparts.get(i);
+							// Check to see if we have the same parent
+							if (ep.getParent() == null || ep.getParent() != firstParent) {
+								enableAll = false;
+								break;
+							}
+						} else {
+							enableAll = false;
+							break;
+						}
+					}
+					// If the parent is the same, enable all the actions.
+					if (enableAll) {
+						fAlignLeftAction.update();
+						fAlignCenterAction.update();
+						fAlignRightAction.update();
+						fAlignTopAction.update();
+						fAlignMiddleAction.update();
+						fAlignBottomAction.update();
+						fMatchWidthAction.update();
+						fMatchHeightAction.update();
+						fDistributeHorizontalAction.update();
+						fDistributeVerticalAction.update();
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/*
+	 * Return true if the parent's layout policy is a GridBagLayout.
+	 * If parent is a tree editpart (selected from the Beans viewer, we need to get its
+	 * corresponding graphical editpart from the Graph viewer in order to check its layout policy.
+	 */
+	public boolean isValidParent(EditPart parent) {
+		if (parent instanceof TreeEditPart) {
+			EditDomain ed = EditDomain.getEditDomain(parent);
+			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
+			if (viewer != null) {
+				// Get the graphical editpart using the model that is common between the two viewers
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)parent).getModel());
+				if (ep != null)
+					parent = ep;
+			}
+		}
+		IActionFilter af = (IActionFilter) ((IAdaptable) parent).getAdapter(IActionFilter.class);
+		if (af != null && af.testAttribute(parent, "EDITPOLICY#LAYOUTPOLICY", "XYLayout")) { //$NON-NLS-1$ //$NON-NLS-2$
+			return true;
+		}
+		return false;
 	}
 
 	protected void handleEditorPartChanged(IEditorPart oldEditorPart) {

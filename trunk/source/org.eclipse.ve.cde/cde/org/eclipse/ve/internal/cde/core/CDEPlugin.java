@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
  */
 
 import java.net.MalformedURLException;
@@ -31,8 +31,8 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	public static final String SHOW_XML = "SHOW_XML"; //$NON-NLS-1$
 	public static final String PREF_SHOW_OVERVIEW_KEY = "ShowOver"; //$NON-NLS-1$	
 
-	public static String ALIGNMENTWINDOW_X = "ALIGNMENTWINDOW_X"; //$NON-NLS-1$
-	public static String ALIGNMENTWINDOW_Y = "ALIGNMENTWINDOW_Y"; //$NON-NLS-1$	
+	public static String CUSTOMIZELAYOUTWINDOW_X = "CUSTOMIZELAYOUTWINDOW_X"; //$NON-NLS-1$
+	public static String CUSTOMIZELAYOUTWINDOW_Y = "CUSTOMIZELAYOUTWINDOW_Y"; //$NON-NLS-1$	
 
 	// Strings needed for the "Adapter by type" extension point.
 
@@ -178,8 +178,8 @@ public final class CDEPlugin extends AbstractUIPlugin {
 		Preferences prefs = getPluginPreferences();
 		prefs.setDefault(PREF_SHOW_OVERVIEW_KEY, false);
 		prefs.setDefault(SHOW_XML, false);
-		prefs.setDefault(ALIGNMENTWINDOW_X, 0);
-		prefs.setDefault(ALIGNMENTWINDOW_Y, 0);
+		prefs.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);
+		prefs.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 0);
 	}
 
 }
