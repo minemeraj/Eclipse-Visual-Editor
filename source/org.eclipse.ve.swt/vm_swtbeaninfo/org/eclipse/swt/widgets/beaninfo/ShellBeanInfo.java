@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-07-16 16:03:04 $ 
+ *  $Revision: 1.7 $  $Date: 2004-07-16 16:09:52 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -79,13 +79,6 @@ public class ShellBeanInfo extends IvjBeanInfo {
 					DISPLAYNAME, ShellMessages.getString("regionDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ShellMessages.getString("regionSD"), //$NON-NLS-1$
 					EXPERT, Boolean.TRUE,
-				}
-				),
-				// shell
-				super.createPropertyDescriptor(getBeanClass(),"shell", new Object[] { //$NON-NLS-1$
-					DISPLAYNAME, ShellMessages.getString("shellDN"), //$NON-NLS-1$
-					SHORTDESCRIPTION, ShellMessages.getString("shellSD"), //$NON-NLS-1$
-					DESIGNTIMEPROPERTY, Boolean.FALSE
 				}
 				),
 				// shells
