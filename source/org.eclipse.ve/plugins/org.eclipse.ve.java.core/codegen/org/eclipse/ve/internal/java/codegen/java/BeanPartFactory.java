@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.36 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.37 $  $Date: 2005-03-13 02:45:14 $ 
  */
 
 import java.util.*;
@@ -406,7 +406,7 @@ protected CodeMethodRef generateThisInitMethod() throws CodeGenException {
    mref = new CodeMethodRef(fBeanModel.getTypeRef(),mNameModifier[0]) ;  
    mref.setModel(fBeanModel) ;
       
-   BeanMethodTemplate template = new BeanMethodTemplate("void", //$NON-NLS-1$
+   BeanMethodTemplate template = new BeanMethodTemplate(BeanMethodTemplate.VOID, //$NON-NLS-1$
   													   bp.getSimpleName(),
                                                        mref.getMethodName(),     
                                                        null) ;    
