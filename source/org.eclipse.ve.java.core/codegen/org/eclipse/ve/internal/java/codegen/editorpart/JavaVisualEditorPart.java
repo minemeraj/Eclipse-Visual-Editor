@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.26 $  $Date: 2004-04-14 21:05:58 $ 
+ *  $Revision: 1.27 $  $Date: 2004-04-20 18:29:18 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -218,9 +218,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Create the common actions
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
 		RetargetTextEditorAction deleteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Delete."); //$NON-NLS-1$
-		deleteAction.setHoverImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_HOVER));
 		deleteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
-		deleteAction.setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
 		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
 		
@@ -728,8 +726,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * This will create the proxy factory registry.
 	 */
 	protected void createProxyFactoryRegistry(IFile aFile, IProgressMonitor monitor) throws CoreException {
-		if (isDisposed())
-			return;	// No registry because we already closed.
 		if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
 			// Since we need to create a new one, we need to get rid of the old one.
 			proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
@@ -861,11 +857,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		registry.getBeanTypeProxyFactory().setMaintainNotFoundTypes(true);	// Want to maintain list of not found types so we know when those types have been added.
 		
 		synchronized (this) {
-			if (isDisposed()) {
-				// Editor closed while we were opening it. So close the registry.
-				registry.terminateRegistry(); 
-				return;
-			}
 			proxyFactoryRegistry = registry;
 			proxyFactoryRegistry.addRegistryListener(registryListener);
 			beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
@@ -912,29 +903,36 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	public void dispose() {
 		try {
-			if (setupJob != null) {
+			boolean queuedJobDispose = setupJob != null && setupJob.getState() != Job.NONE;
+			if (queuedJobDispose) {
 				// We can't actually wait for it because we could get into a deadlock since it may
-				// try to do syncExec for some reason.
+				// try to do syncExec for some reason. So we will farm off and join in a thread.
 				setupJob.cancel();
+				final Display d = Display.getCurrent();
+				(new Job("Cleanup visual java editor.") {
+					protected IStatus run(IProgressMonitor monitor) {
+						while (true) {
+							try {
+								setupJob.join();
+								break;
+							} catch (InterruptedException e) {
+							}
+						}
+						d.asyncExec(new Runnable() {
+							public void run() {
+								finalDispose();							
+							}
+						});
+						return Status.OK_STATUS;
+					}
+				}).schedule();
 			}
 			
 			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
 			if (proxyFactoryRegistry != null) {
 				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
-				proxyFactoryRegistry.terminateRegistry();
 			}
-			
-			modelBuilder.dispose();
-			
-			if (modelSynchronizer != null) {
-				modelSynchronizer.stopSynchronizer();
-			}
-			
-			EditDomain ed = editDomain;
-			synchronized (this) {
-				editDomain = null;	// This indicates we are disposed!
-			}
-
+					
 			getSite().getPage().removeSelectionListener(selectionServiceListener);
 			
 			IWorkbenchWindow window = getSite().getWorkbenchWindow();
@@ -944,13 +942,40 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			if (shell != null && !shell.isDisposed())
 				window.getShell().removeShellListener(activationListener);
 			
-			ed.dispose();
-			
 			graphicalActionRegistry.dispose();
 			commonActionRegistry.dispose();
+			if (!queuedJobDispose)
+				finalDispose();
 		} catch (Exception e) {
 		}
 		super.dispose();
+	}
+	
+	private void finalDispose() {
+		// This is expected to run in the display thread. It is for the editdomain dispose.
+		
+		// This is the final dispose that would be called after the setup job is finished. 
+		// It is farmed off to here so that the setup job can complete without errors, BUT
+		// complete after the rest of the editor has already been closed. This is because
+		// we can't wait for the job in the UI thread during dispose. There would be lockups
+		// if we did that.
+		if (proxyFactoryRegistry != null) {
+			// Now we can terminate
+			proxyFactoryRegistry.terminateRegistry();
+			proxyFactoryRegistry = null;
+		}
+
+		modelBuilder.dispose();
+		
+		if (modelSynchronizer != null) {
+			modelSynchronizer.stopSynchronizer();
+		}
+		
+		EditDomain ed = editDomain;
+		synchronized (this) {
+			editDomain = null;
+		}
+		ed.dispose();
 	}
 	
 	protected synchronized boolean isDisposed() {
@@ -1177,10 +1202,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						a.initBeanProxy();
 					}
 					
-					if (!isDisposed() && !monitor.isCanceled())
+					if (!monitor.isCanceled())
 						getSite().getShell().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								initializeViewers();
+								if (!isDisposed())
+									initializeViewers();
 							}
 						});
 				} else {
@@ -1204,6 +1230,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (!isDisposed()) {
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
+							if (isDisposed())
+								return;
 							String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
 							String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
 							Shell shell = getSite().getShell();
@@ -1249,8 +1277,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			activationListener.partActivated(window.getPartService().getActivePart());	// Initialize to current active part
 
 			synchronized (JavaVisualEditorPart.this) {
-				if (isDisposed())
-					return;
 				// Add the model synchronizer.
 				modelSynchronizer = new JavaModelSynchronizer(beanProxyAdapterFactory, JavaCore.create(file.getProject()), new Runnable() {
 					/**
