@@ -228,6 +228,16 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		super.releaseBeanProxy();
 		fControlManager = null;
 	}
+ 	
+ 	protected void primReinstantiateBeanProxy() {
+ 		// If we are owned by a composite this must re-create us so that we are re-inserted in the correct position
+ 		if(parentProxyAdapter != null){
+ 			parentProxyAdapter.reinstantiateChild(this);
+ 			return;
+ 		}
+ 		super.primReinstantiateBeanProxy();
+ 	}
+ 	
 	
 	public void validateBeanProxy(){
 		super.validateBeanProxy();

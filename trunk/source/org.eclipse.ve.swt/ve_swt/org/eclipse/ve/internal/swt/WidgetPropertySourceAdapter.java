@@ -10,13 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-10 01:57:15 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-10 21:28:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 import java.util.logging.Level;
-
 import org.eclipse.emf.ecore.*;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -177,7 +176,7 @@ protected void mergeStyleBits(List propertyDescriptors, EClass eClass){
 		// This is for style bits like SWT.BORDER that become called "border" with "BORDER" and "UNSET";
 		if(names.length == 1){
 			names = new String[] { names[0] , "UNSET" };
-			initStrings = new String[] { initStrings[0] , "" };
+			initStrings = new String[] { initStrings[0] , "-1" };
 			values = new Integer[] { values[0] , new Integer(-1) };
 		}
 		IPropertyDescriptor property = new StyleBitPropertyDescriptor(propertyName,styleBits.fDisplayName,styleBits.fIsExpert,names,initStrings,values);
@@ -319,6 +318,10 @@ public void setPropertyValue(Object feature, Object val) {
 		//       <rightOperator xmi:type=PTName name="org.eclipse.swt.CHECK">
 		ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getJavaObjectInstance().getAllocation();
 		PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) parseTreeAllocation.getExpression();
+		InstantiationFactory factory = InstantiationFactory.eINSTANCE;		
+		// A value of -1 means that we are unsetting the property value
+		int intValue = ((IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)val)).intValue();
+		boolean unset = intValue == -1;
 		int numberOfArguments = classInstanceCreation.getArguments().size();
 		if(numberOfArguments == 2){
 			Object secondConstructionArgument = classInstanceCreation.getArguments().get(1);
@@ -328,13 +331,121 @@ public void setPropertyValue(Object feature, Object val) {
 				PTFieldAccess fieldAccess = (PTFieldAccess)secondConstructionArgument;
 				String existingFieldName = fieldAccess.getField();
 				if (isSameStyleFamily(existingFieldName,propertyID)){
-					// The field name is in the same family as the one already set.  Replace it
-					fieldAccess.setField(propertyID.getInitString(val));
-					// We need the BeanProxy to refresh itself so do a touch on the expression inside the allocation
-					parseTreeAllocation.setExpression(classInstanceCreation);
-					getWidgetProxyAdapter().hackRefresh();
+					// The field name is in the same family as the one already set
+					if(unset) {
+						// When we are down to the last property replace it with the value of NONE
+						fieldAccess.setField("NONE");
+					} else {
+						fieldAccess.setField(propertyID.getInitString(val));
+					}
+					// We need the BeanProxy and code gen to refresh itself so do a touch on the allocation
+					getJavaObjectInstance().setAllocation(parseTreeAllocation);
+				} else {
+					if(unset){
+						// We are unsetting a value, however it is not in the same family as an existing value that is set
+						// This should not occur, but if it does there's nothing we can do to alter the code
+					} else {
+						// Add to the existing style bit.  This is done by taking the existing one that is a PTFieldAccess
+						// 	and creating a new PTInfix expression for the argument, the left expression of which is a PTName for the bit mask flag
+						// 	and the second is the new one being set
+						PTInfixExpression inFixExpression =InstantiationFactory.eINSTANCE.createPTInfixExpression(
+								factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),existingFieldName),
+								PTInfixOperator.OR_LITERAL,
+								factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),propertyID.getInitString(val)),
+						null
+						);
+						classInstanceCreation.getArguments().remove(1);
+						classInstanceCreation.getArguments().add(inFixExpression);
+					}
+					getJavaObjectInstance().setAllocation(parseTreeAllocation);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly 	
 				}
-			} else if (secondConstructionArgument instanceof PTInfixExpression){		
+			} else if (secondConstructionArgument instanceof PTInfixExpression){
+				PTInfixExpression inFix = (PTInfixExpression)secondConstructionArgument;
+				PTFieldAccess leftStyle = (PTFieldAccess)inFix.getLeftOperand();
+				PTFieldAccess rightStyle = (PTFieldAccess)inFix.getRightOperand();
+				if(unset){
+					// Scan the arguments to find which one is the set value of the one we are unsetting
+					String setInitString = propertyID.fInitStrings[0];
+					if(setInitString.startsWith("org.eclipse.swt.SWT.")) setInitString = setInitString.substring(20);
+					if( leftStyle.getField().equals(setInitString)){
+						// The LHS needs to be removed
+						// How we manipulate the infix depends on how many style bits it includes
+						if(inFix.getExtendedOperands().size() == 0){
+							// If it has no extended operands all that is left is the right one, so it becomes a PTFieldAccess							
+							classInstanceCreation.getArguments().remove(1);
+							classInstanceCreation.getArguments().add(inFix.getRightOperand());
+						} else {
+							// The right becomes the left
+							inFix.setLeftOperand(inFix.getRightOperand());
+							// The first operand becomes the right onw
+							inFix.setRightOperand((PTExpression) inFix.getExtendedOperands().get(0));
+							if(inFix.getExtendedOperands().size() == 1) {
+								// If there is a single operand just remove it as we have made it the new right one
+								inFix.getExtendedOperands().clear();
+							} else {
+								// Shuffle all operands down one
+								// TODO
+							} 							
+						}
+						// The RHS needs to be removed						
+					} else if( rightStyle.getField().equals(setInitString)){
+						if(inFix.getExtendedOperands().size() == 0){
+							// If it has no extended operands all that is left is the left one, so it becomes a PTFieldAccess							
+							classInstanceCreation.getArguments().remove(1);
+							classInstanceCreation.getArguments().add(inFix.getLeftOperand());
+						} else {
+							// The first operand becomes the right onw
+							inFix.setRightOperand((PTExpression) inFix.getExtendedOperands().get(0));
+							if(inFix.getExtendedOperands().size() == 1) {
+								// If there is a single operand just remove it as we have made it the new right one
+								inFix.getExtendedOperands().clear();
+							} else {
+								// Shuffle all operands down one
+								// TODO
+							}
+						}
+					} else {
+						// The bit being unset must be an extended operand - Find it and remove it						
+						int index = 0;
+						Iterator iter = inFix.getExtendedOperands().iterator();
+						while(iter.hasNext()){
+							PTFieldAccess fieldAccess = (PTFieldAccess)iter.next();
+							if(fieldAccess.getField().equals(setInitString)){
+								inFix.getExtendedOperands().remove(index);
+								break;
+							}
+							index++;
+						}
+					}
+				} else {
+					String initString = propertyID.getInitString(val);
+					// Scan the arguments to see if any of them match the value we are setting
+					if(isSameStyleFamily(leftStyle.getField(),propertyID)){
+						// Replace the left operand with our new style bit as it is in the same family
+						leftStyle.setField(initString);
+					} else if(isSameStyleFamily(rightStyle.getField(),propertyID)){
+						// Replace the right operand with our new style bit as it is in the same family
+						rightStyle.setField(initString);
+					} else {
+						// Scan the existing expressionsm to see if we need to reset one
+						boolean existingFound = false;
+						Iterator iter = inFix.getExtendedOperands().iterator();
+						while(iter.hasNext()){
+							PTFieldAccess fieldAccess = (PTFieldAccess)iter.next();
+							if(isSameStyleFamily(fieldAccess.getField(),propertyID)){
+								fieldAccess.setField(propertyID.getInitString(val));
+								existingFound = true;
+								break;
+							}
+						}
+						if(!existingFound) {
+							// The expression we have does not match any of the expressions so create a new one and add it
+							PTExpression newExpression = factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),initString);
+							inFix.getExtendedOperands().add(newExpression);
+						}
+					}
+				}
+				getJavaObjectInstance().setAllocation(parseTreeAllocation);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly				
 			}
 		}
 	}
@@ -354,7 +465,7 @@ private boolean isSameStyleFamily(String existingInitString, StyleBitPropertyID 
 	}
 	// NONE is always replaced
 	if(existingInitString.equals("NONE")) return true;
-	// Iterate over the style bits to see if any of them are in the same faimily
+	// Iterate over the style bits to see if any of them are in the same family
 	return propertyID.includeInitString(existingInitString);
 }
 }
