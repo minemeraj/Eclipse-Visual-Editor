@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2004-08-12 16:26:38 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-12 17:51:34 $ 
  */
 
 import java.util.ArrayList;
@@ -84,7 +84,8 @@ protected class JTableImageListener implements IImageListener {
 }
 protected FigureListener hostFigureListener = new FigureListener() {
 	public void figureMoved(IFigure source) {
-			refreshColumns();
+		refreshColumns();
+		shiftFigureForParent(getFigure());
 	}
 };
 private Adapter jTableAdapter = new EditPartAdapterRunnable() {
@@ -214,7 +215,7 @@ private Rectangle getColumnBounds(int index) {
 		IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) getGetHeaderRect().invoke(getHeaderProxy(), new IBeanProxy[] {indexProxy});
 		result = new Rectangle();
 		result.x = rectProxy.getX();
-		result.y = rectProxy.getY();
+		//result.y = rectProxy.getY();
 		result.width = rectProxy.getWidth();
 		result.height = rectProxy.getHeight();
 		
@@ -223,7 +224,7 @@ private Rectangle getColumnBounds(int index) {
 		
 		// Translate relative to the origin of the table
 		result.x += parentBounds.x;
-		result.y += parentBounds.y;
+		result.y = parentBounds.y;
 		
 	} catch (ThrowableProxy e) {
 		result = null;
