@@ -40,6 +40,7 @@
       <import plugin="org.eclipse.jem.util"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.pde.core"/>
    </requires>
 
 
