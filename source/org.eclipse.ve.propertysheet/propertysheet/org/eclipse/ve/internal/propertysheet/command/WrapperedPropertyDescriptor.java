@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet.command;
  *******************************************************************************/
 /*
  *  $RCSfile: WrapperedPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-19 19:56:19 $ 
  */
 
 
@@ -43,6 +43,7 @@ public final class WrapperedPropertyDescriptor implements ICommandPropertyDescri
 	protected IPropertyDescriptor fDescriptor;
 	protected IPropertySource fSource;
 	protected Object fID;
+	private String fDisplayName;
 	/**
 	 * MergedPropertyDescriptor constructor comment.
 	 */
@@ -79,8 +80,15 @@ public final class WrapperedPropertyDescriptor implements ICommandPropertyDescri
 	 * MergedPropertyDescriptor constructor comment.
 	 */
 	public WrapperedPropertyDescriptor(Object anID, IPropertySource source, IPropertyDescriptor descriptor) {
+		this(anID, null, source, descriptor);
+	}
+	/**
+	 * MergedPropertyDescriptor constructor comment.
+	 */
+	public WrapperedPropertyDescriptor(Object anID, String displayName, IPropertySource source, IPropertyDescriptor descriptor) {
 		super();
 		fID = anID;
+		fDisplayName = displayName;
 		fSource = source;
 		fDescriptor = descriptor;
 	}
@@ -100,7 +108,7 @@ public final class WrapperedPropertyDescriptor implements ICommandPropertyDescri
 	 * getDisplayName method comment.
 	 */
 	public String getDisplayName() {
-		return fDescriptor.getDisplayName();
+		return fDisplayName == null ? fDescriptor.getDisplayName() : fDisplayName;
 	}
 	/**
 	 * getFilterFlags method comment.

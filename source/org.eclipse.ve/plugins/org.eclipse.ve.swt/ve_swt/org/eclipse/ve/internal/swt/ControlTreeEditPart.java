@@ -10,14 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-23 19:49:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-19 19:56:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
-import org.eclipse.gef.EditPartViewer;
-import org.eclipse.gef.Request;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
@@ -32,11 +33,23 @@ import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
 public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	
 	private EStructuralFeature sfDirectEditProperty;
-	
+
 	private TreeDirectEditManager manager;
-	
+
+	protected IPropertySource propertySource;
+
 	public ControlTreeEditPart(Object model) {
 		super(model);
+	}
+
+	public Object getAdapter(Class type) {
+		if (type == IPropertySource.class)
+			if (propertySource != null)
+				return propertySource;
+			else
+				return EcoreUtil.getRegisteredAdapter((EObject)getModel(), IPropertySource.class);
+				
+		return super.getAdapter(type);
 	}
 	
 	protected void createEditPolicies() {
@@ -81,6 +94,10 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	public void performRequest(Request request){
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
 			performDirectEdit();
+	}
+
+	public void setPropertySource(IPropertySource source) {
+		propertySource = source;
 	}
 
 }

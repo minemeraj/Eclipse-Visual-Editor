@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2004-08-04 21:34:53 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2004-08-19 19:56:20 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -110,11 +110,18 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	public void setTransparent(boolean aBool){
 		transparent = aBool;
 	}
+
+	public void setPropertySource(IPropertySource source) {
+		propertySource = source;
+	}
 	public Object getAdapter(Class type) {
 		if (type == IVisualComponent.class)
 			return getVisualComponent();
 		else if (type == IPropertySource.class)
-			return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
+			if (propertySource != null)
+				return propertySource;
+			else
+				return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
 		else if (type == IConstraintHandler.class) {
 			if (constraintHandler == null) {
 				constraintHandler = new ControlVisualModelAdapter(getModel());

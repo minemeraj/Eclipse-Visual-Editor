@@ -8,6 +8,8 @@
     xmlns:org.eclipse.jem.java="java.xmi">
     
   <event:AddMany featureName="eAnnotations">
+	<addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
+	    propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabItemPropertySourceAdapter"/>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
     	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableColumnProxyAdapter"/>
   </event:AddMany>
