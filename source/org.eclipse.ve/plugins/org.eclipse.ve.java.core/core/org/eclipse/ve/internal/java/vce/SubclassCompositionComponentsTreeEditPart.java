@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-23 12:45:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-23 22:45:34 $ 
  */
 
 import java.util.*;
@@ -59,11 +59,8 @@ public class SubclassCompositionComponentsTreeEditPart extends AbstractTreeEditP
 		public void notifyChanged(Notification msg) {
 			switch (msg.getFeatureID(BeanSubclassComposition.class)) {
 				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
-				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:
-try {					
+				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:				
 					refreshChildren();
-}
-catch (Exception e) {}
 					break;
 			}
 		}
