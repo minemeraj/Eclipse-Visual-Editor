@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
 <toc label="Visual Editor for Java User Guide" topic="topics/tve_overview.html">
    <anchor id="anchor0000"/>
    <topic label="Using the visual editor for Java" href="topics/tve_overview.html">
