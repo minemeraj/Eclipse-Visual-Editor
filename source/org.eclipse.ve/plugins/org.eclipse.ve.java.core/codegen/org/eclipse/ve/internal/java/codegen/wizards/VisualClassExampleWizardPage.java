@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:33:03 $ 
  */
 
 import java.io.*;
@@ -25,7 +25,6 @@ import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -118,7 +117,8 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 				lineDelimiter= System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 										
 				ICompilationUnit parentCU= pack.createCompilationUnit(clName + ".java", "", false, new SubProgressMonitor(monitor, 2)); //$NON-NLS-1$ //$NON-NLS-2$
-				createdWorkingCopy= (ICompilationUnit) parentCU.getSharedWorkingCopy(null, JavaUI.getBufferFactory(), null);
+				parentCU.becomeWorkingCopy(null, null);
+				createdWorkingCopy= parentCU;
 											
 				String typeContent= getExampleFileContents() ;				
 				String cuContent= constructCUContent(parentCU, typeContent, lineDelimiter);
@@ -162,7 +162,7 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 	
 			ICompilationUnit cu= createdType.getCompilationUnit();	
 			synchronized(cu) {
-				cu.reconcile();
+				cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor());
 			}			
 			ISourceRange range= createdType.getSourceRange();
 			
@@ -174,16 +174,16 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 			buf.replace(range.getOffset(), range.getLength(), formattedContent);
 			
 			synchronized(cu) {
-				cu.reconcile();
+				cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor());
 			}	
 			
-			cu.commit(true, monitor) ;	
+			cu.commitWorkingCopy(true, monitor) ;	
 	
 			monitor.worked(1);
 			
 		} finally {
 			if (createdWorkingCopy != null) {
-				createdWorkingCopy.destroy();
+				createdWorkingCopy.discardWorkingCopy();
 			}
 			monitor.done();
 		}
