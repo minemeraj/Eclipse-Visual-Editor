@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetTranslator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
@@ -29,6 +29,9 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
+/**
+ * @deprecated
+ */
 public class CodeSnippetTranslator {
 
 
@@ -63,7 +66,7 @@ protected List offendingLines = null;
 IDiagramModelInstance fDiagram = null ;
 
 /**
- * 
+ * @deprecated
  */
 public CodeSnippetTranslator(
 			String entireCode, 

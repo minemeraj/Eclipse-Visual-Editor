@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.List;
@@ -58,15 +58,6 @@ protected char[] getFileContents() throws CodeGenException {
 	return contents.toCharArray();
 }
 
-//g public CompilationUnitDeclaration getModelFromParser(
-//	ProblemReporter reporter,
-//	CompilationResult result,
-//	BasicCompilationUnit cu){
-//	CompilationUnitDeclaration decl = super.getModelFromParser(reporter, result, cu);
-//	updateModelPositions(decl);
-//	return decl;
-//}
-
 /**
  * JDT and old AST differ in the way they look at things like comments of elements etc.
  * Hence have to adjust the AST such that it reflects the JDT - since the BDM is based 
@@ -76,34 +67,52 @@ protected char[] getFileContents() throws CodeGenException {
  * comment blocks belong to that method.   
  * 
  * @param decl
- */protected void updateModelPositions(CompilationUnit decl){
-//g	TypeDeclaration type = decl.types[0];
-//	FieldDeclaration[] decls = type.fields;
-//	AbstractMethodDeclaration[] methods = type.methods;
-//	if(decl!=null && fieldStarts!=null && decls != null && decls.length==fieldStarts.length){ 
-//		// liner mapping.. no problems.
-//		for(int dc=0;dc<decls.length;dc++){
-//			decls[dc].sourceStart = fieldStarts[dc];
-//			decls[dc].sourceEnd = fieldEnds[dc];
-//		}
-//	}
-//	if(methods!=null && methodStarts!=null){
-//		int usefulMethodIndex = 0;
-//		for(int mc=0;mc<methods.length;mc++){
-//			if(	methods[mc]!=null && 
-//					// Since Methods are the only things we care about
-//					methods[mc] instanceof MethodDeclaration) {
-//				methods[mc].declarationSourceStart=methodStarts[usefulMethodIndex];
-//				methods[mc].declarationSourceEnd=methodEnds[usefulMethodIndex];
-//				usefulMethodIndex++;
-//			}
-//		}
-//	}
+ */
+protected void updateModelPositions(CompilationUnit decl){
+	if(decl.types()!=null && decl.types().size()>0){
+		TypeDeclaration type = (TypeDeclaration) decl.types().get(0);
+		FieldDeclaration[] decls = type.getFields();
+		MethodDeclaration[] methods = type.getMethods();
+		if(decl!=null && fieldStarts!=null && decls != null && decls.length==fieldStarts.length){ 
+			// liner mapping.. no problems.
+			for(int dc=0;dc<decls.length;dc++){
+				decls[dc].setSourceRange(fieldStarts[dc], fieldEnds[dc]-fieldStarts[dc]+1);
+			}
+		}
+		if(methods!=null && methodStarts!=null){
+			int usefulMethodIndex = 0;
+			for(int mc=0;mc<methods.length;mc++){
+				if(	methods[mc]!=null && 
+						// Since Methods are the only things we care about
+						methods[mc] instanceof MethodDeclaration &&
+						!((MethodDeclaration)methods[mc]).isConstructor()) {
+							methods[mc].setSourceRange(methodStarts[usefulMethodIndex], methodEnds[usefulMethodIndex]-methodStarts[usefulMethodIndex]+1);
+							usefulMethodIndex++;
+				}
+			}
+		}
+	}
 }
 
 protected void visitType(TypeDeclaration type, IBeanDeclModel model,  List tryAgain){
 	new TypeVisitor(type,model,fFileContent, methodHandles,tryAgain,true).visit()  ;
 }
 
+
+/**
+ * JDT and old AST differ in the way they look at things like comments of elements etc.
+ * Hence have to adjust the AST such that it reflects the JDT - since the BDM is based 
+ * off the JDT. 
+ * Examples of such behaviour are when you have two comment blocks before a method -
+ * AST says only the bottomost comment block belongs to the method, while JDT says all
+ * comment blocks belong to that method.   
+ *
+ * @see org.eclipse.ve.internal.java.codegen.java.JavaBeanModelBuilder#ParseJavaCode()
+ */
+protected CompilationUnit ParseJavaCode() throws CodeGenException {
+	CompilationUnit cu = super.ParseJavaCode();
+	updateModelPositions(cu);
+	return cu;
+}
 
 }

@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-05 23:18:39 $ 
+ *  $Revision: 1.13 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 
 
+import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,7 +28,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 
@@ -529,7 +529,7 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 			return "";	// Shouldn't get here for prims. They should have an allocation.
 	}
 }
-public static String getResolvedInitString(Statement stmt, ITypeResolver resolver){
+/*public static String getResolvedInitString(Statement stmt, ITypeResolver resolver){
 	String resolved = null;
 	if (stmt instanceof TypeReference && resolved==null) {
 		TypeReference tr = (TypeReference) stmt;
@@ -621,6 +621,7 @@ public static String getResolvedInitString(Statement stmt, ITypeResolver resolve
 		resolved = stmt.toString();
 	return resolved;
 }
+*/
 
 public static boolean isConstraintComponentValue (Object val) {
 	return (val != null && val instanceof EObject && 
@@ -828,11 +829,12 @@ public static void logParsingError(String exp, String method, String msg, boolea
 	JavaVEPlugin.log ("\n/**\n Could not parse the following expression "+context+":\n\t"+method+"(): "+exp+"\n\treason: "+msg+"\n**/\n",Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 }
 
-public static String expressionToString (Expression exp) {
+/*public static String expressionToString (Expression exp) {
 	StringBuffer sb = new StringBuffer() ;
 	exp.printExpression(4,sb) ;
 	return sb.toString();	
 }
+*/
 
 public static String resolve(Name toResolve, IBeanDeclModel bdm) {
 	if (toResolve.isQualifiedName())
@@ -846,6 +848,63 @@ public static String resolve(Name toResolve, ITypeResolver resolver) {
 		return toResolve.toString();
 	else 
 		return resolver.resolve(toResolve.toString());
+}
+
+/**
+ * Determines where in the first parameter, the second parameter
+ * occurs. It ignores the presence of spaces in both Strings.
+ * It returns two integers
+ * 		Index where the second String starts
+ *		Index where the second String stops
+ *  
+ * Ex: 
+ *     main :   "ivjButton1.  setBackground   (new Color  (100, 2 , 1 )   )"
+ *     find :   "new Color(   100,2   ,1)"
+ *     
+ *     returns: "ivjButton1.  setBackground   (new Color  (100, 2 , 1 )   )"
+ *                                             ^                      ^
+ *                                             |                      |
+ */
+public static int[] indexOfIgnoringSpace(String main, String find){
+	if(main==null || main.length()<1 || find==null || find.length()<1)
+		return new int[] {-1,-1};
+	char[] mainTokens = main.toCharArray();
+	StringTokenizer tokenizer = new StringTokenizer(find, " \t", false); //$NON-NLS-1$
+	String findS = new String();
+	while(tokenizer.hasMoreTokens())
+		findS = findS.concat(tokenizer.nextToken());
+	char[] findTokens = findS.toCharArray();
+	int tokenFindStart = -1;
+	int tokenFindEnd = -1;
+	for(int mc=0;mc<mainTokens.length;mc++){
+		if(Character.isWhitespace(mainTokens[mc]))
+			continue;
+		tokenFindStart = -1;
+		tokenFindEnd = -1;
+		if(mainTokens[mc]==findTokens[0]){
+			tokenFindStart = mc;
+			int fc=0;
+			int nc=0;
+			for(nc=mc; fc<findTokens.length && nc<mainTokens.length; nc++){
+				if(Character.isWhitespace(mainTokens[nc]))
+					continue;
+				if(mainTokens[nc]==findTokens[fc]){
+					fc++;
+				}else{
+					break;
+				}
+			}
+			if(fc==findTokens.length){
+				tokenFindEnd = nc-1;
+				break;
+			}
+		}
+	}
+	if(tokenFindStart>-1 && tokenFindEnd>-1 && tokenFindStart<=tokenFindEnd){
+		return new int[] {tokenFindStart, tokenFindEnd+1};
+	}else{
+		return new int[] {-1,-1};
+	}
 }
 
 }

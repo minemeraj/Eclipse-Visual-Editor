@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-10 15:50:57 $ 
  */
 
 import java.util.*;
@@ -569,15 +569,6 @@ public void updateBeanNameChange(BeanPart bp) {
 	 */
 	public void setFStatus(ICodeGenStatus fStatus) {
 		this.fStatus = fStatus;
-	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel#resolveSingleNameReference(String)
-	 */
-	public String resolveSingleNameReference(String selector, int location) {
-		return ASTHelper.resolveSingleNameReference(
-			selector, location,
-			getWorkingCopyProvider().getDocument().get());
 	}
 
 	/**
