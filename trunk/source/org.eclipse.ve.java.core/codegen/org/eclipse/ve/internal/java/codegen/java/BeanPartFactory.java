@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.31 $  $Date: 2004-06-21 16:23:34 $ 
+ *  $Revision: 1.32 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
@@ -721,7 +721,7 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      BeanPart bean = fBeanModel.getABean(BeanPart.THIS_NAME) ;
      
      if (bean == null) {    
-       String tname = fBeanModel.resolveThis();
+       String tname = fBeanModel.getResolver().resolveMain().getName();
        bean = new BeanPart (tname) ;	  
        fBeanModel.addBean(bean) ;
      }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.11 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.12 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.*;
@@ -25,6 +25,7 @@ import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -264,9 +265,10 @@ protected void processAssignmment() {
 				// At this point, make sure this is a static method.
 				MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide() : ((CastExpression)stmt.getRightHandSide()).getExpression());
 				if (m.getExpression() instanceof Name) {
-				String resolvedReciver = CodeGenUtil.resolve((Name)m.getExpression(), fModel);
+				TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name)m.getExpression());
+				String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null; 
 			   // TODO This should be in a rule: parse methodInvocation Initialization
-			   if (isStaticCall(resolvedReciver,m.getName().getIdentifier(), (m.arguments()==null?0:m.arguments().size()))) {
+			   if (isStaticCall(resolvedReceiverName,m.getName().getIdentifier(), (m.arguments()==null?0:m.arguments().size()))) {
 			   	  initExpr = true ;
 			   }
 				}

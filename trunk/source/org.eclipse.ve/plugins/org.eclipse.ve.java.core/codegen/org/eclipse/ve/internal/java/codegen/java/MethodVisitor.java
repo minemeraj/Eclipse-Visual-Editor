@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class MethodVisitor extends SourceVisitor {
  */	
 protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	IMethodVariableRule methodVarRule = (IMethodVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IMethodVariableRule.RULE_ID) ;
-	if (methodVarRule!=null && methodVarRule.ignoreVariable(stmt,fModel,fModel.getCompositionModel())) return ;
+	if (methodVarRule!=null && methodVarRule.ignoreVariable(stmt,fModel.getResolver(),fModel.getCompositionModel())) return ;
 	
 	BeanPart bp = new BeanPart(stmt) ;
 	bp.setModel(fModel) ;

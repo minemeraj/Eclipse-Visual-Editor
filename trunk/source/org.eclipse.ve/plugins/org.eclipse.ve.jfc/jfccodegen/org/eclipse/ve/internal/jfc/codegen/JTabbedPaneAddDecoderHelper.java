@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-20 13:01:30 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-04 21:36:30 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -166,7 +167,10 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 				//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+selector);
 			}
 		} else if (arg instanceof ClassInstanceCreation) {
-			String clazzName = CodeGenUtil.resolve(((ClassInstanceCreation)arg).getName(), fbeanPart.getModel());
+			Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)arg).getName());
+			if (resolved == null)
+				return null;
+			String clazzName = resolved.getName();
 			IJavaObjectInstance obj =
 				(IJavaObjectInstance) CodeGenUtil.createInstance(clazzName, fbeanPart.getModel().getCompositionModel());
 			JavaClass c = (JavaClass) obj.getJavaType();

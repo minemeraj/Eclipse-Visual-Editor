@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.codegen.model;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,14 +10,15 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-07 22:48:31 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-04 21:36:17 $ 
  */
+package org.eclipse.ve.internal.java.codegen.model;
+
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
-
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -26,12 +26,10 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider;
+import org.eclipse.ve.internal.java.codegen.util.*;
 
-public interface IBeanDeclModel extends ITypeResolver{
+public interface IBeanDeclModel {
 	
 	public final  int           BDM_STATE_DOWN            		= 0x01 ;	
 	public final  int           BDM_STATE_UP_AND_RUNNING  		= 0x02 ;
@@ -40,6 +38,13 @@ public interface IBeanDeclModel extends ITypeResolver{
 	public final  int           BDM_STATE_UPDATING_DOCUMENT		= 0x10 ;
 
 	
+	/**
+	 * Get the type resolver to use for resolving.
+	 * @return type resolver.
+	 * 
+	 * @since 1.0.0
+	 */
+	public TypeResolver getResolver();
 	public List getBeans() ;
 	public void addBean (BeanPart bean) ;
 	public void addMethodReturningABean(String method,String beanName) throws CodeGenException ;

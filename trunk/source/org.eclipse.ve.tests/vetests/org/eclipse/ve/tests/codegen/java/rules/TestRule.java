@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-29 19:55:45 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-04 21:36:35 $ 
  */
 
 import java.util.HashMap;
@@ -29,8 +29,9 @@ import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter;
-import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
@@ -44,7 +45,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
 	 *       of utility objects.
 	 */
-	protected boolean isModelled(Type tp, ITypeResolver resolver, IVEModelInstance di) {
+	protected boolean isModelled(Type tp, TypeResolver resolver, IVEModelInstance di) {
 
 		// Try to bypass resolving, and isAssignableFrom
 		if (modelledBeansCache == null)
@@ -79,7 +80,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		return name;
 	}
 	
-	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, ITypeResolver resolver, IVEModelInstance di) {
+	protected boolean ignoreVariable(VariableDeclaration decl, Type tp, TypeResolver resolver, IVEModelInstance di) {
 		try {
 			String name = decl.getName().getIdentifier();
 			if (name.startsWith("ivj")) {
@@ -111,23 +112,10 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 			return true;
 		}
 	}
-
-	protected String getType(Type type) {
-		String t = null;
-		if (type instanceof SimpleType)
-			t = new String(((SimpleType) type).getName().toString());
-		else if (type instanceof QualifiedType) {
-			t = ((QualifiedType) type).getName().toString();
-		} else
-			return null;
-		return t;
-	}
 	
-	protected String resolveType(Type type, ITypeResolver resolver) {
-		String theType = getType(type);
-		if (theType == null)
-			return null;
-		return resolver.resolve(getType(type));
+	protected String resolveType(Type type, TypeResolver resolver) {
+		Resolved resolved = resolver.resolveType(type);
+		return resolved != null ? resolved.getName() : null;
 	}
 	
 	public static void clearCache() {
@@ -138,7 +126,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#getDefaultInitializationMethod(org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.jdt.internal.compiler.ast.TypeDeclaration)
 	 */
-	public String getDefaultInitializationMethod(FieldDeclaration field, ITypeResolver resolver, TypeDeclaration typeDec) {
+	public String getDefaultInitializationMethod(FieldDeclaration field, TypeResolver resolver, TypeDeclaration typeDec) {
 		return null;
 	}
 
@@ -151,7 +139,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.FieldDeclaration, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
 	 */
-	public boolean ignoreVariable(FieldDeclaration field, ITypeResolver resolver, IVEModelInstance di) {
+	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
 		if (isModelled(field.getType(), resolver, di))
 			return false;
 		if (AnnotationDecoderAdapter.isDeclarationParseable(field))
@@ -162,7 +150,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.rules.IMethodVariableRule#ignoreVariable(org.eclipse.jdt.core.dom.VariableDeclarationStatement, org.eclipse.ve.internal.java.codegen.java.ITypeResolver, org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance)
 	 */
-	public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver, IVEModelInstance di) {
+	public boolean ignoreVariable(VariableDeclarationStatement localField, TypeResolver resolver, IVEModelInstance di) {
 		if (isModelled(localField.getType(), resolver, di))
 			return false;
 		if (AnnotationDecoderAdapter.isDeclarationParseable(localField))

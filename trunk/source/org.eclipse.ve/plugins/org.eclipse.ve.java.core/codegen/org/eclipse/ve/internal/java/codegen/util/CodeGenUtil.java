@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.25 $  $Date: 2004-06-21 16:23:34 $ 
+ *  $Revision: 1.26 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 
@@ -19,15 +19,12 @@ package org.eclipse.ve.internal.java.codegen.util;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IFileEditorInput;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -286,7 +283,7 @@ public static IMethod refreshMethod(IMethod method) {
 	
 	ICompilationUnit cu = method.getCompilationUnit() ;
 	try {
-	  if (!cu.isConsistent()) cu.reconcile() ;
+	  if (!cu.isConsistent()) cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;
 	}
 	catch (JavaModelException e) {}
 	
@@ -297,7 +294,7 @@ public static IMethod refreshMethod(IMethod method) {
 public static IMethod refreshMethod(String handle, ICompilationUnit cu) {
 	if (handle == null) return null ;
 	try {
-	  if (!cu.isConsistent()) cu.reconcile() ;
+	  if (!cu.isConsistent()) cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;
 	}
 	catch (JavaModelException e) {}
 	return getMethod(getMainType(cu),handle) ;
@@ -306,7 +303,7 @@ public static IMethod refreshMethod(String handle, ICompilationUnit cu) {
 public static IField getField (String handle, ICompilationUnit cu) {
 	if (handle == null) return null ;
 	try {
-	    if (!cu.isConsistent()) cu.reconcile() ;
+	    if (!cu.isConsistent()) cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;
 		
     	IType t = getMainType(cu) ;
     	IField[] flds = t.getFields() ;
@@ -323,7 +320,7 @@ public static IField getField (String handle, ICompilationUnit cu) {
 public static IField getFieldByName (String name, ICompilationUnit cu) {
 	if (name == null || cu==null) return null ;
 	try {
-	    if (!cu.isConsistent()) cu.reconcile() ;
+	    if (!cu.isConsistent()) cu.reconcile(ICompilationUnit.NO_AST, false, null, new NullProgressMonitor()) ;
 		
     	IType t = getMainType(cu) ;
     	IField[] flds = t.getFields() ;
@@ -771,56 +768,6 @@ public static void eSet(EObject obj, EStructuralFeature sf, EObject val, int ind
 	else
 	   obj.eSet(sf, val) ;
 }
-/**
- * Generate a simple working copy provider, using the Compilation Unit as a reference.
- * This provider will only a small set of APIs.
- */
-public static IWorkingCopyProvider getRefWorkingCopyProvider(ICompilationUnit refCU) {
-	        final ICompilationUnit cu = refCU ;
-	  	    IWorkingCopyProvider wcp = new IWorkingCopyProvider(){
-	  	    	CodegenTypeResolver resolver = new CodegenTypeResolver(getMainType(cu));
-	  	    		  	    		  	    	
-
-				public String resolve(String unresolved){
-					try{
-						if(resolver==null)
-							return unresolved;
-						else
-							return resolver.resolveTypeComplex(unresolved);
-					}catch(Exception e){
-						return unresolved;
-					}
-				}
-				public String resolveType(String unresolved) {
-					if (resolver == null) return null ;
-					return unresolved != null ? resolver.resolveTypeComplex(unresolved,true) : null;
-				}				
-				public String resolveThis(){
-					return getMainType(cu).getTypeQualifiedName();
-				}
-		        public ITypeHierarchy getHierarchy() {
-		          try {
-		            IType t = getMainType(cu) ;
-		            return t.newSupertypeHierarchy(null) ;
-		          }
-		          catch (org.eclipse.jdt.core.JavaModelException e) {}
-		          return null ;
-		        }
-		        public ICompilationUnit getWorkingCopy(boolean forceReconcile) { return cu; }
-		        public IFileEditorInput getEditor() { return null; }
-		        public IFile getFile() { return null; }
-		        public IDocument getDocument() { return null; }
-		        public Object    getDocLock() { return null; }
-		        public void disconnect() {}
-		        public void connect(IFile file) {}
-		        public ISourceRange getSourceRange(String handle) { return null; }
-		        public int getLineNo(int Offset) { return -1; }
-		        public void dispose() {}
-		        public IJavaElement getElement(String handle) { return null; }
-
-	 	};
-	 	return wcp ;
-}
 public static void clearCache () {
 	PropertyFeatureMapper.clearCache() ;
 	InstanceVariableCreationRule.clearCache() ;
@@ -875,13 +822,6 @@ public static void logParsingError(String exp, String method, String msg, boolea
 }
 */
 
-public static String resolve(Name toResolve, IBeanDeclModel bdm) {
-		return bdm.resolve(toResolve.getFullyQualifiedName());
-}
-
-public static String resolve(Name toResolve, ITypeResolver resolver) {
-		return resolver.resolve(toResolve.getFullyQualifiedName());
-}
 
 /**
  * Determines where in the first parameter, the second parameter

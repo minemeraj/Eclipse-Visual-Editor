@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.10 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -33,6 +33,7 @@ import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -99,9 +100,9 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     protected abstract boolean isValidArguments (List exps) ;
     
     protected JavaClass getAllocatedType(Name type) {
-    	String name = CodeGenUtil.resolve(type, fbeanPart.getModel()) ;    	    	   
-    	if (name != null)
-    	  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
+    	Resolved resolvedType = fbeanPart.getModel().getResolver().resolveType(type);    	    	   
+    	if (resolvedType != null)
+    	  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(resolvedType.getName(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
     	
     	return null ;
     }
@@ -305,9 +306,9 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 					      lt.getImplements().add(it) ;
 				}
 			}
-			String superClass = fbeanPart.getModel().resolve(cType.getSuperclassName()) ;
-			if (superClass!=null && superClass.length()>0) {
-			    JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(superClass,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;cType.getSuperclassName() ;
+			Resolved superClass = fbeanPart.getModel().getResolver().resolveType(cType.getSuperclassName()) ;
+			if (superClass!=null) {
+			    JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(superClass.getName(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 			    if (it != null && it.isExistingType() && lt.getExtends()!= it)
 			       lt.setExtends(it)  ;
 			}
@@ -563,19 +564,18 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	 * 
 	 * Need to re-parse, as the source code may have changed.
 	 */	
-	protected JavaClass resolveInstance(char[] instanceName) {
+	protected JavaClass resolveInstance(String targetName) {
 			
 		try {
 			IType t = getMainType();
 			if (t == null)
 			   return null;
 			IField fields[] = t.getFields();
-			String targetName = new String(instanceName);
 			for (int i = 0; i < fields.length; i++) {
 				if (fields[i].getElementName().equals(targetName)) {
 					String type = Signature.toString(fields[i].getTypeSignature()) ;
-					type = fbeanPart.getModel().resolve(type);
-					return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
+					Resolved resolved = fbeanPart.getModel().getResolver().resolveType(type);
+					return resolved != null ? (JavaClass) JavaRefFactory.eINSTANCE.reflectType(resolved.getName(), fbeanPart.getModel().getCompositionModel().getModelResourceSet()) : null;
 				}
 			}
 			// Look for an actuall class type
@@ -583,14 +583,13 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			for(int i=1; i<tps.length; i++)
 			  if (tps[i].getElementName().equals(targetName)) {
 			  	String type = tps[i].getFullyQualifiedName() ;
-				type = fbeanPart.getModel().resolve(type);
 				return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 			  }
 		}
 		catch (JavaModelException e) {}		
 		// Single reference may be for a an instance of a class
 		// Figure out if we parsed an instance for it
-		BeanPart bp = findABean(new String (instanceName)) ;
+		BeanPart bp = findABean(targetName) ;
 		if (bp != null) {
 		  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(bp.getType(), fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 		}

@@ -11,12 +11,13 @@ package org.eclipse.ve.tests;
  *******************************************************************************/
 /*
  *  $RCSfile: AllSuites.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-28 14:21:41 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 21:36:35 $ 
  */
 
 import org.eclipse.ve.tests.cde.CDESuite;
 import org.eclipse.ve.tests.codegen.java.rules.CodegenRulesSuite;
 import org.eclipse.ve.tests.codegen.java.templates.CodegenJavaTemplatesSuite;
+import org.eclipse.ve.tests.codegen.resolve.ResolveSuite;
 import org.eclipse.ve.tests.codegen.util.CodegenUtilSuite;
 import org.eclipse.ve.tests.vce.rules.VCERulesSuite;
 import org.eclipse.ve.tests.codegen.model.ModelTestsSuite;
@@ -27,7 +28,8 @@ import junit.framework.TestSuite;
 public class AllSuites extends TestSuite {
 	// Testa cases to be include in the suite
 	private static Class suitesList[] =
-		{ CDESuite.class, CodegenRulesSuite.class, CodegenJavaTemplatesSuite.class, CodegenUtilSuite.class, VCERulesSuite.class, ModelTestsSuite.class };
+		{ CDESuite.class, CodegenRulesSuite.class, CodegenJavaTemplatesSuite.class, CodegenUtilSuite.class, VCERulesSuite.class, ModelTestsSuite.class,
+			ResolveSuite.class };
 
 	public static String pkgName = "Visual Editor jUnit Test Suite";
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-04 21:18:57 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -39,16 +39,6 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  * @since 1.0.0
  */
 public class TypeResolver {
-// TODO These were for some timing tests. Once we are satisified, remove all of the commented out sections for timing.
-//public static int resolveCountString, resolveCountName, alreadyResolvedCount, simpleResolveCount;
-//public static int[]  resolveNameCountStep = new int[3];
-//public static long[] totaltimeNameStep = new long[3];
-//public static int[]  resolveSimpleCountStep = new int[5];
-//public static long[] totaltimeSimpleStep = new long[5];
-//public static long totaltimeString, totaltimeName, totalTimeReResolve, totalTimeSimple;	
-//public static long[] top5exists = new long[5];
-//public static String[] top5Classes = new String[5];
-//boolean incall;
 	
 	/**
 	 * The base resolved return. The subclasses provide the actual
@@ -1056,7 +1046,6 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	protected ResolvedType resolveSimpleType(String simpleName) {
-//long start = System.currentTimeMillis();		
 		try {
 			ResolvedType resolved = (ResolvedType) namesToResolvedTypes.get(simpleName);
 			if (resolved != null)
@@ -1065,18 +1054,11 @@ public class TypeResolver {
 			if (getMainTypeHierarchy() == null)
 				return null;	// We don't have a valid hierarchy. So can only return what we got.
 
-//IType innerClass;
-//long startStep = System.currentTimeMillis();
-//try {
 			// Need to go through the algorithm to see what it could be.
 			// 1) Is it an inner class of this main type.
 			IType innerClass = findType(mainType, simpleName);
 			if (innerClass != null)
 				return addToResolvedMain(simpleName, innerClass);
-//} finally {
-//	resolveSimpleCountStep[0]++;
-//	totaltimeSimpleStep[0] += (System.currentTimeMillis()-startStep);	
-//}
 
 			// 2) Is it an inner class of a super type or super interface.
 			IType[] lclAllSuperTypes = getAllSuperTypes();
@@ -1086,8 +1068,6 @@ public class TypeResolver {
 					return addToResolvedSuperList(simpleName, innerClass);
 			}
 
-//startStep = System.currentTimeMillis();
-//try {
 			// 3) Is it matching an exact match (i.e. same as last qualifier on import declaration).
 			int s = importDecls.size();
 			for (int i = 0; i < s; i++) {
@@ -1101,23 +1081,12 @@ public class TypeResolver {
 					}
 				}
 			}
-//} finally {
-//	resolveSimpleCountStep[2]++;
-//	totaltimeSimpleStep[2] += (System.currentTimeMillis()-startStep);	
-//}
-//IType type;
-//startStep = System.currentTimeMillis();
-//try {
+			
 			// 4) Is it in the same package as the maintype.
 			IType type = javaProject.findType(mainPackageName, simpleName);
 			if (type != null)
 				return addToResolved(simpleName, type);
-//} finally {
-//	resolveSimpleCountStep[3]++;
-//	totaltimeSimpleStep[3] += (System.currentTimeMillis()-startStep);	
-//}			
-//startStep = System.currentTimeMillis();
-//try {			
+			
 			// 5) Is it in an on-demand import.
 			for (int i = 0; i < s; i++) {
 				ImportDecl id = (ImportDecl) importDecls.get(i);
@@ -1139,47 +1108,18 @@ public class TypeResolver {
 					return addToResolved(id, simpleName, type);
 				}
 			}
-//} finally {
-//	resolveSimpleCountStep[4]++;
-//	long time = (System.currentTimeMillis()-startStep);
-//	totaltimeSimpleStep[4] += time;
-//}			
+			
 			// Not found
 			return null;
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.WARNING);
 			return null;
 		}
-//		} finally {
-//			simpleResolveCount++;
-//			totalTimeSimple += (System.currentTimeMillis()-start);
-//		}
 	}
 	
 
 	private IType findType(IType outerType, String innerTypeName) throws JavaModelException {
-//long startStep = System.currentTimeMillis();
-//try {				
-//		
-		return javaProject.findType(outerType.getPackageFragment().getElementName(), outerType.getTypeQualifiedName('.')+'.'+innerTypeName);
-//} finally {
-//	resolveSimpleCountStep[1]++;
-//	long time = (System.currentTimeMillis()-startStep);
-//	totaltimeSimpleStep[1] += time;
-//	for (int ii = 0; ii < top5exists.length; ii++) {
-//		if (time >= top5exists[ii]) {
-//			String name = outerType.getFullyQualifiedName()+'.'+innerTypeName;
-//			if (time == top5exists[ii] && name.equals(top5Classes[ii]))
-//				continue;
-//			System.arraycopy(top5exists, ii, top5exists, ii+1, top5exists.length-ii-1);
-//			top5exists[ii] = time;
-//			System.arraycopy(top5Classes, ii, top5Classes, ii+1, top5Classes.length-ii-1);
-//			top5Classes[ii] = name;
-//			break;
-//		}
-//	}	
-//}								
-		
+		return javaProject.findType(outerType.getPackageFragment().getElementName(), outerType.getTypeQualifiedName('.')+'.'+innerTypeName);		
 	}
 	
 	private ResolvedType addToResolved(String simpleName, IType resolvedType) {
@@ -1229,6 +1169,7 @@ public class TypeResolver {
 
 	
 	private final static String[] EMPTY_FIELD_ACCESSORS = new String[0];
+	
 	/**
 	 * This is the field resolved type from a QualifiedName. The split is between the type name part and where field
 	 * access starts. It will return the type, and the array of parts of all that is left. 
@@ -1273,11 +1214,6 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public FieldResolvedType resolveWithPossibleField(Name name) {
-//long start = System.currentTimeMillis();
-//boolean dotest = !incall;
-//incall = true;
-//
-//try {
 		getMainTypeHierarchy();	// Force a refresh if needed.
 		
 		if (name.isSimpleName()) {
@@ -1287,8 +1223,6 @@ public class TypeResolver {
 		
 		ResolvedType rt = (ResolvedType) namesToResolvedTypes.get(name.getFullyQualifiedName());
 		if (rt != null) {
-//			alreadyResolvedCount++;
-//			totalTimeReResolve += (System.currentTimeMillis()-start);
 			return new FieldResolvedType(rt, EMPTY_FIELD_ACCESSORS);
 		}
 		
@@ -1296,15 +1230,6 @@ public class TypeResolver {
 		// Else resolve as complex
 		NamesList names = decomposeName(name);
 		return resolveWithPossibleField(names);
-//} finally {		
-//	if (dotest) {
-//		resolveCountName++;
-//		totaltimeName += (System.currentTimeMillis()-start);
-//		incall = false;
-//		}
-//
-//}
-		
 	}
 	
 	/**
@@ -1321,11 +1246,6 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public FieldResolvedType resolveWithPossibleField(String name) {
-//long start = System.currentTimeMillis();
-//boolean dotest = !incall;
-//incall = true;
-//
-//try {
 		getMainTypeHierarchy();	// Force a refresh if needed.
 		
 		if (name.indexOf('.') == -1) {
@@ -1335,24 +1255,13 @@ public class TypeResolver {
 
 		ResolvedType rt = (ResolvedType) namesToResolvedTypes.get(name);
 		if (rt != null) {
-//			alreadyResolvedCount++;
-//			totalTimeReResolve += (System.currentTimeMillis()-start);
 			return new FieldResolvedType(rt, EMPTY_FIELD_ACCESSORS);
 		}
 
 		// Else resolve as complex
 		NamesList names = decomposeName(name);
 		return resolveWithPossibleField(names);
-//} finally {		
-//	if (dotest) {
-//		resolveCountString++;
-//		totaltimeString += (System.currentTimeMillis()-start);
-//		incall = false;
-//		}
-//
-//}
-		
-}	
+	}	
 	
 	/*
 	 * Common resolve with possible field for use from name or string.
@@ -1528,32 +1437,18 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public ResolvedType resolveType(Name name) {
-//long start = System.currentTimeMillis();
-//boolean dotest = !incall;
-//incall = true;
-//try {
 		getMainTypeHierarchy();	// Force a refresh if needed.
 		
 		if (name.isSimpleName()) { return resolveSimpleType(((SimpleName) name).getIdentifier()); }
 
 		ResolvedType rt = (ResolvedType) namesToResolvedTypes.get(name.getFullyQualifiedName());
 		if (rt != null) {
-//			alreadyResolvedCount++;
-//			totalTimeReResolve += (System.currentTimeMillis()-start);
 			return rt;
 		}
 		
 		// Else resolve as complex
 		NamesList names = decomposeName(name);
 		return resolveType(names);
-//} finally {
-//	if (dotest) {
-//	resolveCountName++;
-//	totaltimeName += (System.currentTimeMillis()-start);
-//	incall = false;
-//	}
-//	
-//}
 	}
 	
 	/**
@@ -1567,11 +1462,6 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public Resolved resolveType(Type type) {
-//long start = System.currentTimeMillis();
-//boolean dotest = !incall;
-//incall = true;
-//
-//try {
 		getMainTypeHierarchy();	// Force a refresh if needed.
 		
 		if (type.isSimpleType())
@@ -1604,15 +1494,6 @@ public class TypeResolver {
 			return resolveType(decomposeType((QualifiedType) type));
 		} else
 			return null;
-//} finally {		
-//	if (dotest) {
-//		resolveCountName++;
-//		totaltimeName += (System.currentTimeMillis()-start);
-//		incall = false;
-//		}
-//
-//}
-//		
 	}
 	
 	/**
@@ -1626,11 +1507,6 @@ public class TypeResolver {
 	 * @since 1.0.0
 	 */
 	public ResolvedType resolveType(String name) {
-//long start = System.currentTimeMillis();
-//boolean dotest = !incall;
-//incall = true;
-//
-//try {
 		getMainTypeHierarchy();	// Force a refresh if needed.
 		
 		if (name.indexOf('.') == -1) {
@@ -1639,23 +1515,12 @@ public class TypeResolver {
 
 		ResolvedType rt = (ResolvedType) namesToResolvedTypes.get(name);
 		if (rt != null) {
-//			alreadyResolvedCount++;
-//			totalTimeReResolve += (System.currentTimeMillis()-start);
 			return rt;
 		}
 		
 		// Else resolve as complex
 		NamesList names = decomposeName(name);
 		return resolveType(names);
-//} finally {		
-//	if (dotest) {
-//		resolveCountString++;
-//		totaltimeString += (System.currentTimeMillis()-start);
-//		incall = false;
-//		}
-//
-//}
-		
 	}	
 	
 	/*
@@ -1691,15 +1556,13 @@ public class TypeResolver {
 				// We found it on the full size. No need to go further.
 				return rt;
 			}
-//long start = System.currentTimeMillis();			
+			
 			// Else find largest match. But we will stop when we tested only two names. That is because one name would be stored as
 			// a string instead of a nameslist. wW will test for that one name in the next section.
 			while (rt == null && --tSize > 1) {
 				names.setTestSize(tSize);
 				rt = (ResolvedType) namesToResolvedTypes.get(names);
 			}
-//resolveNameCountStep[0]++;
-//totaltimeNameStep[0] += (System.currentTimeMillis()-start);
 			
 			if (rt == null) {
 				// No match, so start building up from first one on left. First we see if the first one is a simple type.
@@ -1708,8 +1571,6 @@ public class TypeResolver {
 				int namesIndex = namesSize-1;
 				names.setTestSize(1);	// Matching first one.
 				rt = resolveSimpleType((String) names.get(namesIndex));
-//start = System.currentTimeMillis();	// Because resolveSimple already has a timer, don't want to include it in ours.
-//try {				
 				if (rt == null) {
 					// First one not a simple type, so start building up package name and type.
 					StringBuffer pkgBuild = new StringBuffer();
@@ -1731,15 +1592,9 @@ public class TypeResolver {
 					
 					if (rt == null)
 						return null;	// We went all of the way and never found a type.
-				}
-//} finally {
-//resolveNameCountStep[1]++;
-//totaltimeNameStep[1] += (System.currentTimeMillis()-start);
-//}
-				
+				}				
 			}
 			
-//start = System.currentTimeMillis();
 			// If we got here we found the minimum type and have cached it, or it was cached. The nameslist testsize will be
 			// set to this length. Now from here we see how far we can go and find inner classes. We will do this by increasing
 			// the testsize one at a time until we don't find a match. When we are done, testsize in names will be the max match.
@@ -1756,8 +1611,6 @@ public class TypeResolver {
 					break;
 				}
 			}
-//resolveNameCountStep[2]++;
-//totaltimeNameStep[2] += (System.currentTimeMillis()-start);
 
 			return rt;
 		} catch (JavaModelException e) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-15 19:34:09 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.List;
@@ -24,6 +24,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.JavaElementInfo;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider;
 
 public class CodeSnippetModelBuilder  extends JavaBeanShadowModelBuilder {
 
@@ -38,7 +39,7 @@ protected int[] methodEnds;
 protected String[] methodHandles;
 
 
-public CodeSnippetModelBuilder(EditDomain d, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU){
+public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU){
 	super(d,"CodeSnippetClass_2",null); //$NON-NLS-1$
 	this.referenceCU = referenceCU;
 	this.contents = contents;
@@ -50,7 +51,7 @@ public CodeSnippetModelBuilder(EditDomain d, String contents, String[] methodHan
 	this.methodEnds=methodEnds;
 	this.methodHandles=new String[methodHandles.length+1];
 	this.methodHandles = methodHandles;
-	this.fWCP = createPseudoWorkingCopyProvider(referenceCU) ;
+	this.fWCP = createPseudoWorkingCopyProvider(referenceCU, wcp.getResolver()) ;
 }
 
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.53 $  $Date: 2004-08-04 21:26:22 $ 
+ *  $Revision: 1.54 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -172,19 +172,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	// allow threads to wait until JVE has loaded
 	protected Object loadCompleteSync = new Object();
 	protected volatile boolean isLoadPending = true;
-	long t100;
+	
 	public JavaVisualEditorPart() {
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
-// TODO Remove when done with TypeResolver timing tests.
-//TypeResolver.totalTimeSimple = TypeResolver.totaltimeName = TypeResolver.totaltimeString = TypeResolver.resolveCountName = TypeResolver.resolveCountString = TypeResolver.alreadyResolvedCount = TypeResolver.simpleResolveCount = 0;
-//Arrays.fill(TypeResolver.resolveNameCountStep, 0);
-//Arrays.fill(TypeResolver.totaltimeNameStep, 0);
-//Arrays.fill(TypeResolver.resolveSimpleCountStep, 0);
-//Arrays.fill(TypeResolver.totaltimeSimpleStep, 0);
-//Arrays.fill(TypeResolver.top5exists, 0);
-//Arrays.fill(TypeResolver.top5Classes, null);
-
-t100 = System.currentTimeMillis();		
 	}
 	
 	/* (non-Javadoc)
@@ -785,33 +775,6 @@ t100 = System.currentTimeMillis();
 				if (doTimerStep) {
 					doTimerStep = false;	// Done with first load, don't do it again.
 					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.
-System.out.println("*** Perf: 100-101: " + (System.currentTimeMillis()-t100));
-// TODO Remove when TypeResolver timing tests are done.
-//if (TypeResolver.resolveCountString != 0)
-//	System.out.println("*** Resolve String TotalCount/TotalTime/Avg: " + TypeResolver.resolveCountString + '/'+ TypeResolver.totaltimeString + "/" + (TypeResolver.totaltimeString/TypeResolver.resolveCountString));
-//if (TypeResolver.resolveCountName != 0)
-//	System.out.println("*** Resolve Name TotalCount/TotalTime/Avg: " + TypeResolver.resolveCountName + '/'+ TypeResolver.totaltimeName + "/" + (TypeResolver.totaltimeName/TypeResolver.resolveCountName));
-//if (TypeResolver.resolveCountName + TypeResolver.resolveCountString != 0)
-//	System.out.println("*** Resolve TotalCount/TotalTime/Avg: " + (TypeResolver.resolveCountName + TypeResolver.resolveCountString)  + '/'+ (TypeResolver.totaltimeName + TypeResolver.totaltimeString) + "/" + ((TypeResolver.totaltimeName + TypeResolver.totaltimeString)/(TypeResolver.resolveCountName + TypeResolver.resolveCountString)));
-//if (TypeResolver.alreadyResolvedCount != 0)
-//	System.out.println("*** Already Resolved TotalCount/TotalTime/Avg: " + TypeResolver.alreadyResolvedCount  + '/'+ TypeResolver.totalTimeReResolve + "/" + (TypeResolver.totalTimeReResolve/TypeResolver.alreadyResolvedCount));
-//if (TypeResolver.simpleResolveCount != 0)
-//	System.out.println("*** Resolve Simple TotalCount/TotalTime/Avg: " + TypeResolver.simpleResolveCount + '/'+ TypeResolver.totalTimeSimple + "/" + (TypeResolver.totalTimeSimple/TypeResolver.simpleResolveCount));
-//for (int i = 0; i < TypeResolver.resolveNameCountStep.length; i++) {
-//	if (TypeResolver.resolveNameCountStep[i] == 0)
-//		continue;
-//	System.out.println("*** Resolve Name Step " + i + " TotalCount/TotalTime/Avg: " + TypeResolver.resolveNameCountStep[i] + '/'+ TypeResolver.totaltimeNameStep[i] + "/" + (TypeResolver.totaltimeNameStep[i]/TypeResolver.resolveNameCountStep[i]));	
-//}
-//for (int i = 0; i < TypeResolver.resolveSimpleCountStep.length; i++) {
-//	if (TypeResolver.resolveSimpleCountStep[i] == 0)
-//		continue;
-//	System.out.println("*** Resolve Simple Step " + i + " TotalCount/TotalTime/Avg: " + TypeResolver.resolveSimpleCountStep[i] + '/'+ TypeResolver.totaltimeSimpleStep[i] + "/" + (TypeResolver.totaltimeSimpleStep[i]/TypeResolver.resolveSimpleCountStep[i]));	
-//}
-//for (int i = 0; i < TypeResolver.top5exists.length; i++) {
-//	if (TypeResolver.top5Classes[i] == null)
-//		continue;
-//	System.out.println("*** Top 5 Simple Exists Class #" + i + " Classname=\""+TypeResolver.top5Classes[i] + "\" time="+ TypeResolver.top5exists[i]); 
-//}
 				}
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
@@ -1445,14 +1408,12 @@ System.out.println("*** Perf: 100-101: " + (System.currentTimeMillis()-t100));
 						setRootInProgressLock.release();
 					}
 				}
-long t50 = System.currentTimeMillis();				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
-if (doTimerStep)
-	System.out.println("*** Perf: 50-51: " + (System.currentTimeMillis()-t50));
+				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
 				if (monitor.isCanceled()) {

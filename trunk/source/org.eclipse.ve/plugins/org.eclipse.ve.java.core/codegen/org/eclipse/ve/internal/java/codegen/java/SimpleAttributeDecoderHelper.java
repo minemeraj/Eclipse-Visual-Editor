@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2004-06-07 21:11:27 $ 
+ *  $Revision: 1.22 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import java.util.Iterator;
@@ -32,6 +32,7 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -96,40 +97,41 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	protected String getInitString(QualifiedName arg) {
 		String initString = arg.toString();
-		try{
-			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
-			   fbeanPart.getModel().getCompilationUnit()!=null && 
-			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
-				//String resType = CodeGenUtil.resolveTypeComplex(fbeanPart.getModel().getCompilationUnit().getTypes()[0], initString);
-				String resType = CodeGenUtil.resolve(arg,fbeanPart.getModel());
-				if(resType!=null)	{
-                    fUnresolveInitString = initString ;
-					initString = resType;
-                }                    
-			}
-		}catch(JavaModelException e){
-			JavaVEPlugin.log(e);
-		}
+		//TODO: use PT instead ... note that this needs to be a resolveField not a type
+//		try{
+//			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
+//			   fbeanPart.getModel().getCompilationUnit()!=null && 
+//			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
+//				Resolved resolved = fbeanPart.getModel().getResolver().resolveType(arg);
+//				if(resolved!=null)	{
+//                    fUnresolveInitString = initString ;
+//					initString = resolved.getName();
+//                }                    
+//			}
+//		}catch(JavaModelException e){
+//			JavaVEPlugin.log(e);
+//		}
 		return initString;
 	}
 	
 	protected String getInitString(MethodInvocation msg){
 		String initstring = msg.toString();
-		if (msg.getExpression() instanceof Name){
-			String unResolved = msg.getExpression().toString();
-		    if(fbeanPart!=null && fbeanPart.getModel()!=null){
-				String resolved = CodeGenUtil.resolve((Name)msg.getExpression(), fbeanPart.getModel());
-				if(!resolved.equals(unResolved)){
-					int from = initstring.indexOf(unResolved);
-					int to = from+unResolved.length();
-					if(from>-1 && from<initstring.length() && 
-					   to>-1 && to<initstring.length() && from<=to){
-					   	String newInitstring = initstring.substring(0,from)+resolved+initstring.substring(to,initstring.length());
-						initstring = newInitstring;
-					}
-				}
-			}
-		}
+		//TODO: use PT instead this logic... note that the resolving here is for a FIELD not a type
+//		if (msg.getExpression() instanceof Name){
+//			String unResolved = msg.getExpression().toString();
+//		    if(fbeanPart!=null && fbeanPart.getModel()!=null){
+//				FieldResolvedType resolved = fbeanPart.getModel().getResolver().resolveWithPossibleField((Name)msg.getExpression());
+//				if(resolved != null && !resolved.getName().equals(unResolved)){
+//					int from = initstring.indexOf(unResolved);
+//					int to = from+unResolved.length();
+//					if(from>-1 && from<initstring.length() && 
+//					   to>-1 && to<initstring.length() && from<=to){
+//					   	String newInitstring = initstring.substring(0,from)+resolved+initstring.substring(to,initstring.length());
+//						initstring = newInitstring;
+//					}
+//				}
+//			}
+//		}
 		return initstring;
 	}
 	
@@ -143,14 +145,13 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			if(fbeanPart!=null && fbeanPart.getModel()!=null && 
 			   fbeanPart.getModel().getCompilationUnit()!=null && 
 			   fbeanPart.getModel().getCompilationUnit().getTypes().length>0){
-			   	String type = arg.getName().toString(); //CodeGenUtil.tokensToString(arg.type.getTypeName());
-			   	String resolvedType = null;
 		   		//String rt = CodeGenUtil.resolveTypeComplex(fbeanPart.getModel().getCompilationUnit().getTypes()[0], type);
-		   		String rt = fbeanPart.getModel().resolve(type);
+		   		Resolved rt = fbeanPart.getModel().getResolver().resolveType(arg.getName());
+		   		String resolvedType;
 		   		if(rt != null)
-		   			resolvedType = rt;
+		   			resolvedType = rt.getName();
 		   		else
-		   			resolvedType = type;
+		   			resolvedType = arg.getName().getFullyQualifiedName();
 				StringBuffer initConstruction = new StringBuffer("new "); //$NON-NLS-1$
 				initConstruction.append(resolvedType);
 				initConstruction.append("("); //$NON-NLS-1$
@@ -210,10 +211,10 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
           JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
           		ConstructorDecoderHelper.getParsedTree(exp,expOfMethod,fbeanPart.getModel(),null));
 
-          String resolved = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()) ; 
+          Resolved resolved = fbeanPart.getModel().getResolver().resolveType(exp.getName()) ;
           EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
         
-          IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved, fbeanPart.getModel().getCompositionModel()) ;
+          IJavaObjectInstance attr = (IJavaObjectInstance)CodeGenUtil.createInstance(resolved.getName(), fbeanPart.getModel().getCompositionModel()) ;
           attr.setAllocation(alloc);
           
           EObject target = fbeanPart.getEObject() ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodVariableRule.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-14 19:54:05 $ 
+ *  $Revision: 1.5 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.ve.internal.cde.rules.IRule;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 
 
 
@@ -36,7 +36,7 @@ static String RULE_ID = "ruleMethodVariable" ;	 //$NON-NLS-1$
  * Note: the passed in AST node field will find its codegen annotation comment from the source 
  * present in its parent CU node's 'org.eclipse.ve.codegen.source' property.
  */
-public boolean ignoreVariable(VariableDeclarationStatement localField, ITypeResolver resolver,IVEModelInstance di) ;
+public boolean ignoreVariable(VariableDeclarationStatement localField, TypeResolver resolver,IVEModelInstance di) ;
 	
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-04 21:36:17 $ 
  */
 
 
@@ -23,6 +23,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 
 
 public class CodeTypeRef {
@@ -44,7 +46,11 @@ public CodeTypeRef (String typeName, IBeanDeclModel model){
 
 public CodeTypeRef (TypeDeclaration declType, IBeanDeclModel model) {
 	fdeclType = declType ;
-	fName = org.eclipse.ve.internal.java.codegen.util.CodeGenUtil.resolve(declType.getName(), model);	
+	ResolvedType resolveType = model.getResolver().resolveType(declType.getName());
+	if (resolveType!=null)
+	   fName = resolveType.getName();
+	else
+	   fName = declType.getName().getFullyQualifiedName(); //TODO none resolved class... do we still want to model this 
 	fBeanModel = model ;
 	fbeanComposition = model.getCompositionModel().getModelRoot() ;
 }	

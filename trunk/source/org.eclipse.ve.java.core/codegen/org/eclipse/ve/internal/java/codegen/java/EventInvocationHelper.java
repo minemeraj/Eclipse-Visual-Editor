@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-20 17:30:39 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-04 21:36:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,6 +34,8 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventMethodParsingRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 
 /**
  * @author gmendel
@@ -64,15 +66,12 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	
 	protected boolean isSameArgs(MethodDeclaration md, Method m) {
 		boolean result = true ;
+		TypeResolver resolver = fbeanPart.getModel().getResolver();		
 		for (int i=0; i<m.getParameters().size(); i++) {
 			JavaParameter p = (JavaParameter) m.getParameters().get(i) ;
 			SingleVariableDeclaration a = (SingleVariableDeclaration) md.parameters().get(i) ;
-			String atype ;
-			if (a.getType() instanceof SimpleType)
-				atype = CodeGenUtil.resolve(((SimpleType)a.getType()).getName(),fbeanPart.getModel());
-			else
-				atype = a.getType().toString();  // Need more specifics for arrays
-			if (!p.getJavaType().getQualifiedName().equals(atype)) {
+			Resolved aType = resolver.resolveType(a.getType());
+			if (!p.getJavaType().getQualifiedName().equals(aType.getName())) {
 				result = false ;
 				break ;
 			}
@@ -193,8 +192,10 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 			JavaParameter p = (JavaParameter) fEventDecorator.getAddListenerMethod().getParameters().get(0);
 			if (exps.get(0) instanceof ClassInstanceCreation) {
 				ClassInstanceCreation e = (ClassInstanceCreation) exps.get(0);
-				String type = CodeGenUtil.resolve(e.getName(),fbeanPart.getModel()); 
-				JavaHelpers jclazz = JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getEObject());
+				Resolved resolvedType = fbeanPart.getModel().getResolver().resolveType(e.getName()); 
+				JavaHelpers jclazz = null;
+				if (resolvedType!=null)
+					 jclazz = JavaRefFactory.eINSTANCE.reflectType(resolvedType.getName(), fbeanPart.getEObject());
 				if (jclazz != null && ((JavaClass)jclazz).isExistingType()) {
 					if (p.getJavaType().isAssignableFrom(jclazz))
 						result = true;
@@ -203,11 +204,11 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 				}
 				else {
 					// Class may not be saved (inner/anonymouse class) and hence not in the JCM
-					StringBuffer b = new StringBuffer(type) ;
-					if (type.indexOf("Adapter") >= 0) {   //$NON-NLS-1$
-					    b.replace(type.indexOf("Adapter"), type.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
+					StringBuffer b = new StringBuffer(resolvedType.getName()) ;
+					if (resolvedType.getName().indexOf("Adapter") >= 0) {   //$NON-NLS-1$
+					    b.replace(resolvedType.getName().indexOf("Adapter"), resolvedType.getName().length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
 					}
-					if (!p.getJavaType().getQualifiedName().equals(type) &&
+					if (!p.getJavaType().getQualifiedName().equals(resolvedType.getName()) &&
 					    !p.getJavaType().getQualifiedName().equals(b.toString()))
 						result = false;
 					
