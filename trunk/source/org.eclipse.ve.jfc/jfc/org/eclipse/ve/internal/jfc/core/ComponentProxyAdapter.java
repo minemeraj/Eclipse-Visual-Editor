@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-27 21:35:25 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-04 23:27:36 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -735,7 +735,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 											// This needs to run in ui thread.
 											ErrorType err =
 												new ErrorType(
-													VisualMessages.getString("ComponentProxyAdapter.Picture_too_large"), //$NON-NLS-1$
+													VisualMessages.getString("ComponentProxyAdapter.Picture_too_large_WARN_"), //$NON-NLS-1$
 													IErrorHolder.ERROR_INFO);
 											processError(IMAGE_DATA_COLLECTION_ERROR_KEY, err);
 										}
@@ -756,9 +756,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 										if (eMsg == null) {
 											// No localized msg. Get the exception type.
 											IBeanTypeProxy eType = exception.getTypeProxy();
-											eMsg = MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_exception"), new Object[] { eType.getTypeName()}); //$NON-NLS-1$
+											eMsg = MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_exception_EXC_"), new Object[] { eType.getTypeName()}); //$NON-NLS-1$
 										}
-										ErrorType err = new ErrorType(MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_failed"), new Object[] { eMsg }), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
+										ErrorType err = new ErrorType(MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_failed_ERROR_"), new Object[] { eMsg }), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
 										processError(IMAGE_DATA_COLLECTION_ERROR_KEY, err);
 									}
 								});
@@ -772,12 +772,12 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 						// No localized msg. Get the exception type. If it is OutOfMemory, handle special.
 						IBeanTypeProxy eType = e.getTypeProxy();
 						if ("java.lang.OutOfMemoryError".equals(eType.getTypeName())) { //$NON-NLS-1$
-							eMsg = VisualMessages.getString("ComponentProxyAdapter.Out_of_memory"); //$NON-NLS-1$
+							eMsg = VisualMessages.getString("ComponentProxyAdapter.Out_of_memory_WARN_"); //$NON-NLS-1$
 						} else {
-							eMsg = MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_exception"), new Object[] {eType.getTypeName()}); //$NON-NLS-1$
+							eMsg = MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_exception_EXC_"), new Object[] {eType.getTypeName()}); //$NON-NLS-1$
 						}
 					}
-					ErrorType err = new ErrorType(MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_failed"), new Object[] {eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
+					ErrorType err = new ErrorType(MessageFormat.format(VisualMessages.getString("ComponentProxyAdapter.Image_collection_failed_ERROR_"), new Object[] {eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
 					processError(IMAGE_DATA_COLLECTION_ERROR_KEY, err);
 					synchronized (this) {
 						fImageValid = INVALID;

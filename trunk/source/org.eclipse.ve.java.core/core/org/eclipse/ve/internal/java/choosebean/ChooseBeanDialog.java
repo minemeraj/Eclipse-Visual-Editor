@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.17 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-04 23:27:16 $ 
  */
 
 import java.util.*;
@@ -570,7 +570,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				isInstantiable = false;
 				if(message.length()>0)
 					message = message.concat(" : "); //$NON-NLS-1$
-				message = ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.UnknownError"); //$NON-NLS-1$ //$NON-NLS-2$
+				message = ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.Unknown_ERROR_"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		Status status = new Status(

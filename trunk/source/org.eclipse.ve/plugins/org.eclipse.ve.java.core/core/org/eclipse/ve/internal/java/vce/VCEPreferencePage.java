@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-02 22:39:07 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-04 23:27:17 $ 
  */
 
 import java.util.ArrayList;
@@ -687,12 +687,12 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			int val = Integer.parseInt(sourceToVisual.getText());
 			if (val < VCEPreferences.DEFAULT_SYNC_DELAY) {
 				isValid = false;
-				setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMinimum")); //$NON-NLS-1$
+				setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMinimum_ERROR_")); //$NON-NLS-1$
 				setValid(false);
 			}
 		} catch (NumberFormatException ex) {
 			isValid = false;
-			setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMustBeInteger")); //$NON-NLS-1$
+			setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMustBeInteger_ERROR_")); //$NON-NLS-1$
 			setValid(false);
 		}
 		// If we got no errors then clear the error message and refresh the total source to visual time
