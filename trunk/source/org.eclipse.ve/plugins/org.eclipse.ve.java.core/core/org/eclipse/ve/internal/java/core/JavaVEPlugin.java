@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.20 $  $Date: 2005-01-31 22:06:20 $ 
+ *  $Revision: 1.21 $  $Date: 2005-02-01 12:36:54 $ 
  */
 
 import java.util.Map;
@@ -19,8 +19,6 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -34,17 +32,16 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
-import sun.security.action.GetBooleanAction;
-
 
 public class JavaVEPlugin extends AbstractUIPlugin {
 
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
 	public static final String VE_BUILDER_ID = "org.eclipse.ve.java.core.vebuilder"; //$NON-NLS-1$
-	public static final IPath  VE_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(".cache"); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final String VE_CACHE_MODEL_PROJECT_RELATIVE = ".cache/emfmodel"; //$NON-NLS-1$ 
-	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String VE_CACHE_ROOT_NAME = ".cache";
+	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME); 
+	public static final String VE_PROJECT_MODEL_CACHE_ROOT = VE_CACHE_ROOT_NAME+"/emfmodel"; //$NON-NLS-1$ 
+	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
 	// ID of the registrations extension point.
 
 	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$
@@ -218,7 +215,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 //	}
 	
 	public static IPath getEMFModelCacheDestination(IProject p){
-		return p.getWorkingLocation(getPlugin().getBundle().getSymbolicName()).append(VE_CACHE_MODEL_PROJECT_RELATIVE);
+		return p.getWorkingLocation(getPlugin().getBundle().getSymbolicName()).append(VE_PROJECT_MODEL_CACHE_ROOT);
 	}
 
 	public Logger getLogger() {
