@@ -17,7 +17,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullAction.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-10 18:37:20 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-19 18:32:38 $ 
  */
 
 import org.eclipse.jface.action.Action;
@@ -30,7 +30,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 public class NullAction extends Action {
 	public NullAction() {
 		ImageDescriptor nullDescriptor =
-			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/transp16.gif"); //$NON-NLS-1$
+			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/transp16.gif"); //$NON-NLS-1$
 		setImageDescriptor(nullDescriptor);
 		setHoverImageDescriptor(nullDescriptor);
 		setDisabledImageDescriptor(nullDescriptor);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DistributeAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-19 18:32:38 $ 
  */
 
 import java.util.*;
@@ -57,8 +57,7 @@ public class DistributeAction extends SelectionAction {
 		// and elc16 for enabled and dlc16 for disasbled
 		setImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
-		setHoverImageDescriptor(
-			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/" + graphicName)); //$NON-NLS-1$
+		setHoverImageDescriptor(getImageDescriptor());
 		setDisabledImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
 		setEnabled(true);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-02 20:41:41 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-19 18:32:38 $ 
  */
 
 
@@ -679,7 +679,7 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 	private PageBook pageBook;
 	private Control outline;
 	private Canvas overview;
-	private IAction showOutlineAction, showOverviewAction;
+	private IAction showOverviewAction;
 	static final int ID_OUTLINE  = 0;
 	static final int ID_OVERVIEW = 1;
 	private boolean overviewInitialized;
@@ -712,17 +712,9 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 		getViewer().setKeyHandler(getOutlineKeyHandler());
 		
 		IToolBarManager tbm = getSite().getActionBars().getToolBarManager();
-		showOutlineAction = new Action() {
+		showOverviewAction = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				showPage(ID_OUTLINE);
-			}
-		};
-		showOutlineAction.setImageDescriptor(ImageDescriptor.createFromFile(
-								CDEPlugin.class,"images/outline.gif")); //$NON-NLS-1$
-		tbm.add(showOutlineAction);
-		showOverviewAction = new Action() {
-			public void run() {
-				showPage(ID_OVERVIEW);
+				showPage(isChecked() ? ID_OVERVIEW : ID_OUTLINE);
 			}
 		};
 		showOverviewAction.setImageDescriptor(ImageDescriptor.createFromFile(
@@ -790,7 +782,6 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 	
 	protected void showPage(int id) {
 		if (id == ID_OUTLINE) {
-			showOutlineAction.setChecked(true);
 			showOverviewAction.setChecked(false);
 			pageBook.showPage(outline);
 			if (thumbnail != null)
@@ -798,7 +789,6 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 		} else if (id == ID_OVERVIEW) {
 			if (!overviewInitialized)
 				initializeOverview();
-			showOutlineAction.setChecked(false);
 			showOverviewAction.setChecked(true);
 			pageBook.showPage(overview);
 			thumbnail.setVisible(true);

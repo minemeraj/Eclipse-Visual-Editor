@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowDistributeBoxAction.java,v $
- *  $Revision: 1.2 $  $Date: 2003-11-20 20:04:04 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-19 18:32:38 $ 
  */
 
 import org.eclipse.gef.ui.actions.EditorPartAction;
@@ -30,7 +30,7 @@ public class ShowDistributeBoxAction extends EditorPartAction {
 
 		String graphicName = "distributebox_obj.gif"; //$NON-NLS-1$
 		setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
-		setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/" + graphicName)); //$NON-NLS-1$
+		setHoverImageDescriptor(getImageDescriptor());
 		setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
