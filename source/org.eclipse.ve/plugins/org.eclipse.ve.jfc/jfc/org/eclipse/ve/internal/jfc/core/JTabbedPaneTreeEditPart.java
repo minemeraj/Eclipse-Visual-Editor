@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-17 21:31:30 $ 
  */
 
 import java.util.*;
@@ -76,7 +76,7 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		EditPart ep = super.createChildEditPart(model);
 		((ComponentTreeEditPart) ep).setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter.getFirstReferencedBy((EObject) model, sfComponent),IPropertySource.class));	// This is the property source of the actual model which is part of the constraintComponent.
 // keep the following for the future so we can show the tab title in the beans viewer.		
-//		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator());
+		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator());
 		return ep;
 	}
 	protected void createEditPolicies() {
