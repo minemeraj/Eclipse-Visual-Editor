@@ -16,7 +16,8 @@
           labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationLabelProvider"
           cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationCellEditor"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="type"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.type" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
     
@@ -24,7 +25,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginWidth"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.marginwidth" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
 
@@ -32,7 +34,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginHeight"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.marginheight" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
     
@@ -40,7 +43,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginLeft"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.marginleft" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>          
     
@@ -48,7 +52,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginRight"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.marginright" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>          
     
@@ -56,7 +61,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginTop"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.margintop" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>          
 
@@ -64,7 +70,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="marginBottom"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.marginbottom" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>              
     
@@ -72,7 +79,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="spacing"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.spacing" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
 
@@ -80,7 +88,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="wrap"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.wrap" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>  
 
@@ -88,7 +97,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="fill"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.fill" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>      
 
@@ -96,7 +106,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="justify"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.justify" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects>          
 
@@ -104,7 +115,8 @@
         unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" beanProxyMediatorName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFieldProxyFeatureMediator"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator">
-        <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="pack"/>
+	    <displayNameString xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString"
+            key="rowlayout.pack" bundle="org.eclipse.ve.internal.cde.utility:URLResourceBundle platform:/plugin/org.eclipse.ve.swt/overrides/resourcebundle.xmi#bundle"/>
       </eAnnotations>
     </addedEObjects> 
             
