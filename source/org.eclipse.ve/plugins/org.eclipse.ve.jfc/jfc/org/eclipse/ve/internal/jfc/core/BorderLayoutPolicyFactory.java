@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -23,7 +23,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * Layout Policy Factory for java.awt.BorderLayout
  * Creation date: (10/24/00 11:50:13 AM)
@@ -39,7 +42,7 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * getConstraintConverter method comment.
 	 */
-	public ILayoutSwitcher getLayoutSwitcher(ContainerPolicy policy) {
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy policy) {
 		return new BorderLayoutSwitcher(policy);
 	}
 	/**
@@ -51,7 +54,7 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * getLayoutPolicyHelperClass method comment.
 	 */
-	public ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy aContainerPolicy) {
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy aContainerPolicy) {
 		return new BorderLayoutPolicyHelper(aContainerPolicy);
 	}
 

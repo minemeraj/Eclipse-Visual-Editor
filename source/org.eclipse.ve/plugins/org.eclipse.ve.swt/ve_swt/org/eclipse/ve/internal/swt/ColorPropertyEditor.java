@@ -9,11 +9,15 @@ package org.eclipse.ve.internal.swt;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 /**
@@ -199,6 +203,8 @@ public class ColorPropertyEditor implements PropertyEditor {
 	}
 	
 	private java.util.List fPropertyChangeListeners;
+	
+	private IJavaObjectInstance fExistingValue;
 
 	private static final String COLOR_PREFIX = "org.eclipse.swt.SWT.COLOR_";
 	
@@ -727,5 +733,26 @@ public class ColorPropertyEditor implements PropertyEditor {
 			fPropertyChangeListeners.remove(listener);
 		}
 		
+	}
+
+	public String getText() {
+		// Return a textual representation of the Color
+		// If we don't have a color but we do have a java object instance then use this
+		if(color != null){
+			return color.toString();
+		} else if (fExistingValue != null) {
+			// Get the toString() of the target VM color
+			return BeanProxyUtilities.getBeanProxy(fExistingValue).toBeanString();
+		} else {
+			return "";
+		}
+	}
+
+	/* 
+	 * Set the existing value into the editor
+	 */
+	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
+		fExistingValue = value;
+		// We have the IDE object that points to the color on the target VM
 	}
 }

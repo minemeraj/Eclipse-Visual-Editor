@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 /**
@@ -46,7 +48,7 @@ public class NullLayoutSwitcher extends LayoutSwitcher {
 	/**
 	 * NullLayoutConstraintConverter constructor comment.
 	 */
-	public NullLayoutSwitcher(ContainerPolicy cp) {
+	public NullLayoutSwitcher(VisualContainerPolicy cp) {
 		super(cp);
 		helper = new NullLayoutPolicyHelper(cp);
 	}

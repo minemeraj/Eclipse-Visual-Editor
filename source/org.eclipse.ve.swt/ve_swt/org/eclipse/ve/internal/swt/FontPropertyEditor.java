@@ -10,6 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
  */
 public class FontPropertyEditor implements PropertyEditor {
 	
+	private IJavaObjectInstance fExistingValue;
 	private java.util.List fPropertyChangeListeners;
 	
 	// Used to perform comparisons on strings ignoring case.
@@ -435,6 +438,16 @@ public class FontPropertyEditor implements PropertyEditor {
 		if(fPropertyChangeListeners != null){
 			fPropertyChangeListeners.remove(listener);
 		}
-		
+	}	
+	public String getText(){
+		if(fExistingValue != null){
+			return FontJavaClassLabelProvider.getText(fExistingValue);			
+		} else {
+			return "";
+		}
+	}
+	
+	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
+		fExistingValue = value;
 	}	
 }

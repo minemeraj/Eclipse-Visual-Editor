@@ -46,7 +46,9 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 			protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 				try {
 					monitor.beginTask(InternalMessages.getString("ClasspathWizardPage.Finish.task.SettingProject"), 2000); //$NON-NLS-1$
-					setSelection(JavaCore.newContainerEntry(new Path("SWT_CONTAINER")));			
+					Path path = new Path("SWT_CONTAINER");
+					path.append("EXTERNAL");
+					setSelection(JavaCore.newContainerEntry(path));			
 				} finally {
 					monitor.done();
 				}

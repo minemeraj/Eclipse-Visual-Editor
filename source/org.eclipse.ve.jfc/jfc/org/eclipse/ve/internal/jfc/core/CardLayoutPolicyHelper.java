@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -28,6 +28,7 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
@@ -37,7 +38,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 	protected EStructuralFeature sfName;	
 
-	public CardLayoutPolicyHelper(ContainerPolicy ep) {
+	public CardLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
 	}
 	
@@ -143,7 +144,7 @@ public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 	/**
 	 * @see org.eclipse.ve.internal.jfc.core.ILayoutPolicyHelper#setContainerPolicy(ContainerPolicy)
 	 */
-	public void setContainerPolicy(ContainerPolicy policy) {
+	public void setContainerPolicy(VisualContainerPolicy policy) {
 		super.setContainerPolicy(policy);
 		if (policy != null) {
 			// Eventually we will be set with a policy. At that time we can compute these.

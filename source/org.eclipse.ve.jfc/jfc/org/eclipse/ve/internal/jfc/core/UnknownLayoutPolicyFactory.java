@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -24,6 +24,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * Unknown Layout Policy Factory for LayoutManager (not LayoutManager2
  * types).
@@ -40,7 +41,7 @@ public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
 	/**
 	 * getConstraintConverter method comment.
 	 */
-	public ILayoutSwitcher getLayoutSwitcher(ContainerPolicy cp) {
+	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy cp) {
 		return new UnknownLayoutSwitcher(cp);
 	}
 	/**
@@ -50,7 +51,7 @@ public class UnknownLayoutPolicyFactory implements ILayoutPolicyFactory {
 		return UnknownLayoutInputPolicy.class;
 	}
 
-	public ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy cp) {
+	public ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy cp) {
 		return new UnknownLayoutPolicyHelper(cp);
 	}
 

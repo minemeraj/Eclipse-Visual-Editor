@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,15 +11,12 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: HoldProcessingCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-02 20:48:57 $ 
  */
 
 
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**

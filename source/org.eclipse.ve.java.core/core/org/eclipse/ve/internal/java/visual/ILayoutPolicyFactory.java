@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.java.visual;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.1 $  $Date: 2004-01-02 20:48:57 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -20,6 +20,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 /**
  * This interface provides one MOF extension point from which to get
  * all the classes needed for a particular Layout manager such as the 
@@ -28,11 +29,13 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
  * @author: Peter Walker
  */
 public interface ILayoutPolicyFactory {
+	
+public static final String LAYOUT_POLICY_FACTORY_CLASSNAME_KEY = "org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"; //$NON-NLS-1$	
 /**
  * Return the constraint converter for this Layout manager
  * Creation date: (10/23/00 2:25:22 PM)
  */
-ILayoutSwitcher getLayoutSwitcher(ContainerPolicy ep);
+ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep);
 /**
  * Return the layout input policy for this Layout manager.
  * This should be a class that implements IInputPolicy.
@@ -43,7 +46,7 @@ Class getLayoutInputPolicyClass();
  * Return the layout policy helper for this Layout manager.
  * Creation date: (10/23/00 2:25:22 PM)
  */
-ILayoutPolicyHelper getLayoutPolicyHelper(ContainerPolicy ep);
+ILayoutPolicyHelper getLayoutPolicyHelper(VisualContainerPolicy ep);
 
 /**
  * Return the propertyDescriptor to use for the constraint 

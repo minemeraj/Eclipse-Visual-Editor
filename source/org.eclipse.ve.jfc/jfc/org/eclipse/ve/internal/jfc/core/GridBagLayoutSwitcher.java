@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.gef.commands.Command;
+
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * This helper class is used when a container's layout is changed
  * to a GridBagLayout. Each of the constraints for the container's children 
@@ -26,7 +28,7 @@ import org.eclipse.gef.commands.Command;
 public class GridBagLayoutSwitcher extends LayoutSwitcher {
 	GridBagLayoutPolicyHelper helper;
 
-public GridBagLayoutSwitcher(ContainerPolicy cp) {
+public GridBagLayoutSwitcher(VisualContainerPolicy cp) {
 	super(cp);
 	helper = new GridBagLayoutPolicyHelper(cp);
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TreeContainerEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,8 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.*;
 import org.eclipse.ui.IActionFilter;
+
+import org.eclipse.ve.internal.java.visual.*;
 /**
  * Tree ContainerEditPolicy for awt Containers.
  */

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.Iterator;
@@ -26,6 +26,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 
 /**
@@ -36,7 +37,7 @@ public class CardLayoutSwitcher extends LayoutSwitcher {
 
 	protected CardLayoutPolicyHelper helper;
 
-	public CardLayoutSwitcher(ContainerPolicy cp) {
+	public CardLayoutSwitcher(VisualContainerPolicy cp) {
 		super(cp);
 		helper = new CardLayoutPolicyHelper(cp);
 	}

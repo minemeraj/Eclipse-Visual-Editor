@@ -8,6 +8,7 @@ public class SWTConstants {
 		SF_CONTROL_BOUNDS,
 		SF_CONTROL_LOCATION,
 		SF_CONTROL_SIZE,
+		SF_CONTROL_LAYOUTDATA,		
 		SF_COMPOSITE_LAYOUT,
 		SF_COMPOSITE_CONTROLS;
 		
@@ -24,6 +25,7 @@ public class SWTConstants {
 		SF_CONTROL_BOUNDS = URI.createURI("java:/org.eclipse.swt.widgets#Control/bounds");		 //$NON-NLS-1$
 		SF_CONTROL_LOCATION = URI.createURI("java:/org.eclipse.swt.widgets#Control/location");		 //$NON-NLS-1$
 		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$					
+		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$		
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
 	}

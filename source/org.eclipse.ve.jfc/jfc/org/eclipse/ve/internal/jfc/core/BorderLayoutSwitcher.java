@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
  */
 
 import java.util.*;
@@ -25,6 +25,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
 import org.eclipse.ve.internal.java.vce.SubclassCompositionContainerPolicy;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
@@ -37,7 +38,7 @@ public class BorderLayoutSwitcher extends LayoutSwitcher {
 	BorderLayoutPolicyHelper helper;
 	SubclassCompositionContainerPolicy freeFormContainerPolicy;
 
-public BorderLayoutSwitcher(ContainerPolicy aPolicy) {
+public BorderLayoutSwitcher(VisualContainerPolicy aPolicy) {
 	super(aPolicy);
 	helper = new BorderLayoutPolicyHelper(aPolicy);
 }

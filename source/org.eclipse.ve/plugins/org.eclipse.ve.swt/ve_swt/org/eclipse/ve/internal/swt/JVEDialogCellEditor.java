@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IFileEditorInput;
 
@@ -30,6 +31,8 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	protected EditDomain fEditDomain;
 	private String initString = ""; //$NON-NLS-1$
 	private Class chooserClass;
+	PropertyEditor chooser = null;
+	private Label label;	
 
 	public JVEDialogCellEditor(Composite parent) {
 		super(parent);
@@ -49,12 +52,6 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 
 	public Object openDialogBox(Control cellEditorWindow) {
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();	
-		PropertyEditor chooser = null;
-		try{
-			chooser = (PropertyEditor)chooserClass.newInstance();					
-		} catch (Exception exc){
-			JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);					
-		}
 		chooser.setValue(aValue);
 		PropertyDialogEditor chooseDialog =
 			new PropertyDialogEditor(
@@ -81,10 +78,34 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
 		if (initData instanceof String){
 			try{
-				chooserClass = CDEPlugin.getClassFromString((String)initData);				
+				chooserClass = CDEPlugin.getClassFromString((String)initData);	
+				try{
+					chooser = (PropertyEditor)chooserClass.newInstance();					
+				} catch (Exception exc){
+					JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);					
+				}	
 			} catch (ClassNotFoundException exc){
 				JavaVEPlugin.log(exc, MsgLogger.LOG_WARNING);				
 			}
 		}
 	}
+	protected Label getDefaultLabel() {
+		return label;
+	}	
+	protected Control createContents(Composite cell) {
+		label = new Label(cell, SWT.LEFT);
+		label.setFont(cell.getFont());
+		label.setBackground(cell.getBackground());
+		return label;
+	}	
+	protected void updateContents(Object value) {
+		if (label == null)
+			return;
+		if (value instanceof IJavaObjectInstance){
+			chooser.setJavaObjectInstanceValue((IJavaObjectInstance)value);
+			label.setText(chooser.getText());
+		} else {
+			label.setText("");
+		}
+	}	
 }
