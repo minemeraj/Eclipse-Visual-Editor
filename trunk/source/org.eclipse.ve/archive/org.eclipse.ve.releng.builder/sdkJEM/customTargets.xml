@@ -157,30 +157,19 @@
 </target>
 
 <target name="getBaseInit">
-	<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
-	<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg"/>
+	<dirname property="antfile.dir" file="${ant.file}"/>
 </target>
 
 <target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-	<get src="${eclipseWin32ZipURL}" dest="${buildDirectory}/../eclipse-SDK.zip" usetimestamp="true"/>
-	<exec dir="${buildDirectory}/.." executable="unzip">
-		<arg line="-o -qq eclipse-SDK.zip"/>
-   	</exec>
-
-  	<stripVersions directory="${buildDirectory}/plugins" />
-	<!-- Extract doc.zip so we can create links in VE java doc -->
-
-	<exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
-		<arg line="-o -qq doc.zip" />
-   	</exec>
+	<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getBaseEclipse"/>
 </target>
-
+	
 <target name="getEMF" unless="emfExists" depends="getBaseInit">
-	<get src="${emfZipURL}" dest="${buildDirectory}/../emf.zip" usetimestamp="true"/>
-	<exec dir="${buildDirectory}/.." executable="unzip">
-		<arg line="-o -qq emf.zip"/>
-   	</exec>
-  	<stripVersions directory="${buildDirectory}/plugins" />
+	<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getEMF"/>
+</target>	
+
+<target name="getGEF" unless="gefExists" depends="getBaseInit">
+	<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getGEF"/>
 </target>
 
 

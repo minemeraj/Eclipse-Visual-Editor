@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project name="project" default="extract">
+    <description>
+            Extract required build files, download if necessary.
+    		Requires properties 
+    			url: URL of download zip
+    			zipname: Name of zip after downloading.
+    </description>
+
+	<target name="init">
+		<taskdef name="stripVersions" classname="org.eclipse.releng.VersionNumberStripper" />
+	</target>
+
+	<target name="testurl" if="url,zipname">
+		<property file="${buildDirectory}/../${zipname}.properties"/>
+		<condition property="sameurl">
+			<and>
+				<isset property="downurl"/>
+				<equals arg1="${downurl}" arg2="${url}"/>
+			</and>
+		</condition>
+	</target>
+				
+	<target name="outofdate" if="zipname" unless="sameurl" depends="testurl">		
+		<delete>
+			<fileset dir="${buildDirectory}/..">
+			    <include name="zipname"/>
+			</fileset>
+		</delete>
+	</target>
+		
+	<target name="download" if="url,zipname" depends="outofdate">
+		<get src="${url}" dest="${buildDirectory}/../${zipname}" usetimestamp="true"/>
+		<propertyfile file="${buildDirectory}/../${zipname}.properties">
+			<entry key="downurl" value="${url}"/>
+		</propertyfile>
+	</target>
+	
+	<target name="extract" if="url,zipname" depends="init,download">
+		<exec dir="${buildDirectory}/.." executable="unzip">
+			<arg line="-o -qq ${zipname}"/>
+	   	</exec>
+
+	  	<stripVersions directory="${buildDirectory}/plugins" />
+	</target>
+	
+	<target name="getInit">
+		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg"/>
+	</target>
+
+	<target name="getBaseEclipse" depends="getInit" description="Extract the base eclipse.">
+		<antcall target="extract">
+			<param name="url" value="${eclipseWin32ZipURL}"/>
+			<param name="zipname" value="eclipse-SDK.zip"/>
+		</antcall>
+		<!-- Extract doc.zip so we can create links in VE java doc -->
+		<exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
+			<arg line="-o -qq doc.zip" />
+	   	</exec>
+	</target>
+
+	<target name="getEMF" depends="getInit" description="Extract the EMF.">
+		<antcall target="extract">
+			<param name="url" value="${emfZipURL}"/>
+			<param name="zipname" value="emf.zip"/>
+		</antcall>
+	</target>
+
+	<target name="getGEF" depends="getInit" description="Extract the GEF.">
+		<antcall target="extract">
+			<param name="url" value="${gefZipURL}"/>
+			<param name="zipname" value="gef.zip"/>
+		</antcall>
+	</target>
+
+</project>
+
