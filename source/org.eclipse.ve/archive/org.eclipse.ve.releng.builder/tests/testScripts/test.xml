@@ -28,11 +28,11 @@
 	    </exec>
 	
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq GEF-runtime-*.zip -d ${install}/eclipse"/>
+			<arg line="-o -qq GEF*.zip -d ${install}/eclipse"/>
     	</exec>
 
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq emf_*.zip -d ${install}/eclipse"/>
+			<arg line="-o -qq emf*.zip -d ${install}/eclipse"/>
     	</exec>
 	
 		<exec dir="." executable="unzip">
