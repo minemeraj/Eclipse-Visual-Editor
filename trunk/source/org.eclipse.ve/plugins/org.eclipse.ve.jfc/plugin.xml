@@ -44,8 +44,7 @@
 
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
-      <variable
-            path="JRE_LIB">
+      <container path="JRE_LIB">
          <beaninfos>
             <beaninfo
                   kind="plugin"
@@ -55,7 +54,7 @@
                </searchpath>
             </beaninfo>
          </beaninfos>
-      </variable>
+      </container>
    </extension>
 <!-- The followin will allow the visuals to come up in web/ejb projects -->
    <extension

@@ -77,12 +77,27 @@
             path="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/layout">
       </override>
    </extension>
-   <extension
+
+  <extension
          point="org.eclipse.jem.proxy.contributor">
       <contributor
             plugin="org.eclipse.swt"
             class="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
       </contributor>
    </extension>
+   
+  <extension point="org.eclipse.jem.beaninfo.registrations">
+      <container path="SWT_CONTAINER">
+         <beaninfos>
+            <beaninfo
+                  kind="plugin"
+                  path="/org.eclipse.ve.swt/vm/swtbeaninfo.jar">
+               <searchpath
+                     package="org.eclipse.swt.widgets.beaninfo">
+               </searchpath>
+            </beaninfo>
+         </beaninfos>
+      </container>
+   </extension>      
 
 </plugin>

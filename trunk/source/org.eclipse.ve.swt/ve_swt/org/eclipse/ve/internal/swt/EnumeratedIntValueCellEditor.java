@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-06 11:26:03 $ 
  */
+
+import java.util.logging.Level;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -21,6 +23,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.initParser.InitializationStringEvaluationException;
+import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
 /**
  * Cell editor for an int field that is enumerated
  */
@@ -35,8 +39,21 @@ public EnumeratedIntValueCellEditor(Composite aComposite, String[] NAMES, Intege
 	// Create the combo editor with the list of possible fill values
 	super(aComposite, NAMES);
 	FILL_NAMES = NAMES;
-	FILL_VALUES = VALUES;
 	FILL_INITSTRINGS = INITSTRINGS;
+	if(VALUES != null){
+		FILL_VALUES = VALUES;
+	} else {
+		// Evaluate the initStrings to find the Init values
+		FILL_VALUES = new Integer[INITSTRINGS.length];
+		for (int i = 0; i < INITSTRINGS.length; i++) {
+			try {
+				FILL_VALUES[i] = (Integer) InitializationStringParser.evaluate(INITSTRINGS[i]);
+			} catch (InitializationStringEvaluationException e) {
+				JavaVEPlugin.log(e,Level.WARNING);
+			}
+		}
+	}
+	
 }
 /**
  * Return an EMF class that represents the value
