@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:35:34 $ 
+ *  $Revision: 1.7 $  $Date: 2004-08-27 21:31:05 $ 
  */
 
 
@@ -343,12 +343,9 @@ public class CDEUtilities {
 					continue;
 				}
 			}
-			// No name set, or no annotation, use index into parent.
-			EditPart parent = ep.getParent();
-			if (parent != top)
-				path.add('{'+String.valueOf(parent.getChildren().indexOf(ep))+'}');
-			else
-				break;	// Might as well get out, same test as for loop, so why redo it.
+			// No name set, or no annotation, use index into parent.			
+			EditPart parent = ep.getParent();			
+			path.add('{'+String.valueOf(parent.getChildren().indexOf(ep))+'}');
 		}
 		
 		if (path.isEmpty())
