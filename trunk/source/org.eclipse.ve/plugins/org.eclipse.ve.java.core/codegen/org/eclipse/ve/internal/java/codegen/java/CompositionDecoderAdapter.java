@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-01 20:57:29 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -56,11 +56,12 @@ public CompositionDecoderAdapter (BeanPart b) {
 		switch (msg.getEventType()) {
 			case Notification.ADD_MANY:
 			case Notification.REMOVE_MANY:
-				List al = (List) msg.getNewValue();
+				int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE;
+				List al = type==Notification.ADD?  (List) msg.getNewValue(): (List)msg.getOldValue();
 				int i = 0;
 				Iterator aitr = al.iterator();
 				int pos = msg.getPosition();
-				int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE;
+				
 				while (aitr.hasNext()) {
 					int mpos = pos < 0 ? pos : pos + i++;
 					Object o = aitr.next();
@@ -69,10 +70,15 @@ public CompositionDecoderAdapter (BeanPart b) {
 				}
 				break;
 			case Notification.ADD:
-				MemberDecoderAdapter a = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(((EObject) msg.getNewValue()).eContainer(),
+				MemberDecoderAdapter a = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(((EObject) msg.getNewValue()),
 						ICodeGenAdapter.JVE_MEMBER_ADAPTER);
-				// looking for a MemberDecoeder Adapter Only
-				if (!a.getClass().isAssignableFrom(MemberDecoderAdapter.class))
+				// TODO Is this really necessary? Can you have another JVE_MEMBER_ADAPTER on a JCMMethod.
+				// We are only JCMMethods at this point. This test is making sure that it is ONLY
+				// a MemberDecoderAdapter and not a subclass of it. If it is a subclass, it will
+				// then go and add a NEW MemberDecoderAdapter IN ADDITION to the one already out there.
+				// But this means we have TWO JVE_MEMBER_ADAPTERs then. And we only clean up the first
+				// one in the REMOVE.
+				if (a != null && a.getClass()!=MemberDecoderAdapter.class)
 					a = null;
 				if (a == null) {
 					a = new MemberDecoderAdapter(fbeanModel);
@@ -102,11 +108,13 @@ protected void processSettings(Notification msg) {
 	switch ( msg.getEventType()) {		
 			case Notification.ADD_MANY:
 			case Notification.REMOVE_MANY:
-                 List al = (List) msg.getNewValue() ;
+				 int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE ;
+				 List al = type==Notification.ADD?  (List) msg.getNewValue(): (List)msg.getOldValue();
+                 
                  int i = 0 ;
                  Iterator aitr = al.iterator() ;
                  int pos = msg.getPosition();
-                 int type = msg.getEventType() == Notification.ADD_MANY ? Notification.ADD : Notification.REMOVE ;
+                
                  while (aitr.hasNext()) {
                  	int mpos = pos<0 ? pos : pos + i++ ;
                  	Object o = aitr.next() ;
