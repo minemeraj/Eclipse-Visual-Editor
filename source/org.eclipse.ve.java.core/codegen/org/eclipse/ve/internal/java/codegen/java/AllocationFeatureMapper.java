@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationFeatureMapper.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-05 16:13:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,8 +25,8 @@ import org.eclipse.jdt.internal.compiler.ast.Statement;
  */
 public class AllocationFeatureMapper extends AbstractFeatureMapper {
 
-	public static final String ALLOCATION_FEATURE = "allocation" ;
-	public static final String NEW = "new" ;
+	public static final String ALLOCATION_FEATURE = "allocation" ;//$NON-NLS-1$
+	public static final String NEW = "new" ;//$NON-NLS-1$
 	
 		/*
 	 * @see IJavaFeatureMapper#getFeature(Expression)
@@ -43,17 +43,11 @@ public class AllocationFeatureMapper extends AbstractFeatureMapper {
 	}
 	
 	public String getMethodName(Expression expr) {
-		String name = super.getMethodName(expr) ;
-		if (name == null) 
-			name = "????????" ;
-		return name ;
+		return getMethodName();
 	}
 
 	public String getMethodName() {
-		String name = super.getMethodName() ;
-		if (name == null) 
-			name = NEW;
-		return name ;
+		return NEW ;
 	}
 	public String getIndexMethodName() {
 		return NEW;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.13 $  $Date: 2004-02-04 15:47:50 $ 
+ *  $Revision: 1.14 $  $Date: 2004-02-05 16:13:50 $ 
  */
 
 import java.util.*;
@@ -640,17 +640,17 @@ public void removeBeanPart (BeanPart bean) {
 	
 	
 	
-//	if (bean.getBackRefs() != null) 
-//		bean.getBackRefs().removeChild(bean) ;
+
     if (mr != null)
 	   bean.removeInitMethod(mr) ;
-	// TODO 
+	
 	if (shouldMethodBeRemoved) {
 	  fBeanModel.removeMethodRef(mr) ;	
 	  mr.dispose() ;		
 	}
     fBeanModel.removeBean(bean) ;    		 	
     // Remove associated Decode Adapters
+    // We do not call dispose here, as the bean was removed from the model already
     bean.setEObject(null) ;	
     bean.setIsInJVEModel(false) ;
 }

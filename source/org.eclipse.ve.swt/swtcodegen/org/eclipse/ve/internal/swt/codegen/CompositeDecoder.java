@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-30 23:19:42 $ 
+ *  $Revision: 1.5 $  $Date: 2004-02-05 16:13:46 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -29,9 +29,10 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
 	protected final static String ADD_METHOD_SF_NAME = "controls"; //$NON-NLS-1$
 
+
 	// First element must be the SF/JCMMethod which has the true children.
-	protected final static String[] writeMethodPrefix = { ADD_METHOD_PREFIX };
-	public final static String[] structuralFeatures = { ADD_METHOD_SF_NAME }; //$NON-NLS-1$
+	protected final static String[] writeMethodPrefix = { ADD_METHOD_PREFIX, AllocationFeatureMapper.NEW };
+	public final static String[] structuralFeatures = { ADD_METHOD_SF_NAME, AllocationFeatureMapper.ALLOCATION_FEATURE }; //$NON-NLS-1$
 	
 	public CompositeDecoder(CodeExpressionRef expr, IBeanDeclModel model, IDiagramModelInstance cm, BeanPart part) {
 		super(expr, model, cm, part, structuralFeatures, writeMethodPrefix);
@@ -47,6 +48,10 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	}
 
 	protected IExpressionDecoderHelper getAppropriateDecoderHelper(String structuralFeature) {
+		
+		if (structuralFeature.equals(AllocationFeatureMapper.ALLOCATION_FEATURE))
+			return new SWTConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+		
 		EStructuralFeature sf = fbeanPart.getEObject().eClass().getEStructuralFeature(structuralFeature);
 		if (sf != null && isCreateMethod(ADD_METHOD_PREFIX, sf))
 			return new CompositeAddDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
