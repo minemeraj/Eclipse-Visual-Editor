@@ -11,10 +11,10 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.13 $  $Date: 2004-05-21 09:42:48 $ 
+ *  $Revision: 1.14 $  $Date: 2004-05-26 08:44:17 $ 
  */
 
-import java.util.Iterator;
+import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
@@ -26,15 +26,23 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jface.viewers.ILabelProvider;
+
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.*;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+
+import org.eclipse.ve.internal.jcm.BeanComposition;
+
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
@@ -185,4 +193,55 @@ public class BeanUtilities {
 			return beanProxyHost.getBeanPropertyValue(feature);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param classNameToCollect - The string of the class being searched for, e.g. "java.awt.Button" to find all buttons
+	 * @param objects - the objects are added to this list (will be the IJavaInstance)
+	 * @param labels - the labels that come from the label providers
+	 * @param beanComposition - bean composition 
+	 * @param editDomain - edit domain
+	 * 
+	 * @since 1.0.0
+	 */
+	public static void collectFreeFormParts(String classNameToCollect, List objects, List labels, BeanComposition beanComposition,EditDomain editDomain){
+		
+		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
+		JavaClass javaClass = (JavaClass) Utilities.getJavaClass(classNameToCollect,beanComposition.eResource().getResourceSet());
+		
+		Iterator components = beanComposition.getMembers().iterator();
+		while(components.hasNext()){
+			Object component = components.next();
+			if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
+				// Test the class
+				IJavaInstance javaComponent = (IJavaObjectInstance) component;
+				JavaHelpers componentType= javaComponent.getJavaType();
+				if ( javaClass.isAssignableFrom(componentType)) {
+					objects.add(component);	
+					// The label used for the icon is the same one used by the JavaBeans tree view
+					ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentType);
+					if ( labelProvider != null ) {
+						labels.add(labelProvider.getText(component));		
+					} else { 
+						// If no label provider exists use the toString of the target VM JavaBean itself
+						labels.add(BeanProxyUtilities.getBeanProxy(javaComponent).toBeanString()); 
+					}
+				}
+			}
+		}
+		// Now we know the children set the items
+		String[] items = new String[labels.size()];
+		System.arraycopy(labels.toArray(),0,items,0,items.length);
+
+		Arrays.sort(items);
+		ArrayList a = new ArrayList() ;
+		for (int i = 0; i < items.length; i++) {			
+			for (int j = 0; j < labels.size(); j++) {
+				if (items[i].equals(labels.get(j))) {
+					a.add(objects.get(j));
+					break;
+				}
+			}		
+		}
+	}	
 }
