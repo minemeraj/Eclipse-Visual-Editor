@@ -1,0 +1,72 @@
+package org.eclipse.ve.internal.swt;
+/*******************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: SWTLabelCreationPolicy.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-27 16:21:19 $ 
+ */
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.requests.CreateRequest;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.core.LabelCreationPolicy;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
+import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
+import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
+
+public class SWTLabelCreationPolicy extends LabelCreationPolicy {
+	
+public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
+	
+	Command setLabelCommand = new CommandWrapper(){
+		
+		protected boolean prepare() {
+			return true;
+		}		
+		
+		public void execute(){
+			// SWT objects shoudn't be subclassed, so we don't need to check for an existing value.
+			Object newObject = aCreateRequest.getNewObject();
+			// Thew new label will be "Label".  This is held externally
+			// The key to use is LabelPolicy.text.xxx where xxx is a piece of inializationData
+			String labelString = SWTMessages.getString("LabelPolicy.text." + fLabelKey); //$NON-NLS-1$
+			EObject refNewObject = (EObject)newObject;
+			ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
+			IJavaInstance newLabel = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + labelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			EStructuralFeature sf_label = refNewObject.eClass().getEStructuralFeature(fPropertyKey); //$NON-NLS-1$
+			RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+			cb.applyAttributeSetting((EObject) newObject, sf_label, newLabel);
+			command = cb.getCommand();
+			command.execute();
+		}
+	};
+	
+	if ( aCommand instanceof CompoundCommand ) {
+		((CompoundCommand)aCommand).append(setLabelCommand);
+		return aCommand;
+	} else {
+		CompoundCommand result = new CompoundCommand();
+		result.append(aCommand);
+		result.append(setLabelCommand);
+		return result;
+	}
+}
+
+}
