@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.8 $  $Date: 2004-01-28 21:54:07 $ 
+ *  $Revision: 1.9 $  $Date: 2004-01-28 22:39:44 $ 
  */
 
 import java.util.*;
@@ -29,7 +29,9 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-// TODO:  this class should be converted to use JavaJet templates
+//*****************************************************************
+// TODO:  this class should be converted to use a JavaJet template extending AbstractMethodTextGenerator
+//*****************************************************************
 
 public class MethodTextGenerator implements IMethodTextGenerator {
 	
@@ -42,6 +44,8 @@ protected   String            fName ;
 protected   String            fMethodName ;
 protected   String[]          fComments = null ;
 private     boolean           fsourceAppended = false ;
+
+public final static String  DEFAULT_PREFIX = "get";   //$NON-NLS-1$
 
 	
 public MethodTextGenerator (EObject component, IBeanDeclModel model)  {
@@ -348,6 +352,13 @@ public String toString() {
 	public void setMethodArguments(String[] fmethodArguments) {
 		// TODO Auto-generated method stub
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#getMethodPrefix()
+	 */
+	public String getMethodPrefix() {
+		return DEFAULT_PREFIX;
 	}
 
 }

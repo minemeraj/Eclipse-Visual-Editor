@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IInstanceVariableCreationRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-28 22:39:44 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -29,8 +29,6 @@ public interface IInstanceVariableCreationRule extends IRule {
 
 	public static final String RULE_ID = "ruleInstanceVariableCreation"; //$NON-NLS-1$
 	public static final String DEFAULT_VAR_PREFIX = "ivj"; //$NON-NLS-1$
-	public static final String DEFAULT_METHOD_PREFIX = "get"; //$NON-NLS-1$
-	public static final String SWT_METHOD_PREFIX = "create"; //$NON-NLS-1$
 
 	public String getInstanceVariableName(EObject obj, IType currentType, IDiagramModelInstance cm, IBeanDeclModel bdm);
 	/**
@@ -64,7 +62,7 @@ public interface IInstanceVariableCreationRule extends IRule {
 	 */
 	
 	public String getValidInstanceVariableName(ResourceSet rs, EObject obj, String base, IType currentType, IBeanDeclModel bdm);	
-	public String getInstanceVariableMethodName(EObject obj, String InstanceName, IType currentType, IDiagramModelInstance cm);
+	public String getInstanceVariableMethodName(EObject obj, String InstanceName, IType currentType, IBeanDeclModel bdm);
 	public boolean isLocalDecleration(EObject obj, IType currentType, IDiagramModelInstance cm);
 	public boolean isGenerateAMethod(EObject obj, IType currentType, IDiagramModelInstance cm);
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-23 22:53:28 $ 
+ *  $Revision: 1.7 $  $Date: 2004-01-28 22:39:44 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -40,6 +39,7 @@ import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class InstanceVariableCreationRule implements IInstanceVariableCreationRule {
@@ -55,7 +55,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		"caret" }; //$NON-NLS-1$
 	public static int internalIndex = 1;
 	public static Preferences fPrefStore = null;
-	public static JavaHelpers fComponentMeta = null;
+	public static List VisualCompoentns = new ArrayList() ;
 
 	private static List getMetaTypes(ResourceSet rs) {
 
@@ -72,7 +72,9 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		}
 		internalHelpers = a;
 
-		fComponentMeta = JavaRefFactory.eINSTANCE.reflectType("java.awt.Component", rs); //$NON-NLS-1$
+		VisualCompoentns.clear();
+		VisualCompoentns.add(JavaRefFactory.eINSTANCE.reflectType("java.awt.Component", rs)); //$NON-NLS-1$
+		VisualCompoentns.add(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Widget", rs)); //$NON-NLS-1$
 
 		fRS = rs;
 		return internalHelpers;
@@ -103,7 +105,11 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	public static boolean usePrefix(EClassifier meta, ResourceSet rs) {
 		if (rs == null || meta == null)
 			return true;
-		return (!getComponentMeta(rs).isAssignableFrom((EClassifier) meta));
+		for (int i = 0; i < VisualCompoentns.size(); i++) {
+			JavaHelpers h = (JavaHelpers) VisualCompoentns.get(i);
+			if (h.isAssignableFrom(meta)) return false ;
+		}
+		return true;
 	}
 
 	/**
@@ -172,21 +178,15 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		return name;
 	}
 
-	protected String addPrefix (EObject obj, String name, IDiagramModelInstance cm) {
-        JavaClassImpl c = null ;
-        c = (JavaClassImpl)CodeGenUtil.getMetaClass("org.eclipse.swt.widgets.Widget",cm) ;        
-		if (c!= null) {
-             EClassifier o = (EClassifier)obj.eClass() ;
-             if (c.isAssignableFrom(o))  
-                 return addPrefix(SWT_METHOD_PREFIX,name) ;
-        }        
-        return addPrefix(DEFAULT_METHOD_PREFIX,name) ;
+	protected String addMethodPrefix (EObject obj, String name, IBeanDeclModel bdm) {
+		IMethodTextGenerator mg = CodeGenUtil.getMethodTextFactory(bdm).getMethodGenerator((IJavaObjectInstance)obj,bdm) ;
+        return addPrefix(mg.getMethodPrefix(),name) ;
 	}
 	/**
 	 *  
 	 *  
 	 */
-	public String getInstanceVariableMethodName(EObject obj, String InstanceName, IType currentType, IDiagramModelInstance cm) {
+	public String getInstanceVariableMethodName(EObject obj, String InstanceName, IType currentType, IBeanDeclModel bdm) {
 
 		if (isInternalType(obj, obj.eResource().getResourceSet()))
 			return null; // No method for a utility object
@@ -194,7 +194,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		String name = InstanceName;
 		//	int index = name.indexOf(DEFAULT_VAR_PREFIX)+DEFAULT_VAR_PREFIX.length() ;
 
-		String methodName = addPrefix(obj, name, cm);
+		String methodName = addMethodPrefix(obj, name, bdm);
 		String ori = methodName;
 
 		int Index = 2;
@@ -248,18 +248,18 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 	 * Returns the fComponentMeta.
 	 * @return JavaHelpers
 	 */
-	public static JavaHelpers getComponentMeta(ResourceSet rs) {
+	public static List getVisualComponents(ResourceSet rs) {
 
 		if (fRS != null && fRS.equals(rs))
-			return fComponentMeta;
+			return VisualCompoentns;
 		getMetaTypes(rs);
-		return fComponentMeta;
+		return VisualCompoentns;
 	}
 
 	public static void clearCache() {
 		fRS = null;
 		internalHelpers = null;
-		fComponentMeta = null;
+		VisualCompoentns.clear();
 	}
 
 	/**
