@@ -19,9 +19,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 
 public class SimpleSWTBrowser {
 	
-	public static final String APP_TITLE = "Simple SWT Browser";
-	public static final String HOME_URL = "http://www.eclipse.org/vep/";
-
 	private org.eclipse.swt.widgets.Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 
 	private Button backButton = null;
@@ -48,7 +45,7 @@ public class SimpleSWTBrowser {
 		browser.setLayoutData(gridData3);
 		browser.addTitleListener(new org.eclipse.swt.browser.TitleListener() { 
 			public void changed(org.eclipse.swt.browser.TitleEvent e) {    
-				sShell.setText(APP_TITLE + " - " + e.title);
+				sShell.setText("Simple SWT Browser" + " - " + e.title);
 			}
 		});
 		browser.addLocationListener(new org.eclipse.swt.browser.LocationListener() { 
@@ -77,7 +74,7 @@ public class SimpleSWTBrowser {
 				statusText.setText(e.text);
 			}
 		});
-		browser.setUrl(HOME_URL);
+		browser.setUrl("http://www.eclipse.org/vep/");
 	}
  	public static void main(String[] args) {
 		/* Before this is run, be sure to set up the following in the launch configuration 
@@ -118,7 +115,7 @@ public class SimpleSWTBrowser {
 		createBrowser();
 		progressBar = new ProgressBar(sShell, SWT.BORDER);
 		statusText = new Label(sShell, SWT.NONE);
-		sShell.setText(APP_TITLE);
+		sShell.setText("Simple SWT Browser");
 		sShell.setLayout(gridLayout1);
 		gridLayout1.numColumns = 7;
 		backButton.setEnabled(false);
@@ -137,7 +134,7 @@ public class SimpleSWTBrowser {
 		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		locationText.setLayoutData(gridData2);
-		locationText.setText(HOME_URL);
+		locationText.setText("http://www.eclipse.org/vep/");
 		locationText.setToolTipText("Enter a web address");
 		homeButton.setText("Home");
 		homeButton.setToolTipText("Return to home page");
@@ -202,7 +199,7 @@ public class SimpleSWTBrowser {
 		});
 		homeButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    
-				browser.setUrl(HOME_URL);
+				browser.setUrl("http://www.eclipse.org/vep/");
 			}
 		});
 		goButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
