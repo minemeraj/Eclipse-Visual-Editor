@@ -132,31 +132,33 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		return containerPath;
 	}
 
+
+	private SWTConfigurationContributor configContribute = new SWTConfigurationContributor();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
 	 */
 	public void initialize(IConfigurationContributionInfo info) {
-		SWTConfigurationContributor.INSTANCE.initialize(info);
+		configContribute.initialize(info);
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
 	 */
 	public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
-		SWTConfigurationContributor.INSTANCE.contributeClasspaths(controller);
+		configContribute.contributeClasspaths(controller);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeToConfiguration(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void contributeToConfiguration(ILaunchConfigurationWorkingCopy config) throws CoreException {
-		SWTConfigurationContributor.INSTANCE.contributeToConfiguration(config);
+		configContribute.contributeToConfiguration(config);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
-		SWTConfigurationContributor.INSTANCE.contributeToRegistry(registry);
+		configContribute.contributeToRegistry(registry);
 	}
 }

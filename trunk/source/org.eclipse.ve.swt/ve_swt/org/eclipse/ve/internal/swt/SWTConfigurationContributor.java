@@ -10,16 +10,23 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.9 $  $Date: 2004-07-30 15:20:00 $ 
+ *  $Revision: 1.10 $  $Date: 2004-10-11 22:19:00 $ 
  */
 package org.eclipse.ve.internal.swt;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
+import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.jdt.core.IJavaProject;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
@@ -35,11 +42,15 @@ import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
  */
 public class SWTConfigurationContributor extends ConfigurationContributorAdapter {
 	
-	/**
-	 * A singleton instance that can be used programtically.
-	 */
-	public static final SWTConfigurationContributor INSTANCE = new SWTConfigurationContributor();
+	protected IJavaProject javaProject;
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#initialize(org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo)
+	 */
+	public void initialize(IConfigurationContributionInfo info) {
+		super.initialize(info);
+		this.javaProject = info.getJavaProject();
+	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
 	 */
@@ -76,11 +87,88 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		}
 	}
 
+	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
 		// TODO the problem with this here is that it is hard-coded REM stuff. Need a better way to do this.
 		SWTREMProxyRegistration.initialize(registry);	// Set the registry up with SWT REM stuff.
+		
+		// [70275] Need a marker if VM is less than 1.4.2 because of a bug with beaninfo.
+		if (javaProject != null) {
+			boolean versOk = true;	// Default is true, and if for some reason can't parse the version, then it will still be true because we don't know.
+			IBeanProxy version = registry.getMethodProxyFactory().getInvokable("java.lang.System", "getProperty", new String[] {"java.lang.String"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith("java.version"));
+			if (version instanceof IStringBeanProxy) {
+				// We got the version
+				StringTokenizer versTokens = new StringTokenizer(((IStringBeanProxy) version).stringValue(), "._");
+				if (versTokens.hasMoreTokens()) {
+					try {
+						Integer v = Integer.valueOf(versTokens.nextToken());
+						if (v.intValue() == 1 && versTokens.hasMoreTokens()) {
+							Integer r = Integer.valueOf(versTokens.nextToken());
+							if (r.intValue() < 4)
+								versOk = false; // Can't support 1.3 on SWT.
+							else if (r.intValue() == 4) {
+								if (versTokens.hasMoreTokens()) {
+									// Need to have mod 2 or greater.
+									Integer m = Integer.valueOf(versTokens.nextToken());
+									if (m.intValue() < 2)
+										versOk = false; // Not 1.4.2 or greater.
+								} else
+									versOk = false; // Just 1.4, probably shouldn't get this, but be safe, this is not good.
+							}
+						}
+					} catch (NumberFormatException e) {
+					}
+				}
+			}
+			final boolean fversok = versOk;
+			try {
+				ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+				
+					/* (non-Javadoc)
+					* @see org.eclipse.core.resources.IWorkspaceRunnable#run(org.eclipse.core.runtime.IProgressMonitor)
+					*/
+					public void run(IProgressMonitor monitor) throws CoreException {
+						if (fversok) {
+							try {
+								// It is ok, remove any outstanding marker. We are doing one kind, so if any there it is gone. 
+								IMarker[] markers = javaProject.getProject().findMarkers(SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO);
+								for (int i = 0; i < markers.length; i++) {
+									markers[i].delete();
+								}
+							} catch (CoreException e) {
+								SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+							}			
+						} else {
+							try {
+								// It is bad, if there is a marker of this type, just leave it there, it 
+								// is already for this message. else add in the new marker. 
+								IMarker[] markers = javaProject.getProject().findMarkers(SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO);
+								if (markers.length == 1) 
+									;	// Do nothing we have it already
+								else {
+									if (markers.length > 1) {
+										// We have more than one, not valid, so get rid of them.
+										for (int i = 0; i < markers.length; i++) {
+											markers[i].delete();
+										}
+									}
+									IMarker marker = javaProject.getProject().createMarker(SWT_BUILD_PATH_MARKER);
+									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+									marker.setAttribute(IMarker.MESSAGE, SWTMessages.getString("Marker.BuildPathNot142"));
+								}
+							} catch (CoreException e) {
+								SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+							}				
+						}
+					}
+				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+			} catch (CoreException e) {
+				SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+			}
+		}
 	}
 }
