@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-02 17:52:14 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-20 17:13:29 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,6 +21,9 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,18 +34,12 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
-
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  
 
