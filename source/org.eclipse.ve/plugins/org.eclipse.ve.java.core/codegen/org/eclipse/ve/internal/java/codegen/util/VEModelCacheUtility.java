@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.5 $  $Date: 2005-01-18 22:33:19 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-21 21:20:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -38,8 +38,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * 
  * @since 1.0.0
  */
-public class VEModelCacheUtility {
-	public static final IPath CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("VEModelCache"); //$NON-NLS-1$ //$NON-NLS-2$
+public class VEModelCacheUtility {	
 	private static final Map XML_TEXT_OPTIONS;
 	static {
 		// Normally focus on speed not readability
@@ -48,7 +47,7 @@ public class VEModelCacheUtility {
 		XML_TEXT_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
 		// /debug/consolelog option in the ve.java.core plugin
 		String option = JavaVEPlugin.getPlugin().getBundle().getSymbolicName()+VCEPreferences.DEBUG_CONSOLE_ECHO;
-		if ("true".equalsIgnoreCase(Platform.getDebugOption(option)))	    
+		if ("true".equalsIgnoreCase(Platform.getDebugOption(option)))	     //$NON-NLS-1$
            XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
 		else
 		   XML_TEXT_OPTIONS.put(XMLResource.OPTION_FORMATTED, Boolean.FALSE);
@@ -58,13 +57,13 @@ public class VEModelCacheUtility {
 	
 	public static IPath getCacheDirectory() {
 		if (!isCacheDirectory) {
-			File  dir = CACHE_DESTINATION.toFile();
+			File  dir =   JavaVEPlugin.VE_CACHE_DESTINATION.toFile();
 			if (dir.exists())
 				isCacheDirectory=true;
 			else
 				isCacheDirectory= dir.mkdirs();
 		}
-		return isCacheDirectory?CACHE_DESTINATION : null;			
+		return isCacheDirectory?JavaVEPlugin.VE_CACHE_DESTINATION : null;			
 	}
 	
 	public static boolean isValidCache (IFile f) {
@@ -89,7 +88,7 @@ public class VEModelCacheUtility {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		Resource r = null;
-		monitor.beginTask("Loading VE cached model for: "+ model.getFile().getName(),3);
+		monitor.beginTask(Messages.getString("VEModelCacheUtility.2")+ model.getFile().getName(),3); //$NON-NLS-1$
 		if (isValidCache(model.getFile())) {		 
 		  monitor.worked(1);
 		  try {
@@ -140,7 +139,7 @@ public class VEModelCacheUtility {
 	public static void doSaveCache (IBeanDeclModel bdm, IProgressMonitor monitor) {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();		
-		monitor.beginTask("Creating cache file",3);
+		monitor.beginTask(Messages.getString("VEModelCacheUtility.3"),3); //$NON-NLS-1$
 		monitor.worked(1);		
 		if (bdm!=null && bdm.getCompositionModel()!=null) {
 			IVEModelInstance model = bdm.getCompositionModel();
@@ -154,7 +153,7 @@ public class VEModelCacheUtility {
 				else {
 				  File f = getCachedPath(model.getFile()).toFile();
 				  monitor.worked(1);
-				  monitor.subTask("saving "+f.getName());
+				  monitor.subTask(Messages.getString("VEModelCacheUtility.4")+f.getName()); //$NON-NLS-1$
 				  FileOutputStream os = new FileOutputStream(f);				
 				  model.getModelResource().save(os, XML_TEXT_OPTIONS);
 				  os.close();
