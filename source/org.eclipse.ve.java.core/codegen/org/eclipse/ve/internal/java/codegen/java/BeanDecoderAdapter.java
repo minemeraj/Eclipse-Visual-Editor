@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-25 23:44:11 $ 
  */
 
 import java.util.*;
@@ -358,7 +358,10 @@ protected void removeElement (Notification msg) {
 			    oldAdapter.notifyChanged(msg) ;
 		     }				
 }
-
+/**
+ * 
+ * @deprecte
+ */
 protected boolean isVanillaConstraint(IJavaObjectInstance c) {
      return (!(c != null && !c.getJavaType().getJavaName().equals("java.lang.String"))) ;  //$NON-NLS-1$
 }
