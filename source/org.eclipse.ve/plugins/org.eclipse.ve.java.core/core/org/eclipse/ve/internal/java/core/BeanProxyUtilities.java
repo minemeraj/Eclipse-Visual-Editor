@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.13 $  $Date: 2005-02-16 00:38:26 $ 
  */
 
 import java.util.List;
@@ -197,10 +197,14 @@ public class BeanProxyUtilities {
 	 */
 	public static void writeBeanFeature(PropertyDecorator aPropertyDecorator, IBeanProxy aSource, IBeanProxy aValue) throws ThrowableProxy {
 
-		Method method = aPropertyDecorator.getWriteMethod();
-		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
-		IMethodProxy setFeatureMethodProxy = getMethodProxy(method, registry);
-		setFeatureMethodProxy.invoke(aSource, aValue);
+		if(aPropertyDecorator.getWriteMethod() != null){
+			Method method = aPropertyDecorator.getWriteMethod();
+			ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
+			IMethodProxy setFeatureMethodProxy = getMethodProxy(method, registry);
+			setFeatureMethodProxy.invoke(aSource, aValue);
+		} else if (aPropertyDecorator.getField() != null){
+			setBeanField(aPropertyDecorator.getField().getName(),aSource,aValue);
+		}
 		
 	}
 	/** 
@@ -242,15 +246,20 @@ public class BeanProxyUtilities {
 
 		if (!aSource.isValid())
 			return null;	// Not valid to read.
-			
-		Method method = aPropertyDecorator.getReadMethod();
-		// Cope with properties that have no get method
-		if (method == null)
-			return null;
-		ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
-		// Now get the invokable and invoke it.
-		IMethodProxy getMethodProxy = getMethodProxy(method, registry);
-		return getMethodProxy.invoke(aSource);
+
+		if(aPropertyDecorator.getReadMethod() != null){
+			Method method = aPropertyDecorator.getReadMethod();
+			ProxyFactoryRegistry registry = aSource.getProxyFactoryRegistry();
+			// 	Now get the invokable and invoke it.
+			IMethodProxy getMethodProxy = getMethodProxy(method, registry);
+			return getMethodProxy.invoke(aSource);
+		} else if (aPropertyDecorator.getField() != null){
+			Field field = aPropertyDecorator.getField();
+			// Find the get method on the same VM as the source
+			IFieldProxy aField = aSource.getTypeProxy().getFieldProxy(field.getName());
+			return aField.get(aSource);
+		}
+		return null;
 	}
 	/**
 	 *	Return the method proxy from the method in the same registry as the source

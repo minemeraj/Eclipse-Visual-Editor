@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 00:36:56 $ 
  */
 
 import java.util.Iterator;
@@ -126,7 +126,7 @@ public class ThisReferenceRule implements IThisReferenceRule {
 						if (!pd.isDesignTime())
 							continue;
 					}
-					if (pd.getWriteMethod() == null)
+					if (pd.getField() != null)
 						continue;
 				}
 				return true;

@@ -1,3 +1,7 @@
+package org.eclipse.ve.internal.jfc.beaninfo;
+
+import java.awt.Insets;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -9,35 +13,31 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: RectangleBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-16 00:43:34 $ 
+ *  $RCSfile: InsetsBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-02-16 00:43:34 $ 
  */
-package org.eclipse.ve.internal.jfc.beaninfo;
-
-import java.awt.Rectangle;
 
 
-
-public class RectangleBeanInfo extends IvjBeanInfo {
+public class InsetsBeanInfo extends IvjBeanInfo {
 /**
  * Gets the bean class.
- * @return java.lang.Class
  */
 public Class getBeanClass() {
-	return java.awt.Rectangle.class;
+	return java.awt.Insets.class;
 }
 /**
- * @return java.beans.PropertyDescriptor[] for the x,y, width and height
+ * @return java.beans.PropertyDescriptor[] for the top, bottom, left and right
  */
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
-				createFieldPropertyDescriptor("x", Rectangle.class.getField("x"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("y", Rectangle.class.getField("y"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("width", Rectangle.class.getField("width"), EMPTY_ARGS),
-				createFieldPropertyDescriptor("height", Rectangle.class.getField("height"), EMPTY_ARGS)
+				createFieldPropertyDescriptor("top", Insets.class.getField("top"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("bottom", Insets.class.getField("bottom"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("left", Insets.class.getField("left"), EMPTY_ARGS),
+				createFieldPropertyDescriptor("right", Insets.class.getField("right"), EMPTY_ARGS),				
 		};
-	} catch (SecurityException e) {
+	} catch (
+			SecurityException e) {
 		handleException(e);
 	} catch (NoSuchFieldException e) {
 		handleException(e);

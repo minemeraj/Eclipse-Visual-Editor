@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.29 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.30 $  $Date: 2005-02-16 00:37:51 $ 
  */
 
 import java.util.*;
@@ -248,7 +248,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 				featureDecor = (BeanFeatureDecorator)Utilities.getDecorator((EModelElement)sf,BeanFeatureDecorator.class);
 			}
 			
-			if ((propertyDecorator != null && propertyDecorator.getWriteMethod() != null) || featureDecor != null) {
+			if ((propertyDecorator != null && propertyDecorator.isWriteable()) || featureDecor != null) {
 				IJavaInstance javaValue = (IJavaInstance)newValue;
 				IBeanProxyHost settingBean = null;
 				if (javaValue != null) {
@@ -277,10 +277,6 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 			}
 		} 
 	}
-}
-
-protected IBeanProxyFeatureMediator getFeatureMediator(BeanFeatureDecorator featureDecor) {
-	return featureDecor.getBeanProxyMediator();
 }
 
 /**
@@ -332,16 +328,9 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
  */
 protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) throws ThrowableProxy {
 
-	if (propDecor != null) {
-		 if (propDecor.getWriteMethod() != null) {
+	if (propDecor != null && propDecor.isWriteable()) {
 			BeanProxyUtilities.writeBeanFeature(propDecor , getBeanProxy() , settingBeanProxy);	
 			return;
-		 }
-	}
-	if (featureDecor != null) {
-		IBeanProxyFeatureMediator mediator = getFeatureMediator(featureDecor);
-		if (mediator != null)
-			mediator.applied(sf, getBeanProxy(), settingBeanProxy);
 	}
 }
 
@@ -701,25 +690,13 @@ protected IBeanProxy primReadBeanFeature(PropertyDecorator propDecor, IBeanProxy
 }
 
 protected IBeanProxy getBeanProxyValue(EStructuralFeature aBeanPropertyAttribute, PropertyDecorator propertyDecorator, BeanFeatureDecorator featureDecor) {
-	if ( propertyDecorator != null && propertyDecorator.getReadMethod() != null) {
+	if ( propertyDecorator != null && propertyDecorator.isReadable()) {
 		try {
 			return primReadBeanFeature(propertyDecorator,getBeanProxy()) ;
 		} catch (ThrowableProxy e) {
 			JavaVEPlugin.log(e, Level.FINE);	// An exception on query is just FINE, not a warning.
 		}
 	} 
-	// It may be that this is a public field - this has a decorator to get the value
-	// ( which also makes it generic for other types of as yet unthought of features )
-	if ( featureDecor != null ) {
-		IBeanProxyFeatureMediator mediator = getFeatureMediator(featureDecor);
-		if ( mediator != null ) {
-			try {
-				return mediator.getValue(aBeanPropertyAttribute, this.getBeanProxy());					
-			} catch ( Exception exc ) {
-				JavaVEPlugin.log(exc, Level.FINE);	// An exception on query is just FINE, not a warning.
-			}
-		}
-	}
 	return null;	
 }
 /**

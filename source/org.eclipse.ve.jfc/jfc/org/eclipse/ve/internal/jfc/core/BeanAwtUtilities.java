@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.19 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.20 $  $Date: 2005-02-16 00:39:18 $ 
  */
 
 import java.util.List;
@@ -414,19 +414,13 @@ public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentM
  */
 public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManager(IJavaInstance layoutManager, EditDomain domain) {
 
-	if(layoutManager == null)
+	if(layoutManager == null) {
 		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
-	
-	ILayoutPolicyFactory factory = VisualUtilities.getLayoutPolicyFactory(layoutManager.eClass(),domain);
-	if(factory == null){
-		// Need to see if it is type LayoutManager2
-		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
-		IBeanProxy layoutManagerProxy = invoke_getLayout(BeanProxyUtilities.getBeanProxy(layoutManager));
-		EClassifier layoutManagerClass = Utilities.getJavaClass(layoutManagerProxy.getTypeProxy(), rset);
-		return getDefaultLayoutPolicyFactory(layoutManagerClass);
 	} else {
-		return factory;
+		return getLayoutPolicyFactoryFromLayoutManger(layoutManager.eClass(),domain);
 	}
+	
+	
 	
 }
 /**
