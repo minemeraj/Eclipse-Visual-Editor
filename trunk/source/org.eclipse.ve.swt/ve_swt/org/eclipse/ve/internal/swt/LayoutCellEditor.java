@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-24 21:06:06 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-01 21:25:06 $ 
  */
 
 import java.util.ArrayList;
@@ -41,25 +41,19 @@ public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaC
 	public static final int DISPLAYNAMES_INDEX = 1;
 	protected EditDomain fEditDomain;
 	
-//	protected static String[] fItems = new String[]{
-//		"null" , "FillLayout" , "FormLayout" , "GridLayout" , "RowLayout"
-//	};
-//	protected static String[] fClassNames = new String[] {
-//		"","org.eclipse.swt.layout.FillLayout",  "org.eclipse.swt.layout.FormLayout" , "org.eclipse.swt.layout.GridLayout", "org.eclipse.swt.layout.RowLayout"
-//	};
 /**
  * This method shows a list of available layout manager classes from which the 
  * user can pick one.
- * For now the list is hard coded
+ * The list is determined from overrides.
  */
 public LayoutCellEditor(Composite aComposite){
-	super(aComposite, null);
+	super(aComposite);
 }
 /**
  * Return an EMF class that represents the constraint bean
  */
 protected Object doGetObject(int index) {
-	if (index == sNoSelection || index == 0)
+	if (index == NO_SELECTION || index == 0)
 		return null;
 	String layoutClassName = getLayoutItems(fEditDomain)[CLASSNAMES_INDEX][index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
@@ -82,7 +76,7 @@ protected int doGetIndex(Object anObject){
 			}
 		}
 	}
-	return sNoSelection;
+	return NO_SELECTION;
 }
 
 public String getJavaInitializationString() {

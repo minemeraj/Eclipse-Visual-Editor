@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutConstraintsPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-01 21:25:17 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -71,13 +71,13 @@ protected EditDomain fEditDomain;
 protected int fOrientation = BorderLayoutPolicyHelper.LEFT_TO_RIGHT;	// default component orientation
 
 public BorderLayoutConstraintsPropertyEditor(Composite aComposite){
-	super(aComposite,null);
+	super(aComposite);
 }
 /**
  * Return a MOF class that represents the constraint bean
  */
 protected Object doGetObject(int index){
-	if ( index == sNoSelection ) return null;
+	if ( index == NO_SELECTION ) return null;
 	String selectedConstraint = fTags[index];
 	return BeanUtilities.createJavaObject("java.lang.String", //$NON-NLS-1$
 		JavaEditDomainHelper.getResourceSet(fEditDomain),
@@ -114,7 +114,7 @@ protected int doGetIndex(Object value){
 			return i;
 		}
 	}	
-	return sNoSelection;
+	return NO_SELECTION;
 }
 /**
  * Return a list of occupied tags.

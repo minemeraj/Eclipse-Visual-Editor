@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * Copyright (c) 2001, 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +10,11 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimaryDragRoleEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:25 $ 
  */
+package org.eclipse.ve.internal.cde.core;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 
@@ -22,13 +23,24 @@ import org.eclipse.gef.commands.Command;
  * being griddable. Certain special things need to be done. This policy
  * wrappers the real one and handles just the grid stuff. It also handles
  * the alignment/distribution requests.
+ * 
+ * It forwards adaptable requests to the dragRolePolicy so it can handle accessibility.
  */
-
-public class PrimaryDragRoleEditPolicy implements EditPolicy {
+public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 	protected EditPart host;
 	protected EditPolicy dragRolePolicy;
 	protected GridController gridController;
 	protected boolean allowAlignment;
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		if (dragRolePolicy instanceof IAdaptable)
+			return ((IAdaptable) dragRolePolicy).getAdapter(adapter);
+		else
+			return null;
+	}
 	
 	public PrimaryDragRoleEditPolicy(GridController gridController, EditPolicy dragRolePolicy, boolean allowAlignment) {
 		this.gridController = gridController;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-04 23:37:32 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-01 21:25:17 $ 
  */
 
 import java.util.ArrayList;
@@ -48,17 +48,16 @@ public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements
 /**
  * This method shows a list of available layout manager classes from which the 
  * user can pick one.
- * For now the list is hard coded because there is no way yet ( until we get the VA2000 Java IDE ) 
- * to see all classes that implement a specific interface.
+ * The list is determined from override files.
  */
 public LayoutManagerCellEditor(Composite aComposite){
-	super(aComposite, null);
+	super(aComposite);
 }
 /**
- * Return a MOF class that represents the constraint bean
+ * Return a EMF class that represents the layout manager.
  */
 protected Object doGetObject(int index) {
-	if (index == sNoSelection || index == 0)
+	if (index == NO_SELECTION || index == 0)
 		return null;
 	String layoutManagerClassName = getLayoutManagerItems(fEditDomain)[CLASSNAMES_INDEX][index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
@@ -83,7 +82,7 @@ protected int doGetIndex(Object anObject){
 			}
 		}
 	}
-	return sNoSelection;
+	return NO_SELECTION;
 }
 
 public String getJavaInitializationString() {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-01 21:25:25 $ 
  */
 
 
@@ -23,6 +23,8 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.SharedCursors;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -222,5 +224,69 @@ public class CDEUtilities {
 	public static void displayExec(EditPart ep, Runnable runnable) {
 		if (ep.isActive())
 			displayExec(ep.getViewer().getControl().getDisplay(), runnable);
+	}
+	
+	/**
+	 * This is to be used in GEF Tools in CDE so that the cursor can be set to busy or not allowed as necessary depending on 
+	 * the state of editor. The default calculateCursor in GEF AbstractTool only checks the state of the command, i.e. can
+	 * the command execute or not. In CDE this isn't sufficient. The domain can also be in a state to prevent the
+	 * execution of the command. We want the appropriate cursor to come up while dragging.
+	 * <p>
+	 * The way to use this is in any Tool that you write for the CDE to overwrite the calculateCursor() command with:
+	 * <pre>
+	 * 	protected Cursor calculateCursor() {
+	 * 		Cursor result = CDEUtilities.calculateCursor((org.eclipse.ve.internal.cde.core.EditDomain) getDomain());
+	 * 		if (result != null)
+	 * 			return result;
+	 * 		super.calculateCursor();
+	 * 	}
+	 * </pre>
+	 * <p>
+	 * CDE provides some standard Tools which already use this and these can be used as superclasses or as they are.
+	 * 
+	 * @param domain CDE edit domain
+	 * @return cursor to use or <code>null</code> if should call super.calculateCursor().
+	 * 
+	 * @see org.eclipse.gef.tools.AbstractTool#calculateCursor()
+	 * @see CDECreationTool
+	 * @since 1.0.0
+	 */
+	public static Cursor calculateCursor(EditDomain domain) {
+		IModelChangeController mc = (IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+		if (mc != null) {
+			int holdState = mc.getHoldState();
+			switch (holdState) {
+				case IModelChangeController.READY_STATE:
+					return null;	// Normal state, which means do rest of normal tests.
+				case IModelChangeController.BUSY_STATE:
+					return SharedCursors.WAIT;	// Busy, so wait
+				case IModelChangeController.NO_UPDATE_STATE:
+				default:
+					// For now default goes in here too. May want to extend capability to have more cursors depending on state.
+					return SharedCursors.NO;	// Update not allowed.
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This is used to simply see if the domain is in a holding state. In those states commands should not be executed.
+	 * This can be used in Tools in conjunction with calculateCursor to quickly see if calculateCursor needs to be done
+	 * instead of other code. For example in CDESelectionTool this is used in the drag tracker redirects so that when in
+	 * hold state it doesn't send requests to the tracker and causes a refreshCursor to occur so correct cursor shows up.
+	 * 
+	 * @param domain
+	 * @return the hold state from IModelChangeController
+	 * 
+	 * @see CDEUtilities#calculateCursor(EditDomain)
+	 * @see IModelChangeController#getHoldState()
+	 * @since 1.0.0
+	 */
+	public static int getHoldState(EditDomain domain) {
+		IModelChangeController mc = (IModelChangeController) domain.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+		if (mc != null)
+			return mc.getHoldState();
+		else
+			return IModelChangeController.READY_STATE;
 	}
 }

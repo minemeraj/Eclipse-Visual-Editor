@@ -11,10 +11,11 @@ package org.eclipse.ve.examples.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MonthCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:31 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:21 $ 
  */
 
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -37,7 +38,7 @@ public class MonthCellEditor extends ComboBoxCellEditor implements INeedData {
 	
 public MonthCellEditor(Composite aComposite){
 	// Create the combo editor with the list of months
-	super(aComposite,MonthLabelProvider.MONTHS);
+	super(aComposite,MonthLabelProvider.MONTHS, SWT.READ_ONLY);
 }
 /* 
  * Create an instance of the Month bean

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagConstraintsFillCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:17 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +75,7 @@ protected int doGetIndex(Object anObject){
 			}
 		}
 	}
-	return sNoSelection;
+	return NO_SELECTION;
 }
 public String isCorrectObject(Object anObject){
 	return null;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: BooleanCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:32:00 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:10 $ 
  */
 
 
@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 
 public class BooleanCellEditor extends StandardComboBoxCellEditor {
 	protected static final int
-		sTrueIndex = 0,
-		sFalseIndex = 1;
+		TRUE_INDEX = 0,
+		FALSE_INDEX = 1;
 			
 	public BooleanCellEditor(Composite parent){
 		super(parent, 
