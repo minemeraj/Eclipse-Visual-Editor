@@ -358,6 +358,10 @@
                path="overrides/javax/swing">
          </override>
          <override
+               package="javax.swing.table"
+               path="overrides/javax/swing/table">
+         </override>
+         <override
                package="java.applet"
                path="overrides/java/applet">
          </override>

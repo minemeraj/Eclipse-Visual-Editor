@@ -19,5 +19,10 @@
         cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassCellEditor"
         labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassLabelProvider"/>
   </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="identifier" unsettable="true">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassCellEditor"
+        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassLabelProvider"/>
+  </addedEObjects>
  </event:Add>
 </xmi:XMI> 
