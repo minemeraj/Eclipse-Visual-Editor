@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.27 $  $Date: 2004-04-09 23:04:44 $ 
+ *  $Revision: 1.28 $  $Date: 2004-04-12 13:35:38 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFileEditorInput;
 
@@ -139,7 +140,6 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		if(primaryType==null)
   			return ;
   		List pureSourceMethods = new ArrayList() ;
-  		primaryType.getCompilationUnit().reconcile(false, false, null, null);
   		IMethod[] methods = primaryType.getMethods() ;
   		if(methods!=null){
   			for (int mc = 0; mc < methods.length; mc++) {
@@ -238,7 +238,10 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		fieldHandles = new String[0];
   		
   		if(allEvents!=null && allEvents.size()>0){
-  			synchronized(((DocumentEvent)allEvents.get(0)).getDocument()){
+  			Object lock = ((DocumentEvent)allEvents.get(0)).getDocument();
+  			if (lock instanceof ISynchronizable)
+      		        lock = ((ISynchronizable)lock).getLockObject();
+  			synchronized(lock){
   				if(allEvents.contains(JavaSourceSynchronizer.RELOAD_HANDLE)){
   					// Reload request
   					fEventsProcessedCount = allEvents.size()-1;
@@ -249,7 +252,8 @@ IDiagramSourceDecoder fSourceDecoder = null;
   					allEvents.clear();
   					lockManager.setThreadScheduled(false);
   					try {
-  						currentSource = workingCopy.getBuffer().getContents();
+  				  		workingCopy.reconcile(false, false, null, null);
+ 						currentSource = workingCopy.getBuffer().getContents();
   						
   						IType primaryType = workingCopy.findPrimaryType() ;
   						
@@ -286,16 +290,36 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		return parseErrors;
   	}
   	
-  	protected void handleNonParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
+  	/**
+  	 * Handles the non-parseable stage, and returns whether successful or not.
+  	 * 
+  	 * @param cuAST
+  	 * @param workingCopy
+  	 * @param cancelMonitor
+  	 * @return
+  	 * 
+  	 * @since 1.0.0
+  	 */
+  	protected boolean handleNonParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor){
   		fBeanModel.refreshMethods();
+  		return true;
   	}
   	
-  	protected void merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ) throws CodeGenException {
+  	/**
+  	 * Tries to merge the main BDM with the newly constructed BDM.
+  	 * Returns whether it was successful in merging or not.
+  	 * @param mainModel
+  	 * @param newModel
+  	 * @param m
+  	 * @return
+  	 * @throws CodeGenException
+  	 * 
+  	 * @since 1.0.0
+  	 */
+  	protected boolean merge( IBeanDeclModel mainModel, IBeanDeclModel newModel, ICancelMonitor m ) throws CodeGenException {
   		BDMMerger merger = new BDMMerger(mainModel, newModel, true, fDisplay);
-  		if(!merger.merge())
-  			Reload(fDisplay, m);
-  		
-  	}
+  		return merger.merge();
+   	}
   	
   	/*
   	 * This method should return the method handles of all methods 
@@ -318,7 +342,17 @@ IDiagramSourceDecoder fSourceDecoder = null;
   		return new String[0] ;
   	}
   	
-  	protected void handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor) throws CodeGenException {
+  	/**
+  	 * Handles the parseable stage, and returns whether successful or not.
+  	 * 
+  	 * @param cuAST
+  	 * @param workingCopy
+  	 * @param cancelMonitor
+  	 * @return
+  	 * 
+  	 * @since 1.0.0
+  	 */
+  	protected boolean handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, ICancelMonitor cancelMonitor) throws CodeGenException {
   		JavaBeanModelBuilder modelBldr =
 			new CodeSnippetModelBuilder(fEDomain, currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy);
 		modelBldr.setDiagram(fVEModel);
@@ -329,7 +363,8 @@ IDiagramSourceDecoder fSourceDecoder = null;
 			JavaVEPlugin.log(e) ;
 		}
 		if(bdm!=null)
-			merge(fBeanModel, bdm, cancelMonitor);
+			return merge(fBeanModel, bdm, cancelMonitor);
+		return false;
  	}
   	
 	public void run(
@@ -363,7 +398,9 @@ IDiagramSourceDecoder fSourceDecoder = null;
 				
 				// We have to call takeCurrentSnapShot to clear events properly
 				boolean reloadRequired = takeCurrentSnapshot(lockManager, allDocEvents, workingCopy) ;
-				        reloadRequired |= fBeanModel == null ;
+				synchronized (JavaSourceTranslator.this) {
+				        reloadRequired |= (fBeanModel == null) && !floadInProgress ;
+				}
 				if (reloadRequired) {
 					Reload(fDisplay, monitor);
 				} else {
@@ -392,10 +429,10 @@ IDiagramSourceDecoder fSourceDecoder = null;
 							fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
 						
 						if (containsParseErrors(ast)) {
-							handleNonParseable(ast, fWorkingCopy, monitor);
+							reloadRequired = reloadRequired || !handleNonParseable(ast, fWorkingCopy, monitor);
 							fireParseError(true);
 						} else {
-							handleParseable(ast, fWorkingCopy, monitor);
+							reloadRequired = reloadRequired || !handleParseable(ast, fWorkingCopy, monitor);
 							fireParseError(false);
 						}
 
@@ -404,7 +441,9 @@ IDiagramSourceDecoder fSourceDecoder = null;
 	
 						fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false);
 	
-						if (fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+						reloadRequired = reloadRequired || fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN);
+
+						if(reloadRequired){
 							Reload(disp, monitor);
 						}
 					}
