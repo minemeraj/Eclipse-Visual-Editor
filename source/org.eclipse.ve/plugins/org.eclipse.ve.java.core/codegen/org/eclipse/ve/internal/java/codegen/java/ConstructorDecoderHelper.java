@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.32 $  $Date: 2005-03-08 23:21:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -91,6 +91,23 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				PTExpression exp = ((CGResolver) resolver).resolveMethodInvocation(node.getName());
 				if (exp != null) {
 					expression = exp;
+					return false;
+				}
+			}
+			return super.visit(node);
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST#visit(org.eclipse.jdt.core.dom.FieldAccess)
+		 */
+		public boolean visit(FieldAccess node) {
+			Expression receiver = node.getExpression();
+			// expression can never be null in a FieldAccess
+			if(receiver.getNodeType()==ASTNode.THIS_EXPRESSION){
+				// It could be this.myComponent
+				PTExpression exp = ((CGResolver)resolver).resolveName(node.getName());
+				if(exp!=null){
+					expression=exp;
 					return false;
 				}
 			}
