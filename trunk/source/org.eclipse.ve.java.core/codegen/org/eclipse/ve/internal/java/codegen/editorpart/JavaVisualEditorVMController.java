@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-16 17:55:23 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-16 21:00:58 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -493,7 +493,12 @@ public class JavaVisualEditorVMController {
 					addJavaModelListener();
 				if (INACTIVE_JOB == null)
 					addInactiveJob();
-				JavaVEPlugin.getPlugin().setJavaVMControllerActive(true);	// We are now active
+				JavaVEPlugin.getPlugin().setJavaVMControllerDisposer(new Runnable() {
+
+					public void run() {
+						dispose();
+					}
+				});	// We are now active
 			}
 			
 			perProjectEntry = (PerProject) PER_PROJECT.get(project);
@@ -562,16 +567,20 @@ public class JavaVisualEditorVMController {
 				for (Iterator iter = PER_PROJECT.values().iterator(); iter.hasNext();) {
 					PerProject pp = (PerProject) iter.next();
 					synchronized (pp) {
-						// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-						RegistryResult spare = pp.getExistingSpare();
-						if (spare != null)
-							spare.registry.terminateRegistry();
+						try {
+							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
+							RegistryResult spare = pp.getExistingSpare();
+							if (spare != null)
+								spare.registry.terminateRegistry();
+						} catch (RuntimeException e) {
+							// Just keep going. We want to shut the rest down.
+						}
 					}
 				}
 				PER_PROJECT.clear();
 			}
 		}
-		JavaVEPlugin.getPlugin().setJavaVMControllerActive(false);
+		JavaVEPlugin.getPlugin().setJavaVMControllerDisposer(null);
 	}
 	
 	/**
