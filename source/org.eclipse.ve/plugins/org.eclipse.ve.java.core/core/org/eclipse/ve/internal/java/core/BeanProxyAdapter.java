@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.18 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.*;
@@ -35,18 +36,24 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
+import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
  */
 public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost {
+	
+public static final String BEANVALIDATOR = "org.eclipse.ve.jfc.beanvalidator";
 	private IBeanProxy fBeanProxy;	// It should be accessed only through accessors, even subclasses.
 	private boolean inInstantiation = false;	// Are we in instantiation. If so, reinstantiate has special processing.
+	private IBeanValidator fBeanValidator;
 	
 	// If a reinstantiation is needed, then this exception will be thrown and caught.
 	// If in instantiation, it will then try again. This is needed because if reinstantiation is required while
@@ -296,10 +303,12 @@ public void applyBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature,
 
 protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) {
 	try {
+
 		if (getBeanProxy().isValid()) {
 			primApplyBeanFeature(sf, propDecor, featureDecor, settingBeanProxy);
 			clearError(sf);		
-			revalidateBeanProxy();
+			revalidateBeanProxy();			
+			getBeanValidator().validate(sf);
 		}
 	} catch (ReinstantiationNeeded e) {
 		throw e;	
@@ -391,9 +400,7 @@ protected void processError(EStructuralFeature sf, Throwable exc){
  */
 protected void processError(Object key, ErrorType error) {
 	keyedErrors.put(key, error);
-
-	fireSeverityError(error.getSeverity());
-	fireAddedError(error);	
+	fireErrorStatusChanged();	
 }
 
 /**
@@ -416,8 +423,7 @@ protected void processError(EStructuralFeature sf, Throwable exc, Object object)
 	ErrorType error = new MultiPropertyError(object, exc, exc instanceof InstantiationException ? ERROR_INFO : ERROR_WARNING , sf);
 	((List) errors).add(error);
 	
-	fireSeverityError(error.getSeverity());
-	fireAddedError(error);
+	fireErrorStatusChanged();
 
 	// Log it so that we can figure out later why.
 	JavaVEPlugin.log(exc, Level.WARNING);		
@@ -431,14 +437,14 @@ protected void processError(EStructuralFeature sf, Throwable exc, Object object)
  */
 protected void processInstantiationError(Throwable exc){
 	fInstantiationError = exc;
-	fireSeverityError(IBeanProxyHost.ERROR_SEVERE);
+	fireErrorStatusChanged();
 }
 
 protected void clearError(Object key){
 	Object v = keyedErrors.remove(key);
 	if(v != null && keyedErrors.isEmpty() && fInstantiationError == null){
 		// We had an error of this key, and it is now no errors and no instantiation error, so let all know it went clear.
-		fireSeverityError(IBeanProxyHost.ERROR_NONE);
+		fireErrorStatusChanged();
 	}
 	
 	if (v instanceof ErrorType) 
@@ -490,11 +496,11 @@ protected boolean isValidFeature(EStructuralFeature sf, Object object) {
 	return true;
 }
 
-protected void fireSeverityError(int severity){
+protected void fireErrorStatusChanged(){
 	if ( fErrorListeners != null ) {
 		Object[] listeners = fErrorListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
-			((IBeanProxyHost.ErrorListener)listeners[i]).errorStatus(severity);
+			((IBeanProxyHost.ErrorListener)listeners[i]).errorStatusChanged();
 		}
 	}
 }
@@ -521,6 +527,7 @@ protected void fireClearedError(ErrorType e){
  * Apply all of the settings to the proxy.
  */
 protected void applyAllSettings() {
+	
 	// Now apply all of the feature settings.
 	// For the moment, apply in same order as in MOF object. This could cause some problems
 	// later, but we attack that then.
@@ -539,6 +546,9 @@ protected void applyAllSettings() {
 			}
 		}
 	}
+	// Validate all errors
+//	getBeanValidator().reset();	
+//	getBeanValidator().validateAll();
 }
 
 /*
@@ -979,48 +989,79 @@ public int getErrorStatus(){
 	
 	if (fInstantiationError != null){
 		return ERROR_SEVERE;
-	} else if (!keyedErrors.isEmpty()){
-		// See whether any of the featuer errors are warning or information
-		Iterator errors = keyedErrors.values().iterator();
-		boolean information = false;		
-		while( errors.hasNext() ) {
-			Object error = errors.next();
-			if (error instanceof List) {
-			// See whether the error is warning or informational
-			// Warning errors are more severe than information, so when we find one we return
-				List eList = (List) error;
-				for (int i = 0; i < eList.size(); i++) {
-					ErrorType eType = (ErrorType) eList.get(i);
-					if ( eType.getSeverity() == ERROR_WARNING ) {
-				return ERROR_WARNING;
-					} else if ( eType.getSeverity() == ERROR_INFO ) {
-				information = true;
-			}
+	} 
+	
+	// Find the property error that is the most severe
+	ErrorType mostSeverePropertyError = getMostSeverPropertyError();
+	
+	// Find the additional error that is the most severe;
+	ErrorType mostSevereAdditionalError = null;
+	Iterator errors = getBeanValidator().getErrors().iterator();
+	while(errors.hasNext()){
+		ErrorType error = (ErrorType)errors.next();
+		if(mostSevereAdditionalError == null){
+			mostSevereAdditionalError = error;
+			continue;
+		} else if (mostSevereAdditionalError.severity > error.severity){
+			mostSevereAdditionalError = error;
 		}
-			} else {
-				// See whether the error is warning or informational
-				// Warning errors are more severe than information, so when we find one we return
-				ErrorType eType = (ErrorType) error;
-				if ( eType.getSeverity() == ERROR_WARNING ) {
-					return ERROR_WARNING;
-				} else if ( eType.getSeverity() == ERROR_INFO ) {
-					information = true;
-				}
-			}
-		}
-		return information ? ERROR_INFO : ERROR_WARNING;
-	} else {
-		return ERROR_NONE;
 	}
 	
+	// Return the most severe status out of property or additional error
+	if(mostSeverePropertyError == null && mostSevereAdditionalError == null) return ERROR_NONE;
+	if(mostSeverePropertyError == null && mostSevereAdditionalError != null) return mostSevereAdditionalError.severity;
+	if(mostSevereAdditionalError == null && mostSeverePropertyError != null) return mostSeverePropertyError.severity;	
+	return Math.max(mostSevereAdditionalError.severity,mostSeverePropertyError.severity);
+	
+}
+public ErrorType getMostSeverPropertyError(){
+	// See whether any of the featuer errors are warning or information
+	Iterator errors = keyedErrors.values().iterator();
+	ErrorType informationError = null;		
+	while( errors.hasNext() ) {
+		Object error = errors.next();
+		if (error instanceof List) {
+		// See whether the error is warning or informational
+		// Warning errors are more severe than information, so when we find one we return
+			List eList = (List) error;
+			for (int i = 0; i < eList.size(); i++) {
+				ErrorType eType = (ErrorType) eList.get(i);
+				if ( eType.getSeverity() == ERROR_WARNING ) {
+					return eType;
+				} else if ( eType.getSeverity() == ERROR_INFO ) {
+					informationError = eType;
+				}
+			}
+		} else {
+			// See whether the error is warning or informational
+			// Warning errors are more severe than information, so when we find one we return
+			ErrorType eType = (ErrorType) error;
+			if ( eType.getSeverity() == ERROR_WARNING ) {
+				return eType;
+			} else if ( eType.getSeverity() == ERROR_INFO ) {
+				informationError = eType;
+			}
+		}
+	}
+	return informationError;
 }
 public List getErrors(){
 	
 	ArrayList result = new ArrayList(2);
+	// If there is an error where the Bean can't be instantiated this is as severe as it can get - return it
 	if ( fInstantiationError != null){
 		result.add(new IErrorNotifier.ExceptionError(fInstantiationError,ERROR_SEVERE));
 		return result;
-	} else {
+	}
+	
+	// There may be errors within the bean validator.  Collect these in the result set
+	Iterator validationErrors = fBeanValidator.getErrors().iterator();
+	while(validationErrors.hasNext()){
+		result.add(validationErrors.next());
+	}
+	
+	// If the Bean was able to have been applied then it could have property errors, return these
+	if( fInstantiationError == null ) {
 		Iterator iter = keyedErrors.values().iterator();
 		while(iter.hasNext()){
 			Object v = iter.next();
@@ -1030,8 +1071,35 @@ public List getErrors(){
 				result.add(v);
 		}
 	}
+
 	return result;	
 }
+protected IBeanValidator getBeanValidator(){
+	
+	if(fBeanValidator == null){
+		BeanDecorator beanDecorator = (BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(getJavaObject().eClass(),BeanDecorator.class,BEANVALIDATOR);
+		if(beanDecorator != null){
+		String validatorClassName = (String)beanDecorator.getKeyedValues().get(BEANVALIDATOR);
+			try {
+				fBeanValidator = (IBeanValidator) CDEPlugin.createInstance(null,validatorClassName);
+			} catch (Exception e) {
+				// 	TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			// 		Create a bean validator
+			fBeanValidator = new BeanValidator();
+		}
+		fBeanValidator.setJavaInstance(getJavaObject());
+		fBeanValidator.addErrorListener(new IBeanValidator.ErrorListener(){
+			public void errorStatusChanged() {
+				fireErrorStatusChanged();
+			}
+		});
+	}
+	return fBeanValidator;
+}
+
 /**
  * Set ownership of the proxy.
  * @see IBeanProxyHost
@@ -1074,7 +1142,5 @@ public void invalidateBeanProxy() {
  */
 public void validateBeanProxy() {
 }
-
-
 
 }

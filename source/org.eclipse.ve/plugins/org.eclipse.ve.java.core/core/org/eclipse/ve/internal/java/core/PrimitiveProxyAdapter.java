@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 import java.util.*;
@@ -126,7 +126,7 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 		if ( errorListeners != null ) {
 			Object[] listeners = errorListeners.getListeners();
 			for (int i = 0; i < listeners.length; i++) {
-				((IBeanProxyHost.ErrorListener)listeners[i]).errorStatus(severity);
+				((IBeanProxyHost.ErrorListener)listeners[i]).errorStatusChanged();
 			}
 		}
 	}		

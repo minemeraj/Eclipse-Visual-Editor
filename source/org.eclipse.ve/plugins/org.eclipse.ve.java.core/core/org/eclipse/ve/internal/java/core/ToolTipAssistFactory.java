@@ -14,17 +14,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-29 18:20:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
-import org.eclipse.draw2d.Label;
+import java.util.Iterator;
+
+import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.internal.ui.palette.editparts.ColumnsLayout;
+import org.eclipse.gef.internal.ui.palette.editparts.SeparatorEditPart;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.*;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
+
+import sun.java2d.loops.DrawLine;
 
 
 /**
@@ -34,6 +44,32 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  * We need to provide an extendible mechanism for these
  */
 public class ToolTipAssistFactory {
+	
+	public static class LineFigure extends Figure {
+		public LineFigure() {
+			setPreferredSize(100, 2);
+		}
+		protected void paintFigure(Graphics g) {
+			g.setLineStyle(Graphics.LINE_DOT);
+			g.setXORMode(true);
+			g.setForegroundColor(ColorConstants.darkGray);
+			if (bounds.width > bounds.height) {
+				g.drawLine(bounds.x, bounds.y, bounds.right(), bounds.y);
+				g.drawLine(bounds.x + 2, bounds.y, bounds.right(), bounds.y);
+			} else {
+				g.drawLine(bounds.x, bounds.y, bounds.x, bounds.bottom());
+				g.drawLine(bounds.x, bounds.y + 2, bounds.x, bounds.bottom());
+			}
+		}
+	}
+	
+	/**
+	 * ToolTipDetails are able to create a figure
+	 * @since 1.0.0
+	 */
+	static interface TooltipDetails{
+		IFigure createFigure();
+	}	
 		
 	static  class NullTTAdapter implements IJavaToolTipProposalAdapter {
 		final static Label l = new Label(JavaMessages.getString("ToolTipAssistFactory.ToolTip_not_available_1")) ; //$NON-NLS-1$
@@ -54,176 +90,123 @@ public class ToolTipAssistFactory {
 	}
 	static final NullTTAdapter fNullTTAdapter = new NullTTAdapter() ; 
 	
-	private static IJavaToolTipProposalAdapter getToolTipAdapter(EditPart ep) {
-		IJavaToolTipProposalAdapter result = null ;
-		if (ep.getModel() instanceof IJavaObjectInstance) {
-			IJavaObjectInstance o = (IJavaObjectInstance) ep.getModel() ;
-			result = (IJavaToolTipProposalAdapter) EcoreUtil.getExistingAdapter(o, IJavaToolTipProposalAdapter.JAVA_ToolTip_Proposal_TYPE);
-		}		
-		return result ;		
-	}
+	private static IJavaToolTipProposalAdapter getToolTipAdapter(IJavaInstance javaInstance) {
+		return (IJavaToolTipProposalAdapter) EcoreUtil.getExistingAdapter(javaInstance, IJavaToolTipProposalAdapter.JAVA_ToolTip_Proposal_TYPE);		
+	}	
 
-    static class DefaultInstanceProcessor implements IContentAssistProcessor {
+    static class DefaultInstanceProcessor implements ToolTipAssistFactory.TooltipDetails {
     	
-    	EditPart					fEditPart ;
+    	IJavaInstance					javaInstance ;
     	IJavaToolTipProposalAdapter fTTadapter = null ;
     	
-    	
-    	/** 
+    	/**
     	 * Create an instance proposal generator, which at this time generates a single 
     	 * proposal: instance name.
     	 */
-		public DefaultInstanceProcessor (EditPart ep) {
-			fEditPart = ep ;
+		public DefaultInstanceProcessor (IJavaInstance aJavaInstance) {
+			javaInstance = aJavaInstance;
 		}
 		
 		IJavaToolTipProposalAdapter  getTTAdapter() {
-			if (fTTadapter == null) 
-			   fTTadapter = getToolTipAdapter(fEditPart) ;
+			if (fTTadapter == null) fTTadapter = getToolTipAdapter(javaInstance) ;
 			return fTTadapter!= null ? fTTadapter : fNullTTAdapter ;
 			
 		}
-		/** 
-		 * Create a getter processor that at this time generates a single getter proposal.
+
+		/* 
+		 * Return a draw2D figure
 		 */
-		public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentOffset) {
-			ICompletionProposal p = new ICompletionProposal() {
-				Label fResult = null;
-				private Label getResult() {
-					// Try to be more effient on calling getTTAdapter().
-					// getResult is going to be called twice.  Once for text, and one for image.
-					if (fResult == null) {
-						fResult = getTTAdapter().getInstanceDisplayInformation();
-						return fResult;
-					}
-					else {
-						Label l = fResult;
-						fResult = null;
-						return l;
-					}
-				}
-				public void apply(org.eclipse.jface.text.IDocument document) {}
-
-				public org.eclipse.swt.graphics.Point getSelection(org.eclipse.jface.text.IDocument document) {
-					return null ;
-				}
-				public java.lang.String getAdditionalProposalInfo() {
-					return null;
-				}
-				public java.lang.String getDisplayString() {			
-					try {		
-					   return getResult().getText();
-					}
-					catch (Exception e) {
-					  return "" ; //$NON-NLS-1$
-					}
-				}
-				public org.eclipse.swt.graphics.Image getImage() {
-					return getResult().getIcon();
-				}
-
-				public org.eclipse.jface.text.contentassist.IContextInformation getContextInformation() {
-					return null;
-				}
-			};
-			return new ICompletionProposal[] { p } ;						
-		}
-		public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
-			return null;
-		}
-		public char[] getCompletionProposalAutoActivationCharacters() {
-			return null;
-		}
-		public char[] getContextInformationAutoActivationCharacters() {
-			return null;
-		}
-		public IContextInformationValidator getContextInformationValidator() {
-			return null;
-		}
-		public String getErrorMessage() {
-			return null;
+		public IFigure createFigure() {
+			// TODO
+			return getTTAdapter().getInstanceDisplayInformation();
 		}
     }
     
-    /** 
+       /** 
      * Create a getter processor that at this time generates a single getter proposal.
      */
-	static class DefaultMethodProcessor implements IContentAssistProcessor {
+	static class DefaultMethodProcessor implements ToolTipAssistFactory.TooltipDetails {
     	
-			EditPart	fEditPart ;
+			IJavaInstance javaInstance;
 		    IJavaToolTipProposalAdapter fTTadapter = null ;
-    	
-			public DefaultMethodProcessor (EditPart ep) {
-				fEditPart = ep ;
+   			public DefaultMethodProcessor (IJavaInstance aJavaInstance) {
+				javaInstance = aJavaInstance ;
 			}
-		    IJavaToolTipProposalAdapter  getTTAdapter() {
-				if (fTTadapter == null) 
-					 fTTadapter = getToolTipAdapter(fEditPart) ;								   
+		    private IJavaToolTipProposalAdapter  getTTAdapter() {
+				if (fTTadapter == null) fTTadapter = getToolTipAdapter(javaInstance) ;								   
 				return fTTadapter!= null ? fTTadapter : fNullTTAdapter ;			
-			}
-    	  
-			public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentOffset) {
-				ICompletionProposal p = new ICompletionProposal() {
-					Label fResult = null ;
-					private Label getResult() {
-						// Try to be more effient on calling getTTAdapter().
-						// getResult is going to be called twice.  Once for text, and one for image.
-						if (fResult == null) {
-						   fResult = getTTAdapter().getReturnMethodDisplayInformation() ;
-						   return fResult ;
-						}
-						else {
-							Label l = fResult ;
-							fResult = null ;
-							return l ;
-						}						
-					}
-					public void apply(org.eclipse.jface.text.IDocument document) {}
-					public org.eclipse.swt.graphics.Point getSelection(org.eclipse.jface.text.IDocument document) {
-						return null ;
-					}
-					public java.lang.String getAdditionalProposalInfo() {
-						return null;
-					}
-					public java.lang.String getDisplayString() {
-						try {
-							return getResult().getText();
-						}
-						catch (Exception e) {
-							return ""; //$NON-NLS-1$
-						}
-					}
-					public org.eclipse.swt.graphics.Image getImage() {
-						return  getResult().getIcon();
-					}
-					public org.eclipse.jface.text.contentassist.IContextInformation getContextInformation() {
-						return null;
-					}
-				};
-				return new ICompletionProposal[] { p } ;						
-			}
-			public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
-				return null;
-			}
-			public char[] getCompletionProposalAutoActivationCharacters() {
-				return null;
-			}
-			public char[] getContextInformationAutoActivationCharacters() {
-				return null;
-			}
-			public IContextInformationValidator getContextInformationValidator() {
-				return null;
-			}
-			public String getErrorMessage() {
-				return null;
+			}    	  
+			/* 
+			 * Return a draw2D label with the icon and method name on the right
+			 */
+			public IFigure createFigure() {
+				// TODO - This is incomplete
+				return getTTAdapter().getReturnMethodDisplayInformation();				
 			}
 		}
-    
-    
-    public static IContentAssistProcessor[] createToolTipProcessors (EditPart ep) {
-		IContentAssistProcessor instanceProcessor = new DefaultInstanceProcessor(ep) ;
-		IContentAssistProcessor methodProcessor = new DefaultMethodProcessor(ep) ;
-		return new IContentAssistProcessor[] { methodProcessor, instanceProcessor } ;		
+	
+	static class ErrorProcessor implements ToolTipAssistFactory.TooltipDetails {
+		
+		IJavaInstance javaInstance;
+		private Figure figure;
+		private IErrorNotifier errNotifier;
+		
+		public ErrorProcessor(IJavaInstance aJavaInstance){
+			javaInstance = aJavaInstance;
+		}
+		/* 
+		 * Iterate over the errors creating a composite figure that arranges them all
+		 */
+		public IFigure createFigure() {
+			figure = new Panel();
+			FlowLayout layout = new FlowLayout(false);
+			layout.setMajorSpacing(0);
+			layout.setMinorSpacing(0);						
+			figure.setLayoutManager(layout);
+			// Get the errors
+			errNotifier =(IErrorNotifier) EcoreUtil.getExistingAdapter(javaInstance, IErrorNotifier.ERROR_NOTIFIER_TYPE);
+			updateFigure();
+			// The error severity could change, in which case we must refresh our figure
+			errNotifier.addErrorListener(new IErrorNotifier.ErrorListenerAdapter(){
+				public void errorStatusChanged() {	
+					updateFigure();
+				}				
+			});
+			return figure;
+		}
+		private void updateFigure(){
+			Iterator errors = errNotifier.getErrors().iterator();
+			figure.removeAll();
+			boolean errorExists = false;
+			while(errors.hasNext()){
+				errorExists = true;
+				IErrorHolder.ErrorType error = (IErrorHolder.ErrorType) errors.next();
+				Label l = new Label();
+				l.setIcon(error.getImage());
+				l.setText(error.getMessage());
+				figure.add(l);
+			}
+			// Draw a line underneath the errors
+			if(errorExists){
+				figure.add(new Figure(){
+					public Dimension getPreferredSize(int wHint, int hHint) {
+						return new Dimension(300,5);
+					}
+					protected void paintClientArea(Graphics graphics) {
+						super.paintClientArea(graphics);
+						Rectangle bounds = getBounds();
+						graphics.drawLine(0,bounds.y,bounds.width,bounds.y);
+					}
+				});
+			}
+		}
+	}
+        
+    public static ToolTipAssistFactory.TooltipDetails[] createToolTipProcessors (IJavaInstance javaInstance) {
+    	ToolTipAssistFactory.TooltipDetails errorProcessor = new ErrorProcessor(javaInstance);    	
+    	ToolTipAssistFactory.TooltipDetails instanceProcessor = new DefaultInstanceProcessor(javaInstance);
+    	ToolTipAssistFactory.TooltipDetails methodProcessor = new DefaultMethodProcessor(javaInstance);
+		return new ToolTipAssistFactory.TooltipDetails[] { errorProcessor , methodProcessor, instanceProcessor } ;		
     }
 
 

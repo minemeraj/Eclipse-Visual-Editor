@@ -51,6 +51,12 @@
       <import plugin="com.ibm.wtp.emf.workbench"/>
    </requires>
 
+<!-- ===================================================================================== -->
+<!-- Editor Part adapters allow additional plugins to contribute to the getAdapter(Object) -->
+<!-- method on JavaVisualEditorPart.  This method is typically used by viewers to ask      -->
+<!-- the editor part for an IPageBook                                                      -->
+<!-- ===================================================================================== -->
+	<extension-point id="editorpartadapters" name="Editor Part Adapters"/>
 
    <extension-point id="style" name="Parsing/generation style"/>
 <!-- The syntax for creating a look and feel is								-->
@@ -86,7 +92,6 @@
    <extension-point id="choosebean" name="%choosebeanContributorsName"/>
    <extension-point id="contributors" name="%vecontributors" schema="schema/contributors.exsd"/>
    <extension-point id="registrations" name="%registrationsName" schema="schema/registrations.exsd"/>
-   <extension-point id="newStyleComponent" name="%newStyleComponentName" schema="schema/newStyleComponent.exsd"/>
 
    <extension
          point="org.eclipse.emf.ecore.generated_package">
@@ -496,15 +501,5 @@
             class="org.eclipse.ve.internal.java.choosebean.AWTChooseBeanContributor">
       </contributor>
    </extension>
-   
-   <extension
- 		point="org.eclipse.ve.java.core.newStyleComponent">
-			<visualElement
-				name="Other"
-				category="None"
-				type="java.lang.Object"
-				contributor="none">
-			</visualElement>
-	</extension>
 
 </plugin>

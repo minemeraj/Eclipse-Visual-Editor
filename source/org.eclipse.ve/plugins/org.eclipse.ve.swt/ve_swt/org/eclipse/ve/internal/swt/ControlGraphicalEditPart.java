@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-05-18 19:48:32 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-06-29 18:20:29 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -36,13 +36,13 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
 
 import org.eclipse.ve.internal.java.core.*;
 
 public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
 	
 	protected ImageFigureController imageFigureController;
+	protected IJavaInstance bean;
 	protected ErrorFigure fErrorIndicator;
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
 	protected IPropertySource propertySource;	// This is the property source.
@@ -68,7 +68,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
 		fig.add(fErrorIndicator);
 		
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this));
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
 		fig.setToolTip(ToolTipFig);
 				
 		return fig;
@@ -79,21 +79,20 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		if (!transparent) {
 			imageFigureController.setImageNotifier(getVisualComponent());
 		}
-	
+			
 		// Listen to the IBeanProxyHost so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
-			public void errorStatus(final int severity){
+			public void errorStatusChanged(){
 				CDEUtilities.displayExec(ControlGraphicalEditPart.this,  new Runnable() {
-
 					public void run() {
-						setSeverity(severity);
+						setSeverity(getControlProxy().getErrorStatus());
 					}
 				});
 			}
 		};
 	
 		setSeverity(getControlProxy().getErrorStatus());	// Set the initial status
-		BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel()).addErrorListener(fBeanProxyErrorListener);
+		getControlProxy().addErrorListener(fBeanProxyErrorListener);
 	
 	}
 	public void setTransparent(boolean aBool){
@@ -153,7 +152,10 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		return (ControlProxyAdapter) beanProxy;
 	}
 	public IJavaInstance getBean() {
-		return (IJavaInstance) getModel();
+		if(bean == null){
+			bean = (IJavaInstance) getModel();
+		}
+		return bean;
 	}	
 	
 	private IActionFilter getControlActionFilter() {

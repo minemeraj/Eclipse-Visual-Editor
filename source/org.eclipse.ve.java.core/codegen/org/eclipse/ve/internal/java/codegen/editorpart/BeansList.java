@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: BeansList.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 import org.eclipse.ui.IWorkbenchPart;
@@ -37,7 +37,7 @@ protected PageRec doCreatePage(IWorkbenchPart part) {
 }
 protected IPage createDefaultPage(PageBook book) {
 	MessagePage msgPage = (MessagePage) super.createDefaultPage(book);
-	msgPage.setMessage(CodegenEditorPartMessages.getString("BeansList.DefaultPageMessage")); //$NON-NLS-1$
+	msgPage.setMessage("Used with the Visual Editor for Java"); //$NON-NLS-1$
 	return msgPage;
 }
 }
