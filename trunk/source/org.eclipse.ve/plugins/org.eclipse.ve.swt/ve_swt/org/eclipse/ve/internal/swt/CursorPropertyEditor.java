@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: CursorPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-20 16:41:17 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-18 14:59:10 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -19,16 +19,14 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 public class CursorPropertyEditor implements PropertyEditor {
 
@@ -37,6 +35,7 @@ public class CursorPropertyEditor implements PropertyEditor {
 	
 	private java.util.List fPropertyChangeListeners;
 	private Composite control;
+	private IJavaObjectInstance fCursorInstance = null;
 	
 	private class PreviewPanel {
 		
@@ -100,14 +99,14 @@ public class CursorPropertyEditor implements PropertyEditor {
 	private static final String CURSOR_CLASS_PREFIX = "org.eclipse.swt.graphics.Cursor("; //$NON-NLS-1$
 	private static final String CURSOR_PREFIX = "org.eclipse.swt.SWT.CURSOR_"; //$NON-NLS-1$
 	
-	private static final String cursorNames[] = { messages.getString("appStarting"), messages.getString("arrow"), messages.getString("cross"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final String cursorNames[] = { messages.getString("appStarting"), messages.getString("arrow"), messages.getString("cross"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			messages.getString("hand"), messages.getString("help"), messages.getString("iBeam"), messages.getString("no"), messages.getString("sizeAll"), messages.getString("sizeE"), messages.getString("sizeN"), messages.getString("sizeNE"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			messages.getString("sizeNESW"), messages.getString("sizeNS"), messages.getString("sizeNW"),  messages.getString("sizeNWSE"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			messages.getString("sizeS"), messages.getString("sizeSE"), messages.getString("sizeSW"), messages.getString("sizeW"), messages.getString("sizeWE"), messages.getString("upArrow"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			messages.getString("wait") //$NON-NLS-1$
 	};
 	
-	private static final String[] cursorConstants = { "APPSTARTING", "ARROW", "CROSS",   //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static final String[] cursorConstants = { "APPSTARTING", "ARROW", "CROSS",   //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"HAND", "HELP", "IBEAM", "NO", "SIZEALL", "SIZEE", "SIZEN", "SIZENE",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			"SIZENESW", "SIZENS", "SIZENW", "SIZENWSE",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			"SIZES", "SIZESE", "SIZESW", "SIZEW",  "SIZEWE", "UPARROW",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
@@ -200,8 +199,12 @@ public class CursorPropertyEditor implements PropertyEditor {
 			makeCustomPanel(control);
 			preview = new PreviewPanel();
 			Control pcontrol = preview.createControl(control, SWT.NONE);
-			cursorValue = new Cursor(pcontrol.getDisplay(), SWT.CURSOR_HAND);
-			preview.updatePreview(cursorValue);
+			if (cursorConstant != -1) {
+				cursorValue = new Cursor(pcontrol.getDisplay(), cursorConstantValues[cursorConstant]);
+				constantsSelect.select(cursorConstant);
+				preview.updatePreview(cursorValue);
+			} else
+				constantsSelect.select(-1);
 			control.pack();
 			radioSwitchStandard(true);
 			xText.setText("0"); //$NON-NLS-1$
@@ -606,6 +609,8 @@ public class CursorPropertyEditor implements PropertyEditor {
 	 * @see PropertyEditor#setValue(java.lang.Object)
 	 */
 	public void setValue(Object value) {
+		if (value == null)
+			cursorConstant = -1;
 		if (value instanceof Cursor) {
 			if (preview != null) {
 				preview.updatePreview((Cursor)value);
@@ -625,6 +630,16 @@ public class CursorPropertyEditor implements PropertyEditor {
 	}
 	
 	public void setJavaObjectInstanceValue(IJavaObjectInstance value) {
+		fCursorInstance = value;
+		String cursorName = CursorJavaClassLabelProvider.getText(value);
+		if (!cursorName.equals("")) {
+			for (int i = 0; i < cursorNames.length; i++) {
+				if (cursorNames[i].equals(cursorName)) {
+					cursorConstant = i;
+					break;
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -638,10 +653,10 @@ public class CursorPropertyEditor implements PropertyEditor {
 	 * @see PropertyEditor#getText()
 	 */
 	public String getText() {
-		if (cursorConstant == -1) {
-			return messages.getString("customCursorLabel");  //$NON-NLS-1$
+		if (fCursorInstance != null) {
+			return CursorJavaClassLabelProvider.getText(fCursorInstance);
 		} else {
-			return cursorNames[cursorConstant];
+			return "";
 		}
 	}
 
