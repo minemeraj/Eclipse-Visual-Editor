@@ -9,24 +9,22 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-06-02 15:57:29 $
+ * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-06-02 23:36:57 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.*;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -37,6 +35,7 @@ import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+
 
 /**
  * Graphical edit part for handling JSplitPane in the Graph viewer
@@ -88,75 +87,15 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 		fig.setLayoutManager(new XYLayout());
 		return fig;
 	}
-	class TabLabel extends Figure{
-		private String string;
-		TabLabel(String aString){
-			string=aString;
-//			setBorder(new LineBorder(ColorConstants.black));
-		}
-		protected void paintClientArea(Graphics graphics) {
-			Rectangle bounds = getBounds();
-			Rectangle innerBounds = getBounds().getCopy();
-			innerBounds.width = innerBounds.width - 7;
-			innerBounds.x = innerBounds.x + 7; 
-			Display display = Display.getCurrent();
-			graphics.setForegroundColor(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			graphics.setBackgroundColor(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-			// Fill the square rectangle for the inner bounds and also a triangle on its left
-			graphics.fillRectangle(innerBounds);
-			graphics.fillPolygon(new int[]{
-					bounds.getBottomLeft().x,bounds.getBottomLeft().y,
-					innerBounds.getTopLeft().x,innerBounds.getTopLeft().y,
-					innerBounds.getBottomLeft().x,innerBounds.getBottomLeft().y});
-			// Draw some text inside the inner rectangle			
-			graphics.drawText(string,innerBounds.x,innerBounds.y);
-			// Draw a tab folder shape around the text
-			graphics.drawLine(bounds.getBottomRight().translate(-1,0),bounds.getTopRight().translate(-1,0));
-			graphics.drawLine(bounds.getTopRight(),innerBounds.getTopLeft());
-			graphics.drawLine(innerBounds.getTopLeft(),bounds.getBottomLeft());
-		}
-	}
-	
-	class BindingLauncher extends Clickable{
-		TabLabel tabLabel;
-		BindingLauncher(){
-			tabLabel = new TabLabel("Bind...");			
-			setContents(tabLabel);
-			setSize(37,13);
-		}
-	}
-	private BindingLauncher labelFigure;
+
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
-		
-		// Test code
-		Layer handleLayer = (Layer)getLayer(LayerConstants.HANDLE_LAYER);
-		
-		labelFigure = new BindingLauncher();
-		getFigure().addAncestorListener(new AncestorListener(){
-			public void ancestorAdded(IFigure ancestor) {
-				ancestor.toString();
-			}
-			public void ancestorMoved(IFigure ancestor) {
-				Rectangle parentBounds = getFigure().getBounds();
-				labelFigure.setLocation(new Point(
-						parentBounds.x + parentBounds.width - labelFigure.getSize().width,
-						getFigure().getBounds().y-labelFigure.getSize().height));
-			}
-			public void ancestorRemoved(IFigure ancestor) {
-				ancestor.toString();
-			}
-		});
-		handleLayer.add(labelFigure);
-		
 	}
 
 	public void deactivate() {
 		super.deactivate();
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
-		Layer handleLayer = (Layer)getLayer(LayerConstants.HANDLE_LAYER);
-		handleLayer.remove(labelFigure);
 	}
 
 	/**
