@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-30 23:19:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 16:13:50 $ 
  */
 
 import java.util.*;
@@ -108,17 +108,19 @@ public List getEventHandlers() {
 
 public synchronized void dispose() {
 	fState = BDM_STATE_DOWN ;
-//	if (fSrcSync != null) 
-//	   fSrcSync.uninstall() ;
+
 	List beans = getBeans() ;
 	for (int i=beans.size()-1; i>=0; i--) {
 		BeanPart b = (BeanPart) beans.remove(i) ;
 		// clean up all expression adapters
 		b.dispose () ;
-	}
+	}	
+	
 	fTypeRef.dispose() ;
 	for (int i = 0; i < fEventHandlers.size(); i++) 
 		((CodeEventHandlerRef)fEventHandlers.get(i)). dispose() ;
+
+
 	fCompositionModel = null ;
 	fSrcSync = null ;
 	fWorkCopyP = null ;

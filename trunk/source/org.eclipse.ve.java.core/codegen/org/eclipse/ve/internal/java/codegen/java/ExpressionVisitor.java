@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 16:13:50 $ 
  */
 
 import java.util.Iterator;
@@ -210,7 +210,6 @@ protected void processAssignmment() {
 			if (initExpr) {
 			   bean.addInitMethod(fMethod) ;
 			   fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-			   fExpression.setState(CodeExpressionRef.STATE_NO_MODEL, true);
 			   fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 			}
 			else {

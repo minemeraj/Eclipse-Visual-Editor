@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-03 20:11:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-05 16:13:50 $ 
  */
 import java.util.*;
 
@@ -602,6 +602,33 @@ public BeanPart getProxy() {
 }
 
 
+public void disposeMethod (CodeMethodRef m, IBeanDeclModel model) {
+	if (m != null) {
+		if (model != null) {
+			Collection parts = model.getBeansInitilizedByMethod(m);
+			if (parts != null) {
+				if (parts.size() < 1 || (parts.size() <= 1 && parts.contains(this))) {
+					// no more beans in that method OR I am the last bean
+					m.dispose();
+				} else {
+					// has more beans - dont dispose the method.
+					if (fBeanRefExpressions != null)
+						for (int i = fBeanRefExpressions.size() - 1; i >= 0; i--) {
+							((CodeExpressionRef) fBeanRefExpressions.get(i)).dispose();
+						}
+					if (fBeanEventExpressions != null)
+						for (int i = fBeanEventExpressions.size() - 1; i >= 0; i--) {
+							((CodeEventRef) fBeanEventExpressions.get(i)).dispose();
+						}
+				}
+			} else {
+				m.dispose();
+			}
+		} else {
+			m.dispose();
+		}
+	}	
+}
 
 public  void dispose() {
 
@@ -612,55 +639,18 @@ public  void dispose() {
     fFFDecoder=null;
 	if (fModel != null)
 	  fModel.removeBean(this) ;	
-	CodeMethodRef m = getInitMethod() ;
-	if (m != null) {
-		if(model!=null){
-			Collection parts = model.getBeansInitilizedByMethod(m);
-			if(parts!=null){
-				if(parts.size()<1 || (parts.size()<=1 && parts.contains(this))){
-					// no more beans in that method OR I am the last bean
-					m.dispose(); 
-				}else{
-					// has more beans - dont dispose the method.
-					if (fBeanRefExpressions!=null)
-					 for (int i=fBeanRefExpressions.size()-1; i>=0; i--) {
-					 	((CodeExpressionRef)fBeanRefExpressions.get(i)).dispose() ;
-					 }
-					 if (fBeanEventExpressions!=null)
-					 for (int i=fBeanEventExpressions.size()-1; i>=0; i--) {
-					 	((CodeEventRef)fBeanEventExpressions.get(i)).dispose() ;
-					 }
-				}
-			}else{
-				m.dispose();
-			}
-		}else{
-			m.dispose() ;
-		}
-	}
-    m = getEventInitMethod() ;	
-	if (m != null) {
-		Iterator itr = m.getEventExpressions() ;
-		ArrayList toDelete = new ArrayList() ;
-		while (itr.hasNext()) {
-			CodeExpressionRef e = (CodeExpressionRef)itr.next() ;
-			if (e.getBean().equals(this))
-			  toDelete.add(e) ;
-		}
-		for (int i = 0; i < toDelete.size(); i++) {
-			((CodeExpressionRef)toDelete.get(i)).dispose() ;
-		}
-		if (!m.getExpressions().hasNext())
-		  m.dispose() ;
-		
-	}
+	
+	for (int i = 0; i < fBeanInitMethods.size(); i++) 
+		disposeMethod((CodeMethodRef) fBeanInitMethods.get(i),model);
+	for (int i = 0; i < fEventInitMethods.size(); i++) 
+		disposeMethod((CodeMethodRef) fEventInitMethods.get(i),model);
 	
 	for (int i = 0; i < fNoSrcExpressions.size(); i++) {
 		((CodeExpressionRef)fNoSrcExpressions.get(i)).dispose();
 	}
 	   
 
-	fModel = null ;
+	
 	fBeanInitMethods.clear() ;
 	fEventInitMethods.clear() ;
 	fBeanRefExpressions.clear() ;
@@ -677,6 +667,7 @@ public  void dispose() {
 	  }
 	}	
 	removeFromJVEModel() ;
+	fModel = null ;
 	fEObject = null ;	
 }
 
@@ -822,7 +813,8 @@ public   void removeFromJVEModel()  {
 	}
 	else {
 		// We better have an initMethod
-	    m.getCompMethod().getMembers().remove(getEObject()) ;
+		if (m != null)
+	        m.getCompMethod().getMembers().remove(getEObject()) ;
 	}
 	
 	// Hook/Set up the JVE model method if needed
