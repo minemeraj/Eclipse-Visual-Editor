@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.List;
@@ -40,8 +40,8 @@ protected int[] methodEnds;
 protected String[] methodHandles;
 
 
-public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU){
-	super(d,"CodeSnippetClass_2",null); //$NON-NLS-1$
+public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU, IProgressMonitor monitor){
+	super(d,"CodeSnippetClass_2",null, monitor); //$NON-NLS-1$
 	this.referenceCU = referenceCU;
 	this.contents = contents;
 	this.importStarts=importStarts;

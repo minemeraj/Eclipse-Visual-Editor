@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.11 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.*;
@@ -363,12 +363,6 @@ public boolean updateBDM(IBeanDeclModel model) throws CodeGenException {
 			JavaVEPlugin.log("CodeSnippetMerglent.updateBDM() : no CodeMethodRef", Level.WARNING) ; //$NON-NLS-1$
 	}
 	return modelUpdated ;
-}
-
-public void updateBDMwithLock(IBeanDeclModel model) throws CodeGenException {
-    synchronized (fBeanModel.getDocumentLock()) {
-    	updateBDM(model) ;
-    }
 }
 
 }

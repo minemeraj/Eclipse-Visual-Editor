@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.12 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
-public interface IBeanDeclModel extends IScannerFactory{
+public interface IBeanDeclModel extends IScannerFactory {
 	
 	public final  int           BDM_STATE_DOWN            		= 0x01 ;	
 	public final  int           BDM_STATE_UP_AND_RUNNING  		= 0x02 ;
@@ -57,10 +57,6 @@ public interface IBeanDeclModel extends IScannerFactory{
 	public void setCompositionModel(IVEModelInstance cm) ;	
 	public ICompilationUnit getCompilationUnit() ;
 	public IBuffer getDocumentBuffer() ;
-	/**
-	 * @deprecated
-	 */
-	public Object getDocumentLock() ;	
 	public void addMethodInitializingABean (CodeMethodRef methodRef) ;
 	public CodeMethodRef getMethodInitializingABean (String methodHandle) ;
 	public CodeTypeRef getTypeRef() ;

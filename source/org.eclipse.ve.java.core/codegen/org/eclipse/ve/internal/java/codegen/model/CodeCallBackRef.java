@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.8 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -65,7 +65,7 @@ public IJVEDecoder  getEventDecoder(){
 /**
  *  Decode this. expression 
  */
-public synchronized boolean decodeExpression() throws CodeGenException {
+public boolean decodeExpression() throws CodeGenException {
 
 	// If it is already in MOF, no need to create it again.
 	if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
@@ -91,7 +91,7 @@ public void dispose() {
 	fBean.removeCallBackExpression(this);
 }
 
-public synchronized void refreshFromComposition() throws CodeGenException {
+public  void refreshFromComposition() throws CodeGenException {
 	
 	if ((!isAnyStateSet()) || 
 		(isStateSet(STATE_DELETE))){

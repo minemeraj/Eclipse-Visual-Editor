@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.ArrayList;
@@ -774,8 +774,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		fStore.setValue(VCEPreferences.GENERATE_COMMENT, generateExpressionComment.getSelection());
 		fStore.setValue(VCEPreferences.GENERATE_TRY_CATCH_BLOCK, generateTryCatchBlock.getSelection());
-		fStore.setValue(VCEPreferences.SOURCE_SYNC_DELAY, Integer.parseInt(sourceToVisual.getText()));
-		fStore.setValue(VCEPreferences.SOURCE_DELAY_FACTOR, VCEPreferences.DEFAULT_L2R_FACTOR);
+		fStore.setValue(VCEPreferences.SOURCE_SYNC_DELAY, Integer.parseInt(sourceToVisual.getText()));		
 		//	fStore.setValue(VCEPreferences.REQUIRE_IVJ_COMPONENTS,requireIVJforComponents.getSelection()) ;
 
 		fStore.setValue(VCEPreferences.JVE_PATTERN_STYLE_ID, fStyleID);

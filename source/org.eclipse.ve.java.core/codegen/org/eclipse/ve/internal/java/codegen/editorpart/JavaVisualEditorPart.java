@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.82 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.83 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -107,7 +107,8 @@ import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.vce.*;
+import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
@@ -128,12 +129,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	public final static int PARSE_ERROR_STATE = 3;	// Model controller update state to indicate parse error.
 	
-	public final static String PI_CLASS = "class";
-	public final static String PI_PALETTE = "palette";
-	public final static String PI_CONTRIBUTOR = "contributor";
-	public final static String PI_LOC = "loc";
-	public final static String PI_CATEGORIES = "categories";
-	public final static String PI_LAST = "last";
+	public final static String PI_CLASS = "class"; //$NON-NLS-1$
+	public final static String PI_PALETTE = CodegenEditorPartMessages.getString("JavaVisualEditorPart.1"); //$NON-NLS-1$
+	public final static String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
+	public final static String PI_LOC = "loc"; //$NON-NLS-1$
+	public final static String PI_CATEGORIES = "categories"; //$NON-NLS-1$
+	public final static String PI_LAST = "last"; //$NON-NLS-1$
 	
 	protected boolean initialized = false;
 	protected EditDomain editDomain;
@@ -186,14 +187,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected Object loadCompleteSync = new Object();
 	protected volatile boolean isLoadPending = true;
 	
-	private static final String JVE_STEP = "JVE"; 
-	public static final String SETUP_STEP = "Setup JVE";
+	private static final String JVE_STEP = "JVE";  //$NON-NLS-1$
+	public static final String SETUP_STEP = "Setup JVE"; //$NON-NLS-1$
 	public final static boolean DO_TIMER_TESTS = Boolean.valueOf(Platform.getDebugOption(JavaVEPlugin.getPlugin().getBundle().getSymbolicName() + "/debug/vetimetrace")).booleanValue(); //$NON-NLS-1$;
 	
 	public JavaVisualEditorPart() {
 		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
 		if (DO_TIMER_TESTS) {
-			System.out.println("");
+			System.out.println(""); //$NON-NLS-1$
 			TimerTests.basicTest.testState(true);
 			TimerTests.basicTest.startStep(JVE_STEP);
 		}
@@ -216,10 +217,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		} else
 			throw new PartInitException(
-				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()})); //$NON-NLS-1$
+				MessageFormat.format("", new Object[] { input.getName()})); //$NON-NLS-1$
 
 		if (DO_TIMER_TESTS)
-			System.out.println("------------ Measuring class \"" + input.getName() + "\" ------------");
+			System.out.println("------------ Measuring class \"" + input.getName() + "\" ------------"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// We need the following now because both the thread that will be spawned off in doSetInput and 
 		// in the createPartControl need the loadingFigureControler and EditDomain
@@ -547,9 +548,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			// All of the values are set from the palette itself and stored. We can't set starting values, those
 			// will come from the preferences. If not set, palette does something default.
-			private static final String DOCK_LOCATION = "DOCK_LOCATION";
-			private static final String PALETTE_STATE = "PALETTE_STATE";
-			private static final String PALETTE_WIDTH = "PALETTE_WIDTH";
+			private static final String DOCK_LOCATION = "DOCK_LOCATION"; //$NON-NLS-1$
+			private static final String PALETTE_STATE = "PALETTE_STATE"; //$NON-NLS-1$
+			private static final String PALETTE_WIDTH = "PALETTE_WIDTH"; //$NON-NLS-1$
 			
 
 			public int getDockLocation() {
@@ -808,7 +809,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (primaryViewer != null && modelBuilder.getModelRoot()!=null) {
 			Diagram d = modelBuilder.getDiagram();
 			try {
-				TimerTests.basicTest.startStep("Initialize Viewers");
+				TimerTests.basicTest.startStep("Initialize Viewers"); //$NON-NLS-1$
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(118);
 				if (d != null) {
@@ -821,7 +822,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(119);
-				TimerTests.basicTest.stopStep("Initialize Viewers");
+				TimerTests.basicTest.stopStep("Initialize Viewers"); //$NON-NLS-1$
 				TimerTests.basicTest.stopStep(JVE_STEP);
 				TimerTests.basicTest.printIt();
 				TimerTests.basicTest.clearTests();
@@ -1029,7 +1030,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.testState(true);
 		TimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
-			TimerTests.basicTest.startStep("Dispose");
+			TimerTests.basicTest.startStep("Dispose"); //$NON-NLS-1$
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			
 			if (proxyFactoryRegistry != null) {
@@ -1081,7 +1082,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				finalDispose();
 		} catch (Exception e) {
 		} finally {
-			TimerTests.basicTest.stopStep("Dispose");
+			TimerTests.basicTest.stopStep("Dispose"); //$NON-NLS-1$
 			TimerTests.basicTest.printIt();
 			if (DO_TIMER_TESTS) 
 				TimerTests.basicTest.testState(false);
@@ -1100,12 +1101,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Note: No need to sync(this) to access proxyFactoryRegistry because we are guarenteed that
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
-			TimerTests.basicTest.startStep("Dispose Proxy Registry");
+			TimerTests.basicTest.startStep("Dispose Proxy Registry"); //$NON-NLS-1$
 			
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
 			proxyFactoryRegistry = null;
-			TimerTests.basicTest.stopStep("Dispose Proxy Registry");
+			TimerTests.basicTest.stopStep("Dispose Proxy Registry"); //$NON-NLS-1$
 		}
 
 		modelBuilder.dispose();
@@ -1532,7 +1533,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				TimerTests.basicTest.startAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
-				monitor.beginTask("", 200);
+				monitor.beginTask("", 200); //$NON-NLS-1$
 				if (!initialized) {
 					initialize(new SubProgressMonitor(monitor, 50));
 				} else {
@@ -1578,7 +1579,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 				}
 			
-				TimerTests.basicTest.startStep("Load Model");				
+				TimerTests.basicTest.startStep("Load Model");				 //$NON-NLS-1$
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(114);	// Starting codegen loading for the first time
 				
@@ -1586,7 +1587,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(115);	// Ending codegen loading for the first time
-				TimerTests.basicTest.stopStep("Load Model");
+				TimerTests.basicTest.stopStep("Load Model"); //$NON-NLS-1$
 				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
@@ -1625,13 +1626,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							new CompositionProxyAdapter();
 						dd.eAdapters().add(a);
 						
-						TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					
+						TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					 //$NON-NLS-1$
 						if (doTimerStep)
 							PerformanceMonitorUtil.getMonitor().snapshot(116);
 						a.initBeanProxy();
 						if (doTimerStep)
 							PerformanceMonitorUtil.getMonitor().snapshot(117);
-						TimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						
+						TimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						 //$NON-NLS-1$
 					}
 					
 					if (!monitor.isCanceled())
@@ -1730,7 +1731,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 
 		protected void initialize(final IProgressMonitor monitor) throws CoreException {
-			monitor.beginTask("", 100);
+			monitor.beginTask("", 100); //$NON-NLS-1$
 			initialized = true;
 			initializeEditDomain();		
 			modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
@@ -1833,7 +1834,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 				
 				public void parsingPaused(boolean paused) {
-					// We don't need this. Since we cause the pause, we know when paused.
+					if (paused) {
+						// If a snippet job is canceled, we will move into the paused state
+						((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).setPause();
+					}
 				}
 			});
 			
@@ -1877,7 +1881,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
 			CDEUtilities.setModelAdapterFactory(editDomain, new DefaultModelAdapterFactory(policy));
 
-			NameInCompositionPropertyDescriptor desc = new NameInMemberPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName"), new FieldNameValidator()); //$NON-NLS-1$
+			NameInCompositionPropertyDescriptor desc = new NameInMemberPropertyDescriptor("", new FieldNameValidator()); //$NON-NLS-1$
 			editDomain.registerKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY, desc);
 			// Make the default add annotations command be the one to make names unique.
 			try {
@@ -2384,7 +2388,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						monitor.beginTask("Waiting for JVE to refresh", 100);
+						monitor.beginTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.26"), 100); //$NON-NLS-1$
 						 synchronized (loadCompleteSync) {			
 							while (isLoadPending)
 								try {
@@ -2402,7 +2406,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 	}
 	public void doSave(IProgressMonitor progressMonitor) {
-		progressMonitor.beginTask("Saving "+getEditorInput().getName(),100);
+		progressMonitor.beginTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.27")+getEditorInput().getName(),100); //$NON-NLS-1$
 		super.doSave(new SubProgressMonitor(progressMonitor, 50));
 		modelBuilder.doSave(new SubProgressMonitor(progressMonitor,50));
 		progressMonitor.done();		

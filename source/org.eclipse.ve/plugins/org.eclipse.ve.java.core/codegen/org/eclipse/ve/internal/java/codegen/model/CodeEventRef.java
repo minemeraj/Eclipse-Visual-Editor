@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.13 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -129,7 +129,7 @@ protected IEventDecoder  getEventDecoder(){
 /**
  *  Decode this. expression 
  */
-public synchronized boolean  decodeExpression() throws CodeGenException {
+public boolean  decodeExpression() throws CodeGenException {
     
       // If it is already in MOF, no need to create it again.
       if ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) // ((fState&~STATE_SRC_LOC_FIXED) != STATE_NOT_EXISTANT) 
@@ -218,7 +218,7 @@ protected ExpressionParser createExpressionParser(String sourceSnippet, int expO
 	return new EventExpressionParser(sourceSnippet, expOffset, expLen, fDecoder.getBeanModel());
 }
 
-public synchronized void refreshFromComposition() throws CodeGenException {
+public void refreshFromComposition() throws CodeGenException {
 	
 	if ((!isAnyStateSet()) || 
 		(isStateSet(STATE_DELETE))){
@@ -308,7 +308,7 @@ public synchronized void refreshFromComposition() throws CodeGenException {
 	/* (non-Javadoc)
 	 * @see com.ibm.etools.jbcf.codegen.model.CodeExpressionRef#refreshFromJOM(com.ibm.etools.jbcf.codegen.model.CodeExpressionRef, boolean)
 	 */
-	public synchronized void refreshFromJOM(CodeExpressionRef exp) {
+	public void refreshFromJOM(CodeExpressionRef exp) {
 		// Reset the event invocation - it may instigate a decoder to reset its helper
 		if (exp.getExprStmt() != null)
 			setExprStmt(exp.getExprStmt());

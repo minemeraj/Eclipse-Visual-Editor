@@ -11,14 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.15 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
@@ -26,202 +26,31 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.ve.internal.java.codegen.core.*;
-import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.vce.VCEPreferences;
+import org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider;
+import org.eclipse.ve.internal.java.codegen.util.ReverseParserJob;
 
-public class JavaSourceSynchronizer {
+public class JavaSourceSynchronizer implements ISynchronizable{
 
- public final static		int NO_OF_UPDATE_WORKERS = 2 ;
  public final static		int DEFAULT_SYNC_DELAY = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_SYNC_DELAY ;
- public       static		int L2R_DELAY_FACTOR = org.eclipse.ve.internal.java.vce.VCEPreferences.DEFAULT_L2R_FACTOR  ;  // Extra Delay if only L2R deltas
- public final static 	String RELOAD_HANDLE = "Reload Request"; //$NON-NLS-1$
+ public final static		String RELOAD_HANDLE = "Reload Request"; //$NON-NLS-1$
  
- private                Object fSyncPoint;
- private                BackgroundThread fThread;	
- private int            fDelay= DEFAULT_SYNC_DELAY ;
- IWorkingCopyProvider    fWorkingCopyProvider  ;
- Display                 fDisplay = null ;
- WorkerPool              fStrategyWorkers = new WorkerPool(NO_OF_UPDATE_WORKERS) ;
- CodegenLockManager     lockManager = null;
- /**
-  * documentEventList 
-  * Contains from 0..n document events in increasing time
-  * Document events are added to the end (n) 
-  */
- private List documentEventList = null;
- List notifierList = null;
  
- DocListener       		fDocListener = null ;
+ private int				snippetDelay= DEFAULT_SYNC_DELAY ;
+ IWorkingCopyProvider		workingCopyProvider  ;
+ Display					curDisplay = null ;
+ EditorUpdateState			updateStatus = null;
+ Object						bdmLock = null;
  
- JavaSourceTranslator    fsrcTranslator = null ;  // Hack, need to provide interface.
- int					 fDelayFactor = L2R_DELAY_FACTOR ;
+  //documentEventList 
+  //Contains from 0..n document events in increasing time
+  //Document events are added to the end (n)  
+ private List 				documentEventList = null;
+
+ DocListener				docListener = null ;
+ JavaSourceTranslator		srcTranslator = null ;  // Hack, need to provide interface.
+ boolean				    stalled = false;        // On a rename, we hold off buttom up
 
 		
-	
-	/**
-	 * Background thread for the periodic reconciling activity.
-	 */
-	class BackgroundThread extends Thread {
-		
-		private volatile boolean fCanceled= false;
-		private volatile boolean fReset= false;
-		private volatile boolean fStall=false;  // Suspend until we are told to go now
-		private volatile boolean fIsDirty= false;
-		private volatile boolean fIsActive= false;
-		private volatile boolean fgoNow = false ; // Hack for now
-		
-		/**
-		 * Creates a new background thread. The thread 
-		 * runs with minimal priority.
-		 *
-		 * @param name the thread's name
-		 */
-		public BackgroundThread(String name) {
-			super(name);
-			setPriority(Thread.MIN_PRIORITY);
-			setDaemon(true);
-		}
-		
-		/**
-		 * Returns whether a reconciling strategy is active right now.
-		 *
-		 * @return <code>true</code> if a activity is active
-		 */
-		public boolean isActive() {
-			return fIsActive;
-		}
-		
-		/**
-		 * Cancels the background thread.
-		 */
-		public void cancel() {
-			fCanceled= true;
-			synchronized (fSyncPoint) {
-				fSyncPoint.notifyAll();
-			}
-		}
-		
-		/**
-		 * Force the synchronizer to go through the wait cycle again.
-		 * Typically called when the document has changed. 
-		 */
-		public void reset() {			
-			if (fDelay > 0) {				
-				synchronized (this) {
-					fIsDirty= true;
-					if (!fgoNow) {					 
-					  fReset= true;
-					}
-				}				
-			} else {				
-				goNow() ;
-			}
-		}
-		/**
-		 * Wake up the sync. and make him process asap
-		 */
-		public void goNow() {
-				synchronized(this) {
-					fIsDirty= true;
-					fReset=false ;					
-					synchronized (fSyncPoint) {
-					  fgoNow=true ;
-					  fStall=false;
-					  fSyncPoint.notifyAll();					  
-				    }
-				}	
-					
-		}
-		
-		public void Stall() {
-			synchronized(this) {
-				fgoNow=false;
-				fStall=true;				
-			}
-		}
-		
-		/**
-		 * The periodic activity. Wait until there is something in the
-		 * queue managing the changes applied to the text viewer. Remove the
-		 * first change from the queue and process it.
-		 */
-		public void run() {
-			while (!fCanceled) {
-				synchronized (fSyncPoint) {
-					try {
-						if (!fgoNow)
-						  if (!fStall)
-						    fSyncPoint.wait(fDelay);
-						  else {
-						  	fStall=false;
-						  	fSyncPoint.wait();
-						  }
-					} catch (InterruptedException x) {}
-				}
-				
-				if (fCanceled)
-					break;
-				
-				if (fgoNow)  
-					fDelayFactor=0; 
-				else
-					fDelayFactor--;
-															
-				synchronized (this) {							
-				 if (!fIsDirty && !fgoNow)
-					 continue;							 
-				}	
-				
-				// isL2ROnly aquires the lock on fList... we may cause a deadlock.
-				if (fDelayFactor>0)// && isL2ROnly())
-				    continue ;
-				    
-				fDelayFactor = L2R_DELAY_FACTOR ;
-				
-				
-					
-				if (fReset) {
-					synchronized (this) {
-						fReset= false;
-					}
-					if (!fgoNow) 
-					  continue;				
-				}									
-				fIsActive= true;
-		
-				process();
-				synchronized (this) {
-					// Work Element may have been added between the process and now.
-					// 
-					fIsDirty = notifierList.size() > 0 ;
-					fgoNow = fgoNow && fIsDirty;
-				}
-				
-				fIsActive= false;
-			}
-		}
-	};
-	
-	class NotifierElement {
-	    ISynchronizerListener fListener ;
-	    String                fMarker ;
-	    boolean              fImmediate ;
-	    public NotifierElement (ISynchronizerListener sl, String marker, boolean immediate) {
-	        fListener = sl ;
-	        fMarker = marker ;
-	        fImmediate = immediate ;
-	    }
-	    public ISynchronizerListener getListener() {
-	        return fListener ;
-	    }
-	    public String getMarker() {
-	        return fMarker ;
-	    }
-	    public boolean isImmediate() {
-	    	return fImmediate ;
-	    }
-	}
 	
 	/**
 	 *  The Listener will convert document text changes to JavaElement changes.
@@ -242,7 +71,7 @@ public class JavaSourceSynchronizer {
 			// We dont need to busy wait becuase updates in the code should never happen when 
 			// GUI to source changes are being performed. We will be here only when no Top-Down
 			// changes are being performed.
-			lockManager.setGUIReadonly(true);  
+			updateStatus.setBottomUpProcessing(true);  
 		}
 
 		/**
@@ -250,10 +79,59 @@ public class JavaSourceSynchronizer {
 		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentChanged(final DocumentEvent event) {
-			documentEventList.add(event);
-			fsrcTranslator.fireSnippetProcessing(true);
-			fThread.reset();
+			driveNewEvent(event);
+		}			
+	}
+	
+	/**
+	 * Creates a new reconciler with the following configuration: it is
+	 * an incremental reconciler which kicks in every 500 ms. There are no
+	 * predefined reconciling strategies.
+	 */ 
+	public JavaSourceSynchronizer(IWorkingCopyProvider wcp, JavaSourceTranslator st) {
+		super();
+		    
+		workingCopyProvider = wcp ;
+        srcTranslator = st ;        		
+		curDisplay = getDisplay();	
+		updateStatus = new EditorUpdateState();
+		documentEventList = new ArrayList();
+		connect() ;		
+	}
+	
+	
+    protected void driveNewEvent(Object event) { 
+    	// Synchronize with potential Jobs that are driving snippets
+		synchronized (updateStatus) {
+			if (event!=null)
+			    documentEventList.add(event);
+			if (updateStatus.isCollectingDeltas()) {
+				updateStatus.setBottomUpProcessing(false); // decrement the counter and go away
+				// Reset current outstanding snippet job's schedcule time
+				Job[] jobs = ReverseParserJob.getReverseParserJobs(workingCopyProvider.getFile());
+				for (int i = 0; i < jobs.length; i++) {
+					if (jobs[i].getState() != Job.RUNNING && jobs[i] instanceof SnippetParseJob) {
+						jobs[i].sleep();
+						jobs[i].wakeUp(getDelay());
+					}
+				}
+				return;
+			}
+			else {
+				if (!stalled && !documentEventList.isEmpty()) {
+					// Go for it, be the one to drive the deltas
+				    updateStatus.setCollectingDeltas(true); 
+				}
+				else {
+					// nothing todo
+					return ;
+				}
+			}
 		}
+		srcTranslator.fireSnippetProcessing(true);
+		SnippetParseJob job = new SnippetParseJob(workingCopyProvider.getFile(), srcTranslator.createSharedToLocalUpdater(), getDisplay(),
+				workingCopyProvider.getWorkingCopy(true), updateStatus, documentEventList);
+		job.schedule(getDelay());
 	}
 			
 	/**
@@ -263,166 +141,25 @@ public class JavaSourceSynchronizer {
 	 * Could be set to null if only RELOAD_HANDLE required. 
 	 */
 	public void appendReloadRequest(){
-		documentEventList.add(RELOAD_HANDLE);
-		fThread.reset();
-	}
-	
-	class  CancelMonitor implements ICancelMonitor {
-		    boolean fCancel = false ;
-		    boolean fCompleted = false ;
-		
-		    public boolean isCanceled() { return fCancel; }
-		    public void setCancel(boolean flag) {
-		    	fCancel = flag ;
-		    }
-		    public synchronized void setCompleted() {
-		    	fCompleted = true ;
-		    	notifyAll() ;
-		    }
-		    public synchronized boolean isCompleted(boolean wantToWait) {
-		    	if (wantToWait && !fCompleted)
-		    	try {
-		    	   wait() ;
-		    	}
-		    	catch (Exception e) {}
-		    	return fCompleted ;
-		    }
-	}
-		
-
-	
-	/**
-	 * Creates a new reconciler with the following configuration: it is
-	 * an incremental reconciler which kicks in every 500 ms. There are no
-	 * predefined reconciling strategies.
-	 */ 
-	public JavaSourceSynchronizer(IWorkingCopyProvider wcp, JavaSourceTranslator st) {
-		super();
-		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
-		int newFactor = -1;
-		// The following is a last moment hack ...
-		try {
-			newFactor = store.getInt(VCEPreferences.SOURCE_DELAY_FACTOR);
-		 if (newFactor >= 0)
-		    L2R_DELAY_FACTOR = newFactor ;
-		}
-		catch (Exception e) {
-			L2R_DELAY_FACTOR = VCEPreferences.DEFAULT_L2R_FACTOR ;
-		}
-		    
-		fWorkingCopyProvider = wcp ;
-        fsrcTranslator = st ;
-        // May or may not have one		
-		fDisplay = Display.getCurrent() ;
-		
-		lockManager = new CodegenLockManager();
-		documentEventList = new ArrayList();
-		notifierList = new ArrayList();
-		
-		install () ;
-	}
-	
-	/**
-	 * Start the background thread, and add this synchroniser as 
-	 * the listener to the Shared document provider.
-	 */
-	private synchronized void install() {
-		if (fThread != null) return ;
-				
-		fSyncPoint= new Object();
-		fThread= new BackgroundThread("CodeGen::"+getClass().getName()+"["+fWorkingCopyProvider.getFile().getName()+"]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		fThread.start();
-		connect() ;
-	}
-	
+		driveNewEvent(RELOAD_HANDLE);		
+	}		
 	
 	private Display getDisplay() {
-		if (fDisplay != null) return fDisplay ;
+		if (curDisplay != null) return curDisplay ;
 		
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows() ;
 		if (windows != null && windows.length>0) {			
 			for (int i=0; i<windows.length; i++) {
 				if (windows[i].getShell() != null && windows[i].getShell().getDisplay() != null) {
-					 fDisplay = windows[i].getShell().getDisplay() ;
+					 curDisplay = windows[i].getShell().getDisplay() ;
 					 break ;
 				}
 			}
 		}
-		return fDisplay ;
+		return curDisplay ;
 	}
 	
-	private void driveStrategy(List allDocEvents, IBackGroundWorkStrategy strategy) throws InterruptedException {
-		if (allDocEvents.isEmpty()) return ;
-		
-		fsrcTranslator.fireStatusChanged(CodeGenJavaMessages.getString("JavaSourceSynchronizer.Synchronizing")) ;   //$NON-NLS-1$
-		
-		if (strategy == null) {
-			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-				JavaVEPlugin.log ("JavaSourceSynchronizer.driveStrategy() - no strategy", Level.WARNING) ; //$NON-NLS-1$
-			return ;
-		}
-		
-		CancelMonitor newMon = new CancelMonitor() ;
-		StrategyWorker w = fStrategyWorkers.grabWorker() ;		  	
-		w.assignStrategy(strategy,lockManager, allDocEvents, 
-		  	           fWorkingCopyProvider.getWorkingCopy(true), getDisplay(), newMon) ;
-	}
-	
-	/**	 
-	 */
-	private void process() {
-		
-		if(documentEventList.size()>0 && !getLockMgr().isGUIUpdating()){
-			try {
-				// Drive source to GUI update stratergy
-				if(!lockManager.isThreadScheduled()){
-					lockManager.setThreadScheduled(true);
-					driveStrategy( documentEventList, fsrcTranslator.createSharedToLocalUpdater()) ;
-				}
-			}catch(InterruptedException ie){}
-		}
 
-		// TODO Collision Logic needed
-		while (notifierList.size() > 0) {
-			final ArrayList NotificationList = new ArrayList();
-			synchronized (notifierList) {
-				if (notifierList.size() > 0)
-					for (int i = notifierList.size() - 1; i >= 0; i--) {
-						NotificationList.add(notifierList.remove(i));
-					}
-			}
-
-			try {
-				if (fStrategyWorkers != null && !NotificationList.isEmpty())
-					fStrategyWorkers.waitForAllWorkersToComplete();
-				for (int i = NotificationList.size() - 1; i>-1; i--) {
-					try {
-						NotifierElement elm = (NotifierElement) NotificationList.get(i);
-						elm.getListener().markerProcessed(elm.getMarker());
-					} catch (Throwable t) {
-						org.eclipse.ve.internal.java.core.JavaVEPlugin.log(t);
-					}
-				}
-			} catch (InterruptedException e) {}
-		}
-	}
-	
-	/**
-	 * A listener can set a marker on the work queue, and get notify when the
-	 * synchronizer processed everything prior to the marker.
-	 */
-	public void notifyOnMarker(ISynchronizerListener listener, String marker, boolean immediate) {
-	    if (listener == null || fThread == null) return ;
-	    
-	    NotifierElement elm = new NotifierElement(listener,marker,immediate) ;    
-	    synchronized (notifierList) {
-	        notifierList.add(elm) ;	        
-	    }
-	    if (immediate)
-	      fThread.goNow() ;
-	    else
-	      fThread.reset() ;	    
-	}
 	
 	/**
 	 * Tells the reconciler how long it should collect text changes before
@@ -431,28 +168,15 @@ public class JavaSourceSynchronizer {
 	 * @param delay the duration in milli seconds of a change collection period.
 	 */
 	public void setDelay(int delay) {
-	    if (delay > DEFAULT_SYNC_DELAY) 
-		   fDelay= delay;
+	    if (delay >= DEFAULT_SYNC_DELAY) 
+		   snippetDelay = delay;
+	    else
+	    	throw new IllegalArgumentException ("invalid delay value"); //$NON-NLS-1$
 	}
 	public int getDelay() {
-		return fDelay ;
+		return snippetDelay ;
 	}
 	
-	
-	/**
-	 *
-	 */
-	public synchronized void uninstall() {
-		disconnect() ;
-		if (fThread != null) {
-			fThread.cancel();
-			fThread= null;
-		}
-        if (fStrategyWorkers != null) 
-           fStrategyWorkers.finish() ;
-        fStrategyWorkers = null ;
-	}
-    
     public boolean isWorkQueued() {        
         boolean result = false ;
 		if(documentEventList.size()>0)
@@ -469,40 +193,31 @@ public class JavaSourceSynchronizer {
      * @since 1.0.0
      */
     public void suspendDocListener() {
-    	if (fDocListener != null) {    		    
-    		    fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
+    	if (docListener != null) {    		    
+    		    workingCopyProvider.getDocument().removeDocumentListener(docListener) ;
         }
     }
     
     public void resumeDocListener() {
-    	if (fDocListener != null) {
-    		fWorkingCopyProvider.getDocument().addDocumentListener(fDocListener) ;
+    	if (docListener != null) {
+    		workingCopyProvider.getDocument().addDocumentListener(docListener) ;
     	}
     }
     
     public synchronized void disconnect() {    	
-        if (fDocListener != null) {
-            fWorkingCopyProvider.getDocument().removeDocumentListener(fDocListener) ;
-            fDocListener = null ;
+        if (docListener != null) {
+            workingCopyProvider.getDocument().removeDocumentListener(docListener) ;
+            docListener = null ;
+            bdmLock=null;
         }        
-        synchronized (notifierList) {
-        	for (int i=0; i<notifierList.size(); i++) {
-        		NotifierElement elm = (NotifierElement) notifierList.get(i) ;
-        		if( elm != null )
-        			try {
-        			elm.getListener().markerProcessed(elm.getMarker()) ;
-        		}
-        		catch (Throwable e) {}
-        	}		      
-        	notifierList.clear() ;   
-        }
         clearOutstandingWork();
     }	
     
     public synchronized void connect() {
-        if (fDocListener == null) {
-          fDocListener = new DocListener() ;
-          fWorkingCopyProvider.getDocument().addDocumentListener(fDocListener) ;        
+        if (docListener == null) {
+          docListener = new DocListener() ;
+          workingCopyProvider.getDocument().addDocumentListener(docListener) ;
+          bdmLock = new Object();
         }
     }
     
@@ -511,27 +226,68 @@ public class JavaSourceSynchronizer {
      * a worker thread
      */
     protected void clearOutstandingWork() {
-    	documentEventList.clear();
-    	lockManager.resetGUIReadOnly();
+    	synchronized (updateStatus) {
+    	   documentEventList.clear();
+    	   updateStatus.setCollectingDeltas(false);    	   
+    	}
+ 	   Job[] jobs = ReverseParserJob.getReverseParserJobs(workingCopyProvider.getFile());
+	   for (int i = 0; i < jobs.length; i++) 
+		if (jobs[i] instanceof SnippetParseJob) {
+			jobs[i].cancel();
+		}
+	  
     }
 
-public ICodegenLockManager getLockMgr() {
-	return lockManager;
+public IEditorUpdateState getUpdateStatus() {
+	return updateStatus;
 }
 
 /**
- * The next cycle around, the thread will wait, untill a resume is called
+ * Continue collecting document change deltas, but do not spawn any new snippet jobs
+ * e.g., a rename transaction is about to occur... let it finish
  */
-public void stallProcessing() {
-	fThread.Stall();
+public void stallProcessing() {	
+	Job[] jobs;
+	synchronized (this) {
+	   stalled=true;
+	   jobs = ReverseParserJob.getReverseParserJobs(workingCopyProvider.getFile());
+	}
+	for (int i = 0; i < jobs.length; i++) {
+		if (jobs[i] instanceof SnippetParseJob) {
+			try {
+				jobs[i].join();
+			} catch (InterruptedException e) {}
+		}
+	}
 }
 
 /**
  * Processing will be started immediately
  * 
  */
-public void resumeProcessing() {
-	fThread.goNow();
+public synchronized void resumeProcessing() {
+	stalled=false;
+	driveNewEvent(null);
+}
+
+
+/* (non-Javadoc)
+ * @see org.eclipse.jface.text.ISynchronizable#setLockObject(java.lang.Object)
+ */
+public void setLockObject(Object lockObject) {
+	bdmLock = lockObject;	
+}
+
+
+/* (non-Javadoc)
+ * @see org.eclipse.jface.text.ISynchronizable#getLockObject()
+ */
+public Object getLockObject() {
+	return bdmLock;
+}
+
+public String toString() {
+	return "Stalled="+stalled+", updateStatus="+updateStatus+", delay="+getDelay(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 }
 
 }

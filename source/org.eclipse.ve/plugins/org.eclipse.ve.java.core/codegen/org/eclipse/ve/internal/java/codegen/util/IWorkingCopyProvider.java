@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IWorkingCopyProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-16 21:12:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -45,10 +45,8 @@ public interface IWorkingCopyProvider {
  * @return the Document associated with this CU
  */ 
  public IDocument getDocument() ;
-/**
- * @return a global lock to be associated with this CU 
- */ 
- public Object    getDocLock() ;
+ 
+ public Object getDocumentLock();
  
  /**
   * DisAssociated from the working copy

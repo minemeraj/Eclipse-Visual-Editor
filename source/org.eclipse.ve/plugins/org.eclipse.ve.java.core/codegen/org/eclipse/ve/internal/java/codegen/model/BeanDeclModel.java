@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.17 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 import java.util.*;
@@ -48,22 +48,13 @@ public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclMod
 	TypeDeclaration				fTypeDeclaration = null ;           // The class element of the JDOM model
 	CodeTypeRef                 fTypeRef = null ;
 	List						fEventHandlers = new ArrayList() ;  // CodeEventHandlerRef list	
-	IWorkingCopyProvider		fWorkCopyP = null ;
-//  The following will suport a working copy for the working copy
-//	ICompilationUnit			fworkingWC = null ;					// Will be used as a temporary working copy for the working copy	
+	IWorkingCopyProvider		fWorkCopyP = null ;	
 	JavaSourceSynchronizer      fSrcSync = null ;
-	IVEModelInstance		fCompositionModel = null ;
+	IVEModelInstance			fCompositionModel = null ;
 	String                      fLineSeperator = null ;
 	int                         fState = BDM_STATE_DOWN ;
 	EditDomain					fDomain = null ; 
 	
-//  The following will suport a working copy for the working copy	
-//	WorkingCopyOwner			fworkingWCowner = new WorkingCopyOwner() {		
-//			BufferManager d= new BufferManager();
-//			public IBuffer createBuffer(ICompilationUnit workingCopy) {
-//				return d.createBuffer(workingCopy);
-//			}
-//	     };
 	
 /**
  * 
@@ -143,10 +134,9 @@ public String getLineSeperator() {
  * stage were it is about to be added onto a different container/aggregator.
  */
 public void designateAsDelete(BeanPart bean) {
-    if (bean == null || fBeanDeleteCandidates.contains(bean)) return ;
-    synchronized(fBeanDeleteCandidates) {
-      fBeanDeleteCandidates.add(bean) ;
-    }
+    if (bean == null || fBeanDeleteCandidates.contains(bean)) return ;    
+    fBeanDeleteCandidates.add(bean) ;
+    
 }
 
 /**
@@ -162,9 +152,8 @@ public BeanPart getDeleteDesignated(IJavaObjectInstance obj, boolean remove) {
     BeanPart bean = getABean(obj) ;
     if (bean != null && fBeanDeleteCandidates.contains(bean)) {
        if (remove) 
-         synchronized(fBeanDeleteCandidates) {
           fBeanDeleteCandidates.remove(bean) ;
-         }
+       
        return bean ;
     } else
         return null ;
@@ -175,8 +164,6 @@ public BeanPart getDeleteDesignated(IJavaObjectInstance obj, boolean remove) {
  * bean added back to the JVE model will be removed from the BDM and source code.
  */
 public void deleteDesignatedBeans() {
-    
-    synchronized (fBeanDeleteCandidates) {
         for(int i=0; i<fBeanDeleteCandidates.size(); i++) {
           try {
             BeanPart b = (BeanPart) fBeanDeleteCandidates.get(i) ;        
@@ -188,8 +175,6 @@ public void deleteDesignatedBeans() {
           }
         }
         fBeanDeleteCandidates.clear() ;
-    }
-    
 }
 
 
@@ -340,13 +325,13 @@ public void setCompositionModel(IVEModelInstance cm) {
 public void setWorkingCopyProvider(IWorkingCopyProvider wcp) {
 	fWorkCopyP = wcp ;
 	if (fSrcSync != null) 
-	   fSrcSync.uninstall() ;
+	   fSrcSync.disconnect() ;
 	fSrcSync = null ;	   
 }
 
 public void setSourceSynchronizer(JavaSourceSynchronizer sync) {
 	if (fSrcSync != null) 
-	   fSrcSync.uninstall() ;
+	   fSrcSync.disconnect() ;
 	fSrcSync = sync ;	
 }
 
@@ -355,12 +340,8 @@ public void setSourceSynchronizer(JavaSourceSynchronizer sync) {
  * During updates, the first call to this method will create
  * a working copy to THE working copy.
  */
-public synchronized ICompilationUnit getCompilationUnit() {
+public  ICompilationUnit getCompilationUnit() {
 	if(fWorkCopyP!=null) {
-//  The following will suport a working copy for the working copy		
-//		if (isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
-//			return getWorkingWorkingCopy() ;
-//		else
 		    return fWorkCopyP.getWorkingCopy(true);
 	}
 	return null ;
@@ -374,9 +355,6 @@ public IBuffer getDocumentBuffer () {
 	return null ;
 }
 
-public Object getDocumentLock() {
-	return fWorkCopyP.getDocLock() ;
-}
 
 public IWorkingCopyProvider getWorkingCopyProvider() {
 	return fWorkCopyP ;
@@ -483,11 +461,11 @@ protected void setState(int flag) {
 	fState = flag ;
 }
 
-protected int getState() {
+protected synchronized int getState() {
 	return fState ;
 }
 
-public void setState(int flag, boolean state) throws CodeGenException {
+public synchronized void setState(int flag, boolean state) throws CodeGenException {
 	
 	if (((flag & BDM_STATE_UP_AND_RUNNING)>0 && (flag & BDM_STATE_DOWN)>0) || // Up and Down
 	    ((flag & BDM_STATE_UP_AND_RUNNING)>0 && (getState() & BDM_STATE_SNIPPET)>0) // Up and Snippet
@@ -612,30 +590,6 @@ public void updateBeanNameChange(BeanPart bp) {
 	}	
 
 	/**
-	 * When updating the BDM (top down), changes will be made to a temporary
-	 * working copy, and then commited once to THE working copy.  This will avoid unecessary
-	 * notification on the WC buffer changes while decoders are generating code.
-	 * e.g., change from null to GridBag layout, will invoke many decoders.
-	 * 
-	 * @return a working copy for THE working copy
-	 * 
-	 * @since 1.0.0
-	 */
-//  The following will suport a working copy for the working copy	
-//	protected ICompilationUnit getWorkingWorkingCopy() {
-//		if (fworkingWC != null) return fworkingWC;
-//		
-//		try {
-//			fworkingWC = (ICompilationUnit) fWorkCopyP.getWorkingCopy(true).getWorkingCopy(fworkingWCowner,null,null) ;
-//			return (fworkingWC) ;
-//		} catch (JavaModelException e) {
-//			JavaVEPlugin.log(e) ;
-//		}
-//		
-//		
-//		return null ;
-//	}
-	/**
 	 * 
 	 * A call to this method will disable CodeGen's listening to changes on the CU document.
 	 * This is before a top down driven change is started.  A call to docChanged() must follow
@@ -658,17 +612,6 @@ public void updateBeanNameChange(BeanPart bp) {
 	
 	public synchronized void docChanged() {
 		if (isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT)) {
-//  The following will suport a working copy for the working copy			
-//			if (fworkingWC != null) {
-//				try {
-//					// need to commit changes made to the working copy of THE working copy
-//					fworkingWC.commit(true,null) ;
-//					fworkingWC.destroy() ;
-//					fworkingWC=null ;
-//				} catch (JavaModelException e1) {
-//					JavaVEPlugin.log(e1);
-//				}
-//			}
 			fSrcSync.resumeDocListener() ;
 			try {
 				setState(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT, false) ;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.13 $  $Date: 2005-02-16 21:12:28 $ 
  */
 
 
@@ -36,7 +36,6 @@ public class VCEPreferences {
 	public static final String SOURCE_SYNC_DELAY = "SOURCE_SYNC_DELAY_NEW" ; //$NON-NLS-1$
 	public static final int	   DEFAULT_SYNC_DELAY = 1000 ;
 	public static final String SOURCE_DELAY_FACTOR = "SOURCE_DELAY_FACTOR_NEW" ; //$NON-NLS-1$
-	public static final int	   DEFAULT_L2R_FACTOR = 1 ;
     public static final String GENERATE_COMMENT = "GENERATE_EXPRESSION_COMMENT" ; //$NON-NLS-1$
     public static final String GENERATE_TRY_CATCH_BLOCK = "GENERATE_TRY_CATCH_BLOCK"; //$NON-NLS-1$
 //    public static String REQUIRE_IVJ_COMPONENTS = "REQUIRE_IVJ_COMPONENTS"; //$NON-NLS-1$
@@ -142,8 +141,6 @@ public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	aStore.setDefault(VCEPreferences.OPEN_JAVABEANS_VIEW, true);
 	aStore.setDefault(VCEPreferences.OPEN_PROPERTIES_VIEW, true);
 	aStore.setDefault(VCEPreferences.SOURCE_SYNC_DELAY,VCEPreferences.DEFAULT_SYNC_DELAY) ;
-	aStore.setDefault(VCEPreferences.SOURCE_DELAY_FACTOR,VCEPreferences.DEFAULT_L2R_FACTOR) ;	
-	aStore.setValue(VCEPreferences.SOURCE_DELAY_FACTOR,VCEPreferences.DEFAULT_L2R_FACTOR) ;	// Always locked in at DEFAULT_L2R_FACTOR so that SOURCE_SYNC_DELAY is the final delay value 
 	aStore.setDefault(VCEPreferences.JVE_PATTERN_STYLE_ID, "GetterStyle");		 //$NON-NLS-1$
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_WIDTH, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_WIDTH);
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_HEIGHT, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT);
