@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,7 +23,6 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 
 import org.eclipse.jem.internal.beaninfo.EventSetDecorator;
 import org.eclipse.jem.java.*;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.codegen.java.rules.IEventProcessingRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -120,7 +119,7 @@ public class EventsParser {
 		CodeMethodRef m = b.getInitMethod() ;
 		if (m != null) {
 			String t = b.getType() ;
-			JavaHelpers h = JavaClassImpl.reflect(t,fModel.getCompositionModel().getModelResourceSet()) ;
+			JavaHelpers h = JavaRefFactory.eINSTANCE.reflectType(t,fModel.getCompositionModel().getModelResourceSet()) ;
 			if (h instanceof JavaClass)			
 			   analyze(b, (JavaClass)h) ;
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.*;
@@ -20,27 +20,28 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.*;
+
+import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.jcm.*;
-
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 
 
 
@@ -318,7 +319,7 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
  */
 protected boolean isNeedToCallInit(BeanPart b) {
 
-    JavaHelpers AppletType = JavaClassImpl.reflect ("java.applet.Applet",b.getEObject()) ; //$NON-NLS-1$
+    JavaHelpers AppletType = JavaRefFactory.eINSTANCE.reflectType("java.applet.Applet",b.getEObject()) ; //$NON-NLS-1$
 	return !AppletType.isAssignableFrom(
 	                    (EClassifier) ((IJavaObjectInstance) b.getEObject()).getJavaType()) ;
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,14 +19,15 @@ import java.util.List;
 
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
+
+import org.eclipse.jem.java.*;
+
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.jcm.*;
-
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.Method;
 
 /**
  * @author Gili Mendel
@@ -212,7 +213,7 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 			int idx = lName.lastIndexOf('.');
 			if (idx>0)
 			   lName = lName.substring(0,idx) + "$" + lName.substring(idx+1,lName.length()) ; //$NON-NLS-1$
-			JavaClass clazz = (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect(lName,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;			
+			JavaClass clazz = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(lName,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;			
 			try {
 				IType iType = getInnerType(clazz) ;
 				if (iType != null) {

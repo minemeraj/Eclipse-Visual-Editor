@@ -10,32 +10,29 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.compiler.ast.*;
-
-import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.Method;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
+import org.eclipse.jem.java.*;
+
+import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
 
 /**
  * @author Gili Mendel
@@ -107,7 +104,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     	}
     	   
     	if (name != null)
-    	  return (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
+    	  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(name,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
     	
     	return null ;
     }
@@ -304,7 +301,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			}
 			String interfaces[] = cType.getSuperInterfaceNames() ;
 			for (int i = 0; i < interfaces.length; i++) {
-				JavaClass it = (JavaClass) JavaClassImpl.reflect(interfaces[i],fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
+				JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(interfaces[i],fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 				if (it != null && it.isExistingType()) {
 					if (it.isInterface()) 
 					   if (!lt.getImplements().contains(it))
@@ -313,7 +310,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			}
 			String superClass = fbeanPart.getModel().resolve(cType.getSuperclassName()) ;
 			if (superClass!=null && superClass.length()>0) {
-			    JavaClass it = (JavaClass) JavaClassImpl.reflect(superClass,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;cType.getSuperclassName() ;
+			    JavaClass it = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(superClass,fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;cType.getSuperclassName() ;
 			    if (it != null && it.isExistingType() && lt.getExtends()!= it)
 			       lt.setExtends(it)  ;
 			}
@@ -581,7 +578,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 				if (fields[i].getElementName().equals(targetName)) {
 					String type = Signature.toString(fields[i].getTypeSignature()) ;
 					type = fbeanPart.getModel().resolve(type);
-					return (JavaClass) JavaClassImpl.reflect(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
+					return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 				}
 			}
 			// Look for an actuall class type
@@ -590,7 +587,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			  if (tps[i].getElementName().equals(targetName)) {
 			  	String type = tps[i].getFullyQualifiedName() ;
 				type = fbeanPart.getModel().resolve(type);
-				return (JavaClass) JavaClassImpl.reflect(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
+				return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 			  }
 		}
 		catch (JavaModelException e) {}		
@@ -598,7 +595,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		// Figure out if we parsed an instance for it
 		BeanPart bp = findABean(new String (instanceName)) ;
 		if (bp != null) {
-		  return (JavaClass) JavaClassImpl.reflect(bp.getType(), fbeanPart.getModel().getCompositionModel().getModelResourceSet());
+		  return (JavaClass) JavaRefFactory.eINSTANCE.reflectType(bp.getType(), fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 		}
 		return null;
 	}

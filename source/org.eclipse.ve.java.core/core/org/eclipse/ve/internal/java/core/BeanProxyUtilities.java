@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.List;
@@ -27,9 +27,8 @@ import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.*;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -123,7 +122,7 @@ public class BeanProxyUtilities {
 	 */
 	public static JavaHelpers getJavaType(IBeanProxy aBeanProxy, ResourceSet aResourceSet) {
 		String qualifiedClassName = aBeanProxy.getTypeProxy().getFormalTypeName();
-		JavaHelpers javaType = JavaClassImpl.reflect(qualifiedClassName, aResourceSet);
+		JavaHelpers javaType = JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, aResourceSet);
 		return javaType;
 	}
 	

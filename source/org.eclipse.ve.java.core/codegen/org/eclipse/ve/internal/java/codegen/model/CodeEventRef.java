@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 21:11:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -31,18 +31,15 @@ import org.eclipse.ve.internal.java.codegen.util.*;
  */
 public class CodeEventRef extends CodeExpressionRef {
 	
-	private	CompilationUnitDeclaration	fDom;
 	private 	AbstractEventInvocation		fEventInvocation = null ;
 	protected	IEventDecoder				fDecoder     = null ; 
 
 	public CodeEventRef(Statement exp, CodeMethodRef method, CompilationUnitDeclaration dom) {
 		super(exp, method);
-		fDom = dom;
 	}
 	
 	public CodeEventRef (CodeMethodRef method,BeanPart bean) {	
-	   super(method,bean) ;	        
-	   fDom = null ;
+	   super(method,bean) ;
     }
 
 	/**
@@ -50,7 +47,6 @@ public class CodeEventRef extends CodeExpressionRef {
 	 * @param dom The dom to set
 	 */
 	public void setDom(CompilationUnitDeclaration dom) {
-		fDom = dom;
 	}
 
 	/**

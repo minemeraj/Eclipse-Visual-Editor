@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-13 21:12:18 $ 
  */
 
 import org.eclipse.emf.ecore.EClassifier;
@@ -19,14 +19,14 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.IJavaCellEditor;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 /**
@@ -63,11 +63,11 @@ protected Object doGetObject(int index) {
 	// on the actual BoxLayout so it will find these special dummy classes.
 	if (layoutManagerClassName.equals("javax.swing.BoxLayoutX_Axis") //$NON-NLS-1$
 		|| layoutManagerClassName.equals("javax.swing.BoxLayoutY_Axis")) { //$NON-NLS-1$
-		JavaHelpers javaClass = JavaClassImpl.reflect("javax.swing.BoxLayout", rset); //$NON-NLS-1$
+		JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$
 		if (javaClass != null)
 			 ((JavaClass) javaClass).getEAnnotations();
 	}
-	JavaHelpers javaClass = JavaClassImpl.reflect(layoutManagerClassName, rset);
+	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
 	ILayoutPolicyFactory factory =
 		BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger((EClassifier) javaClass, fEditDomain);
 	return factory.getLayoutManagerInstance(javaClass, rset);

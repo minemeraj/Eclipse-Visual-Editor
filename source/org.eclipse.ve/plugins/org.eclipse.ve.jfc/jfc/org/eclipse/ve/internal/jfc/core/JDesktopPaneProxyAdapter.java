@@ -11,20 +11,21 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:12:18 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.java.core.*;
 
 public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 	protected IMethodProxy fGetDesktopManagerMethodProxy;
@@ -35,7 +36,7 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 		super(domain);
 		
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());		
-		fJInternalFrameClass = (JavaClass) JavaClassImpl.reflect("javax.swing.JInternalFrame", rset); //$NON-NLS-1$
+		fJInternalFrameClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("javax.swing.JInternalFrame", rset); //$NON-NLS-1$
 	}
 	/**
      * Activtates the selected JInternalFrame for this desktop pane. 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BoxLayoutPolicyFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-13 21:12:18 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -19,9 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.visual.*;
@@ -53,7 +51,7 @@ public class BoxLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 * ctor of the BoxLayout.
 	 */
 	public IJavaInstance getLayoutManagerInstance(JavaHelpers javaClass, ResourceSet rset) {
-		JavaHelpers boxLayoutJavaClass = JavaClassImpl.reflect("javax.swing.BoxLayout", rset); //$NON-NLS-1$
+		JavaHelpers boxLayoutJavaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$
 		String initString = "new javax.swing.BoxLayout(,javax.swing.BoxLayout."; //$NON-NLS-1$
 		String javaClassName = ((JavaClass) javaClass).getName();
 		if (javaClassName.equals("BoxLayoutX_Axis")) { //$NON-NLS-1$

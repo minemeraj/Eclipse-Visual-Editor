@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CharJavaCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -20,17 +20,15 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.ve.internal.propertysheet.ObjectCellEditor;
-import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ICharacterBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.propertysheet.*;
 
 /**
  * Provides property sheet editor functions for char types.
@@ -164,9 +162,9 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 		fEditDomain = (EditDomain) data;
 		fResourceSet = JavaEditDomainHelper.getResourceSet(fEditDomain);
 		if (fIsCharacterClass) {
-			fDataType = JavaClassImpl.reflect("java.lang.Character", fResourceSet);
+			fDataType = JavaRefFactory.eINSTANCE.reflectType("java.lang.Character", fResourceSet);
 		} else {
-			fDataType = JavaClassImpl.reflect("char", fResourceSet);
+			fDataType = JavaRefFactory.eINSTANCE.reflectType("char", fResourceSet);
 		}
 	}
 

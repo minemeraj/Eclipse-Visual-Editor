@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,11 +23,13 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
+
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.Method;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
@@ -73,7 +75,7 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 	
 	protected Method getAddMethod (MessageSend event) {
 		
-		JavaClass beanClass = (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect(
+		JavaClass beanClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(
 					fbeanPart.getType(),fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 		
 		List argsList = new ArrayList() ;
@@ -154,7 +156,7 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 	 */
 	protected List getCallBackList() {
 		if (PropetyChangeCallbacks != null) return PropetyChangeCallbacks ;		
-		JavaClass cb = (JavaClass) org.eclipse.jem.java.impl.JavaClassImpl.reflect("java.beans.PropertyChangeListener",  //$NON-NLS-1$
+		JavaClass cb = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("java.beans.PropertyChangeListener",  //$NON-NLS-1$
 					   fbeanPart.getModel().getCompositionModel().getModelResourceSet()) ;
 		PropetyChangeCallbacks = cb.getMethods() ;
 		return PropetyChangeCallbacks;
