@@ -46,7 +46,14 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	
 	public Command getCreateCommand(Object child, Object positionBeforeChild) {
 		Command result = super.getCreateCommand(child, positionBeforeChild);
-		return createInitStringCommand((IJavaObjectInstance)child).chain(result);
+		IJavaObjectInstance javaChild = (IJavaObjectInstance)child;
+		// If we already have a java allocation then just continue.  This could be because the palette prototype instance defined one
+		// otherwise create one based on the parent composite and a style bit of SWT.NONE
+		if(javaChild.getAllocation() != null){
+			return result;
+		} else {
+			return createInitStringCommand((IJavaObjectInstance)child).chain(result);
+		}
 	}
 		
 	/**
@@ -62,7 +69,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	 */
 	
 	private Command createInitStringCommand(IJavaObjectInstance child) {
-			
+					
 		// Class Creation tree - new Foo(args[])
 		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
 		ic.setType(child.getJavaType().getJavaName()) ;

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $RCSfile: TextBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -24,26 +24,28 @@ import org.eclipse.swt.widgets.*;
  * 
  * @since 1.0.0
  */
-public class TableBeanInfo extends SimpleBeanInfo {
+public class TextBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Table.class);
+	BeanDescriptor descriptor = new BeanDescriptor(Text.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
-	    new Object[] [] {				
-			{ "style" , "style" , Boolean.FALSE , new Object[] {
-			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
+		SweetHelper.STYLE_BITS_ID,
+		new Object[] [] {
+			{ "textAlignment" , "textAlignment" , Boolean.FALSE ,  new Object[] {
+			    "CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER) ,
+				"LEFT" , "org.eclipse.swt.SWT.LEFT" ,  new Integer(SWT.LEFT), 				
+				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) 
 			} } ,
-			{ "selection" , "selection" , Boolean.FALSE , new Object[] {
+			{ "readOnly" , "readOnly", Boolean.FALSE , new Object[] {
+				"READ_ONLY" , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					
+			} },
+			{ "lines" , "lines", Boolean.FALSE , new Object[] {
 				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
 				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
-			} },
-			{ "fullSelection" , "fullSelection" , Boolean.FALSE , new Object[] {
-				"FULL_SELECTION" , "org.eclipse.swt.FULL_SELECTION" , new Integer(SWT.FULL_SELECTION) 					
-			} } ,
-			{ "hideSelection" , "hideSelection" , Boolean.FALSE , new Object[] {
-				"HIDE_SELECTION" , "org.eclipse.swt.HIDE_SELECTION" , new Integer(SWT.HIDE_SELECTION) 					
-			} }			
+			} },			
+			{ "wrap" , "wrap", Boolean.FALSE , new Object[] {
+				"WRAP" , "org.eclipse.swt.SWT.WRAP" , new Integer(SWT.WRAP)					
+			} }
 		}
 	);
 	SweetHelper.mergeSuperclassStyleBits(descriptor);

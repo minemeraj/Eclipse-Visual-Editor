@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-11 01:47:55 $ 
+ *  $RCSfile: ScrollBarBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -24,18 +24,16 @@ import org.eclipse.swt.widgets.*;
  * 
  * @since 1.0.0
  */
-public class ScrollableBeanInfo extends SimpleBeanInfo {
+public class ScrollBarBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Scrollable.class);
+	BeanDescriptor descriptor = new BeanDescriptor(ScrollBar.class);
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
-	    new Object[] [] {							
-			{ "horizontalScroll" , "horizontalScroll" , Boolean.FALSE , new Object[] {
-			    "H_SCROLL" , "org.eclipse.swt.SWT.H_SCROLL" , new Integer(SWT.H_SCROLL)				
-			} } ,
-			{ "verticalScroll" , "verticalScroll" , Boolean.FALSE , new Object[] {
-				"V_SCROLL" , "org.eclipse.swt.SWT.V_SCROLL" , new Integer(SWT.V_SCROLL)				
+	    new Object[] [] {
+			{ "orientation" , "orientation" , Boolean.FALSE ,  new Object[] {
+			    "HORIZONTAL" , "org.eclipse.swt.SWT.HORIZONTAL" , new Integer(SWT.HORIZONTAL) ,
+				"VERTICAL" , "org.eclipse.swt.SWT.VERTICAL" ,  new Integer(SWT.VERTICAL) 				
 			} }
 		}
 	);

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: CompositeBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $RCSfile: CanvasBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.*;
  * 
  * @since 1.0.0
  */
-public class CompositeBeanInfo extends SimpleBeanInfo {
+public class CanvasBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Composite.class);
+	BeanDescriptor descriptor = new BeanDescriptor(Canvas.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {			
 			{ "noBackground" , "noBackground" , Boolean.TRUE , new Object[] {
 			    "NO_BACKGROUND" , "org.eclipse.swt.SWT.NO_BACKGROUND" , new Integer(SWT.NO_BACKGROUND)				
@@ -48,7 +48,7 @@ public BeanDescriptor getBeanDescriptor() {
 			} } 			
 		}
 	);
-	SweetHelper.mergeStyleBits(descriptor,new Class[] {Control.class});
+	SweetHelper.mergeSuperclassStyleBits(descriptor);
 	return descriptor;
 }
 	

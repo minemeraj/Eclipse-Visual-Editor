@@ -2,15 +2,22 @@ package org.eclipse.ve.internal.swt;
 
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.swt.SWT;
+
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.PTExpression;
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class WidgetProxyAdapter extends BeanProxyAdapter {
 	
@@ -48,7 +55,8 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 	}	
 	
 	public void releaseBeanProxy() {
-		style = -1;	// Uncache the style bit
+		style = -1;	// Uncache the style bit]
+		explicitStyle = -1; // Uncache the explicit style bit set in source
 		if(isBeanProxyInstantiated()){
 			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
@@ -82,4 +90,37 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 		}
 		return style;
 	} 
+	private int explicitStyle = -1;
+	/**
+	 * Return the style that is actuall expcitly set when this widget is constructed by us
+	 */
+	public int getExplicitStyle(){
+		if(explicitStyle == -1){
+			IBeanProxy styleBeanProxy = null;
+			// Get the arguments from the source that are the style bits that are explicitly set
+			if (getJavaObject().getAllocation() instanceof ParseTreeAllocation){
+				PTExpression expression = ((ParseTreeAllocation)getJavaObject().getAllocation()).getExpression();
+				if(expression instanceof PTClassInstanceCreation){
+					PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation)expression;
+					if(classInstanceCreation.getArguments().size() == 2){
+						PTExpression styleExpression = (PTExpression)classInstanceCreation.getArguments().get(1);
+						try {
+							styleBeanProxy = BasicAllocationProcesser.instantiateWithString(
+									styleExpression.toString(), 
+									getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int"));							
+						} catch (AllocationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			if(styleBeanProxy == null){
+				explicitStyle = SWT.NONE;
+			} else {
+				explicitStyle = ((IIntegerBeanProxy)styleBeanProxy).intValue();
+			}
+		}
+		return explicitStyle;		
+	}	
 }

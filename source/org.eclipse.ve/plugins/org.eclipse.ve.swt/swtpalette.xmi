@@ -24,11 +24,23 @@
           creationClassURI="java:/org.eclipse.swt.widgets#Button"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Button"/>
       </cmpEntries>        
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/CheckBox.xmi#CheckBox_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="CheckBox"/>
+      </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/RadioButton.xmi#RadioButton_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="RadioButton"/>
+      </cmpEntries>            
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry4obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Text"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string4" string="Text"/>
       </cmpEntries>        
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/textarea_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/TextArea.xmi#TextArea_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TextArea"/>
+      </cmpEntries>            
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry6" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry6obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Label"/>
@@ -48,7 +60,14 @@
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry6obj"
           creationClassURI="java:/org.eclipse.swt.widgets#ProgressBar"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Progress Bar"/>
-      </cmpEntries>                    
+      </cmpEntries>     
+<!--    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry8" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrollbar_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#ScrollBar"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ScrollBar"/>
+      </cmpEntries>                          
+ -->      
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry7" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/slider_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry7obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Slider"/>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-09 00:07:48 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-11 01:47:55 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -29,7 +29,7 @@ public class ButtonBeanInfo extends SimpleBeanInfo {
 public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(Button.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
+		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {
 			{ "style" , "style" , Boolean.FALSE ,  new Object[] {
 			    "PUSH" , "org.eclipse.swt.SWT.PUSH" , new Integer(SWT.PUSH) ,
@@ -38,7 +38,7 @@ public BeanDescriptor getBeanDescriptor() {
 				"ARROW" , "org.eclipse.swt.SWT.ARROW" , new Integer(SWT.ARROW) ,
 				"TOGGLE" , "org.eclipse.swt.SWT.TOGGLE" , new Integer(SWT.TOGGLE)				
 			} } ,
-			{ "alignment" , "alignment", Boolean.FALSE , new Object[] {
+			{ "textAlignment" , "textAlignment", Boolean.FALSE , new Object[] {
 				"LEFT" , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					
 				"RIGHT" , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) ,
 				"CENTER" , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				
