@@ -241,9 +241,9 @@
             category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTBrowser">
          <class class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard">
-         	<parameter exampleFile="SimpleSWTBrowser"/>
-         	<parameter classpathContainerPlugin="org.eclipse.swt"/>
-         	<parameter classpathContainerName="SWT_CONTAINER"/>
+         	<parameter name="exampleFile" value="SimpleSWTBrowser"/>
+         	<parameter name="classpathContainerPlugin" value="org.eclipse.swt"/>
+         	<parameter name="classpathContainerName" value="SWT_CONTAINER"/>
          </class>
          <description>
             %Example.SimpleSWTBrowser.Desc
@@ -255,9 +255,9 @@
             category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
             id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTTextEditor">
          <class class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard">
-         	<parameter exampleFile="SimpleSWTTextEditor"/>
-         	<parameter classpathContainerPlugin="org.eclipse.swt"/>
-         	<parameter classpathContainerName="SWT_CONTAINER"/>
+         	<parameter name="exampleFile" value="SimpleSWTTextEditor"/>
+         	<parameter name="classpathContainerPlugin" value="org.eclipse.swt"/>
+         	<parameter name="classpathContainerName" value="SWT_CONTAINER"/>
          </class>
          <description>
             %Example.SimpleSWTTextEditor.Desc
