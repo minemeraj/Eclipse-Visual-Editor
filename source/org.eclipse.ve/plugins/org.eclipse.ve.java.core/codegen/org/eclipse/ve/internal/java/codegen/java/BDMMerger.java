@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-01 21:11:57 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-01 23:12:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -63,6 +63,7 @@ public class BDMMerger {
 			merged = merged && removeDeletedBeans() ;
 			merged = merged && removeDeletedMethods() ;
 			merged = merged && addNewBeans() ;
+			merged = merged && addThisMethod() ;
 			merged = merged && mergeAllBeans() ;
 			merged = merged && updateFreeForm() ;
 		}
@@ -135,11 +136,13 @@ public class BDMMerger {
 			for (Iterator iter = initBPs.iterator(); iter.hasNext();) {
 				BeanPart bp = (BeanPart) iter.next();
 				logFiner("Disposing init bean "+bp.getSimpleName()+" when disposing method "+m.getMethodHandle());
-				bp.dispose() ;
+				if(!BeanPart.THIS_NAME.equals(bp.getSimpleName())) // do not dispose THIS beanpart
+					bp.dispose() ;
 			}
 			if(retBP!=null && !initBPs.contains(retBP)){
 				logFiner("Disposing return bean "+retBP.getSimpleName()+" when disposing method "+m.getMethodHandle());
-				retBP.dispose() ;
+				if(!BeanPart.THIS_NAME.equals(retBP.getSimpleName())) // do not dispose THIS beanpart
+					retBP.dispose() ;
 			}
 			m.dispose() ;
 			return true ;
@@ -538,25 +541,7 @@ public class BDMMerger {
 		if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
 			// Init method of the bean is not present in the main model - 
 			// add it to the main model, and hook the bean part up.
-			CodeMethodRef updatedMethodRef = referenceBP.getInitMethod() ;
-			initMethod =  new CodeMethodRef(
-					updatedMethodRef.getDeclMethod(), 
-					mainModel.getTypeRef(), 
-					updatedMethodRef.getMethodHandle(),
-					createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
-					updatedMethodRef.getContent()) ; 
-			
-			initMethod.setModel(mainModel) ;
-			
-			BeanPart updateReturnedBP = newModel.getBeanReturned(updatedMethodRef.getMethodName());
-			if(updateReturnedBP!=null){
-				BeanPart mainReturnedBP = mainModel.getABean(updateReturnedBP.getUniqueName());
-				if(mainReturnedBP!=null){
-					// we habe a bean which is returned with this method - hook them up
-					mainReturnedBP.addReturnMethod(initMethod);
-				}
-			}
-			
+			initMethod = createNewMainMethodRef(referenceBP.getInitMethod()) ;
 			logFiner("Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName());
 		}
 		newBP.addInitMethod(initMethod);
@@ -632,6 +617,10 @@ public class BDMMerger {
 		return true ;
 	}	
 	
+	/**
+	 * Adds beans which are present with an init method in the new BDM
+	 * @since 1.0.0
+	 */
 	protected boolean addNewBeans(){
 		boolean add = true ;
 		Iterator newBeansItr = newModel.getBeans().iterator();
@@ -725,5 +714,50 @@ public class BDMMerger {
 			}
 		}
 		return removed;
+	}
+	
+	protected CodeMethodRef createNewMainMethodRef(CodeMethodRef newMethodRef){
+		CodeMethodRef mainMethodRef =  new CodeMethodRef(
+				newMethodRef.getDeclMethod(), 
+				mainModel.getTypeRef(), 
+				newMethodRef.getMethodHandle(),
+				createSourceRange(newMethodRef.getOffset(), newMethodRef.getLen()), 
+				newMethodRef.getContent()) ; 
+		
+		mainMethodRef.setModel(mainModel) ;
+		
+		BeanPart updateReturnedBP = newModel.getBeanReturned(newMethodRef.getMethodName());
+		if(updateReturnedBP!=null){
+			BeanPart mainReturnedBP = mainModel.getABean(updateReturnedBP.getUniqueName());
+			if(mainReturnedBP!=null){
+				// we habe a bean which is returned with this method - hook them up
+				mainReturnedBP.addReturnMethod(mainMethodRef);
+			}
+		}
+		return mainMethodRef ;
+	}
+	
+	/**
+	 * Creates an init method for THIS beanpart.
+	 * @return
+	 * @since 1.0.0
+	 */
+	protected boolean addThisMethod(){
+		boolean add = true ;
+		Iterator newBeansItr = newModel.getBeans().iterator();
+		while (newBeansItr.hasNext()) {
+			BeanPart beanPart = (BeanPart) newBeansItr.next();
+			if(	BeanPart.THIS_NAME.equals(beanPart.getSimpleName()) && 
+					mainModel.getABean(beanPart.getSimpleName())!=null){
+				BeanPart mainBP = mainModel.getABean(beanPart.getSimpleName());
+				if(mainBP.getInitMethod()==null && beanPart.getInitMethod()!=null){
+					// main BDM has no THIS init method, the new BDM has - hence create one
+					CodeMethodRef initMethod = createNewMainMethodRef(beanPart.getInitMethod()) ;
+					mainBP.addInitMethod(initMethod);
+					logFiner("Created new init method "+initMethod.getMethodHandle()+" for THIS part");
+				}
+			}
+		}
+		return add;
 	}
 }
