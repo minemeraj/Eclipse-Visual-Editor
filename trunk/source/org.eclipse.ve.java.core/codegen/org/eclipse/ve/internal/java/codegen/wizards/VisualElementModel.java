@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.5 $  $Date: 2004-07-30 16:38:18 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-08 22:38:50 $ 
  */
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -52,6 +52,18 @@ public class VisualElementModel {
 	public String getCategory() {
 		if (configElement != null)
 			return configElement.getAttributeAsIs("category");
+		return null;
+	}
+
+	public String getContainer() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("container");
+		return null;
+	}
+	
+	public String getPluginId() {
+		if (configElement != null)
+			return configElement.getAttributeAsIs("pluginId");
 		return null;
 	}
 

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.19 $  $Date: 2004-08-04 21:33:03 $ 
+ *  $Revision: 1.20 $  $Date: 2004-09-08 22:38:50 $ 
  */
 
 import java.io.IOException;
@@ -29,6 +29,8 @@ import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -59,7 +61,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @param className
 	 * @param monitor
 	 */
-	protected void updateContributor(VisualElementModel elementModel, IProgressMonitor monitor) {
+	protected void updateContributor(VisualElementModel elementModel) {
 		if (elementModel != null && elementModel.getConfigElement() != null) {
 			IConfigurationElement celm = elementModel.getConfigElement();
 			if ((celm.getAttribute("contributor") != null || celm.getChildren("contributor").length != 0)) {
@@ -297,14 +299,60 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		// Store the selected VisualElementModel if one is selected.
 		if (fPage.getSelectedElement() != null)
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, getSelectedElementStringValue(fPage.getSelectedElement()));
-		fPage.createType(monitor); // use the full progress monitor
-		
-		updateContributor(fPage.getSelectedElement(), monitor);
+		monitor.beginTask("",300);
+		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor
+		// Check for a class path container or plugin id this extension needs in this source folder
+		if (fPage.getSelectedElement() != null && (fPage.getSelectedElement().getContainer() != null || fPage.getSelectedElement().getPluginId() != null)) {
+			verifyProjectClassPath(fPage.getSelectedElement(), new SubProgressMonitor(monitor, 100));
+		} else 
+			monitor.worked(100);
+		updateContributor(fPage.getSelectedElement());
 		if(contributor!=null){
-			applyContributor(fPage.getCreatedType(), fPage.getSuperClass(), monitor);
+			applyContributor(fPage.getCreatedType(), fPage.getSuperClass(), new SubProgressMonitor(monitor, 100));
+		} else 
+			monitor.worked(100);
+		monitor.done();
+	}
+	/**
+	 * Determine if the classpath container or plugin id for this style extension needs
+	 * to be in the source folder for this class.
+	 * 
+	 * @param elementModel
+	 * @param monitor
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void verifyProjectClassPath(VisualElementModel elementModel, IProgressMonitor monitor) {
+		monitor.beginTask("", 100);
+		try {
+			if (elementModel == null)
+				return;
+			String pluginId = elementModel.getPluginId();
+			String container = elementModel.getContainer();
+			IJavaProject project = fPage.getPackageFragment().getJavaProject();
+			if (project != null) {
+				Map containers = new HashMap(), plugins = new HashMap();
+				try {
+					ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
+					if (!((container != null && containers.get(container) == Boolean.TRUE) || (pluginId != null && plugins.get(pluginId) == Boolean.TRUE))) {
+						if (container != null && plugins.isEmpty()) {
+							// TODO If we are a plugin project, we should add the plugin... not the container.
+							// For now just add the container to the project so the class will compile correctly
+							IClasspathEntry[] cp = project.getRawClasspath();
+							IClasspathEntry [] newcp = new IClasspathEntry [cp.length + 1];
+							System.arraycopy(cp, 0, newcp, 0, cp.length);
+							newcp[cp.length] = JavaCore.newContainerEntry(new Path(container));
+							project.setRawClasspath(newcp, new SubProgressMonitor(monitor, 100));
+						}
+					}
+
+				} catch (JavaModelException e) {
+				}
+			}
+		} finally {
+			monitor.done();
 		}
 	}
-	
 	public void addPages() {
 		fPage = new NewVisualClassWizardPage();
 		addPage(fPage);
