@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-20 00:44:30 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-08 21:20:32 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -247,10 +247,12 @@ public class JavaObjectEmiter {
 				// Remember a fallback class, just in case
 				fsecondBestClass = clazz ;
 				long ts = TemplateUtil.getTimeStamp(clazz) ;
-				if (ts >= fSrcTimeStamp) {
-					JavaVEPlugin.log("JavaObjectEmitter: found existing class: "+clazz.getName(),Level.FINEST) ; //$NON-NLS-1$
+				if (ts >= fSrcTimeStamp) {					
 					ftheClass = clazz ;
 					return clazz ;				
+				}
+				else {
+					JavaVEPlugin.log("JavaObjectEmitter: Did not found found existing class: "+clazz.getName(),Level.FINEST) ; //$NON-NLS-1$
 				}
 				index++ ;
 			}
