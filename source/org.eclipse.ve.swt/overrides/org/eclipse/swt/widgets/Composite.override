@@ -11,7 +11,7 @@
     xmlns:event="event.xmi">	
   <event:AddMany xmi:version="2.0" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-     	graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart"
+     	graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true"
     	treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"/>
     </addedEObjects>

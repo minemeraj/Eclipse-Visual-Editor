@@ -7,7 +7,8 @@
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
     xmlns:event="event.xmi" 
     featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true">
     <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/sashform_obj.gif"/>
   </addedEObjects>
 </event:AddMany>
