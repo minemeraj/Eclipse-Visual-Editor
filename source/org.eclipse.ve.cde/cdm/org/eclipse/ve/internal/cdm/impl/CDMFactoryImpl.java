@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 import org.eclipse.ve.internal.cdm.*;
@@ -65,6 +65,7 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 			case CDMPackage.KEYED_GENERIC: return (EObject)createKeyedGeneric();
 			case CDMPackage.KEYED_INTEGER: return (EObject)createKeyedInteger();
 			case CDMPackage.KEYED_DYNAMIC: return (EObject)createKeyedDynamic();
+			case CDMPackage.KEYED_BOOLEAN: return (EObject)createKeyedBoolean();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -234,6 +235,16 @@ public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
 	public Map.Entry createKeyedDynamic() {
 		KeyedDynamicImpl keyedDynamic = new KeyedDynamicImpl();
 		return keyedDynamic;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry createKeyedBoolean() {
+		KeyedBooleanImpl keyedBoolean = new KeyedBooleanImpl();
+		return keyedBoolean;
 	}
 
 	public Dimension createViewDimensionFromString(EDataType eDataType, String initialValue) {

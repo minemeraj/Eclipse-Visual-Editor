@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: KeyedIntegerImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:15 $ 
  */
  
 import org.eclipse.emf.common.notify.Notification;
@@ -48,7 +48,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Integer VALUE_EDEFAULT = null;
+	protected static final int VALUE_EDEFAULT = 0;
 
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
@@ -58,7 +58,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 * @ordered
 	 */
-	protected Integer value = VALUE_EDEFAULT;
+	protected int value = VALUE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
@@ -103,7 +103,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Integer getTypedValue() {
+	public int getTypedValue() {
 		return value;
 	}
 
@@ -112,8 +112,8 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void setTypedValue(Integer newValue) {
-		Integer oldValue = value;
+	public void setTypedValue(int newValue) {
+		int oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.KEYED_INTEGER__VALUE, oldValue, value));
@@ -148,7 +148,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
-				return getTypedValue();
+				return new Integer(getTypedValue());
 			case CDMPackage.KEYED_INTEGER__KEY:
 				return getTypedKey();
 		}
@@ -163,7 +163,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
-				setTypedValue((Integer)newValue);
+				setTypedValue(((Integer)newValue).intValue());
 				return;
 			case CDMPackage.KEYED_INTEGER__KEY:
 				setTypedKey((String)newValue);
@@ -197,7 +197,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case CDMPackage.KEYED_INTEGER__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+				return value != VALUE_EDEFAULT;
 			case CDMPackage.KEYED_INTEGER__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
 		}
@@ -274,7 +274,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	public Object getValue() {
-		return getTypedValue();
+		return new Integer(getTypedValue());
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public Object setValue(Object value) {
 		Object oldValue = getValue();
-		setTypedValue((Integer)value);
+		setTypedValue(((Integer)value).intValue());
 		return oldValue;
 	}
 

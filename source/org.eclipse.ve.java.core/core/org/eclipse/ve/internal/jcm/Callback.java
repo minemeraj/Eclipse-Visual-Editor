@@ -18,8 +18,10 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: Callback.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.jem.java.Method;
 import org.eclipse.emf.ecore.EObject;
@@ -34,6 +36,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.Callback#isSharedScope <em>Shared Scope</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.Callback#getMethod <em>Method</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.Callback#getStatements <em>Statements</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,7 +44,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model 
  * @generated
  */
-public interface Callback extends EObject {
+public interface Callback extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Shared Scope</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -93,5 +96,20 @@ public interface Callback extends EObject {
 	 * @generated
 	 */
 	void setMethod(Method value);
+
+	/**
+	 * Returns the value of the '<em><b>Statements</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jem.internal.instantiation.PTExpression}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * List of modeled statements to be in this callback.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Statements</em>' containment reference list.
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getCallback_Statements()
+	 * @model type="org.eclipse.jem.internal.instantiation.PTExpression" containment="true"
+	 * @generated
+	 */
+	EList getStatements();
 
 } // Callback

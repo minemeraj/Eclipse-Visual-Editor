@@ -11,10 +11,9 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-08 17:52:29 $ 
+ *  $Revision: 1.11 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 

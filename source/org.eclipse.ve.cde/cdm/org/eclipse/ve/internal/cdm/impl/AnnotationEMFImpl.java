@@ -11,19 +11,26 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotationEMFImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-03 23:18:44 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-04 22:31:15 $ 
  */
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.notify.impl.NotificationChainImpl;
-import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
+import org.eclipse.ve.internal.cdm.CDMPackage;
 
 import org.eclipse.ve.internal.cdm.*;
 /**

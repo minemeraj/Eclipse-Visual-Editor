@@ -19,6 +19,7 @@
       <import plugin="org.eclipse.gef"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.jem"/>
+      <import plugin="org.eclipse.ve.propertysheet"/>
    </requires>
 
 

@@ -213,8 +213,8 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public int getHash() {
 		if (hash == -1) {
-		  Object theKey = getKey();
-		  hash = (theKey == null ? 0 : theKey.hashCode());
+			Object theKey = getKey();
+			hash = (theKey == null ? 0 : theKey.hashCode());
 		}
 		return hash;
 	}

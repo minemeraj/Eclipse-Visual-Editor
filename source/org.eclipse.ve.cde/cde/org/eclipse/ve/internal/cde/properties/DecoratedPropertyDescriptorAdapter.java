@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: DecoratedPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-06 18:38:42 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 import java.text.MessageFormat;
@@ -111,17 +111,17 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 
 	protected FeatureDescriptorDecorator getFeatureDecorator() {
 		// Return the FeatureDescriptorDecorator for this feature.
-		return (FeatureDescriptorDecorator) findDecorator(((EModelElement) target).getEAnnotations(), FeatureDescriptorDecorator.class);
+		return (FeatureDescriptorDecorator) CDEUtilities.findDecorator((EModelElement) target, FeatureDescriptorDecorator.class);
 	}
 
 	protected PropertyDescriptorDecorator getPropertyDecorator() {
 		// Return the PropertyDescriptorDecorator for this feature.
-		return (PropertyDescriptorDecorator) findDecorator(((EModelElement) target).getEAnnotations(), PropertyDescriptorDecorator.class);
+		return (PropertyDescriptorDecorator) CDEUtilities.findDecorator((EModelElement) target, PropertyDescriptorDecorator.class);
 	}
 
 	protected BasePropertyDecorator getBaseDecorator() {
 		// Return the BasePropertyDecorator for this feature.
-		return (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
+		return (BasePropertyDecorator) CDEUtilities.findDecorator((EModelElement) target, BasePropertyDecorator.class);
 	}
 
 	public String getDescription() {

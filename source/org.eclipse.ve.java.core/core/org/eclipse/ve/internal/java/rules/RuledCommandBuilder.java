@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import java.util.*;
@@ -80,9 +80,8 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * Constructor for RuledCommandBuilder.
 	 * @param regularCmd
 	 */
-	public RuledCommandBuilder(boolean regularCmd) {
-		super(regularCmd);
-		this.regularCmd = regularCmd;
+	public RuledCommandBuilder(EditDomain domain, boolean regularCmd) {
+		this(domain, null, regularCmd);
 	}
 	
 	/**

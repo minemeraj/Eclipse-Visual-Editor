@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-22 22:43:04 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 
@@ -415,5 +415,24 @@ nextName:
 		}
 		
 		return ep;
+	}
+	
+	/**
+	 * Helper to find an annotation of the given class type on the given model.
+	 * @param model
+	 * @param annotationType
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static EAnnotation findDecorator(EModelElement model, Class annotationType) {
+		List as = model.getEAnnotations();
+		int s = as.size();
+		for (int i=0; i<s; i++) {
+			Object next = as.get(i);
+			if (annotationType.isInstance(next))
+				return (EAnnotation) next;
+		}
+		return null;
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:20 $ 
  */
 
 import java.util.Collection;
@@ -37,6 +37,7 @@ import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
+import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 /**
@@ -48,6 +49,8 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#getKeyedValues <em>Keyed Values</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#getBeanProxyClassName <em>Bean Proxy Class Name</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#getBeanLocation <em>Bean Location</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl#isBeanReturn <em>Bean Return</em>}</li>
  * </ul>
  * </p>
  *
@@ -99,6 +102,64 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	protected String beanProxyClassName = BEAN_PROXY_CLASS_NAME_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getBeanLocation() <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final InstanceLocation BEAN_LOCATION_EDEFAULT = InstanceLocation.GLOBAL_GLOBAL_LITERAL;
+
+	/**
+	 * The cached value of the '{@link #getBeanLocation() <em>Bean Location</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBeanLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected InstanceLocation beanLocation = BEAN_LOCATION_EDEFAULT;
+
+	/**
+	 * This is true if the Bean Location attribute has been set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean beanLocationESet = false;
+
+	/**
+	 * The default value of the '{@link #isBeanReturn() <em>Bean Return</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isBeanReturn()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean BEAN_RETURN_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isBeanReturn() <em>Bean Return</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isBeanReturn()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean beanReturn = BEAN_RETURN_EDEFAULT;
+
+	/**
+	 * This is true if the Bean Return attribute has been set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean beanReturnESet = false;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 */
@@ -147,6 +208,98 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 		beanProxyClassName = newBeanProxyClassName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME, oldBeanProxyClassName, beanProxyClassName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InstanceLocation getBeanLocation() {
+		return beanLocation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBeanLocation(InstanceLocation newBeanLocation) {
+		InstanceLocation oldBeanLocation = beanLocation;
+		beanLocation = newBeanLocation == null ? BEAN_LOCATION_EDEFAULT : newBeanLocation;
+		boolean oldBeanLocationESet = beanLocationESet;
+		beanLocationESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_LOCATION, oldBeanLocation, beanLocation, !oldBeanLocationESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void unsetBeanLocation() {
+		InstanceLocation oldBeanLocation = beanLocation;
+		boolean oldBeanLocationESet = beanLocationESet;
+		beanLocation = BEAN_LOCATION_EDEFAULT;
+		beanLocationESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_DECORATOR__BEAN_LOCATION, oldBeanLocation, BEAN_LOCATION_EDEFAULT, oldBeanLocationESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSetBeanLocation() {
+		return beanLocationESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isBeanReturn() {
+		return beanReturn;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBeanReturn(boolean newBeanReturn) {
+		boolean oldBeanReturn = beanReturn;
+		beanReturn = newBeanReturn;
+		boolean oldBeanReturnESet = beanReturnESet;
+		beanReturnESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_RETURN, oldBeanReturn, beanReturn, !oldBeanReturnESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void unsetBeanReturn() {
+		boolean oldBeanReturn = beanReturn;
+		boolean oldBeanReturnESet = beanReturnESet;
+		beanReturn = BEAN_RETURN_EDEFAULT;
+		beanReturnESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_DECORATOR__BEAN_RETURN, oldBeanReturn, BEAN_RETURN_EDEFAULT, oldBeanReturnESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSetBeanReturn() {
+		return beanReturnESet;
 	}
 
 	/**
@@ -237,6 +390,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 				return getKeyedValues();
 			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
 				return getBeanProxyClassName();
+			case JCMPackage.BEAN_DECORATOR__BEAN_LOCATION:
+				return getBeanLocation();
+			case JCMPackage.BEAN_DECORATOR__BEAN_RETURN:
+				return isBeanReturn() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -277,6 +434,12 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
 				setBeanProxyClassName((String)newValue);
 				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_LOCATION:
+				setBeanLocation((InstanceLocation)newValue);
+				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_RETURN:
+				setBeanReturn(((Boolean)newValue).booleanValue());
+				return;
 		}
 		eDynamicSet(eFeature, newValue);
 	}
@@ -312,6 +475,12 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
 				setBeanProxyClassName(BEAN_PROXY_CLASS_NAME_EDEFAULT);
 				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_LOCATION:
+				unsetBeanLocation();
+				return;
+			case JCMPackage.BEAN_DECORATOR__BEAN_RETURN:
+				unsetBeanReturn();
+				return;
 		}
 		eDynamicUnset(eFeature);
 	}
@@ -339,6 +508,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 				return keyedValues != null && !keyedValues.isEmpty();
 			case JCMPackage.BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME:
 				return BEAN_PROXY_CLASS_NAME_EDEFAULT == null ? beanProxyClassName != null : !BEAN_PROXY_CLASS_NAME_EDEFAULT.equals(beanProxyClassName);
+			case JCMPackage.BEAN_DECORATOR__BEAN_LOCATION:
+				return isSetBeanLocation();
+			case JCMPackage.BEAN_DECORATOR__BEAN_RETURN:
+				return isSetBeanReturn();
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -384,6 +557,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (beanProxyClassName: ");
 		result.append(beanProxyClassName);
+		result.append(", beanLocation: ");
+		if (beanLocationESet) result.append(beanLocation); else result.append("<unset>");
+		result.append(", beanReturn: ");
+		if (beanReturnESet) result.append(beanReturn); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

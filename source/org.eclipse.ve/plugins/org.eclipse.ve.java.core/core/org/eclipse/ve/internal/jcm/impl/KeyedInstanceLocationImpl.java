@@ -1,65 +1,41 @@
-package org.eclipse.ve.internal.cdm.impl;
-/*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-/*
- *  $RCSfile: KeyedIntegerImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2004-05-04 22:31:15 $ 
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: KeyedInstanceLocationImpl.java,v 1.1 2004-05-04 22:31:20 rkulp Exp $
  */
- 
+package org.eclipse.ve.internal.jcm.impl;
+
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.jcm.InstanceLocation;
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Keyed Integer</b></em>'.
+ * An implementation of the model object '<em><b>Keyed Instance Location</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.ve.internal.cdm.impl.KeyedIntegerImpl#getTypedValue <em>Value</em>}</li>
- *   <li>{@link org.eclipse.ve.internal.cdm.impl.KeyedIntegerImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
-	/**
-	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypedValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int VALUE_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypedValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected int value = VALUE_EDEFAULT;
-
+public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.Entry {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -81,11 +57,31 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	protected String key = KEY_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypedValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final InstanceLocation VALUE_EDEFAULT = InstanceLocation.GLOBAL_GLOBAL_LITERAL;
+
+	/**
+	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypedValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected InstanceLocation value = VALUE_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected KeyedIntegerImpl() {
+	protected KeyedInstanceLocationImpl() {
 		super();
 	}
 
@@ -95,28 +91,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getKeyedInteger();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getTypedValue() {
-		return value;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setTypedValue(int newValue) {
-		int oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.KEYED_INTEGER__VALUE, oldValue, value));
+		return JCMPackage.eINSTANCE.getKeyedInstanceLocation();
 	}
 
 	/**
@@ -137,7 +112,28 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 		String oldKey = key;
 		key = newKey;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.KEYED_INTEGER__KEY, oldKey, key));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.KEYED_INSTANCE_LOCATION__KEY, oldKey, key));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InstanceLocation getTypedValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTypedValue(InstanceLocation newValue) {
+		InstanceLocation oldValue = value;
+		value = newValue == null ? VALUE_EDEFAULT : newValue;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.KEYED_INSTANCE_LOCATION__VALUE, oldValue, value));
 	}
 
 	/**
@@ -147,10 +143,10 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.KEYED_INTEGER__VALUE:
-				return new Integer(getTypedValue());
-			case CDMPackage.KEYED_INTEGER__KEY:
+			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
 				return getTypedKey();
+			case JCMPackage.KEYED_INSTANCE_LOCATION__VALUE:
+				return getTypedValue();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -162,11 +158,11 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.KEYED_INTEGER__VALUE:
-				setTypedValue(((Integer)newValue).intValue());
-				return;
-			case CDMPackage.KEYED_INTEGER__KEY:
+			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
 				setTypedKey((String)newValue);
+				return;
+			case JCMPackage.KEYED_INSTANCE_LOCATION__VALUE:
+				setTypedValue((InstanceLocation)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -179,11 +175,11 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.KEYED_INTEGER__VALUE:
-				setTypedValue(VALUE_EDEFAULT);
-				return;
-			case CDMPackage.KEYED_INTEGER__KEY:
+			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
 				setTypedKey(KEY_EDEFAULT);
+				return;
+			case JCMPackage.KEYED_INSTANCE_LOCATION__VALUE:
+				setTypedValue(VALUE_EDEFAULT);
 				return;
 		}
 		eDynamicUnset(eFeature);
@@ -196,10 +192,10 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.KEYED_INTEGER__VALUE:
-				return value != VALUE_EDEFAULT;
-			case CDMPackage.KEYED_INTEGER__KEY:
+			case JCMPackage.KEYED_INSTANCE_LOCATION__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
+			case JCMPackage.KEYED_INSTANCE_LOCATION__VALUE:
+				return value != VALUE_EDEFAULT;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -213,10 +209,10 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (value: ");
-		result.append(value);
-		result.append(", key: ");
+		result.append(" (key: ");
 		result.append(key);
+		result.append(", value: ");
+		result.append(value);
 		result.append(')');
 		return result.toString();
 	}
@@ -226,7 +222,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected int hash= -1;
+	protected int hash = -1;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -274,7 +270,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	public Object getValue() {
-		return new Integer(getTypedValue());
+		return getTypedValue();
 	}
 
 	/**
@@ -284,7 +280,7 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public Object setValue(Object value) {
 		Object oldValue = getValue();
-		setTypedValue(((Integer)value).intValue());
+		setTypedValue((InstanceLocation)value);
 		return oldValue;
 	}
 
@@ -297,4 +293,4 @@ public class KeyedIntegerImpl extends EObjectImpl implements BasicEMap.Entry {
 		EObject container = eContainer();
 		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
 	}
-} //KeyedIntegerImpl
+} //KeyedInstanceLocationImpl

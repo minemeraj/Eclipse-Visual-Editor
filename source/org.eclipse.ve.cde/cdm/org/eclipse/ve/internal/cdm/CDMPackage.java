@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm;
  *******************************************************************************/
 /*
  *  $RCSfile: CDMPackage.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -714,6 +714,43 @@ public interface CDMPackage extends EPackage{
 	int KEYED_DYNAMIC_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl <em>Keyed Boolean</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl
+	 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedBoolean()
+	 * @generated
+	 */
+	int KEYED_BOOLEAN = 16;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_BOOLEAN__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_BOOLEAN__VALUE = 1;
+
+	/**
+	 * The number of structural features of the the '<em>Keyed Boolean</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYED_BOOLEAN_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '<em>View Dimension</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -721,7 +758,7 @@ public interface CDMPackage extends EPackage{
 	 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewDimension()
 	 * @generated
 	 */
-	int VIEW_DIMENSION = 16;
+	int VIEW_DIMENSION = 17;
 
 	/**
 	 * The meta object id for the '<em>View Point</em>' data type.
@@ -731,7 +768,7 @@ public interface CDMPackage extends EPackage{
 	 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewPoint()
 	 * @generated
 	 */
-	int VIEW_POINT = 17;
+	int VIEW_POINT = 18;
 
 	/**
 	 * The meta object id for the '<em>View Rectangle</em>' data type.
@@ -741,7 +778,7 @@ public interface CDMPackage extends EPackage{
 	 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewRectangle()
 	 * @generated
 	 */
-	int VIEW_RECTANGLE = 18;
+	int VIEW_RECTANGLE = 19;
 
 
 	/**
@@ -1162,7 +1199,7 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Integer</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="java.lang.Integer" keyType="java.lang.String" 
+	 * @model features="value key" valueType="int" keyType="java.lang.String" 
 	 * @generated
 	 */
 	EClass getKeyedInteger();
@@ -1254,6 +1291,39 @@ public interface CDMPackage extends EPackage{
 	 * @generated
 	 */
 	EAttribute getKeyedDynamic_Value();
+
+	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Keyed Boolean</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Keyed Boolean</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyType="java.lang.String" valueType="boolean" 
+	 * @generated
+	 */
+	EClass getKeyedBoolean();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getKeyedBoolean()
+	 * @generated
+	 */
+	EAttribute getKeyedBoolean_Key();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getKeyedBoolean()
+	 * @generated
+	 */
+	EAttribute getKeyedBoolean_Value();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.ve.internal.cdm.model.Dimension <em>View Dimension</em>}'.

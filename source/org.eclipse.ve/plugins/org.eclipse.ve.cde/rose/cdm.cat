@@ -1,7 +1,7 @@
 
 (object Petal
-    version    	45
-    _written   	"Rose 7.6.0109.2314"
+    version    	47
+    _written   	"Rose 8.0.0303.1400"
     charSet    	0)
 
 (object Class_Category "CDM"
@@ -221,7 +221,7 @@
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "value"
 		    quid       	"3C6FF61902AF"
-		    type       	"Integer"
+		    type       	"int"
 		    exportControl 	"Public")
 		(object ClassAttribute "key"
 		    quid       	"3DF0E9F5022F"
@@ -275,6 +275,18 @@
 		    quid       	"3F31632A0118"
 		    type       	"EJavaObject"
 		    quidu      	"3ACDF8200182")))
+	(object Class "KeyedBoolean"
+	    quid       	"4097C5020071"
+	    documentation 	"Key/Value for when value is a boolean."
+	    stereotype 	"MapEntry"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "key"
+		    quid       	"4097C5130030"
+		    type       	"String")
+		(object ClassAttribute "value"
+		    quid       	"4097C51803E4"
+		    type       	"boolean"
+		    exportControl 	"Public")))
 	(object Association "$UNNAMED$0"
 	    quid       	"3BF3F64E033F"
 	    roles      	(list role_list
@@ -399,7 +411,7 @@
 	    zoom       	100
 	    max_height 	28350
 	    max_width  	21600
-	    origin_x   	760
+	    origin_x   	1730
 	    origin_y   	0
 	    items      	(list diagram_item_list
 		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @1
@@ -798,7 +810,7 @@
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(2272, 944)
+		    location   	(2288, 976)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -810,7 +822,7 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@9
-			location   	(2026, 868)
+			location   	(2042, 900)
 			fill_color 	13434879
 			nlines     	1
 			max_width  	492
@@ -818,7 +830,7 @@
 			label      	"KeyedPoints")
 		    stereotype 	(object ItemLabel
 			Parent_View 	@9
-			location   	(2026, 823)
+			location   	(2042, 855)
 			fill_color 	13434879
 			anchor     	10
 			nlines     	1
@@ -831,7 +843,7 @@
 		    quidu      	"3A6F4A090222"
 		    compartment 	(object Compartment
 			Parent_View 	@9
-			location   	(2026, 924)
+			location   	(2042, 956)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
@@ -854,7 +866,7 @@
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(2640, 656)
+		    location   	(2640, 672)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -866,19 +878,19 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@10
-			location   	(2502, 580)
+			location   	(2480, 596)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	276
+			max_width  	320
 			justify    	0
 			label      	"KeyedInteger")
 		    stereotype 	(object ItemLabel
 			Parent_View 	@10
-			location   	(2502, 535)
+			location   	(2480, 551)
 			fill_color 	13434879
 			anchor     	10
 			nlines     	1
-			max_width  	276
+			max_width  	320
 			justify    	0
 			label      	"<<MapEntry>>")
 		    icon_style 	"Icon"
@@ -887,7 +899,7 @@
 		    quidu      	"3C6FF60A025D"
 		    compartment 	(object Compartment
 			Parent_View 	@10
-			location   	(2502, 636)
+			location   	(2480, 652)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
@@ -901,8 +913,8 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	3
-			max_width  	285)
-		    width      	294
+			max_width  	233)
+		    width      	338
 		    height     	264
 		    annotation 	8
 		    autoResize 	TRUE)
@@ -976,17 +988,17 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@12
-			location   	(914, 111)
+			location   	(894, 111)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	220
+			max_width  	260
 			justify    	0
 			label      	"Annotation")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	16744703
 		    quidu      	"3AD59613028B"
-		    width      	238
+		    width      	278
 		    height     	122
 		    annotation 	8
 		    autoResize 	TRUE)
@@ -1006,17 +1018,17 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@13
-			location   	(92, 1298)
+			location   	(74, 1298)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	200
+			max_width  	236
 			justify    	0
 			label      	"VisualInfo")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	16744703
 		    quidu      	"39F9A7030371"
-		    width      	218
+		    width      	254
 		    height     	114
 		    annotation 	8
 		    autoResize 	TRUE)
@@ -1036,22 +1048,22 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@14
-			location   	(184, 82)
+			location   	(160, 82)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	272
+			max_width  	320
 			justify    	0
 			label      	"DiagramData")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"3BF3F48003DB"
-		    width      	290
+		    width      	338
 		    height     	114
 		    annotation 	8
 		    autoResize 	TRUE)
 		(object AssociationViewNew "$UNNAMED$1" @15
-		    location   	(685, 128)
+		    location   	(687, 128)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1067,7 +1079,7 @@
 		    roleview_list 	(list RoleViews
 			(object RoleView "annotations" @16
 			    Parent_View 	@15
-			    location   	(365, 0)
+			    location   	(367, 0)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -1079,7 +1091,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @17
 				Parent_View 	@16
-				location   	(713, 88)
+				location   	(712, 88)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1104,11 +1116,11 @@
 			    client     	@15
 			    supplier   	@12
 			    line_style 	3
-			    origin_attachment 	(685, 128)
-			    terminal_attachment 	(905, 128)
+			    origin_attachment 	(687, 128)
+			    terminal_attachment 	(885, 128)
 			    label      	(object SegLabel @18
 				Parent_View 	@16
-				location   	(806, 182)
+				location   	(795, 182)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1129,15 +1141,15 @@
 				orientation 	1))
 			(object RoleView "$UNNAMED$2" @19
 			    Parent_View 	@15
-			    location   	(365, 0)
+			    location   	(367, 0)
 			    stereotype 	TRUE
 			    line_color 	3342489
 			    quidu      	"3BF4046C0288"
 			    client     	@15
 			    supplier   	@14
 			    line_style 	3
-			    origin_attachment 	(685, 128)
-			    terminal_attachment 	(465, 128))))
+			    origin_attachment 	(687, 128)
+			    terminal_attachment 	(489, 128))))
 		(object ClassView "Class" "Logical View::CDM::DiagramFigure" @20
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
@@ -1180,7 +1192,7 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	2
-			max_width  	248)
+			max_width  	252)
 		    width      	270
 		    height     	212
 		    annotation 	8
@@ -1365,7 +1377,7 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	3
-			max_width  	326)
+			max_width  	330)
 		    width      	346
 		    height     	212
 		    annotation 	8
@@ -1850,6 +1862,62 @@
 		    width      	408
 		    height     	264
 		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::CDM::KeyedBoolean" @51
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2800, 976)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@51
+			location   	(2622, 900)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	356
+			justify    	0
+			label      	"KeyedBoolean")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@51
+			location   	(2622, 855)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	356
+			justify    	0
+			label      	"<<MapEntry>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4097C5020071"
+		    compartment 	(object Compartment
+			Parent_View 	@51
+			location   	(2622, 956)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	3
+			max_width  	300)
+		    width      	374
+		    height     	264
+		    annotation 	8
 		    autoResize 	TRUE)))
 	(object ClassDiagram "annotations"
 	    quid       	"3BF40F4E0392"
@@ -1858,9 +1926,9 @@
 	    max_height 	28350
 	    max_width  	21600
 	    origin_x   	45
-	    origin_y   	1570
+	    origin_y   	0
 	    items      	(list diagram_item_list
-		(object ClassView "Class" "Logical View::CDM::VisualInfo" @51
+		(object ClassView "Class" "Logical View::CDM::VisualInfo" @52
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
@@ -1875,22 +1943,22 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@51
-			location   	(1324, 562)
+			Parent_View 	@52
+			location   	(1306, 562)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	200
+			max_width  	236
 			justify    	0
 			label      	"VisualInfo")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	16744703
 		    quidu      	"39F9A7030371"
-		    width      	218
+		    width      	254
 		    height     	114
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::CDM::Annotation" @52
+		(object ClassView "Class" "Logical View::CDM::Annotation" @53
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
@@ -1906,23 +1974,40 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@52
-			location   	(135, 562)
+			Parent_View 	@53
+			location   	(65, 562)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	882
+			max_width  	1022
 			justify    	0
 			label      	"Annotation")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"3AD59613028B"
-		    width      	900
+		    compartment 	(object Compartment
+			Parent_View 	@53
+			location   	(65, 621)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	868)
+		    width      	1040
 		    height     	180
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object AssociationViewNew "$UNNAMED$3" @53
-		    location   	(1170, 608)
+		(object AssociationViewNew "$UNNAMED$3" @54
+		    location   	(1196, 608)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1936,9 +2021,9 @@
 		    line_color 	3342489
 		    quidu      	"3BF413EC0003"
 		    roleview_list 	(list RoleViews
-			(object RoleView "visualInfos" @54
-			    Parent_View 	@53
-			    location   	(674, 480)
+			(object RoleView "visualInfos" @55
+			    Parent_View 	@54
+			    location   	(700, 480)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -1948,9 +2033,9 @@
 				strike     	FALSE
 				color      	0
 				default_color 	TRUE)
-			    label      	(object SegLabel @55
-				Parent_View 	@54
-				location   	(1225, 580)
+			    label      	(object SegLabel @56
+				Parent_View 	@55
+				location   	(1235, 580)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1972,14 +2057,14 @@
 			    stereotype 	TRUE
 			    line_color 	3342489
 			    quidu      	"3BF413EC03C4"
-			    client     	@53
-			    supplier   	@51
+			    client     	@54
+			    supplier   	@52
 			    line_style 	3
-			    origin_attachment 	(1170, 608)
-			    terminal_attachment 	(1315, 608)
-			    label      	(object SegLabel @56
-				Parent_View 	@54
-				location   	(1277, 643)
+			    origin_attachment 	(1196, 608)
+			    terminal_attachment 	(1297, 608)
+			    label      	(object SegLabel @57
+				Parent_View 	@55
+				location   	(1271, 643)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1998,18 +2083,18 @@
 				pctDist    	0.746026
 				height     	35
 				orientation 	1))
-			(object RoleView "$UNNAMED$4" @57
-			    Parent_View 	@53
-			    location   	(674, 480)
+			(object RoleView "$UNNAMED$4" @58
+			    Parent_View 	@54
+			    location   	(700, 480)
 			    stereotype 	TRUE
 			    line_color 	3342489
 			    quidu      	"3BF413EC03D8"
-			    client     	@53
-			    supplier   	@52
+			    client     	@54
+			    supplier   	@53
 			    line_style 	3
-			    origin_attachment 	(1170, 608)
-			    terminal_attachment 	(1026, 608))))
-		(object ClassView "Class" "Logical View::CDM::AnnotationGeneric" @58
+			    origin_attachment 	(1196, 608)
+			    terminal_attachment 	(1096, 608))))
+		(object ClassView "Class" "Logical View::CDM::AnnotationGeneric" @59
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
@@ -2024,22 +2109,39 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@58
-			location   	(687, 1089)
+			Parent_View 	@59
+			location   	(655, 1089)
 			fill_color 	13434879
 			nlines     	2
-			max_width  	386
+			max_width  	450
 			justify    	0
 			label      	"AnnotationGeneric")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"3BF4144C01EB"
-		    width      	404
+		    compartment 	(object Compartment
+			Parent_View 	@59
+			location   	(655, 1145)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	380)
+		    width      	468
 		    height     	212
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @59
+		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @60
 		    ShowCompartmentStereotypes 	TRUE
 		    location   	(576, 176)
 		    font       	(object Font
@@ -2052,47 +2154,47 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@59
-			location   	(384, 127)
+			Parent_View 	@60
+			location   	(350, 127)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	384
+			max_width  	452
 			justify    	0
 			label      	"KeyedValueHolder")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	16744703
 		    quidu      	"3B3CBBFB0013"
-		    width      	402
+		    width      	470
 		    height     	122
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @60
+		(object InheritView "" @61
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3BF40406017D"
-		    client     	@52
-		    supplier   	@59
+		    client     	@53
+		    supplier   	@60
 		    line_style 	0)
-		(object InheritTreeView "" @61
+		(object InheritTreeView "" @62
 		    location   	(576, 843)
 		    line_color 	3342489
 		    fill_color 	13434879
-		    supplier   	@52
+		    supplier   	@53
 		    vertices   	(list Points
 			(576, 843)
 			(576, 730)))
-		(object InheritView "" @62
+		(object InheritView "" @63
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3BF414D503A1"
-		    client     	@58
-		    supplier   	@52
+		    client     	@59
+		    supplier   	@53
 		    line_style 	3
 		    origin_attachment 	(798, 1077)
 		    terminal_attachment 	(798, 843)
-		    drawSupplier 	@61)
-		(object NoteView @63
+		    drawSupplier 	@62)
+		(object NoteView @64
 		    location   	(1360, 1520)
 		    font       	(object Font
 			size       	10
@@ -2104,7 +2206,7 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@63
+			Parent_View 	@64
 			location   	(890, 1366)
 			fill_color 	13434879
 			nlines     	6
@@ -2114,7 +2216,7 @@
 		    fill_color 	13434879
 		    width      	965
 		    height     	320)
-		(object ClassView "Class" "Logical View::ecore::EObject" @64
+		(object ClassView "Class" "Logical View::ecore::EObject" @65
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    location   	(288, 1504)
@@ -2128,7 +2230,7 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@64
+			Parent_View 	@65
 			location   	(199, 1435)
 			fill_color 	13434879
 			nlines     	1
@@ -2143,7 +2245,7 @@
 		    height     	160
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::CDM::AnnotationEMF" @65
+		(object ClassView "Class" "Logical View::CDM::AnnotationEMF" @66
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
@@ -2158,32 +2260,32 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@65
-			location   	(136, 1106)
+			Parent_View 	@66
+			location   	(109, 1106)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	304
+			max_width  	358
 			justify    	0
 			label      	"AnnotationEMF")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"3BF40ECF0141"
-		    width      	322
+		    width      	376
 		    height     	114
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @66
+		(object InheritView "" @67
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3BF40EDF005D"
-		    client     	@65
-		    supplier   	@52
+		    client     	@66
+		    supplier   	@53
 		    line_style 	3
 		    origin_attachment 	(288, 1095)
 		    terminal_attachment 	(288, 843)
-		    drawSupplier 	@61)
-		(object AssociationViewNew "$UNNAMED$10" @67
+		    drawSupplier 	@62)
+		(object AssociationViewNew "$UNNAMED$10" @68
 		    location   	(288, 1316)
 		    font       	(object Font
 			size       	10
@@ -2198,8 +2300,8 @@
 		    line_color 	3342489
 		    quidu      	"3E2339910261"
 		    roleview_list 	(list RoleViews
-			(object RoleView "annotates" @68
-			    Parent_View 	@67
+			(object RoleView "annotates" @69
+			    Parent_View 	@68
 			    location   	(-8, 160)
 			    font       	(object Font
 				size       	10
@@ -2210,8 +2312,8 @@
 				strike     	FALSE
 				color      	0
 				default_color 	TRUE)
-			    label      	(object SegLabel @69
-				Parent_View 	@68
+			    label      	(object SegLabel @70
+				Parent_View 	@69
 				location   	(150, 1369)
 				font       	(object Font
 				    size       	10
@@ -2234,11 +2336,11 @@
 			    stereotype 	TRUE
 			    line_color 	3342489
 			    quidu      	"3E2339920263"
-			    client     	@67
-			    supplier   	@64
+			    client     	@68
+			    supplier   	@65
 			    line_style 	0
-			    label      	(object SegLabel @70
-				Parent_View 	@68
+			    label      	(object SegLabel @71
+				Parent_View 	@69
 				location   	(341, 1379)
 				font       	(object Font
 				    size       	10
@@ -2258,14 +2360,14 @@
 				pctDist    	0.588785
 				height     	53
 				orientation 	0))
-			(object RoleView "$UNNAMED$11" @71
-			    Parent_View 	@67
+			(object RoleView "$UNNAMED$11" @72
+			    Parent_View 	@68
 			    location   	(-8, 160)
 			    stereotype 	TRUE
 			    line_color 	3342489
 			    quidu      	"3E233992026D"
-			    client     	@67
-			    supplier   	@65
+			    client     	@68
+			    supplier   	@66
 			    line_style 	0)))))
 	(object ClassDiagram "visual infos"
 	    quid       	"3BF415E00319"
@@ -2276,7 +2378,7 @@
 	    origin_x   	0
 	    origin_y   	0
 	    items      	(list diagram_item_list
-		(object ClassView "Class" "Logical View::CDM::VisualInfo" @72
+		(object ClassView "Class" "Logical View::CDM::VisualInfo" @73
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
@@ -2291,7 +2393,7 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@72
+			Parent_View 	@73
 			location   	(364, 338)
 			fill_color 	13434879
 			nlines     	1
@@ -2306,7 +2408,7 @@
 		    height     	114
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @73
+		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @74
 		    ShowCompartmentStereotypes 	TRUE
 		    location   	(464, 96)
 		    font       	(object Font
@@ -2319,7 +2421,7 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@73
+			Parent_View 	@74
 			location   	(272, 47)
 			fill_color 	13434879
 			nlines     	1
@@ -2334,14 +2436,14 @@
 		    height     	122
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @74
+		(object InheritView "" @75
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3BF404110197"
-		    client     	@72
-		    supplier   	@73
+		    client     	@73
+		    supplier   	@74
 		    line_style 	0)
-		(object NoteView @75
+		(object NoteView @76
 		    location   	(688, 704)
 		    font       	(object Font
 			size       	10
@@ -2353,7 +2455,7 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@75
+			Parent_View 	@76
 			location   	(315, 620)
 			fill_color 	13434879
 			nlines     	3
@@ -2363,9 +2465,9 @@
 		    fill_color 	13434879
 		    width      	770
 		    height     	180)
-		(object AttachView "" @76
+		(object AttachView "" @77
 		    stereotype 	TRUE
 		    line_color 	3342489
-		    client     	@75
-		    supplier   	@72
+		    client     	@76
+		    supplier   	@73
 		    line_style 	0)))))

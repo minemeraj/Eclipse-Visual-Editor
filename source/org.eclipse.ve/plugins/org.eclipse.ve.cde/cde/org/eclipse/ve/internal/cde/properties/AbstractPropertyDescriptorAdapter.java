@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-04 22:31:15 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -20,8 +20,6 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.*;
@@ -104,20 +102,6 @@ public abstract class AbstractPropertyDescriptorAdapter extends AdapterImpl impl
 	 * Subclasses should return the validator to use, if any. Null if none.
 	 */
 	protected abstract ICellEditorValidator getValidator();
-
-	/**
-	 * A helper method to find a decorator of a specific instance.
-	 */
-	protected EAnnotation findDecorator(EList decorators, Class decoratorType) {
-		if (decorators == null)
-			return null;
-		for (int i = 0; i < decorators.size(); i++) {
-			EAnnotation o = (EAnnotation) decorators.get(i);
-			if (decoratorType.isInstance(o))
-				return o;
-		}
-		return null;
-	}
 
 	public String getDisplayName() {
 		String dn = primGetDisplayName();

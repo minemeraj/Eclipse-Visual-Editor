@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <ecore:EPackage xmi:version="2.0"
-  xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
     nsURI="http:///org/eclipse/ve/internal/jcm.ecore" nsPrefix="org.eclipse.ve.internal.jcm">
   <eClassifiers xsi:type="ecore:EClass" name="BeanDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -10,6 +10,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanProxyClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The name of the class for the BeanProxyAdapter."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanLocation" eType="#//InstanceLocation"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The location of any beans of this type, or subclasses that are not overridden, if not specifically overridden by the BeanFeatureDecorator or the Annotation key of INSTANCELOC."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanReturn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Will this bean have a return method or not. A return method is one that when called will answer the bean. This will only be used for locations of GLOBAL type."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -26,6 +38,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="childFeature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="If true, then this is a child feature. This means that if the parent is deleted, then the child should be deleted except if the child is referenced by another feature that is a child feature."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beanLocation" eType="#//InstanceLocation"
+        unsettable="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The location of any beans of this feature, if not specifically overridden by the Annotation key of INSTANCELOC."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -77,6 +95,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sharedScope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1"
         eType="ecore:EClass ../../org.eclipse.jem/model/java.ecore#//Method"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="statements" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.jem/model/instance.ecore#//PTExpression"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="List of modeled statements to be in this callback."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventInvocation" eSuperTypes="#//AbstractEventInvocation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="ecore:EClass ../../org.eclipse.jem.beaninfo/model/beaninfo.ecore#//BeanEvent"/>
@@ -103,5 +128,37 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="initializes" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="InstanceLocation">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Enumeration for the location of where the instance variable and initialization will be located."/>
+    </eAnnotations>
+    <eLiterals name="GLOBAL_GLOBAL">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Instance Variable will be GLOBAL (i.e. a member of the class) and the initialization will be GLOBAL (i.e. there is a separate initialization method for the instance)."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="GLOBAL_LOCAL" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The instance variable will be GLOBAL (i.e. it will be a member of the class) and the initialization will be LOCAL (i.e. there is not a separate initialization method, the initialization will be in the initialization method of another instance),"/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="LOCAL" value="2">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The instance and initialization will be LOCAL (i.e. it will be declared and initialized in the initialization method of another instance)."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="PROPERTY" value="3">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="There will be no instance variable. It will be a property. This will be applicable if there are no settings on the instance. If there are any settings, then it will promote up to LOCAL automatically."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyedInstanceLocation" instanceClassName="java.util.Map$Entry">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Map Entry for A InstanceLocation in the Key/Values of the Annotation. Used to supply override of InstanceLocation on a per-instance basis."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="#//InstanceLocation"/>
   </eClassifiers>
 </ecore:EPackage>
