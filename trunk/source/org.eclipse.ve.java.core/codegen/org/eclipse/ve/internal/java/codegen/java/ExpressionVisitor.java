@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-12 18:26:31 $ 
  */
 
 import java.util.Iterator;
@@ -103,7 +103,7 @@ BeanPart  processRefToThis  (MethodInvocation stmt) {
 				override.visit();
 				return null;
 			}
-			if (thisRule.shouldProcess(fMethod.getDeclMethod(),stmt)) {
+			if (thisRule.shouldProcess(fMethod.getDeclMethod(),stmt,fModel.getClassHierarchy())) {
 			  bean.addInitMethod(fMethod);
 			  return bean;
 			}

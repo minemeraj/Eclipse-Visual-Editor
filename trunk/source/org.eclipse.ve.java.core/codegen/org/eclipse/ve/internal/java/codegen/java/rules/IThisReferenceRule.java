@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: IThisReferenceRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-12 18:26:51 $ 
  */
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -36,7 +36,7 @@ public interface IThisReferenceRule extends IRule {
 	 */
 	public ISourceVisitor overideThisReferenceVisit(MethodDeclaration method, MethodInvocation stmt, IBeanDeclModel model);
 	//  Need to process these kind of statments only if the current type extends a bean we care about
-	public boolean shouldProcess(MethodDeclaration method, MethodInvocation stmt);
+	public boolean shouldProcess(MethodDeclaration method, MethodInvocation stmt, ITypeHierarchy h);
 	//  Do we need to use inheritance
 	public boolean useInheritance(String superClass, ResourceSet rs);
 	//  what is the name/modifier of the init metod for the this part

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-12 18:26:51 $ 
  */
 
 import java.util.Iterator;
@@ -62,13 +62,31 @@ public class ThisReferenceRule implements IThisReferenceRule {
 		return false;
 	}
 
-	public boolean shouldProcess(MethodDeclaration method, MethodInvocation stmt) {
+	public boolean shouldProcess(MethodDeclaration method, MethodInvocation stmt, ITypeHierarchy h) {
 
+		boolean isThisApplet = false;
+		IType[] classes = h.getAllClasses();
+		for (int i = 0; i < classes.length; i++) {
+			if (classes[i].getFullyQualifiedName().equals(APPLET_CLASS)){
+				isThisApplet = true;
+				break;
+			}
+		}
+		
 		// VAJ's initialization method
 		String sel = method.getName().getIdentifier();
 		for (int i = 0; i < INIT_METHOD_NAME.length; i++)
-			if (sel.equals(INIT_METHOD_NAME[i]))
+			if (sel.equals(INIT_METHOD_NAME[i])){
+				if(i==APPLET_CLASS_INDEX){ // Is this method name 'init' ?
+					if(isThisApplet) // Is this class an applet ?
+						return true; // method name is 'init' and this is applet
+					else
+						return false; // method name is 'init' and this is NOT an applet
+				}
+				if(isThisApplet)
+					return false; // Applets wont take any other init method except 'init'
 				return true;
+			}
 
 		String initMethods[] = VCEPrefContributor.getMethodsFromStore();
 		for (int i = 0; i < initMethods.length; i++)
