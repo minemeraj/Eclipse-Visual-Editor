@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-10 20:15:00 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -109,7 +109,7 @@ protected void hardCode(EStructuralFeature sf) {
 /**
  * Enable extenders to filter methods
  */
-protected boolean isHardCodedMethod (String method) {
+protected boolean isHardCodedMethod (String method, Object bean) {
 	return false ;
 }
 
@@ -134,7 +134,7 @@ public EStructuralFeature getFeature (Statement exprStmt) {
 	if (expr instanceof MethodInvocation)
 		args = ((MethodInvocation) expr).arguments();
 
-	if (isHardCodedMethod(fMethodName)) {
+	if (isHardCodedMethod(fMethodName, fRefObj)) {
 		processHardCodedProperty(fMethodName, fRefObj);
 	}
 	else {

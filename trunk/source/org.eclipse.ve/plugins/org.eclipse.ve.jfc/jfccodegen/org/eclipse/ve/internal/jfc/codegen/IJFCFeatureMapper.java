@@ -45,6 +45,9 @@ public interface IJFCFeatureMapper extends IJavaFeatureMapper {
 	
 	public static String  JTABLE_MODEL_FEATURE_NAME 		="model";
 	public static String  JTABLE_MODEL_NAME				="setModel";
+
+	public static String  JLIST_MODEL_FEATURE_NAME 		="model";
+	public static String  JLIST_MODEL_NAME				="setModel";
 	
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_FEATURE_NAME = "autoCreateColumnsFromModel";
 	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME = "setAutoCreateColumnsFromModel";

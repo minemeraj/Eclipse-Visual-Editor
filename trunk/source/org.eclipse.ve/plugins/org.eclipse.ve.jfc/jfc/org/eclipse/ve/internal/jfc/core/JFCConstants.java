@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-07 20:34:58 $ 
+ *  $Revision: 1.6 $  $Date: 2004-07-10 20:15:01 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -80,6 +80,7 @@ public class JFCConstants {
 		
 		SF_JTABLE_COLUMNS,
 		SF_JTABLE_MODEL,
+		SF_JLIST_MODEL,
 		SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL,
 		SF_TABLECOLUMN_MODELINDEX,
 		SF_TABLECOLUMN_HEADERVALUE,
@@ -154,6 +155,8 @@ public class JFCConstants {
 		SF_JTABCOMPONENT_ICON = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/jtabbedPaneVisuals.ecore#//JTabComponent/tabIcon"); //$NON-NLS-1$
 		SF_JTABCOMPONENT_TITLE = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/jtabbedPaneVisuals.ecore#//JTabComponent/tabTitle");		 //$NON-NLS-1$
 		SF_JTABCOMPONENT_TOOLTIP = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/jtabbedPaneVisuals.ecore#//JTabComponent/tabTooltipText");		 //$NON-NLS-1$
+		
+		SF_JLIST_MODEL = URI.createURI("java:/javax.swing#JList/model"); //$NON-NLS-1$
 
 		SF_JTABLE_MODEL = URI.createURI("java:/javax.swing#JTable/model"); //$NON-NLS-1$
 		SF_JTABLE_COLUMNS = URI.createURI("java:/javax.swing#JTable/columns"); //$NON-NLS-1$
