@@ -18,11 +18,4 @@
     	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" modelled="true"/>
     
   </event:AddMany>
-  <event:AddMany  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="data" unsettable="true" eType="org.eclipse.jem.java:JavaClass java:/java.lang#Object">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassCellEditor"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassLabelProvider"/>
-    </addedEObjects>
- </event:AddMany>
 </xmi:XMI> 
