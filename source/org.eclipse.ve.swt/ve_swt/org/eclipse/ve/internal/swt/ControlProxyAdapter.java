@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -21,8 +22,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
 	
@@ -30,45 +31,111 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	protected ControlManager fControlManager; // The listener on the IDE	
 	protected ImageNotifierSupport imSupport;	
 	public ControlProxyAdapter parentProxyAdapter;
-	public IFieldProxy environmentFreeFormHostFieldProxy;
+	public IMethodProxy environmentFreeFormHostMethodProxy;
 
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);				
 	}
 	
-	protected void primInstantiateBeanProxy() {
-		setBeanProxy((IBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				// Create the control with the constructor of its parent composite
-				IJavaObjectInstance control = (IJavaObjectInstance)getTarget();
-				IJavaObjectInstance composite = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference)JavaInstantiation.getSFeature(control.eResource().getResourceSet(),SWTConstants.SF_COMPOSITE_CONTROLS)); 
-				IBeanProxy compositeBeanProxy = null;
-				// The parent composite either comes because we are logically owned by a composite
-				if(composite != null){
-					compositeBeanProxy = BeanProxyUtilities.getBeanProxy(composite);
-				} else {
-					// or else are on the free form
-					compositeBeanProxy = getEnvironmentFreeFormHostFieldProxy().get(getEnvironmentBeanTypeProxy());
+//	protected void primInstantiateBeanProxy() {
+//		setBeanProxy((IBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+//			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+//				// Create the control with the constructor of its parent composite
+//				IJavaObjectInstance control = (IJavaObjectInstance)getTarget();
+//				IJavaObjectInstance composite = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference)JavaInstantiation.getSFeature(control.eResource().getResourceSet(),SWTConstants.SF_COMPOSITE_CONTROLS)); 
+//				IBeanProxy compositeBeanProxy = null;
+//				// The parent composite either comes because we are logically owned by a composite
+//				if(composite != null){
+//					compositeBeanProxy = BeanProxyUtilities.getBeanProxy(composite);
+//				} else {
+//					// or else are on the free form
+//					compositeBeanProxy = getEnvironmentFreeFormHostFieldProxy().get(getEnvironmentBeanTypeProxy());
+//				}
+//				// Get the constructor to create the control, new Control(Composite,int);
+//				IBeanTypeProxy compositeBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Composite");
+//				IBeanTypeProxy intBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");			
+//				// Get the class of the control
+//				IBeanTypeProxy controlBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(((JavaClass)control.getJavaType()).getJavaName()); 
+//				// Now we have the control type and the argument types, get the constructor
+//				IConstructorProxy createControlProxy = controlBeanTypeProxy.getConstructorProxy(new IBeanTypeProxy[] {compositeBeanTypeProxy,intBeanTypeProxy});
+//				// Create a proxy for the value zero
+//				IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
+//				return createControlProxy.newInstance(new IBeanProxy[] {compositeBeanProxy,zeroBeanProxy});
+//			}
+//		}));
+//	}	
+
+	/**
+	 * Use to call BeanProxyAdapter's beanProxyAllocation.
+	 */
+	protected IBeanProxy superBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
+		return super.beanProxyAllocation(allocation);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
+	 */
+	protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws AllocationException {
+		final AllocationException[] allocExc = new AllocationException[1];
+		try {
+			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					// TODO Need a better way to get a parent in if parent is null. (i.e. on
+					// freeform. Then we can use
+					// the standard allocation mechanism.
+					// Create the control with the constructor of its parent composite
+					IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
+									IJavaObjectInstance composite =
+										(IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(
+											control,
+											(EReference) JavaInstantiation.getSFeature(
+												control.eResource().getResourceSet(),
+												SWTConstants.SF_COMPOSITE_CONTROLS));
+					IBeanProxy compositeBeanProxy = null;
+					// The parent composite either comes because we are logically owned by a
+					// composite
+					if (composite != null) {
+						try {
+							return superBeanProxyAllocation(allocation);
+						} catch (AllocationException e) {
+							allocExc[0] = e;
+							return "allocationexception";
+						}
+					} else {
+						// or else are on the free form
+						compositeBeanProxy = getEnvironmentFreeFormHostMethodProxy().invoke(null);
+					}
+					// Get the constructor to create the control, new Control(Composite,int);
+					IBeanTypeProxy compositeBeanTypeProxy =
+						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+							"org.eclipse.swt.widgets.Composite");
+					IBeanTypeProxy intBeanTypeProxy =
+						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");
+					// Get the class of the control
+					IBeanTypeProxy controlBeanTypeProxy =
+						getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+							((JavaClass) control.getJavaType()).getJavaName());
+					// Now we have the control type and the argument types, get the constructor
+					IConstructorProxy createControlProxy =
+						controlBeanTypeProxy.getConstructorProxy(new IBeanTypeProxy[] { compositeBeanTypeProxy, intBeanTypeProxy });
+					// Create a proxy for the value zero
+					IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
+					return createControlProxy.newInstance(new IBeanProxy[] { compositeBeanProxy, zeroBeanProxy });
 				}
-				// Get the constructor to create the control, new Control(Composite,int);
-				IBeanTypeProxy compositeBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Composite");
-				IBeanTypeProxy intBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("int");			
-				// Get the class of the control
-				IBeanTypeProxy controlBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(((JavaClass)control.getJavaType()).getJavaName()); 
-				// Now we have the control type and the argument types, get the constructor
-				IConstructorProxy createControlProxy = controlBeanTypeProxy.getConstructorProxy(new IBeanTypeProxy[] {compositeBeanTypeProxy,intBeanTypeProxy});
-				// Create a proxy for the value zero
-				IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
-				return createControlProxy.newInstance(new IBeanProxy[] {compositeBeanProxy,zeroBeanProxy});
-			}
-		}));
-	}	
-	
-	private IFieldProxy getEnvironmentFreeFormHostFieldProxy(){
-		if(environmentFreeFormHostFieldProxy == null){
-			environmentFreeFormHostFieldProxy = getEnvironmentBeanTypeProxy().getFieldProxy("freeFormHost");
+			});
+			if (result instanceof String)
+				throw allocExc[0];
+			else
+				return (IBeanProxy) result;
+		} catch (ThrowableProxy e) {
+			throw new AllocationException(e);
 		}
-		return environmentFreeFormHostFieldProxy;
+	}
+	
+	private IMethodProxy getEnvironmentFreeFormHostMethodProxy(){
+		if(environmentFreeFormHostMethodProxy == null){
+			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost");
+		}
+		return environmentFreeFormHostMethodProxy;
 	}
 	
 	public Rectangle getBounds() {
