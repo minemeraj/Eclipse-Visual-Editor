@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-19 20:39:12 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,16 +43,13 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IModelChangeController;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-import org.eclipse.ve.internal.java.codegen.core.ICodeGenFlushController;
-import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
 import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
 import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * ObjectActionDelegate for the RenameJavaAction.
@@ -221,26 +218,13 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 						(IField) field,
 						dialog.getFinalName(),
 						RenameSupport.UPDATE_GETTER_METHOD
-							| RenameSupport.UPDATE_JAVADOC_COMMENTS
 							| RenameSupport.UPDATE_REFERENCES
-							| RenameSupport.UPDATE_REGULAR_COMMENTS
 							| RenameSupport.UPDATE_SETTER_METHOD
-							| RenameSupport.UPDATE_STRING_LITERALS);
+							| RenameSupport.UPDATE_TEXTUAL_MATCHES);
 				rename.perform(
 					targetPart.getSite().getShell(),
 					targetPart.getSite().getWorkbenchWindow());
 				
-				// KLUDGE con't: This is where we turn on the Still flushing key.
-				final EditDomain ed = EditDomain.getEditDomain(selectedEP);
-				ed.setData(STILL_FLUSHING_KEY, Boolean.TRUE);
-				ICodeGenFlushController cg = (ICodeGenFlushController) ed.getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-				cg.flushCodeGen(new ISynchronizerListener() {
-					public void markerProcessed(String marker) {
-						synchronized (STILL_FLUSHING_KEY) {
-							ed.removeData(STILL_FLUSHING_KEY);
-						}
-					}
-				}, "STILL_FLUSH");
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e);
 			} catch (InterruptedException e) {
