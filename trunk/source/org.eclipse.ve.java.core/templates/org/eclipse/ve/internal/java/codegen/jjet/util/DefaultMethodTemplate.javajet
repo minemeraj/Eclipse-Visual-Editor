@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: DefaultMethodTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a getter method skelaton 
@@ -20,7 +20,7 @@
 %>
 	 */    
 	private <%=info.freturnType%> <%=info.fmethodName%>() {
-		if (<%=info.finitBeanName%> != null) {
+		if (<%=info.finitBeanName%> == null) {
 			<%=info.finitBeanName%> = new <%=info.finitBeanType%>(<%
 			boolean first = true ;
 			// Generate constructor arguments, if needed
