@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2004-08-04 21:36:17 $ 
+ *  $Revision: 1.23 $  $Date: 2004-08-09 21:29:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,10 +22,12 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
-import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
  
@@ -195,7 +197,20 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		ParseTreeCreationFromAST parser = new ParseTreeCreationFromAST(r);
 		return parser.createExpression(ast);
 	}
-
+	
+	public static String convertToString(JavaAllocation alloc){
+		if (alloc instanceof InitStringAllocation) {
+			InitStringAllocation isAlloc = (InitStringAllocation) alloc;
+			return isAlloc.getInitString();
+		}else if (alloc instanceof ParseTreeAllocation) {
+			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
+			NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
+			ptAlloc.getExpression().accept(flattener);
+			return flattener.getResult();
+		}// Ignoring ImplicitAlloction for now
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#decode()
 	 */
@@ -204,7 +219,20 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
-		obj.setAllocation(alloc) ;
+		
+		// SMART UPDATE
+		boolean allocationChanged = true;
+		JavaAllocation currentAllocation = obj.getAllocation();
+		if(currentAllocation!=null && alloc!=null){
+			String currentAllocationString = convertToString(currentAllocation);
+			String newAllocationString = convertToString(alloc);
+			if(currentAllocationString!=null)
+				allocationChanged = !currentAllocationString.equals(newAllocationString);
+		}else if(currentAllocation==null && alloc==null)
+			allocationChanged = false;
+		if(allocationChanged)
+			obj.setAllocation(alloc) ;
+		
 		return true;
 	}
 
