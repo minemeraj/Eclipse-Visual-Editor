@@ -7,16 +7,20 @@
 	
 	// Get build type names
 
-	$fileHandle = fopen("../../dlconfig.txt", "r");
-	while (!feof($fileHandle)) {
-		
-		$aLine = fgets($fileHandle, 4096); // Length parameter only optional after 4.2.0
-		$parts = explode(",", $aLine);
-		$dropNames[trim($parts[0])] = trim($parts[1]);
- 	}
-	fclose($fileHandle);
-
-	$buildType = $dropNames[$parts2[0]];
+	if (file_exists("../../dlconfig.txt")) {
+		$fileHandle = fopen("../../dlconfig.txt", "r");
+		while (!feof($fileHandle)) {
+			
+			$aLine = fgets($fileHandle, 4096); // Length parameter only optional after 4.2.0
+			$parts = explode(",", $aLine);
+			$dropNames[trim($parts[0])] = trim($parts[1]);
+	 	}
+		fclose($fileHandle);
+	
+		$buildType = $dropNames[$parts2[0]];
+	} else {
+		$buildType = "??";
+	}
 
 	echo "<title>Build Notes for $buildType $buildName </title>";
 ?>
