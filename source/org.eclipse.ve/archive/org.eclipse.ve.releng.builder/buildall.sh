@@ -29,8 +29,7 @@ ftpPassword=""
 # RSYNC Password file location, required for Linux. Without it, no push.
 rsyncPWFile=""
 
-# NOPUSH and NOTEST flags
-nopush=""
+# NOTEST flags
 notest=""
 
 if [ "x$1" == "x" ] ; then
@@ -69,9 +68,6 @@ while [ "$#" -gt 0 ] ; do
                 		rsyncPWFile="-DrsyncPWFile=$2"
                 		shift 1
                 	;;
-                '-nopush')
-                		nopush="-Dnopush=true"
-                	;;
                 '-notest')
                 		notest="-Dnotest=true"
                 	;;
@@ -87,4 +83,4 @@ if [ -z $buildType ] ; then
 	exit 0
 fi
 
-$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $nopush $notest $buildID $rsyncPWFile $ftpUser $ftpPassword
+$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $notest $buildID $rsyncPWFile $ftpUser $ftpPassword
