@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-20 15:18:17 $ 
+ *  $Revision: 1.8 $  $Date: 2004-04-20 17:30:39 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -189,16 +189,29 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 	 */
 	protected boolean isValidArguments(List exps) {
 		boolean result = exps != null && exps.size() == 1;
-		if (result) {
+		if (result) { // Check parmeter type
 			JavaParameter p = (JavaParameter) fEventDecorator.getAddListenerMethod().getParameters().get(0);
 			if (exps.get(0) instanceof ClassInstanceCreation) {
 				ClassInstanceCreation e = (ClassInstanceCreation) exps.get(0);
 				String type = CodeGenUtil.resolve(e.getName(),fbeanPart.getModel()); 
 				JavaHelpers jclazz = JavaRefFactory.eINSTANCE.reflectType(type, fbeanPart.getEObject());
-				if (jclazz != null && p.getJavaType().isAssignableFrom(jclazz))
-				  result = true ;
-				else
-				  result = false ;
+				if (jclazz != null && ((JavaClass)jclazz).isExistingType()) {
+					if (p.getJavaType().isAssignableFrom(jclazz))
+						result = true;
+					else
+						result = false;
+				}
+				else {
+					// Class may not be saved (inner/anonymouse class) and hence not in the JCM
+					StringBuffer b = new StringBuffer(type) ;
+					if (type.indexOf("Adapter") >= 0) {   //$NON-NLS-1$
+					    b.replace(type.indexOf("Adapter"), type.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
+					}
+					if (!p.getJavaType().getQualifiedName().equals(type) &&
+					    !p.getJavaType().getQualifiedName().equals(b.toString()))
+						result = false;
+					
+				}
 			}
 		}
 		return result;
