@@ -24,7 +24,7 @@
           creationClassURI="java:/org.eclipse.swt.widgets#Button"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Button"/>
       </cmpEntries>        
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/textfield_obj.gif">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry4obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Text"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string4" string="Text"/>
@@ -55,5 +55,22 @@
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Slider"/>
       </cmpEntries>          
     </cmpGroups> 
+    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group2">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry10" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry10obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Table"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Table"/>
+      </cmpEntries> 
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry11" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry11obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Tree"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Tree"/>
+      </cmpEntries>                                 
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry12" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tabfolder_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry12obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#TabFolder"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="TabFolder"/>
+      </cmpEntries>                                       
+    </cmpGroups>    
   </palette:CategoryCmp>
 </xmi:XMI>
