@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-24 14:49:16 $ 
+ *  $Revision: 1.8 $  $Date: 2004-08-24 22:15:43 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -206,7 +206,7 @@ public class ToolTipAssistFactory {
 
 		public IFigure createFigure() {
 			Label label = new Label();
-			if(beanProxy == null || beanProxy.getTypeProxy() == null) return null;
+			if(beanProxy == null || !beanProxy.isValid()) return null;
 			// Get the error message from calling the get method
 			if(methodProxy == null){
 				methodProxy = beanProxy.getTypeProxy().getMethodProxy(methodName);
