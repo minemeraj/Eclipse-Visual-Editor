@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.17 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.18 $  $Date: 2004-03-30 14:42:55 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1303,34 +1303,38 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 			// AND refresh the text viewer.
 			modelBuilder.addIBuilderListener(new IDiagramModelBuilder.IBuilderListener() {
 				public void modelUpdated() {
-					if (rootPropertySheetEntry != null) {
-						// Horrid kludge: The model could be reloaded from scratch at this point,
-						// which means any editpart has been deselected. However, if the PropertySheet
-						// was the active viewer, it wouldn't know this because for him he listens to
-						// Workbench selection provider, and when he is the active viewer, he IS the
-						// selection provider. In that case the deselect in the graph and tree viewer
-						// would go unnoticed. Also, the editparts would no longer exist at this point,
-						// so the PS is using old deactivated editparts. So to get around this, we will get
-						// the root entry and see if it is an editpart and that editpart is not selected.
-						// If that is so, we will set no selection into the PS so that it won't have 
-						// an invalid value.
-						//
-						// The reason this happens is because if you do a ctrl-z (undo) from the PS,
-						// this could cause a reload from scratch to occur if complicated enough. Now the
-						// PS doesn't expect the model that it is currently handling to be pulled out
-						// from under it while it has focus. It uses the Workbench Selection provider to
-						// handle changes.
-					
-						Object[] value = rootPropertySheetEntry.getValues();
-						if (value.length == 1 && value[0] instanceof EditPart) {
-							if (((EditPart) value[0]).getSelected() == EditPart.SELECTED_NONE)
-								rootPropertySheetEntry.setValues(new Object[0]);
-							else
-								rootPropertySheetEntry.refreshFromRoot();
-						} else
-							rootPropertySheetEntry.refreshFromRoot();
-					}
-					refreshTextPage();	// Because model has been updated.
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (rootPropertySheetEntry != null) {
+								// Horrid kludge: The model could be reloaded from scratch at this point,
+								// which means any editpart has been deselected. However, if the PropertySheet
+								// was the active viewer, it wouldn't know this because for him he listens to
+								// Workbench selection provider, and when he is the active viewer, he IS the
+								// selection provider. In that case the deselect in the graph and tree viewer
+								// would go unnoticed. Also, the editparts would no longer exist at this point,
+								// so the PS is using old deactivated editparts. So to get around this, we will get
+								// the root entry and see if it is an editpart and that editpart is not selected.
+								// If that is so, we will set no selection into the PS so that it won't have 
+								// an invalid value.
+								//
+								// The reason this happens is because if you do a ctrl-z (undo) from the PS,
+								// this could cause a reload from scratch to occur if complicated enough. Now the
+								// PS doesn't expect the model that it is currently handling to be pulled out
+								// from under it while it has focus. It uses the Workbench Selection provider to
+								// handle changes.
+							
+								Object[] value = rootPropertySheetEntry.getValues();
+								if (value.length == 1 && value[0] instanceof EditPart) {
+									if (((EditPart) value[0]).getSelected() == EditPart.SELECTED_NONE)
+										rootPropertySheetEntry.setValues(new Object[0]);
+									else
+										rootPropertySheetEntry.refreshFromRoot();
+								} else
+									rootPropertySheetEntry.refreshFromRoot();
+							}
+							refreshTextPage();	// Because model has been updated.
+						}
+					});
 				}
 
 		    	public void statusChanged (String msg){

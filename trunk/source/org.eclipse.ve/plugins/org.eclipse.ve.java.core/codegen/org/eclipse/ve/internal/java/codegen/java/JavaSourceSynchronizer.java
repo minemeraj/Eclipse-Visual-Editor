@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-30 14:42:55 $ 
  */
 
 import java.util.ArrayList;
@@ -373,7 +373,7 @@ public class JavaSourceSynchronizer {
 	 */
 	private void process() {
 		
-		if(documentEventList.size()>0){
+		if(documentEventList.size()>0 && !getLockMgr().isGUIUpdating()){
 			try {
 				// Drive source to GUI update stratergy
 				if(!lockManager.isThreadScheduled()){
