@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-05 18:14:26 $ 
  */
 
 import java.util.*;
@@ -19,26 +19,23 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.internal.corext.util.*;
-import org.eclipse.jdt.internal.ui.util.StringMatcher;
-import org.eclipse.jdt.internal.ui.util.TypeInfoLabelProvider;
+import org.eclipse.jdt.internal.corext.util.TypeInfo;
+import org.eclipse.jdt.internal.ui.dialogs.TypeSelectionDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.FilteredList;
-import org.eclipse.ui.dialogs.TwoPaneElementSelector;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
@@ -61,40 +58,23 @@ import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  * Swing Types: Subclasses of JComponent, JFrame, JDialog, JWindow, JApplet, TableColumn
  * AWT Types: Subclasses of Component, but not subclass of Swing Types.
  */
-public class ChooseBeanDialog extends TwoPaneElementSelector {
+public class ChooseBeanDialog extends TypeSelectionDialog {
 
 	public static final String JBCF_CHOOSEBEAN_SELHIST_KEY = "JBCF_CHOOSEBEAN_SELHIST_KEY"; //$NON-NLS-1$
 	public static final Color green = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
 	public static final Color red = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
-	public static int CHOICE_ALL = 0;
-	public static int CHOICE_SWING = 1;
-	public static int CHOICE_AWT = 2;
-	public static int CHOICE_DEFAULT = CHOICE_ALL;
 	public static final String EmptyString = new String() ;
-	private String[] choices = {	ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.ALL"),  //$NON-NLS-1$
-												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.SWING"),  //$NON-NLS-1$
-												ChooseBeanMessages.getString("SelectionAreaHelper.SelectType.AWT")}; //$NON-NLS-1$
 	
-	private static TypeInfoLabelProvider classLabelProvider = new TypeInfoLabelProvider(TypeInfoLabelProvider.SHOW_TYPE_ONLY);
-	private static TypeInfoLabelProvider packageLabelProvider = new TypeInfoLabelProvider(TypeInfoLabelProvider.SHOW_TYPE_CONTAINER_ONLY + TypeInfoLabelProvider.SHOW_ROOT_POSTFIX);
 	private ResourceSet resourceSet;
 	private IJavaProject project;
 	private IPackageFragment pkg;
 	private java.util.List selectionHistory;
 	
 	private IJavaSearchScope scope = null;
+	private IChooseBeanContributor[] contributors = null;
+	private int selectedContributor = -1;
 	private Button[] typeChoices = null;
-	private int selectedChoice = 0;
 	private boolean disableOthers = false;
-	
-	private String[] awtBaseClasses = {"java.awt", "Component"}; //$NON-NLS-1$ //$NON-NLS-2$
-	private String[] swingBaseClasses = {"javax.swing", "JComponent", "javax.swing", "JFrame", "javax.swing", "JDialog", "javax.swing", "JWindow", "javax.swing", "JApplet", "javax.swing.table", "TableColumn"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
-	// TypeInfos for the above mentioned base classes
-	private List awtTypeInfos = new ArrayList();
-	private List swingTypeInfos = new ArrayList();
-	private List swingTypes = null;
-	private List awtTypes = null;
-	private List allTypes = new ArrayList();
 	
 	private Text superFilterText = null;
 	private Combo filterCombo = null;
@@ -102,173 +82,61 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	private String beanLabelText = null;
 	private Text beanLabel = null ;
 
-	private FilteredList.FilterMatcher currentFilterMatcher = null;
-	private TypeFilterMatcher anTypeFilterMatcher = new TypeFilterMatcher();
-	private ShowAllTypeChoiceFilter anShowAllTypeChoiceFilter = new ShowAllTypeChoiceFilter();
 // TODO TimerStep comment	private int originalTestId;	// used for performance measurements
 	
 	private EditDomain feditDomain = null ;
 	
-	private static class TypeFilterMatcher implements FilteredList.FilterMatcher {
-
-		private static final char END_SYMBOL= '<';
-		private static final char ANY_STRING= '*';
-
-		private StringMatcher fMatcher;
-		private StringMatcher fQualifierMatcher;
+	public ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
+		super(
+			shell, 
+			new ProgressMonitorDialog(shell), 
+			IJavaSearchConstants.CLASS, 
+			SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}));
 		
-		/*
-		 * @see FilteredList.FilterMatcher#setFilter(String, boolean)
-		 */
-		public void setFilter(String pattern, boolean ignoreCase, boolean igoreWildCards) {
-			int qualifierIndex= pattern.lastIndexOf("."); //$NON-NLS-1$
-
-			// type			
-			if (qualifierIndex == -1) {
-				fQualifierMatcher= null;
-				fMatcher= new StringMatcher(adjustPattern(pattern), ignoreCase, igoreWildCards);
-				
-			// qualified type
-			} else {
-				fQualifierMatcher= new StringMatcher(pattern.substring(0, qualifierIndex), ignoreCase, igoreWildCards);
-				fMatcher= new StringMatcher(adjustPattern(pattern.substring(qualifierIndex + 1)), ignoreCase, igoreWildCards);
-			}
-		}
-
-		/*
-		 * @see FilteredList.FilterMatcher#match(Object)
-		 */
-		public boolean match(Object element) {
-			if (!(element instanceof TypeInfo))
-				return false;
-
-			TypeInfo type= (TypeInfo) element;
-
-			if (!fMatcher.match(type.getTypeName()))
-				return false;
-
-			if (fQualifierMatcher == null)
-				return true;
-
-			return fQualifierMatcher.match(type.getTypeContainerName());
-		}
-		
-		private String adjustPattern(String pattern) {
-			int length= pattern.length();
-			if (length > 0) {
-				switch (pattern.charAt(length - 1)) {
-					case END_SYMBOL:
-						pattern= pattern.substring(0, length - 1);
-						break;
-					case ANY_STRING:
-						break;
-					default:
-						pattern= pattern + ANY_STRING;
-				}
-			}
-			return pattern;
-		}
-	}
-	
-	/*
-	 * A string comparator which is aware of obfuscated code
-	 * (type names starting with lower case characters).
-	 */
-	private static class StringComparator implements Comparator {
-	    public int compare(Object left, Object right) {
-	     	String leftString= (String) left;
-	     	String rightString= (String) right;
-	     		     	
-	     	if (Strings.isLowerCase(leftString.charAt(0)) &&
-	     		!Strings.isLowerCase(rightString.charAt(0)))
-	     		return +1;
-
-	     	if (Strings.isLowerCase(rightString.charAt(0)) &&
-	     		!Strings.isLowerCase(leftString.charAt(0)))
-	     		return -1;
-	     	
-			int result= leftString.compareToIgnoreCase(rightString);			
-			if (result == 0)
-				result= leftString.compareTo(rightString);
-
-			return result;
-	    }
-	}
-	
-	protected final class ShowAllTypeChoiceFilter implements FilteredList.FilterMatcher{
-
-		private StringMatcher fMatcher;
-		private StringMatcher fQualifierMatcher;
-		
-		/*
-		 * @see FilteredList.FilterMatcher#setFilter(String, boolean)
-		 */
-		public void setFilter(String pattern, boolean ignoreCase, boolean igoreWildCards) {
-			int qualifierIndex= pattern.lastIndexOf("."); //$NON-NLS-1$
-
-			// type			
-			if (qualifierIndex == -1) {
-				fQualifierMatcher= null;
-				fMatcher= new StringMatcher(pattern + '*', ignoreCase, igoreWildCards);
-				
-			// qualified type
-			} else {
-				fQualifierMatcher= new StringMatcher(pattern.substring(0, qualifierIndex), ignoreCase, igoreWildCards);
-				fMatcher= new StringMatcher(pattern.substring(qualifierIndex + 1), ignoreCase, igoreWildCards);
-			}
-		}
-
-		/*
-		 * @see FilteredList.FilterMatcher#match(Object)
-		 */
-		public boolean match(Object element) {
-			if (!(element instanceof TypeInfo))
-				return false;
-			TypeInfo typeInfo = (TypeInfo) element;
-			if (!fMatcher.match(typeInfo.getTypeName()))
-				return false;
-			if (fQualifierMatcher!=null && !fQualifierMatcher.match(typeInfo.getTypeContainerName()))
-				return false;
-			boolean matched = false;
-			switch (selectedChoice) {
-				case 0 :
-					matched = true;
-					break;
-				case 1 :
-					if(swingTypes!=null){
-						if(swingTypes.contains(typeInfo.getFullyQualifiedName()))
-							matched = true;
-					}
-					break;
-				case 2 :
-					if(awtTypes!=null){
-						if(awtTypes.contains(typeInfo.getFullyQualifiedName()) &&
-						   !swingTypes.contains(typeInfo.getFullyQualifiedName()))
-							matched = true;
-					}
-					break;
-				default :
-					break;
-			}
-			return matched;
-		}
-	}
-	
-	public ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, int choice, boolean disableOthers){
-		super(shell, classLabelProvider, packageLabelProvider);
 		// Use TimerStep APIs for performance measurements. Save the original test id to restore it later.
 // TODO Remove all timerstep comments		originalTestId = TimerStep.instance().getTestd();
 //		TimerStep.instance().setTestd(137);
 //		TimerStep.instance().writeCounters2(100);
+		this.selectedContributor = choice;
 		this.pkg = packageFragment;
 		this.project = packageFragment.getJavaProject();
-		this.selectedChoice = choice;
 		this.selectionHistory = new ArrayList();
 		this.disableOthers = disableOthers;
+		this.contributors = contributors;
 		setTitle(ChooseBeanMessages.getString("MainDialog.title")); //$NON-NLS-1$
 		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
 		setStatusLineAboveButtons(true);
+		setMatchEmptyString(false);
+		if(!anyContributors())
+			selectedContributor = -1;
+		else if(!isValidContributor())
+			selectedContributor = 0;
 		loadSelectionHistory();
+	}
+	
+	public static IChooseBeanContributor[] determineContributors(){
+		List contributorList = new ArrayList();
+		IExtensionPoint exp = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint("choosebean"); //$NON-NLS-1$
+		IExtension[] extensions = exp.getExtensions();
+		if(extensions!=null && extensions.length>0){
+			boolean contributorFound = false;
+			for(int ec=0;ec<extensions.length && !contributorFound;ec++){
+				IConfigurationElement[] configElms = extensions[ec].getConfigurationElements();
+				for(int cc=0;cc<configElms.length && !contributorFound;cc++){
+					IConfigurationElement celm = configElms[cc];
+					try {
+						IChooseBeanContributor contributor = (IChooseBeanContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
+						if(contributor!=null)
+							contributorList.add(contributor);
+					} catch (CoreException e) {
+						JavaVEPlugin.log(e, Level.FINEST);
+					}
+				}
+			}
+		}
+		IChooseBeanContributor[] contributors = new IChooseBeanContributor[contributorList.size()];
+		contributorList.toArray(contributors);
+		return contributors;
 	}
 	
 	private void loadSelectionHistory(){
@@ -299,26 +167,33 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		return new QualifiedName(JavaVEPlugin.getPlugin().getDescriptor().getUniqueIdentifier(), JBCF_CHOOSEBEAN_SELHIST_KEY);
 	}
 	
-	public ChooseBeanDialog(Shell shell, IFile file, ResourceSet resourceSet, int choice, boolean disableOthers){
-		this(shell, (IPackageFragment) JavaCore.create(file).getParent(), choice, disableOthers);
+	public ChooseBeanDialog(Shell shell, IFile file, ResourceSet resourceSet, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
+		this(shell, (IPackageFragment) JavaCore.create(file).getParent(), contributors, choice, disableOthers);
 		this.resourceSet = resourceSet;
 	}
 	
-	public ChooseBeanDialog(Shell shell, EditDomain ed, int choice, boolean disableOthers){
+	public ChooseBeanDialog(Shell shell, EditDomain ed, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
 			this(shell, ((FileEditorInput)ed.getEditorPart().getEditorInput()).getFile(),
 		                 JavaEditDomainHelper.getResourceSet(ed), 
-		                 choice, disableOthers);
+		                 contributors, choice, disableOthers);
 		    feditDomain = ed;
+	}
+	
+	protected boolean anyContributors(){
+		return contributors != null && contributors.length > 0;
+	}
+	
+	protected boolean isValidContributor(){
+		return anyContributors() && selectedContributor > -1 && selectedContributor < contributors.length ;
 	}
 	
 	/*
 	 * @see AbstractElementListSelectionDialog#createFilteredList(Composite)
 	 */
  	protected FilteredList createFilteredList(Composite parent) {
- 		final FilteredList list= super.createFilteredList(parent);
- 		currentFilterMatcher = anTypeFilterMatcher;
-		list.setFilterMatcher(currentFilterMatcher);
-		list.setComparator(new StringComparator());
+ 		FilteredList list= super.createFilteredList(parent);
+ 		if(isValidContributor())
+ 			list.setFilterMatcher(contributors[selectedContributor].getFilter(project));
 		return list;
 	}
 
@@ -349,15 +224,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		className = new Label(topComponent, SWT.NONE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		className.setLayoutData(gd);
-				
-		
-//		Deemed unnecessary for now.		
-//		Group fileGroup = new Group(topComponent, SWT.NONE);
-//		gd = new GridData(GridData.FILL_HORIZONTAL);
-//		fileGroup.setLayoutData(gd);
-//		fileGroup.setText(ChooseBeanMessages.getString("SerializedFileHelper.GroupTitle")); //$NON-NLS-1$
-//		fileGroup.setLayout(new GridLayout(2, false));
-//		createFileArea(fileGroup);
 
 //		TimerStep.instance().writeCounters2(101);	// take another snapshot after filling in the areas
 //		TimerStep.instance().setTestd(originalTestId);	// restore to the original test id
@@ -401,190 +267,74 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	}
 
 	protected void createClassArea(Composite parent){
-		int numCols = choices.length;
-		Composite c = new Composite(parent, SWT.NONE);
-		GridData gd= new GridData();
-		gd.grabExcessHorizontalSpace= true;
-		gd.horizontalAlignment= GridData.FILL;
-		c.setLayoutData(gd);
-		GridLayout cLayout = new GridLayout(numCols, true);
-		// got from super.super.createDialoagArea()
-		cLayout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-		cLayout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		c.setLayout(cLayout);
-		
-		typeChoices = new Button[choices.length];
-		for(int i=0;i<typeChoices.length;i++){
-			typeChoices[i] = new Button(c, SWT.RADIO);
-			gd = new GridData();
-			typeChoices[i].setLayoutData(gd);
-			typeChoices[i].setText(choices[i]);
-			typeChoices[i].addSelectionListener(new SelectionListener() {
-				/**
-				 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
-				 */
-				public void widgetSelected(SelectionEvent e) {
-					if(e.widget instanceof Button){
-						Button choice = (Button) e.widget;
-						if(choice.getSelection()){
-							if(typeChoices!=null)
-								for(int i=0;i<typeChoices.length;i++)
-									if(choice.equals(typeChoices[i]))
-										selectedChoice = i;
-							updateElements();
-						}else{
-							selectedChoice = -1;
+		if(isValidContributor()){
+			int numEntries = anyContributors()?contributors.length:0;
+			Composite c = new Composite(parent, SWT.NONE);
+			GridData gd= new GridData();
+			gd.grabExcessHorizontalSpace= true;
+			gd.horizontalAlignment= GridData.FILL;
+			c.setLayoutData(gd);
+			GridLayout cLayout = new GridLayout(numEntries, true);
+			// got from super.super.createDialoagArea()
+			cLayout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+			cLayout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+			c.setLayout(cLayout);
+			
+			typeChoices = new Button[numEntries];
+			for(int i=0;i<typeChoices.length;i++){
+				typeChoices[i] = new Button(c, SWT.RADIO);
+				gd = new GridData();
+				typeChoices[i].setLayoutData(gd);
+				typeChoices[i].setText(contributors[i].getName());
+				typeChoices[i].addSelectionListener(new SelectionListener() {
+					/**
+					 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
+					 */
+					public void widgetSelected(SelectionEvent e) {
+						if(e.widget instanceof Button){
+							Button choice = (Button) e.widget;
+							if(choice.getSelection()){
+								if(typeChoices!=null)
+									for(int i=0;i<typeChoices.length;i++)
+										if(choice.equals(typeChoices[i]))
+											selectedContributor = i;
+								updateElements();
+							}else{
+								selectedContributor = -1;
+							}
 						}
 					}
+	
+					/**
+					 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
+					 */
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+				});
+				if(disableOthers && selectedContributor!=i){
+					typeChoices[i].setEnabled(false);
 				}
-
-				/**
-				 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
-				 */
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
-				}
-			});
-			if(disableOthers && selectedChoice!=i){
-				typeChoices[i].setEnabled(false);
 			}
+	
+			typeChoices[selectedContributor].setSelection(true);
 		}
+	}
 
-		typeChoices[selectedChoice].setSelection(true);
-		updateElements();
-	}
-	
-	protected void createFileArea(Composite parent){
-//		Text text = new Text(parent, SWT.BORDER|SWT.SINGLE);
-//		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//		text.setLayoutData(gd);
-//		
-//		Button b = new Button(parent, SWT.PUSH);
-//		b.setText(ChooseBeanMessages.getString("SerializedFileHelper.Button.SelectFile"));  //$NON-NLS-1$
-//		b.setEnabled(false);
-//		gd = new GridData();
-//		b.setLayoutData(gd);
-	}
-	
 	private void updateElements(){
-
-		if(typeChoices[0].getSelection()){
-			if(!(currentFilterMatcher instanceof TypeFilterMatcher)){
-				currentFilterMatcher = anTypeFilterMatcher;
-				fFilteredList.setFilterMatcher(currentFilterMatcher);
-			}
-		}
-		
-		if(typeChoices[1].getSelection()){
-			if(!(currentFilterMatcher instanceof ShowAllTypeChoiceFilter)){
-				currentFilterMatcher = anShowAllTypeChoiceFilter;
-				fFilteredList.setFilterMatcher(currentFilterMatcher);
-			}
-			if(swingTypes==null)
-				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					public void run() {
-						swingTypes= getSubTypes(swingTypeInfos);
-					}
-				});
-		}
-
-		if(typeChoices[2].getSelection()){
-			if(!(currentFilterMatcher instanceof ShowAllTypeChoiceFilter)){
-				currentFilterMatcher = anShowAllTypeChoiceFilter;
-				fFilteredList.setFilterMatcher(currentFilterMatcher);
-			}
-			if(awtTypes==null)
-				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					public void run() {
-						awtTypes= getSubTypes(awtTypeInfos);
-						swingTypes= getSubTypes(swingTypeInfos);
-					}
-				});
-		}
-		
+		if(isValidContributor())
+			fFilteredList.setFilterMatcher(contributors[selectedContributor].getFilter(project));
 		// Force the filtered list to reload
 		setFilter(getFilter());
 	}
 
-	protected List getAllElements(){
-		final TypeInfoFactory typeInfoFactory = new TypeInfoFactory();
-		TypeInfoRequestor requestor = new TypeInfoRequestor(allTypes){
-			private void check(char[] packageName, char[] typeName, char[][] enclosingTypeNames, String path, boolean isInterface){
-				for(int i=0;i<swingBaseClasses.length;i+=2)
-					if(new String(packageName).equals(swingBaseClasses[i]) && new String(typeName).equals(swingBaseClasses[i+1]))
-						swingTypeInfos.add(typeInfoFactory.create(packageName, typeName, enclosingTypeNames, isInterface, path));
-				for(int i=0;i<awtBaseClasses.length;i+=2)
-					if(new String(packageName).equals(awtBaseClasses[i]) && new String(typeName).equals(awtBaseClasses[i+1]))
-						awtTypeInfos.add(typeInfoFactory.create(packageName, typeName, enclosingTypeNames, isInterface, path));
-			}
-			public void acceptClass(char[] packageName, char[] typeName, char[][] enclosingTypeNames, String path) {
-				super.acceptClass(packageName, typeName, enclosingTypeNames, path);
-				check(packageName, typeName, enclosingTypeNames, path, false);
-			}
-		};
-		try {
-			new SearchEngine().searchAllTypeNames(ResourcesPlugin.getWorkspace(),
-				null,
-				null,
-				IJavaSearchConstants.PATTERN_MATCH,
-				IJavaSearchConstants.CASE_INSENSITIVE,
-				IJavaSearchConstants.CLASS,
-				getJavaSearchScope(),
-				requestor,
-				IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-				null);
-		} catch (JavaModelException e) {
-		}
-		return allTypes;
-	}
 
-	private List getSubTypes(List tis){
-		List list = new ArrayList();
-		for(int i=0;i<tis.size();i++){
-			try {
-				TypeInfo ti = (TypeInfo) tis.get(i);
-				IType type = ti.resolveType(getJavaSearchScope());
-				ITypeHierarchy th = type.newTypeHierarchy(null);
-				IType[] types = th.getAllSubtypes(type);
-				list.add(type.getFullyQualifiedName());
-				for(int j=0;j<types.length;j++)
-					list.add(types[j].getFullyQualifiedName());
-			} catch (JavaModelException e) {
-			}
-		}
-		return list;
-	}
-	
-	protected static List getSubTypes(ITypeHierarchy th, IType fromType, boolean isClass){
-		IType[] types = th.getAllSubtypes(fromType);
-		List list = new ArrayList();
-		for(int i=0;i<types.length;i++){
-			try {
-				if(isClass && types[i].isClass())
-					list.add(types[i]);
-				if(!isClass && types[i].isInterface())
-					list.add(types[i]);
-			} catch (JavaModelException e) {
-				JavaVEPlugin.log(e, Level.INFO);
-			}
-		}
-		return list;
-	}
-	
 	protected IJavaSearchScope getJavaSearchScope(){
 		if(scope==null)
 			scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { ((IJavaProject)project) });
 		return scope;
 	}
 	
-	/**
-	 * @see org.eclipse.jface.window.Window#open()
-	 */
-	public int open() {
-		setElements(getAllElements().toArray());
-		return super.open();
-	}
-
 	/**
 	 * Returns in ChooseBeanSelector format if ResourceSet speciofied.
 	 * Returns the TypeInfos if ResourceSet is null.
@@ -595,19 +345,22 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 		if(resourceSet!=null){
 			Object[] newResults = new Object[results.length*2];
 			for(int i=0;i<results.length;i++){
-				TypeInfo ti = (TypeInfo) results[i];
-				if(selectionHistory!=null){
-					if(selectionHistory.contains(classLabelProvider.getText(ti)))
-						selectionHistory.remove(classLabelProvider.getText(ti));
-					selectionHistory.add(0, classLabelProvider.getText(ti));
-					storeSelectionHistory();
+				if (results[i] instanceof IType) {
+					IType type = (IType) results[i];
+					if(selectionHistory!=null){
+						String typeName = type.getElementName();
+						if(selectionHistory.contains(typeName))
+							selectionHistory.remove(typeName);
+						selectionHistory.add(0, typeName);
+						storeSelectionHistory();
+					}
+					String realFQN = type.getFullyQualifiedName('$');
+					EClass eclass = (EClass) Utilities.getJavaClass(realFQN, resourceSet);
+					EObject eObject = eclass.getEPackage().getEFactoryInstance().create(eclass);
+					setBeanName(eObject, beanLabelText);
+					newResults[(i*2)] = eObject;
+					newResults[(i*2)+1] = eclass;
 				}
-				String realFQN = getFullSelectionName(ti);
-				EClass eclass = (EClass) Utilities.getJavaClass(realFQN, resourceSet);
-				EObject eObject = eclass.getEPackage().getEFactoryInstance().create(eclass);
-				setBeanName(eObject, beanLabelText);
-				newResults[(i*2)] = eObject;
-				newResults[(i*2)+1] = eclass;
 			}
 			return newResults;
 		}else{
@@ -766,78 +519,19 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	protected String getFullSelectionName(TypeInfo ti){
 		String falseFQN = ti.getFullyQualifiedName();
 		String correctResolve = null;
-//		if(file!=null && file instanceof org.eclipse.jdt.internal.core.CompilationUnit){
-//			String[][] ret = null;
-//			try{
-//				IType[] types =((org.eclipse.jdt.internal.core.CompilationUnit)file).getTypes();
-//				if(types!=null && types.length>0)
-//					ret = types[0].resolveType(falseFQN);
-//			}catch(JavaModelException e){}
-//			if(ret!=null && ret.length>0){
-//				correctResolve = ret[0][0]+"."+ret[0][1].replace('.','$'); //$NON-NLS-1$
-//			}
-//		}
-//		if(correctResolve==null){
-			IType type = null;
-			try{
-				type = project.findType(falseFQN);
-			}catch(JavaModelException e){
-				type = null;
-			}
-			if(type!=null)
-				correctResolve = type.getFullyQualifiedName('$');//getFQNforType(type,0);
-//		}
-//		if(correctResolve==null){
-//			String packageName = ti.getPackageName();
-//			String className = new TypeInfoLabelProvider(TypeInfoLabelProvider.SHOW_TYPE_ONLY).getText(ti);
-//			boolean isContainerPackage = ti.getPackageName().equals(ti.getTypeContainerName());
-//			String fullName = null;
-//			if(isContainerPackage){
-//				if(packageName.length()==0) 
-//					fullName = className;
-//				else
-//					fullName = packageName + "." + className; //$NON-NLS-1$
-//			}else{
-//				packageName = ti.getTypeContainerName();
-//				fullName = packageName + "$" + className; //$NON-NLS-1$
-//			}
-//			correctResolve = fullName;
-//		}
+		IType type = null;
+		try{
+			type = project.findType(falseFQN);
+		}catch(JavaModelException e){
+			type = null;
+		}
+		if(type!=null)
+			correctResolve = type.getFullyQualifiedName('$');//getFQNforType(type,0);
 		if(correctResolve==null)
 			correctResolve = falseFQN;
 		return correctResolve;
 	}
 
-//	/*
-//	 * elm - for level of 0, the input SHOULD be an IType
-//	 * got from CodegenTypeResolver.getFQNforType()
-//	 */
-//	public static String getFQNforType(IJavaElement elm, int level){
-//		if(elm instanceof IClassFile){
-//			IClassFile cf = (IClassFile) elm;
-//			String className = elm.getElementName();
-//			className = className.substring(0,className.lastIndexOf(".class")); //$NON-NLS-1$
-//			return getFQNforType(elm.getParent(),level+1) + className;
-//		}else if(elm instanceof ICompilationUnit){
-//			return getFQNforType(elm.getParent(),level+1);
-//		}else if(elm instanceof IPackageFragment){
-//			return elm.getElementName()+"."; //$NON-NLS-1$
-//		}else if(elm instanceof IPackageFragmentRoot){
-//			return ""; //$NON-NLS-1$
-//		}else if(elm instanceof BinaryType){
-//			return getFQNforType(elm.getParent(), level+1);
-//		}else if(elm instanceof SourceType){
-//			if(level==0)
-//				return getFQNforType(elm.getParent(), level+1) + elm.getElementName();
-//			else
-//				return getFQNforType(elm.getParent(), level+1) + elm.getElementName()+"$"; //$NON-NLS-1$
-//		}else if(elm instanceof IJavaProject){
-//			return ""; //$NON-NLS-1$
-//		}
-//		return ""; //$NON-NLS-1$
-//	}
-
-	
 	/**
 	 * @see org.eclipse.ui.dialogs.AbstractElementListSelectionDialog#createFilterText(Composite)
 	 */
@@ -934,7 +628,7 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 			}
 
 			/**
-			 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
+			 * @see org.ecloipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
 			 */
 			public void widgetDefaultSelected(SelectionEvent e) {
 				updateStatus(getClassStatus(getLowerSelectedElement()));

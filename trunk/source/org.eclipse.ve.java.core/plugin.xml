@@ -120,6 +120,16 @@
 		org.eclipse.ve.internal.jfc.wizards.IVisualClassCreationSourceContributor-->
    <extension-point id="newsource" name="%newSourceContrbutorsName"/>
 
+<!--
+	This extension point allows for providing contributors for the Choosebean dialog.
+	A contributor should implement the interface org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor,
+	which provides the name of the contribution, and a filter for that contribution.
+	<extension point = "org.eclipse.ve.java.core.choosebean">
+		<contributor class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor"/>
+	</extension>
+-->
+	<extension-point id="choosebean" name="%choosebeanContributorsName"/>
+
 <!-- This container initializer is part of an experimental API that may be changed in future releases and is not guaranteed to be supported
         It is to be used in combination with the palette extension APIs to allow a JAVA_BEANS container to be created by the container wizard
         that can then be expanded into a set of classpath entries for the JAR files containing the JavaBeans based on the registrations extension point.
@@ -512,5 +522,11 @@
          </description>
       </wizard>
    </extension>
+   
+	<extension point = "org.eclipse.ve.java.core.choosebean">
+		<contributor class="org.eclipse.ve.internal.java.choosebean.AllTypesChooseBeanContributor"/>
+		<contributor class="org.eclipse.ve.internal.java.choosebean.SwingChooseBeanContributor"/>
+		<contributor class="org.eclipse.ve.internal.java.choosebean.AWTChooseBeanContributor"/>
+	</extension>
 
 </plugin>
