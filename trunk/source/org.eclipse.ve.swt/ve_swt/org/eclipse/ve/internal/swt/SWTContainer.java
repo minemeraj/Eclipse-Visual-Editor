@@ -12,6 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
@@ -59,7 +60,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				classpathlength += jfaceLibraries.length;
 			if (isGTK)
 				classpathlength += swtGTKLibraries.length;
-			fClasspathEntries = new IClasspathEntry[classpathlength];
+			ArrayList entries = new ArrayList() ;
+			
 
 			int ci = 0;
 			for (int i = 0; i < swtLibraries.length; i++) {
@@ -73,7 +75,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				if (locSrc.length>1 && locSrc[1] != null)
 					srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
 				if (path!=null) 
-				   fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
+				   entries.add(JavaCore.newLibraryEntry(path, srcPath, null));
 				else {
 					//TODO: this is a temporary M6 hack for flatten swt.jar
 					Bundle[] frags = Platform.getFragments(Platform.getBundle(swtLibraries[i][0]));
@@ -87,8 +89,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 								String version = "_"+(String) frags[i].getHeaders().get("Bundle-Version");
 								location = location.append("plugins").append(frags[i].getSymbolicName()+version+".jar");
 					    }						
-					}				
-					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(location, location, null);						
+					}
+					entries.add(JavaCore.newLibraryEntry(location, location, null));						
 				}
 			}
 
@@ -102,7 +104,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					Path srcPath = null;
 					if (locSrc[1] != null)
 						srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
-					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
+					entries.add(JavaCore.newLibraryEntry(path, srcPath, null));
 				}
 			}
 
@@ -116,11 +118,12 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					Path srcPath = null;
 					if (locSrc[1] != null)
 						srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
-					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
+					entries.add(JavaCore.newLibraryEntry(path, srcPath, null));
 				}
 				
 				
 			}
+			fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
 
 		} catch (IOException e) {
 			JavaVEPlugin.log(e, Level.INFO);
