@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-02 00:11:35 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:39:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -29,7 +29,7 @@ public class ReloadAction extends Action {
 	/**
 	 * Action ID for Reload action.
 	 */
-	public static final String RELOAD_ACTION_ID = "org.eclipse.ve.java.core.Reload";
+	public static final String RELOAD_ACTION_ID = "org.eclipse.ve.java.core.Reload"; //$NON-NLS-1$
 	
 	/**
 	 * Used to callback into the JavaVisualEditorPart to perform the required actions.
@@ -91,13 +91,13 @@ public class ReloadAction extends Action {
 	private void setCorrectText() {
 		// TODO We need full gammit of icons for this.
 		if (isChecked()) {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_RELOAD"));
+			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_RELOAD")); //$NON-NLS-1$
 			setText(getToolTipText());
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/play.gif"));
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/play.gif")); //$NON-NLS-1$
 		} else {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSE"));
+			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSE")); //$NON-NLS-1$
 			setText(getToolTipText());
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif"));			
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif"));			 //$NON-NLS-1$
 		}
 	}
 
@@ -110,9 +110,9 @@ public class ReloadAction extends Action {
 	 */
 	public void parseError(boolean error) {
 		if (error) {
-			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR"));
-			setText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
-			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif"));
+			setToolTipText(CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR")); //$NON-NLS-1$
+			setText(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
+			setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif")); //$NON-NLS-1$
 			setChecked(true);
 		} else {
 			setChecked(false);

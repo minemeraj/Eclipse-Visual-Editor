@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-03 14:38:53 $ 
  */
 
 import java.util.*;
@@ -35,10 +35,10 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 public class JavaVEPlugin extends AbstractUIPlugin {
 
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
-	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors";
+	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
 	// ID of the registrations extension point.
 
-	public static final String PI_DESCRIPTION = "description";	
+	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LabelCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-04-23 16:28:10 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-03 14:38:53 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -82,7 +82,7 @@ public Command getCommand(Command aCommand, final EditDomain domain, final Creat
 }
 public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
 	String s = (String)initData;
-	int index = s.indexOf(",");
+	int index = s.indexOf(","); //$NON-NLS-1$
 	if (index >= 0) {
 		fLabelKey = s.substring(0, index);
 		fPropertyKey = s.substring(index+1);

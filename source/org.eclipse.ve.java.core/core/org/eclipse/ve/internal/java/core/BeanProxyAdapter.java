@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2004-05-19 23:04:07 $ 
+ *  $Revision: 1.17 $  $Date: 2004-06-03 14:38:53 $ 
  */
 
 import java.util.*;
@@ -958,7 +958,7 @@ public void setBeanProxy(IBeanProxy beanProxy) {
 protected void setupBeanProxy(IBeanProxy beanProxy) {
 	fBeanProxy = beanProxy;
 	if (beanProxy == null)
-		processInstantiationError(new IllegalStateException("No Bean instantiated for some reason."));
+		processInstantiationError(new IllegalStateException(JavaMessages.getString("BeanProxyAdapter.NoBeanInstantiatedForSomeReason_EXC_"))); //$NON-NLS-1$
 	else if (!beanProxy.getTypeProxy().isPrimitive()) {
 		// We are trying to set a non-primitive and non-null proxy. Primitives aren't valid here because
 		// this proxy adapter is only valid for non-primitives.

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.41 $  $Date: 2004-06-02 22:39:07 $ 
+ *  $Revision: 1.42 $  $Date: 2004-06-03 14:39:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -148,7 +148,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected JavaVisualEditorOutlinePage beansListPage;
 	
-	protected String currentStatusMessage = "";
+	protected String currentStatusMessage = ""; //$NON-NLS-1$
 	
 	protected  boolean statusMsgSet = false;  // do we have error/info on the status bar
 	
@@ -188,7 +188,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		} else
 			throw new PartInitException(
-				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()}));
+				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()})); //$NON-NLS-1$
 
 		// We need the following now because both the thread that will be spawned off in doSetInput and 
 		// in the createPartControl need the loadingFigureControler and EditDomain
@@ -274,7 +274,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
-			setupJob = new Setup("Setup Java Visual Editor");
+			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE")); //$NON-NLS-1$
 			setupJob.setPriority(Job.SHORT); // Make it slightly slower so that ui thread still active
 		}
 		// TODO Not quite happy with this. Need way to cancel and join any previous to be on safe side.
@@ -851,7 +851,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				} else
 					return false;	// invalid
 			}
-			URI catsURI = URI.createURI(EMFWorkbenchPlugin.PLATFORM_PROTOCOL+":/"+EMFWorkbenchPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat);
+			URI catsURI = URI.createURI(EMFWorkbenchPlugin.PLATFORM_PROTOCOL+":/"+EMFWorkbenchPlugin.PLATFORM_PLUGIN+'/'+bundleName+'/'+cat); //$NON-NLS-1$
 			Resource res = rset.getResource(catsURI, true);
 			List cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
 			if (cats.isEmpty())
@@ -918,7 +918,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// try to do syncExec for some reason. So we will farm off and join in a thread.
 				setupJob.cancel();
 				final Display d = Display.getCurrent();
-				(new Job("Cleanup visual java editor.") {
+				(new Job(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CleanupJVE")) { //$NON-NLS-1$
 					protected IStatus run(IProgressMonitor monitor) {
 						while (true) {
 							try {
@@ -1328,7 +1328,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * Start the create registry job.
 		 */
 		private void startCreateProxyFactoryRegistry(IFile file) {
-			registryCreateJob = new CreateRegistry("Create Remote VM for Visual Editor for Java", file);
+			registryCreateJob = new CreateRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file); //$NON-NLS-1$
 			registryCreateJob.schedule(1L);	// Give us a moment to actually continue working before starting this.
 		}
 		
@@ -1364,7 +1364,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
 				if (doTimerStep)
 					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
-				monitor.subTask("Initializing model");
+				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
 				if (monitor.isCanceled())
 					return canceled();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.7 $  $Date: 2004-05-19 23:04:07 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -83,9 +83,9 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			// We are handling this.getClass() and getClass() special because we can possibly get the this.class. Normally "this...." anything 
 			// cannot be handled because we don't have a "this" object to work with. So if getClass() or this.getClass() then we know we
 			// can simply return the thisType we have already stored within us.
-			if ("getClass".equals(node.getName()) && (node.getReceiver() == null || node.getReceiver() instanceof PTThisLiteral)) {
+			if ("getClass".equals(node.getName()) && (node.getReceiver() == null || node.getReceiver() instanceof PTThisLiteral)) { //$NON-NLS-1$
 				if (thisType == null)
-					throw new IllegalArgumentException("Type of \"this\" was not found, or it was invalid.");
+					throw new IllegalArgumentException(JavaMessages.getString("BasicAllocationProcesser.ThisTypeNotFoundOrInvalid_EXC_")); //$NON-NLS-1$
 				try {
 					getExpression().createProxyExpression(getNextExpression(), thisType);
 				} catch (IllegalStateException e) {
@@ -121,7 +121,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		else if (allocClass == InstantiationPackage.eINSTANCE.getImplicitAllocation())
 			return allocate((ImplicitAllocation) allocation);
 		else
-			throw new IllegalArgumentException("Invalid allocation class: \""+allocClass.toString()+"\"");
+			throw new IllegalArgumentException(MessageFormat.format(JavaMessages.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[]{allocClass.toString()})); //$NON-NLS-1$
 	}
 	
 	/**
@@ -200,8 +200,8 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		throws AllocationException {
 		if (targetClass == null || targetClass.getInitializationError() != null) {
 			// The target class is invalid.
-			Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {"unknown"})); //$NON-NLS-1$
-			JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+			Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {JavaMessages.getString("BasicAllocationProcesser.unknown_ERROR_")})); //$NON-NLS-1$ //$NON-NLS-2$
+			JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			JavaVEPlugin.log(exc, Level.WARNING);
 			throw new AllocationException(exc);			
 		}

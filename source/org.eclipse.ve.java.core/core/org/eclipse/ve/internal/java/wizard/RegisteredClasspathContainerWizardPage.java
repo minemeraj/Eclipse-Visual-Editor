@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainerWizardPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-03 14:38:53 $ 
  */
 package org.eclipse.ve.internal.java.wizard;
 
@@ -196,15 +196,15 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		// The container id is the id from the config element. This is because this the config element is a "classpathContainerPage", and the
 		// id attribute is the container this is for.
-		containerid = config.getAttributeAsIs("id");
-		String name = config.getAttribute("name"); 
+		containerid = config.getAttributeAsIs("id"); //$NON-NLS-1$
+		String name = config.getAttribute("name");  //$NON-NLS-1$
 		// Get the registration element for this container. It will be the first one found. Can't handle more than one.
 		IConfigurationElement[] configs = Platform.getExtensionRegistry().getConfigurationElementsFor(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), JavaVEPlugin.PI_JBCF_REGISTRATIONS);
 		for (int i = 0; i < configs.length; i++) {
 			String ctrid = configs[i].getAttributeAsIs(JavaVEPlugin.PI_CONTAINER);
 			if (containerid.equals(ctrid)) {
 				configData = configs[i];
-				setTitle(MessageFormat.format("{0}({1})", new Object[] {name, containerid}));				
+				setTitle(MessageFormat.format(InternalMessages.getString("RegisteredClasspathContainerWizardPage.Title"), new Object[] {name, containerid}));				 //$NON-NLS-1$
 				break;
 			} 
 		}				

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-24 23:23:46 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-03 14:38:53 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -202,7 +202,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			wc.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
 			// TODO: remove swt hack
 			if (isSWTProject(type.getJavaProject())) {
-				wc.setAttribute("isSWT", true);
+				wc.setAttribute("isSWT", true); //$NON-NLS-1$
 			}
 			config = wc.doSave();		
 		} catch (CoreException ce) {
@@ -224,7 +224,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			Map containers = new HashMap(), plugins = new HashMap();
 			try {
 				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt"));
+				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt")); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (JavaModelException e) {
 			}
 		}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.7 $  $Date: 2004-05-18 14:30:11 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-03 14:38:53 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -223,8 +223,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		// Provide options specific to the Swing/AWT widget sets
 		TabItem swingItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
-		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text"));
-		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip"));
+		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text")); //$NON-NLS-1$
+		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip")); //$NON-NLS-1$
 		
 		Composite swingOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
 		GridLayout swingLayout = new GridLayout();
@@ -271,8 +271,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 
 		// Provide options specific to the SWT widget set
 		TabItem swtItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
-		swtItem.setText(VCELauncherMessages.getString("BeanTab.swttab.text"));
-		swtItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swttab.tooltip"));
+		swtItem.setText(VCELauncherMessages.getString("BeanTab.swttab.text")); //$NON-NLS-1$
+		swtItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swttab.tooltip")); //$NON-NLS-1$
 		
 		Composite swtOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
 		GridLayout swtLayout = new GridLayout();
@@ -371,7 +371,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 				// If the configuration has no look and feel, default to the one in the preferences
 				lookAndFeel = VCEPreferences.getPlugin().getPluginPreferences().getString(VCEPreferences.SWING_LOOKANDFEEL);
 			}
-			if (lookAndFeel.equals("")){
+			if (lookAndFeel.equals("")){ //$NON-NLS-1$
 				fLookAndFeelList.setSelection(0);
 			} else {
 				// Match the look and feel class against the list of known ones
@@ -463,7 +463,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		config.setAttribute(JavaBeanLaunchConfigurationDelegate.PACK, fPackWindow.getSelection() || fPackSWTWindow.getSelection());
 		
 		// TODO: Remove this swt specific code later
-		config.setAttribute("isSWT", isSWTProject(getJavaProject()));
+		config.setAttribute("isSWT", isSWTProject(getJavaProject())); //$NON-NLS-1$
 	}
 			
 	/**
@@ -574,7 +574,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			Map containers = new HashMap(), plugins = new HashMap();
 			try {
 				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt"));
+				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt")); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (JavaModelException e) {
 			}
 		}
