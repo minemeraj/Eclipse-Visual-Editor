@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:47:40 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +22,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
+import org.eclipse.ve.internal.jcm.MemberContainer;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 /**
  * This is a special adaptor for BeanCompositions.
@@ -66,33 +70,36 @@ public void notifyChanged(Notification msg) {
 	} else if (msg.getEventType() == INSTANTIATE_PROXIES) {
 		initBeanProxy();
 	} else {
-		// Now process it.
-		switch (msg.getEventType()) {
-			case Notification.REMOVING_ADAPTER:
-				releaseBeanProxy();
-				break;
-			case Notification.ADD:
-			case Notification.SET:
-				if (!CDEUtilities.isUnset(msg)) {
-					releaseSetting(msg.getOldValue());
-					initSetting(msg.getNewValue());
+		int fid = msg.getFeatureID(MemberContainer.class); 
+		if (fid != JCMPackage.MEMBER_CONTAINER__MEMBERS && fid != JCMPackage.MEMBER_CONTAINER__PROPERTIES) {
+			// Not members or properties. Those will be handled by their parent instead. 
+			switch (msg.getEventType()) {
+				case Notification.REMOVING_ADAPTER:
+					releaseBeanProxy();
 					break;
-				}	// else flow into unset.
-			case Notification.REMOVE:
-			case Notification.UNSET:
-				releaseSetting(msg.getOldValue());
-				break;
-			case Notification.ADD_MANY:
-				Iterator itr = ((List) msg.getNewValue()).iterator();
-				while (itr.hasNext())
-					initSetting(itr.next());
-				break;
-			case Notification.REMOVE_MANY:
-				itr = ((List) msg.getOldValue()).iterator();
-				while (itr.hasNext())
-					releaseSetting(itr.next());
-				break;
-		}		
+				case Notification.ADD:
+				case Notification.SET:
+					if (!CDEUtilities.isUnset(msg)) {
+						releaseSetting(msg.getOldValue());
+						initSetting(msg.getNewValue());
+						break;
+					}	// else flow into unset.
+				case Notification.REMOVE:
+				case Notification.UNSET:
+					releaseSetting(msg.getOldValue());
+					break;
+				case Notification.ADD_MANY:
+					Iterator itr = ((List) msg.getNewValue()).iterator();
+					while (itr.hasNext())
+						initSetting(itr.next());
+					break;
+				case Notification.REMOVE_MANY:
+					itr = ((List) msg.getOldValue()).iterator();
+					while (itr.hasNext())
+						releaseSetting(itr.next());
+					break;
+			}
+		}
 	}
 }
 

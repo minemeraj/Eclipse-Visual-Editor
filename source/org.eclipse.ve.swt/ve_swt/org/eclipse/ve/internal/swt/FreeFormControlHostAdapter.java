@@ -33,19 +33,23 @@ public class FreeFormControlHostAdapter extends AdapterImpl {
 	}
 	
 	public void notifyChanged(Notification msg) {
-		ensureEMFDetailsCached();		
-		switch (msg.getEventType()) {
-			case Notification.ADD :
-			case Notification.SET :
-				if (!CDEUtilities.isUnset(msg)) {
-					applied(msg.getNewValue());
+		int fid = msg.getFeatureID(MemberContainer.class);
+		if (fid != JCMPackage.MEMBER_CONTAINER__MEMBERS && fid != JCMPackage.MEMBER_CONTAINER__PROPERTIES) {
+			// Members and properties relationships will be handled by their parent (or by components or this part if free form).
+			ensureEMFDetailsCached();
+			switch (msg.getEventType()) {
+				case Notification.ADD :
+				case Notification.SET :
+					if (!CDEUtilities.isUnset(msg)) {
+						applied(msg.getNewValue());
+						break;
+					} // Else flow into unset
+				case Notification.UNSET :
+				case Notification.REMOVE :
+					canceled(msg.getOldValue());
 					break;
-				}	// Else flow into unset
-			case Notification.UNSET :
-			case Notification.REMOVE :
-				canceled(msg.getOldValue());
-			break;
-		}
+			}
+		} 
 	}			
 	
 	protected void applied(Object newValue) {
