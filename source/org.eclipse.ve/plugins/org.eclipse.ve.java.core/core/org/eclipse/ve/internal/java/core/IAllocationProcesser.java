@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IAllocationProcesser.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-19 22:50:27 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 20:48:16 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -37,7 +37,6 @@ public interface IAllocationProcesser {
 	 * are thrown will be passed on through.
 	 */
 	public static class AllocationException extends Exception {
-		private final Throwable exc;
 		
 		/**
 		 * Construct an <code>AllocationException</code>
@@ -45,23 +44,14 @@ public interface IAllocationProcesser {
 		 * @param exc The exception that is being wrappered.
 		 */
 		public AllocationException(Throwable exc) {
-			this.exc = exc;
+			super(exc);
 		}
-		
-		/**
-		 * Get the wrappered exception.
-		 * 
-		 * @return The wrappered exception.
-		 */
-		public Throwable getWrapperedException() {
-			return exc;
-		}
-		
+				
 		/* (non-Javadoc)
 		 * @see java.lang.Throwable#getMessage()
 		 */
 		public String getMessage() {
-			return exc.getMessage();
+			return getCause().getMessage();
 		}
 
 	}

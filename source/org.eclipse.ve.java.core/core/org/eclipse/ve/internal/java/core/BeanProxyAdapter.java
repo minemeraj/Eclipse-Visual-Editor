@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2004-02-05 23:11:15 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-06 20:48:16 $ 
  */
 
 import java.util.*;
@@ -820,7 +820,7 @@ protected void primInstantiateBeanProxy() {
 				try {
 					setupBeanProxy(beanProxyAllocation(allocation));
 				} catch (IAllocationProcesser.AllocationException e) {
-					processInstantiationError(e.getWrapperedException());
+					processInstantiationError(e.getCause());
 				}
 				return;
 			}
@@ -831,7 +831,7 @@ protected void primInstantiateBeanProxy() {
 				fOwnsProxy = true; // Since we created it, obviously we own it.
 				setupBeanProxy(basicInitializationStringAllocation(null,targetClass));
 			} catch (IAllocationProcesser.AllocationException exc) {
-				processInstantiationError(exc.getWrapperedException());
+				processInstantiationError(exc.getCause());
 			}			
 		} else {
 			// We are a "this" part, so instantiate the super class (go up until we reach one that is not abstract) instead.
@@ -854,7 +854,7 @@ protected void primInstantiateBeanProxy() {
 				fOwnsProxy = true; // Since we created it, obviously we own it				
 				setupBeanProxy(basicInitializationStringAllocation(null,targetClass));
 			} catch (IAllocationProcesser.AllocationException exc) {
-				processInstantiationError(exc.getWrapperedException());
+				processInstantiationError(exc.getCause());
 			}
 		}
 	}
