@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-21 14:43:13 $ 
+ *  $Revision: 1.16 $  $Date: 2005-02-21 18:11:39 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -73,6 +73,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	// Need these features often, but they depend upon the class we are in,
 	// can't get them as statics because they would be different for each Eclipse project.
 	protected EStructuralFeature sfComponentVisible, sfComponentLocation, sfComponentSize, sfComponentBounds;
+    private IPointBeanProxy fInitialLocation;
 
 	/**
 	 * ComponentProxyAdaptor constructor comment.
@@ -314,10 +315,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	
 	protected Point getDefaultLocation(){
 		if(fPLocationToUse == null){
-			return fComponentManager.getLocation();
+		    return fComponentManager.getLocation();		    
 		} else {
-			Point targetVMLocation = fComponentManager.getLocation();
-			return new Point(targetVMLocation.x-fPLocationToUse.x,targetVMLocation.y-fPLocationToUse.y);
+			return new Point(fInitialLocation.getX(),fInitialLocation.getY());		    
 		}
 	}
 
@@ -371,6 +371,8 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				super.applied(sfComponentLocation, ((EObject) target).eGet(sfComponentLocation), 0);
 			}
 		} else {
+		    // Get the existing location and store it so this can be shown on the property sheet
+		    fInitialLocation = (IPointBeanProxy)super.getBeanPropertyProxyValue(sfComponentLocation);	    
 			// Create a new point for the location we wish to set the component to
 			// and apply this as an attribute settings
 			fJLocationToUse = BeanUtilities.createJavaObject(
@@ -472,7 +474,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 				d.releaseBeanProxy();
 			fJLocationToUse = null;
 		}
-
+		
 		// TODO we want to release the fparentcomponent, but not everyone is setting it correctly in their proxy adapters, so until then we can't release it.
 //		fParentComponent = null;
 		super.releaseBeanProxy();
@@ -642,7 +644,6 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 
 	protected void applyAllSettings() {
 		if (isBeanProxyInstantiated()) {
-			// Query the current value and put into fDefaultLocation so that we know what it was at the beginning.
 			if (fJLocationToUse != null) {
 				// We have a location setting that bypasses the setting in the mof object, apply it now so that it would off screen when made visible.
 				super.applied(sfComponentLocation, fJLocationToUse, -1);
