@@ -38,8 +38,9 @@ public class Spinner extends Composite {
 	protected NumberTextVerifier verifier = new NumberTextVerifier();
 	protected int minimum, maximum;
 	protected int fValue = 0;
-	protected boolean commandInProcess = false;
-	private boolean settingText = false;
+	private boolean commandInProcess = false;	// Flag saying we are processing a change, during which we won't allow further changes.
+	private boolean settingText = false;	// Text is being set through the text field itself. In that case, don't set the text back on itself.
+	private boolean selectAll = true;	// When setting text should the entire text be set or not.
 
 	public Spinner(Composite parent, int style, int initialValue) {
 
@@ -52,9 +53,11 @@ public class Spinner extends Composite {
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				settingText = true;
-				setValue(verifier.getNewValue());
-				settingText = false;
-				text.setSelection(text.getCharCount());
+				try {
+					setValue(verifier.getNewValue());
+				} finally {
+					settingText = false;
+				}
 			}
 		});
 		text.addListener(SWT.Traverse, new Listener() {
@@ -74,11 +77,13 @@ public class Spinner extends Composite {
 		});
 		up.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
+				forceTextFocus();
 				up();
 			}
 		});
 		down.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
+				forceTextFocus();
 				down();
 			}
 		});
@@ -93,33 +98,55 @@ public class Spinner extends Composite {
 		fValue = initialValue;
 		setTextField();
 	}
+	
+	/*
+	 * Force the text focus, if it already doesn't have it. This is used when someone clicks on
+	 * the up/down button so that from that point on the arrows can be used
+	 * or someone could type something in.
+	 */
+	void forceTextFocus() {
+		if (!text.isFocusControl())
+			text.forceFocus();
+	}
+	
 	void traverse(Event e) {
 		switch (e.detail) {
 			case SWT.TRAVERSE_ARROW_PREVIOUS :
 				if (e.keyCode == SWT.ARROW_UP) {
 					e.doit = true;
 					e.detail = SWT.NULL;
-					up();
+					selectAll = false;	// Don't want to select the text when using arrow keys to go up/down
+					try {
+						up();
+					} finally {
+						selectAll = true;
+					}
 				}
 				break;
 			case SWT.TRAVERSE_ARROW_NEXT :
 				if (e.keyCode == SWT.ARROW_DOWN) {
 					e.doit = true;
 					e.detail = SWT.NULL;
-					down();
+					selectAll = false;	// Don't want to select the text when using arrow keys to go up/down
+					try {
+						down();
+					} finally {
+						selectAll = true;
+					}
+
 				}
 				break;
 		}
 	}
+	
 	void up() {
 		setValue(getValue() + 1);
 	}
+	
 	void down() {
 		setValue(getValue() - 1);
 	}
-	void focusIn() {
-		text.setFocus();
-	}
+
 	public void setFont(Font font) {
 		super.setFont(font);
 		text.setFont(font);
@@ -127,6 +154,12 @@ public class Spinner extends Composite {
 	public void setValue(int value) {
 		// Don't process anything if we are still in the middle of processing previous commands 
 		if (commandInProcess) return;
+		/*
+		 * A real hack for now. Need to handle the case where notification has been
+		 * sent out and commands are processing. To avoid a ConcurrentModificationException,
+		 * we need to set a flag to prevent accepting any more input from the user.
+		 */ 		
+		commandInProcess = true;
 		try {
 			Integer.parseInt(String.valueOf(value));
 			if (value < minimum || value > maximum) {
@@ -137,16 +170,11 @@ public class Spinner extends Composite {
 			}
 			fValue = value;	
 			setTextField();
-			/*
-			 * A real hack for now. Need to handle the case where notification has been
-			 * sent out and commands are processing. To avoid a ConcurrentModificationException,
-			 * we need to set a flag to prevent accepting any more input from the user.
-			 */ 
-			commandInProcess = true;
-			setEnabled(false);
 			notifyListeners(SWT.Modify, new Event());
 		} catch (NumberFormatException ex) {
 			setTextField();
+		} finally {
+			commandInProcess = false;
 		}
 	}
 	public int getValue() {
@@ -158,7 +186,10 @@ public class Spinner extends Composite {
 			settingText = true;
 			String valueString = String.valueOf(fValue);
 			text.setText(valueString);
-			text.setSelection(valueString.length());
+			if (selectAll)
+				text.selectAll();
+			else
+				text.setSelection(valueString.length()+1);	// So that cursor at right of text. Looks better.
 			settingText = false;
 		}
 	}
@@ -211,12 +242,6 @@ public class Spinner extends Composite {
 			text.setEnabled(enabled);
 		if (up != null && up.getEnabled() != enabled)
 			up.setEnabled(enabled);
-		if (down != null && down.getEnabled()!= enabled) down.setEnabled(enabled);
-		
-		// re-enable the notification process and allow user input if enabled
-		if (enabled) {
-			commandInProcess = false;
-			text.forceFocus();
-		} 
+		if (down != null && down.getEnabled()!= enabled) down.setEnabled(enabled);		
 	}
 }
