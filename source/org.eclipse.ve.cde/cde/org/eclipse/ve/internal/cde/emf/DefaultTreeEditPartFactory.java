@@ -11,12 +11,20 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultTreeEditPartFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-01-31 19:19:59 $ 
  */
 
+import java.lang.reflect.Constructor;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gef.EditPart;
+import org.eclipse.ve.internal.cde.core.CDEDefaultGraphicalEditPart;
+import org.eclipse.ve.internal.cde.core.CDEDefaultTreeEditPart;
+import org.eclipse.ve.internal.cde.core.CDEMessages;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 /**
  * Default factory for creating GraphicalEditParts.
@@ -26,14 +34,38 @@ import org.eclipse.gef.EditPart;
 public class DefaultTreeEditPartFactory extends AbstractEditPartFactory {
 
 	protected ClassDescriptorDecoratorPolicy policy;
+	public String DEFAULT_EDIT_PART_NAME = "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultTreeEditPart"; //$NON-NLS-1$"
+	public static Class DEFAULT_EDIT_PART_CLASS = CDEDefaultTreeEditPart.class;
+	private Constructor DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR;	
+	
 
 	public DefaultTreeEditPartFactory(ClassDescriptorDecoratorPolicy policy) {
 		this.policy = policy;
 	}
 
 	public EditPart createEditPart(EditPart parentEP, Object modelObject) {
-		String epClassString = modelObject instanceof EObject ? policy.getTreeViewClassname(((EObject) modelObject).eClass()) : "org.eclipse.ve.internal.cde.core:org.eclipse.ve.internal.cde.core.CDEDefaultTreeEditPart"; //$NON-NLS-1$
-		return createEditPart(epClassString, modelObject);
+		
+		EditPart result = policy.createTreeEditPart((EObject)modelObject);
+		if(result != null){
+			return result;
+		} else {
+			return createDefaultEditPart(modelObject);
+		}
 	}
-
+	private EditPart createDefaultEditPart(Object modelObject){
+		try {		
+			if (DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR == null){
+				DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR = DEFAULT_EDIT_PART_CLASS.getConstructor(new Class[] {Object.class});
+			}
+			return (EditPart) DEFAULT_EDIT_PART_CLASS_CONSTRUCTOR.newInstance(new Object[] {modelObject});
+		} catch (Exception exc){
+			String message =
+				java.text.MessageFormat.format(
+					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					new Object[] { DEFAULT_EDIT_PART_CLASS.getName() });
+			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, exc);
+			CDEPlugin.getPlugin().getLog().log(s);
+			return null;				
+		}
+	}	
 }

@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanFeatureDecorator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-31 20:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-31 19:21:24 $ 
  */
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+import org.eclipse.ve.internal.java.core.IBeanProxyFeatureMediator;
 import org.eclipse.emf.ecore.EAnnotation;
 
 /**
@@ -153,5 +154,10 @@ public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
 	 * @generated
 	 */
 	boolean isSetBeanLocation();
+
+	/**
+	 * @return BeanProxyMediator which is cached
+	 */
+	IBeanProxyFeatureMediator getBeanProxyMediator();
 
 } // BeanFeatureDecorator

@@ -18,16 +18,21 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:52 $ 
+ *  $Revision: 1.3 $  $Date: 2005-01-31 19:18:45 $ 
  */
 
+import java.lang.reflect.Constructor;
+import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EModelElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -35,7 +40,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.TreeEditPart;
+import org.eclipse.jface.viewers.ILabelProvider;
 
+import org.eclipse.ve.internal.cde.core.CDEMessages;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
@@ -44,6 +55,7 @@ import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
+import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
  * <!-- begin-user-doc -->
@@ -815,5 +827,96 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		EObject eo = KeyedValueHolderHelper.eObjectForURIFragmentSegment(this, uriFragmentSegment);
 		return eo == KeyedValueHolderHelper.NOT_KEYED_VALUES_FRAGMENT ? super.eObjectForURIFragmentSegment(uriFragmentSegment) : eo;
 	}
+
+	private Constructor graphicalEditPartConstructor;	// Cached only if there is a constructor that takes an argument
+	private Class graphicalEditPartClass;  // Cache of the graphical edit part class
+	/** 
+	 * Return graphical edit part for the argument, caching the EditPart class and constructor used
+	 */
+	public GraphicalEditPart createGraphicalEditPart(Object object) {
+
+		try {		
+			if(graphicalEditPartClass == null){
+				graphicalEditPartClass = CDEPlugin.getClassFromString(getGraphViewClassname());
+				try{
+					graphicalEditPartConstructor = graphicalEditPartClass.getConstructor(new Class[] {Object.class});
+				} catch (NoSuchMethodException exc){
+					// It's possible there is no argument with a constructor so just continue
+				}
+			} 		
+
+			if(graphicalEditPartClass != null){
+				if(graphicalEditPartConstructor == null){
+					return (GraphicalEditPart)graphicalEditPartClass.newInstance();
+				} else {
+					return (GraphicalEditPart)graphicalEditPartConstructor.newInstance(new Object[] { object });
+				}
+			} 
+		} catch (Exception e){
+			String message =
+				java.text.MessageFormat.format(
+						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+							new Object[] { getGraphViewClassname() });
+							Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
+							CDEPlugin.getPlugin().getLog().log(s);
+		}
+		return null;		
+	}
+	
+	private Constructor treeEditPartConstructor;	// Cached only if there is a constructor that takes an argument
+	private Class treeEditPartClass;  // Cache of the tree edit part class
+	/** 
+	 * Return Tree edit part for the argument, caching the EditPart class and constructor used
+	 */
+	public TreeEditPart createTreeEditPart(Object object) {
+
+		try {		
+			if(treeEditPartClass == null){
+				treeEditPartClass = CDEPlugin.getClassFromString(getTreeViewClassname());
+				try{
+					treeEditPartConstructor = treeEditPartClass.getConstructor(new Class[] {Object.class});
+				} catch (NoSuchMethodException exc){
+					// It's possible there is no argument with a constructor so just continue
+				}
+			} 		
+
+			if(treeEditPartClass != null){
+				if(treeEditPartConstructor == null){
+					return (TreeEditPart)treeEditPartClass.newInstance();
+				} else {
+					return (TreeEditPart)treeEditPartConstructor.newInstance(new Object[] { object });
+				}
+			} 
+		} catch (Exception e){
+			String message =
+				java.text.MessageFormat.format(
+						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+							new Object[] { getTreeViewClassname() });
+							Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
+							CDEPlugin.getPlugin().getLog().log(s);
+		}
+		return null;		
+	}
+
+	private Class labelProviderClass;
+	/**
+	 * Return LabelProvider using a cache'd instance of the label provider class
+	 */
+	public ILabelProvider getLabelProvider() {
+
+		try{
+			if(labelProviderClass == null){
+				labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());
+			}
+			ILabelProvider result = (ILabelProvider) labelProviderClass.newInstance();
+			// Set the initData
+			CDEPlugin.setInitializationData(result,getLabelProviderClassname(),null);
+			return result;
+		} catch (Exception exc) {
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass }); //$NON-NLS-1$
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
+		}	
+		return null;
+	}	
 
 } //ClassDescriptorDecoratorImpl

@@ -11,13 +11,17 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-01-31 19:21:39 $ 
  */
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.logging.Level;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EModelElement;
@@ -31,11 +35,17 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
 
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
+import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.jcm.InstanceLocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -571,6 +581,54 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	public EObject eObjectForURIFragmentSegment(String uriFragmentSegment) {
 		EObject eo = KeyedValueHolderHelper.eObjectForURIFragmentSegment(this, uriFragmentSegment);
 		return eo == KeyedValueHolderHelper.NOT_KEYED_VALUES_FRAGMENT ? super.eObjectForURIFragmentSegment(uriFragmentSegment) : eo;
+	}
+	
+	private Class beanProxyAdapterClass;
+	private Constructor beanProxyAdapterClassConstructor;
+	
+	/**
+	 * Return the adapter for the argument which will be an IJavaInstance.  The class and its contrusctor are cached for performance
+	 */
+	public IBeanProxyHost createBeanProxy(Notifier adaptable, IBeanProxyDomain aBeanProxyDomain) {
+		
+		// Use the cache'd constructor is one is available
+		if(beanProxyAdapterClassConstructor != null){
+			try {			
+				return (IBeanProxyHost) beanProxyAdapterClassConstructor.newInstance(new Object[] { aBeanProxyDomain });
+			} catch (Exception e) {
+				JavaVEPlugin.log(e, Level.WARNING);
+				return null;
+			}				
+		}
+
+		IBeanProxyHost adapter = null;
+		if (getBeanProxyClassName() != null) {
+			try {
+				// If the class is not the default we need to load it using the correct
+				// class lodaed.  CDEPlugin can do this for us but if the name is BeanProxyAdapter or PrimitiveBeanProxyAdapter we can
+				// just get the default class faster with a .class reference here
+				if (getBeanProxyClassName().equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanProxyAdapter")) //$NON-NLS-1$
+					adapter = new BeanProxyAdapter(aBeanProxyDomain);
+				else if (getBeanProxyClassName().equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter")) //$NON-NLS-1$
+					adapter = new PrimitiveProxyAdapter(aBeanProxyDomain);
+				else
+					beanProxyAdapterClass = CDEPlugin.getClassFromString(getBeanProxyClassName());
+			} catch (ClassNotFoundException e) {
+				beanProxyAdapterClass = null;
+				JavaVEPlugin.log(e, Level.WARNING);
+			}
+			if (beanProxyAdapterClass != null)
+				try {
+					// There must be a constructor that takes an argument with the IBeanProxyDomain.
+					beanProxyAdapterClassConstructor = beanProxyAdapterClass.getConstructor(new Class[] { IBeanProxyDomain.class });
+					adapter = (IBeanProxyHost) beanProxyAdapterClassConstructor.newInstance(new Object[] { aBeanProxyDomain });
+				} catch (Exception e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				}
+		}
+
+		return adapter != null ? adapter : new BeanProxyAdapter(aBeanProxyDomain);
+		
 	}	
 
 } //BeanDecoratorImpl

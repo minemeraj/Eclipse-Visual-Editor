@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: DecoratedPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-31 19:20:09 $ 
  */
 
 import java.text.MessageFormat;
@@ -286,11 +286,12 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 		BasePropertyDecorator decorator = getBaseDecorator();
 		if (decorator != null && decorator.isSetLabelProviderClassname()) {
 			try {
-				classNameAndData = decorator.getLabelProviderClassname();
-				if (classNameAndData == null)
+				ILabelProvider labelProvider = decorator.getLabelProvider(this);
+				if (labelProvider == null)
 					return null; // Explicitly set to no label provider.
-				providerClass = CDEPlugin.getClassFromString(classNameAndData);
-			} catch (ClassNotFoundException e) {
+				CDEPlugin.setInitializationData(labelProvider,decorator.getLabelProviderClassname(),null);
+				return labelProvider;
+			} catch (Exception e) {
 				// One specified, but incorrect, log it, but continue and see if we can get another way.
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
 			}
@@ -305,11 +306,12 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 					DecoratorsPackage.eINSTANCE.getBasePropertyDecorator_LabelProviderClassname());
 			if (bdec != null && bdec.isSetLabelProviderClassname()) {
 				try {
-					classNameAndData = bdec.getLabelProviderClassname();
-					if (classNameAndData == null)
+					ILabelProvider labelProvider = bdec.getLabelProvider(this);
+					if (labelProvider == null)
 						return null; // Explicitly set to no label provider.
-					providerClass = CDEPlugin.getClassFromString(classNameAndData);
-				} catch (ClassNotFoundException e) {
+					CDEPlugin.setInitializationData(labelProvider,decorator.getLabelProviderClassname(),null);
+					return labelProvider;					
+				} catch (Exception e) {
 					// One specified, but incorrect, log it, but continue and see if we can get another way.
 					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
 				}
@@ -317,12 +319,9 @@ public class DecoratedPropertyDescriptorAdapter extends AbstractPropertyDescript
 
 		}
 
-		if (providerClass == null)
-			return new TypeLabelProvider(); // Couldn't find one either on the feature or on the type. Return the default one.
 
-		ILabelProvider provider = createLabelProviderInstance(providerClass, classNameAndData, null, this);
+		return new TypeLabelProvider(); // Couldn't find one either on the feature or on the type. Return the default one.
 
-		return provider;
 	}
 
 	/**

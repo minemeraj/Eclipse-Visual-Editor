@@ -11,10 +11,14 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: BasePropertyDecoratorImpl.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2005-01-31 19:18:32 $ 
  */
+import java.lang.reflect.Constructor;
+import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -27,7 +31,11 @@ import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.jface.viewers.ILabelProvider;
 
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ve.internal.cde.core.CDEMessages;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 
@@ -635,4 +643,37 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 		return result.toString();
 	}
 
+	private Constructor labelProviderConstructor;	// Constructor that takes an IPropertyDescriptor - may not be present
+	private Class labelProviderClass;
+	private boolean hasInitializedLabelProvider = false;	// boolean to store whether or not a constructor has been looked for
+	/**
+	 * @param IPropertyDescriptor for the property the label provider is going to be used for
+	 * @return An instantiated label provider 
+	 */
+	public ILabelProvider getLabelProvider(IPropertyDescriptor aPropertyDescriptor){
+		
+		if(!hasInitializedLabelProvider){
+			try {
+				labelProviderClass = CDEPlugin.getClassFromString(getLabelProviderClassname());				
+				labelProviderConstructor = labelProviderClass.getConstructor(new Class[] { IPropertyDescriptor.class });
+			} catch (ClassNotFoundException e) {
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$				
+			} catch (NoSuchMethodException e){
+				// Do nothing - it is possible there is no constructor with an IPropertyDescriptor argument
+				// in which case the default constructor will be used instead
+			}
+			hasInitializedLabelProvider = true;
+		}
+		try {
+			if (labelProviderConstructor != null) {
+				return (ILabelProvider) labelProviderConstructor.newInstance(new Object[] { aPropertyDescriptor });
+			} else {
+				return (ILabelProvider) labelProviderClass.newInstance();
+			}
+		} catch (Exception exc) {
+			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass }); //$NON-NLS-1$
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));			
+			return null;
+		}
+	}
 }

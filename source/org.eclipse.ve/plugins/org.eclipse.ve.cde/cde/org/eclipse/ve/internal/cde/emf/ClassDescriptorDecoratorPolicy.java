@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-01-24 22:26:42 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-31 19:19:23 $ 
  */
 
 import java.net.URL;
@@ -21,12 +21,13 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.TreeEditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.*;
-import org.eclipse.ve.internal.cde.utility.GIFFileGraphic;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -251,28 +252,45 @@ public class ClassDescriptorDecoratorPolicy {
 	 * Return the labelProvider itself. 
 	 */
 	public ILabelProvider getLabelProvider(EClassifier eClass) {
-		String classNameAndData = getLabelProviderClassname(eClass);
-		if (classNameAndData == null)
-			return null;
-
-		try {
-			Class clazz = CDEPlugin.getClassFromString(classNameAndData);
-
-			try {
-				ILabelProvider provider = (ILabelProvider) clazz.newInstance();
-
-				CDEPlugin.setInitializationData(provider, classNameAndData, null);
-				if (provider instanceof INeedData)
-					 ((INeedData) provider).setData(editDomain);
-				return provider;
-			} catch (Exception exc) {
-				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz }); //$NON-NLS-1$
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
-			}
-		} catch (ClassNotFoundException e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
+		
+		ClassDescriptorDecorator decr =
+			(ClassDescriptorDecorator) findDecorator(eClass,
+				ClassDescriptorDecorator.class,
+				DecoratorsPackage.eINSTANCE.getClassDescriptorDecorator_LabelProviderClassname());
+		if(decr != null){
+			ILabelProvider result = decr.getLabelProvider();
+			if (result instanceof INeedData)
+				((INeedData) result).setData(editDomain);
+			return result;
 		}
-
-		return null;
+		return null;		
 	}
+
+	/**
+	 * @param object
+	 * @return An instantiated Graphical edit part for the argument
+	 */
+	public GraphicalEditPart createGraphicalEditPart(EObject object) {
+
+		ClassDescriptorDecorator decr =
+			(ClassDescriptorDecorator) findDecorator(object.eClass(),
+				ClassDescriptorDecorator.class,
+				DecoratorsPackage.eINSTANCE.getClassDescriptorDecorator_GraphViewClassname());
+		
+		return decr != null ? decr.createGraphicalEditPart(object) : null;
+	}
+	
+	/**
+	 * @param object
+	 * @return An instantiated Tree edit part for the argument
+	 */
+	public TreeEditPart createTreeEditPart(EObject object) {
+
+		ClassDescriptorDecorator decr =
+			(ClassDescriptorDecorator) findDecorator(object.eClass(),
+				ClassDescriptorDecorator.class,
+				DecoratorsPackage.eINSTANCE.getClassDescriptorDecorator_TreeViewClassname());
+		
+		return decr != null ? decr.createTreeEditPart(object) : null;
+	}	
 }
