@@ -7,8 +7,10 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.3 $ $Date: 2004-05-25 02:34:52 $
+ * $RCSfile: ImageLabelProvider.java,v $ $Revision: 1.4 $ $Date: 2004-06-16 13:52:26 $
  */
+
+import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
@@ -19,8 +21,19 @@ public class ImageLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 
 		if (element instanceof IJavaObjectInstance) {
-			IJavaObjectInstance image = (IJavaObjectInstance) element;
-			return ImageCellEditor.getPathFromInitializationAllocation(image.getAllocation());
+			IJavaObjectInstance imageIcon = (IJavaObjectInstance) element;
+			String initStr = ImageCellEditor.getPathFromInitializationAllocation(imageIcon.getAllocation());
+			int ind_first = initStr.indexOf("\""); //$NON-NLS-1$
+			int ind_last = initStr.lastIndexOf("\""); //$NON-NLS-1$
+			if ((ind_first != -1) && (ind_last != -1)) {
+				initStr = initStr.substring(ind_first + 1, ind_last);
+				StringTokenizer tokenizer = new StringTokenizer(initStr, "\"\\/"); //$NON-NLS-1$
+				String fname = ""; //$NON-NLS-1$
+				while (tokenizer.hasMoreTokens()) {
+					fname = tokenizer.nextToken();
+				}
+				return fname;
+			}
 		}
 		return ""; //$NON-NLS-1$
 	}
