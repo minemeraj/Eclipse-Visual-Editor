@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-05 14:36:44 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-22 22:43:04 $ 
  */
 
 import java.util.Iterator;
@@ -48,14 +48,38 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 
 	public NameInCompositionPropertyDescriptor(String displayNameToUse, ICellEditorValidator additionalValidator) {
 		super(NAME_IN_COMPOSITION_KEY, displayNameToUse);
-		setValidator(
-			additionalValidator != null
-				? (ICellEditorValidator) new DefaultWrapperedValidator(new ICellEditorValidator[] { new NameValidator(),
-					additionalValidator })
-				: new NameValidator());
-		setAlwaysIncompatible(true);
-		// Can only be one. Doesn't make sense to allow changing the name of more than one to the same name, since the validator needs to make it unique.
+		setValidator(additionalValidator);
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.propertysheet.INeedData#setData(java.lang.Object)
+	 */
+	public void setData(Object data) {
+		super.setData(data);
+		if (!getAlwaysIncompatible()) {
+			// We haven't yet set always incompatible, so we haven't set out validator yet.
+			setValidator(
+					getValidator() != null
+						? (ICellEditorValidator) new DefaultWrapperedValidator(new ICellEditorValidator[] { getNameValidator(),
+							getValidator()})
+						: getNameValidator());
+			// Can only be one. Doesn't make sense to allow changing the name of more than one to the same name, since the validator needs to make it unique.		
+			setAlwaysIncompatible(true);
+		}
+		
+	}
+	
+	/**
+	 * Get the name validator to use. Subclasses should override and return thier own. 
+	 * The default one makes it unique within entire compostion.
+	 * 
+	 * @return name validator to use.
+	 * 
+	 * @since 1.0.0
+	 */
+	protected NameValidator getNameValidator() {
+		return new NameValidator();
+	}
+
 	protected Object getKeyedValue(BasicEMap.Entry kv) {
 		return kv.getValue();
 	}
@@ -90,6 +114,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 	public static String getUniqueNameInComposition(EditDomain domain, String name) {
 		return getUniqueNameInComposition(domain, name, null);
 	}
+	
 	/**
 	 * Get a unique name in composition using the given base name. It will also
 	 * look in the Set of other names if the set is not null. This allows for checking
@@ -132,10 +157,9 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			return editor;
 		} else
 			return null;
-
 	}
 
-	private static class NameValidator implements ICellEditorValidator, INeedData, ISourced {
+	public static class NameValidator implements ICellEditorValidator, INeedData, ISourced {
 		protected EditDomain domain;
 		protected IPropertySource[] pos;
 		protected IPropertyDescriptor[] des;
@@ -154,11 +178,24 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			if (name.equals(getCurrentName()))
 				return null; // The current name is considered valid.
 
-			String newName = getUniqueNameInComposition(domain, name);
+			String newName = getSuggestedName(name);
 			if (newName.equals(name))
 				return null; // The name didn't change, so it is valid.
 
 			return CDEMessages.getString("PropertyDescriptor.NameInComposition.NonUnique_INFO_"); //$NON-NLS-1$
+		}
+
+		/**
+		 * Get the suggested name. Overrides may come up with a different one.
+		 * This default implementation makes the name unique in the entire composition.
+		 * 
+		 * @param name
+		 * @return the name to use based upon input name.
+		 * 
+		 * @since 1.0.0
+		 */
+		protected String getSuggestedName(String name) {
+			return getUniqueNameInComposition(domain, name);
 		}
 
 		private String getCurrentName() {

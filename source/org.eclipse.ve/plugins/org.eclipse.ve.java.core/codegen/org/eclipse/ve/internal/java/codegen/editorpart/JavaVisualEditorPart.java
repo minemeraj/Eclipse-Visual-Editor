@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.27 $  $Date: 2004-04-20 18:29:18 $ 
+ *  $Revision: 1.28 $  $Date: 2004-04-22 22:43:06 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -88,6 +88,7 @@ import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.CDEUtilities.EditPartNamePath;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
@@ -279,6 +280,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private BeanSubclassComposition currentSetRoot;
+	private static final Object SELECTED_EDITPARTS_KEY = new Object();
 	/*
 	 * Set a new model into the root editparts. This can happen because the setup and the initial creation
 	 * of the viewers can be in a race condition with each other.
@@ -286,6 +288,32 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	protected void setRootModel(final BeanSubclassComposition root) {
 		Assert.isTrue(Display.getCurrent() != null);
+		if (root == null) {
+			// We are going away. Try to build the path to the selected editparts so they can be restored later.
+			// Have to gather them all first because individually set the roots of the viewers to null will
+			// destroy the selection for the following viewers. The viewers may have slightly different selections
+			// if one viewer had an editpart that other didn't. So we need to get each individually.
+			Iterator itr = editDomain.getViewers().iterator();
+			while (itr.hasNext()) {
+				EditPartViewer viewer = (EditPartViewer) itr.next();
+				List selected = viewer.getSelectedEditParts();
+				if (selected.isEmpty())
+					editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// None selected
+				else {
+					List paths = new ArrayList(selected.size());
+					for (int i = 0; i < selected.size(); i++) {
+						EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
+						if (editPartNamePath == null)
+							continue;	// If the root is selected, then treat as not selected.
+						paths.add(editPartNamePath);
+					}
+					if (paths.isEmpty())
+						editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// None selected
+					else
+						editDomain.setViewerData(viewer, SELECTED_EDITPARTS_KEY, paths);
+				}
+			}
+		}
 		
 		Iterator itr = editDomain.getViewers().iterator();
 		while (itr.hasNext()) {
@@ -297,6 +325,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			rootEP.activate();
 			rootEP.refresh();
 		}
+		
+		if (root != null) {
+			// We have something, see if anything needs to be selected.
+			Iterator itr1 = editDomain.getViewers().iterator();
+			while (itr1.hasNext()) {
+				EditPartViewer viewer = (EditPartViewer) itr1.next();			
+				List paths = (List) editDomain.getViewerData(viewer, SELECTED_EDITPARTS_KEY);
+				if (paths != null) {
+					editDomain.removeViewerData(viewer, SELECTED_EDITPARTS_KEY);	// So that doesn't hang around.
+					for (int i = 0; i < paths.size(); i++) {
+						EditPart selected = CDEUtilities.findEditpartFromNamePath((EditPartNamePath) paths.get(i), viewer, editDomain);
+						if (selected != null)
+							viewer.appendSelection(selected);
+					}
+				}
+			}
+		}
+		
 
 		try {
 			if (currentSetRoot != root && currentSetRoot != null)
@@ -1401,7 +1447,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
 			CDEUtilities.setModelAdapterFactory(editDomain, new DefaultModelAdapterFactory(policy));
 
-			NameInCompositionPropertyDescriptor desc = new NameInCompositionPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName"), new FieldNameValidator()); //$NON-NLS-1$
+			NameInCompositionPropertyDescriptor desc = new NameInMemberPropertyDescriptor(VCEMessages.getString("nameInComposition.displayName"), new FieldNameValidator()); //$NON-NLS-1$
 			editDomain.registerKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY, desc);
 			// Make the default add annotations command be the one to make names unique.
 			try {
