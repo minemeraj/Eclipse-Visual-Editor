@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-04-26 16:43:44 $ 
+ *  $RCSfile: ListBeanInfo.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-26 16:43:44 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -24,26 +24,17 @@ import org.eclipse.swt.widgets.*;
  * 
  * @since 1.0.0
  */
-public class TableBeanInfo extends SimpleBeanInfo {
+public class ListBeanInfo extends SimpleBeanInfo {
 	
 public BeanDescriptor getBeanDescriptor() {
-	BeanDescriptor descriptor = new BeanDescriptor(Table.class);
+	BeanDescriptor descriptor = new BeanDescriptor(List.class);
 	descriptor.setValue(
-		"SWEET_STYLEBITS",
-	    new Object[] [] {				
-			{ "style" , "style" , Boolean.FALSE , new Object[] {
-			    "CHECK" , "org.eclipse.swt.SWT.CHECK" , new Integer(SWT.CHECK) 
-			} } ,
-			{ "selectionStyle" , "selectionStyle" , Boolean.FALSE , new Object[] {
+		SweetHelper.STYLE_BITS_ID,
+		new Object[] [] {
+			{ "selectionStyle" , "selectionStyle", Boolean.FALSE , new Object[] {
 				"SINGLE" , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					
 				"MULTI" , "org.eclipse.swt.SWT.MULTI" , new Integer(SWT.MULTI)				
-			} },
-			{ "fullSelection" , "fullSelection" , Boolean.FALSE , new Object[] {
-				"FULL_SELECTION" , "org.eclipse.swt.FULL_SELECTION" , new Integer(SWT.FULL_SELECTION) 					
-			} } ,
-			{ "hideSelection" , "hideSelection" , Boolean.FALSE , new Object[] {
-				"HIDE_SELECTION" , "org.eclipse.swt.HIDE_SELECTION" , new Integer(SWT.HIDE_SELECTION) 					
-			} }			
+			} }
 		}
 	);
 	SweetHelper.mergeSuperclassStyleBits(descriptor);
