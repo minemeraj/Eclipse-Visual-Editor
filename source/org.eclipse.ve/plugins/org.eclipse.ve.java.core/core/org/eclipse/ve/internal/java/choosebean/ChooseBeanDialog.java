@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.10 $  $Date: 2004-03-19 14:51:47 $ 
+ *  $Revision: 1.11 $  $Date: 2004-03-22 17:25:48 $ 
  */
 
 import java.util.*;
@@ -519,7 +519,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 				boolean isAnyConstructorPresent = false;
 				
 				// If we don't need a default constructor skip the searching of the methods for one
-				if(!isDefaultConstructorSearchRequired){
+				if(isDefaultConstructorSearchRequired){
 					IMethod[] methods = type.getMethods();
 					for(int m=0;m<methods.length;m++){
 						if(methods[m].isConstructor() &&
