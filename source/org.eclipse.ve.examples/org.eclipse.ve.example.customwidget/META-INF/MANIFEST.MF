@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Customwidget VE Example Plug-in
 Bundle-SymbolicName: org.eclipse.ve.example.customwidget
 Bundle-Version: 1.0.0
-Bundle-ClassPath: customwidget.jar
+Bundle-ClassPath: customwidgetplugin.jar
 Bundle-Activator: org.eclipse.ve.example.customwidget.CustomwidgetPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
