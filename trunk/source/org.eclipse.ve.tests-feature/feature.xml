@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.ve.tests"
       label="%featureName"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="%featureProvider"
       image="eclipse_update_120.jpg">
 
@@ -17,7 +17,7 @@
 
    <includes
          id="org.eclipse.jem.tests"
-         version="1.0.0"
+         version="0.0.0"
          name="%featureName"/>
 
    <requires>
@@ -28,7 +28,7 @@
          id="org.eclipse.ve.tests"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.test"
@@ -46,6 +46,6 @@
          id="org.eclipse.ve.tests.source"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
 </feature>
