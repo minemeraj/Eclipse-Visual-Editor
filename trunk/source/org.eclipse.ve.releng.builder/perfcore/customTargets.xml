@@ -19,8 +19,9 @@
 <!-- ===================================================================== -->
 
 	<target name="assemble.phony.perfcore">
+		<!--
 		<property name="archiveName" value="phonyPerfCore-${buildId}.zip"/>
-		<ant antfile="${assembleScriptName}"/>
+		<ant antfile="${assembleScriptName}"/> -->
 	<!-- ADD POST STEPS -->
 	</target>
 
