@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.29 $  $Date: 2004-05-20 18:45:38 $ 
+ *  $Revision: 1.30 $  $Date: 2004-06-09 14:38:03 $ 
  */
 
 import java.util.*;
@@ -72,18 +72,7 @@ protected IInstanceVariableCreationRule getVarRule() {
 }
 
 
-/**
- * @deprecated
- */
-protected void  generateInLineBean (IJavaObjectInstance component, CodeMethodRef mref, String varName,  List kids, ICompilationUnit cu) throws CodeGenException {
-    
-    IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel);
-    mgen.generateInLine(mref,varName,kids) ;
-    
-    
-}
-
- protected void  generateLocalVariable (IJavaObjectInstance component, CodeMethodRef mref, String varName,  ICompilationUnit cu) throws CodeGenException {
+protected void  generateLocalVariable (IJavaObjectInstance component, CodeMethodRef mref, String varName,  ICompilationUnit cu) throws CodeGenException {
     
     IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component,fBeanModel) ;
     mgen.generateInLine(mref,varName,new ArrayList()) ;
