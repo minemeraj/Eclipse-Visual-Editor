@@ -17,6 +17,8 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -32,7 +34,7 @@ public class NullLayoutEditPolicy extends XYLayoutEditPolicy {
 /**
  * Create with the container policy for handling DiagramFigures.
  */
-public NullLayoutEditPolicy(ContainerPolicy containerPolicy, Rectangle aClientBox) {
+public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy, Rectangle aClientBox) {
 	this.containerPolicy = containerPolicy;
 	helper = new NullLayoutPolicyHelper(containerPolicy);	
 	clientBox = aClientBox;
