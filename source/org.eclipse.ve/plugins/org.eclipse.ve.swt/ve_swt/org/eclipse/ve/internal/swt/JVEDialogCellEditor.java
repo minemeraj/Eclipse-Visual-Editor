@@ -113,7 +113,9 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 			try{
 				chooserClass = CDEPlugin.getClassFromString((String)initData);	
 				try{
-					chooser = (PropertyEditor)chooserClass.newInstance();					
+					chooser = (PropertyEditor)chooserClass.newInstance();
+					if (chooser instanceof INeedData)
+						((INeedData) chooser).setData(fEditDomain);
 				} catch (Exception exc){
 					JavaVEPlugin.log(exc, Level.WARNING);					
 				}	

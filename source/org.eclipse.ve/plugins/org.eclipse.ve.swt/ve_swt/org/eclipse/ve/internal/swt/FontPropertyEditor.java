@@ -19,19 +19,23 @@ import org.eclipse.swt.widgets.Control;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-public class FontPropertyEditor implements PropertyEditor {
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.propertysheet.INeedData;
+
+public class FontPropertyEditor implements PropertyEditor, INeedData {
 	
 	
 	protected FontCustomPropertyEditor customFontEditor;
 	private IJavaObjectInstance fExistingValue;
 	protected Font value;
+	private EditDomain fEditDomain;
 	
 	/* (non-Javadoc)
 	 * @see PropertyEditor#createControl(org.eclipse.swt.widgets.Composite, int)
 	 */
 	public Control createControl(Composite parent, int style) {
 		if (customFontEditor == null || customFontEditor.isDisposed()) {
-			customFontEditor = new FontCustomPropertyEditor(parent, style, value, fExistingValue);
+			customFontEditor = new FontCustomPropertyEditor(parent, style, value, fExistingValue, fEditDomain);
 			parent.setLayout(new FillLayout());
 		}
 		return customFontEditor;
@@ -73,6 +77,10 @@ public class FontPropertyEditor implements PropertyEditor {
 		fExistingValue = value;
 		if(customFontEditor != null)
 			customFontEditor.setExistingValue(value);
+	}
+
+	public void setData(Object data) {
+		fEditDomain = (EditDomain) data;
 	}
 
 }

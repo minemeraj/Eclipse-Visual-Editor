@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-03-29 16:17:15 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -36,6 +36,7 @@ public static String getText(IJavaInstance element){
 		// target VM traffic a single static helper method exists on the utility class
 		// org.eclipse.ve.internal.swt.targetvm.Environment.getFontLabel(Font aFont)
 		IBeanProxy fontBeanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
+		if (fontBeanProxy == null) return "";
 		IBeanTypeProxy environmentBeanTypeProxy = fontBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment");
 		IMethodProxy getFontLabelMethodProxy = environmentBeanTypeProxy.getMethodProxy("getFontLabel", new IBeanTypeProxy[] {fontBeanProxy.getTypeProxy()});
 		IStringBeanProxy fontLabelBeanProxy = (IStringBeanProxy) getFontLabelMethodProxy.invoke(environmentBeanTypeProxy,fontBeanProxy);
