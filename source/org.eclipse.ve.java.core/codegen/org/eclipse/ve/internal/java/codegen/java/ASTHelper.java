@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ASTHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-10 15:50:57 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-12 18:25:44 $ 
  */
 
 import java.util.*;
@@ -108,10 +108,14 @@ public static class VariableValueVisitor
 		if(isValuable(assignment.getRightHandSide())){
 			Expression ref = assignment.getLeftHandSide();
 			String varName = "?"; //$NON-NLS-1$
-			if (ref instanceof Name) {
-					Name varNameNode = (Name) ref;
-					varName = varNameNode.toString();
+			if (ref instanceof SimpleName) {
+					SimpleName varNameNode = (SimpleName) ref;
+					varName = varNameNode.getIdentifier();
 			}
+			if (ref instanceof QualifiedName) {
+					QualifiedName qname = (QualifiedName) ref;
+					varName = qname.getName().getIdentifier();
+				}
 			getHash().put(varName, assignment.getRightHandSide());
 		}
 		return super.visit(assignment);
@@ -205,7 +209,7 @@ public static String resolveVariavleValue(SimpleName variable, int location, Str
 	parser.setSource(entireCode.toCharArray());
 	CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
-	VariableValueVisitor valueVisitor = new VariableValueVisitor(variable.toString(), location);
+	VariableValueVisitor valueVisitor = new VariableValueVisitor(variable.getIdentifier(), location);
 	cu.accept(valueVisitor);
 	return valueVisitor.getValue();
 }
