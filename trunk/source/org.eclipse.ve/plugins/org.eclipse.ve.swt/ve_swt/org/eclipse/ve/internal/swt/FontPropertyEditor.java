@@ -143,6 +143,7 @@ public class FontPropertyEditor implements PropertyEditor {
 			gd03.grabExcessHorizontalSpace = true;
 			gd03.grabExcessVerticalSpace = true;
 			gd03.heightHint = 50;
+			gd03.widthHint = 500;
 			previewText.setLayoutData(gd03);
 			
 			initializeLists();
