@@ -11,12 +11,11 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-06 19:21:39 $ 
  */
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -24,10 +23,9 @@ import java.util.Iterator;
 
 import javax.swing.JComponent;
 
-import org.eclipse.ve.internal.java.common.Common;
 import org.eclipse.jem.internal.proxy.common.*;
-import org.eclipse.jem.internal.proxy.common.ICallback;
-import org.eclipse.jem.internal.proxy.common.IVMServer;
+
+import org.eclipse.ve.internal.java.common.Common;
 
 
 public class WindowLauncher implements ICallback {
@@ -112,39 +110,79 @@ void launchEditor(){
 	windowState = Common.WIN_OPENED;
 }
 
-void listenToComponent(){
-	fWindow.addWindowListener(new WindowAdapter(){
-		public void windowClosed(WindowEvent event){
-			Iterator iter = fWindowListeners.iterator();
-			while(iter.hasNext()){
-				((WindowListener)iter.next()).windowClosed();
+void listenToComponent() {
+		fWindow.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent event) {
+				Iterator iter = fWindowListeners.iterator();
+				while (iter.hasNext()) {
+					((WindowListener) iter.next()).windowClosed();
+				}
+				callbackWindowClosed();
 			}
-			callbackWindowClosed();
-		}
-	});
-	fDialog.addListener(new IPropertyEditorDialogListener(){
-		public void revertPropertyValue(){callbackRevertValue();}
-		public void savePropertyValue(){callbackSaveValue();}
-	});
-	
-	// Add ourself as a listener to the component
-	// This is required for customizers that use this as a means to signal the they may
-	// need repainting of the bean
-	fComponent.addPropertyChangeListener(
-		new PropertyChangeListener(){
-			public void propertyChange(final PropertyChangeEvent evt){
-				try {
-					fServer.doCallback(new ICallbackRunnable() {
-						public Object run(ICallbackHandler handler) throws CommandException {
-							return handler.callbackWithParms(fCallbackID, Common.PROP_CHANGED, new Object[] {evt.getPropertyName()});
-						}
-					});
-				} catch (CommandException exp) {
-				}				
+		});
+		fDialog.addListener(new IPropertyEditorDialogListener() {
+			public void revertPropertyValue() {
+				callbackRevertValue();
 			}
-		}
-	);	
-}
+			public void savePropertyValue() {
+				callbackSaveValue();
+			}
+		});
+
+		// Because of problem with timing we can get property change events even as we are being
+		// disposed.
+		// So to get around that we will listen only when it is actually added as a child. If not
+		// parented, we won't listen.
+		fComponent.addHierarchyListener(new HierarchyListener() {
+
+			// Add ourself as a listener to the component
+			// This is required for customizers that use this as a means to signal the they may
+			// need repainting of the bean
+			PropertyChangeListener pcl = new PropertyChangeListener() {
+				public void propertyChange(final PropertyChangeEvent evt) {
+					try {
+						fServer.doCallback(new ICallbackRunnable() {
+							public Object run(ICallbackHandler handler) throws CommandException {
+								return handler.callbackWithParms(fCallbackID, Common.PROP_CHANGED, new Object[] { evt.getPropertyName()});
+							}
+						});
+					} catch (CommandException exp) {
+					}
+				}
+			};
+
+			boolean hasParent;
+			{
+				hasParent = fComponent.getParent() != null;
+				if (hasParent)
+					fComponent.addPropertyChangeListener(pcl);
+			}
+
+			// KLUDGE We're listening for displayability change because that is the only thing that
+			// occurs
+			// in the addNotify/removeNotify. And we need to do it then because if we don't, the
+			// JComponent removeNotify goes
+			// on and signals out propertyChange event, but it happens in the middle of the
+			// removeNotify, which causes a lockup
+			// because we callback to the IDE, which then comes back on a different thread to
+			// invalidate. The problem is since we
+			// are in the middle of a remove, we've locked the AWT treelock, and the invalidate
+			// also tries to lock the treelock. So
+			// we get a deadlock situation. By removing the property listener during the
+			// removenotify we won't get the propertychange event
+			// sent.
+			public void hierarchyChanged(HierarchyEvent e) {
+				if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0) {
+					hasParent = !hasParent;
+					if (hasParent)
+						fComponent.addPropertyChangeListener(pcl);
+					else
+						fComponent.removePropertyChangeListener(pcl);
+				}
+			}
+		});
+	}
+
 public void toFront(){
 	fWindow.toFront();
 	fWindow.requestFocus();
