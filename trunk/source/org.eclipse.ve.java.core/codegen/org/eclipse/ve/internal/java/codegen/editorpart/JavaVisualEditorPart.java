@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.48 $  $Date: 2004-06-18 23:46:43 $ 
+ *  $Revision: 1.49 $  $Date: 2004-06-19 15:37:06 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1034,20 +1034,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected synchronized boolean isDisposed() {
 		return editDomain == null;
-	}
-
-	/*
-	 * Answer the stored palette ratios.
-	 * 
-	 * TODO currently only the default is stored. Don't have a mechanism to save the current setting because
-	 * no save per editor available.
-	 */
-	protected int[] getPaletteSashWeights() {
-		// The weights are stored as preferences so as the user changes it new editors open with the 
-		// customized size
-		int leftRatio = VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.PALETTE_SASH_LEFT_RATIO);
-		int rightRatio = VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.PALETTE_SASH_RIGHT_RATIO);
-		return new int[] { leftRatio, rightRatio };
 	}
 
 	/* (non-Javadoc)
