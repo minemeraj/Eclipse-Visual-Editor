@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-07 16:46:03 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-08 14:49:46 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -191,8 +191,7 @@ public ILabelProvider getLabelProvider(){
 		labelProvider = createLabelProviderInstance(labelProviderClass, labelProviderClassNameAndData, null, this);
 		return labelProvider;
 	} else if ("".equals(labelProviderClassNameAndData)) { //$NON-NLS-1$
-		labelProvider = null;
-		return labelProvider;	// Explicitly said no label provider
+		return null;	// Explicitly said no label provider
 	}
 		
 	// Step 1 - See if the emf feature decorator has a label provider.
@@ -202,8 +201,7 @@ public ILabelProvider getLabelProvider(){
 			String classNameAndData = decorator.getLabelProviderClassname();
 			if (classNameAndData == null) {
 				labelProviderClassNameAndData = ""; //$NON-NLS-1$
-				labelProvider = null;
-				return labelProvider;	// It is explicitly set to no label provider.
+				return null;	// It is explicitly set to no label provider.
 			}
 			labelProviderClass = CDEPlugin.getClassFromString(classNameAndData);
 			labelProviderClassNameAndData = classNameAndData;	// Set here so that it stays unset if class not found

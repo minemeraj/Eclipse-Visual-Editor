@@ -11,12 +11,10 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-07 14:30:08 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-08 14:50:01 $ 
  */
 
 import java.util.logging.Level;
-
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -25,10 +23,11 @@ import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringEvaluationException;
 import org.eclipse.jem.internal.proxy.initParser.InitializationStringParser;
+import org.eclipse.ve.internal.propertysheet.*;
 /**
  * Cell editor for an int field that is enumerated
  */
-public class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements org.eclipse.ve.internal.propertysheet.INeedData {
+public class EnumeratedIntValueCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	protected EditDomain fEditDomain;
 	protected Object[] fSources; 
 	protected Integer[] FILL_VALUES;

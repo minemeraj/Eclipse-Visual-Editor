@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyFactory.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-07 16:45:54 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-08 14:49:54 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -59,16 +59,12 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 	public IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstraint) {
 		
 		return new AbstractConstraintPropertyDescriptor(sfConstraint) {
-			private ILabelProvider labelProvider;  // Performance cache because property sheets asks for this twice always
 			public CellEditor createPropertyEditor(Composite parent) {
 				return new BorderLayoutConstraintsPropertyEditor(parent);
 			}
 
 			public ILabelProvider getLabelProvider() {
-				if(labelProvider == null){
-					labelProvider = new BorderLayoutConstraintsPropertyEditor.BorderLayoutConstraintsLabelProvider();
-				}
-				return labelProvider;
+				return new BorderLayoutConstraintsPropertyEditor.BorderLayoutConstraintsLabelProvider();
 			}
 		};
 	}

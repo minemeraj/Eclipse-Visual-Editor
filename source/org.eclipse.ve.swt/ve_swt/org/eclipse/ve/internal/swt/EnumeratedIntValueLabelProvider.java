@@ -11,21 +11,15 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-07 14:30:08 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-08 14:50:01 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
-
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.jem.internal.proxy.core.*;
 /**
  * Label provider for the int Orientation field
  */
-public class EnumeratedIntValueLabelProvider extends LabelProvider implements INeedData {
+public class EnumeratedIntValueLabelProvider extends LabelProvider  {
 
 	protected EditDomain editDomain;
 	protected String[] FILL_NAMES;
@@ -46,11 +40,4 @@ public String getText(Object element){
 	}
 	return "";
 }
-	/**
-	 * @see INeedData#setData(Object)
-	 */
-	public void setData(Object data) {
-		editDomain = (EditDomain) data;
-	}
-
 }
