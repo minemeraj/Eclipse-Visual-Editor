@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.8 $  $Date: 2004-01-24 01:08:29 $ 
  */
 
 import java.util.*;
@@ -161,6 +161,11 @@ protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor,
 	return sibling;
 }
 
+protected void createInitExpression (BeanPart b) {
+	ExpressionRefFactory f = new ExpressionRefFactory(b, null) ;
+	f.createInitExpression() ;
+}
+
 protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, CodeMethodRef mref, String methodName,  ICompilationUnit cu) throws CodeGenException {
 
       if (!mref.isGenerationRequired()) return ;
@@ -186,7 +191,8 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
     	 JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
     	 throw new CodeGenException(e) ;
      }    
- 
+    // template also created the init expression; e.g., new Foo()
+    createInitExpression(bp) ;
     JavaVEPlugin.log("Adding JCMMethod: \n"+newMSrc+"\n", MsgLogger.LOG_FINE) ;	 //$NON-NLS-1$ //$NON-NLS-2$    
     CodeGenUtil.refreshMethodOffsets(cuType,fBeanModel) ;  
     // Workaround, as the create method may create a method which include other comments,etc.

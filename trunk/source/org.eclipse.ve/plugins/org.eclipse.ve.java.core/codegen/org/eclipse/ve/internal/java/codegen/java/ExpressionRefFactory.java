@@ -11,14 +11,20 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-24 01:08:29 $ 
  */
 
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
+
+
+
+
+
 import org.eclipse.jem.internal.core.*;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -31,6 +37,7 @@ import org.eclipse.ve.internal.java.codegen.util.*;
 
 public class ExpressionRefFactory {
 
+	final static String CLASS_PREFIX = "class Foo {\n" ;  //$NON-NLS-1$
     BeanPart             fBeanPart ;
     EStructuralFeature fSF ;
     CodeExpressionRef    fExpr = null ;
@@ -116,24 +123,73 @@ public CodeExpressionRef getExistingExpressionRef(Object[] args) {
 	return fExpr ;
 }
 
+//TODO: need to change to new AST
+private org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration getModelFromParser(
+		org.eclipse.jdt.internal.compiler.problem.ProblemReporter reporter,
+		org.eclipse.jdt.internal.compiler.CompilationResult result,
+		org.eclipse.jdt.internal.core.BasicCompilationUnit cu){
+	org.eclipse.jdt.internal.compiler.parser.Parser aParser = new org.eclipse.jdt.internal.compiler.parser.Parser(reporter,true);
+	return aParser.parse(cu,result);	
+}
 
-public CodeExpressionRef createInitExpression(BeanMethodTemplate mt) {
-   CodeMethodRef mr = fBeanPart.getInitMethod() ;   	
-   CodeExpressionRef exp = new CodeExpressionRef(mr,fBeanPart) ;
-   //exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
-   exp.clearAllFlags();
-   exp.setState(CodeExpressionRef.STATE_EXIST, true);
-   exp.setState(CodeExpressionRef.STATE_NO_OP, true);
-   exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
-   exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-   exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-   ExpressionParser p = new ExpressionParser (mt.getPrefix(),mt.getInitExpressionOffset(),
-                                               mt.getInitExpression().length()) ;
-                                                 
-   exp.setContent(p) ;
-   exp.setOffset(p.getExpressionOff()) ;   	
-   fExpr = exp ;
-   return fExpr ;
+//TODO: need to change to new AST
+private org.eclipse.jdt.internal.compiler.ast.Statement getInitExpression(String src) {
+		
+//TODO:  M7 Eclipse should provide support for this in AST				
+		org.eclipse.jdt.internal.core.BasicCompilationUnit scu =
+		new org.eclipse.jdt.internal.core.BasicCompilationUnit(src.toString().toCharArray(),  new char[][] { {}
+		}, "Foo.java", (String) JavaCore.getOptions().get(org.eclipse.jdt.internal.compiler.impl.CompilerOptions.OPTION_Encoding));
+		org.eclipse.jdt.internal.compiler.problem.ProblemReporter reporter = new org.eclipse.jdt.internal.compiler.problem.ProblemReporter(org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies.exitAfterAllProblems(), new org.eclipse.jdt.internal.compiler.impl.CompilerOptions(), new org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory(Locale.getDefault()));
+		org.eclipse.jdt.internal.compiler.CompilationResult result = new org.eclipse.jdt.internal.compiler.CompilationResult(scu, 1, 1, 20);
+		org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration cudecl = getModelFromParser(reporter, result, scu);
+
+		//TODO: this is a poor man's parsing, need revisit in the move to the new AST
+		org.eclipse.jdt.internal.compiler.ast.Statement st[] = cudecl.types[0].methods[1].statements ;
+		if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.LocalDeclaration ||
+		    st[0] instanceof org.eclipse.jdt.internal.compiler.ast.Assignment)
+		   return cudecl.types[0].methods[1].statements[0] ;
+		else if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.IfStatement) {
+			org.eclipse.jdt.internal.compiler.ast.Statement as = ((org.eclipse.jdt.internal.compiler.ast.IfStatement)st[0]).thenStatement ;
+			if (as instanceof org.eclipse.jdt.internal.compiler.ast.Block)
+				return ((org.eclipse.jdt.internal.compiler.ast.Block)as).statements[0] ;
+		}
+		return null ;
+			
+			
+}
+
+/**
+ * 
+ * this method will parse a method to get its init expression (new Foo())
+ * 
+ * @since 1.0.0
+ */
+public CodeExpressionRef createInitExpression() {
+	
+	CodeMethodRef mr = fBeanPart.getInitMethod() ;
+	// Create a temporary class signiture
+	StringBuffer sb = new StringBuffer();
+	sb.append(CLASS_PREFIX) ;
+	sb.append(mr.getContent()) ;
+	sb.append("\n}") ;
+	String src = sb.toString() ;
+	
+	org.eclipse.jdt.internal.compiler.ast.Statement s = getInitExpression(src) ;
+	CodeExpressionRef exp = new CodeExpressionRef(s,mr,mr.getOffset()-CLASS_PREFIX.length()) ;
+	//exp.setState(exp.STATE_EXIST|exp.STATE_NO_OP|exp.STATE_IN_SYNC|exp.STATE_SRC_LOC_FIXED) ;
+	exp.clearAllFlags();
+	exp.setState(CodeExpressionRef.STATE_EXIST, true);
+	exp.setState(CodeExpressionRef.STATE_NO_OP, true);
+	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
+	exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
+	
+	// add it into the BDM
+	exp.setBean(fBeanPart) ;
+	fExpr = exp ;
+	
+	return fExpr ;	
+	
 }
 
 /**

@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: ShellMethodTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a create method for a Shell object
@@ -21,6 +21,6 @@
 	 *
 	 */    
 	private void <%=info.fmethodName%> () {
-		<%=info.fbeanType%> <%=info.fbeanName%> = new <%=info.fbeanType%>();
+		<%=info.fbeanName%> = new <%=info.fbeanType%>();
 	}
  

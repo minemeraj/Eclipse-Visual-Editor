@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-24 01:08:29 $ 
  */
 
 import java.util.*;
@@ -168,13 +168,12 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 	}
 }
 
-/**
- *  Create a NOop expression reference for the initializationn expression..
- */
-CodeExpressionRef createInitExpression(BeanMethodTemplate mt,BeanPart bean) {
+
+CodeExpressionRef createInitExpression(BeanPart bean) {
 	ExpressionRefFactory eg = new ExpressionRefFactory(bean,null) ;
-	return eg.createInitExpression(mt) ;
+	return eg.createInitExpression() ;
 }
+
 
 /**
  * Parent Child relationship may be aggregated by a middle object (e.g., Container Constraint)
@@ -240,7 +239,7 @@ public String generateInLine(CodeMethodRef method,String beanName, List kids) th
     
    StringBuffer sb = new StringBuffer () ;
     
-   CodeExpressionRef initExp = createInitExpression(template,bp) ;
+   CodeExpressionRef initExp = createInitExpression(bp) ;
    // Allow the expression sorted to find a nice spot for this one
    initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
    initExp.setOffset(-1) ;
@@ -290,7 +289,7 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
 //    }
     StringBuffer sb = new StringBuffer () ;
     sb.append (template.getPrefix()) ;
-
+    
 
      if (fMethodRef.getExpressions() != null && fMethodRef.getExpressions().hasNext())
         throw new CodeGenException("Init JCMMethod already has expressions in it") ;     //$NON-NLS-1$
@@ -302,8 +301,10 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
 //        shadowExprList.add(itr.next()) ;
 //    for (int i=0; i<shadowExprList.size(); i++) 
 //        fMethodRef.removeExpressionRef((CodeExpressionRef)shadowExprList.get(i)) ;
-        
-    createInitExpression(template,bp) ;
+
+    // Init Expression will use the method's content
+    method.setContent(template.getPrefix()+template.getPostfix()) ;
+    createInitExpression(bp) ;
 //    
 //    // Add back the internal expressions, if any 
 //    for (int i=0; i<shadowExprList.size(); i++) {
