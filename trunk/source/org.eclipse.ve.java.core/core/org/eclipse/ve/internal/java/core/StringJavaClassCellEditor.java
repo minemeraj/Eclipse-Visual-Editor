@@ -11,15 +11,16 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.propertysheet.PropertysheetMessages;
 /**
  * Cell editor for Strings that are Beans.
  */
@@ -78,7 +79,7 @@ protected String isCorrectString(String value) {
 
 public void setData(Object data) {
 	super.setData(data);
-	setJavaType(JavaClassImpl.reflect("java.lang.String", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
+	setJavaType(JavaRefFactory.eINSTANCE.reflectType("java.lang.String", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
 }
 }
 

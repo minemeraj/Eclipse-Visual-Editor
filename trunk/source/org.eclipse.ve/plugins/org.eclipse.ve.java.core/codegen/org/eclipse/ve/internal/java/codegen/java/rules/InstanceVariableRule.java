@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.*;
@@ -19,10 +19,11 @@ import java.util.*;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
@@ -47,7 +48,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		for (int i = 0; i < InstanceVariableCreationRule.internalTypes.length; i++) {
 			EClassifier iClass;
 			try {
-				iClass = JavaClassImpl.reflect(InstanceVariableCreationRule.internalTypes[i], di.getModelResourceSet());
+				iClass = JavaRefFactory.eINSTANCE.reflectType(InstanceVariableCreationRule.internalTypes[i], di.getModelResourceSet());
 			} catch (Exception e) {
 				continue;
 			}
@@ -90,7 +91,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 					return true; // ignore IvjEventHandler and such //$NON-NLS-1$
 
 				ResourceSet rs = di.getModelResourceSet();
-				EClassifier meta = (EClassifier) org.eclipse.jem.java.impl.JavaClassImpl.reflect(type, rs);
+				EClassifier meta = JavaRefFactory.eINSTANCE.reflectType(type, rs);
 
 				String pre = InstanceVariableCreationRule.getPrefix(meta, rs);
 				if (pre == null || pre.length() == 0)
@@ -140,7 +141,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		if (t == null)
 			return false;
 		try {
-			EClassifier iClass = JavaClassImpl.reflect(t, di.getModelResourceSet());
+			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(t, di.getModelResourceSet());
 			for (Iterator iterator = utilClasses.iterator(); iterator.hasNext();) {
 				JavaClass uc = (JavaClass) iterator.next();
 				if (uc.isAssignableFrom(iClass)) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 
@@ -51,7 +51,7 @@ import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaRefFactory;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -128,7 +128,7 @@ static public String tokensToString(char tokens[][]) {
  */
 public  static IJavaInstance  createInstance (String instanceType,ResourceSet rs) throws CodeGenException {
   
-  JavaHelpers iClass =  JavaClassImpl.reflect(instanceType, rs);
+  JavaHelpers iClass =  JavaRefFactory.eINSTANCE.reflectType(instanceType, rs);
   IJavaInstance inst = (IJavaInstance) iClass.getEPackage().getEFactoryInstance().create(iClass) ;
   return inst ;  
 }
@@ -146,7 +146,7 @@ public static IJavaInstance createInstance(String instanceType, IDiagramModelIns
 
 public static EClassifier getMetaClass (String qualifiedName, IDiagramModelInstance cm) {
      if (cm.getModelResourceSet() == null || qualifiedName == null) return null ;
-     return  JavaClassImpl.reflect(qualifiedName, cm.getModelResourceSet());
+     return  JavaRefFactory.eINSTANCE.reflectType(qualifiedName, cm.getModelResourceSet());
 }
 
 /**

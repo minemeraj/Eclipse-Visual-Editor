@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.choosebean;
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.*;
@@ -82,7 +82,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	private ResourceSet resourceSet;
 	private IJavaProject project;
 	private IPackageFragment pkg;
-	private IJavaElement file;
 	private java.util.List selectionHistory;
 	
 	private IJavaSearchScope scope = null;
@@ -441,7 +440,6 @@ public class ChooseBeanDialog extends TwoPaneElementSelector {
 	
 	public ChooseBeanDialog(Shell shell, IFile file, ResourceSet resourceSet, int choice, boolean disableOthers){
 		this(shell, (IPackageFragment) JavaCore.create(file).getParent(), choice, disableOthers);
-		this.file = JavaCore.create(file);
 		this.resourceSet = resourceSet;
 	}
 	

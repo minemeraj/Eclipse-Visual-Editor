@@ -11,32 +11,35 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
-import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 public class InstanceVariableCreationRule implements IInstanceVariableCreationRule {
 
@@ -61,14 +64,14 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		ArrayList a = new ArrayList();
 		org.eclipse.ve.internal.java.core.JavaVEPlugin.log("InstanceVariableCreationRule: loading cache", org.eclipse.jem.internal.core.MsgLogger.LOG_FINE); //$NON-NLS-1$
 		for (int i = 0; i < internalTypes.length; i++) {
-			JavaHelpers sType = JavaClassImpl.reflect(internalTypes[i], rs);
+			JavaHelpers sType = JavaRefFactory.eINSTANCE.reflectType(internalTypes[i], rs);
 			if (sType == null)
 				throw new IllegalArgumentException("Invalid Type"); //$NON-NLS-1$
 			a.add(sType);
 		}
 		internalHelpers = a;
 
-		fComponentMeta = JavaClassImpl.reflect("java.awt.Component", rs); //$NON-NLS-1$
+		fComponentMeta = JavaRefFactory.eINSTANCE.reflectType("java.awt.Component", rs); //$NON-NLS-1$
 
 		fRS = rs;
 		return internalHelpers;

@@ -11,22 +11,21 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.IActionFilter;
-
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.ui.IActionFilter;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 /**
  * This action filter is used by EditParts that implement IJavaBeanEditPart
@@ -104,7 +103,7 @@ public class JavaBeanActionFilter implements IActionFilter {
 		if (name.equals(BEAN_TYPE_STRING) && ((EditPart) target).getModel() instanceof IJavaInstance) {
 			// Really don't like fluffing it up. But that is the best way because isInstance tests in java model land are complicated.
 			// Besides it only will fluff it up once per project and find that it is invalid only once. So following tests will be quicker.
-			EClassifier type = JavaClassImpl.reflect(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain((EditPart)target)));
+			EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain((EditPart)target)));
 			if (type != null)
 				return type.isInstance(((EditPart) target).getModel());
 		} else if (name.equals(PROPERTY_STRING)) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BooleanJavaCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -19,12 +19,14 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.propertysheet.*;
 import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.propertysheet.*;
 /**
  * Boolean type property editor.
  * It will default to boolean unless the initData string is "class". In that case it will
@@ -47,7 +49,7 @@ public class BooleanJavaCellEditor extends BooleanCellEditor implements IExecuta
 	public void setData(Object data) {
 		fEditDomain = (EditDomain) data;
 		if (!fIsBooleanClass) {
-			fBooleanHelper = JavaClassImpl.reflect("boolean", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
+			fBooleanHelper = JavaRefFactory.eINSTANCE.reflectType("boolean", JavaEditDomainHelper.getResourceSet(fEditDomain)); //$NON-NLS-1$
 			// Set into the items the data types for boolean.
 			setItems(getDisplayStrings(),
 				new Object[] {
@@ -55,7 +57,7 @@ public class BooleanJavaCellEditor extends BooleanCellEditor implements IExecuta
 					BeanUtilities.createJavaObject(fBooleanHelper, JavaEditDomainHelper.getResourceSet(fEditDomain), "false") //$NON-NLS-1$
 				});
 		} else
-			fBooleanHelper = JavaClassImpl.reflect("java.lang.Boolean", JavaEditDomainHelper.getResourceSet(fEditDomain));		 //$NON-NLS-1$
+			fBooleanHelper = JavaRefFactory.eINSTANCE.reflectType("java.lang.Boolean", JavaEditDomainHelper.getResourceSet(fEditDomain));		 //$NON-NLS-1$
 	}
 	
 	protected String isCorrectObject(Object value) {

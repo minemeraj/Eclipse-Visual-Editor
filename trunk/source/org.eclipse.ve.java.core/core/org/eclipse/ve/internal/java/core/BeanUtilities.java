@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,7 +21,7 @@ import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaRefFactory;
 
 public class BeanUtilities {
 	/**
@@ -36,7 +36,7 @@ public class BeanUtilities {
 		String qualifiedClassName,
 		ResourceSet aResourceSet,
 		String javaInitializationString) {
-		return createJavaObject(JavaClassImpl.reflect(qualifiedClassName, aResourceSet), aResourceSet, javaInitializationString);
+		return createJavaObject(JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, aResourceSet), aResourceSet, javaInitializationString);
 	}
 
 	/**

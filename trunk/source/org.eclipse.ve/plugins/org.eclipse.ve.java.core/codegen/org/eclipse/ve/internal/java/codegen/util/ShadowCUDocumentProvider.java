@@ -17,11 +17,10 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ShadowCUDocumentProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -29,16 +28,9 @@ import org.eclipse.core.internal.filebuffers.TextFileBufferManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IProblemRequestor;
 import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.*;
-import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.CompilationUnitDocumentProvider2;
-import org.eclipse.jdt.internal.ui.javaeditor.filebuffers.DocumentAdapter2;
 import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.IFileEditorInput;

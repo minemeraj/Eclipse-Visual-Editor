@@ -11,15 +11,15 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaRefFactory;
 /**
  * Cell Editor for Insets Beans.
  */
@@ -76,7 +76,7 @@ protected String isCorrectString(String text) {
 
 public void setData(Object data) {
 	super.setData(data);
-	setJavaType(JavaClassImpl.reflect("java.awt.Insets", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
+	setJavaType(JavaRefFactory.eINSTANCE.reflectType("java.awt.Insets", JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
 }
 
 /**

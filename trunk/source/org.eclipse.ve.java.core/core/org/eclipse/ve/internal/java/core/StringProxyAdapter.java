@@ -11,15 +11,16 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.jem.java.JavaParameter;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaParameter;
+import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.impl.JavaClassImpl;
 
 public class StringProxyAdapter extends BeanProxyAdapter {
 	
@@ -57,7 +58,7 @@ protected IBeanProxy instantiateWithString(IBeanTypeProxy targetClass, String in
 		// Put a bandAid for the time being...
 		boolean sGetString = false ;  // is there a static getString() method
 		String className = initString.substring(0,indexOfGetString) ;
-		org.eclipse.jem.java.JavaHelpers h = JavaClassImpl.reflect(className,(EObject)target) ;
+		org.eclipse.jem.java.JavaHelpers h = JavaRefFactory.eINSTANCE.reflectType(className,(EObject)target) ;
 		if (h instanceof JavaClassImpl) {
 			 JavaClassImpl clazz = (JavaClassImpl) h ;	
 			 for (Iterator itr=clazz.getMethodsExtended().iterator(); itr.hasNext();) {			 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-12 21:44:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.*;
@@ -54,7 +54,7 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	 * @see IBeanProxyHost#releaseBeanProxy()
 	 */
 	public void releaseBeanProxy() {
-		if (getBeanProxy() != null && getBeanProxy().isValid()) {
+		if (ownsProxy && getBeanProxy() != null && getBeanProxy().isValid()) {
 			getBeanProxy().getProxyFactoryRegistry().releaseProxy(getBeanProxy());
 			// Give it a chance to clean up
 		}

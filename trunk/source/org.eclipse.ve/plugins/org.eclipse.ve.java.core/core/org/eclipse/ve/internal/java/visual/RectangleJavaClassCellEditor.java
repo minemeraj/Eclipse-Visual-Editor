@@ -11,18 +11,20 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.StringTokenizer;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.core.*;
-
-import org.eclipse.core.runtime.*;
-import org.eclipse.draw2d.geometry.Rectangle;
 /**
  * Cell Editor for Rectangle Beans.
  */
@@ -83,7 +85,7 @@ protected String isCorrectString(String text) {
 
 public void setData(Object data) {
 	super.setData(data);
-	setJavaType(JavaClassImpl.reflect(rectangleClassName, JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
+	setJavaType(JavaRefFactory.eINSTANCE.reflectType(rectangleClassName, JavaEditDomainHelper.getResourceSet(fEditDomain))); //$NON-NLS-1$
 }
 
 /**

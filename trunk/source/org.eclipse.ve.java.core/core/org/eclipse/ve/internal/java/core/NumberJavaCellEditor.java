@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: NumberJavaCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.text.MessageFormat;
@@ -19,12 +19,14 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.propertysheet.*;
 import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.propertysheet.*;
 /**
  * Cell Editor for Integer beans
  */
@@ -91,7 +93,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData 
 	
 	public void setData(Object data) {
 		fEditDomain = (EditDomain) data;
-		fNumberType = JavaClassImpl.reflect(fTypeName, JavaEditDomainHelper.getResourceSet(fEditDomain));
+		fNumberType = JavaRefFactory.eINSTANCE.reflectType(fTypeName, JavaEditDomainHelper.getResourceSet(fEditDomain));
 	}
 	
 

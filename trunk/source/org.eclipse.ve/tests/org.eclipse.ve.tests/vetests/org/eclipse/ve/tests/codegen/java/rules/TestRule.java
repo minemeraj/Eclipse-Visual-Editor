@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-13 21:12:22 $ 
  */
 
 import java.util.*;
@@ -21,14 +21,15 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 
 public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 
@@ -45,7 +46,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		utilityRS = di.getModelResourceSet();
 		internalsCache = null;
 		for (int i = 0; i < InstanceVariableCreationRule.internalTypes.length; i++) {
-			EClassifier iClass = JavaClassImpl.reflect(InstanceVariableCreationRule.internalTypes[i], di.getModelResourceSet());
+			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(InstanceVariableCreationRule.internalTypes[i], di.getModelResourceSet());
 			utilityClasses.add(iClass);
 		}
 		return utilityClasses;
@@ -72,7 +73,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 					return true;
 
 				ResourceSet rs = di.getModelResourceSet();
-				EClassifier meta = JavaClassImpl.reflect(type, rs);
+				EClassifier meta = JavaRefFactory.eINSTANCE.reflectType(type, rs);
 
 				String pre = InstanceVariableCreationRule.getPrefix(meta, rs);
 				if (pre == null || pre.length() == 0)
@@ -123,7 +124,7 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 		if (t == null)
 			return false;
 		try {
-			EClassifier iClass = JavaClassImpl.reflect(t, di.getModelResourceSet());
+			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(t, di.getModelResourceSet());
 			for (Iterator iterator = utilClasses.iterator(); iterator.hasNext();) {
 				JavaClass uc = (JavaClass) iterator.next();
 				if (uc.isAssignableFrom(iClass)) {

@@ -11,14 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-13 21:11:52 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,18 +27,19 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.core.MsgLogger;
-import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.TypeKind;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.java.core.IAllocationAdapter.AllocationException;
+
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
+
+import org.eclipse.ve.internal.java.core.IAllocationAdapter.AllocationException;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
@@ -938,7 +937,7 @@ protected void setupBeanProxy(IBeanProxy beanProxy) {
 		String qualifiedClassName = beanProxy.getTypeProxy().getTypeName();
 		JavaClass currentType = (JavaClass) ((IJavaInstance) target).getJavaType();
 		if (!currentType.getQualifiedNameForReflection().equals(qualifiedClassName)) {
-			JavaClass javaClass = (JavaClass) JavaClassImpl.reflect(qualifiedClassName, currentType.eResource().getResourceSet());
+			JavaClass javaClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, currentType.eResource().getResourceSet());
 			// Only perform the change if the new type is assignable to the old type, otherwise leave the old type alone.
 			if (currentType.isAssignableFrom(javaClass)) {
 				if (javaClass.getKind() == TypeKind.UNDEFINED_LITERAL)
