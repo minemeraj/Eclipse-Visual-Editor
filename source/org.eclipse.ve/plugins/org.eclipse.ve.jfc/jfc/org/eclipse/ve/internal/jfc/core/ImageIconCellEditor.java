@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2004-05-20 14:56:03 $ 
+ *  $Revision: 1.5 $  $Date: 2004-05-25 02:34:52 $ 
  */
 
 import org.eclipse.jdt.core.dom.*;
@@ -42,7 +42,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$
-	private static final String IMAGE_ICON_CLASSNAME = "javax.swing.ImageIcon";
+	private static final String IMAGE_ICON_CLASSNAME = "javax.swing.ImageIcon"; //$NON-NLS-1$
 
 	public ImageIconCellEditor(Composite parent) {
 		super(parent);
@@ -97,14 +97,14 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 			}
 		}
 		
-		return "";	// Don't know how to handle if not an ParseTree allocation.
+		return "";	// Don't know how to handle if not an ParseTree allocation. //$NON-NLS-1$
 	}
 	
 	/**
 	 * getJavaInitializationString method comment.
 	 */
 	public String getJavaInitializationString() {
-		return "new " + IMAGE_ICON_CLASSNAME + '(' + path + ")"; //$NON-NLS-1$
+		return "new " + IMAGE_ICON_CLASSNAME + '(' + path + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected void updateContents(Object aValue) {
