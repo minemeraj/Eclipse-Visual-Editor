@@ -10,20 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-03-09 15:36:24 $ 
+ *  $Revision: 1.4 $  $Date: 2005-03-16 23:03:34 $ 
  */
 package org.eclipse.ve.internal.swt;
+
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
-
 import org.eclipse.ve.internal.java.core.*;
 
 /**
@@ -87,5 +86,18 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 		if (newTarget != null) {
 			sf_columns = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TABLE_COLUMNS);
 		}
+	}
+
+	public void releaseBeanProxy() {
+		// Need to release all of the table columns.  This is because they will be implicitly disposed anyway when super
+		// gets called because the target VM will dispose them as children
+		List columns = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_columns);
+		Iterator iter = columns.iterator();
+		while(iter.hasNext()){
+			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)iter.next());
+			if (value != null)
+				value.releaseBeanProxy();
+		}
+		super.releaseBeanProxy();
 	}
 }
