@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualComponent.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-29 02:41:12 $ 
  */
 
 
@@ -49,4 +49,6 @@ public interface IVisualComponent extends IImageNotifier {
 	 * for component changes.
 	 */
 	public void removeComponentListener(IVisualComponentListener aListener);
+	
+	public boolean hasImageListeners();	
 }

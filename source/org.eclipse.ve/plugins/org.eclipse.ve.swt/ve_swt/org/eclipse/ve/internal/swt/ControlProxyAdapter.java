@@ -27,6 +27,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -38,13 +39,13 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.RectangleJavaClassCellEditor;
 
-public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
+public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent , IControlProxyHost {
 	
 	protected List fControlListeners = null; // Listeners for IComponentNotification.
 	protected ControlManager fControlManager; // The listener on the IDE	
 	protected ImageNotifierSupport imSupport;	
 	public IMethodProxy environmentFreeFormHostMethodProxy;
-	protected CompositeProxyAdapter parentProxyAdapter;
+	protected IControlProxyHost parentProxyAdapter;
 	protected EReference sf_layoutData;
 	protected EStructuralFeature  sfComponentBounds;
 	
@@ -303,20 +304,21 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					// Still live at when invoked later.
 					// Go up the chain and find all image listeners.
 					List allImageListeners = new ArrayList(5);
-					ControlProxyAdapter nextParentBean = parentProxyAdapter;
-					ControlProxyAdapter parentBean = ControlProxyAdapter.this;
+					IVisualComponent nextParentBean = (IVisualComponent) parentProxyAdapter;
+					IVisualComponent parentBean = ControlProxyAdapter.this;
 					if (parentBean.hasImageListeners())
 						allImageListeners.add(parentBean);
 					while (nextParentBean != null) {
 						parentBean = nextParentBean;
-						if (parentBean.hasImageListeners())
+						if (parentBean.hasImageListeners()) {
 							allImageListeners.add(parentBean);
-						nextParentBean = parentBean.parentProxyAdapter;
+						}
+						nextParentBean = (IVisualComponent) ((IControlProxyHost)parentBean).getParentProxyHost();
 					}
 					// Now refresh all of the components that notify.
 					Iterator listeners = allImageListeners.iterator();
 					while (listeners.hasNext()) {
-						((ControlProxyAdapter) listeners.next()).refreshImage();
+						((IVisualComponent) listeners.next()).refreshImage();
 					}
 				}
 			}
@@ -324,9 +326,10 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		childValidated(this);		
 	}
 	
-	public void childValidated(ControlProxyAdapter childProxy) {
-		if (parentProxyAdapter != null)
-			parentProxyAdapter.childValidated(childProxy);
+	public void childValidated(IControlProxyHost childProxy) {
+		if (parentProxyAdapter != null){
+			((IControlProxyHost)parentProxyAdapter).childValidated(childProxy);
+		}
 	}
 		
 	public void setTarget(Notifier newTarget) {
@@ -348,7 +351,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		}
 	}
 
-	public void setParentProxyHost(CompositeProxyAdapter adapter) {
+	public void setParentProxyHost(IControlProxyHost adapter) {
 		parentProxyAdapter = adapter;
 	}
 
@@ -414,4 +417,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		}
 		super.applied(as, newValue, position);
 		}
+
+	public IControlProxyHost getParentProxyHost() {
+		return parentProxyAdapter;
+	}
 }
