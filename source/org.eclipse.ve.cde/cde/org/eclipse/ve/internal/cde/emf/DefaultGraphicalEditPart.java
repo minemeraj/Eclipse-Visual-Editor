@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:07 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-23 20:26:41 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.draw2d.*;
@@ -45,8 +46,14 @@ public class DefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 				(EObject) getModel(),
 				EditDomain.getEditDomain(this),
 				new DefaultLabelProviderNotifier.IDefaultLabelProviderListener() {
-					public void refreshLabel(ILabelProvider provider) {
-						DefaultGraphicalEditPart.this.refreshVisuals(provider);
+					public void refreshLabel(final ILabelProvider provider) {
+						CDEUtilities.displayExec(DefaultGraphicalEditPart.this, new Runnable() {
+
+							public void run() {
+								if (isActive())
+									DefaultGraphicalEditPart.this.refreshVisuals(provider);
+							}
+						});
 					}
 				},
 				ClassDescriptorDecoratorPolicy.getPolicy(this).getLabelProvider(((EObject) getModel()).eClass()));
