@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-07-09 11:01:45 $ 
+ *  $Revision: 1.4 $  $Date: 2004-07-27 15:33:54 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -199,7 +199,7 @@ public class ToolTipAssistFactory {
 			if(errorExists){
 				figure.add(new Figure(){
 					public Dimension getPreferredSize(int wHint, int hHint) {
-						return new Dimension(300,5);
+						return new Dimension(550,5);
 					}
 					protected void paintClientArea(Graphics graphics) {
 						super.paintClientArea(graphics);

@@ -7,11 +7,12 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-06-29 18:20:33 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-07-27 15:34:00 $
  */
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -382,5 +383,21 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	 */
 	public EStructuralFeature getSfDirectEditProperty() {
 		return sfDirectEditProperty;
+	}
+
+	/**
+	 * Lighten this figure excluding the child figures
+	 */
+	public void lightenExcluding(List textFieldEditParts) {
+		if(true)return;
+		// Get the figures for each of the edit parts
+		imageFigureController.addLightenFigure(getFigure());
+		Iterator editParts = textFieldEditParts.iterator();
+		while(editParts.hasNext()){
+			IFigure figure = ((GraphicalEditPart)editParts.next()).getFigure();
+			figure.setOpaque(true);
+			figure.setBackgroundColor(ColorConstants.yellow);
+//			imageFigureController.removeLightenFigure(figure);
+		}
 	}
 }
