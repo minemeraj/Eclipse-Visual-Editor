@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-27 16:36:04 $ 
+ *  $Revision: 1.2 $  $Date: 2004-02-02 21:14:23 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -25,6 +25,8 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
+import org.eclipse.jem.internal.proxy.initParser.MethodHelper;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
@@ -91,17 +93,16 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutMana
  * @since 1.0.0
  */
 public static EditPolicy getLayoutPolicy(Class layoutInputPolicyClass, org.eclipse.ve.internal.cde.core.ContainerPolicy policy) {
-	EditPolicy layoutPolicy =  null;
+	EditPolicy layoutPolicy = null;
 	try {
 		// See if there is a ctor that takes an IContainerInputPolicyHelper, and if there is,
 		// use that ctor with the helper assigned to this view object.
 		Constructor ctor = null;
-		try {
-			ctor = layoutInputPolicyClass.getConstructor(new Class[] {org.eclipse.ve.internal.cde.core.ContainerPolicy.class});
-			layoutPolicy = (EditPolicy) ctor.newInstance(new Object[] {policy});
-		} catch (NoSuchMethodException e) {
+		ctor = MethodHelper.findCompatibleConstructor(layoutInputPolicyClass, new Class[] { policy.getClass()});
+		if (ctor != null)
+			layoutPolicy = (EditPolicy) ctor.newInstance(new Object[] { policy });
+		else
 			layoutPolicy = (EditPolicy) layoutInputPolicyClass.newInstance();
-		}
 	} catch (Throwable e) {
 		JavaVEPlugin.log("Unable to create the layout policy", MsgLogger.LOG_WARNING); //$NON-NLS-1$
 		JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);

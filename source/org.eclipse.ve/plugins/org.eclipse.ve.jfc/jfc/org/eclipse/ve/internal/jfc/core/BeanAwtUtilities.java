@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-27 16:36:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-02-02 21:14:20 $ 
  */
 
 import java.util.List;
@@ -396,7 +396,9 @@ public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentM
  * Note: if containerProxy is null, then editdomain can be null.
  */
 public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(IBeanProxy containerProxy, EditDomain domain) {
-
+	if (containerProxy == null)
+		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+	
 	IBeanProxy layoutManagerProxy = invoke_getLayout(containerProxy);
 	if(layoutManagerProxy == null) return new NullLayoutPolicyFactory(); // There is nothing we can check against, so we hardcode null.
 	
@@ -425,7 +427,10 @@ private static ILayoutPolicyFactory getDefaultLayoutPolicyFactory(EClassifier la
  * @since 1.0.0
  */
 public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClassifier classifier, EditDomain editDomain) {
-	// TODO Auto-generated method stub
+	if (classifier == null)
+		return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+	if (!(classifier instanceof JavaClass))
+		return null;	// Not a java class.
 	ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(classifier, editDomain);
 	if(layoutPolicyFactory == null){
 		return getDefaultLayoutPolicyFactory(classifier);
