@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-27 01:12:06 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-28 21:54:07 $ 
  */
 
 import java.util.Iterator;
@@ -63,42 +63,46 @@ public void insertContentToDocument() throws CodeGenException {
  */   
 public CodeExpressionRef createFromJVEModel(Object[] args) throws CodeGenException {
    	
-      	if (fExpr != null) return fExpr ;
-      	if (getExistingExpressionRef(args) != null) 
-      	  throw new CodeGenException("Expression already exists") ;  	    //$NON-NLS-1$
-   	   
-   	CodeMethodRef mr = fBeanPart.getInitMethod() ;
-	   	CodeExpressionRef exp = new CodeExpressionRef(mr,fBeanPart) ;
-	   	exp.setArguments(args) ;
-	   	//exp.setState(exp.STATE_EXIST) ;
-	   	exp.clearAllFlags();
-	   	exp.setState(CodeExpressionRef.STATE_EXIST, true);
-	   	exp.generateSource(fSF) ;	   
-	   	if((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) //exp.getState() == exp.STATE_NOT_EXISTANT)
-	      return null ;
-	      
-	   fExpr = exp ;
-try {	   
-	   mr.updateExpressionOrder() ; 	    
-}
-catch (Throwable e) {
-    JavaVEPlugin.log(e, MsgLogger.LOG_WARNING) ;
-    Iterator itr = mr.getExpressions() ;
-    CodeExpressionRef prev =null ;
-    
-    while (itr.hasNext()) {
-        CodeExpressionRef x = (CodeExpressionRef) itr.next() ;
-        
-        if (x.equals(exp)) break ;                
-        prev = x ;
-    }
-    if (prev == null) prev = (CodeExpressionRef) itr.next() ;
-    exp.setOffset(prev.getOffset()+prev.getLen()) ;
-    
-    // TODO  Remove this try{}catch{} block : CDEHack.fixMe("remove this try") ; 
-}
-	   return exp ;   	
-}
+      	if (fExpr != null)
+			return fExpr;
+		if (getExistingExpressionRef(args) != null)
+			throw new CodeGenException("Expression already exists"); //$NON-NLS-1$
+
+		CodeMethodRef mr = fBeanPart.getInitMethod();
+		CodeExpressionRef exp = new CodeExpressionRef(mr, fBeanPart);
+		exp.setArguments(args);
+		//exp.setState(exp.STATE_EXIST) ;
+		exp.clearAllFlags();
+		exp.setState(CodeExpressionRef.STATE_EXIST, true);
+		exp.generateSource(fSF);
+		if ((!exp.isAnyStateSet()) || exp.isStateSet(CodeExpressionRef.STATE_NOT_EXISTANT)) //exp.getState()
+																							// ==
+																							// exp.STATE_NOT_EXISTANT)
+			return null;
+
+		fExpr = exp;
+		try {
+			mr.updateExpressionOrder();
+		} catch (Throwable e) {
+			JavaVEPlugin.log(e, MsgLogger.LOG_WARNING);
+			Iterator itr = mr.getExpressions();
+			CodeExpressionRef prev = null;
+
+			while (itr.hasNext()) {
+				CodeExpressionRef x = (CodeExpressionRef) itr.next();
+
+				if (x.equals(exp))
+					break;
+				prev = x;
+			}
+			if (prev == null)
+				prev = (CodeExpressionRef) itr.next();
+			exp.setOffset(prev.getOffset() + prev.getLen());
+
+			// TODO Remove this try{}catch{} block : CDEHack.fixMe("remove this try") ;
+		}
+		return exp;
+	}
    
       
    

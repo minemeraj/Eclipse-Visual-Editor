@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.7 $  $Date: 2004-01-27 01:12:06 $ 
+ *  $Revision: 1.8 $  $Date: 2004-01-28 21:54:07 $ 
  */
 
 import java.util.*;
@@ -41,6 +41,7 @@ protected   String            freturnType ;
 protected   String            fName ;
 protected   String            fMethodName ;
 protected   String[]          fComments = null ;
+private     boolean           fsourceAppended = false ;
 
 	
 public MethodTextGenerator (EObject component, IBeanDeclModel model)  {
@@ -115,6 +116,9 @@ protected void appendNewSource(StringBuffer buf,BeanPart bean, List kids) throws
  * 
  */
 public void generateExpressionsContent() throws CodeGenException {
+	
+	if (fsourceAppended) return ;
+	
 	BeanPart bp = fModel.getABean(fComponent) ;
 	BeanDecoderAdapter bda = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(fComponent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 	
@@ -166,6 +170,7 @@ protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boole
 			buf.append(src);
 		}
 	}
+	fsourceAppended=true ;
 }
 
 

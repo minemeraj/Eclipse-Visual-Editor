@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.8 $  $Date: 2004-01-24 01:08:29 $ 
+ *  $Revision: 1.9 $  $Date: 2004-01-28 21:54:07 $ 
  */
 
 import java.util.*;
@@ -198,6 +198,7 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
     // Workaround, as the create method may create a method which include other comments,etc.
     fixOffsetsIfNeeded(newMethod,mref) ;
     mref.setGenerationRequired(false) ;
+    mgen.generateExpressionsContent();
 }
 
 /**

@@ -10,18 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-28 00:47:03 $ 
+ *  $Revision: 1.2 $  $Date: 2004-01-28 21:54:07 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.core.MsgLogger;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
+import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
+import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
  
 /**
@@ -41,6 +50,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	protected   String[]			fmethodArgs = null ;
 	protected   String[]		fbeanInitArgs = null ;
 	protected   IMethodTemplate fMethodTemplate = null ;
+	protected	EStructuralFeature[] fignoreSFlist = null ;
 	
 	
 	public class MethodInfo {
@@ -154,5 +164,83 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	
 	protected abstract String getBasePlugin() ;	
 	protected abstract String getTemplatePath() ;
+	protected abstract String[] getIgnoreSFnameList();
+	
+	
+	private EStructuralFeature[] getIgnoreSFlist() {
+		if (fignoreSFlist!=null) return fignoreSFlist ;
+		String[] list = getIgnoreSFnameList() ;
+		if (list==null) return null ;
+		EStructuralFeature[] sfList = new EStructuralFeature[list.length] ;
+		EClass c = fComponent.eClass();
+		for (int i = 0; i < sfList.length; i++) {
+			sfList[i]=c.getEStructuralFeature(list[i]) ;
+		}
+		fignoreSFlist=sfList;
+		return fignoreSFlist;
+	}
+	
+	/**
+	 * Determine if source sould be generated for the given SF
+	 * @param sf
+	 * @return true or false
+	 * 
+	 * @since 1.0.0
+	 */
+	protected boolean ignoreSF(EStructuralFeature sf) {				
+		EStructuralFeature[] ignore = getIgnoreSFlist() ;
+		if (sf == null || ignore==null || sf.isTransient() || sf.isMany()) return true ;
+		
+		for (int i = 0; i < ignore.length; i++) {
+			if (sf.equals(ignore[i])) return true ;
+		}
+		return false ;
+	}
+	
+	/**
+	 *  Create a new Expression for a given SF
+	 */
+	protected CodeExpressionRef GenerateAttribute(EStructuralFeature sf,BeanPart bean) throws CodeGenException {		
+		ExpressionRefFactory egen = new ExpressionRefFactory(bean,sf) ;      	
+		CodeExpressionRef exp = egen.createFromJVEModel(null) ;	
+		exp.insertContentToDocument() ;
+		return exp ;
+	}
+	/**
+	 * This method will generate Expressions for all set features
+	 * that do not have codeGen adapter on them.
+	 * 
+	 * (At this time, the allocation feature is set independantly)
+	 * 
+	 * @since 1.0.0
+	 */
+	protected void generateForSetFeatures (BeanPart bean) throws CodeGenException {
+		EObject obj = bean.getEObject() ;
+		BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(obj, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;		
+		Iterator itr = ((JavaClass)obj.eClass()).getEAllStructuralFeatures().iterator();
+		while (itr.hasNext()) {
+			EStructuralFeature sf = (EStructuralFeature) itr.next();
+			if (obj.eIsSet(sf)) {
+				if (ignoreSF(sf))
+					continue;
+				// Check if source was generated already
+				if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
+					continue;
+				CodeExpressionRef newExpr = GenerateAttribute(sf, bean);
+				String src = newExpr.getContent();
+				if (src == null)
+					throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
+				JavaVEPlugin.log("\tAdding: " + src, MsgLogger.LOG_FINE); //$NON-NLS-1$
+			}
+		}
+	}
+	
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.IMethodTextGenerator#generateExpressionsContent()
+	 */
+	public void generateExpressionsContent() throws CodeGenException {
+		BeanPart b = fModel.getABean(fComponent) ;
+		generateForSetFeatures(b) ;
+	}
 }

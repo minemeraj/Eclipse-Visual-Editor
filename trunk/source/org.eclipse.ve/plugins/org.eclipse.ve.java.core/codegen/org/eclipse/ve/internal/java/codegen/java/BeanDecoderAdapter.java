@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
+ *  $Revision: 1.5 $  $Date: 2004-01-28 21:54:07 $ 
  */
 
 import java.util.*;
@@ -582,9 +582,7 @@ protected void addElement (Notification msg) {
 					}
 					b = fBean.getModel().getABean(comp);
 				}
-				else {
-					JavaVEPlugin.log("CheckMe ---> " + this +" AddElement existing Bean", MsgLogger.LOG_FINE); //$NON-NLS-1$ //$NON-NLS-2$
-				}
+				
 				args = new Object[] { comp };
 				b.addBackRef(fBean, (EReference)msg.getFeature());
 				fBean.addChild(b);
