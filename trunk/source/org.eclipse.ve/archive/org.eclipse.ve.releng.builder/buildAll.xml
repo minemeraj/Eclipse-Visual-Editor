@@ -55,11 +55,10 @@
 		</propertyfile>
 	</target>
 
-	<target name="run" depends="init">
+	<target name="run" depends="init" description="Do all, build all, test, and publish, but not push.">
 		<antcall target="buildAll" />
 		<antcall target="test" />
 		<antcall target="publish" />
-		<antcall target="push" />
 	</target>
 
 	<target name="buildAll" depends="init,buildSDK,buildRuntime,buildSDKJEM,buildRuntimeJEM,buildExamples,buildTests">
@@ -102,7 +101,7 @@
 	</target>
 	
 
-	<target name="test" unless="notest" depends="init">
+	<target name="test" unless="notest" depends="init" description="Run the tests">
 		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
 		<!--<parallel>-->
 
@@ -130,7 +129,7 @@
 		</ant>	
 	</target>	
 	
-	<target name="publish" depends="init">
+	<target name="publish" depends="init" description="Publish the results, but don't push.">
 		<property name="publish.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/publish.xml" />
 
 		<property name="indexFileName" value="index.html" />
@@ -160,10 +159,10 @@
 		<replace file="${result}/${indexFileName}" token="@gefZipURL@" value="${gefZipURL}"/>
 	</target>
 	
-	<target name="push" depends="init,pushftp,pushrsync">
+	<target name="push" depends="init,pushftp,pushrsync" description="Push the results to the download site.">
 	</target>
 	
-	<target name="pushftp" unless="nopush" if="ftppush">
+	<target name="pushftp" if="ftppush">
 		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
 		<echo message="FTP to: ${remoteDirectory}/${buildLabel}"/>	
 	  	<ftp server="download1.eclipse.org"
@@ -185,7 +184,7 @@
 		
 	</target>
 		
-	<target name="pushrsync" unless="nopush" if="rsyncpush">
+	<target name="pushrsync" if="rsyncpush">
 		<property name="remoteDirectory" value="downloads/drops"/>
 		<echo message="RSYNC to: ${remoteDirectory}/${buildLabel}"/>
 		<!-- Need to get permissions correct so that Webserver will work. -->
@@ -205,7 +204,7 @@
 		<antcall target="publishupdatesite"/>
 	</target>
 	
-	<target name="publishupdatesite" unless="nopush" if="rsyncPWFile" depends="init">
+	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
 		<!-- Publish to update site, but not push it. -->
 		<echo message="Publish the update site for the latest build."/>
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
@@ -247,7 +246,7 @@
 
 	</target>
 	
-	<target name="pushupdatesite" if="rsyncpush" unless="nopush" depends="init">
+	<target name="pushupdatesite" if="rsyncpush" depends="init">
 		<echo message="Push the update site to the download site."/>
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
