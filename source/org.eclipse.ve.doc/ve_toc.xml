@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 <toc label="Visual Editor for Java User Guide" topic="topics/tve_overview.html">
    <anchor id="anchor0000"/>
-   <topic label="Using the visual editor for Java" href="topics/tve_overview.html">
+   <topic label="Editing Java in the visual editor" href="topics/tve_overview.html">
       <anchor id="anchor0010"/>
       <topic label="About the visual editor for Java" href="topics/cve_overview.html">
          <anchor id="anchor0015"/>
@@ -101,7 +101,7 @@
             <topic label="Viewing the source for an event" href="topics/tve_events_viewsource.html"/>
          </topic>
          <anchor id="anchor0150"/>
-         <topic label="Using externalized text strings with the visual editor" href="topics/tve_external_strings.html"/>
+         <topic label="Externalizing text strings with the visual editor" href="topics/tve_external_strings.html"/>
          <topic label="Dragging and dropping with the keyboard in the visual editor" href="topics/tve_dragdrop.html"/>
          <anchor id="anchor0170"/>
       </topic>
@@ -136,8 +136,8 @@
          <anchor id="anchor0220"/>
       </topic>
       <anchor id="anchor0230"/>
-      <topic label="Migrating code from VisualAge for Java for use in the visual editor" href="topics/tve_migrating_vaj.html"/>
-      <topic label="Limitations for the Visual Editor for Java" href="topics/rve_limitations.html"/>
+      <topic label="Code migration from VisualAge for Java to the visual editor" href="topics/cve_migration_vaj.html"/>
+      <topic label="Limitations for the visual editor for Java" href="topics/rve_limitations.html"/>
       <anchor id="anchor0240"/>
    </topic>
    <anchor id="anchor9999"/>
