@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JSliderBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -474,7 +474,31 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			boolean.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JSliderMessages.getString("getUI().Name"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(SliderUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JSliderMessages.getString("setUI(SliderUI).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		BOUND, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("uI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JSliderMessages.getString("setUI(SliderUI).ui.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			javax.swing.plaf.SliderUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -539,8 +563,9 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"model", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JSliderMessages.getString("model.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JSliderMessages.getString("model.Desc"), //$NON-NLS-1$
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      		BOUND, Boolean.TRUE
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      		BOUND, Boolean.TRUE,
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// orientation
@@ -603,9 +628,19 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JSliderMessages.getString("labelTable.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JSliderMessages.getString("labelTable.Desc"), //$NON-NLS-1$
 	      		BOUND, Boolean.TRUE,
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
-	    	)	    	
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JSliderMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JSliderMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      		BOUND, Boolean.TRUE,
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextFieldBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -258,7 +258,30 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getAction()
+			super.createMethodDescriptor(getBeanClass(),"getAction",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JTextFieldMessages.getString("getAction().Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JTextFieldMessages.getString("getAction().Desc"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setAction(Action)
+			super.createMethodDescriptor(getBeanClass(),"setAction",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JTextFieldMessages.getString("setAction(Action).Name"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("action", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JTextFieldMessages.getString("setAction(Action).action.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			javax.swing.Action.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -336,7 +359,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JTextFieldMessages.getString("scrollOffset.Desc"), //$NON-NLS-1$
       	    DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
-	    	)
+	    	),
+	    	// action
+			super.createPropertyDescriptor(getBeanClass(),"action", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JTextFieldMessages.getString("action.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JTextFieldMessages.getString("action.Desc"), //$NON-NLS-1$
+			EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractButtonBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-12 18:49:57 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -333,8 +333,8 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, resAbstractButton.getString("MthdDesc.GetUI.Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Get the ButtonUI object",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE	      		
+	      		//EXPERT, Boolean.TRUE,
+	      		//OBSCURE, Boolean.TRUE	      		
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
@@ -729,11 +729,11 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 				new Object[] {
 	   			DISPLAYNAME, resAbstractButton.getString("MthdDesc.SetUI.Name"), //$NON-NLS-1$
 	      		// SHORTDESCRIPTION, "Set the Button UI",
-	      		EXPERT, Boolean.TRUE,
-	      		OBSCURE, Boolean.TRUE
+	      		//EXPERT, Boolean.TRUE,
+	      		//OBSCURE, Boolean.TRUE
 	    		}, 
 	    		new ParameterDescriptor[] {
-	    			createParameterDescriptor("ui", new Object[] { //$NON-NLS-1$
+	    			createParameterDescriptor("uI", new Object[] { //$NON-NLS-1$
 	   					DISPLAYNAME, resAbstractButton.getString("ParamDesc.SetUI.ui.Name"), //$NON-NLS-1$
 	      				// SHORTDESCRIPTION, "Button UI",
 	      				}
@@ -916,7 +916,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.Model.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE
+	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// pressedIcon
@@ -1007,7 +1007,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      				"javax.swing.SwingConstants.BOTTOM"	      			 //$NON-NLS-1$
 	    		}
 	    		}
-	    	)		
+	    	),		
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, resAbstractButton.getString("PropDesc.ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.ui.Desc"), //$NON-NLS-1$
+	      	BOUND, Boolean.TRUE,
+	      	PREFERRED, Boolean.TRUE,
+	      	EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

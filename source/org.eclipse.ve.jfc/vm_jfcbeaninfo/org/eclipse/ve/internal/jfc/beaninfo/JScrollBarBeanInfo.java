@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JScrollBarBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -346,7 +346,33 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	)		  	
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JScrollBarMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(ScrollBarUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JScrollBarMessages.getString("setUI(ScrollBarUI).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		BOUND, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("scrollBarUI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JScrollBarMessages.getString("setUI(scrollBarUI).scrollBarUI.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			javax.swing.plaf.ScrollBarUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -396,7 +422,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"model", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollBarMessages.getString("model.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollBarMessages.getString("model.Desc"), //$NON-NLS-1$
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// orientation
@@ -438,7 +465,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollBarMessages.getString("visibleAmount.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollBarMessages.getString("visibleamount.Desc"), //$NON-NLS-1$
 	    		}
-	    	)	    	
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JScrollBarMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JScrollBarMessages.getString("ui.Desc"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE
+	    		}
+	    	)
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

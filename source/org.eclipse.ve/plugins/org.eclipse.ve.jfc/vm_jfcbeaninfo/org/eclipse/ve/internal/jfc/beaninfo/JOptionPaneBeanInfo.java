@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JOptionPaneBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-31 17:09:23 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -885,7 +885,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	EXPERT, Boolean.TRUE,
 	      	OBSCURE, Boolean.TRUE	      	
 	    		}
-	    	)	
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JOptionPaneMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JOptionPaneMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      	EXPERT, Boolean.TRUE,
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

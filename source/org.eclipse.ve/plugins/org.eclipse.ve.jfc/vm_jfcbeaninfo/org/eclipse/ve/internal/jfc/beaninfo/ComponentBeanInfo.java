@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
+import java.awt.dnd.DropTarget;
 import java.beans.*;
 /**
  * BeanInfo descriptor for a standard AWT component.
@@ -1148,7 +1149,32 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
-		  	)			
+		  	),
+		  	// getDropTarget()
+			super.createMethodDescriptor(getBeanClass(),"getDropTarget",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, rescomponent.getString("MthdDesc.GetDropTarget.Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Get the drop target",
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setDropTarget(DropTarget)
+			super.createMethodDescriptor(getBeanClass(),"setDropTarget",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, rescomponent.getString("MthdDesc.SetDropTarget.Name"), //$NON-NLS-1$
+	      		// SHORTDESCRIPTION, "Set the drop target",
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("dropTarget", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, rescomponent.getString("ParamDesc.SetDropTarget.dropTarget.Name"), //$NON-NLS-1$
+	      				// SHORTDESCRIPTION, "DropTarget",
+	      				})
+	      		},
+	      		new Class[] {
+	      			DropTarget.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -1360,7 +1386,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
                     } ,
                     BOUND, Boolean.TRUE,                                   
                }
-            )
+            ),
+	    	// dropTarget
+			super.createPropertyDescriptor(getBeanClass(),"dropTarget", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, rescomponent.getString("PropDesc.DropTarget.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, rescomponent.getString("PropDesc.DropTarget.Desc"), //$NON-NLS-1$
+	      	BOUND, Boolean.TRUE,
+	      	PREFERRED, Boolean.TRUE,
+	      	EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

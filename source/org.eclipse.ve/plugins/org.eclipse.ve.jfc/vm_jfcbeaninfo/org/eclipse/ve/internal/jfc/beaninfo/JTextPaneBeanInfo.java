@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextPaneBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -257,8 +257,9 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"styledDocument", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextPaneMessages.getString("styledDocument.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextPaneMessages.getString("styledDocument.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
-	      	PREFERRED, Boolean.TRUE	      	
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	PREFERRED, Boolean.TRUE,
+			EXPERT, Boolean.TRUE
 	    		}
 	    	)
 		};

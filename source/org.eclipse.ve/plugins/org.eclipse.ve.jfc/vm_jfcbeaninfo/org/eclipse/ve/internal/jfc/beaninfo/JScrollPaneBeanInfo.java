@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JScrollPaneBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
@@ -427,21 +427,23 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("columnHeader.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("columnHeader.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// columnHeaderView
 			super.createPropertyDescriptor(getBeanClass(),"columnHeaderView", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("columnHeaderView.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("columnHeaderView.Desc"), //$NON-NLS-1$
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// horizontalScrollBar
 			super.createPropertyDescriptor(getBeanClass(),"horizontalScrollBar", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("horizontalScrollBar.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("horizontalScrollBar.Desc"), //$NON-NLS-1$
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// horizontalScrollBarPolicy
@@ -477,14 +479,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JScrollPaneMessages.getString("rowHeader.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("rowHeader.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	),
 			// rowHeaderView
 			super.createPropertyDescriptor(getBeanClass(),"rowHeaderView", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("rowHeaderView.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("rowHeaderView.Desc"), //$NON-NLS-1$
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),	    	
 	    	// validateRoot
@@ -498,7 +501,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"verticalScrollBar", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("verticalScrollBar.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("verticalScrollBar.Desc"), //$NON-NLS-1$
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// verticalScrollBarPolicy
@@ -520,7 +524,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"viewport", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("viewport.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("viewport.Desc"), //$NON-NLS-1$
-		      	DESIGNTIMEPROPERTY, Boolean.FALSE
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
 	    		}
 	    	),
 	    	// viewportBorder
@@ -536,8 +541,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("viewportView.Desc"), //$NON-NLS-1$
 		      	DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
-	    	)
-	    	
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JScrollPaneMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("ui.Desc"), //$NON-NLS-1$
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

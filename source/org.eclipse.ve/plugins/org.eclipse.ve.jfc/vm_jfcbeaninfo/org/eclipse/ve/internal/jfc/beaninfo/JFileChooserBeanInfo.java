@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JFileChooserBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -967,7 +967,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"accessory", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.accessory.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.accessory.Desc"), //$NON-NLS-1$
-				HIDDEN, Boolean.TRUE,
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// approveButtonMnemonic
@@ -1047,7 +1047,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"fileFilter", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.fileFilter.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.fileFilter.Desc"), //$NON-NLS-1$
-				HIDDEN, Boolean.TRUE,
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// fileHidingEnabled
@@ -1082,14 +1082,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"fileSystemView", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.fileSystemView.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.fileSystemView.Desc"), //$NON-NLS-1$
-				HIDDEN, Boolean.TRUE,
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// fileView
 			super.createPropertyDescriptor(getBeanClass(),"fileView", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.fileView.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.fileView.Desc"), //$NON-NLS-1$
-				HIDDEN, Boolean.TRUE,
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// font - hide it

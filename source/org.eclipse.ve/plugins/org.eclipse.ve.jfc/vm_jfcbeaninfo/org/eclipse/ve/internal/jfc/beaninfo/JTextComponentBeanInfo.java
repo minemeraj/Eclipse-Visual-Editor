@@ -11,10 +11,12 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-07-09 20:28:08 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
+
+import javax.swing.text.NavigationFilter;
 
 public class JTextComponentBeanInfo extends IvjBeanInfo {
 		
@@ -775,7 +777,33 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			java.io.Writer.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getNavigationFilter()
+			super.createMethodDescriptor(getBeanClass(),"getNavigationFilter",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JTextComponentMessages.getString("getNavigationFilter().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setNavigationFilter(NavigationFilter)
+			super.createMethodDescriptor(getBeanClass(),"setNavigationFilter",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JTextComponentMessages.getString("setNavigationFilter(NavigationFilter).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("navigationFilter", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JTextComponentMessages.getString("setNavigationFilter(NavigationFilter).navigationFilter.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+					NavigationFilter.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -809,7 +837,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JTextComponentMessages.getString("caret.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("caret.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
@@ -878,7 +906,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JTextComponentMessages.getString("keymap.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("keymap.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	DESIGNTIMEPROPERTY, Boolean.FALSE,
+	      	//DESIGNTIMEPROPERTY, Boolean.FALSE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
@@ -944,7 +972,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("text.Desc"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE
 	    		}
-	    	)	
+	    	),
+	    	// navigationFilter
+			super.createPropertyDescriptor(getBeanClass(),"navigationFilter", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JTextComponentMessages.getString("navigationFilter.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JTextComponentMessages.getString("navigationFilter.Desc"), //$NON-NLS-1$
+			EXPERT, Boolean.TRUE
+	    		}
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      	DISPLAYNAME, JTextComponentMessages.getString("ui.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, JTextComponentMessages.getString("ui.Desc"), //$NON-NLS-1$
+			EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

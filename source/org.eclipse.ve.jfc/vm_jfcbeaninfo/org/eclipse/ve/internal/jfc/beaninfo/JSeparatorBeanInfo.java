@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JSeparatorBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2004-04-19 16:34:13 $ 
+ *  $Revision: 1.4 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -77,7 +77,32 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	    		}, 
 	    		new ParameterDescriptor[] {},
 	      		new Class[] {}		    		
-		  	)
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JSeparatorMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(SeparatorUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JSeparatorMessages.getString("setUI(ScrollPaneUI).Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("ui", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JSeparatorMessages.getString("setUI(SeparatorUI).aUI.Name"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			javax.swing.plaf.SeparatorUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -106,7 +131,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"layout", new Object[] { //$NON-NLS-1$
 	      	HIDDEN, Boolean.TRUE
 	    		}
-	    	),	      			
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JSeparatorMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JSeparatorMessages.getString("ui.Desc"), //$NON-NLS-1$
+		      	//DESIGNTIMEPROPERTY, Boolean.FALSE
+				EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

@@ -11,10 +11,12 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuBarBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:49 $ 
  */
 
 import java.beans.*;
+
+import javax.swing.plaf.MenuBarUI;
 
 public class JMenuBarBeanInfo extends IvjBeanInfo {
 
@@ -230,7 +232,59 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			javax.swing.SingleSelectionModel.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getHelpMenu()
+			super.createMethodDescriptor(getBeanClass(),"getHelpMenu",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JMenuBarMessages.getString("getHelpMenu().Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("getHelpMenu().Desc") //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setHelpMenu(JMenu)
+			super.createMethodDescriptor(getBeanClass(),"setHelpMenu",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JMenuBarMessages.getString("setHelpMenu(JMenu).Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("setHelpMenu(JMenu).Desc"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("helpMenu", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JMenuBarMessages.getString("setHelpMenu(JMenu).helpMenu.Name"), //$NON-NLS-1$
+	      				SHORTDESCRIPTION, JMenuBarMessages.getString("setHelpMenu(JMenu).helpMenu.Desc"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			javax.swing.JMenu.class
+	      		}		    		
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JMenuBarMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("getUI().Desc") //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(MenuBarUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JMenuBarMessages.getString("setUI(MenuBarUI).Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("setUI(MenuBarUI).Desc"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("menuBarUI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JMenuBarMessages.getString("setUI(MenuBarUI).ui.Name"), //$NON-NLS-1$
+	      				SHORTDESCRIPTION, JMenuBarMessages.getString("setUI(MenuBarUI).ui.Desc"), //$NON-NLS-1$
+	      				})
+	      		},
+	      		new Class[] {
+	      			MenuBarUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -275,7 +329,23 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		DISPLAYNAME, JMenuBarMessages.getString("selectionModel.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JMenuBarMessages.getString("selectionModel.Desc"), //$NON-NLS-1$
 	      		EXPERT, Boolean.TRUE,
-	      		DESIGNTIMEPROPERTY, Boolean.FALSE
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+	    		}
+	    	),
+	    	// helpMenu
+			super.createPropertyDescriptor(getBeanClass(),"helpMenu", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JMenuBarMessages.getString("helpMenu.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("helpMenu.Desc"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		DESIGNTIMEPROPERTY, Boolean.FALSE //TODO - not implemented as of 1.4; check again for 1.5 (aka Java 5) + up
+	    		}
+	    	),
+	    	// selectionModel
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JMenuBarMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JMenuBarMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
 	    		}
 	    	)
 		};

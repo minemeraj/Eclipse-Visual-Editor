@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JToolBarBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-17 20:19:48 $ 
  */
 
 import java.beans.*;
@@ -224,7 +224,32 @@ public java.beans.MethodDescriptor[] getMethodDescriptors() {
 	      		new Class[] {
 	      			int.class
 	      		}		    		
-		  	)
+		  	),
+		  	// getUI()
+			super.createMethodDescriptor(getBeanClass(),"getUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JToolBarMessages.getString("getUI().Name"), //$NON-NLS-1$
+	      		EXPERT, Boolean.TRUE,
+	      		OBSCURE, Boolean.TRUE
+	    		}, 
+	    		new ParameterDescriptor[] {},
+	      		new Class[] {}		    		
+		  	),
+		  	// setUI(ToolBarUI)
+			super.createMethodDescriptor(getBeanClass(),"setUI",  //$NON-NLS-1$
+				new Object[] {
+	   			DISPLAYNAME, JToolBarMessages.getString("setUI(ToolBarUI).Name"), //$NON-NLS-1$
+	    		}, 
+	    		new ParameterDescriptor[] {
+	    			createParameterDescriptor("toolBarUI", new Object[] { //$NON-NLS-1$
+	   					DISPLAYNAME, JToolBarMessages.getString("setUI(ToolBarUI).toolBarUI.Name"), //$NON-NLS-1$
+	      				}
+	      			)
+	      		},
+	      		new Class[] {
+	      			javax.swing.plaf.ToolBarUI.class
+	      		}		    		
+		  	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
@@ -286,7 +311,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      				"javax.swing.JToolBar.HORIZONTAL", //$NON-NLS-1$
 	    		}
 	    	}
-	    	)
+	    	),
+	    	// ui
+			super.createPropertyDescriptor(getBeanClass(),"uI", new Object[] { //$NON-NLS-1$
+	      		DISPLAYNAME, JToolBarMessages.getString("ui.Name"), //$NON-NLS-1$
+	      		SHORTDESCRIPTION, JToolBarMessages.getString("ui.Desc"), //$NON-NLS-1$
+	      		BOUND, Boolean.TRUE,
+	      		EXPERT, Boolean.TRUE
+	    		}
+	    	),
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {
