@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class TabItemBeanInfo extends IvjBeanInfo {
+public class TabItemBeanInfoX extends IvjBeanInfo {
 
 private static java.util.ResourceBundle TabItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.tabitem");  //$NON-NLS-1$
 
@@ -29,20 +29,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		PropertyDescriptor aDescriptorList[] = {
 			// control
 			super.createPropertyDescriptor(getBeanClass(),"control", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, TabItemMessages.getString("null.controlDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, TabItemMessages.getString("null.controlSD"), //$NON-NLS-1$
-			}
-			),
-			// parent
-			super.createPropertyDescriptor(getBeanClass(),"parent", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, TabItemMessages.getString("null.parentDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, TabItemMessages.getString("null.parentSD"), //$NON-NLS-1$
+				DISPLAYNAME, TabItemMessages.getString("controlDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TabItemMessages.getString("controlSD"), //$NON-NLS-1$
 			}
 			),
 			// toolTipText
 			super.createPropertyDescriptor(getBeanClass(),"toolTipText", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, TabItemMessages.getString("null.toolTipTextDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, TabItemMessages.getString("null.toolTipTextSD"), //$NON-NLS-1$
+				DISPLAYNAME, TabItemMessages.getString("toolTipTextDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TabItemMessages.getString("toolTipTextSD"), //$NON-NLS-1$
 			}
 			),
 		};

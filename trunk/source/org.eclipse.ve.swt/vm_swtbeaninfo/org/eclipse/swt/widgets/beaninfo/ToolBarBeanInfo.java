@@ -29,20 +29,20 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		PropertyDescriptor aDescriptorList[] = {
 			// itemCount
 			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ToolBarMessages.getString("null.itemCountDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ToolBarMessages.getString("null.itemCountSD"), //$NON-NLS-1$
+				DISPLAYNAME, ToolBarMessages.getString("itemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ToolBarMessages.getString("itemCountSD"), //$NON-NLS-1$
 			}
 			),
 			// items
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ToolBarMessages.getString("null.itemsDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ToolBarMessages.getString("null.itemsSD"), //$NON-NLS-1$
+				DISPLAYNAME, ToolBarMessages.getString("itemsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ToolBarMessages.getString("itemsSD"), //$NON-NLS-1$
 			}
 			),
 			// rowCount
 			super.createPropertyDescriptor(getBeanClass(),"rowCount", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ToolBarMessages.getString("null.rowCountDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ToolBarMessages.getString("null.rowCountSD"), //$NON-NLS-1$
+				DISPLAYNAME, ToolBarMessages.getString("rowCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ToolBarMessages.getString("rowCountSD"), //$NON-NLS-1$
 			}
 			),
 		};

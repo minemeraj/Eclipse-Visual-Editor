@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class CoolBarBeanInfo extends IvjBeanInfo {
+public class CoolBarBeanInfoX extends IvjBeanInfo {
 
 private static java.util.ResourceBundle CoolBarMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.coolbar");  //$NON-NLS-1$
 
@@ -29,38 +29,38 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		PropertyDescriptor aDescriptorList[] = {
 			// itemCount
 			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.itemCountDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.itemCountSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("itemCountDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("itemCountSD"), //$NON-NLS-1$
 			}
 			),
 			// itemOrder
 			super.createPropertyDescriptor(getBeanClass(),"itemOrder", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.itemOrderDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.itemOrderSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("itemOrderDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("itemOrderSD"), //$NON-NLS-1$
 			}
 			),
 			// itemSizes
 			super.createPropertyDescriptor(getBeanClass(),"itemSizes", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.itemSizesDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.itemSizesSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("itemSizesDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("itemSizesSD"), //$NON-NLS-1$
 			}
 			),
 			// items
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.itemsDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.itemsSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("itemsDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("itemsSD"), //$NON-NLS-1$
 			}
 			),
 			// locked
 			super.createPropertyDescriptor(getBeanClass(),"locked", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.lockedDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.lockedSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("lockedDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("lockedSD"), //$NON-NLS-1$
 			}
 			),
 			// wrapIndices
 			super.createPropertyDescriptor(getBeanClass(),"wrapIndices", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, CoolBarMessages.getString("null.wrapIndicesDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, CoolBarMessages.getString("null.wrapIndicesSD"), //$NON-NLS-1$
+				DISPLAYNAME, CoolBarMessages.getString("wrapIndicesDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, CoolBarMessages.getString("wrapIndicesSD"), //$NON-NLS-1$
 			}
 			),
 		};

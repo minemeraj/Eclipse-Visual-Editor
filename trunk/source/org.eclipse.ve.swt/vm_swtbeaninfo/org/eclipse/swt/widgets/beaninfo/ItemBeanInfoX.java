@@ -8,7 +8,7 @@ package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
-public class ItemBeanInfo extends IvjBeanInfo {
+public class ItemBeanInfoX extends IvjBeanInfo {
 
 private static java.util.ResourceBundle ItemMessages = java.util.ResourceBundle.getBundle("org.eclipse.swt.widgets.beaninfo.item");  //$NON-NLS-1$
 
@@ -29,14 +29,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		PropertyDescriptor aDescriptorList[] = {
 			// image
 			super.createPropertyDescriptor(getBeanClass(),"image", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ItemMessages.getString("null.imageDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ItemMessages.getString("null.imageSD"), //$NON-NLS-1$
+				DISPLAYNAME, ItemMessages.getString("imageDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ItemMessages.getString("imageSD"), //$NON-NLS-1$
 			}
 			),
 			// text
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, ItemMessages.getString("null.textDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ItemMessages.getString("null.textSD"), //$NON-NLS-1$
+				DISPLAYNAME, ItemMessages.getString("textDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, ItemMessages.getString("textSD"), //$NON-NLS-1$
 			}
 			),
 		};
