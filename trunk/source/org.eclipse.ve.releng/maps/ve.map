@@ -25,6 +25,7 @@ plugin@org.eclipse.ve.java.core=S20031113a,:pserver:anonymous@dev.eclipse.org:/h
 plugin@org.eclipse.ve.propertysheet=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.jfc=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.tests=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.doc=I20031117,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
 feature@org.eclipse.jem=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
 feature@org.eclipse.jem.tests=S20031113,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
