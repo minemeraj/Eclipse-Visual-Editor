@@ -40,4 +40,13 @@ public interface IJFCFeatureMapper extends IJavaFeatureMapper {
 	public static String  LOCATION_FEATURE_NAME 	= "location" ; //$NON-NLS-1$
 	public static String  LOCATION_NAME 			= "setLocation" ; //$NON-NLS-1$
 	
+	public static String  LAYOUT_FEATURE_NAME		="layout";
+	public static String  LAYOUT_NAME				="setLayout";
+	
+	public static String  JTABLE_MODEL_FEATURE_NAME 		="model";
+	public static String  JTABLE_MODEL_NAME				="setModel";
+	
+	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_FEATURE_NAME = "autoCreateColumnsFromModel";
+	public static String  JTABLE_AUTOCREATECOLUMNSFROMMODEL_NAME = "setAutoCreateColumnsFromModel";
+	
 }
