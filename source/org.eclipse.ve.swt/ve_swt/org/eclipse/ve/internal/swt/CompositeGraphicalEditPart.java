@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-03-28 22:09:51 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-03-30 12:33:40 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -64,7 +64,8 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		// This must be done before the layout edit policy because the implicit parent can be created by the implicit edit policy 
 		createImplicitEditPolicy();
 		
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); // This is a special policy that just
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); 
+		// This is a special policy that just
 		// handles the size/position of visual
 		// components wrt/the figures. It does not
 		// handle changing size/position.
