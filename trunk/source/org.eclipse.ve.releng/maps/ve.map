@@ -19,6 +19,7 @@ plugin@org.eclipse.ve.cde=I20031030,:pserver:anonymous@dev.eclipse.org:/home/too
 plugin@org.eclipse.ve.examples=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.java.core=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.propertysheet=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.jfc=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.tests=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
 feature@org.eclipse.jem=I20031030,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
