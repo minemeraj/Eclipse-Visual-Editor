@@ -16,7 +16,7 @@ plugin@org.eclipse.jem.workbench=I20031031,:pserver:anonymous@dev.eclipse.org:/h
 
 plugin@org.eclipse.ve=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.cde=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.examples=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.examples=I20031031a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.java.core=I20031031a,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.propertysheet=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.ve.jfc=I20031031,:pserver:anonymous@dev.eclipse.org:/home/tools,

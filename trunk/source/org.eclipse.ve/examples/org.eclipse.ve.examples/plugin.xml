@@ -66,7 +66,7 @@
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
-            name="Visual Examples"
+            name="%visualExamples"
             class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:JAVA_EXAMPLE"
             id="org.eclipse.ve.examples.java.visualexamples.classpathcontainerpage">
       </classpathContainerPage>
@@ -109,7 +109,7 @@
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
-            name="Bean Developer Kit"
+            name="%beanDeveloperKit"
             class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:BDK"
             id="org.eclipse.ve.examples.java.classpathcontainerpage.bdk">
       </classpathContainerPage>
@@ -157,7 +157,7 @@
    <extension
          point="org.eclipse.jdt.ui.classpathContainerPage">
       <classpathContainerPage
-            name="Wizzo Widgets"
+            name="%wizzoWidgets"
             class="org.eclipse.ve.internal.java.wizard.ClasspathWizardPage:WIZZO_WIDGETS"
             id="com.abc.wizzowidgets.classpathcontainerpage">
       </classpathContainerPage>
