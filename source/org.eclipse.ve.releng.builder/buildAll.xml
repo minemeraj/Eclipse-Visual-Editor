@@ -1,10 +1,12 @@
 <project default="run">
 
+
 	<target name="init">
 		<property name="buildDirectory" value="${basedir}/src/eclipse" />
 		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
 		<antcall target="create.label.properties" />
 		<property file="${buildDirectory}/label.properties" />
+		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
 	</target>
 
 	<target name="create.label.properties" unless="label.properties.exists">
@@ -38,9 +40,10 @@
 		<antcall target="buildAll" />
 		<antcall target="test" />
 		<antcall target="publish" />
+		<antcall target="push" />
 	</target>
 
-	<target name="buildAll" depends="init">
+	<target name="buildAll">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
 		</ant>
@@ -55,54 +58,32 @@
 		</ant>
 	</target>
 
-	<target name="determinePlatform">
-		<condition property="isWinXP">
-			<equals arg1="winxp" arg2="${platform}"/>
-		</condition>
-	</target>
-	
-	<target name="test" depends="init,determinePlatform,testWinXP">
-	</target>
-	
-	<target name="testWinXP" if="isWinXP">
-		<!-- run just local for now. Need a better way for all build machines. -->
-		<property name="testdir" value="${basedir}/ve-testing"/>
-	  
-		<!--unzip the automated tests-->
-		<exec dir="${buildDirectory}/${buildLabel}" executable="unzip">
-			<arg line="-o -qq VE-Automated-*.zip -d ${testdir}/.." />
-		</exec>
-	
-		<copy todir="${testdir}">
-			<fileset dir="${buildDirectory}/.." includes="eclipse-SDK.zip,gef.zip,emf.zip"/>
-			<fileset dir="${buildDirectory}/${buildLabel}" includes="VE-runtime*.zip"/>
-		</copy>
-	
-		<mkdir dir="${buildDirectory}/${buildLabel}/testResults/consoleLogs"/>
-		<property name="testingproperties" value="${testdir}/testing.properties"/>
-		<echo file="${testingproperties}">
-			platform=${platform}
-		</echo>
+	<target name="test">
+		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
+		<!--<parallel>-->
 
-		<filelist dir="${buildDirectory}/${buildLabel}" files="testResults" id="results.filelist"/>		
-		<pathconvert dirsep="/" property="resultsdir" refid="results.filelist"/>
-		<echo file="${testingproperties}" append="true">
-			results=${resultsdir}
-		</echo>
-				
-		<exec dir="${testdir}" executable="cmd.exe" output="${buildDirectory}/${buildLabel}/testResults/consoleLogs/${platform}_consolelog.txt">
-			<arg line='/C runtests -vm "${vm}" -properties "${testingproperties}" all'/>
-		</exec>
+		<ant antfile="${test.xml}">
+			<property name="tester" value="${basedir}/../internalBuildTools/testConfigs/win32-local" />
+		</ant>
+
+		<!--ant antfile="${test.xml}">
+			<property name="tester" value="${basedir}/../internalBuildTools/testConfigs/win32" />
+		</ant>
+		<ant antfile="${test.xml}">
+			<property name="tester" value="${basedir}/../internalBuildTools/testConfigs/linux-gtk" />
+		</ant-->
+		<!--</parallel>-->
 	</target>
 
 	<target name="publish" depends="init">
+		<property name="publish.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/publish.xml" />
+
 		<property name="indexFileName" value="index.html" />
 		<property name="result" value="${buildDirectory}/${buildLabel}" />
 
-		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
-			<ant antfile="publish.xml">
+			<ant antfile="${publish.xml}" dir="${basedir}">
 				<property name="dropTokenList" value="%sdk%,%runtime%,%examples%,%tests%" />
-				<property name="isBuildTested" value="false" />
+				<property name="isBuildTested" value="true" />
 			</ant>
 
 	 	<!--  Insert url for supported eclipse drop-->
@@ -119,7 +100,11 @@
 		<replace file="${result}/${indexFileName}" token="@gefBuildID@" value="${gefBuildID}"/>
 		<replace file="${result}/${indexFileName}" token="@gefURL@" value="${gefURL}"/>
 		<replace file="${result}/${indexFileName}" token="@gefZipURL@" value="${gefZipURL}"/>
-
 	</target>
 	
+	<target name="push" depends="init">
+		<!--
+		FTP or rsync the entire ${buildLabel} directory to the downloads server.
+		-->
+	</target>
 </project>

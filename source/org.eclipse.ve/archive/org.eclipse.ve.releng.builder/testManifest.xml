@@ -16,26 +16,25 @@
 </zipTypes>
 
 <logFiles>
-<!-- Until we have linux too. 
-	<logFile name="org.eclipse.jem.tests_linux.gtk.xml">
-		<effectedFile id="SDK"></effectedFile>
-		<effectedFile id="RUN"></effectedFile>
-	</logFile>
+<!-- Comment out for now until we get tests on various platforms.
 	<logFile name="org.eclipse.ve.tests_linux.gtk.xml">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
 	</logFile>
--->	
-	
-	<logFile name="org.eclipse.jem.tests_winxp.xml">
+	<logFile name="org.eclipse.jem.tests_linux.gtk.xml">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
 	</logFile>
-	<logFile name="org.eclipse.ve.tests_winxp.xml">
+
+-->
+	<logFile name="org.eclipse.ve.tests_win32.xml">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
 	</logFile>
-	
+	<logFile name="org.eclipse.jem.tests_win32.xml">
+		<effectedFile id="SDK"></effectedFile>
+		<effectedFile id="RUN"></effectedFile>
+	</logFile>
 	<logFile name="plugins/org.eclipse.jem.beaninfo.ui_*/beaninfoui.jar.bin.log">
 		<effectedFile id="SDK"></effectedFile>
 		<effectedFile id="RUN"></effectedFile>
