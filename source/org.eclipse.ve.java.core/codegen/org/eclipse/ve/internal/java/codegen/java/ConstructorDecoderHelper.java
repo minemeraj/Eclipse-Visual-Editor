@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2004-05-10 18:13:52 $ 
+ *  $Revision: 1.19 $  $Date: 2004-05-20 13:06:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -101,10 +101,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 					// This could be a type, or a field access
 					// TODO:  this is a temporary fix, and will not deal with
 					//        factories call etc.
-					String r = 	bdm.resolveType(n);
+					String r = 	bdm.resolveType(n);					
 					if (r != null && !r.equals(n)) {
 						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
-						ptname.setName(r) ;
+						ptname.setName(bdm.resolve(r)) ;
 						PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess() ;
 						fa.setReceiver(ptname) ;
 						fa.setField(n.substring(r.length()+1)) ;
@@ -176,10 +176,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public String generate(Object[] args) throws CodeGenException {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
-			// ivjFoo = <allocation>;			
+			// ivjFoo = <allocation>;					
 		sb.append(fbeanPart.getSimpleName());
 		sb.append(" = ");
-		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel()));
+		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
 		sb.append(";");
 		sb.append(fbeanPart.getModel().getLineSeperator());
 		return sb.toString();

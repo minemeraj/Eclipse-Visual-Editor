@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-04-28 14:21:33 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-20 13:06:57 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -346,7 +346,7 @@ private String getSourceCodeArg()  {
       if (!(currentVal instanceof IJavaInstance))
              return NULL_STRING ;
       else         
-             return boxLayoutOveride(CodeGenUtil.getInitString((IJavaInstance)currentVal,fbeanPart.getModel())) ;
+             return boxLayoutOveride(CodeGenUtil.getInitString((IJavaInstance)currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports())) ;
    }
       
    StringBuffer st = new StringBuffer() ;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-08 01:19:01 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-20 13:06:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -31,12 +31,13 @@ public interface IMethodTextGenerator {
 	 * @param method the method to generate the source for
 	 * @param methodName
 	 * @param beanName  
+	 * @param imports 
 	 * @return String containing the source snippet for the method
 	 * @throws CodeGenException
 	 * 
 	 * @since 1.0.0
 	 */
-	public String generateMethod(CodeMethodRef method,String methodName,String beanName) throws CodeGenException ;
+	public String generateMethod(CodeMethodRef method,String methodName,String beanName, List imports) throws CodeGenException ;
 	
 	/**
 	 * Insert the decleration of beanName in method and all its associated property  

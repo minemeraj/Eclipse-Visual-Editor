@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-05-19 23:04:11 $ 
+ *  $Revision: 1.9 $  $Date: 2004-05-20 13:06:44 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -224,23 +224,23 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		boolean result = super.primIsDeleted();
 		if (!result) {
 			// See if there is a 'control' expression
-			if (getParent() != null) {
-				EObject parent = getParent().getEObject();
-				BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil
-						.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+			BeanPart p = getParent() ;
+			if (p!= null) {
+				EObject parent = p.getEObject();
+				BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 				ICodeGenAdapter[] list = pAdapter.getSettingAdapters(getControlSF());
 				ExpressionDecoderAdapter adapter = null;
-				for (int i = 0; list != null && i < list.length; i++) {
+				for (int i = 0; list!=null && i < list.length; i++) {
 					if (list[i] instanceof ExpressionDecoderAdapter) {
-						adapter = (ExpressionDecoderAdapter) list[i];
-						if (!adapter.getDecoder().getBeanPart().equals(fbeanPart))
-							adapter = null;
-						else
-							break;
+						adapter = (ExpressionDecoderAdapter)list[i] ;
+						Object[] added = adapter.getDecoder().getAddedInstance();
+						if (added==null || added.length==0 || added[0]!=fbeanPart.getEObject())
+								adapter = null;
+						else						
+						        break;
 					}
 				}
-				if (adapter == null)
-					return true;
+				if (adapter==null) return true;
 				return adapter.getDecoder().isDeleted();
 			}
 		}

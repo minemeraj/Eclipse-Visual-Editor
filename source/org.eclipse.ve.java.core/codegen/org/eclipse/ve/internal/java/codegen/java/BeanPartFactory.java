@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.26 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.27 $  $Date: 2004-05-20 13:06:57 $ 
  */
 
 import java.util.*;
@@ -238,7 +238,8 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 		} else {
 
 			IType cuType = CodeGenUtil.getMainType(cu);
-			String newMSrc = mgen.generateMethod(mref, methodName, bp.getSimpleName());
+			List reqImports = new ArrayList() ;
+			String newMSrc = mgen.generateMethod(mref, methodName, bp.getSimpleName(), reqImports);
 
 			IMethod newMethod = null;
 			// Create it as the last method
@@ -249,6 +250,9 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 				// Need to set the source overhere, so that we can parse the init expression
 				mref.setContent(newMethod.getSource());
 				fBeanModel.addMethodInitializingABean(mref);
+				
+				// create imports if needed
+				CodeExpressionRef.handleImportStatements(cu, null, reqImports); // no need to update expressions
 				
 				// Generate main, if needed				
 				newMSrc = mgen.generateMain(cuType.getElementName());

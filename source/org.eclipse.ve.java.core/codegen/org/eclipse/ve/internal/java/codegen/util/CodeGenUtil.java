@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.21 $  $Date: 2004-05-13 20:30:34 $ 
+ *  $Revision: 1.22 $  $Date: 2004-05-20 13:06:57 $ 
  */
 
 
@@ -535,22 +535,29 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 	return -1;
 }
 
-public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model) {
+public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model, List importList) {
 	JavaAllocation alloc = javaInstance.getAllocation();
 	if (alloc instanceof InitStringAllocation)
 		return ((InitStringAllocation) alloc).getInitString();
 	else if (alloc instanceof ParseTreeAllocation) {
 		PTExpression e = ((ParseTreeAllocation)javaInstance.getAllocation()).getExpression();
 		// Resolve references if needed
-		CodeGenExpFlattener f = new CodeGenExpFlattener(model);
+		CodeGenExpFlattener f = new CodeGenExpFlattener(model, importList);
 		e.accept(f);
 		return f.getResult();
 	} else {
 		// There is none, so let's create the default ctor (only valid for classes)
 		// Return construct with default ctor when not explicitly set.
 		JavaHelpers jc = javaInstance.getJavaType();
-		if (!jc.isPrimitive()) { 
-			String qn = jc.getQualifiedName();
+		if (!jc.isPrimitive()) {
+			String qn;
+			if (importList!=null) {
+			  // use Imports
+			  importList.add(jc.getQualifiedName());
+			  qn = jc.getName();
+		    }
+			else // use full qualifier
+			  qn = jc.getQualifiedName();
 			return "new " + qn + "()";
 		} else
 			return "";	// Shouldn't get here for prims. They should have an allocation.

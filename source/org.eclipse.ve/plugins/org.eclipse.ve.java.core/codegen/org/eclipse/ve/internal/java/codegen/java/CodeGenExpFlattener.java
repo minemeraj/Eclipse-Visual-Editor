@@ -10,34 +10,54 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-03 23:18:16 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-20 13:06:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
+import java.util.List;
+
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.PTInstanceReference;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
  
+
+
+
 /**
+ * This class will convert a PTree into a string, while resolving instance references,
+ * and removing qualified names, while adding import requirements.
+ * 
  * @author Gili Mendel
  * @since 1.0.0
  */
 public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 
 		IBeanDeclModel fmodel ;
+		List 		   fimportList;
 		
 		
 		public CodeGenExpFlattener (IBeanDeclModel model) {
+			this(model, null);
+		}
+		/**
+		 * Providing an import list, will not use qualified name resolutions,
+		 * but will ad a required import list.
+		 * @param model
+		 * @param importList
+		 */
+		public CodeGenExpFlattener (IBeanDeclModel model, List importList) {
 			super() ;
 			fmodel = model ;
-		}
-		
+			fimportList = importList;
+			if (fimportList!=null)
+				fimportList.clear();				
+		} 
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTTypeLiteral)
 		 */
@@ -55,13 +75,24 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
 		    	} else {
 		    		getStringBuffer().append("new ");
-		    		getStringBuffer().append(((JavaHelpers)obj.eClass()).getJavaName());
+		    		getStringBuffer().append(handleQualifiedName(((JavaHelpers)obj).getJavaName())); 
 		    		getStringBuffer().append("()");
 		    	}
 		    }
 			return false;
 		}
 		
-
-
+		protected String handleQualifiedName(String qName) {									
+			if (fimportList!=null) {
+				// Use short names instead of full quallified names
+				JavaHelpers clazz = JavaRefFactory.eINSTANCE.reflectType(qName, fmodel.getCompositionModel().getModelRoot());
+				// mark a dependency on an import
+				if (!fimportList.contains(clazz.getJavaName()))
+					fimportList.add(clazz.getJavaName());
+				return clazz.getName();
+			}
+			else
+				return qName;
+		}
+		
 }

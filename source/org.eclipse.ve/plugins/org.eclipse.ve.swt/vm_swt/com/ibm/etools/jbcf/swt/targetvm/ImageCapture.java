@@ -1,5 +1,6 @@
 package com.ibm.etools.jbcf.swt.targetvm;
 import org.eclipse.swt.*;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -8,6 +9,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.internal.win32.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.ole.win32.OleFrame;
 
 public class ImageCapture {
 	
@@ -69,7 +71,9 @@ public class ImageCapture {
 		int print_bits = PRF_NONCLIENT | PRF_CLIENT | PRF_ERASEBKGND;
 		// This method does not print immediate children because the z-order doesn't work correctly and needs to be
 		// dealt with separately, however Table's TableColumn widgets are children so much be handled differently
-		if(aControl instanceof Table){
+		if(aControl instanceof Table ||
+		   aControl instanceof Browser ||
+		   aControl instanceof OleFrame){
 			print_bits = print_bits | PRF_CHILDREN;	
 		}
 		GC gc = new GC (image);

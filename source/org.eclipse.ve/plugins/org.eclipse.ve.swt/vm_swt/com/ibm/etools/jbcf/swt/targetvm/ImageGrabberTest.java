@@ -1,6 +1,8 @@
 package com.ibm.etools.jbcf.swt.targetvm;
 
 import java.lang.reflect.*;
+
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
@@ -100,6 +102,10 @@ public class ImageGrabberTest {
 		data.heightHint = 450;
 		labelComposite.setLayoutData(data);
 		
+		Browser browser = new Browser(shell, SWT.NONE) ;
+		browser.setBounds(200,200, 200, 200);
+		browser.setUrl("http://www.google.com");
+		
 		final Label l1 = new Label(labelComposite,SWT.LEFT);
 		l1.setBackground(d.getSystemColor(SWT.COLOR_YELLOW));
 //		final Label l2 = new Label(labelComposite,SWT.NONE);
@@ -108,7 +114,7 @@ public class ImageGrabberTest {
 		grabButton.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent event){
 				
-				ImageGrabber grabber = new ImageGrabber();				
+				ImageCapture grabber = new ImageCapture();				
 				// The GC now contains the client area painted into it
 				Image oldImage = l1.getImage();
 				if(oldImage != null) oldImage.dispose();
