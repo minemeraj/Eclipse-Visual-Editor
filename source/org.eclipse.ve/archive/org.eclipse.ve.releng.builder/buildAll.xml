@@ -207,6 +207,11 @@
 		</exec>
 	</target>
 	
+	<target name="publishdevupdate">
+		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml -add4thPart"/>
+		<antcall target="publishupdatesite"/>
+	</target>
+	
 	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
 		<!-- Publish to update site, but not push it. -->
 		<echo message="Publish the update site for the latest build."/>
@@ -239,8 +244,9 @@
 		</exec>
 
 		<!-- Now run the update process -->
+		<property value="-cats ${updateLocalDirectory}/cats.properties" name="devtype"/>
 	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
-	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -cats ${updateLocalDirectory}/cats.properties" /> 
+	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} ${devtype}" /> 
 	         <classpath>
 	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar" />
 	         </classpath>
