@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-26 23:08:01 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-29 20:32:39 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -148,12 +148,13 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		
 		super.setActiveEditor(part);
 		
+		ITextEditor textEditor = (getActiveEditorPart() instanceof ITextEditor) ? (ITextEditor) getActiveEditorPart() : null;
 		if (getActiveEditorPart() instanceof ITextEditorExtension) {
 			ITextEditorExtension extension= (ITextEditorExtension) getActiveEditorPart();
+			statusField.setActionHandler(getAction(textEditor, ReloadNowAction.RELOADNOW_ACTION_ID));
 			extension.setStatusField(statusField, STATUS_FIELD_CATEGORY);
 		}
 		
-		ITextEditor textEditor = (getActiveEditorPart() instanceof ITextEditor) ? (ITextEditor) getActiveEditorPart() : null;
 		
 		IActionBars bars = getActionBars();
 		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getAction(textEditor, ActionFactory.DELETE.getId()));
