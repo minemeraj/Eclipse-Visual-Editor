@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-16 21:00:58 $ 
+ *  $Revision: 1.3 $  $Date: 2004-08-17 19:32:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -114,6 +114,9 @@ public class JavaVisualEditorVMController {
 
 		protected final IStatus run(IProgressMonitor monitor) {
 			final IConfigurationContributionInfo[] contributeInfo = new IConfigurationContributionInfo[1];
+			
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
 			
 			ConfigurationContributorAdapter jcmCont = new ConfigurationContributorAdapter() {
 
@@ -340,11 +343,16 @@ public class JavaVisualEditorVMController {
 		 * Get the existing spare (waiting if necessary) but
 		 * don't start a new one, and don't clear the spare out.
 		 * 
+		 * @param cancel waiting. Cancel any job that is waiting to start a vm.
 		 * @since 1.0.0
 		 */
-		public synchronized RegistryResult getExistingSpare() {
+		public synchronized RegistryResult getExistingSpare(boolean cancel) {
+			if (cancel && createJob != null)
+				createJob.cancel();
 			IStatus status = waitForJob(); // Wait for any outstanding job.
-			if (!status.isOK())
+			// If bad status but not cancel, then no spare. If cancel, slight possibility of a spare 
+			// depending on when it was canceled.
+			if (!status.isOK() && status.getCode() != IStatus.CANCEL)
 				return null;
 			if (createJob != null) {
 				synchronized (createJob) {
@@ -569,7 +577,7 @@ public class JavaVisualEditorVMController {
 					synchronized (pp) {
 						try {
 							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							RegistryResult spare = pp.getExistingSpare();
+							RegistryResult spare = pp.getExistingSpare(true);
 							if (spare != null)
 								spare.registry.terminateRegistry();
 						} catch (RuntimeException e) {
@@ -645,7 +653,7 @@ public class JavaVisualEditorVMController {
 							if (!pp.project.equals(project)) {
 								synchronized (pp) {
 									// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-									RegistryResult spare = pp.getExistingSpare();
+									RegistryResult spare = pp.getExistingSpare(false);
 									if (spare != null && spare.configInfo != null && spare.configInfo.getProjectPaths().containsKey(projectPath))
 										pp.restartSpare();
 								}
@@ -669,7 +677,7 @@ public class JavaVisualEditorVMController {
 					if (pp != null) {
 						synchronized (pp) {
 							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							RegistryResult spare = pp.getExistingSpare();
+							RegistryResult spare = pp.getExistingSpare(false);
 							if (spare != null)
 								pp.restartSpare();
 						}
@@ -691,7 +699,7 @@ public class JavaVisualEditorVMController {
 					if (pp != null) {
 						synchronized (pp) {
 							// Sync on pp so no other changes occur to it while we check for spare and recreate if needed.
-							RegistryResult spare = pp.getExistingSpare();
+							RegistryResult spare = pp.getExistingSpare(true);
 							if (spare != null)
 								spare.registry.terminateRegistry();
 						}
@@ -776,7 +784,7 @@ public class JavaVisualEditorVMController {
 									if (pp.createJob == null && pp.lastActivity <= clearCount) {
 										removeIt = true;
 									} else {
-										RegistryResult rr = pp.getExistingSpare(); // This will force the current job to complete if there is one.									
+										RegistryResult rr = pp.getExistingSpare(true); // This will force the current job to complete if there is one.									
 										if (removeIt = pp.lastActivity <= clearCount) {
 											// Terminate the registry now
 											rr.registry.terminateRegistry();
