@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="BeanInfo classes and introspection" />
+<meta name="DC.Relation" scheme="URI" content="http://java.sun.com/products/javabeans/docs" />
+<meta name="DC.Relation" scheme="URI" content="tspcloc.dita" />
+<meta name="DC.Relation" scheme="URI" content="tcntbnf.dita" />
+<meta name="DC.Relation" scheme="URI" content="rspcJRE.dita" />
+<meta name="DC.Relation" scheme="URI" content="rwrtbnf.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="cbeaninf" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>BeanInfo classes and introspection</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="cbeaninf"><a name="cbeaninf"><!-- --></a>
+
+<h1 class="topictitle1">BeanInfo classes and introspection</h1><div><p>If you are creating beans for use within the Visual Editor, you can control
+their behavior by supplying a BeanInfo class. A BeanInfo class implements
+ <tt>java.beans.BeanInfo</tt> and is used by the Visual
+Editor to determine the behavior of the properties view for the bean, and
+whether a customizer is available. The Visual Editor includes BeanInfo classes
+for common AWT and Swing controls.</p>
+<p>Since the BeanInfo class contains information required only at design time,
+it is usually kept in a different project from the bean class itself and not
+included when the bean is deployed. The Visual Editor for Java uses a number
+of rules that allow you to associate BeanInfo classes with the Java beans
+they describe. You need to understand these rules if you are using Java beans
+having BeanInfo classes that you wish the Visual Editor to detect. For instance,
+if you are using a third party set of Java bean classes, or if you have developed
+Java beans and BeanInfo classes that you are using.</p>
+<p>To learn more about BeanInfo classes you can download the JavaBeans specification
+from  <a href="http://java.sun.com/products/javabeans/docs" target="_blank">http://java.sun.com/products/javabeans/docs/</a>.</p>
+<div class="p"><p class="sectiontitle">Background</p><p>The class <tt>java.beans.Introspector</tt> 
+is used to locate a BeanInfo class for a Java bean. The time that this occurs
+is referred to as <i>introspection</i>, and is done by the Visual Editor the
+first time a bean is used. For example, when a button is first dropped from
+the palette, introspection occurs that tries to locate the correct BeanInfo
+class. After introspecting the bean, the results are cached to help performance.
+However, when the Visual Editor detects that the BeanInfo class may have changed
+and the cache is stale, introspection will re-occur.  </p>
+<p>Introspection
+of a bean is done by calling the  <tt>getBeanInfo(Class)</tt> static
+method with the bean class as the argument. For example:</p>
+<p> <tt>java.beans.Introspector.getBeanInfo(MyJavaBean.class)</tt> </p>
+<p>The introspector uses the following logic to locate a BeanInfo class
+for the argument class  <tt>MyJavaBean</tt>. This involves
+a number of sequential steps, and after any successful step the introspector
+stops looking. If any step fails, then the next step is used to try a different
+way to locate the bean info.</p>
+<ul><li>If the Java bean itself implements  <tt>java.beans.BeanInfo</tt>,
+then it is used. This scenario rarely occurs, however, because it means that
+the run-time class  <tt>MyJavaBean</tt> contains design
+time information that will be unnecessarily included at deployment.</li>
+<li>A class with the same name as the argument, but the string  <tt>BeanInfo</tt> appended
+to it is searched for. For example,  <tt>MyJavaBeanBeanInfo.</tt> It
+is first searched for in the same package as the class, and if one is not
+found, it is located within a defined search path. Rather than use the class
+path of the Java virtual machine to search for the BeanInfo class, the introspector
+has its own list of packages to search within. This is known as the BeanInfo
+search path. The introspector does not use the class path again in order to
+keep run-time and design time information separate.</li>
+<li>If no BeanInfo class is found for the immediate class being introspected,
+then the introspector attempts to locate the BeanInfo class for the superclass.</li>
+<li>If no BeanInfo class is found for the immediate class being introspected,
+then a default one is created. The default will take the results of the introspection
+of the immediate superclass and merge in the results of the default properties
+of the immediate class. The rules for creating the default properties are
+to match  <tt>get</tt> and  <tt>set</tt> methods
+with compatible names and arguments. For example, the method  <tt>public
+void setName(String aName)</tt> and  <tt>public String
+getName()</tt> are paired into a property called  <tt>name</tt>.
+The BeanInfo created is not stored as a class in any package. It is a transient
+instance that is used as a temporary description of the bean's design time
+details, so that the Visual Editor can extract a list of properties and other
+information.</li>
+</ul>
+<p>If a BeanInfo class is found for the class, then the introspector
+does not return it explicitly. Instead, it uses its details to create a temporary
+result class that implements <tt>java.beans.BeanInfo</tt>.</p>
+</div><div class="p"><p class="sectiontitle">BeanInfo search path</p><p>The best way to understand
+the BeanInfo path is to consider the Java virtual machine that is created
+to perform introspection. This virtual machine is given a class path that
+is made up of following entries:  </p>
+<ul><li>The items in the Java build path for the project itself</li>
+<li>The items in the BeanInfo classes on the BeanInfo path for the project
+itself</li>
+<li>All exported items in the BeanInfo classes for any projects in the Java
+build path</li>
+</ul>
+<p>Having created the virtual machine, the <tt>java.beans.Introspector</tt> 
+has its list of packages to search for BeanInfo classes set with the method <tt>public
+void setSearchPath(String[])</tt>.</p>
+<p>The arguments to this method
+are:  </p>
+<ul><li>The items in the packages list on the BeanInfo path for the project itself</li>
+<li>All exported items in the packages lists for any projects in the Java
+build path</li>
+</ul>
+</div><div class="p"><p class="sectiontitle">BeanInfo and inherent attributes</p><p>If the bean you
+are writing is inheriting attributes from a super class, the default BeanInfo
+will not expose the inherent attributes. You have to explicitly expose them
+with the getAdditionalBeanInfo() method.</p>
+<p>For example:</p>
+<pre>public BeanInfo[] getAdditionalBeanInfo() { 
+try {                 
+         // The following will return all inherited features.                 
+         return new BeanInfo[] { 
+Introspector.getBeanInfo(MyPanel.class.getSuperclass())};  
+} catch (IntrospectionException e) {            
+return new BeanInfo[0];            
+} </pre>
+<p>If an inherent attribute is not exposed, the Visual Editor
+will not render it, even if it is set in the source code.  </p>
+</div></div><div><p><b class="relrefhd">Related reference</b><br /><a href="rspcJRE.html" title="">BeanInfo classes for JRE classes</a><br /><a href="rwrtbnf.html" title="">BeanInfo classes for the Visual Editor for Java</a><br /></p><p><a href="http://java.sun.com/products/javabeans/docs">http://java.sun.com/products/javabeans/docs/.</a><br /><a href="tspcloc.html" title="">Specifying the location of BeanInfo classes</a><br /><a href="tcntbnf.html" title="">Controlling BeanInfo information for plug-in developers</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

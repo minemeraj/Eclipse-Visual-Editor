@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Code synchronization" />
+<meta name="DC.Relation" scheme="URI" content="csrcpat.dita" />
+<meta name="DC.Relation" scheme="URI" content="cextstring.dita" />
+<meta name="DC.Relation" scheme="URI" content="cstylegendsrc.dita" />
+<meta name="DC.Relation" scheme="URI" content="cmetamig.dita" />
+<meta name="DC.Relation" scheme="URI" content="csrcevent.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjbeaninved.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="ccodesync" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Code synchronization</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="ccodesync"><a name="ccodesync"><!-- --></a>
+
+<h1 class="topictitle1">Code synchronization</h1><div><p>As you use the Visual Editor there are two internal models that are maintained.
+The first of these is a representation of the Java beans that is used by the
+Java Beans view, the Properties view, and the Design view. The second model
+is the source that represents the code that, when compiled and executed, will
+re-create the Java beans in a runtime VM. As you make changes to either model
+the Visual Editor will maintain the other model for you by performing synchronization.
+The status of the synchronization of the two models can be seen on the right
+hand side of the status bar as shown below</p>
+<p> <img src="../images/CodeInSync.gif" alt="code in sync" /> </p>
+<p>There is a performance overhead associated with synchronizing the two models,
+so the processes to do this are run in background threads on a delay timer.
+If changes are made to a model, by either manipulating the Java beans in a
+view or by editing the source, the other model needs to be updated or it will
+no longer be synchronized. To show that the models are not synchronized, the
+label changes from  <b>In Sync</b> to  <b>Out of Sync</b>.</p>
+<p> <img src="../images/CodeOutOfSync.gif" alt="code out of sync" /> </p>
+<p>After a period of inactivity, for example when you have paused typing code
+in the editor, synchronization will occur. While synchronization is taking
+place the arrows will show the direction the update is occurring. For example,
+the up arrow represents changes from the source to the Java beans model, and
+the down arrow vice versa.</p>
+<p> <img src="../images/CodeSyncUp.gif" alt="code sync update" /> </p>
+<p>If synchronization takes place too frequently and is degrading performance,
+the time that the synchronizer waits can be altered using the  <b>Window &gt;
+Preferences &gt; Java &gt; Visual Editor</b>. You can change the delay time used
+to make updates from the Java beans model to the source, from its initial
+value of 500 milliseconds. This is how long the Visual Editor waits after
+you have dropped or moved a Java bean in the canvas before updating the source
+code. The delay time that the Visual Editor waits before making updates from
+the source code to the Java beans model is initially set to be larger by a
+factor of 2. So, it will be 2 * 500 = 1000 milliseconds. If you are typing
+in the source code, and the synchronizer is starting too soon and you wish
+to increase this number, you can increase the factor to a new value. For example,
+4 * 500 = 2000. With the value set as 2000, the Visual Editor will wait for
+2 seconds until after you have finished modifying the source before updating
+the Java beans. If you wish to make a number of large changes to the source
+without incurring the overhead of having the synchronizer running, you can
+disable synchronization by pressing the pause button between the two arrows.</p>
+<p> <img src="../images/CodeSyncPause.gif" alt="code sync paused" /> </p>
+<p>While the synchronizer is paused, you can make changes to the source without
+any overhead of parsing source, but you can no longer make changes to the
+Java beans model. All edits made using the Design view, the Java Beans view,
+or the Properties view will not be applied. When you have finished updating
+the source, you can resume the synchronizer by pressing the button between
+the two arrows. This displays a 'resume' arrow while synchronization is paused.</p>
+<p>While the source code is being parsed and analyzed, the synchronizer may
+determine that the source contains errors. Rather than trying to update the
+Java beans model, it will wait for the errors to be corrected. If this occurs,
+the button will be pressed automatically and the graphic will be changed to
+a red X.</p>
+<p> <img src="../images/CodeSyncError.gif" alt="code sync error" /> </p>
+<p>Once the errors have been fixed in the source and it becomes well formed
+enough for the parser to continue, the synchronizer will automatically refresh
+the Java beans model and continue.</p>
+<p>In addition to synchronization between the Java beans model and the source
+code, there is also a Java VM that is used to execute the live Java bean instances.
+This is synchronously maintained whenever the Java beans model is changed,
+and is used by the Properties view and the graphical representation of components
+in the Design view. More information on the live Java bean instances and how
+to debug them can be found in the section  <a href="tjbeaninved.html">Java
+beans exceptions</a>.</p>
+</div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="csrcpat.html" title="">Source code patterns</a><br /><a href="cextstring.html" title="">Externalized strings</a><br /><a href="cstylegendsrc.html" title="">Style of generated source</a><br /><a href="cmetamig.html" title="">Metadata and migrating from VisualAge for Java</a><br /><a href="csrcevent.html" title="">Event handling</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="tjbeaninved.html" title="">Identifying Java bean exceptions</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

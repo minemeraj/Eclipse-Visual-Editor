@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Adding a visual bean" />
+<meta name="DC.Relation" scheme="URI" content="coverview.dita" />
+<meta name="DC.Relation" scheme="URI" content="ccontlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjvelaunch.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjveovrvw.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tjveaddbean" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Adding a visual bean</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="tjveaddbean"><a name="tjveaddbean"><!-- --></a>
+
+<h1 class="topictitle1">Adding a visual bean</h1><div><div class="p"><p>When you add a bean, the mouse pointer changes when it is 'loaded'
+and positioned over a valid drop location within the Design page. Depending
+on which layout manager you are using, you may see other visual cues to guide
+your positioning of the bean. For example, for classes that implement a border
+layout, the Visual Editor labels different areas as North, East, South, West,
+and Center.</p>
+<p>Some Java classes are also containers. For example, a JFrame
+class can have child components such as buttons, list boxes, and labels.</p>
+<p><b>Adding
+a bean from a palette</b></p>
+<p>Unless you have changed your preferences for
+the Visual Editor, the Design view provides bean palettes for different kinds
+of Swing and AWT components. You can expand and collapse these categories
+by clicking on the category. When a category is expanded, a 'pin open' icon
+ <img src="../images/Palette_pin.gif" alt="palette pin" /> is displayed
+to the right of the category name.</p>
+</div><ol><li><span>Left-click the bean that you want to add. Do  <i>not</i> hold
+down the mouse button. Note that when a bean is selected, the background area
+of its entry in the palette is shaded.</span></li><li><span>Move the mouse pointer over to the Design page and click the mouse
+button again to drop the bean where you want it.</span></li></ol><div class="p"><p><b>Adding a bean from a categorized list</b></p>
+<ol><li>Click the down arrow next to the  <b>Choose Bean</b> button on the main
+toolbar. A cascading menu offers four categories of beans for Swing and AWT
+components.</li>
+<li>Once you have selected a bean from one of the menus, move the mouse pointer
+to drop it in the Design page.</li>
+</ol>
+<p><b>Adding a bean from a comprehensive list</b></p>
+<ol><li>Click the  <b>Choose Bean</b> button either in the  <b>Selection</b> palette
+or on the main toolbar. The Choose a Bean dialog box opens.</li>
+<li>(Optional) Select  <b>Swing</b> or  <b>AWT</b> if you wish to restrict
+the list of beans that you are searching for.</li>
+<li>In the  <b>Class</b> field, type part of the name of the bean that you
+are searching for. You can use wild cards, for example by typing  <tt>*button</tt> to
+list all classes with the character string  <tt>button</tt> anywhere
+in the name.</li>
+<li>As you type the characters that you want to filter for, the list of beans
+changes. This list includes all classes that are available in the Java build
+path for the Java project that contains the .java file you are editing.</li>
+<li>Select a class from the list and click  <b>OK</b>. You are permitted to
+select only classes that include a null constructor because the Visual Editor
+for Java can instantiate only those classes that have default constructors.)</li>
+<li>Move the mouse pointer to drop the bean on the Design page.</li>
+</ol>
+<p>The source page of the Visual Editor shows the Java code that is generated
+as you add each bean.  <b>Note: </b>The Visual Editor's 'Choose beans' will
+allow you to drop JavaBeans that have null constructor in them (a JavaBean
+specification requirement). It will not allow you to drop Beans that use the
+static getInstance() pattern.</p>
+</div></div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="coverview.html" title="">Visual Editor for Java</a><br /><a href="ccontlay.html" title="">Containers and layout managers</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="tjvelaunch.html" title="">Launching the Visual Editor for Java</a><br /><a href="tjveovrvw.html" title="">Composing classes visually</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Keeping beans and BeanInfo classes in different packages in the same project" />
+<meta name="DC.Relation" scheme="URI" content="cbeaninf.dita" />
+<meta name="DC.Relation" scheme="URI" content="tspcloc.dita" />
+<meta name="DC.Relation" scheme="URI" content="rspcJRE.dita" />
+<meta name="DC.Relation" scheme="URI" content="rwrtbnf.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tsmpdfp" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Keeping beans and BeanInfo classes in different packages in the
+same project</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="tsmpdfp"><a name="tsmpdfp"><!-- --></a>
+
+<h1 class="topictitle1">Keeping beans and BeanInfo classes in different packages in the same
+project</h1><div><div class="p"><p>When you develop classes in the Visual Editor for Java, you have
+the option to keep your .java files and BeanInfo classes in different packages
+within the same project. The advantage of doing this, compared to having them
+in the same package, is that by decoupling design and runtime classes you
+can deploy them separately.</p>
+<p>To accomplish this, you must edit the properties
+of the Java project to configure the BeanInfo search path that the Visual
+Editor uses.</p>
+<p>For example, a project called MyProject contains the following
+packages:</p>
+<ul><li>Package runtimeclasses includes a class called runtimeclasses.MyJavaBean</li>
+<li>Package beaninfoclasses contains the BeanInfo class for MyJavaBean, beaninfoclasses.MyJavaBeanBeanInfo</li>
+</ul>
+<p>To configure the setup just described:  </p>
+</div><ol><li><span>Switch to the Java perspective.</span></li><li><span>Right-click the project that contains both packages, for example
+MyProject, and select  <b>Properties</b> from the pop-up menu.</span></li><li><span>Select  <b>BeanInfo Path</b> from the list of properties.</span></li><li><span>On the Packages page, make sure the  <b>Enable BeanInfo Introspection
+on this Project</b> checkbox is selected. Otherwise, no information in the
+BeanInfo path will be used by the introspector at any time for the project.</span></li><li><span>Click the  <b>Choose packages</b> push button and select one or
+more packages in the same project that contain the BeanInfo classes</span></li><li><span>(Optional) If you want to change the order in which packages are
+searched during introspection, click the  <b>Order and export</b> tab and
+use the  <b>Up</b> and  <b>Down</b> buttons. During introspection the rules
+for finding a suitable BeanInfo class for a Java bean are applied to each
+package in turn. Changing the order of packages is required only if there
+are two or more possible BeanInfo classes that may be candidates for the same
+Java bean class.</span></li><li><span>If you want these packages to be included in the BeanInfo search
+path for classes in other Java projects that reference classes in this project
+(and therefore include this project in their Java build path), the package
+that contains the BeanInfo classes must be exported. Confirm the following
+settings:</span></li><li><span> </span><ol type="a"><li><span>Still editing the BeanInfo Path properties, click the  <b>Order
+and export</b> tab and make sure the packages that contain the BeanInfo classes
+are selected for export. This is the default.</span></li><li><span>Select the  <b>Java Build Path</b> properties for the same project
+and confirm that the packages containing the BeanInfo classes are not excluded
+from export there. Excluding them here would override including them on the
+BeanInfo Path page.</span></li></ol>  </li></ol><div class="p"><p>When the introspector is created for the project, it includes all
+packages specified in the Packages list in its search path.  </p>
+</div></div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="cbeaninf.html" title="">BeanInfo classes and introspection</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="tspcloc.html" title="">Specifying the location of BeanInfo classes</a><br /></p><p><b class="relrefhd">Related reference</b><br /><a href="rspcJRE.html" title="">BeanInfo classes for JRE classes</a><br /><a href="rwrtbnf.html" title="">BeanInfo classes for the Visual Editor for Java</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

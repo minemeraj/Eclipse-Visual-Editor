@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Enumerated lists" />
+<meta name="DC.Relation" scheme="URI" content="cpropvw.dita" />
+<meta name="DC.Relation" scheme="URI" content="cpropdialog.dita" />
+<meta name="DC.Relation" scheme="URI" content="ttstdbg.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="cpropenum" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Enumerated lists</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="cpropenum"><a name="cpropenum"><!-- --></a>
+
+<h1 class="topictitle1">Enumerated lists</h1><div><p>Drop-down property editors are used for properties when there is a restricted
+set of acceptable values. To use one of these editors, click in the value
+column of the property, and select the drop-down arrow to view the list of
+values. When you select a new value in the list, it will be applied to the
+component you have selected. You do not have to use the  <b>Enter</b>  key. 
+The cursor property uses an enumerated list as shown below:</p>
+<p> <img src="../images/CursorDropDownList.gif" alt="Property view" /> </p>
+<p>Examples of property editors that use enumerated lists are</p>
+<ul><li> <tt>java.lang.Boolean</tt> and  <tt>boolean</tt></li>
+<li> <tt>java.awt.Cursor</tt> </li>
+<li> <tt>java.awt.LayoutManager</tt> </li>
+</ul>
+<p>In addition to the property editor being associated with a type of property
+descriptor, some enumerated editors are specified on a per-property basis.
+An example of this is the orientation property on  <tt>java.awt.Scrollbar</tt>.
+The property is typed to  <tt>int</tt>  but is restricted
+to the static values  <tt>java.awt.Scrollbar.HORIZONTAL</tt>, and <tt>java.awt.Scrollbar.VERTICAL,</tt> which
+are 0 and 1 respectively. Rather than having an  <tt>int</tt> property
+editor that allows any valid integer to be entered, the orientation property
+editor uses a drop-down list of available values.</p>
+</div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="cpropvw.html" title="">Properties view</a><br /><a href="cpropdialog.html" title="">Property editors</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="ttstdbg.html" title="">Testing a Java bean</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

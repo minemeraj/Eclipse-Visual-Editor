@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Explicitly defining the location of BeanInfo classes" />
+<meta name="DC.Relation" scheme="URI" content="cbeaninf.dita" />
+<meta name="DC.Relation" scheme="URI" content="tspcloc.dita" />
+<meta name="DC.Relation" scheme="URI" content="rspcJRE.dita" />
+<meta name="DC.Relation" scheme="URI" content="rwrtbnf.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tdfnkey" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Explicitly defining the location of BeanInfo classes</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="tdfnkey"><a name="tdfnkey"><!-- --></a>
+
+<h1 class="topictitle1">Explicitly defining the location of BeanInfo classes</h1><div><div class="p"><p>Rather than hard coding the location of BeanInfo classes that
+are external to Eclipse, they can be defined using a keyword. To
+do this, open the  <b>Window &gt; Preferences</b> dialog and select  <b>Java
+&gt; Classpath Variables</b> as shown below.</p>
+<p> <img src="../images/nwrkclsp.gif" alt="Java Classpath preferences" /> </p>
+<p>A class path variable is used to
+specify the association between a keyword and the location of the entry it
+represents. The entry can point to either a JAR file or a folder that exists
+in the file system.</p>
+<p>To specify a JAR file click the  <b>New</b> button
+and enter the name of the variable and the location of the JAR file. Click
+the  <b>File</b> button to browse through the file system and select the JAR.</p>
+<p> <img src="../images/nnwclvr.gif" alt="Adding JAR file to classpath" /> </p>
+<p>If
+the BeanInfo classes are in a package that exists in the file system, then
+click the  <b>Folder</b> button and browse to the parent directory of the
+package.</p>
+<p>Having created the variable MY_BEANINFOS, it can now be included
+in a BeanInfo path as part of its list of BeanInfo classes. In the  <b>BeanInfo</b> <b>Path</b> page
+(located in the project's Properties dialog), you can click the  <b>BeanInfo</b> <b>classes</b> tab
+and define the location of the project's BeanInfo classes.</p>
+<p> <img src="../images/nbninfo.gif" alt="BeanInfo properties" /> </p>
+<p>Click  <b>Add Variable</b> to open the
+dialog shown below.</p>
+<p> <img src="../images/nslcclp.gif" alt="selecting Classpath variables" /> </p>
+<p>To
+define a classpath variable you type the variable's name or click  <b>Browse</b> to
+select the variable from a list of all defined variables. If the variable
+is for a folder and the BeanInfo packages are in a sub-folder then you can
+use the  <b>Path Extension</b> field to select the subfolder. Click  <b>OK</b>.</p>
+<p>Having
+entered the variable in the BeanInfo classes you still need to use the Modify
+Paths dialog to enter the names of the packages that contain BeanInfo classes.</p>
+<p>Click
+Modify Paths to open the follow dialog:</p>
+<p> <img src="../images/nmdfpth.gif" alt="Modify searchpaths dialog" /> </p>
+<p>Click  <b>Choose Packages</b> to
+select the names of the packages that contain the BeanInfo classes. Depending
+on the structure of the packages, you may be able to select them or you may
+have to specify their names.</p>
+</div></div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="cbeaninf.html" title="">BeanInfo classes and introspection</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="tspcloc.html" title="">Specifying the location of BeanInfo classes</a><br /></p><p><b class="relrefhd">Related reference</b><br /><a href="rspcJRE.html" title="">BeanInfo classes for JRE classes</a><br /><a href="rwrtbnf.html" title="">BeanInfo classes for the Visual Editor for Java</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

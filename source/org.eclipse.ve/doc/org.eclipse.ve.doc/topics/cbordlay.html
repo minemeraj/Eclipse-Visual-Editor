@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Border layout manager" />
+<meta name="DC.Relation" scheme="URI" content="ccontlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cflowlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cnullay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cgridbag.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="cbordlay" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Border layout manager</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="cbordlay"><a name="cbordlay"><!-- --></a>
+
+<h1 class="topictitle1">Border layout manager</h1><div><p>The border layout manager lays out components into regions defined by compass
+directions. The class java.awt.BorderLayout implements LayoutManager2, and
+its constraint is a string that can be of the value "North", "East", "Center",
+"South" or "West".</p>
+<p>Two additional constants are used to support relative positioning based
+on the container's ComponentOrientation, "before line begins" and "after line
+ends". For example, in a container where ComponenetOrientation is  <tt>ComponentOrientation.LEFT_TO_RIGHT</tt>,
+"Before line begins" maps to "West", and "After line ends" maps to "East".
+Mixing the two types of constants is not recommended. Unusual results may
+show in the graph viewer and runtime, since the relative constants will take
+precedence.</p>
+<p>If you switch a container to BorderLayout and it has more than five components,
+then only the first five components are added with constraints. The remaining
+components will be moved from the container to the Freeform surface.</p>
+<p> <img src="../images/BorderLayout.gif" alt="elements placed with border layout" /> </p>
+<p>The constraints value is used as the second argument to the method  <tt>add(Component,Object)</tt> that
+adds the components to their parent container. The code to initialize the
+JPanel is now:</p>
+<pre>private void initialize() { 
+        
+       this.setLayout(new java.awt.BorderLayout()); 
+       this.add(getJLabel(), java.awt.BorderLayout.NORTH); 
+       this.add(getJScrollBar(), java.awt.BorderLayout.WEST); 
+       this.add(getJButton(), java.awt.BorderLayout.EAST);  
+       this.setSize(193, 124); 
+ }</pre>
+<p>When the layout manager was converted from null layout to BorderLayout,
+the explicit bounds property setting of each component was removed. When you
+select a component, the property sheet no longer shows the bounds, size and
+location properties because they are not used to position or size the component.
+Instead, a constraint property is shown that has the value of the constraint.
+When you edit the constraint property, a relevant editor will be used for
+the class of the component's parent's layout manager. For BorderLayout this
+is a drop-down list of available constraint regions.  </p>
+<p>In addition to the constraint value using the property sheet, and the Java
+source view which will round trip and be reflect in the Design view, you can
+specify the constraint when you drop a component. To see this use the palette
+to select a new component such as a JTree and as you move the mouse over the
+JPanel it shows five rectangles representing each of the constraint regions.</p>
+<p> <img src="../images/BorderLayoutDropJButtonNotCursor.gif" alt="dropping a bean outside of constraint limits" /> </p>
+<p>The occupied regions are shown in dark grey. When you move the mouse over
+them, they become a 'not' symbol, indicating that you cannot drop the component
+because the constraint region is not available. When the cursor is over one
+of the available regions, either "South" or "Center" it becomes an arrow with
+a + indicating that the region is available. The constraint region shows the
+name of the region, and a light grey rectangle is drawn inside the region
+to indicate it is the current target region.</p>
+<p> <img src="../images/BoederLayoutDropJButtonOnCenter.gif" alt="dropping a bean inside constraint limits" /> </p>
+<p>After releasing the mouse the button is added at the "Center" constraint.
+BorderLayout positions each component at one of the compass constraints along
+the edge with its preferred width or height as required and the "Center" component
+occupies all of the remaining space.</p>
+<p> <img src="../images/BorderLAyoutDropJButtonComplete.gif" alt="bean successfully dropped" /> </p>
+<p>In addition to specifying the constraint when you a drop a component, you
+can select it and move it to a new region in the Design view. In the above
+example, you can drag the JScrollBar in the West region to the OK button in
+the East region. When you release the mouse, the components will swap with
+each other leaving the JScrollBar now in the East region and the OK button
+in the West region. You can move components to empty regions as well as ones
+already occupied.</p>
+</div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="ccontlay.html" title="">Containers and layout managers</a><br /><a href="cflowlay.html" title="">Flow layout manager</a><br /><a href="cnullay.html" title="">Null layout manager</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Viewing and changing bean properties" />
+<meta name="DC.Relation" scheme="URI" content="cpropvw.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjveovrvw.dita" />
+<meta name="DC.Relation" scheme="URI" content="tjveedit.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tjveviewprop" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Viewing and changing bean properties</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="tjveviewprop"><a name="tjveviewprop"><!-- --></a>
+
+<h1 class="topictitle1">Viewing and changing bean properties</h1><div><div class="p"><p>To view and change the properties for a bean:</p>
+</div><ol><li><span>From the pop-up menu for the .java file, select  <b>Open With &gt;
+Visual Editor for Java</b>. The Visual Editor opens and the visual components
+of the Java class are rendered in the Design view.</span></li><li><span>Go to the Properties view ( <b>Window &gt; Show View &gt; Properties</b>)
+and select the property's  <b>Value</b> column. For instructions on changing
+values in this view, refer to the related topic on editing visual beans.</span></li></ol><div class="p"><p><b>The Properties view</b></p>
+<p>Each entry in the Properties view
+represents an instance of a  <tt>java.beans.PropertyDescriptor</tt> class
+that is obtained by performing introspection on the beans. Each property descriptor
+can have a get method for retrieving the current value and a set method for
+updating the value. By default, the properties shown in this view are those
+that have both a get and a set method, that is, properties that can be both
+read and written. If you would also like to see read-only properties, click
+the  <b>Menu</b>  button (the down arrow) on the view's toolbar and select
+the corresponding menu item.</p>
+<p>The name shown for each property is the
+value of the displayName property from the  <tt>java.beans.PropertyDescriptor</tt> class.
+If there is no displayName property set then the name of the property descriptor
+is used instead. The value of the property is the result of calling the get
+method associated with the descriptor.</p>
+<p>The value of some properties
+may itself be a Java bean that has properties, in which case a plus sign (+)
+appears in the  <b>Property</b> column. Click the plus sign to expand the
+view and see all the bean properties.</p>
+<p>A right angle bracket (&gt;) next
+to a name in the  <b>Property</b> column indicates a property whose value
+is explicitly set in code, not returned from the live bean. If you select
+the  <b>Value</b> column for a property that is flagged with the &gt; symbol,
+the line of Java code that sets the value is highlighted in the source view.
+To toggle the &gt; symbol on or off, click the  <b>Menu</b> button (the down
+arrow) on the view's toolbar.</p>
+<p><b>Null values</b></p>
+<p>Sometimes it
+is difficult to distinguish null from empty values in the <b>Value</b> column.
+To solve this problem, click the Menu button on the toolbar and select <b>Show
+null values</b>. The characters <tt>&lt;null&gt;</tt>  will
+then appear in the Value column when the result of calling the property's
+get method on the Java bean returns null.</p>
+<p>To set a value to be explicitly
+null, select it the Value cell and click the  <b>Set the Active Property Being
+Edited to Null</b> button on the Properties view's toolbar. The set method
+will now be called with a null argument.</p>
+<p><b>Resetting a property's value</b></p>
+<p>When
+you first drop a bean in the Design view in the Visual Editor, all of the
+values shown in the Properties view are the initial defaults. If a property
+is changed a set method is generated in the code. If you wish to unset the
+value of a property, click the  <b>Restore Default Value</b>  button on the
+Properties view's toolbar.</p>
+<p>When a value is restored to its default value
+the statement that sends the set method is deleted from the source and the
+set method is explicitly called with the original default value, to restore
+the Java bean to its default state. The original value is also sent to the
+bean if you delete the set method manually, in the source code view.</p>
+</div></div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="cpropvw.html" title="">Properties view</a><br /></p><p><b class="reltaskshd">Related tasks</b><br /><a href="tjveovrvw.html" title="">Composing classes visually</a><br /><a href="tjveedit.html" title="">Editing a visual bean</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>

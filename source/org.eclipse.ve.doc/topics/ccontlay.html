@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2003" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Containers and layout managers" />
+<meta name="DC.Relation" scheme="URI" content="cflowlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cnullay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cbordlay.dita" />
+<meta name="DC.Relation" scheme="URI" content="cgridbag.dita" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="ccontlay" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="..\../com.ibm.style.doc/swg_info_common.css" />
+<title>Containers and layout managers</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=100,top=100' );
+      popup.focus();
+    }
+</script></head>
+<body id="ccontlay"><a name="ccontlay"><!-- --></a>
+
+<h1 class="topictitle1">Containers and layout managers</h1><div><p>Some Java beans allow relationships between themselves. For example, the
+class java.awt.Container allows instances of java.awt.Component to be added
+to it as part of its components relationship. An example of java.awt.Container
+is a panel or a frame. An example of java.awt.Component is a button or a text
+box. In the Visual Editor for Java, containment relationships are shown in
+the Java Beans view and in the Design view.</p>
+<p>A layout manager is an object that controls the size and position of components
+within a container. You can choose to set the layout manager on a container
+to null, thereby allowing each component to size and position itself. However,
+the position of the GUI components will not correspond to the changes you
+make when you resize the window. Rather than having a fixed size and position
+for each component, the container will delegate the sizing and positioning
+of its components by using a layout manager.</p>
+<p>Each layout manager has its own rules for distributing the components,
+but most place each component so that they are at least as big as their preferred
+size. The preferred size of components with user visible strings, such as
+button or label, is calculated dynamically. So, as the string length changes
+due to different locales or fonts, the layout manager will reposition each
+component. As the window is resized by the user at runtime, a layout manager
+will also reposition each component to optimize the new overall size. This
+makes layout managers invaluable for building GUIs that will be deployed in
+an environment where label strings, fonts, or window size may vary.</p>
+<p>The Visual Editor allows you to set the layout manager of a container to:</p>
+<ul><li>null</li>
+<li>java.awt.FlowLayout</li>
+<li>java.awt.BorderLayout</li>
+<li>java.awt.GridLayout</li>
+<li>java.awt.GridBagLayout</li>
+<li>java.awt.CardLayout.</li>
+<li>java.awt.BoxLayout</li>
+</ul>
+<p>These topics are covered separately in the documentation.</p>
+<p>If you use a layout manager not supplied in the Visual Editor, the Design
+view will still construct the container correctly and render the components.
+However, you won't be able to update constraints using the Properties view
+or Design view.</p>
+</div><div><p><b class="relconceptshd">Related concepts</b><br /><a href="cflowlay.html" title="">Flow layout manager</a><br /><a href="cnullay.html" title="">Null layout manager</a><br /><a href="cbordlay.html" title="">Border layout manager</a><br /></p></div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 2000, 2003. All Rights Reserved.</div>
+</body>
+</html>
