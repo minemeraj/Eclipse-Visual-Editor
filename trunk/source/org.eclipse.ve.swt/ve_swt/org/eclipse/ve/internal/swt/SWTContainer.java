@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -64,13 +65,31 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			for (int i = 0; i < swtLibraries.length; i++) {
 				Path path = new Path(swtLibraries[i][1]);
 				URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(swtLibraries[i][0]), path);
-				if (locSrc[0] == null)
-					continue;
-				path = new Path(Platform.resolve(locSrc[0]).getFile());
+				if (locSrc[0] != null) 					
+				   path = new Path(Platform.resolve(locSrc[0]).getFile());
+				else
+				   path = null;
 				Path srcPath = null;
-				if (locSrc[1] != null)
+				if (locSrc.length>1 && locSrc[1] != null)
 					srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
-				fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
+				if (path!=null) 
+				   fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
+				else {
+					//TODO: this is a temporary M6 hack for flatten swt.jar
+					Bundle[] frags = Platform.getFragments(Platform.getBundle(swtLibraries[i][0]));
+					IPath location = null;
+					for (int j = 0; j < frags.length; j++) {
+						if (frags[i].getSymbolicName().indexOf(".nl")>=0) continue;
+						// TODO: Assume a single real fragment for SWT					
+						String filter = (String) frags[i].getHeaders().get("Eclipse-PlatformFilter");
+						if (filter.indexOf("osgi.ws")>=0) {
+								location = new Path(Platform.getInstallLocation().getURL().getPath());
+								String version = "_"+(String) frags[i].getHeaders().get("Bundle-Version");
+								location = location.append("plugins").append(frags[i].getSymbolicName()+version+".jar");
+					    }						
+					}				
+					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(location, location, null);						
+				}
 			}
 
 			if (isJFace) {
@@ -99,6 +118,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
 					fClasspathEntries[ci++] = JavaCore.newLibraryEntry(path, srcPath, null);
 				}
+				
+				
 			}
 
 		} catch (IOException e) {
