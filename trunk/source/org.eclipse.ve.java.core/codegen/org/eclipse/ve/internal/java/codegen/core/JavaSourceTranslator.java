@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.63 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.64 $  $Date: 2005-02-23 23:23:39 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -891,9 +891,9 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
 				  reverseParse(monitor);					
 				} catch (Exception e) {
 					if (!isDown(monitor)) {
-						fireParseError(true);
-						String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
-						return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, msg ,e);
+						fireParseError(true);						
+						String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();						
+						return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, msg!=null?msg:"" ,e); //$NON-NLS-1$
 				    }
 				}
 				return Status.OK_STATUS;
