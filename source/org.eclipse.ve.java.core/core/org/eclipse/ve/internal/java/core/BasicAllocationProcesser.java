@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,8 +10,9 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-18 18:15:15 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-19 23:04:07 $ 
  */
+package org.eclipse.ve.internal.java.core;
  
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -111,6 +111,9 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 */
 	public IBeanProxy allocate(JavaAllocation allocation) throws AllocationException {
 		EClass allocClass = allocation.eClass();
+		// We are using explicit tests here for type of allocation so that these can be overridden by
+		// others. If we used instanceof, then the overrides that are subclasses may be grabbed here
+		// instead of where intended.
 		if (allocClass == InstantiationPackage.eINSTANCE.getParseTreeAllocation())
 			return allocate((ParseTreeAllocation) allocation);
 		else if (allocClass == InstantiationPackage.eINSTANCE.getInitStringAllocation())
@@ -119,6 +122,18 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			return allocate((ImplicitAllocation) allocation);
 		else
 			throw new IllegalArgumentException("Invalid allocation class: \""+allocClass.toString()+"\"");
+	}
+	
+	/**
+	 * Allocate from a parse tree allocation.
+	 * @param allocation
+	 * @return the bean proxy from allocation execution.
+	 * @throws AllocationException
+	 * 
+	 * @since 1.0.0
+	 */
+	protected IBeanProxy allocate(ParseTreeAllocation allocation) throws AllocationException {
+		return BasicAllocationProcesser.instantiateWithExpression(allocation.getExpression(), domain);
 	}
 	
 	/**
@@ -150,14 +165,15 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	/**
 	 * Allocate for a parse tree
 	 * @param parseTree
-	 * @return The allocation
+	 * @param domain
+	 * @return The allocation.
 	 * 
 	 * @since 1.0.0
 	 */
-	protected IBeanProxy allocate(ParseTreeAllocation parseTree) throws AllocationException {
+	public static IBeanProxy instantiateWithExpression(PTExpression expression, IBeanProxyDomain domain) throws AllocationException {
 		ParseAllocation allocator = new ParseAllocation(domain.getThisType());
 		try {
-			return allocator.getBeanProxy(parseTree.getExpression(), domain.getProxyFactoryRegistry());
+			return allocator.getBeanProxy(expression, domain.getProxyFactoryRegistry());
 		} catch (ProcessingException e) {
 			throw new AllocationException(e.getCause());
 		} catch (ThrowableProxy e) {

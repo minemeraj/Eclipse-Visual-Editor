@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2004-04-27 21:35:21 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-19 23:04:07 $ 
  */
 
 import java.util.*;
@@ -874,13 +874,12 @@ protected IBeanProxy beanProxyAllocation(JavaAllocation allocation) throws Alloc
 }
 /**
  * @param aString
- * @param targetClass
- * Temporary method here just to allow SWT proxies to refactor the basic initialization to run it on the display thread * 
+ * @param targetClass 
  * 
  * @since 1.0.0
  */
 protected IBeanProxy basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException{
-	return BasicAllocationProcesser.instantiateWithString(null, targetClass);
+	return BasicAllocationProcesser.instantiateWithString(aString, targetClass);
 }
 protected IBeanTypeProxy getTargetTypeProxy() {
 	String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();

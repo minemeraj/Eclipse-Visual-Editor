@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-19 23:04:05 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -73,7 +73,7 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 	/**
 	 * Helper to avoid casting all over the place.  Maybe should be cached later
 	 */
-	protected EObject getEObject() {
+	protected final EObject getEObject() {
 		return (EObject) target;
 	}
 

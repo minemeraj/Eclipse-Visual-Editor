@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-05-19 17:05:43 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-19 23:04:11 $ 
  */
 
 import org.eclipse.jdt.core.dom.*;
@@ -42,7 +42,7 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$
-	private static final String IMAGE_INITSTRING_START = "org.eclipse.swt.graphics.Image(org.eclipse.swt.widgets.Display.getDefault()"; //$NON-NLS-1$
+	private static final String IMAGE_INITSTRING_START = "org.eclipse.swt.graphics.Image(org.eclipse.swt.widgets.Display.getCurrent()"; //$NON-NLS-1$
 	private static final String IMAGE_CLASSNAME = "org.eclipse.swt.graphics.Image";
 
 	public ImageCellEditor(Composite parent) {
