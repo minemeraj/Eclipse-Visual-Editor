@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-01-21 15:19:56 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-24 22:17:23 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -546,13 +546,10 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	 * Propagate to settings if not already propagated and not contained in a resource.
 	 */
 	public final void propagate() {
-//		propagated = true;
 		if (isPropagated())
 			return;
 		if (getTarget() instanceof EObject && ((EObject) getTarget()).eResource() != null) {
-			long l = System.currentTimeMillis();			
 			primPropagate();
-			System.out.println("Time to propogate inverse = " + (System.currentTimeMillis() - l));
 		}
 	}
 	
