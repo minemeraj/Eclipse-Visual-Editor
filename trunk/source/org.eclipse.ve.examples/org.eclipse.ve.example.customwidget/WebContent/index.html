@@ -592,44 +592,197 @@ plugin.<br>
 <img style="border: 1px solid ; width: 465px; height: 502px;"
  alt="JarExport" src="images/index.9.jpg"><br>
 <br>
+<a name="Testing_as_a_JAR"></a>Having created the plugin you can now
+test it.&nbsp; To do this create an Eclipse launch configuration using
+the <span style="font-weight: bold;">Run </span>menu to bring up the
+list of avaliable launch configurations, selecting <span
+ style="font-style: italic;">Eclipse Application</span> and <span
+ style="font-style: italic;">New </span>and then running this.&nbsp;
+This will launch a second Eclipse workbench - the first being your one
+that you are using to develop the plugin and the second being the one
+you are going to use to deploy the plugin into.&nbsp; In the deployed
+workbench create a Java project and add customwidgets.jar to the Java
+build path.&nbsp; This is done using the pop-up menu option to open the
+<span style="font-weight: bold;">Properties </span>of the project and
+selecting <span style="font-weight: bold;">Java Build path ...</span>.&nbsp;
+On the build path select the <span style="font-style: italic;">Libraries
+</span>tab and <span style="font-style: italic;">Add External Jar ...</span>.&nbsp;
+Point to the location of the JAR in the plugin itself - for the example
+figure above this would be <span style="font-style: italic;">D:\temp\tutorial\org.eclipse.ve.example.customwidget.customwidgets.jar.</span>&nbsp;
+Having added the JAR containing the <span style="font-style: italic;">MyCustomPrompter
+</span>class you can now use it within a visual editor class.&nbsp;
+Create a test sample using <span style="font-weight: bold;">File &gt;
+New &gt; Visual class </span>and selecting <span
+ style="font-weight: bold;">SWT &gt; Shell.&nbsp; </span>This will
+open the Visual Editor over a class with an SWT shell.&nbsp; Select the
+<span style="font-style: italic;">Choose Bean </span>palette entry and
+because <span style="font-style: italic;">customwidgets.jar </span>is
+in the project's build path (the effective -classpath used by the
+Eclipse Java compiler and by the Visual Editor) you can choose <span
+ style="font-style: italic;">MyCustomPrompter </span>and drop it onto
+the Shell.<br>
 <br>
+The behavior of <span style="font-style: italic;">MyCustomPrompter </span>is
+everything picked up by default as the Visual Editor will realize that <span
+ style="font-style: italic;">MyCustomPrompter </span>extends <span
+ style="font-style: italic;">org.eclipse.swt.widgets.Composite </span>so
+it will be rendered visually and have default property sheet, code
+generation, graphical edit part and event menu behavior.&nbsp; The
+remainder of this tutorial shows how to customize this behavior as
+described in the <a href="#Introduction">introduction</a>.<br>
 <br>
-<p class="PictureParagraph"><br>
-</p>
 <h2><a name="Creating_a_Classpath_Container">Creating a Classpath
-Container</a></h2>
-<p>
-&nbsp;</p>
-<p>
-In order to make the <i><b>customwidgets.jar </b></i> available for
-users on the target IDE, we are going to define a Classpath container
-that points to our jar.&nbsp; Users would then be able add this
-specific container to their classpath and make the <i>MyCustomPrompter</i>
-widget available for use.</p>
-<p>
-To do so, we will add the following to the <a
+Container</a><br>
+</h2>
+<p>For the test described at the end of the precedding section the <span
+ style="font-style: italic;">MyCustomPrompter </span>class was made
+available to the user's Java project by them adding it as an external
+JAR.&nbsp; This isn't ideal as it requires the user knowing the
+location of the plugin directory on their computer and physically
+pointing to it.&nbsp; A better way is to use a classpath
+container.&nbsp; This allows one-touch configuration of a Java project
+to use a named container which handles all the internals of how to
+locate the correct runtime code.&nbsp; <br>
+</p>
+<p>A Java container is a class that implements the JDT interface <span
+ style="font-style: italic;">org.eclipse.jdt.core.IClasspathContainer</span>.&nbsp;&nbsp;
+It is added to a Java project's build path using the <span
+ style="font-style: italic;">Add Library </span>button on the <span
+ style="font-style: italic;">Libraries </span>tab and an example of
+one used by the Visual Editor is <span style="font-style: italic;">org.eclipse.ve.internal.swt.SWTContainer</span>.&nbsp;&nbsp;
+As well as the JDT using the container to locate the runtime classes
+the Visual Editor uses this as a marker for extension behavior.&nbsp;
+When the Visual Editor opens over a project all of the containers are
+scanned and matched against extension points to see if there are any
+plugins that wish to contribute to the palette or any other custom
+visual editor behavior based on the classes included within the
+container.<br>
+</p>
+<p>This tutorial doesn't create a new container class because the
+complexities involved doing this require knowledge of JDT concepts such
+as IPath and IClassPathEntry[].&nbsp; It is expected that commercial
+quality plugins extending the Visual Editor will create their own
+containers in which case the <span style="font-style: italic;">SWTContainer
+</span>class is a good example to look at to learn how to do this,
+however for simplicitly the visual editor provides a reference
+implementation container class&nbsp; <span style="font-style: italic;">org.eclipse.ve.internal.java.core.RegisteredClassPathContainer.&nbsp;
+</span>The Registered container uses extension points to determine the
+JAR files it will add to the user's build path.<br>
+</p>
+<p>The user experience is that a container called "Custom Prompter"
+will be available for them to add to a Java project's build path.&nbsp;
+This is described in the section <a href="#Using_a_classpath_container">Using
+a classpath container</a>.&nbsp; The JDT extension point <span
+ style="font-style: italic;">org.eclipse.jdt.ui.classpathContainerPage </span>allows
+contributions to be made for an entry to appear in the list of
+containers and be available for the user to select, as well as the
+wizard page that will then appear once <span
+ style="font-style: italic;">Next </span>is pressed.&nbsp; The wizard
+page is responsible for configuring the project's build path to
+actually add the container classpath entry.<br>
+</p>
+<p>To add the <span style="font-style: italic;">Custom Prompter </span>entry
+to the list of available containers add the following to the <a
  href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">plugin.xml</a>
-of our plugin:</p>
-<blockquote>
-  <pre>&lt;plugin&gt;<br>   &lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br>            <font
- color="#0000ff">name</font>="<font color="#0000ff">Custom Prompter</font>"<br>            class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"<br>            <font
- color="#0000ff">id</font>="<font color="#0000ff">org.eclipse.ve.example.PrompterContainer</font>"&gt;<br>      &lt;/classpathContainerPage&gt;<br>   &lt;/extension&gt;  <br>   <br>   &lt;extension<br>         point="org.eclipse.jdt.core.classpathContainerInitializer"&gt;<br>      &lt;classpathContainerInitializer<br>            class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"<br>            id="org.eclipse.ve.example.PrompterContainer"&gt;<br>      &lt;/classpathContainerInitializer&gt;<br>   &lt;/extension&gt;   <br>   <br>  &lt;extension<br>         point="org.eclipse.ve.java.core.registrations"&gt;<br>      &lt;registration<br>            <font
- color="#0000ff">container</font>="org.eclipse.ve.example.PrompterContainer"<br>            <font
- color="#0000ff">description</font>="<font color="#0000ff">Custom Prompter</font>"&gt;<br>         &lt;library runtime="<font
- color="#0000ff">customwidgets.jar</font>"/&gt;<br>      &lt;/registration&gt;<br>   &lt;/extension&gt; <br>&lt;/plugin&gt;</pre>
-</blockquote>
-<ul>
-  <li>The first is a JDT extension that registers the VE <i>RegisteredClasspathContainerWizardPage</i>
-as a container wizard page.</li>
-  <li>The second (a JDT) extension registers a VE <i>RegisteredClasspathContainerInitializer</i>
-and binds it to the wizard page above.</li>
-  <li>The third extension is a VE extension, and binds the container
-id, to the <i>customwidgets.jar </i>that we have generated.</li>
-</ul>
-<p>
-<img src="images/note.gif" alt="Note: " height="13" width="62">The jar
-name registered here must be the same name/path we gave it when we
-exported the .jar.</p>
+of the <span style="font-style: italic;">org.eclipse.ve.examples.customwidget
+</span>plugin.<br>
+</p>
+<blockquote> </blockquote>
+<pre><br>  &lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br><img
+ style="width: 24px; height: 13px;" alt="tag1" src="images/tag1.gif">         name="Custom Prompter"<br><img
+ style="width: 24px; height: 13px;" alt="tag2" src="images/tag_2.gif">         class="org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage"<br><img
+ style="width: 24px; height: 13px;" alt="tag3" src="images/tag_3.gif">         id="org.eclipse.ve.example.PrompterContainer"&gt;<br>      &lt;/classpathContainerPage&gt;<br>   &lt;/extension&gt;  <br></pre>
+The name <img style="width: 24px; height: 13px; font-style: italic;"
+ alt="tag1" src="images/tag1.gif"><span style="font-style: italic;">
+"Custom Prompter"</span> is the user visible String shown in the list
+of available libraries from the <span style="font-style: italic;">Add
+Library </span>wizard on the <span style="font-style: italic;">Libraries
+</span>tab on the <span style="font-style: italic;">Java build
+path.&nbsp; </span>In a commercial quality plugin it is expected this
+would come from a resource bundle and be externalized for different
+locales however this tutorial will hard code it to the literal <span
+ style="font-style: italic;">"Custom Prompter"</span>.&nbsp; Once the
+user selects a container library to be added and presses <span
+ style="font-style: italic;">Next </span>a wizard page is brought up
+showing configuration details of the particular container.&nbsp; This
+wizard page <span style="font-style: italic;">implements
+org.eclipse.jdt.ui.wizards.IClasspathContainerPage</span> and for a
+commercial quality plugin it is expected that a custom page would be
+written.&nbsp; The visual editor SWT container page
+org.eclipse.ve.internal.swt.SWTcontainerWizardPage is a good example to
+look at if your intention is to create a full wizard page, however the
+visual editor provides an example <span style="font-style: italic;">org.eclipse.ve.internal.java.wizard.RegisteredClasspathContainerWizardPage
+</span>that can be used <img style="width: 24px; height: 13px;"
+ alt="tag2" src="images/tag_2.gif">.&nbsp;&nbsp; <br>
+<br>
+The container needs an id that uniquely identifies it within an Eclipse
+environment and this tutorial uses&nbsp;<img
+ style="width: 24px; height: 13px;" alt="tag3" src="images/tag_3.gif"> <span
+ style="font-style: italic;">org.eclipse.ve.example.PrompterContainer.</span><br>
+<br>
+The RegisteredClasspathContainerWizardPage will add the container
+RegisteredClasspathContainer to the build path of the user's project
+once they select it.&nbsp; This is a generic container and to identify
+it as being an entry that should point to the runtime files required
+for the <span style="font-style: italic;">MyCustomPrompter </span>and
+its supporting classes requires two further extension points.&nbsp; If
+a specific custom container is being used then these are not required.<br>
+<br>
+The extension point <span style="font-style: italic;">org.eclipse.jdt.core.classpathContainerInitializer
+</span>specificies a container initializer that will be used by the JDT
+to configure containers.&nbsp; The following lines should be added to
+the plugin.xml for the <span style="font-style: italic;">org.eclipse.ve.examples.customwidget
+</span>plugin.<br>
+<br>
+<pre>   &lt;extension<br>         point="org.eclipse.jdt.core.classpathContainerInitializer"&gt;<br>      &lt;classpathContainerInitializer<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">      class="org.eclipse.ve.internal.java.core.RegisteredClasspathContainerInitializer"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">      id="org.eclipse.ve.example.PrompterContainer"&gt;<br>      &lt;/classpathContainerInitializer&gt;<br>   &lt;/extension&gt;   <br>   <br> </pre>
+The class used is a reference implementation provided by the Visual
+Editor and is <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> <span style="font-style: italic;">org.eclipse.ve.internal.java.core.RegisteredClasspathcontainerInitializer.&nbsp;
+</span>The id used must match the one described earlier as the id of
+the container wizard page.&nbsp; This tutorial is using <img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif"> <span
+ style="font-style: italic;">org.eclipse.ve.example.PrompterContainer.<br>
+<br>
+</span>Having configured the wizard page and the container initializer
+this will now add an instance of the RegisteredClasspathContainer to
+the user's build path of their Java project.&nbsp; This need to be told
+where to locate the jars that contain the runtime code.&nbsp; There is
+an extension point used by the RegisteredClasspathContainer class named
+<span style="font-style: italic;">org.eclipse.ve.java.core.registrations.&nbsp;
+</span>To use it add the following lines to the plugin.xml.&nbsp; Note
+that if a true container implementation is being done instead then this
+extension point is not required - it is only used by the
+RegisteredClasspathContainer.&nbsp; For example, the project
+org.eclipse.ve.swt that defines the SWT extensions for the visual
+editor has its own custom behavior and does not require use of this
+extension point.&nbsp; <span style="font-style: italic;"></span><br>
+<pre> &lt;extension<br>         point="org.eclipse.ve.java.core.registrations"&gt;<br>      &lt;registration<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">       container="org.eclipse.ve.example.PrompterContainer"<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">       description="Custom Prompter"&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">     &lt;library runtime="customwidgets.jar"/&gt;<br>      &lt;/registration&gt;<br>   &lt;/extension&gt; <br></pre>
+The&nbsp; name of the container must match the id used when the
+classpath wizard page and container initializer were defined.&nbsp;
+This tutorial is using <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag1.gif"> <span style="font-style: italic;">org.eclipse.ve.example.PrompterContainer.&nbsp;&nbsp;
+</span>The container needs a description that will appear in the Java
+build path list of classpath entries and the tutorial uses the hard
+coded literal <img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_2.gif"> <span style="font-style: italic;">"Custom
+Prompter".&nbsp; </span>The plugin element&nbsp;<img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
+&lt;library runtime="customwidgets.jar".&gt; describes the actual
+location of the runtime jars that container the <span
+ style="font-style: italic;">MyCustomPrompter </span>class.&nbsp; If
+there are multiple jars then the entry can be repeated.&nbsp;&nbsp; The
+location of the jar is relative to the plugin itself, so if <span
+ style="font-style: italic;">customwidgets.jar </span>were in a
+directory called <span style="font-style: italic;">jars </span>within
+the plugin then the entry would be runtime="jars/.customwidgets.jar".<br>
+<h2><a name="Using_a_classpath_container"></a>Using a classpath
+container<br>
+</h2>
 <p>If you launch the workspace you will be able to see/use this
 container :</p>
 <blockquote>
