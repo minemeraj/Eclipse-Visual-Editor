@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.1 $  $Date: 2004-02-05 23:11:19 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-26 18:16:09 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -37,7 +37,8 @@ public class DisplayManager {
 		
 		// TODO These need to go into a Common that is available to both IDE and remote vm.
 		protected static final int RUN_EXEC = 0;
-		protected IBeanProxy displayExecProxy;
+		
+		IBeanProxy displayExecProxy;
 		
 		/*
 		 * Set the displayExec proxy for this runnable.
@@ -53,7 +54,9 @@ public class DisplayManager {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, org.eclipse.jem.internal.proxy.core.IBeanProxy)
 		 */
-		public Object calledBack(int msgID, IBeanProxy parm) {
+		public final Object calledBack(int msgID, IBeanProxy parm) {
+			// Set so that we now we are running under a UI thread callback.
+			Constants.getConstants(displayExecProxy.getProxyFactoryRegistry()).setThreadSyncDisplay(parm);
 			try {
 				if (msgID == RUN_EXEC) {					
 					try {
@@ -64,7 +67,8 @@ public class DisplayManager {
 				}
 			} finally {
 				// Clean up. This is a one-shot deal.
-				ProxyFactoryRegistry registry = displayExecProxy.getProxyFactoryRegistry();				
+				ProxyFactoryRegistry registry = displayExecProxy.getProxyFactoryRegistry();
+				Constants.getConstants(displayExecProxy.getProxyFactoryRegistry()).setThreadSyncDisplay(null);	// No longer under UI thread callback control.				
 				registry.getCallbackRegistry().deregisterCallback(displayExecProxy);				
 				Constants.getConstants(registry).returnDisplayExec(displayExecProxy);				
 			}
@@ -120,6 +124,19 @@ public class DisplayManager {
 				registry.registerConstants(REGISTRY_KEY, constants = new Constants(registry));
 			return constants;
 		}
+		
+		/*
+		 * This stores for the current thread what displayProxy for a syncExec in use for the thread. This
+		 * is set on the callback so that any calls from that thread to the same displayProxy will know that
+		 * it is already connected to the UI thread and so syncExec's don't need to get a new DisplayExec and
+		 * create a new thread to handle the runnable. Just execute it.
+		 * 
+		 * The value return from this is the IBeanProxy (for displayProxy) for the current thread for the current
+		 * registry (since Constants are stored on a per-registry basis. There can only be one display callback per-thread
+		 * per-registry. If another display is desired for an callback thread from a UI call, then a new callback
+		 * thread will be required, so we would have a new ThreadLocal value.
+		 */
+		private ThreadLocal threadInSyncExec = new ThreadLocal();
 		
 		private IBeanTypeProxy displayType;
 		private IBeanTypeProxy displayExecType;
@@ -208,6 +225,30 @@ public class DisplayManager {
 				return getDisplayExecType().newInstance();
 			} else
 				return (IBeanProxy) displayExecPool.pop();
+		}
+		
+		/*
+		 * Get the Display proxy for the current thread and registry (since this Constants instance is per-registry).
+		 * The Display proxy will only be set on a a/syncExec callback. This is so that we know that we are in a syncExec
+		 * for the given display.
+		 * 
+		 * @return displayProxy for the current thread if in a a/syncExec callback, or <code>null</code> if not in a callback.
+		 * 
+		 * @since 1.0.0
+		 */
+		public IBeanProxy getTheadSyncDisplay() {
+			return (IBeanProxy) threadInSyncExec.get();
+		}
+		
+		/*
+		 * Set the Display proxy for the current thread. 
+		 * @param displayProxy the display proxy to use for current thread, or <code>null</code> if no longer in callback.
+		 * 
+		 * @since 1.0.0
+		 * @see DisplayManager#getThreadSyncDisplay
+		 */
+		public void setThreadSyncDisplay(IBeanProxy displayProxy) {
+			threadInSyncExec.set(displayProxy);
 		}
 		
 		public synchronized void returnDisplayExec(IBeanProxy displayExecProxy) {
@@ -361,20 +402,29 @@ public class DisplayManager {
 	 */
 	protected static Object syncExec(IBeanProxy displayProxy, DisplayRunnable runnable, ProxyFactoryRegistry registry) throws ThrowableProxy {
 		Constants constants = Constants.getConstants(registry);
-		IBeanProxy displayExecProxy = constants.getFreeDisplayExec();
-		try {
-			runnable.setDisplayExecProxy(displayExecProxy);			
-			registry.getCallbackRegistry().registerCallback(displayExecProxy, runnable);
-			Object result = constants.getDisplayExecSyncExec().invoke(displayExecProxy, displayProxy);
-			displayExecProxy = null;	// Ended well, so runnable took care of clean up.
-			if (result instanceof ThrowableProxy)
-				throw (ThrowableProxy) result;
-			return result;
-		} finally {
-			if (displayExecProxy != null) {
-				registry.getCallbackRegistry().deregisterCallback(displayExecProxy);				
-				constants.returnDisplayExec(displayExecProxy);
+		IBeanProxy inSyncProxy = constants.getTheadSyncDisplay();
+		if (inSyncProxy != null && displayProxy == null) 
+			displayProxy = getDefault(registry);	// We must get the default because we are currently within a UI callback for this thread and we MUST verify if different display.
+		if (inSyncProxy == null || inSyncProxy != displayProxy) {
+			// Either we are not within a current display UI callback, or we are, but the display we want is a different one, then need a new callback.
+			IBeanProxy displayExecProxy = constants.getFreeDisplayExec();
+			try {
+				runnable.setDisplayExecProxy(displayExecProxy);
+				registry.getCallbackRegistry().registerCallback(displayExecProxy, runnable);
+				Object result = constants.getDisplayExecSyncExec().invoke(displayExecProxy, displayProxy);
+				displayExecProxy = null; // Ended well, so runnable took care of clean up.
+				if (result instanceof ThrowableProxy)
+					throw (ThrowableProxy) result;
+				return result;
+			} finally {
+				if (displayExecProxy != null) {
+					registry.getCallbackRegistry().deregisterCallback(displayExecProxy);
+					constants.returnDisplayExec(displayExecProxy);
+				}
 			}
+		} else {
+			// We are in the UI callback for the same display, so just execute the runnable.
+			return runnable.run(displayProxy);
 		}
 	}
 	
@@ -418,6 +468,9 @@ public class DisplayManager {
 	 */
 	protected static void asyncExec(IBeanProxy displayProxy, DisplayRunnable runnable, ProxyFactoryRegistry registry) throws ThrowableProxy {
 		Constants constants = Constants.getConstants(registry);
+		// Note: We aren't testing if currently under sync exec because these are ALWAYS to be farmed off to 
+		// next time UI thread processes the queue. Since we don't know when that is, we need to have a
+		// displayExec proxy around to actually process it.
 		IBeanProxy displayExecProxy = constants.getFreeDisplayExec();
 		try {
 			runnable.setDisplayExecProxy(displayExecProxy);
