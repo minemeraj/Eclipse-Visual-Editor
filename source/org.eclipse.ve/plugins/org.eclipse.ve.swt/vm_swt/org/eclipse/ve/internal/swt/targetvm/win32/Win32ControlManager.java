@@ -10,9 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Win32ControlManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-07-30 15:20:00 $ 
+ *  $Revision: 1.3 $  $Date: 2004-11-02 22:00:15 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.win32;
+
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.ve.internal.swt.targetvm.ControlManager;
 import org.eclipse.ve.internal.swt.targetvm.IImageCapture;
@@ -24,11 +28,46 @@ import org.eclipse.ve.internal.swt.targetvm.IImageCapture;
  */
 public class Win32ControlManager extends ControlManager {
 
+	/**
+	 * A Shell Listener that prevents the target shell from being closed or minimized.
+	 * @since 1.0.0
+	 */
+	public class PreventShellCloseMinimizeListener extends ShellAdapter {
+		
+		/**
+		 * Prevent the closing of the shell when the shellClosed event is received.
+		 * @param e the shell event
+		 */
+		public void shellClosed(ShellEvent e) {
+			e.doit = false;
+		}
+		
+		/**
+		 * Prevent the minimizing of the shell by un-minimizing whenever the minimization occurs
+		 * @param e the shell event
+		 */
+		public void shellIconified(ShellEvent e) {
+			Shell s = (Shell)e.widget;
+			s.setMinimized(false);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.swt.targetvm.ControlManager#getImageCapturer()
 	 */
 	public IImageCapture getImageCapturer() {
 		return new ImageCapture();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.targetvm.ControlManager#addShellListener(org.eclipse.swt.widgets.Shell)
+	 */
+	public void addShellListener(final Shell shell) {
+		shell.getDisplay().asyncExec(new Runnable(){
+			public void run() {
+				shell.addShellListener(new PreventShellCloseMinimizeListener());
+			}
+		});	
 	}
 
 }

@@ -10,17 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PreventShellCloseMinimizeListener.java,v $
- *  $Revision: 1.1 $  $Date: 2004-07-28 15:04:15 $ 
+ *  $Revision: 1.2 $  $Date: 2004-11-02 22:00:15 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Shell;
  
 
 /**
- * A Shell Listener that prevents the target shell from being closed or minimized.
+ * A Shell Listener that prevents the target shell from being closed.
  * @since 1.0.0
  */
 public class PreventShellCloseMinimizeListener extends ShellAdapter {
@@ -31,14 +30,5 @@ public class PreventShellCloseMinimizeListener extends ShellAdapter {
 	 */
 	public void shellClosed(ShellEvent e) {
 		e.doit = false;
-	}
-	
-	/**
-	 * Prevent the minimizing of the shell by un-minimizing whenever the minimization occurs
-	 * @param e the shell event
-	 */
-	public void shellIconified(ShellEvent e) {
-		Shell s = (Shell)e.widget;
-		s.setMinimized(false);
 	}
 }
