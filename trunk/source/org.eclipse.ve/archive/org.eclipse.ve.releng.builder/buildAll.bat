@@ -31,7 +31,9 @@ set buildType=%1 && shift && goto processcmdlineargs
 
 :run
 %vm% -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml %bootclasspath% -DmapVersionTag=%mapBersionTag% -DbuildType=%buildType%
-exit
+goto end
 
 :usage
 echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-vm <url to java executable to run build>] [-bc <bootclasspath>] I|M"
+
+:end
