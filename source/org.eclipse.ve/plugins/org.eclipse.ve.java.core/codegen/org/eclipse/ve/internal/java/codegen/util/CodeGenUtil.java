@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.29 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.30 $  $Date: 2005-03-15 21:48:45 $ 
  */
 
 
@@ -39,6 +39,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
+import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
@@ -795,16 +796,14 @@ public static MethodGeneratorFactory getMethodTextFactory (org.eclipse.ve.intern
  * remove it.
  */
 public static boolean propertyCleanup(EObject target, EStructuralFeature sf) { 
-   boolean result = false ;
    if (target.eIsSet(sf)) {
    	 EObject p = (EObject) target.eGet(sf) ;
-   	 if (p!=null && p.eContainer() instanceof MemberContainer) {
-   	 	MemberContainer c = (MemberContainer)p.eContainer() ;
-   	 	result = c.getProperties().contains(p) ;
-   	 	c.getProperties().remove(p) ;
+   	 if (p.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
+   	     ((MemberContainer) p.eContainer()).getProperties().remove(p);
+   	     return true;
    	 }
    }
-   return result ;
+   return false;
 }
 
 public static void logParsingError(String exp, String method, String msg, boolean event) {
