@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 16:16:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-18 21:45:42 $ 
  */
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -24,13 +25,14 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
-import org.eclipse.jem.internal.core.MsgLogger;
 import org.eclipse.ui.*;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.jem.internal.core.MsgLogger;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
 /**
@@ -104,7 +106,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		String[] jdtClassPaths = new String[jdtClassPath.size()];
 		for(int i=0;i<jdtClassPath.size();i++)
 			jdtClassPaths[i] = (String)jdtClassPath.get(i);
-		String templatePath = templateLocation.getPath().substring(0,templateLocation.getPath().lastIndexOf('/'));
+		String templatePath = null;
+		try {
+			templatePath = Platform.asLocalURL(templateLocation).getPath();
+			templatePath = templatePath.substring(0,templatePath.lastIndexOf('/'));
+		} catch (IOException e1) {
+			JavaVEPlugin.log(e1, MsgLogger.LOG_WARNING);
+		}
 		String[] templatePaths = {  templatePath };
 		try {
 			return (IVisualClassCreationSourceGenerator) TemplateObjectFactory.getClassInstance(jdtClassPaths, templatePaths, templateLocation.getPath().substring(templateLocation.getPath().lastIndexOf('/')+1), contributor.getClass().getClassLoader(), null, null);
@@ -201,8 +209,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			}
 			to.delete(true, monitor);
 			String source = finalSource.toString();
-			if(formatter!=null)
-				source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
+//			if(formatter!=null)
+//				source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 			declaringType.createMethod(NEWLINE+source+NEWLINE, sibling, true, monitor);
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
@@ -236,8 +244,10 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 				if (child instanceof IField) {
 					IField field = (IField) child;
 					String source = getCompleteSource(field.getCompilationUnit(), field);
-					if(formatter!=null)
-						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();						
+					if(formatter!=null){
+//						TextEdit te = formatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS,source,0, source.length(), 1, NEWLINE);
+//						source = te.toString();
+					}
 					toType.createField(source+NEWLINE, null, true, monitor);
 				}
 				if (child instanceof IMethod) {
@@ -260,16 +270,16 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 							merge(targetMethods[tmc], method, formatter, monitor);
 					}else{
 						String source = getCompleteSource(method.getCompilationUnit(), method);
-						if(formatter!=null)
-							source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
+//						if(formatter!=null)
+//							source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 						toType.createMethod(source, null, true, monitor);
 					}
 				}
 				if (child instanceof IType) {
 					IType type = (IType) child;
 					String source = getCompleteSource(type.getCompilationUnit(), type);
-					if(formatter!=null)
-						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
+//					if(formatter!=null)
+//						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
 					toType.createType(source, null, true, monitor);
 				}
 			}
@@ -282,15 +292,13 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		IVisualClassCreationSourceGenerator gen = getGeneratorInstance(contributor.getTemplateLocation());
 		try {
 			ICompilationUnit originalCU = type1.getCompilationUnit(); 
-			if (originalCU.isWorkingCopy())
-				originalCU = (ICompilationUnit) originalCU.getOriginal(originalCU);
 			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName);
-			ICompilationUnit workingCopy = (ICompilationUnit) originalCU.getWorkingCopy() ;
+			ICompilationUnit workingCopy = (ICompilationUnit) originalCU.getWorkingCopy(null) ;
 			workingCopy.getBuffer().setContents(src);
-			workingCopy.reconcile();
+			workingCopy.reconcile(true, null);
 			CodeFormatter formatter = contributor.needsFormatting()?ToolFactory.createCodeFormatter(null):null;
 			merge(originalCU, workingCopy, formatter, monitor);
-			workingCopy.destroy();
+			workingCopy.discardWorkingCopy();
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, MsgLogger.LOG_FINE);
 		}
@@ -362,7 +370,9 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 					window.getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							try {
-								activePage.openEditor(new FileEditorInput((IFile) resource), "org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"); //$NON-NLS-1$
+								String editorID = "org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"; //$NON-NLS-1$
+								activePage.openEditor(new FileEditorInput((IFile) resource), editorID); 
+								IDE.setDefaultEditor((IFile)resource, editorID);
 							} catch (PartInitException e) {
 								JavaVEPlugin.log(e);
 							}
