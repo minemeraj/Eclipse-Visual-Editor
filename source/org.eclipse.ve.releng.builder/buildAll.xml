@@ -117,16 +117,24 @@
 	</target>
 	
 	<target name="pushftp" if="ftppush">
+		<!-- There may not be anything in buildnotes. ftp won't create directory in that case. But we must have one. -->
 	  	<ftp server="download.eclipse.org"
        		userid="${ftpUser}"
-		       password="${ftpPassword}"
-			remotedir="${remoteDir}">
+		      password="${ftpPassword}"
+			action="mkdir"
+			remotedir="${remoteDirectory}/${buildLabel}/buildnotes">
+		</ftp>
+
+	  	<ftp server="download.eclipse.org"
+       		userid="${ftpUser}"
+		      password="${ftpPassword}"
+			remotedir="${remoteDirectory}">
 		    <fileset dir="${buildDirectory}">
 				<include name="${buildLabel}/**"/>
 		    </fileset>
 		</ftp>
 	</target>
-	
+		
 	<target name="pushrsync" if="rsyncpush"/>
 	
 </project>
