@@ -77,4 +77,4 @@ if [ -z $buildType ] ; then
 	exit 0
 fi
 
-$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $buildID $rsyncPWFile $ftpUser $ftpPassword
+$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag -DbuildType=$buildType $buildID $rsyncPWFile $ftpUser $ftpPassword
