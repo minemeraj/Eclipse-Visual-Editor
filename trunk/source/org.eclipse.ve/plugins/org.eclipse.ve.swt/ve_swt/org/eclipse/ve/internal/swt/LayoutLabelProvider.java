@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 02:13:17 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-24 21:06:06 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -34,7 +34,7 @@ public class LayoutLabelProvider extends LabelProvider implements INeedData {
 		IBeanProxy beanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) element, JavaEditDomainHelper.getResourceSet(editDomain));
 		if (beanProxy != null) {
 			String qualifiedName = getQualifiedName(element);
-			return LayoutCellEditor.getDisplayName(qualifiedName);
+			return LayoutCellEditor.getDisplayName(editDomain, qualifiedName);
 		} else {
 			return "null";
 		}
