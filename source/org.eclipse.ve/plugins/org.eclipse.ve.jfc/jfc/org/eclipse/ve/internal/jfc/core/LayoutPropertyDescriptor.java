@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-12 22:29:43 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -35,10 +35,10 @@ public class LayoutPropertyDescriptor extends BeanPropertyDescriptorAdapter impl
 	
 	
 public ILabelProvider getLabelProvider() {
-	return createLabelProviderInstance(LayoutManagerLabelProvider.class, null, null, this);
+	return new LayoutManagerLabelProvider();
 }
 public CellEditor createPropertyEditor(Composite parent) {
-	return createCellEditorInstance(LayoutManagerCellEditor.class,parent , null, null);
+	return new LayoutManagerCellEditor(parent);
 }
 /**
  * It's here that we create the command to apply the new value to the 'layout' property of the container and we also create 
