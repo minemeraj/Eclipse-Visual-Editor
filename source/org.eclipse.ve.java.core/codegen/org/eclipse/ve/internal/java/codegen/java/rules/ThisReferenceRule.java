@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-13 21:11:52 $ 
+ *  $Revision: 1.4 $  $Date: 2004-01-23 12:45:36 $ 
  */
 
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public class ThisReferenceRule implements IThisReferenceRule {
 	public final static String[] INIT_METHOD_MODIFIERS = { "private", "public" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	// The following are list of sf that should not determine if to have a "this" part
-	public final static String[] ignoredAttributes = new String[] { "initializationString", "implicit", "instantiateUsing", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public final static String[] ignoredAttributes = new String[] { "allocation", "implicit", "instantiateUsing", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		"serializeData", "class", "listeners", "events" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	public ISourceVisitor overideThisReferenceVisit(AbstractMethodDeclaration mDecl, MessageSend exp, IBeanDeclModel model) {

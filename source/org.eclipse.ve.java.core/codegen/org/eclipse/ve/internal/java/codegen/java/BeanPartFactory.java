@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-21 00:00:24 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-23 12:45:36 $ 
  */
 
 import java.util.*;
@@ -65,30 +65,6 @@ public BeanPartFactory (IBeanDeclModel bmodel,IDiagramModelInstance cmodel) {
  *  Will create the BDM entries associated with the component and its children.
  */
 
-/**
- * If this component is a container, process its children 
- * @return List of BeanPart/SF pair denoting the beans generated
- */
-protected List processKidsIfNeeded(IJavaObjectInstance component,ICompilationUnit cu) throws CodeGenException {	
-    List kids = new ArrayList() ;
-    // Get a decoder that will know how to collect all first level childrens
-    IExpressionDecoder decoder = CodeGenUtil.getDecoderFactory(fBeanModel).getExpDecoder((IJavaObjectInstance)component) ;
-    Iterator itr = decoder.getChildren((IJavaObjectInstance)component).iterator() ;
-  	// This component has childrents, Process them first, so that we 
-    	// can add them as we generate the current method
-    while (itr.hasNext()) {
-    	IJavaObjectInstance child = (IJavaObjectInstance)itr.next() ;
-    	List GrandKids = createFromVCEModel(child, cu) ;    	
-    	if (!GrandKids.isEmpty())
-    	    fTotalGeneratedList.addAll(GrandKids) ;
-    	
-    	kids.add(fBeanModel.getABean(child)) ;
-    	kids.add(itr.next()) ;    		
-    } 
-    if (!kids.isEmpty())
-       fTotalGeneratedList.addAll(kids) ;
-    return kids ;    
-}
 
 protected IInstanceVariableCreationRule getVarRule() {
     if (fRule != null) return fRule ;
@@ -571,82 +547,6 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
          generateLocalVariable(component,ma.getMethodRef(),varName, cu) ;
       }
       fBeanModel.refreshMethods();
-}
-
-/**
- * @deprecated
- * @return additional First Level children BeanPart/SF pair List have been created
- */
-public List createFromVCEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
-		
-	
-	
-	// Sanity Check
-	if (fBeanModel.getABean(component)!=null) {
-	   JavaVEPlugin.log ("BeanPartGenerator.createFromVCEModel <--- check me", MsgLogger.LOG_FINE) ; //$NON-NLS-1$
-    	   return processKidsIfNeeded(component,cu) ;
-      }
-      
-      IType cuType = CodeGenUtil.getMainType(cu) ;
-
- 
-      String varName = getVarRule().getInstanceVariableName(component,cuType,fCompositionModel, fBeanModel) ;    
-      String methodName = getVarRule().getInstanceVariableMethodName(component,varName, cuType,fCompositionModel) ;
-    
-      BeanPart bp = fBeanModel.getABean(varName) ;
-      if (bp != null) throw new CodeGenException ("BeanPart Already Exists") ; //$NON-NLS-1$
-
-      
-      // Set up a new BeanPart in the decleration Model
-      String bType = ((IJavaObjectInstance)component).getJavaType().getQualifiedName() ;
-      bp = new BeanPart (varName,bType) ;
-      bp.setModel(fBeanModel) ;
-      bp.setEObject(component) ;
-      MemberDecoderAdapter ma = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(component.eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
-      // Instance variable are always members of BSC
-      if (component.eContainer() instanceof BeanSubclassComposition)
-         bp.setInstanceVar(true) ;
-      else
-         bp.setInstanceVar(false) ;
-        
-      CodeMethodRef   mref = ma.getMethodRef() ;
-      if (mref == null) {
-         if (bp.isInstanceVar()) {
-             mref = new CodeMethodRef(fBeanModel.getTypeRef(),methodName) ;
-             mref.setGenerationRequired(true) ;
-             ma.setMethodRef(mref) ;
-         }      
-        else {
-        	throw new CodeGenException("Local Variable declared with no method") ; //$NON-NLS-1$
-        }
-      }
-         
-      bp.addInitMethod(mref) ;
-      fBeanModel.addBean(bp) ;               
-      
-      // Kids need to be generated before we generate parents
-      List kids = processKidsIfNeeded(component,cu) ;
-      
-//      boolean generateAMethod = mref.isGenerationRequired() ;
-//      boolean generateReturn = false ;
-//      if (component.eContainer() instanceof JCMMethod) {
-//      	JCMMethod m = (JCMMethod) component.eContainer() ;
-//      	if (m.getReturn().equals(component))
-//      	   generateReturn = true ;
-//      }
-      
-// TODO Need to deal with return vs. non return - other than VCE styles
-      if (bp.isInstanceVar()) {
-         bp.addReturnMethod(mref) ;
-         generateMethodAndVar(bp, component,mref, varName, methodName, kids, cu) ;
-      }
-      else
-         generateInLineBean (component,mref, varName, kids, cu) ;
-      
-         
-	    
-      
-    return kids ;      
 }
 
 
