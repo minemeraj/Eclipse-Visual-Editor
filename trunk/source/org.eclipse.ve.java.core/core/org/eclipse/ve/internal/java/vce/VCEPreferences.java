@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-14 19:52:42 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-17 20:28:32 $ 
  */
 
 
@@ -65,8 +65,6 @@ public class VCEPreferences {
     public static final String DEBUG_LIVEWINDOW_OPTION = "/debug/livewindow" ; // Provide the Live Window option  //$NON-NLS-1$
     
 	public static final String JVE_PATTERN_STYLE_ID = "JVA_PATTERN_STYLE_ID" ; // The current Style (pattern) style ID //$NON-NLS-1$
-	public static final String VE_DEFAULT_PREFIX_KEY = "VE_DEFAULT_PREFIX_KEY"; //$NON-NLS-1$
-	public static String VE_DEFAULT_PREFIX = "ivj"; //$NON-NLS-1$
 
 /*
  *  This is a read from the plugin extension point <com.ibm.etools.visualeditor.lookandfeel>
@@ -161,7 +159,6 @@ public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	aStore.setDefault(VCEPreferences.JVE_PATTERN_STYLE_ID, "GetterStyle");		 //$NON-NLS-1$
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_WIDTH, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_WIDTH);
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_HEIGHT, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT);
-	aStore.setDefault(VCEPreferences.VE_DEFAULT_PREFIX_KEY, VCEPreferences.VE_DEFAULT_PREFIX);
 }
 
 /**

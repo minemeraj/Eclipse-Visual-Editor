@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-05-17 20:28:01 $ 
  */
 
 import java.util.logging.Level;
@@ -169,12 +169,12 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
           
           if (curAnnotation == null) {
             // Brand New Anotation 
-              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
+              newSrc = generate(null,null) ;
               if (newSrc == null || newSrc.length() == 0) {
                 JavaVEPlugin.log(fBeanpart.getUniqueName()+" No FF annotation.", Level.WARNING) ; //$NON-NLS-1$
                 return ;
               }
-              
+              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc; 
               
               int commentStart = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
               commentStart = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, commentStart);
@@ -187,7 +187,9 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
           }
           else {
               JavaVEPlugin.log(fBeanpart.getUniqueName()+" Updating FF annotation", Level.FINE) ;    //$NON-NLS-1$
-              newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + generate(null,null) ;
+              newSrc = generate(null,null) ;
+              if(newSrc!=null && newSrc.length()>0)
+              	newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
               int s = FreeFormAnnotationTemplate.getAnnotationStart(src) ;
               s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
               int end = FreeFormAnnotationTemplate.getAnnotationEnd(src,s) ;

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.15 $  $Date: 2004-05-14 19:55:38 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-17 20:28:01 $ 
  */
 
 import java.util.Iterator;
@@ -82,12 +82,15 @@ public CodeExpressionRef createInitExpression() {
 	// Since inner variables also need to have an annotation now (VariableRule.ignoreVariable),
 	// we need to generate on and add it to the init expression.
 	try {
-		String comment = FreeFormAnnotationTemplate.ANNOTATION_PREFIX + fBeanPart.getFFDecoder().generate(null, null);
-	    if(content.indexOf(';')>-1){
-	    	content = content.substring(0, content.indexOf(';')+1) + comment + content.substring(content.indexOf(';')+1); 
-	    }else{
-	    	content += comment;
-	    }
+		String comment = fBeanPart.getFFDecoder().generate(null, null);
+		if(comment!=null && comment.length()>0){
+			comment = FreeFormAnnotationTemplate.ANNOTATION_PREFIX + comment;
+			if(content.indexOf(';')>-1){
+				content = content.substring(0, content.indexOf(';')+1) + comment + content.substring(content.indexOf(';')+1); 
+			}else{
+	    		content += comment;
+			}
+		}
 	} catch (CodeGenException e) {
 		JavaVEPlugin.log(e, Level.WARNING);
 	}
