@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.4 $  $Date: 2004-05-12 15:58:26 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.*;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.debug.ui.JavaUISourceLocator;
@@ -33,6 +34,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -198,11 +201,35 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, type.getFullyQualifiedName());
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, type.getJavaProject().getElementName());
 			wc.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, JavaUISourceLocator.ID_PROMPTING_JAVA_SOURCE_LOCATOR);
+			// TODO: remove swt hack
+			if (isSWTProject(type.getJavaProject())) {
+				wc.setAttribute("isSWT", true);
+			}
 			config = wc.doSave();		
 		} catch (CoreException ce) {
 			JavaVEPlugin.log(ce.getStatus(), Level.WARNING);			
 		}
 		return config;
+	}
+	
+	/*
+	 * TODO: Refactor this out when we extract the SWT specific stuff from the launcher. 
+	 * @param project
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	private boolean isSWTProject(IJavaProject project) {
+		boolean value = false;
+		if (project != null) {
+			Map containers = new HashMap(), plugins = new HashMap();
+			try {
+				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
+				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt"));
+			} catch (JavaModelException e) {
+			}
+		}
+		return value;
 	}
 	
 	/**

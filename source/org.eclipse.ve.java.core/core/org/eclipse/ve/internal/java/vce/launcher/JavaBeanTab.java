@@ -11,10 +11,12 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.5 $  $Date: 2004-04-21 19:34:38 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-12 15:58:26 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -42,6 +44,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
@@ -71,6 +75,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	// Controls to specify whether the component should be packed
 	// or launched at a fixed size
 	protected Button fPackWindow;
+	protected Button fPackSWTWindow;
 	
 	// Controls for the locale of the VM to launch
 	protected Text fLocaleText;
@@ -158,30 +163,44 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		fSearchExternalJarsCheckButton.setText(VCELauncherMessages.getString("BeanTab.externaljars.label")); //$NON-NLS-1$
 		fSearchExternalJarsCheckButton.setToolTipText(VCELauncherMessages.getString("BeanTab.externaljars.tooltip")); //$NON-NLS-1$
 		
+		TabFolder widgetSetsTabFolder = new TabFolder(comp, SWT.NONE);
+		gd = new GridData(GridData.FILL_BOTH);
+		widgetSetsTabFolder.setLayoutData(gd);
+		
+		// Provide options specific to the Swing/AWT widget sets
+		TabItem swingItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
+		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text"));
+		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip"));
+		
+		Composite swingOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
+		GridLayout swingLayout = new GridLayout();
+		swingOptionsComp.setLayout(swingLayout);
+		swingItem.setControl(swingOptionsComp);
+		
 		// The user can specify which look and feel they want
-		Label fJavaBeanLabel = new Label(mainComp, SWT.NONE);
+		Label fJavaBeanLabel = new Label(swingOptionsComp, SWT.NONE);
 		fJavaBeanLabel.setText(VCELauncherMessages.getString("BeanTab.lookfeel.label")); //$NON-NLS-1$
 		gd = new GridData();
 		gd.horizontalSpan = 3;
 		fJavaBeanLabel.setLayoutData(gd);
 		
 		fLookAndFeelClasses = new ArrayList();
-		fLookAndFeelList = new List(mainComp,SWT.BORDER);
+		fLookAndFeelList = new List(swingOptionsComp,SWT.BORDER);
 		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
 		data.verticalAlignment = GridData.FILL;
 		data.grabExcessVerticalSpace = true;
-		data.horizontalSpan = 3;		
+//		data.horizontalSpan = 3;		
 		fLookAndFeelList.setLayoutData(data);
-
+		
 		// Label for locale
-		Label fLocaleLabel = new Label(comp, SWT.NONE);
+		Label fLocaleLabel = new Label(swingOptionsComp, SWT.NONE);
 		fLocaleLabel.setText(VCELauncherMessages.getString("BeanTab.locale.label")); //$NON-NLS-1$
 		gd = new GridData();
 		fLocaleLabel.setLayoutData(gd);	
 
 		// For locale create a new group that has 3 columns
-		Composite localeComp = new Composite(comp, SWT.NONE);
+		Composite localeComp = new Composite(swingOptionsComp, SWT.NONE);
 		GridLayout localeLayout = new GridLayout();
 		localeLayout.numColumns = 3;
 		localeLayout.marginHeight = 0;
@@ -193,17 +212,17 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		// Controls for the locale
 			
 		fDefaultLocaleButton = new Button(localeComp,SWT.CHECK);
-		data = new GridData();
-		fDefaultLocaleButton.setData(data);
+		gd = new GridData();
+		fDefaultLocaleButton.setData(gd);
 		fDefaultLocaleButton.setText(VCELauncherMessages.getString("BeanTab.default.label")); //$NON-NLS-1$
 		fDefaultLocaleButton.setSelection(true);
 		
 		fLocaleText = new Text(localeComp,SWT.BORDER);
 		fLocaleText.setEnabled(false);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.grabExcessHorizontalSpace = true;
-		data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
-		fLocaleText.setData(data);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
+		fLocaleText.setData(gd);
 		fLocaleText.setText(Locale.getDefault().toString());
 		
 		Label fSuggestionLabel = new Label(localeComp,SWT.NONE);
@@ -225,14 +244,12 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			}
 		});
 		
-//		Label spacer = new Label(comp,SWT.NONE);
-		
 		// Let the user specify the size of the component to open 
 		// or whether to pack it
-		Label fSizeLabel = new Label(comp,SWT.NONE);
+		Label fSizeLabel = new Label(swingOptionsComp,SWT.NONE);
 		fSizeLabel.setText(VCELauncherMessages.getString("BeanTab.size.label")); //$NON-NLS-1$
 		
-		Composite visualComp = new Composite(comp, SWT.NONE);
+		Composite visualComp = new Composite(swingOptionsComp, SWT.NONE);
 		GridLayout visualLayout = new GridLayout();
 		visualLayout.numColumns = 1;
 		visualLayout.marginHeight = 0;
@@ -244,6 +261,38 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		fPackWindow = new Button(visualComp,SWT.CHECK);
 		fPackWindow.setText(VCELauncherMessages.getString("BeanTab.pack.label")); //$NON-NLS-1$
 		fPackWindow.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent evt) {
+				updateLaunchConfigurationDialog();
+			}
+		});
+
+		// Provide options specific to the SWT widget set
+		TabItem swtItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
+		swtItem.setText(VCELauncherMessages.getString("BeanTab.swttab.text"));
+		swtItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swttab.tooltip"));
+		
+		Composite swtOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
+		GridLayout swtLayout = new GridLayout();
+		swtOptionsComp.setLayout(swtLayout);
+		swtItem.setControl(swtOptionsComp);
+		
+		// Let the user specify the size of the component to open 
+		// or whether to pack it
+		Label fSWTSizeLabel = new Label(swtOptionsComp,SWT.NONE);
+		fSWTSizeLabel.setText(VCELauncherMessages.getString("BeanTab.swtsize.label")); //$NON-NLS-1$
+		
+		Composite swtVisualComp = new Composite(swtOptionsComp, SWT.NONE);
+		GridLayout swtVisualLayout = new GridLayout();
+		swtVisualLayout.numColumns = 1;
+		swtVisualLayout.marginHeight = 0;
+		swtVisualLayout.marginWidth = 0;
+		swtVisualComp.setLayout(swtVisualLayout);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		swtVisualComp.setLayoutData(gd);		
+		
+		fPackSWTWindow = new Button(swtVisualComp,SWT.CHECK);
+		fPackSWTWindow.setText(VCELauncherMessages.getString("BeanTab.pack.label")); //$NON-NLS-1$
+		fPackSWTWindow.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				updateLaunchConfigurationDialog();
 			}
@@ -348,7 +397,12 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			}			
 			// Set the saved size
 			boolean pack = config.getAttribute(JavaBeanLaunchConfigurationDelegate.PACK,false);
-			fPackWindow.setSelection(pack);
+			// TODO: another SWT hack
+			if (isSWTProject(getJavaProject())) {
+				fPackSWTWindow.setSelection(pack);
+			} else {
+				fPackWindow.setSelection(pack);
+			}
 			
 		} catch ( CoreException exc ) {
 			fLookAndFeelList.setSelection(0);
@@ -403,7 +457,10 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			config.setAttribute(JavaBeanLaunchConfigurationDelegate.LOCALE,fLocaleText.getText());
 		}
 		// Save details about whether to pack or what size to use
-		config.setAttribute(JavaBeanLaunchConfigurationDelegate.PACK, fPackWindow.getSelection());
+		config.setAttribute(JavaBeanLaunchConfigurationDelegate.PACK, fPackWindow.getSelection() || fPackSWTWindow.getSelection());
+		
+		// TODO: Remove this swt specific code later
+		config.setAttribute("isSWT", isSWTProject(getJavaProject()));
 	}
 			
 	/**
@@ -499,6 +556,26 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			return (IJavaProject) dialog.getFirstResult();
 		}			
 		return null;		
+	}
+	
+	/*
+	 * TODO: Refactor this out when we extract the SWT specific stuff from the launcher. 
+	 * @param project
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	private boolean isSWTProject(IJavaProject project) {
+		boolean value = false;
+		if (project != null) {
+			Map containers = new HashMap(), plugins = new HashMap();
+			try {
+				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
+				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt"));
+			} catch (JavaModelException e) {
+			}
+		}
+		return value;
 	}
 	
 	/**
