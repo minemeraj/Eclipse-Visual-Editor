@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.29 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.30 $  $Date: 2005-03-23 19:55:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1192,6 +1192,8 @@ public class BDMMerger {
 				return false;			
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
+			// Could have been deleted when a parent was deleted
+			if (mainBean.getModel()==null) continue;
 			if(newModel.getABean(mainBean.getUniqueName())==null){
 				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
