@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.10 $  $Date: 2004-04-02 16:34:43 $ 
+ *  $Revision: 1.11 $  $Date: 2004-04-12 13:35:38 $ 
  */
 
 import java.util.*;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jface.text.ISynchronizable;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -111,14 +112,25 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 	//       to compile all of this, but rather bits of pieaces of this
 	
 	try {
-		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
-		if (fCU != null)
-			parser.setSource(fCU);
-		else {
-			fFileContent = getFileContents();
-			parser.setSource(fFileContent);
+		CompilationUnit result;
+		if (fCU!=null) {
+			if (fCU.isConsistent()) {
+				ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+				parser.setSource(fCU);
+				result = (CompilationUnit) parser.createAST(null);
+			}
+			else {
+				// AST will only be returned if need to reconcile
+			   result = fCU.reconcile(true,false,null,null);	
+			}
 		}
-		CompilationUnit result = (CompilationUnit) parser.createAST(null);		
+		else {
+		  ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		
+			fFileContent = getFileContents();
+			parser.setSource(fFileContent);		
+		    result = (CompilationUnit) parser.createAST(null);
+		}
 		   		
 		
 		IProblem[]	problems = result.getProblems();
@@ -318,11 +330,15 @@ JavaVEPlugin.log ("JavaBeanModelBuilder.build() starting .... ", Level.FINE) ; /
 
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.
-    if (fSync!=null)
-      synchronized(fWCP.getDocument()) {
+    if (fSync!=null) {
+      Object lock = (fWCP.getDocument() instanceof ISynchronizable) ?
+      		        ((ISynchronizable)fWCP.getDocument()).getLockObject() :
+      		        fWCP.getDocument();
+      synchronized(lock) {      	
         fSync.clearOutstandingWork();
         fastCU = ParseJavaCode () ;
       }
+    }
     else 
     	fastCU = ParseJavaCode () ;
 	CreateBeanDeclModel() ;
