@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.68 $  $Date: 2004-12-01 17:09:08 $ 
+ *  $Revision: 1.69 $  $Date: 2004-12-06 18:44:05 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -802,6 +802,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			Diagram d = modelBuilder.getDiagram();
 			try {
 				VETimerTests.basicTest.startStep("Initialize Viewers");
+				if (doTimerStep)
+					PerformanceMonitorUtil.getMonitor().snapshot(118);
 				if (d != null) {
 					editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
 					setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
@@ -810,8 +812,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				setReloadEnablement(true);
 				modelChangeController.setHoldState(IModelChangeController.READY_STATE, null); // Restore to allow updates.
 				
-				VETimerTests.basicTest.stopStep("Initialize Viewers");
 				if (doTimerStep)
+					PerformanceMonitorUtil.getMonitor().snapshot(119);
+				VETimerTests.basicTest.stopStep("Initialize Viewers");
 				VETimerTests.basicTest.stopStep(JVE_STEP);
 				VETimerTests.basicTest.printIt();
 				VETimerTests.basicTest.clearTests();
@@ -1553,12 +1556,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 				VETimerTests.basicTest.startStep("Load Model");				
 				if (doTimerStep)
-					PerformanceMonitorUtil.getMonitor().snapshot(50);	// Starting codegen loading for the first time
+					PerformanceMonitorUtil.getMonitor().snapshot(114);	// Starting codegen loading for the first time
 				
 				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
 				
 				if (doTimerStep)
-					PerformanceMonitorUtil.getMonitor().snapshot(51);	// Ending codegen loading for the first time
+					PerformanceMonitorUtil.getMonitor().snapshot(115);	// Ending codegen loading for the first time
 				VETimerTests.basicTest.stopStep("Load Model");
 				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
@@ -1599,7 +1602,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						dd.eAdapters().add(a);
 						
 						VETimerTests.basicTest.startStep("Create Bean Instances on Target VM");					
+						if (doTimerStep)
+							PerformanceMonitorUtil.getMonitor().snapshot(116);
 						a.initBeanProxy();
+						if (doTimerStep)
+							PerformanceMonitorUtil.getMonitor().snapshot(117);
 						VETimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						
 					}
 					
