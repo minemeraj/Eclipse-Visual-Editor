@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFCreationTool.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-01 21:25:25 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-16 15:37:24 $ 
  */
 
 import org.eclipse.emf.ecore.EClass;
@@ -109,11 +109,32 @@ public class EMFCreationTool extends CDECreationTool {
 	}
 
 	public interface CreationPolicy {
-		public Command getCommand(Command aCommand, EditDomain domain, CreateRequest createRequest);
 		/**
+		 * Get the command to do creation. Take the incoming aCommand and return a command that uses this command and 
+		 * adds more commands before or after it.
+		 * 
+		 * @param aCommand the starting command to work with
+		 * @param domain the editDomain to work in
+		 * @param createRequest the create request that is being processed.
+		 * @return the new modified command, or the original if unchanged.
+		 * 
+		 * @since 1.0.0
+		 */
+		public Command getCommand(Command aCommand, EditDomain domain, CreateRequest createRequest);
+		
+		/**
+		 * TODO This doesn't belong here. Default SuperString is a concept of JAVA not CDE. Also,
+		 * it should be create default ctor instead including the super. For example for Dialog it
+		 * should by default create a ctor that takes a Frame, and use super(framepassedin) and
+		 * not create a default ctor that does a super(new Frame).
+		 * 
 		 *  Optionally overides the default null constructor super string.
-		 *  e.g., super(new Arg1()) 
-		 *  @return null if no overide is needed, String if an overide exists
+		 *  e.g., <code>super(new Arg1())</code>.
+		 *  
+		 * @param superClass
+		 * @return <code>null</code> if no override is needed, String if an override exists
+		 * 
+		 * @since 1.0.0
 		 */
 		public String getDefaultSuperString(EClass superClass);
 	}
