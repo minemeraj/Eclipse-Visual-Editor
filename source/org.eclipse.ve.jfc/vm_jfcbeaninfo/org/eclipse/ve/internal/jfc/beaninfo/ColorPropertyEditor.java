@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: ColorPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-04-19 20:38:52 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-20 13:28:12 $ 
  */
 
 import java.awt.*;
@@ -86,7 +86,7 @@ public class ColorPropertyEditor extends JPanel {
 			// Horrible hack because the Color Chooser with the GTK L&F doesn't like added chooser panels
 			// See Sun bug 5027338
 			LookAndFeel lnf = null;
-			if (UIManager.getLookAndFeel().toString().indexOf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel") >= 0) {
+			if (UIManager.getLookAndFeel().getClass().getName().equals("com.sun.java.swing.plaf.gtk.GTKLookAndFeel")) {
 				lnf = UIManager.getLookAndFeel();
 				try {
 					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
