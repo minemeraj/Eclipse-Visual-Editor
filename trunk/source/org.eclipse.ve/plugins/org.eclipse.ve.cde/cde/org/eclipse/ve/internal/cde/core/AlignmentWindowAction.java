@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentWindowAction.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-20 22:24:52 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -125,7 +126,7 @@ public class AlignmentWindowAction extends Action {
 	
 	private ISelectionListener selListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if (fDialog != null && !fDialog.isHidden())
+			if (selection instanceof IStructuredSelection && !selection.isEmpty() && ((IStructuredSelection)selection).getFirstElement() instanceof EditPart)
 				update(selection);			
 		}
 	};
@@ -283,8 +284,8 @@ public class AlignmentWindowAction extends Action {
 	}
 	
 	protected void update(ISelection selection) {
+		selectionProvider.setSelection(selection);
 		if (fDialog != null) {
-			selectionProvider.setSelection(selection);
 			fDialog.update(selection);
 		}
 	}
