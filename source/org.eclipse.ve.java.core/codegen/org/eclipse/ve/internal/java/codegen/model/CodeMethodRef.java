@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.23 $  $Date: 2005-04-01 21:01:07 $ 
+ *  $Revision: 1.24 $  $Date: 2005-04-04 19:33:59 $ 
  */
 
 import java.util.*;
@@ -281,7 +281,7 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	// find the last expression in our model
 	for(int i=list.size()-1;i>=0;i--){
 	 	CodeExpressionRef ce = (CodeExpressionRef) list.get(i);
-	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && ce.getOffset()>=0){
+	 	if(ce.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED) && ce.getOffset()>=0 && !ce.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
 	 		offset = ce.getOffset()+ce.getLen();
 	 		filler = ce.getFillerContent();
 	 		break;
@@ -335,7 +335,15 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 	int offset;
 	String filler;
 	
-	if (l.size()==0) {
+	// Remove no source expressions - they are not needed to determine offsets
+	List noSourceExpressions = new ArrayList();
+	for (Iterator iter = l.iterator(); iter.hasNext();) {
+		CodeExpressionRef sourceExp = (CodeExpressionRef) iter.next();
+		if(sourceExp.isStateSet(CodeExpressionRef.STATE_NO_SRC))
+			noSourceExpressions.add(sourceExp);
+	}
+	
+	if ((l.size()-noSourceExpressions.size())==0) {
 	  // No expression to piggy on from
 	  Object[] result = getUsableOffsetAndFiller();	  
 	  offset = ((Integer)result[0]).intValue();
