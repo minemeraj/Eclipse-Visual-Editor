@@ -202,5 +202,35 @@
 			</visualElement>
 -->
   </extension>   
+  
+    <!-- Add an SWT Examples category to the new wizard -->
+  <extension
+      point="org.eclipse.ui.newWizards">
+      <category
+            name="%Example.SWT"
+            parentCategory="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples"
+            id="org.eclipse.ve.swt.SWTExample">
+      </category>
+      <wizard
+            name="Simple SWT Browser"
+            icon="icons/full/clcl16/browser_obj.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SimpleSWTBrowser"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTBrowser">
+         <description>
+            %Example.SimpleSWTBrowser.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="Simple Text Editor"
+            icon="icons/full/clcl16/textarea_obj.gif"
+            category="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples/org.eclipse.ve.swt.SWTExample"
+            class="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard:SimpleSWTTextEditor"
+            id="org.eclipse.ve.internal.java.codegen.wizards.VisualClassExampleWizard.SimpleSWTTextEditor">
+         <description>
+            %Example.SimpleSWTTextEditor.Desc
+         </description>
+      </wizard>
+   </extension>
 
 </plugin>
