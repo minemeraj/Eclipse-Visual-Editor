@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.12 $ $Date: 2004-05-19 23:04:11 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.13 $ $Date: 2004-07-12 16:17:56 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -98,7 +98,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 
 	public void releaseBeanProxy() {
 		style = -1; // Uncache the style bit
-		if (isBeanProxyInstantiated()) {
+		if (fOwnsProxy && isBeanProxyInstantiated()) {
 			invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
