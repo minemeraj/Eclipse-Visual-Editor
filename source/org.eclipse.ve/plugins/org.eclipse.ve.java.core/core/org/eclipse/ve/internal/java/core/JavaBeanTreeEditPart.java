@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-10-28 18:35:30 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-02-11 17:14:05 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -153,7 +153,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			// tree item for it.
 			TreeItem w = (TreeItem) getWidget();
 			if (!w.isDisposed())
-				w.setImage(null);
+				w.setImage((Image)null);
 
 			fOverlayImage.dispose(); // Now we can get rid of it since tree item no longer has it.
 		}
