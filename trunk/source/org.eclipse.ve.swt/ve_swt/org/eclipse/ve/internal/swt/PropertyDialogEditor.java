@@ -26,6 +26,11 @@ public class PropertyDialogEditor extends Dialog {
 		myProject = project;
 		chooser = aChooser;
 	}
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(SWTMessages.getString("PropertyDialogEditor.dialog.title")); //$NON-NLS-1$
+	}
+	
 	public Object getValue(){
 		return chooser.getValue();
 	}
