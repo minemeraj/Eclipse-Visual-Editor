@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.1 $ $Date: 2004-08-20 22:39:14 $
+ * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-08-24 22:08:41 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -90,8 +90,8 @@ public class CoolBarTreeEditPart extends CompositeTreeEditPart {
 	}
 
 	public void activate() {
-		((EObject) getModel()).eAdapters().add(containerAdapter);
 		super.activate();
+		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
 	private Adapter containerAdapter = new EditPartAdapterRunnable() {

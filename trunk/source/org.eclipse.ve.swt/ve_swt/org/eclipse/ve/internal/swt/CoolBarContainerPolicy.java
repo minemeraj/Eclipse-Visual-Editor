@@ -11,29 +11,27 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-08-20 22:39:14 $ 
+ *  $Revision: 1.2 $  $Date: 2004-08-24 22:08:42 $ 
  */
 
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EFactory;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import java.util.List;
+
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.PTClassInstanceCreation;
-import org.eclipse.jem.internal.instantiation.PTFieldAccess;
-import org.eclipse.jem.internal.instantiation.PTInstanceReference;
-import org.eclipse.jem.internal.instantiation.PTName;
+
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 /**
  * Container Edit Policy for CoolBar/CoolItems.
@@ -113,6 +111,71 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 			}
 		};
 		return setCoolItemCommand;
+	}
+
+	private Command getMoveCoolItemCommand(final List children, final EObject positionBeforeChild) {
+		Command moveTabItemCommand = new CommandWrapper() {
+	
+			protected boolean prepare() {
+				return true;
+			}
+	
+			public void execute() {
+				// First get the CoolItem of the positionBeforeChild
+				EObject positionBeforeItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_coolbarItems, sf_coolItemControl,
+						positionBeforeChild);
+				// Process throught the list and cancel/apply each CoolItem before the positional CoolItem
+				for (int i = 0; i < children.size(); i++) {
+					EObject child = (EObject) children.get(i);
+					EObject coolItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_coolbarItems, sf_coolItemControl,
+							child);
+					RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+					cb.cancelAttributeSetting((EObject) getContainer(), sf_coolbarItems, coolItem);
+					cb.applyAttributeSetting((EObject) getContainer(), sf_coolbarItems, coolItem, positionBeforeItem);
+					command = cb.getCommand();
+					command.execute();
+				}
+			}
+		};
+		return moveTabItemCommand;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getMoveChildrenCommand(java.util.List, java.lang.Object,
+	 *      org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.getMoveChildrenCommand(children, positionBeforeChild, containmentSF).chain(
+				getMoveCoolItemCommand(children, (EObject) positionBeforeChild));
+	}
+
+	private Command getDeleteCoolItemCommand(final Object child) {
+		Command deleteCoolItemCommand = new CommandWrapper() {
+	
+			protected boolean prepare() {
+				return true;
+			}
+	
+			public void execute() {
+				EObject coolItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_coolbarItems, sf_coolItemControl,
+						(EObject) child);
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
+				cb.cancelAttributeSetting((EObject) coolItem, sf_coolItemControl);
+				cb.cancelAttributeSetting((EObject) getContainer(), sf_coolbarItems, coolItem);
+				command = cb.getCommand();
+				command.execute();
+			}
+		};
+		return deleteCoolItemCommand;
+	}
+
+	/**
+	 * Delete the dependent. The child is the component, not the JTabComponent.
+	 */
+	public Command getDeleteDependentCommand(Object child) {
+		return getDeleteCoolItemCommand(child).chain(super.getDeleteDependentCommand(child));
 	}
 
 
