@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.28 $  $Date: 2004-05-20 18:45:38 $ 
+ *  $Revision: 1.29 $  $Date: 2004-06-09 14:32:30 $ 
  */
 
 
@@ -585,13 +585,24 @@ protected void updateDocument(int docOff, int len, String newContent) {
  */
 public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel model, List imports) {
 	if (imports != null && imports.size()>0) {		
-		try {			
+		try {
+			String packageName=null;
+			IPackageDeclaration[] pkg = cu.getPackageDeclarations();
+			if (pkg!=null && pkg.length>0)
+				packageName = pkg[0].getElementName();
+
 			for (int i = 0; i < imports.size(); i++) {
 //				cu.reconcile(false,false,null,null);
+			   String reqName = (String)imports.get(i);
+			   int lastIndex = reqName.lastIndexOf('.');
+			   if (reqName.indexOf('.')<0)
+			   	   continue; // Default package ... no need
+			   else if (reqName.substring(0,lastIndex).equals(packageName))
+			   	   continue; // same package
+			   
 			   int preLen = cu.getSource().length();
 			   IImportDeclaration[] cuImports = cu.getImports();
-			   boolean found=false;
-			   String reqName = (String)imports.get(i);
+			   boolean found=false;			   
 			   for (int j = 0; j < cuImports.length; j++) {
 						String iname = cuImports[j].getElementName();
 						// check to see if this is a a.b.c.* type of an import
