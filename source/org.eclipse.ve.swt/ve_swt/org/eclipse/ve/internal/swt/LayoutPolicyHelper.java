@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-01 19:16:49 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-04 02:13:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -35,16 +35,24 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 	
 	protected ContainerPolicy policy;	
 	
-	public LayoutPolicyHelper(VisualContainerPolicy ep){
-		setContainerPolicy(ep);
-	}
-	public LayoutPolicyHelper(){
-	}
+public LayoutPolicyHelper(VisualContainerPolicy ep){
+	setContainerPolicy(ep);
+}
+public LayoutPolicyHelper(){
+}
 		
-	public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+
+	Command createContributionCmd = policy.getCreateCommand(childComponent, position);
+	if (createContributionCmd == null || !createContributionCmd.canExecute())
+		return UnexecutableCommand.INSTANCE;	// It can't be created
+		
+	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
+	// TODO Add layoutData here to the compound command
+	command.append(createContributionCmd);
+
+	return command.unwrap();
+}
 
 public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2004-01-02 20:49:03 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 02:13:17 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -36,10 +36,10 @@ import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 public class LayoutPropertyDescriptor extends BeanPropertyDescriptorAdapter implements ICommandPropertyDescriptor {
 
 public ILabelProvider getLabelProvider() {
-	return super.getLabelProvider();
+	return new LayoutLabelProvider();
 }
 public CellEditor createPropertyEditor(Composite parent) {
-	return createCellEditorInstance(LayoutCellEditor.class,parent , null, null);
+	return new LayoutCellEditor(parent);
 }
 /**
  * It's here that we create the command to apply the new value to the 'layout' property of the composite and we also create 

@@ -11,10 +11,11 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollPaneTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-04 02:13:08 $ 
  */
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * Tree edit part for handling ScrollPane in the Beans viewer
@@ -25,7 +26,7 @@ public class ScrollPaneTreeEditPart extends ContainerTreeEditPart {
 		super(model);
 	}
 
-	protected ContainerPolicy getContainerPolicy() {
+	protected VisualContainerPolicy getContainerPolicy() {
 		return new ScrollPaneContainerPolicy(EditDomain.getEditDomain(this));	// AWT standard Contained Edit Policy
 	}
 }
