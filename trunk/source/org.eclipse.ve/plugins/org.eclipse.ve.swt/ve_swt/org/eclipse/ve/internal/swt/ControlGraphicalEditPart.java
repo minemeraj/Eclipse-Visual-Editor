@@ -9,14 +9,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2004-06-29 18:20:29 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2004-07-31 03:00:09 $
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -39,7 +42,7 @@ import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.*;
 
-public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
+public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 	
 	protected ImageFigureController imageFigureController;
 	protected IJavaInstance bean;
@@ -48,6 +51,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	protected IPropertySource propertySource;	// This is the property source.
 	protected ControlVisualModelAdapter constraintHandler;	
 	protected boolean transparent;
+	protected boolean border = false; // Whether there should be a border or not around the figure.
 	
 	protected DirectEditManager manager = null;
 	protected EStructuralFeature sfDirectEditProperty = null;
@@ -55,10 +59,19 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	public ControlGraphicalEditPart(Object model) {
 		setModel(model);
 	}
+	
+	/**
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(IConfigurationElement, String, Object)
+	 */
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data instanceof String)
+			border = Boolean.valueOf((String) data).booleanValue();
+	}
+	
 	protected IFigure createFigure() {
 		ImageFigure fig = new ImageFigure();
 		//TODO always draw a border for now
-		if (true)
+		if (border)
 			fig.setBorder(new OutlineBorder());
 		fig.setOpaque(!transparent);
 		if (!transparent) {

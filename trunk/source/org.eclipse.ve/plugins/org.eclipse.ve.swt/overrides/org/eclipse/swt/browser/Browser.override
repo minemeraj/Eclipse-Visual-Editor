@@ -9,7 +9,7 @@
     featureName="eAnnotations">
   <!-- Have to set the edit parts explicitly to avoid the containment relationships inherited from Composite -->
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-  	    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart"
+  	    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart:true"
 	    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart">
     <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/browser_obj.gif"/>
   </addedEObjects>
