@@ -9,11 +9,13 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.*;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.ve.internal.java.core.*;
  
 public class CompositeProxyAdapter extends ControlProxyAdapter {
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
+	private IMethodProxy getLayoutMethodProxy;  // Field to cache the IMethodProxy for the getLayout() method on the composite
 
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
@@ -40,6 +42,14 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 
 	}
 
+	protected IBeanProxy getLayoutBeanProxy(){
+		// Invoke getLayout() on the display thread
+		if(getLayoutMethodProxy == null){
+			getLayoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getLayout");
+		}
+		return getEnvironmentInvoke0ArgMethodProxy().invokeCatchThrowableExceptions(getBeanProxy(),getLayoutMethodProxy);
+	}
+	
 	protected void addControl(IJavaObjectInstance aControl, int position) throws ReinstantiationNeeded {
 		//TODO We need to add a listener to the control to know when its layoutData changes to handle layouts in SWT
 		// For now just deal with x and y

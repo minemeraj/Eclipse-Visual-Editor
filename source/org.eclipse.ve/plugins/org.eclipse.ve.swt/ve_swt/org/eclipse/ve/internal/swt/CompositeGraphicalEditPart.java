@@ -19,7 +19,6 @@ import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -72,19 +71,12 @@ protected EditPart createChild(Object model) {
 protected void createLayoutEditPolicy() {
 
 	EditPolicy layoutPolicy = null;
-	CompositeProxyAdapter beanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
+	CompositeProxyAdapter compositeBeanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)getModel());
 	// See the layout of the composite to determine the edit policy
-	IBeanProxy compositeBeanProxy = beanProxyAdapter.getBeanProxy();
-	IBeanProxy layoutBeanProxy = null;
-	try {
-		layoutBeanProxy = compositeBeanProxy.getTypeProxy().getMethodProxy("getLayout").invoke(compositeBeanProxy);
-	} catch (ThrowableProxy e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	IBeanProxy layoutBeanProxy = compositeBeanProxyAdapter.getLayoutBeanProxy();
 	// If the layoutBeanProxy is null then we use the null layout edit policy
 	if(layoutBeanProxy == null){
-		layoutPolicy = new NullLayoutEditPolicy((VisualContainerPolicy)getContainerPolicy(),beanProxyAdapter.getClientBox());		
+		layoutPolicy = new NullLayoutEditPolicy((VisualContainerPolicy)getContainerPolicy(),compositeBeanProxyAdapter.getClientBox());		
 	} else {
 		// Get the layoutPolicyFactory
 		ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(layoutBeanProxy.getTypeProxy(),EditDomain.getEditDomain(this));
