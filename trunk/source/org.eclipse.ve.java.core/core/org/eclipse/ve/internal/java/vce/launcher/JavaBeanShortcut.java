@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.8 $  $Date: 2004-06-04 16:50:17 $ 
+ *  $Revision: 1.9 $  $Date: 2004-06-04 16:52:24 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.*;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.debug.ui.JavaUISourceLocator;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.IAction;
