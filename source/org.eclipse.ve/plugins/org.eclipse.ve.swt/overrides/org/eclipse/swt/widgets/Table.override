@@ -13,6 +13,8 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
         treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableTreeEditPart"
         graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableGraphicalEditPart:false">
+	  <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.creationtool.policy"
+    	value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableCreationPolicy"/>
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
