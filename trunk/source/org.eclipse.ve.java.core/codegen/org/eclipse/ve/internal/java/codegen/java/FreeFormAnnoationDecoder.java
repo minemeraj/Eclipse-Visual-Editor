@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.19 $  $Date: 2005-02-25 23:07:18 $ 
+ *  $Revision: 1.20 $  $Date: 2005-03-25 13:42:51 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -27,6 +27,7 @@ import org.eclipse.ve.internal.cdm.model.Rectangle;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -61,8 +62,12 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 		
 		f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
 		
-		if (f == null) 
+		if (f == null){ 
+			CodeExpressionRef exp = BeanPartFactory.getInstanceInitializationExpr(fBeanpart);
+			if(exp.isStateSet(CodeExpressionRef.STATE_NO_SRC))
+				return true;
 			return false ;
+		}
         ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
         String comment = p.getComment();
         // when absolutely no comment is present (handcoded), we should 
