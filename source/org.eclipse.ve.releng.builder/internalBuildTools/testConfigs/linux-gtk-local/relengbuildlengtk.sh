@@ -5,6 +5,9 @@ PATH=.:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin:/usr/X11R6/bin:`pwd`/../linux;e
 LD_ASSUME_KERNEL=2.2.5
 LD_LIBRARY_PATH=.
 USERNAME=`whoami`
+PREVXUTHORITY=$XAUTHORITY
+export XAUTHORITY=
+
 Xvfb :42 -screen 0 1024x768x24 -ac &
 sleep 3
 Xnest :43 -display :42 -depth 24 &
@@ -28,4 +31,4 @@ runtests -os linux -ws gtk -arch x86 -Dplatform=linux.gtk -vm $1 > $2
 kill `cat /tmp/.X43-lock`
 kill `cat /tmp/.X42-lock`
 
-
+export XAUTHORITY=$PREVXUTHORITY
