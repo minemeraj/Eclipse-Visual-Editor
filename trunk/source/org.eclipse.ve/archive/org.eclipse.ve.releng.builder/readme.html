@@ -122,8 +122,8 @@
         will be exported, where scripts will be generated and where the end products 
         of the build will be located. On Windows systems, the path length should 
         not exceed thirty characters due to possible path length limitations when 
-        compiling some classes. For VE builds, the directory name must be called 
-        &quot;eclipse&quot;.</p>
+        compiling some classes. For VE builds, the directory name must have
+        &quot;eclipse&quot; as its last segment.</p>
       </td>
   </tr>
   <tr> 
@@ -262,7 +262,7 @@
   <a name="ex1"></a>Build Windows SDK component with javadoc generation on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=sdk 
-  -Djavacfailonerror=true -DjavacVerbose=false -DbuildDirectory=c:\mybuild</b> 
+  -Djavacfailonerror=true -DjavacVerbose=false -DbuildDirectory=c:\mybuild\eclipse</b> 
   <br>
   <br>
   This builds a VE SDK in the directory c:\mybuild. &quot;-DjavaVerbose=false&quot; 
@@ -273,7 +273,7 @@
 <p><b><a name="ex4"></a>Build VE runtime component on Linux</b></p>
 <p><b>java -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=runtime 
-  -DbuildDirectory=/builds/runtime</b></p>
+  -DbuildDirectory=/builds/runtime/eclipse</b></p>
 <p>This builds a VE runtime in the directory &quot;/builds/runtime&quot;.<br>
   <br>
   <br>
@@ -281,7 +281,7 @@
   from a previous SDK build on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=tests 
-  -DbuildDirectory=c:\builds\sdk -Djavacfailonerror=true</b></p>
+  -DbuildDirectory=c:\builds\sdk\eclipse -Djavacfailonerror=true</b></p>
 <p></p>
 <p>This builds an the VE test plugins in the same directory where an SDK was previously 
   built. The build will fail if there are compile errors.<br>
@@ -291,11 +291,11 @@
   on Windows</b></p>
 <p><b>java -cp ..\org.eclipse.releng.basebuilder\startup.jar org.eclipse.core.launcher.Main 
   -application org.eclipse.ant.core.antRunner -buildfile build.xml -Dcomponent=examples 
-  -DbuildDirectory=c:\examples -DbaseLocation=c:\eclipse -Dbaseos=win32 -Dbasews=win32 
+  -DbuildDirectory=c:\examples\eclipse -DbaseLocation=c:\eclipse -Dbaseos=win32 -Dbasews=win32 
   -Dbasearch=x86 -Djavacfailonerror=true</b></p>
 <p></p>
 <p>This builds VE examples in the directory c:\examples against a VE SDK installed 
-  in eclipse in the directory c:\eclipse. The build will fail if there are compile 
+  in eclipse in the directory c:\examples\eclipse. The build will fail if there are compile 
   errors.<br>
 </p>
 <p>&nbsp;</p>
