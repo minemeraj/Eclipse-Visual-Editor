@@ -62,12 +62,12 @@
 <!-- Steps to do after setup but before starting the build proper -->
 <!-- ===================================================================== -->
 <target name="postSetup">
-	<available file="${buildDirectory}/../eclipse-SDK.zip" property="baseExists" />
+	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
 	<antcall target="getBaseEclipse" />
-	<available file="${buildDirectory}/../emf.zip" property="emfExists" />
+	<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
 	<antcall target="getEMF" />
-	<available file="${buildDirectory}/../gef.zip" property="gefExists" />
-	<antcall target="getGEF" />
+	<available file="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" property="gefExists" />
+	<antcall target="getGEF" />	
 </target>
 
 <!-- ===================================================================== -->
@@ -164,7 +164,7 @@
 </target>
 
 <target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-	<get src="${eclipseZipURL}" dest="${buildDirectory}/../eclipse-SDK.zip"/>
+	<get src="${eclipseZipURL}" dest="${buildDirectory}/../eclipse-SDK.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq eclipse-SDK.zip"/>
    	</exec>
@@ -178,19 +178,19 @@
 </target>
 
 <target name="getEMF" unless="emfExists" depends="getBaseInit">
-	<get src="${emfZipURL}" dest="${buildDirectory}/../emf.zip"/>
+	<get src="${emfZipURL}" dest="${buildDirectory}/../emf.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq emf.zip -d ${buildDirectory}"/>
    	</exec>
-  	<stripVersions directory="${buildDirectory}/plugins" />   	
+  	<stripVersions directory="${buildDirectory}/plugins" />
 </target>
 
 <target name="getGEF" unless="gefExists" depends="getBaseInit">
-	<get src="${gefZipURL}" dest="${buildDirectory}/../gef.zip"/>
+	<get src="${gefZipURL}" dest="${buildDirectory}/../gef.zip" usetimestamp="true"/>
 	<exec dir="${buildDirectory}/.." executable="unzip">
 		<arg line="-o -qq gef.zip -d ${buildDirectory}"/>
    	</exec>
-  	<stripVersions directory="${buildDirectory}/plugins" />		
+  	<stripVersions directory="${buildDirectory}/plugins" />
 </target>
 <!-- ===================================================================== -->
 <!-- Default target                                                        -->
