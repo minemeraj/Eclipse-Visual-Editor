@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionParser.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-09 17:40:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -162,7 +162,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(start, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		return new EventExpressionParser(buff.toString(),off,buff.length()-off) ;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int len = end1-off+1;
+		return new EventExpressionParser(buff.toString(),off,len) ;
 	}
 	
 	
@@ -242,7 +244,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(startingOffset, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		return new EventExpressionParser(buff.toString(),off,buff.length()-off) ;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int len = end1-off+1;
+		return new EventExpressionParser(buff.toString(),off,len) ;
 	}
 	
 	protected int getEventBodyStart() {
@@ -272,7 +276,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.insert(offset,content) ;
 		
 		int off = fFillerLen ;
-		return new EventExpressionParser(buff.toString(),off,buff.length()-off) ;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int len = end1-off+1;
+		return new EventExpressionParser(buff.toString(),off,len) ;
 	}
 	
 	public EventExpressionParser addPropertyBlock (String content) throws CodeGenException {
@@ -297,7 +303,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.insert(start + startingOffset, content);
 		
 		int off = fFillerLen ;
-		return new EventExpressionParser(buff.toString(), off, buff.length()-off);
+		int end = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int len = end-off+1;
+		return new EventExpressionParser(buff.toString(), off, len);
 		
 	}
 	
@@ -382,7 +390,9 @@ public class EventExpressionParser extends ExpressionParser {
 		buff.replace(start, end, "") ; //$NON-NLS-1$
 		
 		int off = fFillerLen ;
-		return new EventExpressionParser(buff.toString(),off,buff.length()-off) ;
+		int end1 = ExpressionParser.indexOfLastSemiColon(buff.toString())-1;
+		int len = end1-off+1;
+		return new EventExpressionParser(buff.toString(),off,len) ;
 	
 	}
 	

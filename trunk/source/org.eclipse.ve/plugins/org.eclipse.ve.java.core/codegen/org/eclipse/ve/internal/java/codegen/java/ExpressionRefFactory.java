@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.12 $  $Date: 2004-03-06 18:38:51 $ 
+ *  $Revision: 1.13 $  $Date: 2004-03-09 17:40:57 $ 
  */
 
 import java.util.Iterator;
@@ -78,9 +78,14 @@ public CodeExpressionRef createInitExpression() {
 	gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel()));
 		   			
 	String content = gen.generate();
-	Statement Stmt = getInitExpression(content);
+	String classContent = classWrapper(content, true);
+	Statement Stmt = getInitExpression(classContent);
+	int contentStart = classContent.indexOf(content);
+	int start = Stmt.getStartPosition() - contentStart;
+	int end = ExpressionParser.indexOfLastSemiColon(classContent.substring(Stmt.getStartPosition(), Stmt.getStartPosition()+Stmt.getLength())) - 1 + Stmt.getStartPosition() - contentStart;
+	int len = end - start + 1;
 	
-	ExpressionParser p = new ExpressionParser (content,Stmt.getStartPosition(),Stmt.getLength());
+	ExpressionParser p = new ExpressionParser (content, start, len);
 	
 	exp.setContent(p) ;
 	exp.setExprStmt(Stmt);
