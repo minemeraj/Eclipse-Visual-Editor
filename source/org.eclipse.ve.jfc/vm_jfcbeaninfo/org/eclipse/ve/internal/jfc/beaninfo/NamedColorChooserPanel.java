@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedColorChooserPanel.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-19 20:38:52 $ 
  */
 package org.eclipse.ve.internal.jfc.beaninfo;
 
@@ -83,13 +83,20 @@ public class NamedColorChooserPanel extends AbstractColorChooserPanel {
 	private static char mnemonic = UNKNOWN_CHAR;
 	private static int mnemonicIndex = UNKNOWN_INDEX;
 	
+	private ChangeListener colorListener = new ChangeListener() {
+		public void stateChanged(ChangeEvent e) {
+			updateListSelection(getColorFromModel());
+		}
+	};
+	
 	public void installChooserPanel(JColorChooser cc) {
-		cc.getSelectionModel().addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				updateListSelection(getColorFromModel());
-			}
-		});
+		cc.getSelectionModel().addChangeListener(colorListener);
 		super.installChooserPanel(cc);
+	}
+	
+	public void uninstallChooserPanel(JColorChooser cc) {
+		cc.getSelectionModel().removeChangeListener(colorListener);
+		super.uninstallChooserPanel(cc);
 	}
 
 	/**
@@ -185,12 +192,12 @@ public class NamedColorChooserPanel extends AbstractColorChooserPanel {
 		return c instanceof SystemColor;
 	}
 
-	public String getName() {
+	public String getColorName() {
 		Color c = getColorFromModel();
-		return getName(c);
+		return getColorName(c);
 	}
 
-	public static String getName(Color c) {
+	public static String getColorName(Color c) {
 		if (isBasicColor(c)) {
 			return basicColorNames[basicColors.indexOf(c)];
 		} else if (isSystemColor(c)) {

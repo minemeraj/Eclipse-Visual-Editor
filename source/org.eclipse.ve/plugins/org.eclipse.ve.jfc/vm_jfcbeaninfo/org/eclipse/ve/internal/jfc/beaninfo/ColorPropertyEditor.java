@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: ColorPropertyEditor.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-04-19 20:38:52 $ 
  */
 
 import java.awt.*;
@@ -35,9 +35,6 @@ public class ColorPropertyEditor extends JPanel {
 	
 	// index of the Named Colors tab in the chooser's JTabbedPane
 	private int namedTabPosition = 0;
-	
-	// index of the RGB tab in the chooser's JTabbedPane
-	private int rgbTabPosition   = 3;
 	
 	public void addChangeListener( ChangeListener listener ) {
 		getColorChooser().getSelectionModel().addChangeListener( listener );
@@ -84,14 +81,33 @@ public class ColorPropertyEditor extends JPanel {
 	public void initialize() {
 		if (!initialized) {
 			// initialize the color chooser
-			// could be in line below, but this is clearer
+			// could be in line below, but this is clearer			
+			
+			// Horrible hack because the Color Chooser with the GTK L&F doesn't like added chooser panels
+			// See Sun bug 5027338
+			LookAndFeel lnf = null;
+			if (UIManager.getLookAndFeel().toString().indexOf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel") >= 0) {
+				lnf = UIManager.getLookAndFeel();
+				try {
+					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			getColorChooser();
-
 			autoSelectTab();
+			if (lnf != null) {
+				try {
+					UIManager.setLookAndFeel(lnf);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 			this.setLayout(new BorderLayout());
 			this.add(colorChooser, BorderLayout.CENTER);
 			recursiveSetBackground(this, java.awt.SystemColor.control);
+			
 			initialized = true;
 		}
 	}
@@ -107,7 +123,7 @@ public class ColorPropertyEditor extends JPanel {
 			tp.setSelectedIndex( namedTabPosition );
 		} else {
 			// set the initial tab to the RGB tab
-			tp.setSelectedIndex( rgbTabPosition );
+			tp.setSelectedIndex( tp.getTabCount() - 1 );
 		}
 	}		
 
@@ -116,10 +132,10 @@ public class ColorPropertyEditor extends JPanel {
 			return ""; //$NON-NLS-1$
 		} else if (NamedColorChooserPanel.isBasicColor(value)) {
 			return MessageFormat.format(VisualBeanInfoMessages.getString("ColorEditor.Color(String)"), //$NON-NLS-1$
-			new Object[] {NamedColorChooserPanel.getName(value)});
+			new Object[] {NamedColorChooserPanel.getColorName(value)});
 		} else if (NamedColorChooserPanel.isSystemColor(value)) {
 			return MessageFormat.format(VisualBeanInfoMessages.getString("ColorEditor.SystemColor(String)"), //$NON-NLS-1$
-			new Object[] {NamedColorChooserPanel.getName(value)});
+			new Object[] {NamedColorChooserPanel.getColorName(value)});
 		} else {
 			return MessageFormat.format(VisualBeanInfoMessages.getString("ColorEditor.Color(int,int,int)"), //$NON-NLS-1$
 			new Object[] {
