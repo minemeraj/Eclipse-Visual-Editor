@@ -21,8 +21,7 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 	protected IBeanProxy primReadBeanFeature(final PropertyDecorator propDecor, final IBeanProxy aSource) throws ThrowableProxy{
 		return (IBeanProxy) invokeSyncExec(new DisplayManager.DisplayRunnable() {
 			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				WidgetProxyAdapter.super.primReadBeanFeature(propDecor, aSource);
-				return null;
+				return WidgetProxyAdapter.super.primReadBeanFeature(propDecor, aSource);
 			}
 		});
 	}			
