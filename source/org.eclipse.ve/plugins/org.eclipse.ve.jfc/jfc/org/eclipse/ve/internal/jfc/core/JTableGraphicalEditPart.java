@@ -11,9 +11,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTableGraphicalEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-10 17:52:26 $ 
+ *  $Revision: 1.9 $  $Date: 2004-08-12 16:26:38 $ 
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.FigureListener;
@@ -32,8 +33,6 @@ import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
@@ -43,9 +42,28 @@ private EStructuralFeature sfColumns;
 private IBeanProxy fHeaderProxy = null;
 private IMethodProxy fGetHeaderRect = null;
 
+private boolean isOnScrollPane = false;
+
 public JTableGraphicalEditPart(Object aModel){
 	super(aModel);
 }
+
+public IFigure createFigure() {
+	IFigure figure = super.createFigure();
+	shiftFigureForParent(figure);
+	return figure;
+}
+
+private void shiftFigureForParent(IFigure figure) {
+	if (getParent() instanceof JScrollPaneGraphicalEditPart) {
+		isOnScrollPane = true;
+		Rectangle parentBounds = ((JScrollPaneGraphicalEditPart)getParent()).getFigure().getBounds().getCopy();
+		figure.setBounds(parentBounds);
+	} else {
+		isOnScrollPane = false;
+	}
+}
+
 
 private JTableImageListener fImageListener;
 protected JTableImageListener getJTableImageListener() {
@@ -128,7 +146,11 @@ protected void refreshVisuals() {
 }
 
 protected List getModelChildren() {
-	return getChildJavaBeans();
+	if (isOnScrollPane) {
+		return getChildJavaBeans();
+	} else {
+		return new ArrayList();
+	}
 }
 
 public List getChildJavaBeans() {
@@ -141,10 +163,14 @@ public List getChildJavaBeans() {
  * directly by the JTableGraphicalEditPart
  */
 protected EditPart createChild(Object child) {
-	TableColumnGraphicalEditPart result = new TableColumnGraphicalEditPart();
-	result.setModel(child);
-	result.setBounds(getColumnBounds(getChildren().size()));
-	return result;
+	if (isOnScrollPane) {
+		TableColumnGraphicalEditPart result = new TableColumnGraphicalEditPart();
+		result.setModel(child);
+		result.setBounds(getColumnBounds(getChildren().size()));
+		return result;
+	} else {
+		return null;
+	}
 }
 
 /*
@@ -192,11 +218,8 @@ private Rectangle getColumnBounds(int index) {
 		result.width = rectProxy.getWidth();
 		result.height = rectProxy.getHeight();
 		
-		// Move up by the height of the header (will be 0 if header isn't showing)
-		result.y = -result.height;
 		// Add the size of the header to the height of the table,
 		Rectangle parentBounds = getBounds();
-		result.height = parentBounds.height + result.height;
 		
 		// Translate relative to the origin of the table
 		result.x += parentBounds.x;
