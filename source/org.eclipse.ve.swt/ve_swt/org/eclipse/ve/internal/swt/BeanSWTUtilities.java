@@ -21,8 +21,7 @@ public class BeanSWTUtilities {
 	public static ILayoutPolicyFactory getLayoutPolicyFactoryFromLayoutManger(EClassifier layoutManagerClass, EditDomain domain) {
 
 		if (layoutManagerClass == null)
-			return null; // TODO 	
-//			return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
+			return new NullLayoutPolicyFactory();	// There is nothing we can check against, so we hardcode null.
 		if (!(layoutManagerClass instanceof JavaClass))
 			return null;	// Not a java class.
 
@@ -50,7 +49,7 @@ public class BeanSWTUtilities {
 			}
 		}
 	
-	return null;
+	return new UnknownLayoutPolicyFactory();
 	// TODO - Need to add the unknown factory return 
 	}
 }

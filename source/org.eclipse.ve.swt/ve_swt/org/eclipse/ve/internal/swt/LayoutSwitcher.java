@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-01 19:16:49 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-11 15:27:25 $ 
  */
 
 import java.util.*;
@@ -54,11 +54,21 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		if (!components.isEmpty()) {
 			// Get the layout policy helper class from the layout policy factory and
 			// set it in the container helper policy for the current layout, so that we can switch out.	
-			// Get the layout bean type proxy
-			IBeanTypeProxy layoutManagerTypeProxy = BeanProxyUtilities.getBeanProxy(newManager).getTypeProxy();			
-			ILayoutPolicyFactory lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutManagerTypeProxy, policy.getEditDomain());
-			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
-			cb.append(lpHelper.getOrphanConstraintsCommand(components));
+			CompositeProxyAdapter compositeBeanProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(compositeBean);
+			if (compositeBeanProxyAdapter != null) {
+				IBeanProxy layoutBeanProxy = compositeBeanProxyAdapter.getLayoutBeanProxy();
+				ILayoutPolicyFactory lpFactory;
+				// If the layoutBeanProxy is null then we use the null layout policy factory
+				if(layoutBeanProxy == null)
+					lpFactory = new NullLayoutPolicyFactory();
+				else 
+					lpFactory = VisualUtilities.getLayoutPolicyFactory(layoutBeanProxy.getTypeProxy(), policy.getEditDomain());
+				if (lpFactory != null) {
+					ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);
+					if (lpHelper != null)
+						cb.append(lpHelper.getOrphanConstraintsCommand(components));
+				}
+			}
 		}
 		
 		// Set the new layout into the composite 

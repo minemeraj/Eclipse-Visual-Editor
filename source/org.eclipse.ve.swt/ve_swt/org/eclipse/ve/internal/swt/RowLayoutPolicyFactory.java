@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutPolicyFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-04 19:28:57 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-11 15:27:25 $ 
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -31,7 +31,7 @@ public class RowLayoutPolicyFactory implements ILayoutPolicyFactory {
 
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep) {
 		// TODO Auto-generated method stub
-		return null;
+		return new UnknownLayoutSwitcher(ep);
 	}
 	
 	public EditPolicy getLayoutEditPolicy(VisualContainerPolicy containerPolicy) {

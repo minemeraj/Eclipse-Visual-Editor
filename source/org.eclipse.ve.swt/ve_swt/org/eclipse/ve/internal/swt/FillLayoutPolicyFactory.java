@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.1 $ $Date: 2004-03-05 20:57:04 $
+ * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.2 $ $Date: 2004-03-11 15:27:25 $
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -25,8 +25,7 @@ import org.eclipse.ve.internal.java.visual.*;
  */
 public class FillLayoutPolicyFactory extends Object implements ILayoutPolicyFactory {
 	public ILayoutSwitcher getLayoutSwitcher(VisualContainerPolicy ep) {
-		// TODO Auto-generated method stub
-		return null;
+		return new UnknownLayoutSwitcher(ep);
 	}
 	
 	/*
