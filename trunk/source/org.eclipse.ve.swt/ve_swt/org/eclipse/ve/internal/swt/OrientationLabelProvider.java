@@ -8,6 +8,8 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.swt.SWT;
 
+import org.eclipse.ve.internal.java.core.*;
+
 /**
  * @author JoeWin
  *

@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.swt;
+package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-10 01:57:15 $ 
+ *  $Revision: 1.1 $  $Date: 2004-03-26 19:31:52 $ 
  */
 
 import java.util.logging.Level;

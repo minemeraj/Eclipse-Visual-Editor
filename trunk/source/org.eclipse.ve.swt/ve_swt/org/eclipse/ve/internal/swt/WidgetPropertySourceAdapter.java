@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-22 23:48:52 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-26 19:31:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -33,6 +33,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 

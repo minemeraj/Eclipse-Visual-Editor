@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.swt;
+package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-12 18:50:31 $ 
+ *  $Revision: 1.1 $  $Date: 2004-03-26 19:31:52 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -21,7 +21,6 @@ import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 /**
  * Label provider for the int Orientation field
  */
