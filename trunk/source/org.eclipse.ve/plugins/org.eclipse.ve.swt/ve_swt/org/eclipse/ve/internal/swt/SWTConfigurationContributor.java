@@ -10,10 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-03-11 22:07:39 $ 
+ *  $Revision: 1.14 $  $Date: 2005-03-11 22:40:15 $ 
  */
 package org.eclipse.ve.internal.swt;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -23,10 +22,9 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.osgi.service.resolver.BundleDescription;
-import org.eclipse.pde.core.plugin.*;
+import org.eclipse.pde.core.plugin.IFragmentModel;
 import org.eclipse.pde.internal.core.PDECore;
-import org.eclipse.pde.internal.core.WorkspaceModelManager;
+import org.eclipse.pde.internal.core.PluginModelManager;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
@@ -54,26 +52,6 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		this.javaProject = info.getJavaProject();
 	}
 	
-	private IPlugin getPluginFor(IPluginModelBase base, String pluginID, Map visited) {
-		String id = base.getPluginBase().getId();
-		if (visited.get(id) == null) {
-			visited.put(id, id);		
-			IPluginImport[] imports = base.getPluginBase().getImports();
-			for (int i = 0; i < imports.length; i++) {
-				if (visited.get(imports[i].getId()) == null) {
-					IPlugin p = PDECore.getDefault().findPlugin(imports[i].getId(), imports[i].getVersion(), imports[i].getMatch());
-					if (p.getId().equals(pluginID))
-						return p;
-					
-					IPlugin result = getPluginFor(p.getPluginModel(), pluginID, visited);
-					if (result != null)
-						return result;
-				}
-			}
-			
-		}
-		return null;
-	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -96,35 +74,31 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 			URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$"));
 			IPath idePath = new Path(ide.getFile());
 			final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
-			String arch = relPath.removeFirstSegments(1).removeLastSegments(1).toString();
 			
-			
-			WorkspaceModelManager wm = PDECore.getDefault().getWorkspaceModelManager();						
-			IPluginModelBase base =  wm.getWorkspacePluginModel(javaProject.getProject());			
-			IPlugin p = getPluginFor(base, "org.eclipse.swt", new HashMap());
-			IPath location = null;
-			if (p!=null) {
-				BundleDescription[] fragDesc = p.getPluginModel().getBundleDescription().getFragments();						
-				for (int i = 0; i < fragDesc.length; i++) {
-				     if (fragDesc[i].getSymbolicName().startsWith("org.eclipse.swt."+arch))
-				     	location = new Path(fragDesc[i].getLocation());				
+			PluginModelManager pm = PDECore.getDefault().getModelManager();
+			IFragmentModel[] frags = pm.getFragments();			
+			URL os = null;
+			for (int i = 0; i < frags.length; i++) {
+				if (frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) {
+					// swt fragment					
+					if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl")) 
+						continue; // skip the nl ones
+					os = frags[i].getResourceURL(relPath.toPortableString());
+					if (os!=null){					   
+					   break;
+					}
 				}
-			}		
-            final IPath loc = location;           
+			}
             final String msg = "Could not resolve the SWT dll on the PDE target";
+            final URL osURL = os;
             ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
-				 try {
-					if (loc!=null) {
-						URL osURL = osURL = loc.append(relPath).toFile().toURL();
+					if (osURL!=null) {						
 					    controller.contributeClasspath(osURL, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
 					    removeMarker(msg);
 					}
 					else
 						createMarker(msg);				
-				 } catch (MalformedURLException e) {
-					SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
-				 }					
 			}
 		}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
 		}
