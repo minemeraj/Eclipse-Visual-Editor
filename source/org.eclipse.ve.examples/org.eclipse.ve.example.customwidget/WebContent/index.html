@@ -64,51 +64,69 @@ Dave Orme, db4objects</b></p>
 <hr width="100%">
 <h1>Table of Contents</h1>
 <ul>
-  <li>Introduction</li>
+  <li><a href="#Introduction">Introduction</a></li>
   <ul>
-    <li>Paltte</li>
-    <li>Property sheet</li>
-    <li>Graphical behavior</li>
-    <li>Code generation</li>
-    <li>Preferred Event</li>
+    <li><a href="#Intro_Palette">Paltte</a></li>
+    <li><a href="#Intro_Property_sheet">Property sheet</a></li>
+    <li><a href="#Intro_Graphical_behavior">Graphical behavior</a></li>
+    <li><a href="#Intro_Code_generation">Code generation</a></li>
+    <li><a href="#Intro_Preferred_Event">Preferred Event</a></li>
   </ul>
-  <li>Getting started</li>
-  <li>Creating the Plugin</li>
-  <li>Different jars and packages for the workbench and widget code</li>
-  <li>The custom widget</li>
+  <li><a href="#Getting_started">Getting started</a></li>
+  <li><a href="#Creating_the_Plugin">Creating the Plugin</a></li>
+  <li><a href="#Different_jars_and_packages">Different jars and
+packages for the workbench and widget code</a></li>
   <ul>
-    <li>Testing MyCustomPrompter</li>
+    <li><a href="#Plugin_Jar">Plugin jar</a></li>
   </ul>
-  <li>Creating a classpath container</li>
-  <li>Using a classpath container</li>
-  <li>Adding a palette category for MyCustomPrompter</li>
   <ul>
-    <li>Testing the custom palette</li>
+    <li><a href="#Runtime_jar">Runtime jar</a><br>
+    </li>
   </ul>
-  <li>Enumerated values for the <span style="font-style: italic;">type
-    </span>property</li>
+  <li><a href="#The_Custom_Widget">The custom widget</a></li>
   <ul>
-    <li>Testing the enumerated values for <span
- style="font-style: italic;">type</span></li>
+    <li><a href="#Testing_MyCustomPrompter">Testing MyCustomPrompter</a></li>
   </ul>
-  <li>The Override mechanism</li>
-  <li>Custom cell editing for the <span style="font-style: italic;">text
-    </span>property</li>
-  <li>Rendering the <span style="font-style: italic;">text </span>value
-in the Properties view</li>
+  <li><a href="#Creating_a_Classpath_Container">Creating a classpath
+container</a></li>
+  <li><a href="#Using_a_classpath_container">Using a classpath container</a></li>
+  <li><a href="#Adding_a_palette_category_for_our_widget">Adding a
+palette category for MyCustomPrompter</a></li>
   <ul>
-    <li>Target VM and its APIs</li>
+    <li><a href="#Testing_the_custom_palette">Testing the custom palette</a></li>
   </ul>
-  <li>Testing the <span style="font-style: italic;">text </span>dialog
-cell editor</li>
-  <li>Specifying a custom GEF edit part</li>
-  <li>Custom code generation for the <span style="font-style: italic;">text
-    </span>property</li>
-  <li>Specifying a preferred event</li>
-  <li>A complete example</li>
-  <li>Conclusion</li>
+  <li><a href="#Using_an_ENUM_cell_editor">Enumerated values for the <span
+ style="font-style: italic;">type </span>property</a></li>
+  <ul>
+    <li><a href="#Testing_the_enumerated_values_for_type">Testing the
+enumerated values for <span style="font-style: italic;">type</span></a></li>
+  </ul>
+  <li><a href="#The_EMF_override_mechanism">The EMF override mechanism</a></li>
+  <li><a href="#Creating_A_SWT_cell_editor">Custom cell editing for the
+    <span style="font-style: italic;">text </span>property</a></li>
+  <li><a href="#Rendering_the_text_value_in_the">Rendering the <span
+ style="font-style: italic;">text </span>value
+in the Properties view</a></li>
+  <ul>
+    <li><a href="#Target_VM_and_its_APIs">Target VM and its APIs</a></li>
+    <li><a href="#Retrieving_the_target_VM_property_value">Retrieving
+the target VM property value</a><br>
+    </li>
+  </ul>
+  <ul>
+    <li><a href="#Testing_the_text_dialog_cell_editor">Testing the <span
+ style="font-style: italic;">text </span>dialog
+cell editor</a></li>
+  </ul>
+  <li><a href="#Overriding_a_GEF_edit_part">Specifying a custom GEF
+edit part</a></li>
+  <li><a href="#Overriding_an_Expression_Decoder">Custom code
+generation for the <span style="font-style: italic;">text </span>property</a></li>
+  <li><a href="#Preferred_Event">Specifying a preferred event</a></li>
+  <li><a href="#A_complete_example">A complete example</a></li>
+  <li><a href="#Conclusion">Conclusion</a></li>
 </ul>
-<span style="color: rgb(255, 0, 0);"><br>
+<span style="color: rgb(255, 0, 0);">
 </span>
 <h2><a name="Introduction"></a>Introduction</h2>
 <p>In this tutorial a 3.1 based Eclipse plugin&nbsp; <i>
@@ -172,7 +190,7 @@ own custom widget or Java class.&nbsp;<span
 </span></p>
 <ul>
   <li>
-    <h3>Palette</h3>
+    <h3><a name="Intro_Palette"></a>Palette</h3>
   </li>
   <ul>
     <li>The visual editor provides a palette of classes from which the
@@ -208,7 +226,7 @@ enter the class name</li>
 </table>
 <ul>
   <li>
-    <h3>Property sheet</h3>
+    <h3><a name="Intro_Property_sheet"></a>Property sheet</h3>
   </li>
   <ul>
     <li><span style="font-family: monospace;">MyCustomPrompter </span>has
@@ -217,8 +235,7 @@ called <span style="font-style: italic;">type </span>that affects the
 text shown on the CustomPrompter's button.&nbsp; This has a set of
 restricted values corresponding to static constrants.&nbsp; For
 example, 0 is the constant <span style="font-family: monospace;">CustomPrompter.DOTS</span>,
-1 is
-      <span style="font-family: monospace;">CustomPrompter.MORE </span>and
+1 is <span style="font-family: monospace;">CustomPrompter.MORE </span>and
 2 is <span style="font-family: monospace;">CustomPrompter.OPEN.</span>
 Rather than have the
 user have to remember this the
@@ -307,7 +324,7 @@ editor for <span style="font-style: italic;">text </span>property<br>
 <br>
 <ul>
   <li>
-    <h3>Graphical behavior</h3>
+    <h3><a name="Intro_Graphical_behavior"></a>Graphical behavior</h3>
   </li>
   <ul>
     <li>The visual editor uses the graphical editor framework or GEF to
@@ -364,10 +381,11 @@ part with an icon and label and no border<br>
   </tbody>
 </table>
 <br>
-<br>
+<ul>
+</ul>
 <ul>
   <li>
-    <h3>Code generation</h3>
+    <h3><a name="Intro_Code_generation"></a>Code generation</h3>
   </li>
   <ul>
     <li>Code generation uses decoder classes to mediate between the
@@ -425,7 +443,7 @@ SWT.<span style="font-style: italic; color: rgb(51, 51, 255);">NONE</span>);&nbs
 <br>
 <ul>
   <li>
-    <h3><a name="Preferred_Event_"></a>Preferred Event</h3>
+    <h3><a name="Intro_Preferred_Event"></a>Preferred Event</h3>
   </li>
 </ul>
 <ul>
@@ -589,7 +607,8 @@ first is to create the actual custom widget class itself and test it,
 and the second is to extend the visual editor to have the customized
 behavior described in the <a href="#Introduction">intrduction</a>.<br>
 <br>
-<h2>Different jars and packages for workbench and widget code<br>
+<h2><a name="Different_jars_and_packages"></a>Different jars and
+packages for workbench and widget code<br>
 </h2>
 There are two jar files being created as part of this tutorial.&nbsp;
 The reason for this is based on the architecture of the Visual Editor
@@ -717,7 +736,9 @@ customwidgets.jar are described in the section <a
 <span style="color: rgb(204, 0, 0);">&lt;&lt;Gili = names way too
 similar -
 we should put "vm" on the package name and the jar name and update the
-tutorial as it is way too confusing to have them so close&gt;&gt;</span><br>
+tutorial as it is way too confusing to have them so close however it is
+going to take some time and care to rename everything and get this doc
+updated but it'd be worth it&gt;&gt;</span><br>
 <br>
 <h2><a name="The_Custom_Widget">The Custom Widget</a></h2>
 <p>The custom widget used in this tutorial extends SWT composite and
@@ -783,7 +804,7 @@ plugin.<br>
  alt="JarExport" src="images/index.9.jpg"><br>
 <br>
 <h3><a name="Testing_MyCustomPrompter"></a>Testing MyCustomPrompter</h3>
-<a name="Testing_as_a_JAR"></a>Having created the plugin you can now
+Having created the plugin you can now
 test it.&nbsp; To do this create an Eclipse launch configuration using
 the <span style="font-weight: bold;">Run </span>menu to bring up the
 list of available launch configurations, selecting <span
@@ -823,8 +844,8 @@ generation, graphical edit part and event menu behavior.&nbsp; The
 remainder of this tutorial shows how to customize this behavior as
 described in the <a href="#Introduction">introduction</a>.<br>
 <br>
-<h2><a name="Creating_a_Classpath_Container">Creating a Classpath
-Container</a><br>
+<h2><a name="Creating_a_Classpath_Container">Creating a classpath
+container</a><br>
 </h2>
 <p>For the test described at the end of the preceding section the <span
  style="font-style: italic;">MyCustomPrompter </span>class was made
@@ -1207,7 +1228,7 @@ Java project would be to add a dependent plugin rather than a classpath
 container.&nbsp; An example of this might be something like a PDE type
 development environment for the actual end user.<br>
 </p>
-<h3>Testing the custom palette</h3>
+<h3><a name="Testing_the_custom_palette"></a>Testing the custom palette</h3>
 Having modified the manifest of the example plugin to include the
 plugin the next step is so test it.&nbsp; Do this by launching the
 Eclipse Application workbench and creating, or re-opening, a class
@@ -1480,7 +1501,8 @@ custom class it itself doesn't want to inherit the behavior of <span
  style="font-family: monospace;">Composite </span>such as the ability
 to have its layout changed.&nbsp; For this reason it is logically a
 subclass of <span style="font-family: monospace;">Control</span>.<br>
-<h3>Testing the enumerated values for <span style="font-style: italic;">type</span></h3>
+<h3><a name="Testing_the_enumerated_values_for_type"></a>Testing the
+enumerated values for <span style="font-style: italic;">type</span></h3>
 <p>Having updated <span style="font-family: monospace;">MyCustomPrompterBeanInfo.java</span>
 this must be re-exported to the <span style="font-style: italic;">customwidgets.jar
 </span>file.&nbsp; The customwidgets.jar in the plugin is the one that
@@ -1549,7 +1571,7 @@ the BeanInfo mechanism and provides the ability to leverage any Eclipse
 IDE or Visual Editor specific behavior for a class.<span
  style="font-weight: bold;"><span style="font-weight: bold;"><span
  style="font-weight: bold;"></span></span></span><br>
-<h2>The Override mechanism</h2>
+<h2><a name="The_EMF_override_mechanism"></a>The EMF override mechanism</h2>
 <p>At the heart of the Visual Editor is an EMF model that describes a
 class being edited.&nbsp; This model describes the instances, their
 relationships and property settings. Instances of objects in this model
@@ -1995,7 +2017,8 @@ helper method on&nbsp;<img style="width: 24px; height: 13px;" alt=""
 cases such as the string containing bona-fide escape characters the
 user put there that themselves need quoting.<br>
 <span style="font-family: monospace;"></span></p>
-<h3>Rendering the <span style="font-style: italic;">text value&nbsp; </span>in
+<h3><a name="Rendering_the_text_value_in_the"></a>Rendering the <span
+ style="font-style: italic;">text value&nbsp; </span>in
 the Properties view<span style="font-family: monospace;"></span><br>
 </h3>
 <p>When the <span style="font-style: italic;">text </span>property is
@@ -2035,7 +2058,7 @@ String object.<br>
 an understanding of the API to work with the Visual Editor target VM
 objects<br>
 </p>
-<h4>Target VM and its APIs<br>
+<h4><a name="Target_VM_and_its_APIs"></a>Target VM and its APIs<br>
 </h4>
 <p>Live objects used by the Visual Editor exist only on the target VM
 and are never loaded by the Visual Editor inside the actual Eclipse
@@ -2341,7 +2364,9 @@ the classes in its -classpath and that these are a compatible shape
 with the target VM's instances.&nbsp; This and and other advanced
 topics such as handling arrays, exceptions and debugging the target VM
 are covered in a later tutorial specific to the target VM architecture.<br>
-<h4>Overriding doSetValue(Object anObject) </h4>
+<h3><a name="Retrieving_the_target_VM_property_value"></a>Retrieving
+the target VM property value<br>
+</h3>
 Having covered some of the background to the target VM API the method <span
  style="font-family: monospace;">doSetValue(Object value)</span> can
 now be overriden on CustomLabelEditor.&nbsp; This is so that the
@@ -2396,7 +2421,8 @@ is overriden to ignore the argument and call&nbsp;<img
 <span style="font-family: monospace;">super.updateContents()</span>
 with the actual String.<br>
 </p>
-<h3>Testing the <span style="font-style: italic;">text </span>dialog
+<h3><a name="Testing_the_text_dialog_cell_editor"></a>Testing the <span
+ style="font-style: italic;">text </span>dialog
 cell editor</h3>
 To create the curstom <span style="font-style: italic;">text </span>editor
 several steps were involved:<br>
