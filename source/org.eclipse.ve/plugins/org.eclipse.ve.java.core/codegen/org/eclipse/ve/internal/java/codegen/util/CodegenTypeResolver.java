@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenTypeResolver.java,v $
- *  $Revision: 1.2 $  $Date: 2004-02-06 21:43:09 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-15 19:42:59 $ 
  */
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class CodegenTypeResolver implements IElementChangedListener{
 	
 	public void connect(){
 		if(!isConnected){
-			JavaCore.addElementChangedListener(this);
+			JavaCore.addElementChangedListener(this,ElementChangedEvent.POST_CHANGE);
 			isConnected = true;
 		}
 	}	/**
@@ -251,8 +251,6 @@ public class CodegenTypeResolver implements IElementChangedListener{
 	    // TODO Temporary
 		PropertyFeatureMapper.clearCache() ;	    
 		CodeGenUtil.clearCache()  ;		
-		org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule.clearCache() ;
-		org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableRule.clearCache() ;
 	}	
 	
 	public void disconnect() {

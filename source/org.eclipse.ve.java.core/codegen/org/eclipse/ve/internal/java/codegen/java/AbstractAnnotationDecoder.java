@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.5 $  $Date: 2004-04-15 19:42:20 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
@@ -169,7 +169,8 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     	if (vi == null)  return ;    	    
     	ICodeGenAdapter adapter = (ICodeGenAdapter)EcoreUtil.getExistingAdapter(a, ICodeGenAdapter.JVE_CODEGEN_ANNOTATION_ADAPTER) ;
     	if (adapter != null) 
-    		vi.eAdapters().remove(adapter) ;    	
+    		vi.eAdapters().remove(adapter) ;    
+    	vi.getKeyedValues().removeKey(fAnnotationKey);
     }
     /*
      * @see IAnnotationDecoder#dispose()
