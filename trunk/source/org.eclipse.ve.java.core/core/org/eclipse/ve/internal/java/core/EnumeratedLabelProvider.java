@@ -1,112 +1,114 @@
 package org.eclipse.ve.internal.java.core;
-/*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+/***************************************************************************************************
+ * Copyright (c) 2001, 2003 IBM Corporation and others. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation
+ **************************************************************************************************/
 /*
- *  $RCSfile: EnumeratedLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-20 00:44:29 $ 
+ * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.4 $ $Date: 2004-03-19 20:23:05 $
  */
-
 import java.util.logging.Level;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
-
 import org.eclipse.ve.internal.cde.core.EditDomain;
-
 import org.eclipse.ve.internal.propertysheet.INeedData;
-
+/**
+ * Label Provider for Enumerated Java Beans. This uses the enumerated values that are retrieved from the PropertyDescriptor
+ * as an array.
+ * 
+ * @since 1.0.0
+ */
 public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProvider implements INeedData {
-	
 	protected String[] fDisplayNames;
 	protected String[] fInitStrings;
-	protected IBeanProxy[] fBeanProxies;
 	protected JavaHelpers fFeatureType;
 	protected EditDomain editDomain;
-
-public EnumeratedLabelProvider(IArrayBeanProxy aBeanInfoValuesArray, JavaHelpers aFeatureType){
-	fFeatureType = aFeatureType;
-	// Iterate over the array of values, these are stored in the format
-	// displayName, object, initString
-	// We only care about storing the displayName and the initStrings
-	int length = aBeanInfoValuesArray.getLength();
-	int j=0;
-	fDisplayNames = new String[length/3];
-	fInitStrings = new String[length/3];
-	try {
-		for ( int i=0;i<length;i+=3 ) {
-			fDisplayNames[j] = ((IStringBeanProxy)aBeanInfoValuesArray.get(i)).stringValue();
-			fInitStrings[j] = ((IStringBeanProxy)aBeanInfoValuesArray.get(i+2)).stringValue();
-			// NOTE - We cannot in any way use the object that came in from the values array
-			// This came from the VM that did introspection that is NOT the same as the
-			// one the editor is necessarily running in so we must re-create the
-			// bean proxies from the init string each time
-			j++;
-		}
-	} catch ( ThrowableProxy exc ){
-		JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
-		JavaVEPlugin.log(exc, Level.WARNING);
-	}	
-}
-public String getText(Object aJavaInstance){
-	// Now that we have an object we have a remote VM.  If we have not turned the init
-	// strings into objects do this now
-	IBeanProxy valueProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)aJavaInstance, JavaEditDomainHelper.getResourceSet(editDomain));
-	if ( fBeanProxies == null ) {
-		// Mistake on my part, didn't get getQualifiedNameForReflection() added to JavaHelpers, so only available on JavaClass.
-		String featureTypeName = null;
-		if (fFeatureType instanceof JavaClass)
-			featureTypeName = ((JavaClass) fFeatureType).getQualifiedNameForReflection();
-		else
-			featureTypeName = fFeatureType.getQualifiedName();			
-		IBeanTypeProxy aBeanTypeProxy = valueProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(featureTypeName);
-		fBeanProxies = new IBeanProxy[fInitStrings.length];
-		int index=0;
-		try {
-			for(int i=0;i<fInitStrings.length;i++){
-				index = i;
-				fBeanProxies[i] = aBeanTypeProxy.newInstance(fInitStrings[i]);
+	
+	/*
+	 * Get the enumerated values out of the registry constants for the current registry associated with the
+	 * current edit domain. These values are stored with actual label provider as the key since each label provider
+	 * needs an unique set of enumeration values. They are stored in the registry because each label provider instance is
+	 * cached and shared for all editors within a project. But the data needs to be per reqistry. Also, since stored as
+	 * registry constants, these will be automatically cleaned up when the registry is closed.
+	 */
+	protected IBeanProxy[] getEnumeratedValues() {
+		ProxyFactoryRegistry registry = JavaEditDomainHelper.getBeanProxyDomain(editDomain).getProxyFactoryRegistry();
+		IBeanProxy[] enumeratedValues = (IBeanProxy[]) registry.getConstants(this);
+		if (enumeratedValues == null) {
+			IBeanTypeProxy aBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
+					fFeatureType.getQualifiedNameForReflection());
+			enumeratedValues = new IBeanProxy[fInitStrings.length];
+			int index = 0;
+			try {
+				for (int i = 0; i < fInitStrings.length; i++) {
+					index = i;
+					enumeratedValues[i] = aBeanTypeProxy.newInstance(fInitStrings[i]);
+				}
+			} catch (ThrowableProxy exc) {
+				JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			} catch (InstantiationException exc) {
+				JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
+				JavaVEPlugin.log(exc, Level.WARNING);
 			}
-		} catch ( ThrowableProxy exc ) {
-			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc,Level.WARNING);
-		} catch ( InstantiationException exc ) {
-			JavaVEPlugin.log("Unable to create enumeration value for " + fInitStrings[index], Level.WARNING); //$NON-NLS-1$
-			JavaVEPlugin.log(exc,Level.WARNING);
+			registry.registerConstants(this, enumeratedValues);
+		}
+		return enumeratedValues;
+	}
+	
+	public EnumeratedLabelProvider(IArrayBeanProxy aBeanInfoValuesArray, JavaHelpers aFeatureType) {
+		fFeatureType = aFeatureType;
+		// Iterate over the array of values, these are stored in the format
+		// displayName, object, initString
+		// We only care about storing the displayName and the initStrings
+		int length = aBeanInfoValuesArray.getLength();
+		int j = 0;
+		fDisplayNames = new String[length / 3];
+		fInitStrings = new String[length / 3];
+		try {
+			for (int i = 0; i < length; i += 3) {
+				fDisplayNames[j] = ((IStringBeanProxy) aBeanInfoValuesArray.get(i)).stringValue();
+				fInitStrings[j] = ((IStringBeanProxy) aBeanInfoValuesArray.get(i + 2)).stringValue();
+				// NOTE - We cannot in any way use the object that came in from the values array
+				// This came from the VM that did introspection that is NOT the same as the
+				// one the editor is necessarily running in so we must re-create the
+				// bean proxies from the init string each time
+				j++;
+			}
+		} catch (ThrowableProxy exc) {
+			JavaVEPlugin.log("Unable to determine enumeration values", Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log(exc, Level.WARNING);
 		}
 	}
-	// This can occur following an introspection error
-	if ( fBeanProxies == null ) {
+	
+	public String getText(Object aJavaInstance) {
+		IBeanProxy[] enumeratedValues = getEnumeratedValues();
+		if (enumeratedValues == null)
+			return JavaMessages.getString("LabelProvider.Enumerated.getText_ERROR_"); //$NON-NLS-1$
+		IBeanProxy valueProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) aJavaInstance, JavaEditDomainHelper
+				.getResourceSet(editDomain));
+		// Now that we have an array of bean proxies compare the value against the entries
+		for (int i = 0; i < enumeratedValues.length; i++) {
+			if (enumeratedValues[i] == null) {
+				if (valueProxy == null) {
+					return fDisplayNames[i];
+				}
+			} else if (enumeratedValues[i].equals(valueProxy)) {
+				return fDisplayNames[i];
+			}
+		}
+		// TODO This needs more thought"); //$NON-NLS-1$
 		return JavaMessages.getString("LabelProvider.Enumerated.getText_ERROR_"); //$NON-NLS-1$
 	}
 	
-	// Now that we have an array of bean proxies compare the value against the entries
-	for( int i=0;i<fBeanProxies.length;i++){
-		if (fBeanProxies[i] == null) {
-			if (valueProxy == null) {
-				return fDisplayNames[i];
-			}
-		} else if(fBeanProxies[i].equals(valueProxy)){
-			return fDisplayNames[i];
-		}
-	}	
-	// TODO This needs more thought"); //$NON-NLS-1$
-	return JavaMessages.getString("LabelProvider.Enumerated.getText_ERROR_"); //$NON-NLS-1$
-}
-	/**
+	/*
 	 * @see INeedData#setData(Object)
 	 */
 	public void setData(Object data) {
 		editDomain = (EditDomain) data;
 	}
-
 }

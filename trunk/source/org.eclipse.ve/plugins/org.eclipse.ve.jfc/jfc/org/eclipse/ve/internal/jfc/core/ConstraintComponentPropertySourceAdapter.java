@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ConstraintComponentPropertySourceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-19 20:23:09 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -47,6 +47,7 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	protected IPropertySource componentPS;
 	protected IPropertyDescriptor constraintDescriptor;
 	protected EStructuralFeature sfConstraintConstraint;
+	private boolean triedCreateComponentPS;
 	
 	
 	/*
@@ -75,13 +76,11 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 		boolean containerBad = !containerProxyHost.isBeanProxyInstantiated() || containerProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE; 
 		IBeanProxy layoutManagerProxy =  !containerBad ? BeanAwtUtilities.invoke_getLayout(containerProxyHost.getBeanProxy()) : null;
 		
-		Resource cRes = getEObject().eResource();
-		EObject component = cRes != null ? (EObject) getEObject().eGet(JavaInstantiation.getSFeature(getEObject().eResource().getResourceSet(), JFCConstants.SF_CONSTRAINT_COMPONENT)) : null;
+		createComponentPS();		
 		IPropertyDescriptor[] theirs = null;
 		IPropertyDescriptor[] wrappedTheirs = null;
 		int wi = 0;		
-		if (component != null) {
-			componentPS = (IPropertySource) EcoreUtil.getRegisteredAdapter(component, IPropertySource.class);
+		if (componentPS != null) {
 			theirs = componentPS.getPropertyDescriptors();
 			
 			wrappedTheirs = new IPropertyDescriptor[theirs.length];
@@ -122,13 +121,23 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 		return finalList;
 	}
 		
+	private void createComponentPS() {
+		if (triedCreateComponentPS)
+			return;
+		triedCreateComponentPS = true;
+		Resource cRes = getEObject().eResource();
+		EObject component = cRes != null ? (EObject) getEObject().eGet(JavaInstantiation.getSFeature(getEObject().eResource().getResourceSet(), JFCConstants.SF_CONSTRAINT_COMPONENT)) : null;
+		if (component != null)
+			componentPS = (IPropertySource) EcoreUtil.getRegisteredAdapter(component, IPropertySource.class);
+	}
+
 	/*
 	 * If one of ours, send it on up, else send it to the component.
 	 */
 	public Object getPropertyValue(Object feature) {
 		if (feature == sfConstraintConstraint)
 			return super.getPropertyValue(feature);
-			
+		createComponentPS();	
 		return componentPS != null ? componentPS.getPropertyValue(feature) : null;
 	}
 	
@@ -138,7 +147,7 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	public boolean isPropertySet(Object feature) {
 		if (feature == sfConstraintConstraint)
 			return super.isPropertySet(feature);
-			
+		createComponentPS();	
 		return componentPS != null ? componentPS.isPropertySet(feature) : false;
 	}	
 
@@ -148,7 +157,8 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	public void resetPropertyValue(Object feature) {
 		if (feature == sfConstraintConstraint)
 			super.resetPropertyValue(feature);
-		else if (componentPS != null)
+		createComponentPS();
+		if (componentPS != null)
 			componentPS.resetPropertyValue(feature);
 	}	
 	
@@ -158,9 +168,14 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	public void setPropertyValue(Object feature, Object val)  {
 		if (feature == sfConstraintConstraint)
 			super.setPropertyValue(feature, val);
-		else if (componentPS != null)
+		createComponentPS();
+		if (componentPS != null)
 			componentPS.setPropertyValue(feature, val);
 	}	
 
+	public Object getEditableValue() {
+		createComponentPS();
+		return componentPS != null ? componentPS.getEditableValue() : super.getEditableValue();	// Think this is the correct value for constraint component as the editable value?
+	}
 
 }
