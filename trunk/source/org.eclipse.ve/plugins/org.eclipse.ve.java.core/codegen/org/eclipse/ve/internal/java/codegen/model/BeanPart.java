@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.24 $  $Date: 2004-09-07 19:15:56 $ 
+ *  $Revision: 1.25 $  $Date: 2004-10-15 22:46:02 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -857,7 +857,7 @@ public   void addToJVEModel() throws CodeGenException {
 	
 	for (Iterator itr=getChildren(); itr.hasNext();) {
 		BeanPart bp = (BeanPart) itr.next() ;
-		bp.addToJVEModel() ;
+		bp.addToJVEModel();
 	}
 	if (isInJVEModel() || isProxy() || getModel() == null || 
 	     getModel().isStateSet(IBeanDeclModel.BDM_STATE_SNIPPET)) 
@@ -867,7 +867,7 @@ public   void addToJVEModel() throws CodeGenException {
 	boolean thisPart = getSimpleName().equals(BeanPart.THIS_NAME) ;
 	
 	if (getEObject() == null) 
-	    createEObject() ;
+	    createEObject();
 	
 	
 	CodeMethodRef m = getInitMethod() ;

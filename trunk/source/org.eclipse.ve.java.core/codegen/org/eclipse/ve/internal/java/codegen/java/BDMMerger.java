@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.24 $  $Date: 2004-09-09 16:19:27 $ 
+ *  $Revision: 1.25 $  $Date: 2004-10-15 22:46:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -988,6 +988,13 @@ public class BDMMerger {
 			CodeMethodRef retMethod = mainModel.getMethod(referenceReturnMethod.getMethodHandle());
 			if(retMethod!=null)
 				newBP.addReturnMethod(retMethod);
+		}
+		try {
+			newBP.addToJVEModel();
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e);
+			newBP.dispose();
+			return false;
 		}
 		
 		List errorBeans = createNewBeanJavaInstance(newBP) ;
