@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IMethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-10 23:37:11 $ 
+ *  $Revision: 1.4 $  $Date: 2004-04-29 21:06:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -90,5 +90,12 @@ public interface IMethodTextGenerator {
 	 * @since 1.0.0
 	 */
 	public String getMethodPrefix() ;
+	
+	/**
+	 * This method can be called only after a call to generateMethod().
+	 * It will generate a content for specialized main method.
+	 * @return main() content, or null, if no main should be generated.
+	 */
+	public String generateMain(String className) ;
 
 }

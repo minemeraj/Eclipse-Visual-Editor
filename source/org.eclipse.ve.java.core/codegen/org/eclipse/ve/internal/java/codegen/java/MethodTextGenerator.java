@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.14 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.15 $  $Date: 2004-04-29 21:06:33 $ 
  */
 
 import java.util.*;
@@ -353,6 +353,12 @@ public String toString() {
 		return DEFAULT_PREFIX;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#generateMain()
+	 */
+	public String generateMain(String className) {		
+		return null;
+	}
 }
 
 

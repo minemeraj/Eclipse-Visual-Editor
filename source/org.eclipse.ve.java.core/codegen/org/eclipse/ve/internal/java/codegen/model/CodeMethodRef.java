@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.14 $  $Date: 2004-04-28 14:57:18 $ 
+ *  $Revision: 1.15 $  $Date: 2004-04-29 21:06:33 $ 
  */
 
 import java.util.*;
@@ -163,8 +163,9 @@ public  void addEventExpressionRef(CodeEventRef ref) {
 public  void removeExpressionRef(CodeExpressionRef ref) {
 	if (ref instanceof CodeEventRef)
 		removeEventRef((CodeEventRef) ref);
-	else	
-	    fExpressions.remove(ref) ;
+	else
+		if (fExpressions!=null)
+	       fExpressions.remove(ref) ;
 }
 
 public  void removeEventRef(CodeEventRef ref) {

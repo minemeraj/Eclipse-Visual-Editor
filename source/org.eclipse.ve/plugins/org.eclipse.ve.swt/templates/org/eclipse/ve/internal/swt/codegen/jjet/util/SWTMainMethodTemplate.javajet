@@ -1,0 +1,32 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: SWTMainMethodTemplate.javajet,v $
+ *  $Revision: 1.1 $
+ */
+ 
+ // This Method is expected to generate a Main method for a SWT based application.
+ // see AbstractMethodTextGenerator.MethodInfo for more information regarding the info structure
+  
+%><%@ jet skeleton="MethodSkelaton.java" 
+        package="org.eclipse.ve.internal.swt.codegen.jjet.util" 
+        class="SWTMainMethodTemplate"
+%>
+	/*
+	 * Temporary main generation 
+	 */    
+	public static void main(String[] args) {
+		// before you run this, make sure to set up the following in
+		// the launch configuration (Arguments->VM Arguments) for the correct SWT lib. path
+		// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.xxx\platform"
+		<%=info.finitBeanType%> test = new <%=info.finitBeanType%>();
+		test.<%=info.fmethodName%>() ;
+		test.<%=info.finitBeanName%>.open();
+		
+		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+		while (!test.<%=info.finitBeanName%>.isDisposed()) {
+			if (!display.readAndDispatch()) display.sleep ();
+		}
+		display.dispose();		
+	}
+ 

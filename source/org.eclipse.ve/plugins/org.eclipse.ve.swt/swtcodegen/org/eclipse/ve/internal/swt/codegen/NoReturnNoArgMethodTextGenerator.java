@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: NoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-10 23:37:07 $ 
+ *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-29 21:06:36 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -27,9 +27,9 @@ import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  * @author Gili Mendel
  * @since 1.0.0
  */
-public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerator {
+public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerator {
 
-	public static final String METHOD_TEMPLATE_CLASS_NAME = "NoArgNoReturnMethodTemplate" ; //$NON-NLS-1$
+	public static final String METHOD_TEMPLATE_CLASS_NAME = "NoReturnMethodTemplate" ; //$NON-NLS-1$
 	public static final String METHOD_TEMPLATE_NAME = METHOD_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;
 	public final static  String BASE_PLUGIN = "org.eclipse.ve.swt"; //$NON-NLS-1$
 	public final static  String TEMPLATE_PATH = "templates/org/eclipse/ve/internal/swt/codegen/jjet/util" ; //$NON-NLS-1$
@@ -38,6 +38,9 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 	
 	public final static  String[] ignoredFeatures = {
 	                                                  "allocation" };
+	
+	public static final String MAIN_TEMPLATE_CLASS_NAME = "SWTMainMethodTemplate" ; //$NON-NLS-1$
+	public static final String MAIN_TEMPLATE_NAME = MAIN_TEMPLATE_CLASS_NAME+JAVAJET_EXT ;
 												
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
 
@@ -50,7 +53,7 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
        return fInfo ;
 	}
 		
-	public NoArgNoReturnMethodTextGenerator(EObject component, IBeanDeclModel model) {
+	public NoReturnNoArgMethodTextGenerator(EObject component, IBeanDeclModel model) {
 		super(component,model) ;
 	}
 	
@@ -84,4 +87,21 @@ public class NoArgNoReturnMethodTextGenerator extends AbstractMethodTextGenerato
 		return METHOD_PREFIX;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#generateMain()
+	 */
+	public String generateMain(String className) {
+		if (fMethodTemplate==null) 
+			return null ;  // regular method was not generated yet.
+		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell"))
+			return null ;
+		
+		fMethodTemplate=null;
+		IMethodTemplate mt = getMethodTemplate(MAIN_TEMPLATE_NAME,MAIN_TEMPLATE_CLASS_NAME) ;
+		fMethodTemplate=null;
+		getInfo().finitBeanType=className;
+		String r = mt.generateMethod(getInfo());
+		fInfo=null;
+		return r;
+	}
 }

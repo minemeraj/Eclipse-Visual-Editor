@@ -2,10 +2,10 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: DefaultMethodTemplate.javajet,v $
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  */
  
- // This Method is expected to generate a getter method skelaton 
+ // This Method is expected to generate a getter-like, lazy initializaton method skelaton 
  // see AbstractMethodTextGenerator.MethodInfo for more information regarding the info structure
   
 %><%@ jet skeleton="MethodSkelaton.java" 

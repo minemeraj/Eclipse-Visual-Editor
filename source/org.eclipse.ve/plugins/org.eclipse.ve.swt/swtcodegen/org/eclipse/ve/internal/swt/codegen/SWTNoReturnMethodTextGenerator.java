@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: SWTNoArgNoReturnMethodTextGenerator.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-28 17:38:02 $ 
+ *  $RCSfile: SWTNoReturnMethodTextGenerator.java,v $
+ *  $Revision: 1.1 $  $Date: 2004-04-29 21:06:36 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  * @author Gili Mendel
  * @since 1.0.0
  */
-public class SWTNoArgNoReturnMethodTextGenerator extends NoArgNoReturnMethodTextGenerator {
+public class SWTNoReturnMethodTextGenerator extends NoReturnNoArgMethodTextGenerator {
 
 	/**
 	 * @param component
@@ -43,7 +43,7 @@ public class SWTNoArgNoReturnMethodTextGenerator extends NoArgNoReturnMethodText
 	 * 
 	 * @since 1.0.0
 	 */
-	public SWTNoArgNoReturnMethodTextGenerator(EObject component, IBeanDeclModel model) {
+	public SWTNoReturnMethodTextGenerator(EObject component, IBeanDeclModel model) {
 		super(component, model);		
 	}
 

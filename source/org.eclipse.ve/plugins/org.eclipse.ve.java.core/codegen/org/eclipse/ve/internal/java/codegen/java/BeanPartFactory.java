@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.23 $  $Date: 2004-04-27 18:50:35 $ 
+ *  $Revision: 1.24 $  $Date: 2004-04-29 21:06:33 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
@@ -183,9 +184,37 @@ protected CodeExpressionRef createInitExpression(BeanPart bp, IJavaObjectInstanc
     return exp;
 }
 
+	protected void generateMainIfNeeded(IType t, String content) throws JavaModelException {
+		IMethod main = t.getMethod("main", new String[]{Signature
+				.createTypeSignature("String[]", false)});
+		if (main != null && main.exists()) {
+			try {
+				// main already exists
+				// See if there are any statement in it.
+				String clazz = "class Foo {\n" + main.getSource() + "\n}";
+				ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+				parser.setSource(clazz.toCharArray());
+				parser.setSourceRange(0, clazz.length());
+				parser.setKind(ASTParser.K_COMPILATION_UNIT);
+				CompilationUnit ast = (CompilationUnit) parser.createAST(null);
+				MethodDeclaration mt = ((TypeDeclaration) ast.types().get(0))
+						.getMethods()[0];
+				if (mt.getBody() != null && mt.getBody().statements().size() > 0)
+					return; // already have statements in this method
+				else
+					main.delete(true,null); // recreate it
+			} catch (Exception e) {
+				return;
+			}
+		}
+		// go for it
+		t.createMethod(content, getSiblingForNewMEthod(t, false, false), false,
+				null);
+	}
+
 protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, CodeMethodRef mref, String methodName,  ICompilationUnit cu) throws CodeGenException {
 
- IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component, fBeanModel);
+	IMethodTextGenerator mgen = CodeGenUtil.getMethodTextFactory(fBeanModel).getMethodGenerator(component, fBeanModel);
 
 		if (!mref.isGenerationRequired()) {
 			// Init method is already there, just create the constructor
@@ -208,6 +237,14 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 				// Need to set the source overhere, so that we can parse the init expression
 				mref.setContent(newMethod.getSource());
 				fBeanModel.addMethodInitializingABean(mref);
+				
+				// Generate main, if needed				
+				newMSrc = mgen.generateMain(cuType.getElementName());
+				if (newMSrc!=null) {
+					// This method generator contributes a main method					
+					generateMainIfNeeded (cuType, newMSrc);
+				}
+				
 			} catch (JavaModelException e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 				throw new CodeGenException(e);
