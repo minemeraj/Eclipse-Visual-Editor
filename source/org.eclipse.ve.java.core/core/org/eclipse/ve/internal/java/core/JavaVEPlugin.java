@@ -11,13 +11,14 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.14 $  $Date: 2004-08-16 17:55:23 $ 
+ *  $Revision: 1.15 $  $Date: 2004-08-16 21:00:58 $ 
  */
 
-import java.util.*;
+import java.util.Map;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -25,13 +26,12 @@ import org.osgi.framework.BundleContext;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
-import com.ibm.wtp.common.logger.proxy.Logger;
-import com.ibm.wtp.logger.proxyrender.EclipseLogger;
-
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorVMController;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
+
+import com.ibm.wtp.common.logger.proxy.Logger;
+import com.ibm.wtp.logger.proxyrender.EclipseLogger;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
 
@@ -277,24 +277,26 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * Called by JavaVmController. It is public only because this class is in another package.
 	 * It is not meant to be called by any other classes, either internal or customers.
 	 * 
-	 * @param active whether java vm controller is active or not.
+	 * @param disposer when java vm controller is active it will give the plugin a dispose runnable to call.
 	 * @since 1.0.0
 	 */
-	public void setJavaVMControllerActive(boolean active) {
-		javaVMControllerActive = active;
+	public void setJavaVMControllerDisposer(Runnable disposer) {
+		javaVMControllerDisposer = disposer;
 	}
 	
 	/*
-	 * Is the javaVMController ever started. If so we need to shut it down when going down.
+	 * If the javaVMController ever started, then we will be given a runnable to call on shutdown.
 	 */
-	private boolean javaVMControllerActive;
+	private Runnable javaVMControllerDisposer;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		if (javaVMControllerActive)
-			JavaVisualEditorVMController.dispose();
+		if (javaVMControllerDisposer != null) {
+			javaVMControllerDisposer.run();
+			javaVMControllerDisposer = null;
+		}
 		super.stop(context);
 	}
 	
