@@ -1,11 +1,11 @@
 !***************  VE CONTRIBUTION  ******************************************************** 
 
 !*** Special binary plugins which are temporarily included until they become open sourced.
-plugin@com.ibm.etools.emf.event=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
-plugin@com.ibm.wtp.emf.workbench=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.workbench
-plugin@com.ibm.wtp.common.util=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.util
-feature@com.ibm.wtp.emf.integration.core=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.integration.core-feature
-feature@com.ibm.wtp.common.utilities=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.utilities-feature
+plugin@com.ibm.etools.emf.event=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
+plugin@com.ibm.wtp.emf.workbench=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.workbench
+plugin@com.ibm.wtp.common.util=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.util
+feature@com.ibm.wtp.emf.integration.core=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.integration.core-feature
+feature@com.ibm.wtp.common.utilities=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.utilities-feature
 
 !*** Special ones from eclipse.
 plugin@org.eclipse.test=v20040510a,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
@@ -14,29 +14,29 @@ plugin@org.eclipse.perfmsr.core=v20040526a,:pserver:anonymous@dev.eclipse.org:/h
 
 !*** The standard contributions
 
-plugin@org.eclipse.jem=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.beaninfo=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.ui=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.proxy=I20040716,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.tests=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.jem.workbench=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.beaninfo=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.ui=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.proxy=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.tests=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.workbench=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
 
-plugin@org.eclipse.ve=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.cde=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.examples=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.java.core=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.propertysheet=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.jfc=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.swt=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.tests=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.doc=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,
-plugin@org.eclipse.ve.sdk=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
+plugin@org.eclipse.ve=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.cde=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.examples=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.java.core=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.propertysheet=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.jfc=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.swt=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.tests=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.doc=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.ve.sdk=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk
 
-feature@org.eclipse.jem=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
-feature@org.eclipse.jem.tests=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
+feature@org.eclipse.jem=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature
+feature@org.eclipse.jem.tests=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem.tests-feature
 
-feature@org.eclipse.ve=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
-feature@org.eclipse.ve.examples=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
-feature@org.eclipse.ve.tests=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
-feature@org.eclipse.ve.sdk=I20040715,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
+feature@org.eclipse.ve=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
+feature@org.eclipse.ve.examples=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
+feature@org.eclipse.ve.tests=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
+feature@org.eclipse.ve.sdk=I20040721,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
