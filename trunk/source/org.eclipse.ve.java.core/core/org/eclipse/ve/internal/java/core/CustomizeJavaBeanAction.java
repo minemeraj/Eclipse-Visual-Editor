@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.8 $  $Date: 2004-08-27 15:34:09 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-24 22:26:44 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
@@ -45,6 +46,9 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class CustomizeJavaBeanAction extends CustomizeAction {
+	// dbk cache IMG_CUSTOMIZE_BEAN image descriptors
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif");
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif");
 
 	protected EditDomain fEditDomain;
 	static final int NONE = 0;
@@ -59,9 +63,9 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		setId(ACTION_ID);
 		setText(JavaMessages.getString("Action.CustomizeJavaBean.Text")); //$NON-NLS-1$
 		setToolTipText(JavaMessages.getString("Action.CustomizeJavaBean.ToolTipText")); //$NON-NLS-1$
-		setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif")); //$NON-NLS-1$
+		setImageDescriptor(IMG_CUSTOMIZE_BEAN);
 		setHoverImageDescriptor(getImageDescriptor());
-		setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif")); //$NON-NLS-1$
+		setDisabledImageDescriptor(IMG_CUSTOMIZE_BEAN_DISABLED);
 	}
 	public void run() {
 		try {

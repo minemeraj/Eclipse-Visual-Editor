@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.6 $  $Date: 2004-09-13 21:43:52 $ 
+ *  $Revision: 1.7 $  $Date: 2005-01-24 22:26:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -63,7 +63,12 @@ import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPar
  * @since 1.0.0
  */
 class JavaVisualEditorOutlinePage extends ContentOutlinePage {
-
+	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
+	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif");
+	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif");
+	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title");
+	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip");
+	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
 		public ShowOverviewAction() {
@@ -88,17 +93,20 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	/*
 	 * Copied from Resource navigator to do the same thing.
 	 */
-	protected ImageDescriptor getUIImageDescriptor(String relativePath) { 
+	static protected ImageDescriptor getUIImageDescriptor(String relativePath) { 
 		URL url = Platform.getBundle(PlatformUI.PLUGIN_ID).getEntry("icons/full/" + relativePath);	//$NON-NLS-1$
 		return url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
 	}
 	
 	private class CollapseAllAction extends Action {
+
+
+
 		public CollapseAllAction() {
-			super(ResourceNavigatorMessages.getString("CollapseAllAction.title"), IAction.AS_PUSH_BUTTON); //$NON-NLS-1$
-			setToolTipText(ResourceNavigatorMessages.getString("CollapseAllAction.toolTip")); //$NON-NLS-1$
-			setImageDescriptor(getUIImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
-			setDisabledImageDescriptor(getUIImageDescriptor("dlcl16/collapseall.gif")); //$NON-NLS-1$			
+			super(TITLE, IAction.AS_PUSH_BUTTON);
+			setToolTipText(TOOL_TIP);
+			setImageDescriptor(IMG_COLLAPSE_ALL);
+			setDisabledImageDescriptor(IMG_COLLAPSE_ALL_DISABLED);			
 		}
 		
 		public void run() {
@@ -304,3 +312,4 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		}
 	}
 }
+

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:35:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-01-24 22:26:42 $ 
  */
 import java.net.*;
 import java.util.*;
@@ -45,7 +45,6 @@ import org.eclipse.ve.internal.cde.utility.UtilityPackage;
  */
 
 public class URLResourceBundleImpl extends ResourceBundleImpl implements URLResourceBundle {
-
 	/**
 	 * The default value of the '{@link #getBundleName() <em>Bundle Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -97,16 +96,24 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 		return UtilityPackage.eINSTANCE.getURLResourceBundle();
 	}
 
+	// dbk cache previously loaded bundles (custom classloader defeats ResourceBundle cache)
+	
+	private static HashMap rbCache = new HashMap();
+	
 	public java.util.ResourceBundle getBundle() {
 		if (!fLoaded) {
 			fLoaded = true;
 			if (getBundleName() != null && bundleURLs != null && bundleURLs.size() > 0) {
 				ArrayList urls = new ArrayList(bundleURLs.size() * 2);
+				StringBuffer sb = new StringBuffer(); 
+				sb.append(getBundleName());
+				sb.append(':');
 				Iterator itr = bundleURLs.iterator();
 				while (itr.hasNext()) {
 					try {
 						String urlString = (String) itr.next();
 						urls.add(new URL(urlString));
+						sb.append(urlString + ";"); //dbk						
 						if (urlString.startsWith("platform:/plugin/")) { //$NON-NLS-1$
 							// Special, need to get the fragments too.
 							int begPluginName = "platform:/plugin/".length(); //$NON-NLS-1$
@@ -135,11 +142,17 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 						return null; // An error, don't go on.
 					}
 				}
-				URLClassLoader cl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]), null);
-				try {
-					fBundle = java.util.ResourceBundle.getBundle(getBundleName(), Locale.getDefault(), cl);
-				} catch (MissingResourceException e) {
-					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
+				
+				String key = sb.toString(); //dbk
+				fBundle = (ResourceBundle) rbCache.get(key); //dbk
+				if (fBundle == null) { //dbk
+					URLClassLoader cl = new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]), null);
+					try {
+						fBundle = java.util.ResourceBundle.getBundle(getBundleName(), Locale.getDefault(), cl);
+						rbCache.put(key, fBundle); //dbk						
+					} catch (MissingResourceException e) {
+						CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
+					}
 				}
 			}
 		}
