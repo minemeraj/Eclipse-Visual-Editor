@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-03-11 14:05:54 $ 
+ *  $Revision: 1.8 $  $Date: 2004-03-25 23:44:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -79,7 +79,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * 
 	 * @since 1.0.0
 	 */
-	public static PTExpression getParsedTree(Expression ast, final IBeanDeclModel bdm, final List ref) {
+	public  PTExpression getParsedTree(Expression ast, final IBeanDeclModel bdm, final List ref) {
 		class Resolver extends ParseTreeCreationFromAST.Resolver{
 			public PTExpression resolveName(Name name) {
 				String n=null;
@@ -88,7 +88,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 					// This could be a type, or a field access
 					// TODO:  this is a temporary fix, and will not deal with
 					//        factories call etc.
-					String r = CodeGenUtil.resolve(name, bdm); //	fbeanPart.getModel().resolveType(n);
+					String r = 	fbeanPart.getModel().resolveType(n);
 					if (!r.equals(n)) {
 						PTName ptname = InstantiationFactory.eINSTANCE.createPTName();
 						ptname.setName(r) ;
