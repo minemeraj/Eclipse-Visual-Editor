@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2004-05-20 13:06:44 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-16 20:29:43 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -39,6 +39,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	BeanPart fParent = null ;
+	protected String constructorSF = null;
 
 	/**
 	 * @param bean
@@ -48,8 +49,9 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 * 
 	 * @since 1.0.0
 	 */
-	public SWTConstructorDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner) {
-		super(bean, exp, fm, owner);		
+	public SWTConstructorDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner, String constructorSF) {
+		super(bean, exp, fm, owner);
+		this.constructorSF = constructorSF;
 	}
 	/**
 	 * If this widget is initialized in the same method as its parent, than
@@ -83,7 +85,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	protected EStructuralFeature getControlSF() {
-		return getParent().getEObject().eClass().getEStructuralFeature("controls");
+		return getParent().getEObject().eClass().getEStructuralFeature(constructorSF);
 	}
 	
 	/**
