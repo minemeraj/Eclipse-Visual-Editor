@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.17 $  $Date: 2004-06-04 18:35:12 $ 
  */
 
 import java.util.Iterator;
@@ -217,7 +217,24 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
           attr.setAllocation(alloc);
           
           EObject target = fbeanPart.getEObject() ;
-          CodeGenUtil.propertyCleanup(target,sf) ;
+  		// Smart decoding capability:
+		// If the value has not changed - no need to re-apply it
+		Object currentValue = target.eGet(sf);
+		if(currentValue==null && attr==null)
+			return true;
+		if(currentValue!=null && attr!=null){
+			String currentClassName = currentValue.getClass().getName();
+			String newClassName = attr.getClass().getName();
+			if(currentClassName.equals(newClassName) && currentValue instanceof IJavaInstance){
+				IJavaInstance currentInstance = (IJavaInstance) currentValue;
+				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
+				String newInitString = CodeGenUtil.getInitString(attr, fOwner.getBeanModel(), null);
+				if(newInitString.equals(currentInitString))
+					return true; 
+			}
+		}
+          
+  		CodeGenUtil.propertyCleanup(target,sf) ;
           fbeanPart.getInitMethod().getCompMethod().getProperties().add(attr) ;          
           target.eSet(sf,attr) ; 
           fInitString = parseInitString(exp) ;       
@@ -254,12 +271,13 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		
 
         EClassifier argType = null ;
-                
+        String newInitString = null;
+        IJavaInstance newPropInstance = null;
         if (fFmapper.isFieldFeature()) {
             EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
             if (sf == null) throw new CodeGenException("Invalid SF"); //$NON-NLS-1$
             argType = sf.getEType() ;   
-            fInitString = parseInitString(((Assignment)getExpression()).getRightHandSide()) ;
+            newInitString = parseInitString(((Assignment)getExpression()).getRightHandSide()) ;
         }
         else {
             // Regular setter JCMMethod
@@ -274,13 +292,13 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
             if (argExpr.get(0) instanceof ClassInstanceCreation) 
                return dealwithInternalBean((ClassInstanceCreation)argExpr.get(0)) ;
     		// Determine the value of the attribute
-    		fInitString = parseInitString((Expression)argExpr.get(0)) ;		    
+    		newInitString = parseInitString((Expression)argExpr.get(0)) ;		    
         }
 
 		try {
-			fPropInstance = createPropertyInstance(fInitString, argType) ;
-			if (fInitString == null)
-			   fInitString = NULL_STRING ;
+			newPropInstance = createPropertyInstance(newInitString, argType) ;
+			if (newInitString == null)
+			   newInitString = NULL_STRING ;
 		}
 		catch (CodeGenException e) {
 			return false ;
@@ -288,6 +306,26 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		
 		EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
 		EObject target = fbeanPart.getEObject() ;
+		
+  		// Smart decoding capability:
+		// If the value has not changed - no need to re-apply it
+		Object currentValue = target.eGet(sf);
+		if(currentValue==null && newPropInstance==null)
+			return true;
+		if(currentValue!=null && newPropInstance!=null){
+			String currentClassName = currentValue.getClass().getName();
+			String newClassName = newPropInstance.getClass().getName();
+			if(currentClassName.equals(newClassName) && currentValue instanceof IJavaInstance){
+				IJavaInstance currentInstance = (IJavaInstance) currentValue;
+				String currentInitString = CodeGenUtil.getInitString(currentInstance, fOwner.getBeanModel(), null);
+				String newInitString1 = CodeGenUtil.getInitString(newPropInstance, fOwner.getBeanModel(), null);
+				if(newInitString1.equals(currentInitString))
+					return true; 
+			}
+		}
+		
+		fPropInstance = newPropInstance;
+		fInitString = newInitString;
 
         CodeGenUtil.propertyCleanup(target,sf) ;
 		if (fPropInstance == null) {
