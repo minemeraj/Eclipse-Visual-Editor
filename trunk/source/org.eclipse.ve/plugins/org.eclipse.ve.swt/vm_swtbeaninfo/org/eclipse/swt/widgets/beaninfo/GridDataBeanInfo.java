@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: GridDataBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-03-01 19:33:55 $ 
  */
 
 
@@ -42,11 +42,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 						SHORTDESCRIPTION, resbundle.getString("griddata.grabExcessVerticalSpace.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("heightHint", GridData.class.getField("heightHint"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.heightHint"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.heightHint"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.heightHint.Desc"), //$NON-NLS-1$
 				}),
 				createFieldPropertyDescriptor("widthHint", GridData.class.getField("widthHint"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.widthHint"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.widthHint"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.widthHint.Desc"), //$NON-NLS-1$
 				}),
 				createFieldPropertyDescriptor("horizontalAlignment", GridData.class.getField("horizontalAlignment"), new Object[]{
@@ -54,19 +54,19 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalAlignment.Desc"), //$NON-NLS-1$
 				}),
 				createFieldPropertyDescriptor("verticalAlignment", GridData.class.getField("verticalAlignment"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.verticalAlignment"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.verticalAlignment"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.verticalAlignment.Desc"), //$NON-NLS-1$
 				}),				
 				createFieldPropertyDescriptor("horizontalIndent", GridData.class.getField("horizontalIndent"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.horizontalIndent"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.horizontalIndent"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalIndent.Desc"), //$NON-NLS-1$
 				}),
 				createFieldPropertyDescriptor("horizontalSpan", GridData.class.getField("horizontalSpan"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.horizontalSpan"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.horizontalSpan"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.horizontalSpan.Desc"), //$NON-NLS-1$
 				}),
 				createFieldPropertyDescriptor("verticalSpan", GridData.class.getField("verticalSpan"), new Object[]{
-						DISPLAYNAME, resbundle.getString("giddata.verticalSpan"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("griddata.verticalSpan"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("griddata.verticalSpan.Desc"), //$NON-NLS-1$
 				}),	
 		};

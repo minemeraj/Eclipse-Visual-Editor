@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-02-17 12:39:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-03-01 19:33:55 $ 
  */
 
 
@@ -35,27 +35,27 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		return new java.beans.PropertyDescriptor[] {
 				createFieldPropertyDescriptor("numColumns", GridLayout.class.getField("numColumns"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.numColumns"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.numcolumns"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.numColumns.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("makeColumnsEqualWidth", GridLayout.class.getField("makeColumnsEqualWidth"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.makeColumnsEqualWidth"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.makecolumnsequalwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.makeColumnsEqualWidth.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginWidth", GridLayout.class.getField("marginWidth"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.marginWidth"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.marginwidth"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.marginWidth.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("marginHeight", GridLayout.class.getField("marginHeight"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.marginHeight"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.marginheight"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.marginHeight.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("horizontalSpacing", GridLayout.class.getField("horizontalSpacing"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.horizontalSpacing"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.horizontalspacing"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.horizontalSpacing.Desc"), //$NON-NLS-1$							
 				}),
 				createFieldPropertyDescriptor("verticalSpacing", GridLayout.class.getField("verticalSpacing"), new Object[]{
-						DISPLAYNAME, resbundle.getString("gridlayout.verticalSpacing"), //$NON-NLS-1$
+						DISPLAYNAME, resbundle.getString("gridlayout.verticalspacing"), //$NON-NLS-1$
 						SHORTDESCRIPTION, resbundle.getString("gridlayout.verticalSpacing.Desc"), //$NON-NLS-1$							
 				}),				
 		};
