@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainer.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-30 00:21:08 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 15:57:26 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -19,11 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.IClasspathContainer;
-import org.eclipse.jdt.core.IClasspathEntry;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
  
@@ -43,7 +40,7 @@ class RegisteredClasspathContainer implements IClasspathContainer {
 		this.containerpath = containerpath;
 		String containerid = containerpath.segment(0);
 		// TODO This is just hard-coded against this point. Future would have these retrieved by the plugin, plus more in there.
-		IConfigurationElement[] configs = JavaVEPlugin.getPlugin().getDescriptor().getExtensionPoint(JavaVEPlugin.PI_JBCF_REGISTRATIONS).getConfigurationElements();
+		IConfigurationElement[] configs = Platform.getExtensionRegistry().getConfigurationElementsFor(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),JavaVEPlugin.PI_JBCF_REGISTRATIONS); 
 		for (int i = 0; i < configs.length; i++) {
 			String ctrid = configs[i].getAttributeAsIs(JavaVEPlugin.PI_CONTAINER);
 			if (containerid.equals(ctrid)) {
@@ -72,25 +69,25 @@ class RegisteredClasspathContainer implements IClasspathContainer {
 	private IPath getPath(String lib, IConfigurationElement ce) {
 		if (lib == null || lib.length() == 0)
 			return null;
-		IPluginDescriptor pd = null;
+		Bundle bundle = null;
 		IPath libpath =  null;
 		if (lib.charAt(0) != '/') {
-			// Relative to declaring plugin.
-			pd = ce.getDeclaringExtension().getDeclaringPluginDescriptor();
+			// Relative to declaring bundle.
+			bundle = Platform.getBundle(ce.getDeclaringExtension().getNamespace());
 			libpath = new Path(lib);
 		} else {
 			int pathNdx = lib.indexOf('/', 1);
 			if (pathNdx == -1 || pathNdx >= lib.length())
 				return null;	// Invalid, no path after plugin id.
-			pd = Platform.getPluginRegistry().getPluginDescriptor(lib.substring(0, pathNdx));
-			if (pd == null)
+			bundle = Platform.getBundle(lib.substring(0, pathNdx));
+			if (bundle == null)
 				return null;	// Invalid, plugin not found.
 			libpath = new Path(lib.substring(pathNdx+1));
 		}
 		// Unfortunately, you can't return class folders from a container, only jars, so in workbench dev mode
 		// we can't reference the bin directory. Therefore we have to have an actual jar sitting in the development
 		// image for it to be found. localize can't use the bin directory.
-		URL url = ProxyPlugin.getPlugin().urlLocalizeFromPluginDescriptor(pd, libpath);
+		URL url = ProxyPlugin.getPlugin().urlLocalizeFromBundle(bundle, libpath);
 		if (url != null)
 			return new Path(url.getFile());
 		else

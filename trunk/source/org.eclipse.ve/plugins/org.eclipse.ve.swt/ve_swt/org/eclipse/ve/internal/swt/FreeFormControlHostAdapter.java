@@ -6,27 +6,27 @@
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.*;
-import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.*;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.internal.beaninfo.adapters.*;
-import org.eclipse.jem.internal.beaninfo.core.*;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.*;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
 public class FreeFormControlHostAdapter extends AdapterImpl {
 
-	private IBeanProxyDomain fDomain;
 	protected ResourceSet rset;
 	protected EClass classControl;	
 	protected BeanComposition composition;
 
 	public FreeFormControlHostAdapter(IBeanProxyDomain domain, BeanComposition aComposition) {
-		fDomain = domain;
 		composition = aComposition; 
 	}
 	private void ensureEMFDetailsCached(){

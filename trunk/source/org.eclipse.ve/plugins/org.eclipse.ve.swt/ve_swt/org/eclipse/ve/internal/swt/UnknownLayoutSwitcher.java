@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: UnknownLayoutSwitcher.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-01 19:16:49 $ 
+ *  $Revision: 1.2 $  $Date: 2004-05-24 15:57:27 $ 
  */
 
 import java.util.Collections;
@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * This helper class is used when a container's layout is changed
