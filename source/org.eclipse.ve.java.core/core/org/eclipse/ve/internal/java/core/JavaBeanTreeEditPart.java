@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-12-05 14:01:01 $ 
  */
 
 import java.text.Collator;
@@ -532,7 +532,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		Listener listener = anEventInvocation.getListener();
 		anEventInvocation.setListener(null);
 		// If there are no callbacks remaining registered against the listener we should also remove the listener itself
-		if (listener.getListenedBy().isEmpty()){
+		if (listener != null && listener.getListenedBy().isEmpty()){
 			// The Listener is owned by the BeanComposition
 			ListenerType listenerType = listener.getListenerType();
 			listenerType.getListeners().remove(listener);
