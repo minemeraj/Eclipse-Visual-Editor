@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-03-22 23:47:56 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -77,6 +77,8 @@ public class TabItemPropertySourceAdapter extends PropertySourceAdapter {
 	 * If one of ours, send it on up, else send it to the control.
 	 */
 	public Object getPropertyValue(Object feature) {
+		if (myDescriptors == null)
+			getPropertyDescriptors();
 		if (myDescriptors.contains(feature))
 			return super.getPropertyValue(feature);
 	
