@@ -10,12 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-06 22:28:01 $ 
  */
 package org.eclipse.ve.internal.swt;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -29,7 +33,7 @@ import org.eclipse.pde.internal.core.PluginModelManager;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
 
-import org.eclipse.ve.internal.jface.JFaceColorProxyRegistration;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -55,6 +59,79 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		this.javaProject = info.getJavaProject();
 		this.fConfigContributionInfo = info;
 	}
+
+private static IPath dllCache = JavaVEPlugin.VE_PLUGIN_CACHE_DESTINATION.append("swtDlls");	
+public static void createDirectories (IPath finalDir) {
+	for (int i=0; i<finalDir.segmentCount(); i++) {
+		File f = finalDir.removeLastSegments(finalDir.segmentCount()-1-i).toFile();
+		f.mkdir();
+	}
+}
+public static void createEntry (ZipEntry entry, InputStream in) {
+	IPath dest = dllCache.append(entry.getName());
+	File f = dest.toFile();
+	if (entry.isDirectory()) {				
+		createDirectories(dest);		
+	}
+	else {
+	     try {
+			IPath parentDir = dest.removeLastSegments(1);
+			createDirectories(parentDir);
+			FileOutputStream file = new FileOutputStream(f);
+			try {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                   file.write(buffer, 0, bytesRead);
+                }                
+             }
+             finally {
+                file.close();
+             }
+
+		} catch (Exception e) {
+			JavaVEPlugin.log(e);
+		}
+	}
+}
+static public URL generateSwtDllIfNeeded (IFragmentModel frag, String relativePath) {
+		String location = frag.getInstallLocation();
+		if (location == null)
+			return null;
+		File f = dllCache.append(relativePath).toFile();
+		if (f.exists()) {
+			try {
+				return f.toURL();
+			} catch (MalformedURLException e1) {
+				JavaVEPlugin.log(e1);
+				return null;
+			}
+		}
+				
+		File file = new File(location);
+		URL url = null;
+
+		if (file.isFile() && file.getName().endsWith(".jar")) { //$NON-NLS-1$
+			try {
+				ZipFile zip = new ZipFile(file);
+				Enumeration entries = zip.entries();
+				while (entries.hasMoreElements()) {
+					ZipEntry entry = (ZipEntry) entries.nextElement();
+					if (entry.getName().startsWith(relativePath)) {
+						InputStream in = zip.getInputStream(entry);
+						createEntry(entry, in);
+						in.close();
+					}
+					
+				}
+				url = f.toURL();
+			} catch (Exception e) {
+				JavaVEPlugin.log(e);
+			}
+		}
+		return url;		
+}
+		
 	
 	/*
 	 * (non-Javadoc)
@@ -87,8 +164,11 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 					// swt fragment					
 					if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
 						continue; // skip the nl ones
-					os = frags[i].getResourceURL(relPath.toPortableString());
-					if (os!=null){					   
+					os = getResourceURL(frags[i], relPath.toPortableString());
+					if (os!=null){	
+						// if our DLL is inside a .jar extract it out to out private cache.
+					   if (os.toString().startsWith("jar"))
+							os = generateSwtDllIfNeeded(frags[i], relPath.toPortableString());
 					   break;
 					}
 				}
@@ -234,5 +314,25 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 				SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
 			}
 		}
+	}
+	private URL getResourceURL(IFragmentModel frag, String relativePath) {
+		String location = frag.getInstallLocation();
+		if (location == null)
+			return null;
+		
+		File file = new File(location);
+		URL url = null;
+		try {
+			if (file.isFile() && file.getName().endsWith(".jar")) { //$NON-NLS-1$
+				ZipFile zip = new ZipFile(file);
+				if (zip.getEntry(relativePath) != null) {
+					url = new URL("jar:file:" + file.getAbsolutePath() + "!/" + relativePath); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			} else if (new File(file, relativePath).exists()){
+				url = new URL("file:" + file.getAbsolutePath() + Path.SEPARATOR + relativePath); //$NON-NLS-1$
+			}
+		} catch (IOException e) {
+		}
+		return url;
 	}
 }
