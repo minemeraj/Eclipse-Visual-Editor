@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:08:01 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-06-29 18:20:23 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -25,22 +25,29 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart;
-import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
 
 public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
 
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
+	protected IJavaInstance bean;
 
 	public JavaBeanGraphicalEditPart(Object model) {
 		setModel(model);
 	}
 
+	public IJavaInstance getBean(){
+		if(bean == null){
+			bean = (IJavaInstance)getModel();
+		}
+		return bean;
+	}
+	
 	public void activate() {
 		super.activate();
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
+		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(getBean());
 		if (fBeanProxyErrorListener == null) {
 			fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
-				public void errorStatus(int severity) {
+				public void errorStatusChanged(){
 					CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, new Runnable() {
 						public void run() {
 							if (isActive())
@@ -132,8 +139,8 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	 */
 	protected IFigure createFigure() {
 		IFigure fig = super.createFigure();
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this));
-		fig.setToolTip(ToolTipFig);
+		ToolTipContentHelper.AssistedToolTipFigure toolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
+		fig.setToolTip(toolTipFig);
 		return fig;
 	}
 

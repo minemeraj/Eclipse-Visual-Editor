@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IErrorNotifier.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 /**
@@ -26,7 +26,7 @@ public interface IErrorNotifier extends IErrorHolder {
 
 
 	public interface ErrorListener {
-		public void errorStatus(int errorStatus);	// Status has changed
+		public void errorStatusChanged();	// Status has changed
 		public void errorCleared(ErrorType error);	// A particular error has been cleared.
 		public void errorAdded(ErrorType error);	// A particular error has been added.
 	}
@@ -40,13 +40,7 @@ public interface IErrorNotifier extends IErrorHolder {
 	 * specific overrides and let the others do nothing.
 	 * @author richkulp
 	 */
-	public static class ErrorListenerAdapter implements ErrorListener {
-
-		/**
-		 * @see org.eclipse.ve.internal.java.core.IErrorNotifier.ErrorListener#errorStatus(int)
-		 */
-		public void errorStatus(int errorStatus) {
-		}
+	public static abstract class ErrorListenerAdapter implements ErrorListener {
 
 		/**
 		 * @see org.eclipse.ve.internal.java.core.IErrorNotifier.ErrorListener#errorCleared(Error)

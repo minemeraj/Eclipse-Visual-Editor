@@ -7,7 +7,7 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-06-07 20:34:58 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2004-06-29 18:20:33 $
  */
 import java.util.*;
 
@@ -30,7 +30,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.utility.ToolTipContentHelper;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -61,6 +60,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	protected DirectEditManager manager = null;
 
 	protected EStructuralFeature sfDirectEditProperty = null;
+	protected IJavaInstance bean;
 
 	public ComponentGraphicalEditPart(Object model) {
 		setModel(model);
@@ -85,7 +85,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		}
 		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
 		fig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(null, ToolTipAssistFactory.createToolTipProcessors(this));
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
 		fig.setToolTip(ToolTipFig);
 		return fig;
 	}
@@ -242,18 +242,17 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		}
 		// Listen to the IBeanProxyHost so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
-			public void errorStatus(final int severity) {
+			public void errorStatusChanged() {
 				CDEUtilities.displayExec(ComponentGraphicalEditPart.this,  new Runnable() {
-
 					public void run() {
-						setSeverity(severity);
+						setSeverity(getComponentProxy().getErrorStatus());
 					}
 				}); 
 			}
 		};
 		setSeverity(getComponentProxy().getErrorStatus()); // Set the initial
 		// status
-		BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel()).addErrorListener(fBeanProxyErrorListener);
+		getComponentProxy().addErrorListener(fBeanProxyErrorListener);
 	}
 
 	protected void setSeverity(int severity) {
@@ -323,7 +322,10 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	 * Return the IBean
 	 */
 	public IJavaInstance getBean() {
-		return (IJavaInstance) getModel();
+		if(bean == null){
+			bean = (IJavaInstance) getModel();
+		}
+		return bean;
 	}
 
 	protected IActionFilter getComponentActionFilter() {

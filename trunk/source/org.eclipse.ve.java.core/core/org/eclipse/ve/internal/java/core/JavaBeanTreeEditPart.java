@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:08:01 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-06-29 18:20:23 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -50,7 +50,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	protected IErrorNotifier.ErrorListener fErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
-		public void errorStatus(int severity) {
+		public void errorStatusChanged() {
 			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, new Runnable() {
 
 				public void run() {

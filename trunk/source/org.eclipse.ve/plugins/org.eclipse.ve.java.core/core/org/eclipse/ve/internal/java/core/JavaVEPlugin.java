@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.11 $  $Date: 2004-06-09 22:47:02 $ 
+ *  $Revision: 1.12 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 import java.util.*;
@@ -35,8 +35,10 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 public class JavaVEPlugin extends AbstractUIPlugin {
 
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
+	// ID of the registrations extension point.	
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
-	// ID of the registrations extension point.
+	// Editor part adapters
+	public static final String PI_ADAPTER_EXTENSION_POINT = "org.eclipse.ve.java.core.editorpartadapters"; //$NON-NLS-1$	
 
 	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
@@ -313,6 +315,22 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		containerToContributions = info.containerToContributions;
 		pluginToContributions = info.pluginToContributions;
 	}
-	
 
+	/**
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public String[] getAdditionalAdapterContributorClassNames() {
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(PI_ADAPTER_EXTENSION_POINT);
+		if(extensionPoint != null){
+			String[] result = new String[extensionPoint.getConfigurationElements().length];
+			IConfigurationElement[] configElements = extensionPoint.getConfigurationElements();
+			for(int i=0; i<configElements.length; i++){
+				result[i] = configElements[i].getAttributeAsIs("class");
+			}
+			return result;
+		}
+		return new String[0];
+	}
 }

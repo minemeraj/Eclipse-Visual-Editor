@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.49 $  $Date: 2004-06-19 15:37:06 $ 
+ *  $Revision: 1.50 $  $Date: 2004-06-29 18:20:23 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -169,12 +169,30 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	protected SelectionServiceListener selectionServiceListener = new SelectionServiceListener();
 	
+	protected HashMap additionalAdapterContributors;	// Instances of nnn contributing to additional adapters	
+	
 	// allow threads to wait until JVE has loaded
 	protected Object loadCompleteSync = new Object();
 	protected volatile boolean isLoadPending = true;
 
 	public JavaVisualEditorPart() {
-		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot.
+		PerformanceMonitorUtil.getMonitor().snapshot(100);	// Start snapshot
+		
+		// The extension point "org.eclipse.ve.java.editpart.adapters" allows other plugins to contribute
+		// to adapters.  Collect these on startup
+		/**
+		additionalAdapterContributors = new HashMap(1); 
+		String[] adapterClassNames = JavaVEPlugin.getPlugin().getAdditionalAdapterContributorClassNames();
+		for(int i=0;i<adapterClassNames.length;i++){
+			try {
+				IAdapterContributor adapterContributor = (IAdapterContributor)CDEPlugin.createInstance(null,adapterClassNames[i]);
+				additionalAdapterContributors.put(adapterContributor.getAdapterKey(),adapterContributor);				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	
+		*//
 	}
 	
 	/* (non-Javadoc)
@@ -1916,6 +1934,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+
 	public Object getAdapter(Class adapterKey) {
 		if (adapterKey == IPropertySheetPage.class)
 			return getPropertySheetPage();
@@ -1925,9 +1944,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			return primaryViewer;	// Current impl. only has one active editpart viewer. The outline viewer is its own IWorkbenchPart.
 		else if (adapterKey == CommandStack.class)
 			return editDomain.getCommandStack();
-		else if (adapterKey == PalettePage.class){
+		else if (adapterKey == PalettePage.class)
 			return getPalettePage();
-		}
+//		else if (additionalAdapterContributors.get(adapterKey) != null)
+//			return additionalAdapterContributors.get(adapterKey);
 		else
 			return super.getAdapter(adapterKey);
 	}
