@@ -22,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -37,6 +38,8 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
 public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 
 	private EditDomain fEditDomain;	
+	
+	protected String stringValue = "";
 
 	public CustomLabelEditor(Composite aComposite) {
 		super(aComposite);
@@ -62,7 +65,7 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 			}
 			protected Control createDialogArea(Composite parent) {
 				content = new LabelDialogContent(parent, SWT.NONE);
-				content.setString((String)getValue());
+				content.setString(stringValue);
 				return content;
 			}
 			
@@ -85,12 +88,16 @@ public class CustomLabelEditor extends DialogCellEditor implements INeedData {
 		// TODO Auto-generated method stub
 		fEditDomain = (EditDomain) data;
 	}
-
-	protected void updateContents(Object value) {
-		if (value!=null) {
-		   IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);
-		   value = stringBeanProxy.stringValue();		   
+	
+	protected void doSetValue(Object value) {
+		if (value != null){
+			IStringBeanProxy stringBeanProxy = (IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value);
+			stringValue = stringBeanProxy.stringValue();
 		}
-		super.updateContents(value);
+		super.doSetValue(value);
 	}
+	protected void updateContents(Object value) {
+		super.updateContents(stringValue);
+	}
+
 }
