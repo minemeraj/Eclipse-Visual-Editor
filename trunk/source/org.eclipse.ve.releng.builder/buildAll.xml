@@ -252,7 +252,15 @@
 		<echo message="Push the update site to the download site."/>
 		<property name="updateRemoteDirectory" value="updates/1.0"/>
 		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
+				
+		<!-- Now make a backup of the site.xml that we previously updated. -->
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml"/>
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site.xml"/>		
+		<exec dir="." executable="rsync">
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site.xml versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}/site.xml.bak " />
+		</exec>
 		
+		<!-- Now push the updates themselves back. -->
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site/**"/>
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site/**"/>		
 		<chmod dir="${updateLocalDirectory}" type="dir" perm="ugo+rx" includes="site/**"/>
