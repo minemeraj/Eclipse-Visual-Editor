@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.15 $  $Date: 2004-04-29 21:06:33 $ 
+ *  $Revision: 1.16 $  $Date: 2004-05-08 01:19:01 $ 
  */
 
 import java.util.*;
@@ -587,7 +587,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 	
 	int index = -1;
 	VEexpressionPriority expPriority = exp.getPriority();
-	if (exp.getPriority().equals(IJavaFeatureMapper.NOPriority)) {
+	if (expPriority.equals(IJavaFeatureMapper.NOPriority)) {
 		// add to the end of the list
 		index=sortedList.size();
 	}

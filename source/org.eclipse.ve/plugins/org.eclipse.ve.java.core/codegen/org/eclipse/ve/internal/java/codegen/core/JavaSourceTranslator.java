@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.30 $  $Date: 2004-04-20 21:57:43 $ 
+ *  $Revision: 1.31 $  $Date: 2004-05-08 01:19:01 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -719,6 +719,8 @@ void	buildCompositionModel() throws CodeGenException {
 		    // Composition.
 		    while (refs.hasNext()) {
 			  CodeExpressionRef codeRef = (CodeExpressionRef)refs.next() ;
+			  // Expression may be decoded already - instigated by another expression decoder 
+			  if (codeRef.isStateSet(CodeExpressionRef.STATE_EXIST)) continue ;
 		      
 		      //if (getCorrespondingFeature(codeRef,obj) != null)
 		      try {

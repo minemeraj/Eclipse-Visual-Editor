@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.24 $  $Date: 2004-04-29 21:06:33 $ 
+ *  $Revision: 1.25 $  $Date: 2004-05-08 01:19:01 $ 
  */
 
 import java.util.*;
@@ -136,7 +136,7 @@ private void fixOffsetsIfNeeded(IMethod imethod, CodeMethodRef mref) throws Code
 
    fixOffsetIfNeeded(src,mref) ;        
 }
-protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor, boolean topMost){
+protected IJavaElement getSiblingForNewMethod(IType type, boolean isConstructor, boolean topMost){
 	IMethod sibling = null;
 	try {
 		IMethod[] methods = type.getMethods();
@@ -152,6 +152,10 @@ protected IJavaElement getSiblingForNewMEthod(IType type, boolean isConstructor,
 					sibling = methods[sc];
 					break;
 				}
+			}
+			else {
+				// Vanila old method... make sure to put it before a main, if one exits.
+				sibling = getMainMethod(type);
 			}
 		}
 	} catch (JavaModelException e) {
@@ -171,23 +175,31 @@ protected void parseInitExpression (BeanPart b) {
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR,true);
 }
 
-/**
- *  This method will use the allocation feature to generate
- *  a new init expression from the model
- */
-protected CodeExpressionRef createInitExpression(BeanPart bp, IJavaObjectInstance component) throws CodeGenException {
-    // Use the allocation feature to generate from the model
-	ExpressionRefFactory f = new ExpressionRefFactory(bp,ObjectDecoder.getAllocationFeature(component));
-	CodeExpressionRef exp = f.createFromJVEModel(null) ;
-	exp.setState(CodeExpressionRef.STATE_INIT_EXPR,true);
-	exp.insertContentToDocument();
-    return exp;
-}
+	/**
+	 * This method will use the allocation feature to generate a new init
+	 * expression from the model
+	 */
+	protected CodeExpressionRef createInitExpression(BeanPart bp,
+			IJavaObjectInstance component) throws CodeGenException {
+		// Use the allocation feature to generate from the model
+		ExpressionRefFactory f = new ExpressionRefFactory(bp, ObjectDecoder
+				.getAllocationFeature(component));
+		CodeExpressionRef exp = f.createFromJVEModel(null);
+		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+		exp.insertContentToDocument();
+		return exp;
+	}
 
-	protected void generateMainIfNeeded(IType t, String content) throws JavaModelException {
+   protected IMethod getMainMethod(IType t) {
 		IMethod main = t.getMethod("main", new String[]{Signature
 				.createTypeSignature("String[]", false)});
-		if (main != null && main.exists()) {
+		if (main != null && main.exists())
+			return main;
+		return null;
+	}
+	protected void generateMainIfNeeded(IType t, String content) throws JavaModelException {
+		IMethod main = getMainMethod(t);
+		if (main!=null) {
 			try {
 				// main already exists
 				// See if there are any statement in it.
@@ -208,7 +220,7 @@ protected CodeExpressionRef createInitExpression(BeanPart bp, IJavaObjectInstanc
 			}
 		}
 		// go for it
-		t.createMethod(content, getSiblingForNewMEthod(t, false, false), false,
+		t.createMethod(content, getSiblingForNewMethod(t, false, false), false,
 				null);
 	}
 
@@ -232,7 +244,7 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
 			// Create it as the last method
 			try {
 				// Offsets will be updated with a call to refreshMethods on mref
-				newMethod = cuType.createMethod(newMSrc, getSiblingForNewMEthod(cuType, false, false), false, null);
+				newMethod = cuType.createMethod(newMSrc, getSiblingForNewMethod(cuType, false, false), false, null);
 				mref.setMethodHandle(newMethod.getHandleIdentifier());
 				// Need to set the source overhere, so that we can parse the init expression
 				mref.setContent(newMethod.getSource());
@@ -430,7 +442,7 @@ protected CodeMethodRef generateThisInitMethod() throws CodeGenException {
    			newMethod = alreadyPresentMethod;
    			newSrc = newMethod.getSource();
    		}else{
-	        newMethod = cuType.createMethod(newSrc,getSiblingForNewMEthod(cuType, false, true),false,null) ;    
+	        newMethod = cuType.createMethod(newSrc,getSiblingForNewMethod(cuType, false, true),false,null) ;    
    		}        
         mref.setMethodHandle(newMethod.getHandleIdentifier()) ;       
         // empty lines may shift to other methods

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-23 23:15:53 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-08 01:19:05 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -100,7 +100,9 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		BeanPart bp = null ;
 		
 		List args = exp.arguments() ;
-		if (args.size() < 1) throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
+		if (args.size() < 1)
+			return parseNoArgAddedPart(exp) ;
+			
 		
 		// Parse the arguments to figure out which bean to add to this container
 		if (args.get(0) instanceof MethodInvocation)  {
@@ -397,4 +399,26 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	}
 
 
+	protected BeanPart parseNoArgAddedPart(MethodInvocation exp) throws CodeGenException {
+		// This decoder assume that this expression is adding a child to its bean
+		// with a createFoo()... During the resolution, the child must be put
+		// as an argumet
+		if (fOwner.getExprRef().getArgs() == null || fOwner.getExprRef().getArgs().length<1)
+		   throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
+		return (BeanPart) fOwner.getExprRef().getArgs()[0];
+	}
+	
+	/**
+	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getSFPriority()
+	 */
+	protected int getSFPriority() {
+		// The add priority is tied to a constructor's priority
+		return IJavaFeatureMapper.PRIORITY_CONSTRUCTOR ;
+	}	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
+	 */
+	protected int getIndexPriority() {		
+		return SWTConstructorDecoderHelper.getIndexPriority(fAddedPart,getIndexedEntries());
+	}
 }

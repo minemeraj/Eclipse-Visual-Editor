@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.7 $  $Date: 2004-04-29 21:06:33 $ 
+ *  $Revision: 1.8 $  $Date: 2004-05-08 01:19:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
@@ -45,7 +46,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	protected   String[]		fComments = null ;			// JavaDoc for the method	
 	protected   String[]		fmethodArgs = null ;
 	protected	String			finitbeanName = null ;		// Initialized Bean
-	protected   String[]		finitbeanArgs = null ;		// Init constructor args. 
+	protected   String			finitbeanInitString = null ;		// Init constructor/args. 
 	protected   IMethodTemplate fMethodTemplate = null ;
 	protected	EStructuralFeature[] fignoreSFlist = null ;
 	protected   boolean			fGenerateComments=false ;
@@ -59,7 +60,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		public String[]		   fmethodArguments ;	// type name array
 		public String		   finitBeanName ;
 		public String		   finitBeanType ;
-		public String[]		   finitBeanArgs;		// Constructor arguments
+		public String		   finitbeanInitString;		// Constructor arguments
 		
 		public MethodInfo(boolean generateReturn) {
 			this.fSeperator = fModel.getLineSeperator() ;
@@ -76,7 +77,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 				freturnType = finitBeanType;
 		    else
 		    	freturnType = null ;
-			finitBeanArgs = AbstractMethodTextGenerator.this.finitbeanArgs;
+			finitbeanInitString = AbstractMethodTextGenerator.this.finitbeanInitString;
 			fmethodArgs = AbstractMethodTextGenerator.this.fmethodArgs;
 		}
 
@@ -105,6 +106,9 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	public String generateMethod(CodeMethodRef method, String methodName, String beanName) throws CodeGenException {
 		fmethodName = methodName ;
 		finitbeanName = beanName ;
+		
+		IJavaObjectInstance obj = (IJavaObjectInstance)fComponent ;		
+		setBeanInitString(CodeGenUtil.getInitString(obj, fModel));	
 				
 		return getMethodTemplate().generateMethod(getInfo()) ;				
 	}
@@ -132,15 +136,15 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	/**
 	 * @return Returns the fbeanInitArgs.
 	 */
-	public String[] getBeanInitArgs() {
-		return finitbeanArgs;
+	public String getBeanInitString() {
+		return finitbeanInitString;
 	}
 
 	/**
 	 * @param fbeanInitArgs The fbeanInitArgs to set.
 	 */
-	public void setBeanInitArgs(String[] beanInitArgs) {
-		this.finitbeanArgs = beanInitArgs;
+	public void setBeanInitString(String str) {
+		this.finitbeanInitString = str;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: DefaultMethodInvocationTemplate.javajet,v $
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  */
  
  // This Method is expected to generate a method invocation expression
@@ -12,7 +12,7 @@
         package="org.eclipse.ve.internal.java.codegen.jjet.util" 
         class="DefaultMethodInvocationTemplate"
 %>
-	<%=info.fmethodName%> (<%
+	<%=info.fmethodName%>(<%
 		boolean first = true ;
 		// Generate arguments, if needed
 		if (info.fmethodArguments != null) 
