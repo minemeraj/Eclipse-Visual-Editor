@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: SWTMainMethodTemplate.javajet,v $
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a Main method for a SWT based application.
@@ -18,7 +18,8 @@
 	public static void main(String[] args) {
 		// before you run this, make sure to set up the following in
 		// the launch configuration (Arguments->VM Arguments) for the correct SWT lib. path
-		// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.xxx\platform"
+		// the following is a windows example,
+		// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.0\os\win32\x86"
 		<%=info.finitBeanType%> test = new <%=info.finitBeanType%>();
 		test.<%=info.fmethodName%>() ;
 		test.<%=info.finitBeanName%>.open();
