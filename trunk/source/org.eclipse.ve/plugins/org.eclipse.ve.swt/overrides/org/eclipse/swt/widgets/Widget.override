@@ -14,7 +14,8 @@
   	  expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTControlDecoder"
       methodGenerator="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTNoReturnMethodTextGenerator"
       modelled="true"/>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+      modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.NoFFModelAdapter">
     <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.prototypefactory"
         value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetPrototypeFactory"/>
   </addedEObjects>
