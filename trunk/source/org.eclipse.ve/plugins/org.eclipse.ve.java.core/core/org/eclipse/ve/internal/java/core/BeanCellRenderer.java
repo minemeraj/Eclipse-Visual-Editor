@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanCellRenderer.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-19 12:20:47 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-19 22:11:02 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -159,7 +159,8 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 		if (sources[0] instanceof IJavaObjectInstance) {
 			rebuildWrapper = !(sources[0].equals(source));
 			source = (IJavaObjectInstance) sources[0];
-		}
+		} else
+			rebuildWrapper = true;
 	}	
 
 }
