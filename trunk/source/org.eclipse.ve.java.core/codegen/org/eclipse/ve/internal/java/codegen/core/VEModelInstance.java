@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-21 22:51:21 $ 
+ *  $Revision: 1.8 $  $Date: 2005-03-07 22:55:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -96,6 +96,10 @@ public class VEModelInstance implements IVEModelInstance {
 			if (cr != null)
 				rs.getResources().remove(cr);
 
+			// TODO: workaround to the fact that if we load from cache, their may
+			//       be timing associated with the creation of an element from .xmi.
+			//       so, create the BeanSubclass for the first time here.
+			fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
 			if (!ignoreCache && 
 					(fResource=VEModelCacheUtility.doLoadFromCache(this, null))!=null){				
 				fRoot = (BeanSubclassComposition) fResource.getEObject("/");
@@ -104,8 +108,7 @@ public class VEModelInstance implements IVEModelInstance {
 				isFromCache=true;	
 			}
 			else {
-				fResource = rs.createResource(URI.createURI(fUri));
-				fRoot = JCMFactory.eINSTANCE.createBeanSubclassComposition();
+				fResource = rs.createResource(URI.createURI(fUri));				
 				Diagram d = CDMFactory.eINSTANCE.createDiagram();
 				d.setId(Diagram.PRIMARY_DIAGRAM_ID);
 				fRoot.getDiagrams().add(d);
