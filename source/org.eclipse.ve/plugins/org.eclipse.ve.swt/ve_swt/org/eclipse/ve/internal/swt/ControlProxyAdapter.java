@@ -7,9 +7,12 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.jem.internal.core.MsgLogger;
@@ -36,8 +39,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			IBeanTypeProxy environmentBeanTypeProxy = getEnvironmentBeanTypeProxy();
 			// Create the control with the constructor of its parent composite
 			IJavaObjectInstance control = (IJavaObjectInstance)getTarget();
-			// TODO For free form parts this throws an exception.  Needs resolving
-			IJavaObjectInstance composite = (IJavaObjectInstance) control.eContainer();
+			IJavaObjectInstance composite = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference)JavaInstantiation.getSFeature(control.eResource().getResourceSet(),SWTConstants.SF_COMPOSITE_CONTROLS)); 
 			IBeanProxy compositeBeanProxy = null;
 			// The parent composite either comes because we are logically owned by a composite
 			if(composite != null){

@@ -17,12 +17,14 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter"/>
   </event:AddMany>
   <event:AddMany featureName="eReferences">
+    <!-- Layout property has special property sheet processing for changing layoutData properties (constraints) when layouts are switched -->
     <addedEObjects xsi:type="ecore:EReference" name="layout" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
           propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LayoutPropertyDescriptor"/>
     </addedEObjects>    
+    <!-- The composite/controls relationship is not containment.  This means that by default a method will be created by the RuledCommandBuilder that owns the child control -->
     <addedEObjects xsi:type="ecore:EReference" name="controls" eType="com.ibm.etools.java:JavaClass java:/org.eclipse.swt.widgets#Control"
-        upperBound="-1" containment="true">
+        upperBound="-1" containment="false">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
     </addedEObjects>
   </event:AddMany>
