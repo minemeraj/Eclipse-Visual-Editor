@@ -1,0 +1,24 @@
+<project default="main">
+
+	<property name="pde.build.scripts" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.pde.build_3.0.0/scripts" />
+
+	<target name="init">
+		<tstamp/>
+		<touch file="${user.home}/.cvspass" />
+		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
+		<property name="buildDirectory" value="${basedir}/src/eclipse" />
+		<property name="bootclasspath" value="${java.home}/lib/rt.jar" />
+		<property name="rt" value="${java.home}/lib/rt.jar" />
+
+		<property name="buildType" value="I" />
+		<property name="buildId" value="build" />
+		<property name="buildid" value="build" />
+	</target>
+
+	<target name="main" depends="init">
+		<ant antfile="build.xml" dir="${pde.build.scripts}">
+			<property name="builder" value="${basedir}/${component}" />
+		</ant>
+	</target>
+	
+</project>

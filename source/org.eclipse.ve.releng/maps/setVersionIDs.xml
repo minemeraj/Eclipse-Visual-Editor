@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Set Map Version Ids" default="setids" basedir=".">
+
+<target name="setids" depends="version" description="Set maps ids. (Define property id for id, and version to cause CVS project versioning to occur)" >
+	<fail message="No id passed in." unless="id"/>
+	<copy file="ve.map.template" tofile="ve.map" overwrite="true">
+		<filterset >
+			<filter token="v" value="${id}"/>
+		</filterset>
+	</copy>
+	<eclipse.convertPath fileSystemPath="${basedir}" property="mypath"/>
+	<eclipse.refreshLocal resource="${mypath}" depth="infinite"/>
+</target>
+
+<target name="version" if="version" >
+	<fail message="No id passed in." unless="id"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.beaninfo.ui" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.proxy" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.tests" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.tests-feature" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem.workbench" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.jem-feature" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.cde" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.examples" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.examples-feature" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.java.core" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.jfc" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.propertysheet" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.tests" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.tests-feature" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve-feature" versionName="${id}"/>	
+	<versionProjectFromWorkspace project="org.eclipse.ve.releng" versionName="${id}"/>
+	<versionProjectFromWorkspace project="org.eclipse.ve.releng.builder" versionName="${id}"/>	
+</target>
+</project>
