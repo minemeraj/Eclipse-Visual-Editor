@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2004-04-22 10:17:33 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2004-04-23 19:49:07 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -107,8 +107,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			return constraintHandler;
 		}
 		else if (type == IActionFilter.class)
-			return null; //TODO
-//			return getComponentActionFilter();
+			return getControlActionFilter();
 		
 		Object result = super.getAdapter(type);
 		if ( result != null ) {
@@ -128,6 +127,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		}
 		return null;
 	}		
+
 	protected void setSeverity(int severity) {
 		fErrorIndicator.sevSeverity(severity);
 		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
@@ -151,6 +151,11 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	public IJavaInstance getBean() {
 		return (IJavaInstance) getModel();
 	}	
+	
+	private IActionFilter getControlActionFilter() {
+		return JavaBeanActionFilter.INSTANCE;
+	}
+	
 	private class ControlVisualModelAdapter extends ControlModelAdapter {
 		
 		protected IJavaObjectInstance control;		

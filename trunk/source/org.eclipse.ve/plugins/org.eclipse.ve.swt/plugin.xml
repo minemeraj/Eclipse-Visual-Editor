@@ -95,6 +95,27 @@
             plugin="org.eclipse.swt">
       </palette>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+     <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.core.editorpart.settextaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="org.eclipse.swt.widgets.Control">
+         </filter>
+         <filter
+               name="PROPERTY"
+               value="text">
+         </filter>
+         <action
+               label="%PopupMenus.SetTextAction.Label  Set Text"
+               class="org.eclipse.ve.internal.swt.SetTextObjectActionDelegate"
+               id="org.eclipse.ve.internal.swt.settextaction">
+         </action>
+      </objectContribution>
+   </extension>      
 
 <!-- Contribute to the ChooseBean dialog to allow dropping of SWT widgets -->
    
