@@ -85,7 +85,8 @@ public class ImageCapture implements IImageCapture{
 		// dealt with separately, however Table's TableColumn widgets are children so much be handled differently
 		if(aControl instanceof Table ||
 		   aControl instanceof Browser ||
-		   aControl instanceof OleFrame){
+		   aControl instanceof OleFrame || 
+		   aControl instanceof Spinner){
 			print_bits = print_bits | PRF_CHILDREN;	
 		}
 		GC gc = new GC (image);
