@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UserOverideRuleProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:22 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-09 22:47:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -81,44 +81,45 @@ public class UserOverideRuleProvider implements IRuleProvider {
 		JavaObjectEmiter e = getEmiter (getTimeStamp()) ;
 		if (e == fEmiter) return fRule ;
 		
-		FileReader in = null ;
-		try {
-			fRule = (IRule) e.generateObjectFromExisting(this.getClass().getClassLoader(),null) ;			
-			if (fRule == null) {
-				// Need to compile
-				if (!fsrcFile.canRead()) {
-					JavaVEPlugin.log("UserOverideRuleProvider: Can not read source file: "+fsrcFile.getAbsolutePath(), //$NON-NLS-1$
-					                Level.WARNING) ;
-					return null ;
+		synchronized (this) {
+			FileReader in = null;
+			try {
+				fRule = (IRule) e.generateObjectFromExisting(this.getClass().getClassLoader(), null);
+				if (fRule == null) {
+					// Need to compile
+					if (!fsrcFile.canRead()) {
+						JavaVEPlugin.log("UserOverideRuleProvider: Can not read source file: " + fsrcFile.getAbsolutePath(), //$NON-NLS-1$
+								Level.WARNING);
+						return null;
+					}
+					in = new FileReader(fsrcFile);
+					char[] buf = new char[4096];
+					StringBuffer sBuf = new StringBuffer();
+					while (true) {
+						int len = in.read(buf, 0, buf.length);
+						if (len <= 0)
+							break;
+						sBuf.append(buf, 0, len);
+					}
+					e.setSrc(sBuf.toString().toCharArray());
+					fRule = (IRule) e.generateObject(getClassPath(), this.getClass().getClassLoader(), null);
 				}
-				in = new FileReader(fsrcFile);
-				char [] buf = new char[4096] ;
-				StringBuffer sBuf = new StringBuffer() ;
-				while (true) {
-					int len = in.read(buf,0,buf.length) ;
-					if (len <= 0) break ;
-					sBuf.append(buf,0,len) ;
-				}
-				e.setSrc(sBuf.toString().toCharArray()) ;
-				fRule = (IRule) e.generateObject(getClassPath(),this.getClass().getClassLoader(),null) ;			           
+
+				fRule.setRegistry(ruleRegistry);
+			} catch (Exception ex) {
+				JavaVEPlugin.log("UserOverideRuleProvider.getRule(): " + ex.getMessage(), //$NON-NLS-1$
+						Level.WARNING);
+			} finally {
+				if (in != null)
+					try {
+						in.close();
+					} catch (IOException ex) {
+					}
 			}
-			
-			fRule.setRegistry(ruleRegistry);
-		}
-		catch (Exception ex) {
-			JavaVEPlugin.log("UserOverideRuleProvider.getRule(): "+ex.getMessage(), //$NON-NLS-1$
-			               Level.WARNING) ;
-		}		
-		finally {
-			if (in != null)
-			   try {
-				in.close() ;
-			   }
-			   catch (IOException ex) {}
-		}
-		if (fRule != null) {
-		   fEmiter = e ;
-		   fTimeStamp = fsrcFile.lastModified() ;
+			if (fRule != null) {
+				fEmiter = e;
+				fTimeStamp = fsrcFile.lastModified();
+			}
 		}
 		return fRule;
 	}

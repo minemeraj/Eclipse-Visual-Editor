@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-02 15:57:29 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-09 22:47:03 $ 
  */
 
 import java.util.Iterator;
@@ -23,14 +23,16 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.TypeKind;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.TypeKind;
+
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.*;
 
 public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHoldProcessing {
 
@@ -70,31 +72,33 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 	public void releaseBeanProxy() {
 		// Need to release all of the components. This isn't being done in BeanProxyAdapter because
 		// the constraint components aren't bean proxies directly.
-
-		if (((JavaClass) getEObject().eClass()).getKind() != TypeKind.UNDEFINED_LITERAL && getEObject().eIsSet(sfContainerComponents)) {
-			// TODO This really does nothing because the settings in the CC are shared settings and so are not
-			// released. Next release we need a general way of handling releasing shared settings.
-			Iterator itr = ((List) getEObject().eGet(sfContainerComponents)).iterator();
-			while (itr.hasNext()) {
-				EObject ip = (EObject) itr.next();
-				// Get all of the settings and release those that are beans that we own.
-				// For constraintComponents that would normally be the constraint and the component.
-				Iterator settings = (new BeanProxyUtilities.JavaSettingsEList(ip, false)).basicIterator();	// Use basic iterator so proxies aren't resolved since we are releasing anyway.
-				while (settings.hasNext()) {
-					// Use getExisting so that we don't fluff up a bean proxy host just to release it.
-					IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) settings.next(), IBeanProxyHost.BEAN_PROXY_TYPE);
-					if (value != null)
-						value.releaseBeanProxy();
+		if (((JavaClass) getEObject().eClass()).getKind() != TypeKind.UNDEFINED_LITERAL) {
+			if (getEObject().eIsSet(sfContainerComponents)) {
+				// TODO This really does nothing because the settings in the CC are shared settings and so are not
+				// released. Next release we need a general way of handling releasing shared settings.
+				Iterator itr = ((List) getEObject().eGet(sfContainerComponents)).iterator();
+				while (itr.hasNext()) {
+					EObject ip = (EObject) itr.next();
+					// Get all of the settings and release those that are beans that we own.
+					// For constraintComponents that would normally be the constraint and the component.
+					Iterator settings = (new BeanProxyUtilities.JavaSettingsEList(ip, false)).basicIterator(); // Use basic iterator so proxies aren't resolved since we are releasing anyway.
+					while (settings.hasNext()) {
+						// Use getExisting so that we don't fluff up a bean proxy host just to release it.
+						IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) settings.next(),
+								IBeanProxyHost.BEAN_PROXY_TYPE);
+						if (value != null)
+							value.releaseBeanProxy();
+					}
 				}
 			}
-		}
 
-		// Bugzilla 59391 - force a release of the layout
-		IJavaInstance layoutValue = (IJavaInstance)getEObject().eGet(getEObject().eClass().getEStructuralFeature("layout"));
-		if(layoutValue != null){
-			IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost(layoutValue);
-			layoutProxyHost.releaseBeanProxy();
-		}		
+			// Bugzilla 59391 - force a release of the layout TODO Needs to be handled in a generic way because if this goes invalid (i.e. class deleted) then this layout will not be released.
+			IJavaInstance layoutValue = (IJavaInstance) getEObject().eGet(getEObject().eClass().getEStructuralFeature("layout"));
+			if (layoutValue != null) {
+				IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost(layoutValue);
+				layoutProxyHost.releaseBeanProxy();
+			} 
+		}
 
 		super.releaseBeanProxy();
 	}

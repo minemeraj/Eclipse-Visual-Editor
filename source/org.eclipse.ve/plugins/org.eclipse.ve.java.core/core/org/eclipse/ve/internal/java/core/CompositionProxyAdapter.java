@@ -11,11 +11,14 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-02-07 00:09:56 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-09 22:47:02 $ 
  */
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.impl.NotifierImpl;
 import org.eclipse.emf.ecore.EObject;
@@ -145,9 +148,17 @@ protected void initSetting(Object v) {
 protected void releaseSetting(Object v) {
 	if (v instanceof IJavaInstance) {	
 		// Get existing adapter, if it doesn't have one, don't create it.
-		IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
+		final IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
 		if (value != null) {
-			value.releaseBeanProxy();	// Dispose of a bean proxy automatically takes care of dispose any of the children of the proxy.
+			Platform.run(new ISafeRunnable() {
+				public void handleException(Throwable exception) {
+					JavaVEPlugin.getPlugin().getLogger().log(exception, Level.WARNING);
+				}
+
+				public void run() throws Exception {
+					value.releaseBeanProxy();	// Dispose of a bean proxy automatically takes care of dispose any of the children of the proxy.
+				}
+			});
 		}
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.10 $  $Date: 2004-06-03 14:38:53 $ 
+ *  $Revision: 1.11 $  $Date: 2004-06-09 22:47:02 $ 
  */
 
 import java.util.*;
@@ -288,7 +288,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * 
 	 * @since 1.0.0
 	 */
-	public IConfigurationElement[] getContainerConfigurations(String containerid) {
+	public synchronized IConfigurationElement[] getContainerConfigurations(String containerid) {
 		if (containerToContributions == null)
 			processProxyContributionExtensionPoint();
 		return (IConfigurationElement[]) containerToContributions.get(containerid);
@@ -302,13 +302,13 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * 
 	 * @since 1.0.0
 	 */
-	public IConfigurationElement[] getPluginConfigurations(String pluginid) {
+	public synchronized IConfigurationElement[] getPluginConfigurations(String pluginid) {
 		if (pluginToContributions == null)
 			processProxyContributionExtensionPoint();
 		return (IConfigurationElement[]) pluginToContributions.get(pluginid);
 	}
 	
-	protected void processProxyContributionExtensionPoint() {
+	protected synchronized void processProxyContributionExtensionPoint() {
 		ProxyPlugin.ContributorExtensionPointInfo info = ProxyPlugin.processContributionExtensionPoint(PI_CONTRIBUTION_EXTENSION_POINT);
 		containerToContributions = info.containerToContributions;
 		pluginToContributions = info.pluginToContributions;
