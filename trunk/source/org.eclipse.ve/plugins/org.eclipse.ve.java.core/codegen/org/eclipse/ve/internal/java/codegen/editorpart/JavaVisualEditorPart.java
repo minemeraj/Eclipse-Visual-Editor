@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.23 $  $Date: 2004-04-07 14:01:15 $ 
+ *  $Revision: 1.24 $  $Date: 2004-04-07 18:02:39 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1641,6 +1641,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
 				// TODO Eventually we need to also get the hover and disabled images.
 				setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));
+				// TODO Hack until we can find out what the heck is up with this image.
+				setImageDescriptor(getImageDescriptor("elcl16/showbasic_ps.gif"));
 			}			
 
 			public void run() {
@@ -1654,6 +1656,22 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				showOverview(isChecked());
 				CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.PREF_SHOW_OVERVIEW_KEY, isChecked());
 			}
+			
+			/*
+			 * Copied from Resource navigator to do the same thing.
+			 */
+			protected ImageDescriptor getImageDescriptor(String relativePath) {
+				String iconPath = "icons/full/"; //$NON-NLS-1$
+				try {
+					AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
+					URL installURL = plugin.getDescriptor().getInstallURL();
+					URL url = new URL(installURL, iconPath + relativePath);
+					return ImageDescriptor.createFromURL(url);
+				} catch (MalformedURLException e) {
+					// should not happen
+					return ImageDescriptor.getMissingImageDescriptor();
+				}
+			}
 
 		}
 		
@@ -1662,7 +1680,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				super(ResourceNavigatorMessages.getString("CollapseAllAction.title"), IAction.AS_PUSH_BUTTON); //$NON-NLS-1$
 				setToolTipText(ResourceNavigatorMessages.getString("CollapseAllAction.toolTip")); //$NON-NLS-1$
 				setImageDescriptor(getImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
-				setHoverImageDescriptor(getImageDescriptor("clcl16/collapseall.gif")); //$NON-NLS-1$				
+				setHoverImageDescriptor(getImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
+				setDisabledImageDescriptor(getImageDescriptor("dlcl16/collapseall.gif")); //$NON-NLS-1$
 			}
 			
 			/*
