@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventSrcGenerator.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2003-11-24 20:35:00 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.*;
 
+import org.eclipse.ve.internal.java.codegen.java.PropertyChangeInvocationHelper;
 import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.jem.internal.java.*;
 
@@ -76,9 +77,17 @@ public abstract class AbstractEventSrcGenerator implements IEventSrcGenerator {
    	  	   PropertyChangeEventInvocation pee = (PropertyChangeEventInvocation) fEE ;
    	  	   fPropertyNames = new String[pee.getProperties().size()] ;
    	  	   fPropertyIfFlag = new boolean[pee.getProperties().size()] ;
+   	  	   
+   	  	   // generate If statements for a single parameter method invocation
+   	  	   boolean useIfExpr;
+		   if (fEE instanceof PropertyChangeEventInvocation)
+			   useIfExpr = ((PropertyChangeEventInvocation)fEE).getAddMethod().getParameters().size()==1 ;
+		   else
+			   useIfExpr = false ;
    	  	   for (int i = 0; i < pee.getProperties().size(); i++) {
 			  fPropertyNames[i] = ((PropertyEvent)pee.getProperties().get(i)).getPropertyName() ;
-			  fPropertyIfFlag[i] = ((PropertyEvent)pee.getProperties().get(i)).isUseIfExpression() ;
+			  
+			  fPropertyIfFlag[i] = useIfExpr;
    	  	   }
    	  	   fselectorArgCount = pee.getAddMethod().getParameters().size() ;		
    	  	}   	  	   
@@ -160,9 +169,15 @@ public abstract class AbstractEventSrcGenerator implements IEventSrcGenerator {
 			this.fPropertyIfFlag = new boolean[props.length] ;
 		    this.fEventArgName = AbstractEventSrcGenerator.this.fEventArgName ;
 
+            // Generate If statements for a signle argument Property Change method invocation
+            boolean useIfExpr;
+            if (fEE instanceof PropertyChangeEventInvocation)
+		        useIfExpr = ((PropertyChangeEventInvocation)fEE).getAddMethod().getParameters().size()==1 ;
+		    else
+		        useIfExpr = false ;
 			for (int i = 0; i < props.length; i++) {
 				fPropertyNames[i] = props[i].getPropertyName() ;
-				fPropertyIfFlag[i] = props[i].isUseIfExpression() ;
+				fPropertyIfFlag[i] = useIfExpr ;
 			}
 		  }
    }
