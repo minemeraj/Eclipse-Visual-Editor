@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEActionFilter.java,v $
- *  $Revision: 1.2 $  $Date: 2004-05-27 14:46:51 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-27 14:50:28 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -62,6 +62,9 @@ public class CDEActionFilter implements IActionFilter {
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
+		if (!(target instanceof EditPart))	//Can only handle edit parts
+			return false;
+		
 		if (name.equals(PROPERTY_STRING)) {
 			// This allows an extension so that a popup action could be provided if a component
 			// had a specific property with its name equal to 'value'.			
