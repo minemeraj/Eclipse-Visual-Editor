@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-03-09 15:36:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -43,8 +44,13 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 
 	protected void applied(EStructuralFeature as, Object newValue, int position) {
 		super.applied(as, newValue, position);
-		if (as == sf_columns)
+		if (as == sf_columns) {
+			IBeanProxyHost valueProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) newValue);
+			valueProxyHost.instantiateBeanProxy();
 			revalidateBeanProxy();
+		} else {
+			super.applied(as, newValue, position);
+		}
 	}
 
 	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
