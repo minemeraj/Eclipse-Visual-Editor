@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageFigureController.java,v $
- *  $Revision: 1.3 $  $Date: 2004-07-29 15:22:26 $ 
+ *  $Revision: 1.4 $  $Date: 2004-07-29 15:52:46 $ 
  */
 
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -121,6 +122,7 @@ public class ImageFigureController {
 				while (itr.hasNext()) {
 					IFigure fig = (IFigure) itr.next();
 					fig.removeFigureListener(getListener());
+					setBorderEanbleStates(fig, false);	// Remove the override.
 				}
 				lightenFigures = null;
 			}
@@ -272,10 +274,32 @@ public class ImageFigureController {
 				// If the fig is this same fig, no need to listen because we already
 				// are notified of changes. Don't want double notification.
 				fig.addFigureListener(getListener()); // Listen for changes
+				setBorderEanbleStates(fig, true);
 			}
 		}
 		if (imageNotifier != null)
 			scheduleRefresh(FIGURE_MOVED); // Refresh with the new region, use Figure_moved to refresh the images.
+	}
+
+	/*
+	 * Set the border enable state. This will go through the figure and its children and
+	 * disable the border state. It will only do this for ImageFigures that have an OutlineBorder.
+	 * Since non-image figures don't really participate in the lightening we don't look at them.
+	 * @param fig
+	 * @param b
+	 * 
+	 * @since 1.0.0
+	 */
+	private void setBorderEanbleStates(IFigure fig, boolean disableBorder) {
+		if (fig instanceof ImageFigure) {
+			Border border = fig.getBorder();
+			if (border instanceof OutlineBorder)
+				((OutlineBorder) border).setOverrideAndDisable(disableBorder);
+			List children = fig.getChildren();
+			for (int i = 0; i < children.size(); i++) {
+				setBorderEanbleStates((IFigure) children.get(i), disableBorder);
+			}
+		}
 	}
 
 	/**
@@ -317,6 +341,7 @@ public class ImageFigureController {
 				// If the fig is this same fig, no need to listen because we already
 				// are notified of changes. Don't want double notification.
 				aFigure.addFigureListener(getListener()); // Listen for changes
+				setBorderEanbleStates(aFigure, false);	// Restore any disable that may be there from a parent.
 			}
 		}
 		if (imageNotifier != null)

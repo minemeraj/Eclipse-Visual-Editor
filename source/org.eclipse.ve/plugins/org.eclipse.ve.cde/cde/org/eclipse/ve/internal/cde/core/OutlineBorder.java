@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: OutlineBorder.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-07-29 15:52:46 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -29,6 +29,9 @@ public class OutlineBorder extends AbstractBorder {
 	protected Color 
 		foreground = ColorConstants.black, 
 		background;
+	
+	private boolean borderDisabled;	// Is the border disabled? If it is then it won't draw.
+	private boolean overrideAndDisable;	// A temporary override of the border disabled state. If true, then override and disable, if false no override. 
 		
 	private static final Insets insets = new Insets(0,0,0,0);
 	protected int lineStyle = SWT.LINE_SOLID;
@@ -48,6 +51,8 @@ public class OutlineBorder extends AbstractBorder {
 
 	
 	public void paint(IFigure aFigure, Graphics g, Insets insets) {
+		if (overrideAndDisable || borderDisabled)
+			return;	// Disabled, don't pain.
 		Rectangle r = getPaintRectangle(aFigure, insets);
 		r.resize(-1,-1);	// Make room for the outline.
 		g.setForegroundColor(foreground);
@@ -85,5 +90,46 @@ public class OutlineBorder extends AbstractBorder {
 	
 	public boolean isOpaque() {
 		return true;
-	}	
+	}
+
+	/**
+	 * Set the border to be disable so it doesn't paint.
+	 * @param borderDisabled The borderDisabled to set.
+	 * @since 1.0.0
+	 */
+	public void setBorderDisabled(boolean borderDisabled) {
+		this.borderDisabled = borderDisabled;
+	}
+
+	/**
+	 * Return whether the borderDisable flag is on.
+	 * @return Returns the borderDisabled.
+	 * 
+	 * @since 1.0.0
+	 */
+	public boolean isBorderDisabled() {
+		return borderDisabled;
+	}
+
+	/**
+	 * Override the current border disable setting and force a disable if <code>true</code>
+	 * or restore current border disable state if <code>false</code>
+	 * @param overrideAndDisable <code>true</code> to force disable, <code>false</code> to revert to current disable state.
+	 * @since 1.0.0
+	 */
+	public void setOverrideAndDisable(boolean overrideAndDisable) {
+		this.overrideAndDisable = overrideAndDisable;
+	}
+
+	/**
+	 * Answers if currently override the disable state and it is temporarily disabled.
+	 * @return Returns the overrideAndDisable.
+	 * 
+	 * @since 1.0.0
+	 */
+	public boolean isOverrideAndDisable() {
+		return overrideAndDisable;
+	}
+	
+	
 }
