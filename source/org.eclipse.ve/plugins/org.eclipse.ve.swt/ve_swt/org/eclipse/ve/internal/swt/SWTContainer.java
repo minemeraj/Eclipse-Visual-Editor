@@ -43,7 +43,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			{ "org.eclipse.jface.text", "jfacetext.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.core.runtime", "runtime.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" }, //$NON-NLS-1$ //$NON-NLS-2$			
-			{ "org.eclipse.osgi", "osgi.jar" } //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.osgi", "core.jar" } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
 	public SWTContainer(IPath containerPath) {
