@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.69 $  $Date: 2004-12-06 18:44:05 $ 
+ *  $Revision: 1.70 $  $Date: 2004-12-06 20:38:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -76,6 +76,7 @@ import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.*;
 
+import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoClassAdapter;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -1506,6 +1507,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (DO_TIMER_TESTS)
 					VETimerTests.basicTest.testState(true);
 				VETimerTests.basicTest.startStep(SETUP_STEP);
+				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
+				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
+				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);
+				VETimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);				
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 200);
@@ -1648,6 +1653,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 			monitor.done();
 			setLoadIsPending(false);
+			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
+			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
+			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
+			VETimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT_PROPERTIES);			
 			VETimerTests.basicTest.stopStep(SETUP_STEP);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}
