@@ -11,6 +11,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
+/*
+*  $RCSfile: AbstractClassGenerator.java,v $
+*  $Revision: 1.2 $
+*/
+
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.List;
