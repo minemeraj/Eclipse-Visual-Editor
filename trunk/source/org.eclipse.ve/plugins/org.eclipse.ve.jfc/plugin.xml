@@ -422,6 +422,13 @@
          type="javax.swing.JFrame"
          icon="icons/full/clcl16/frame_obj.gif"
          category="org.eclipse.ve.jfc.swing.cat"
+         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.SwingApplicationSourceContributor"
+         name="%NewStyleComponent.Application">
+			</visualElement>
+			<visualElement
+         type="javax.swing.JFrame"
+         icon="icons/full/clcl16/frame_obj.gif"
+         category="org.eclipse.ve.jfc.swing.cat"
          contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ContentPaneSourceContributor"
          name="%NewStyleComponent.Frame">
 			</visualElement>
