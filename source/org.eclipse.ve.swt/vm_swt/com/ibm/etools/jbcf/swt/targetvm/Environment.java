@@ -21,7 +21,8 @@ public static void initialize(){
 			display = new Display();
 			while(true){
 				try {
-					display.readAndDispatch();
+					if (!display.readAndDispatch())
+						display.sleep();
 				} catch (RuntimeException e) {
 					e.printStackTrace();
 					// We don't want this to end because of some user error. It will stay running until vm is killed.
