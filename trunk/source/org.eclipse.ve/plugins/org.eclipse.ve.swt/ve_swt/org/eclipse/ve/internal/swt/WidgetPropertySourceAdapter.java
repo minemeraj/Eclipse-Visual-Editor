@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetPropertySourceAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2004-05-13 12:27:19 $ 
+ *  $Revision: 1.14 $  $Date: 2004-05-14 17:31:29 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,6 +32,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter;
@@ -307,6 +308,128 @@ public void resetPropertyValue(Object descriptorID) {
 	}
 }
 
+/**
+ * Find existing style that is equivalent, and update it.
+ * @param current  PTFieldAccess or PTInfixExpression
+ * @param id
+ * @param val
+ * @return true, updated, false not updated.
+ */
+protected boolean updateStyleBit (PTExpression current, StyleBitPropertyID id, Object val) {
+	if (current instanceof PTFieldAccess) {
+    	// We have a single bit map
+     	if (isSameStyleFamily(((PTFieldAccess)current).getField(),id)) {   
+     		((PTFieldAccess)current).setField(id.getInitString(val));
+     		return true;
+     	}
+     	return false ;
+	}
+	else if (current instanceof PTInfixExpression) {
+		PTInfixExpression infix = (PTInfixExpression)current ;
+		return updateStyleBit(infix.getLeftOperand(), id, val) ||
+		       updateStyleBit(infix.getRightOperand(), id, val);
+	}
+	return false;
+}
+
+/**
+ * Helper to add/update style bit to a style argument.
+ * Assume the syle is constructed from Infix/Field OR expressions only 
+ * 
+ * @param current must be a PTFieldAccess, or PTInfixExpression
+ * @param id, val the added style
+ * @return updated or augmented with OR ('|')
+ */
+protected PTExpression  addStyleBit(PTExpression current, StyleBitPropertyID id, Object val) {	
+	if (updateStyleBit(current, id, val))
+		return current ;
+	
+	// Need to add a new element
+	PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");
+	PTFieldAccess field = InstantiationFactory.eINSTANCE.createPTFieldAccess(name,id.getInitString(val));
+	
+     if (current instanceof PTFieldAccess) {
+			PTInfixExpression inFixExpression =InstantiationFactory.eINSTANCE.createPTInfixExpression(
+					current,
+					PTInfixOperator.OR_LITERAL,
+					field,
+					null);
+			return inFixExpression;
+     }
+     else {
+     	// Assume it is already an inFix, add it to the right.     	     
+		PTInfixExpression inFixExpression =InstantiationFactory.eINSTANCE.createPTInfixExpression(
+				field,
+				PTInfixOperator.OR_LITERAL,
+				current,
+				null);
+		return inFixExpression;
+     }
+}
+/**
+ * called from removeStyleBit (PTExpression cur, StyleBitPropertyID id, Object val)
+ * Keep looking to an Infix with one of its nodes that has to be removed - this will
+ * remove the current infix all together.
+ */
+private PTExpression removeStyleBit (PTInfixExpression parent, PTExpression cur, StyleBitPropertyID id, Object val) {
+	
+	if (cur instanceof PTFieldAccess)
+		return cur ; // Arrived to a leaf; stop
+	
+	PTInfixExpression current = (PTInfixExpression) cur;
+	if (current.getLeftOperand() instanceof PTFieldAccess) {
+		if (isSameStyleFamily(((PTFieldAccess)current.getLeftOperand()).getField(),id)) {
+			// Need to remove the left operant from the list
+			return current.getRightOperand();
+		}
+	}
+	if (current.getRightOperand() instanceof PTFieldAccess) {
+		if (isSameStyleFamily(((PTFieldAccess)current.getRightOperand()).getField(),id)) {
+			// Need to remove the right operant from the list
+			return current.getLeftOperand();
+		}
+	} 
+	current.setLeftOperand(removeStyleBit(current, current.getLeftOperand(), id, val));
+	current.setRightOperand(removeStyleBit(current, current.getRightOperand(), id, val));
+	return current;
+}
+
+/**
+ * This is the starting point of going through an Infix tree to remove a style bit
+ * @param current root of the tree
+ * @param id
+ * @param val
+ * @return
+ */
+protected PTExpression removeStyleBit (PTExpression cur, StyleBitPropertyID id, Object val) {
+	if (cur instanceof PTFieldAccess) {
+		// A single style bit
+		if (isSameStyleFamily(((PTFieldAccess)cur).getField(),id)) {   
+
+			((PTFieldAccess)cur).setField(NONE);     	
+     	}
+		return cur;
+	}
+	else {
+		PTInfixExpression current = (PTInfixExpression) cur;
+		if (current.getLeftOperand() instanceof PTFieldAccess) {
+			if (isSameStyleFamily(((PTFieldAccess)current.getLeftOperand()).getField(),id)) {
+				// Need to remove the left operant from the list
+				return current.getRightOperand();
+			}
+		}
+		if (current.getRightOperand() instanceof PTFieldAccess) {
+			if (isSameStyleFamily(((PTFieldAccess)current.getRightOperand()).getField(),id)) {
+				// Need to remove the right operant from the list
+				return current.getLeftOperand();
+			}
+		} 
+		current.setLeftOperand(removeStyleBit(current, current.getLeftOperand(), id, val));
+		current.setRightOperand(removeStyleBit(current, current.getRightOperand(), id, val));
+		return current;
+	}
+}
+
 public void setPropertyValue(Object feature, Object val) {
 	if(feature instanceof EStructuralFeature) {
 		super.setPropertyValue(feature,val);
@@ -332,113 +455,44 @@ public void setPropertyValue(Object feature, Object val) {
 		int intValue = ((IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaInstance)val)).intValue();
 		boolean unset = intValue == -1;
 		int numberOfArguments = classInstanceCreation.getArguments().size();
-		if(numberOfArguments == 2){
-			Object secondConstructionArgument = classInstanceCreation.getArguments().get(1);
+		
+		PTExpression flagsArgument = null;
+		// TODO: We need to ensure that the argument is of the right type (int for style)
+		if (numberOfArguments == 1 || numberOfArguments == 0) {
+				JavaHelpers shell = Utilities.getJavaClass("org.eclipse.swt.widgets.Shell", ((IJavaObjectInstance) target).eResource().getResourceSet());
+				if (shell.isAssignableFrom(((IJavaObjectInstance) target).getJavaType())) {
+					if (numberOfArguments == 1) {
+						// Shell that already have a style argument
+						flagsArgument = (PTExpression) classInstanceCreation.getArguments().get(0);
+					} else {
+						// Shell with no arguments yet, create one
+						//TODO: SHELL_TRIM is not valid for WinCE
+						flagsArgument = factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),"SHELL_TRIM");						
+					}
+				}
+		}
+		else if (numberOfArguments == 2)
+			flagsArgument = (PTExpression) classInstanceCreation.getArguments().get(1);
+		
+		if(flagsArgument != null){
+			PTExpression newArgument;
 			// If just a single style bit is set this will be a PTFieldAccess 
-			if(secondConstructionArgument instanceof PTFieldAccess){
-				// See whether the style bit is one we should replace or whether we should add to it
-				PTFieldAccess fieldAccess = (PTFieldAccess)secondConstructionArgument;
-				String existingFieldName = fieldAccess.getField();
-				if (isSameStyleFamily(existingFieldName,propertyID)){
-					// The field name is in the same family as the one already set
-					if(unset) {
-						// When we are down to the last property replace it with the value of NONE
-						fieldAccess.setField(NONE);
-					} else {
-						fieldAccess.setField(propertyID.getInitString(val));
-					}
-					// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
-					// and set the Java Object instance with this new allocation.
-					ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-					newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
-					getJavaObjectInstance().setAllocation(newParseTreeAlloc);
-				} else {
-					if(unset){
-						// We are unsetting a value, however it is not in the same family as an existing value that is set
-						// This should not occur, but if it does there's nothing we can do to alter the code
-					} else {
-						// Add to the existing style bit.  This is done by taking the existing one that is a PTFieldAccess
-						// 	and creating a new PTInfix expression for the argument, the left expression of which is a PTName for the bit mask flag
-						// 	and the second is the new one being set
-						PTInfixExpression inFixExpression =InstantiationFactory.eINSTANCE.createPTInfixExpression(
-								factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),existingFieldName),
-								PTInfixOperator.OR_LITERAL,
-								factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),propertyID.getInitString(val)),
-						null
-						);
-						classInstanceCreation.getArguments().remove(1);
-						classInstanceCreation.getArguments().add(inFixExpression);
-					}
-					// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
-					// and set the Java Object instance with this new allocation.
-					ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-					newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
-					getJavaObjectInstance().setAllocation(newParseTreeAlloc);	 // Touch the allocation so listeners (bean proxy/code gen) can deal accordingly 	
-				}
-			} else if (secondConstructionArgument instanceof PTInfixExpression){
-				PTInfixExpression inFix = (PTInfixExpression)secondConstructionArgument;
-				PTFieldAccess leftStyle = (PTFieldAccess)inFix.getLeftOperand();
-				PTFieldAccess rightStyle = (PTFieldAccess)inFix.getRightOperand();
-				if(unset){
-					// Scan the arguments to find which one is the set value of the one we are unsetting
-					String setInitString = propertyID.fInitStrings[0];
-					if(setInitString.startsWith(SWT_TYPE_ID)) setInitString = setInitString.substring(20);
-					if( leftStyle.getField().equals(setInitString)){
-						inFix.setLeftOperand(null);
-						classInstanceCreation.getArguments().remove(1);
-						classInstanceCreation.getArguments().add(inFix.asCompressedExpression());
-						// The RHS needs to be removed						
-					} else if( rightStyle.getField().equals(setInitString)){
-						inFix.setRightOperand(null);
-						classInstanceCreation.getArguments().remove(1);
-						classInstanceCreation.getArguments().add(inFix.asCompressedExpression());						
-					} else {
-						// The bit being unset must be an extended operand - Find it and remove it						
-						int index = 0;
-						Iterator iter = inFix.getExtendedOperands().iterator();
-						while(iter.hasNext()){
-							PTFieldAccess fieldAccess = (PTFieldAccess)iter.next();
-							if(fieldAccess.getField().equals(setInitString)){
-								inFix.getExtendedOperands().remove(index);
-								break;
-							}
-							index++;
-						}
-					}
-				} else {
-					String initString = propertyID.getInitString(val);
-					// Scan the arguments to see if any of them match the value we are setting
-					if(isSameStyleFamily(leftStyle.getField(),propertyID)){
-						// Replace the left operand with our new style bit as it is in the same family
-						leftStyle.setField(initString);
-					} else if(isSameStyleFamily(rightStyle.getField(),propertyID)){
-						// Replace the right operand with our new style bit as it is in the same family
-						rightStyle.setField(initString);
-					} else {
-						// Scan the existing expressionsm to see if we need to reset one
-						boolean existingFound = false;
-						Iterator iter = inFix.getExtendedOperands().iterator();
-						while(iter.hasNext()){
-							PTFieldAccess fieldAccess = (PTFieldAccess)iter.next();
-							if(isSameStyleFamily(fieldAccess.getField(),propertyID)){
-								fieldAccess.setField(propertyID.getInitString(val));
-								existingFound = true;
-								break;
-							}
-						}
-						if(!existingFound) {
-							// The expression we have does not match any of the expressions so create a new one and add it
-							PTExpression newExpression = factory.createPTFieldAccess(factory.createPTName("org.eclipse.swt.SWT"),initString);
-							inFix.getExtendedOperands().add(newExpression);
-						}
-					}
-				}
-				// We need the BeanProxy and code gen to refresh itself so create a new parse tree allocation
-				// and set the Java Object instance with this new allocation.
-				ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-				newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
-				getJavaObjectInstance().setAllocation(newParseTreeAlloc);	 				
+			if (unset)
+				newArgument = removeStyleBit(flagsArgument,propertyID, val);
+			else
+				newArgument = addStyleBit(flagsArgument, propertyID, val);
+			
+			int index = classInstanceCreation.getArguments().indexOf(flagsArgument);
+			if (index<0) {
+				classInstanceCreation.getArguments().add(newArgument);
 			}
+			else {
+			  classInstanceCreation.getArguments().remove(flagsArgument);
+			  classInstanceCreation.getArguments().add(index,newArgument);
+			}
+			ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+			newParseTreeAlloc.setExpression(parseTreeAllocation.getExpression());
+			getJavaObjectInstance().setAllocation(newParseTreeAlloc);
 		}
 	}
 }
