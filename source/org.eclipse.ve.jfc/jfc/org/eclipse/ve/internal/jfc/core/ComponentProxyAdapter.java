@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2004-01-12 21:44:36 $ 
+ *  $Revision: 1.4 $  $Date: 2004-02-05 23:11:10 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -334,7 +334,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		} else {
 			fVisibilityToUse =
 				BeanProxyUtilities.wrapperBeanProxy(
-					domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(setToVisibility),
+					getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(setToVisibility),
 					((EObject) target).eResource().getResourceSet(),
 					null,
 					true);
@@ -476,7 +476,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		if (isBeanProxyInstantiated()) {
 			if (getErrorStatus() != ERROR_SEVERE) {
 				IMethodProxy removeFreeFormComponentMethodProxy =
-					domain.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aFreeFormDialogHost.getTypeProxy().getTypeName(), 
+					getBeanProxyDomain().getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aFreeFormDialogHost.getTypeProxy().getTypeName(), 
 					"remove",	//$NON-NLS-1$
 					new String[] { "java.awt.Component" }); //$NON-NLS-1$				
 				removeFreeFormComponentMethodProxy.invokeCatchThrowableExceptions(aFreeFormDialogHost, getBeanProxy());
@@ -672,7 +672,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			instantiateBeanProxy();	// If not already instantiated, and not errors, try again. If already instantiated w/severe, don't waste time
 		if (isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE) {
 			IMethodProxy addFreeFormComponentMethodProxy =
-				domain.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aFreeFormDialogHost.getTypeProxy().getTypeName(), "add",//$NON-NLS-1$
+				getBeanProxyDomain().getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aFreeFormDialogHost.getTypeProxy().getTypeName(), "add",//$NON-NLS-1$
 				new String[] { "java.awt.Component" } //$NON-NLS-1$
 				);			
 			addFreeFormComponentMethodProxy.invokeCatchThrowableExceptions(aFreeFormDialogHost, instantiateBeanProxy());

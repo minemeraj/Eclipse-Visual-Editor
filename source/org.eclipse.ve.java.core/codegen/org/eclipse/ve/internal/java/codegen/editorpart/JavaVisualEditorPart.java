@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.7 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.8 $  $Date: 2004-02-05 23:11:15 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -752,6 +752,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public void dispose() {
 		try {
 			
+			// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
+			if (proxyFactoryRegistry != null) {
+				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
+				proxyFactoryRegistry.terminateRegistry();
+			}
 			
 			modelBuilder.dispose();
 			
@@ -776,11 +781,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			Shell shell = window.getShell();
 			if (shell != null && !shell.isDisposed())
 				window.getShell().removeShellListener(activationListener);
-
-			if (proxyFactoryRegistry != null) {
-				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
-				proxyFactoryRegistry.terminateRegistry();
-			}
 			
 			ed.dispose();
 			

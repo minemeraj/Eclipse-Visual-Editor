@@ -9,6 +9,8 @@ package org.eclipse.jem.internal.proxy.swt;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 /**
  * Standard SWT Constants
  *
@@ -29,6 +31,8 @@ public final class JavaStandardSWTBeanConstants {
 		
 	public static final String REGISTRY_KEY = "STANDARDPROXYSWTCONSTANTS:"; //$NON-NLS-1$
 			
+	final IBeanTypeProxy environmentBeanTypeProxy;
+	IBeanProxy displayProxy;
 	final IFieldProxy pointXProxy;
 	final IFieldProxy pointYProxy;
 	final IFieldProxy rectangleHeightProxy;
@@ -49,10 +53,9 @@ public static JavaStandardSWTBeanConstants getConstants(ProxyFactoryRegistry reg
 public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isRegistered) {
 	super();
 	
-	IStandardBeanTypeProxyFactory typeFactory = (IStandardBeanTypeProxyFactory) registry.getBeanTypeProxyFactory();
+	IStandardBeanTypeProxyFactory typeFactory = registry.getBeanTypeProxyFactory();
 	
 	IBeanTypeProxy pointTypeProxy = typeFactory.getBeanTypeProxy("org.eclipse.swt.graphics.Point");//$NON-NLS-1$
-	IBeanTypeProxy intTypeProxy = typeFactory.getBeanTypeProxy("int"); //$NON-NLS-1$
 		
 	pointXProxy = pointTypeProxy.getFieldProxy("x");//$NON-NLS-1$
 	pointYProxy = pointTypeProxy.getFieldProxy("y");//$NON-NLS-1$
@@ -62,6 +65,12 @@ public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isReg
 	rectangleWidthProxy = rectangleTypeProxy.getFieldProxy("width");//$NON-NLS-1$
 	rectangleXProxy = rectangleTypeProxy.getFieldProxy("x");//$NON-NLS-1$
 	rectangleYProxy = rectangleTypeProxy.getFieldProxy("y");//$NON-NLS-1$
+	
+	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy("com.ibm.etools.jbcf.swt.targetvm.Environment"); //$NON-NLS-1$
+	try {
+		displayProxy = environmentBeanTypeProxy.getFieldProxy("display").get(null);
+	} catch (ThrowableProxy e) {
+	}
 }
 /**
  * getPointXFieldProxy method comment.
@@ -98,5 +107,27 @@ public IFieldProxy getRectangleXFieldProxy() {
  */
 public IFieldProxy getRectangleYFieldProxy() {
 	return rectangleYProxy;
+}
+
+public IBeanTypeProxy getEnvironmentBeanTypeProxy(){
+	return environmentBeanTypeProxy;
+}
+
+public IBeanProxy getDisplayProxy() {
+	return displayProxy;
+}
+
+public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) throws ThrowableProxy {
+	JavaStandardSWTBeanConstants constants = getConstants(registry);
+	return DisplayManager.syncExec(constants.getDisplayProxy(), runnable);
+}
+
+public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) {
+	try {
+		return invokeSyncExec(registry, runnable);
+	} catch (ThrowableProxy e) {
+		JavaVEPlugin.getPlugin().getMsgLogger().log(e);
+		return null;
+	}
 }
 }

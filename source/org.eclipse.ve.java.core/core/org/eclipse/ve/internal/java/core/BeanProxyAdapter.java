@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2004-01-22 20:13:47 $ 
+ *  $Revision: 1.7 $  $Date: 2004-02-05 23:11:15 $ 
  */
 
 import java.util.*;
@@ -84,7 +84,7 @@ public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost {
 	protected List notInstantiatedClasses = null;	
 	
 	// The domain must be given to us so we can create instances
-	protected IBeanProxyDomain domain;
+	private IBeanProxyDomain domain;
 	
 	// Hold any exception that occurs when we try to create the BeanProxy
 	protected Throwable fInstantiationError;
@@ -303,10 +303,14 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
 		}
 	} catch (ReinstantiationNeeded e) {
 		throw e;	
-	} catch ( Exception exc ) {
+	} catch ( RuntimeException exc ) {
 		// It is possible that the set method threw an exception
 		// In this case record the error against the feature and recycle the bean
 		processError(sf,exc);
+	} catch (ThrowableProxy e) {
+		// It is possible that the set method threw an exception
+		// In this case record the error against the feature and recycle the bean
+		processError(sf,e);
 	}
 }
 		
@@ -315,7 +319,7 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
  * This can be overridden. Overrides shouldn't catch exceptions except if they can clean them up to mean a good apply was done.
  * Otherwise, applyBeanFeature will catch exceptions and mark the errors correctly.
  */
-protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) throws Exception {
+protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , BeanFeatureDecorator featureDecor, IBeanProxy settingBeanProxy) throws ThrowableProxy {
 
 	if (propDecor != null) {
 		if (propDecor.needIntrospection())
@@ -814,7 +818,7 @@ protected void primInstantiateBeanProxy() {
 				JavaAllocation allocation = getJavaObject().getAllocation();
 				fOwnsProxy = true;
 				try {
-					beanProxyAllocation(getBeanProxyDomain(),allocation);
+					setupBeanProxy(beanProxyAllocation(allocation));
 				} catch (IAllocationProcesser.AllocationException e) {
 					processInstantiationError(e.getWrapperedException());
 				}
@@ -825,7 +829,7 @@ protected void primInstantiateBeanProxy() {
 			IBeanTypeProxy targetClass = getTargetTypeProxy();
 			try {
 				fOwnsProxy = true; // Since we created it, obviously we own it.
-				setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null,targetClass));
+				setupBeanProxy(basicInitializationStringAllocation(null,targetClass));
 			} catch (IAllocationProcesser.AllocationException exc) {
 				processInstantiationError(exc.getWrapperedException());
 			}			
@@ -848,7 +852,7 @@ protected void primInstantiateBeanProxy() {
 
 			try {
 				fOwnsProxy = true; // Since we created it, obviously we own it				
-				basicInitializationStringAllocation(null,targetClass);
+				setupBeanProxy(basicInitializationStringAllocation(null,targetClass));
 			} catch (IAllocationProcesser.AllocationException exc) {
 				processInstantiationError(exc.getWrapperedException());
 			}
@@ -862,8 +866,8 @@ protected void primInstantiateBeanProxy() {
  * 
  * @since 1.0.0
  */
-protected void beanProxyAllocation(IBeanProxyDomain beanProxyDomain, JavaAllocation allocation) throws AllocationException {
-	setupBeanProxy(beanProxyDomain.getAllocationProcesser().allocate(allocation)); 
+protected IBeanProxy beanProxyAllocation(JavaAllocation allocation) throws AllocationException {
+	return getBeanProxyDomain().getAllocationProcesser().allocate(allocation); 
 }
 /**
  * @param aString
@@ -872,9 +876,8 @@ protected void beanProxyAllocation(IBeanProxyDomain beanProxyDomain, JavaAllocat
  * 
  * @since 1.0.0
  */
-protected void basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException{
-	// TODO Get rid of this hack as soon as we can
-	setupBeanProxy(BasicAllocationProcesser.instantiateWithString(null, targetClass));
+protected IBeanProxy basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException{
+	return BasicAllocationProcesser.instantiateWithString(null, targetClass);
 }
 protected IBeanTypeProxy getTargetTypeProxy() {
 	String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
