@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-07-01 15:43:09 $ 
+ *  $Revision: 1.5 $  $Date: 2004-07-09 20:28:08 $ 
  */
 
 import java.beans.*;
@@ -869,7 +869,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"highlighter", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JTextComponentMessages.getString("highlighter.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextComponentMessages.getString("highlighter.Desc"), //$NON-NLS-1$
-	      	DESIGNTIMEPROPERTY, Boolean.TRUE,
+	      	BOUND, Boolean.TRUE,
 	      	EXPERT, Boolean.TRUE
 	    		}
 	    	),
