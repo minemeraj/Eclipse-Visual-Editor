@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-02-15 23:51:47 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-03-28 22:09:51 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
@@ -58,11 +60,20 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
+		// Allow dropping of implicit controls such as JFace or other places where the control is created by a non-visual delgate
+		// This must be done before the layout edit policy because the implicit parent can be created by the implicit edit policy 
+		createImplicitEditPolicy();
+		
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); // This is a special policy that just
 		// handles the size/position of visual
 		// components wrt/the figures. It does not
 		// handle changing size/position.
 		createLayoutEditPolicy();
+	}
+	
+	protected void createImplicitEditPolicy(){
+		EditPolicy implicitEditPolicy = new ImplicitEditPolicy(EditDomain.getEditDomain(this),getBean());
+		installEditPolicy("IMPLICIT_CONTROL",implicitEditPolicy);
 	}
 
 	protected EditPart createChild(Object model) {

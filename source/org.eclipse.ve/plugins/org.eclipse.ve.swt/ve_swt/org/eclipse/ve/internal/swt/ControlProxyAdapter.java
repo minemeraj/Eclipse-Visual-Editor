@@ -65,6 +65,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		return super.basicInitializationStringAllocation(aString, targetClass);
 	}
 	
+	
+	
 	/*
 	 * The initString is evaluated using a static method on the Environment target VM class
 	 * that ensures it is evaluated on the Display thread
@@ -211,6 +213,12 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				}
 			}
 	}
+	
+	protected void primInstantiateBeanProxy() {
+		super.primInstantiateBeanProxy();
+	}
+	
+	
 	protected void initializeControlManager() {
 		if (isBeanProxyInstantiated()) {
 			// Create an instance of ComponentManager on the target VM

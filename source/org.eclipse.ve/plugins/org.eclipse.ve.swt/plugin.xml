@@ -63,7 +63,7 @@
          point="org.eclipse.jem.proxy.contributors">
       <contributor
             plugin="org.eclipse.swt"
-            class="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
+            class="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTConfigurationContributor">
       </contributor>
    </extension>
    <extension
@@ -97,6 +97,10 @@
                package="org.eclipse.swt.custom"
                path="overrides/org/eclipse/swt/custom">
          </override>
+         <override
+               package="org.eclipse.ui.part"
+               path="overrides/org/eclipse/ui/part">
+         </override>             
       </registration>
    </extension>
    <extension
