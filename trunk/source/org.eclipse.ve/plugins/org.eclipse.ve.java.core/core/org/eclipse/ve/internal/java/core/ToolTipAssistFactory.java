@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-29 18:20:23 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-09 11:01:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -28,9 +28,12 @@ import org.eclipse.gef.internal.ui.palette.editparts.ColumnsLayout;
 import org.eclipse.gef.internal.ui.palette.editparts.SeparatorEditPart;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.*;
+import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
 
 import org.eclipse.ve.internal.java.core.IErrorHolder.ErrorType;
 
@@ -150,6 +153,7 @@ public class ToolTipAssistFactory {
 		IJavaInstance javaInstance;
 		private Figure figure;
 		private IErrorNotifier errNotifier;
+		private Display display;
 		
 		public ErrorProcessor(IJavaInstance aJavaInstance){
 			javaInstance = aJavaInstance;
@@ -158,6 +162,7 @@ public class ToolTipAssistFactory {
 		 * Iterate over the errors creating a composite figure that arranges them all
 		 */
 		public IFigure createFigure() {
+			display = Display.getCurrent();
 			figure = new Panel();
 			FlowLayout layout = new FlowLayout(false);
 			layout.setMajorSpacing(0);
@@ -169,7 +174,11 @@ public class ToolTipAssistFactory {
 			// The error severity could change, in which case we must refresh our figure
 			errNotifier.addErrorListener(new IErrorNotifier.ErrorListenerAdapter(){
 				public void errorStatusChanged() {	
-					updateFigure();
+					CDEUtilities.displayExec(display,new Runnable(){
+						public void run(){
+							updateFigure();
+						}
+					});
 				}				
 			});
 			return figure;
