@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.67 $  $Date: 2004-11-22 22:23:18 $ 
+ *  $Revision: 1.68 $  $Date: 2004-12-01 17:09:08 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1584,9 +1584,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					dd.eAdapters().add(ia);
 					ia.propagate();
 	
-					VETimerTests.basicTest.startStep("Join with remote vm");
+//					VETimerTests.basicTest.startStep("Join with remote vm");
 					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
-					VETimerTests.basicTest.stopStep("Join with remote vm");
+//					VETimerTests.basicTest.stopStep("Join with remote vm");
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
