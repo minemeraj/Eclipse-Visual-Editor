@@ -9,12 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.14 $ $Date: 2004-08-27 15:35:50 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.15 $ $Date: 2004-09-08 22:15:54 $
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.logging.Level;
 
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -22,6 +23,7 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
 
@@ -40,12 +42,19 @@ public class WidgetProxyAdapter extends BeanProxyAdapter {
 	}
 
 	protected IBeanProxy primReadBeanFeature(final PropertyDecorator propDecor, final IBeanProxy aSource) throws ThrowableProxy {
-		return (IBeanProxy) invokeSyncExecCatchRunnable(new DisplayManager.DisplayRunnable() {
+		IBeanProxy result = (IBeanProxy) invokeSyncExecCatchRunnable(new DisplayManager.DisplayRunnable() {
 
 			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
 				return WidgetProxyAdapter.super.primReadBeanFeature(propDecor, aSource);
 			}
 		});
+		// Primitive results are wrappered into the class types. Need to turn them back to primitive proxies.
+		if (result != null) {
+			EClassifier type = ((EStructuralFeature) propDecor.getEModelElement()).getEType();
+			if (type instanceof JavaHelpers && ((JavaHelpers) type).isPrimitive())
+				return result.getProxyFactoryRegistry().getBeanProxyFactory().convertToPrimitiveBeanProxy(result);
+		}
+		return result;
 	}
 
 	protected final IBeanTypeProxy getEnvironmentBeanTypeProxy() {

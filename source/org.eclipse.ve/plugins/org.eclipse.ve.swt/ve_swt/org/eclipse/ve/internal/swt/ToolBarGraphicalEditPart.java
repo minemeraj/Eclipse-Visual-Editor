@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.1 $ $Date: 2004-08-22 22:42:51 $
+ * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-09-08 22:15:54 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.*;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
@@ -85,5 +86,12 @@ public class ToolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		result.setModel(child);
 		//result.setBounds(getColumnBounds(getChildren().size()));
 		return result;
+	}
+	
+	protected void refreshItems() {
+		List children = getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			((ToolItemGraphicalEditPart) children.get(i)).refreshVisuals();
+		}
 	}
 }
