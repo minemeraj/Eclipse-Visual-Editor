@@ -357,9 +357,9 @@
             id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart.BreakpointRulerActions">
          <action
                label="%Dummy.label"
-               class="org.eclipse.jdt.internal.debug.ui.actions.ManageBreakpointRulerActionDelegate"
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
                actionID="RulerDoubleClick"
-               id="org.eclipse.jdt.ui.actions.ManageBreakpointRulerAction">
+               id="org.eclipse.jdt.debug.ui.actions.ManageBreakpointRulerAction">
          </action>
          <action
                label="%Dummy.label"
