@@ -10,23 +10,23 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.12 $  $Date: 2005-03-11 17:44:54 $ 
  */
 package org.eclipse.ve.internal.swt;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.pde.core.plugin.*;
+import org.eclipse.pde.internal.core.PDECore;
+import org.eclipse.pde.internal.core.WorkspaceModelManager;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
@@ -42,6 +42,8 @@ import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
  */
 public class SWTConfigurationContributor extends ConfigurationContributorAdapter {
 	
+	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	
+	
 	protected IJavaProject javaProject;
 	
 	/* (non-Javadoc)
@@ -51,17 +53,81 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		super.initialize(info);
 		this.javaProject = info.getJavaProject();
 	}
-	/* (non-Javadoc)
+	
+	private IPlugin getPluginFor(IPluginModelBase base, String pluginID, Map visited) {
+		String id = base.getPluginBase().getId();
+		if (visited.get(id) == null) {
+			visited.put(id, id);		
+			IPluginImport[] imports = base.getPluginBase().getImports();
+			for (int i = 0; i < imports.length; i++) {
+				if (visited.get(imports[i].getId()) == null) {
+					IPlugin p = PDECore.getDefault().findPlugin(imports[i].getId(), imports[i].getVersion(), imports[i].getMatch());
+					if (p.getId().equals(pluginID))
+						return p;
+					
+					IPlugin result = getPluginFor(p.getPluginModel(), pluginID, visited);
+					if (result != null)
+						return result;
+				}
+			}
+			
+		}
+		return null;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
 	 */
-	public void contributeClasspaths(IConfigurationContributionController controller) throws CoreException {
+	public void contributeClasspaths(final IConfigurationContributionController controller) throws CoreException {
 		// Add the jar file with the supporting classes required for the JVE into the classpath
 		// In development model the file proxy.jars redirects this to the plugin development project
 		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
 		
-		// Get the location of the swt dll in the workbench path and add it.
-		// we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
-		controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		if (!ProxyPlugin.isPDEProject(javaProject)) {
+ 		  // Get the location of the swt dll in the workbench path and add it.
+		  // we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
+		  controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false);
+		}
+		else {
+			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController
+			
+			// Assume target's have the same platform/architecture/overrides
+			URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$"));
+			IPath idePath = new Path(ide.getFile());
+			final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
+			String arch = relPath.removeFirstSegments(1).removeLastSegments(1).toString();
+			
+			
+			WorkspaceModelManager wm = PDECore.getDefault().getWorkspaceModelManager();						
+			IPluginModelBase base =  wm.getWorkspacePluginModel(javaProject.getProject());			
+			IPlugin p = getPluginFor(base, "org.eclipse.swt", new HashMap());
+			IPath location = null;
+			if (p!=null) {
+				BundleDescription[] fragDesc = p.getPluginModel().getBundleDescription().getFragments();						
+				for (int i = 0; i < fragDesc.length; i++) {
+				     if (fragDesc[i].getName().startsWith("org.eclipse.swt."+arch))
+				     	location = new Path(fragDesc[i].getLocation());				
+				}
+			}		
+            final IPath loc = location;           
+            final String msg = "Could not resolve the SWT dll on the PDE target";
+            ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+				 try {
+					if (loc!=null) {
+						URL osURL = osURL = loc.append(relPath).toFile().toURL();
+					    controller.contributeClasspath(osURL, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
+					    removeMarker(msg);
+					}
+					else
+						createMarker(msg);				
+				 } catch (MalformedURLException e) {
+					SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+				 }					
+			}
+		}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+		}
 		
 		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
 		if(Platform.WS_GTK.equals(Platform.getWS())){
@@ -87,7 +153,54 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		}
 	}
 
-	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";
+
+	protected IMarker[] getMarker(String msg) {
+		List result = new ArrayList();
+		
+		try {
+			IMarker[] markers = javaProject.getProject().findMarkers(SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO);		
+			for (int i = 0; i < markers.length; i++) {
+				if (markers[i].getAttribute(IMarker.MESSAGE).equals(msg))
+						result.add(markers[i]);
+			}
+		} catch (CoreException e) {
+			SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+		}
+		return (IMarker[]) result.toArray(new IMarker[result.size()]);
+	}
+	/**
+	 * 
+	 * @param markerID
+	 * @param msg  null to delete all msgs.  If not null, will not be deleted
+	 * @return true of a maker already exits
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void removeMarker(String msg) {
+		
+		try {
+			IMarker[] marks = getMarker(msg);
+			for (int i = 0; i < marks.length; i++) {
+				marks[i].delete();
+			}			
+		} catch (CoreException e) {
+			SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+		}
+	}
+	
+	protected void createMarker(String msg) {
+		try {
+			// It is bad, if there is a marker of this type, just leave it there, it 
+			// is already for this message. else add in the new marker.
+			if (getMarker(msg).length==0) {
+				IMarker marker = javaProject.getProject().createMarker(SWT_BUILD_PATH_MARKER);				
+				marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				marker.setAttribute(IMarker.MESSAGE, msg);									
+			}
+		} catch (CoreException e) {
+			SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
@@ -133,36 +246,9 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 					*/
 					public void run(IProgressMonitor monitor) throws CoreException {
 						if (fversok) {
-							try {
-								// It is ok, remove any outstanding marker. We are doing one kind, so if any there it is gone. 
-								IMarker[] markers = javaProject.getProject().findMarkers(SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO);
-								for (int i = 0; i < markers.length; i++) {
-									markers[i].delete();
-								}
-							} catch (CoreException e) {
-								SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
-							}			
+							removeMarker(SWTMessages.getString("Marker.BuildPathNot142"));
 						} else {
-							try {
-								// It is bad, if there is a marker of this type, just leave it there, it 
-								// is already for this message. else add in the new marker. 
-								IMarker[] markers = javaProject.getProject().findMarkers(SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO);
-								if (markers.length == 1) 
-									;	// Do nothing we have it already
-								else {
-									if (markers.length > 1) {
-										// We have more than one, not valid, so get rid of them.
-										for (int i = 0; i < markers.length; i++) {
-											markers[i].delete();
-										}
-									}
-									IMarker marker = javaProject.getProject().createMarker(SWT_BUILD_PATH_MARKER);
-									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-									marker.setAttribute(IMarker.MESSAGE, SWTMessages.getString("Marker.BuildPathNot142"));
-								}
-							} catch (CoreException e) {
-								SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
-							}				
+							createMarker(SWTMessages.getString("Marker.BuildPathNot142"));
 						}
 					}
 				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
