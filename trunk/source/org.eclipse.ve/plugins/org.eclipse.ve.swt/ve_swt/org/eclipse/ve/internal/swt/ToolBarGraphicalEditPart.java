@@ -5,7 +5,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************************************************************************************/
 /*
- * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-09-08 22:15:54 $
+ * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-11-09 17:48:35 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -16,7 +16,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.*;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 

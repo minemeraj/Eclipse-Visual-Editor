@@ -11,21 +11,56 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: TableColumnProxyAdapter.java,v $ $Revision: 1.5 $ $Date: 2004-08-27 15:35:50 $
+ * $RCSfile: TableColumnProxyAdapter.java,v $ $Revision: 1.6 $ $Date: 2004-11-09 17:48:35 $
  */
 
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.*;
+
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class TableColumnProxyAdapter extends WidgetProxyAdapter {
+	private IMethodProxy widthMethodProxy;
+	private EReference sf_columns;
+	protected BeanProxyAdapter tableProxyAdapter;
 
 	public TableColumnProxyAdapter(IBeanProxyDomain aDomain) {
 		super(aDomain);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return; // Nothing to cancel to yet or could not construct.
+		super.canceled(sf, oldValue, position);
+		if (getTableProxyAdapter() != null)
+			getTableProxyAdapter().revalidateBeanProxy();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 */
+	protected void applied(EStructuralFeature sf, Object newValue, int position) {
+		if (!isBeanProxyInstantiated())
+			return; // Nothing to apply to yet or could not construct.
+		super.applied(sf, newValue, position); // We letting the settings go through
+		if (getTableProxyAdapter() != null)
+			getTableProxyAdapter().revalidateBeanProxy();
 	}
 
 	/*
@@ -60,4 +95,42 @@ public class TableColumnProxyAdapter extends WidgetProxyAdapter {
 		return super.beanProxyAllocation(allocation);
 	}
 
+	protected IMethodProxy getWidthMethodProxy() {
+		if (widthMethodProxy == null) {
+			widthMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getWidth"); //$NON-NLS-1$
+		}
+		return widthMethodProxy;
+	}
+
+	public IIntegerBeanProxy getWidth() {
+		if (isBeanProxyInstantiated()) {
+			return (IIntegerBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					IBeanProxy intProxy = getWidthMethodProxy().invoke(getBeanProxy());
+					return intProxy;
+				}
+			});
+		} else
+			return null;
+	}
+
+	/*
+	 * Return the proxy adapter associated with this TabFolder.
+	 */
+	protected BeanProxyAdapter getTableProxyAdapter() {
+		if (tableProxyAdapter == null) {
+			EObject parent = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(), sf_columns);
+			IBeanProxyHost tableProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) parent);
+			tableProxyAdapter = (BeanProxyAdapter) tableProxyHost;
+		}
+		return tableProxyAdapter;
+	}
+
+	public void setTarget(Notifier newTarget) {
+		super.setTarget(newTarget);
+		if (newTarget != null) {
+			sf_columns = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TABLE_COLUMNS);
+		}
+	}
 }
