@@ -10,11 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-17 12:23:39 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-20 21:43:03 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
  
 /**

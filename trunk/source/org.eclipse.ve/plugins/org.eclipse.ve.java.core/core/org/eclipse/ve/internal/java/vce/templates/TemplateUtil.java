@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-04 16:04:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-05-20 21:43:03 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
 import java.io.File;
 import java.util.*;
 
-import org.eclipse.core.boot.BootLoader;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.*;
 import org.eclipse.osgi.service.environment.Constants;
@@ -159,7 +158,7 @@ public class TemplateUtil {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < path.length(); i++) {
 			char c = path.charAt(i);
-			if (i == 0 && c == '/' && BootLoader.getOS().equals(Constants.OS_WIN32))
+			if (i == 0 && c == '/' && Platform.getOS().equals(Constants.OS_WIN32))
 				continue;
 
 			// Some VMs may return %20 instead of a space
