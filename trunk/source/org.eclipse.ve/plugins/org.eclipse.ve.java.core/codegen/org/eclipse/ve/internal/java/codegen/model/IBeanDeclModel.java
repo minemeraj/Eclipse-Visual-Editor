@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.6 $  $Date: 2004-04-02 14:34:34 $ 
+ *  $Revision: 1.7 $  $Date: 2004-04-07 22:48:31 $ 
  */
 
 import java.util.*;
@@ -107,6 +107,10 @@ public interface IBeanDeclModel extends ITypeResolver{
 	 * @since 1.0.0
 	 */
 	public void refreshMethods () ;
+	
+	public void suspendSynchronizer() ;
+	public void resumeSynchronizer() ;
+	
 }
       
 	
