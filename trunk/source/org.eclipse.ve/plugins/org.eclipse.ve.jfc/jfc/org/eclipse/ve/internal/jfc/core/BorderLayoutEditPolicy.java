@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.3 $  $Date: 2004-07-12 22:15:23 $ 
  */
 
 import java.util.*;
@@ -28,6 +28,7 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWT;
 
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -290,11 +291,14 @@ protected Command getMoveChildrenCommand(Request generic) {
 		}
 	}
 	// change constraint of source to target constraint if we have one
-	if(targetConstraint != null){
+	if((targetConstraint != null)&&(!targetConstraint.equals(sourceConstraint))){
 		Command srcCmd = createChangeConstraintCommand(source,targetConstraint);
 		if (srcCmd != null) {
 			cmpCmd.add(srcCmd);
 		}
+	}
+	else{
+		return NoOpCommand.INSTANCE;		
 	}
 	return cmpCmd;
 }
