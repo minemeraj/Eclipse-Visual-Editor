@@ -14,7 +14,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-04 21:33:52 $ 
+ *  $Revision: 1.6 $  $Date: 2004-08-23 13:22:07 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -27,6 +27,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 
@@ -61,7 +64,7 @@ public class ToolTipAssistFactory {
 	 * ToolTipDetails are able to create a figure
 	 * @since 1.0.0
 	 */
-	static interface TooltipDetails{
+	public static interface TooltipDetails{
 		IFigure createFigure();
 	}	
 		
@@ -177,28 +180,48 @@ public class ToolTipAssistFactory {
 		private void updateFigure(){
 			Iterator errors = errNotifier.getErrors().iterator();
 			figure.removeAll();
-			boolean errorExists = false;
 			while(errors.hasNext()){
-				errorExists = true;
 				IErrorHolder.ErrorType error = (IErrorHolder.ErrorType) errors.next();
 				Label l = new Label();
 				l.setIcon(error.getImage());
 				l.setText(error.getMessage());
 				figure.add(l);
 			}
-			// Draw a line underneath the errors
-			if(errorExists){
-				figure.add(new Figure(){
-					public Dimension getPreferredSize(int wHint, int hHint) {
-						return new Dimension(550,5);
-					}
-					protected void paintClientArea(Graphics graphics) {
-						super.paintClientArea(graphics);
-						Rectangle bounds = getBounds();
-						graphics.drawLine(0,bounds.y,bounds.width,bounds.y);
-					}
-				});
+		}
+	}
+	/**
+	 * Construct with a beanproxy and a get method name
+	 * If the get method throws an exception then show this in a label
+	 */
+	public static class GetMethodErrorProcessor implements ToolTipAssistFactory.TooltipDetails{
+		
+		private IBeanProxy beanProxy;
+		private String methodName;
+		private IMethodProxy methodProxy;
+
+		public GetMethodErrorProcessor(IBeanProxy aBeanProxy, String aMethodName){
+			beanProxy = aBeanProxy;
+			methodName = aMethodName;
+		}
+
+		public IFigure createFigure() {
+			Label label = new Label();
+			if(beanProxy == null) return label;
+			// Get the error message from calling the get method
+			if(methodProxy == null){
+				methodProxy = beanProxy.getTypeProxy().getMethodProxy(methodName);
 			}
+			String errorMessage = null;
+			try {
+				methodProxy.invoke(beanProxy);
+			} catch (ThrowableProxy e) {
+				errorMessage = e.toBeanString();
+			}
+			if(errorMessage != null){
+				label.setIcon(IErrorHolder.ErrorType.getSevereErrorImage());
+				label.setText(errorMessage);
+			}
+			return label;
 		}
 	}
         
