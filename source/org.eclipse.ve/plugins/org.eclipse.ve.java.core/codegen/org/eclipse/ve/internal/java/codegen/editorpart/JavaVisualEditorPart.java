@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.72 $  $Date: 2005-01-05 18:41:43 $ 
+ *  $Revision: 1.73 $  $Date: 2005-01-05 20:17:44 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -440,14 +440,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Only open the views if the preferences say they should be.  This allows users to switch the option off
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
 		if (store.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW)) {
-			site.getPage().showView("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$	
+			site.getPage().showView("org.eclipse.ui.views.PropertySheet", null, IWorkbenchPage.VIEW_VISIBLE); //$NON-NLS-1$	
 		}
 		if (store.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW)) {
-			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.BeansList"); //$NON-NLS-1$
+			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.BeansList", null, IWorkbenchPage.VIEW_VISIBLE); //$NON-NLS-1$
 		}
-
-		// Now restore focus to new editor since the above caused it to be lost.
-		site.getPage().activate(site.getPage().findEditor(getEditorInput()));
 
 	}
 
