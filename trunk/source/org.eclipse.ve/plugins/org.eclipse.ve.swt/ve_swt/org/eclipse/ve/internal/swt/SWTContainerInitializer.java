@@ -9,7 +9,7 @@ public class SWTContainerInitializer extends ClasspathContainerInitializer{
 			int size = containerPath.segmentCount();
 			if (size > 0) {
 				if (containerPath.segment(0).equals("SWT_CONTAINER")) {
-					SWTContainer container = new SWTContainer();
+					SWTContainer container = new SWTContainer(containerPath);
 					JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 				}
 			}
