@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.17 $  $Date: 2004-11-16 22:40:03 $ 
+ *  $Revision: 1.18 $  $Date: 2004-11-17 20:06:23 $ 
  */
 
 import java.util.*;
@@ -332,9 +332,9 @@ protected  void analyzeEvents() {
 	// Parse an Event handler (VCE style 2) if one exits
     List innerTypes = getInnerTypes();	
 	  for (int i=0; i<innerTypes.size(); i++) {
-		String name = ((TypeDeclaration)innerTypes.get(0)).getName().getIdentifier();
+		String name = ((TypeDeclaration)innerTypes.get(i)).getName().getIdentifier();
 		if (sharedListeners.contains(name)) {
-			EventHandlerVisitor visitor = new EventHandlerVisitor((TypeDeclaration)innerTypes.get(0),fModel,false);
+			EventHandlerVisitor visitor = new EventHandlerVisitor((TypeDeclaration)innerTypes.get(i),fModel,false);
 			visitor.setProgressMonitor(fMonitor);
 			visitor.visit() ;
 			break ;
