@@ -2,10 +2,6 @@
 
 !*** Special binary plugins which are temporarily included until they become open sourced.
 plugin@com.ibm.etools.emf.event=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.etools.emf.event
-plugin@com.ibm.wtp.emf.workbench=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.workbench
-plugin@com.ibm.wtp.common.util=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.util
-feature@com.ibm.wtp.emf.integration.core=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.emf.integration.core-feature
-feature@com.ibm.wtp.common.utilities=@org.eclipse.jem-feature-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.jem-feature/com.ibm.wtp.common.utilities-feature
 
 !*** Special ones from eclipse.
 plugin@org.eclipse.test=v20040510a,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
@@ -17,6 +13,7 @@ plugin@org.eclipse.perfmsr.core=v20040526a,:pserver:anonymous@dev.eclipse.org:/h
 plugin@org.eclipse.jem=@org.eclipse.jem-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.beaninfo=@org.eclipse.jem.beaninfo-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.ui=@org.eclipse.jem.ui-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
+plugin@org.eclipse.jem.util=@org.eclipse.jem.util-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.proxy=@org.eclipse.jem.proxy-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.tests=@org.eclipse.jem.tests-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,
 plugin@org.eclipse.jem.workbench=@org.eclipse.jem.workbench-v@,:pserver:anonymous@dev.eclipse.org:/home/tools,

@@ -3,7 +3,7 @@
 <plugin
    id="org.eclipse.ve.java.core"
    name="%pluginName"
-   version="1.0.2"
+   version="1.1.0"
    provider-name="%providerName"
    class="org.eclipse.ve.internal.java.core.JavaVEPlugin">
 
@@ -46,9 +46,8 @@
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jem.workbench"/>
       <import plugin="org.eclipse.core.filebuffers"/>
-      <import plugin="com.ibm.wtp.common.util"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="com.ibm.wtp.emf.workbench"/>
+      <import plugin="org.eclipse.jem.util"/>
    </requires>
 
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.8 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.9 $  $Date: 2005-01-07 20:51:41 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
+import org.eclipse.jem.util.logger.proxy.Logger;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -32,7 +33,6 @@ import org.eclipse.ve.internal.jcm.BeanDecorator;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-import com.ibm.wtp.common.logger.proxy.Logger;
  
 /**
  * 

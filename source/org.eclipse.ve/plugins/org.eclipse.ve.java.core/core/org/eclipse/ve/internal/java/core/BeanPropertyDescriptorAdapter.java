@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2004-12-16 18:36:14 $ 
+ *  $Revision: 1.18 $  $Date: 2005-01-07 20:51:41 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -34,6 +34,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.util.logger.proxy.Logger;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
@@ -46,7 +47,6 @@ import org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider;
 import org.eclipse.ve.internal.propertysheet.DefaultWrapperedValidator;
 import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
 
-import com.ibm.wtp.common.logger.proxy.Logger;
 
 /**
  * The creation method for BeanProperties is different than for regular MOF properties
