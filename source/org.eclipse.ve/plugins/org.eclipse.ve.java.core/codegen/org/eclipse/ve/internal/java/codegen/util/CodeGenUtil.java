@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.15 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.16 $  $Date: 2004-03-31 20:47:47 $ 
  */
 
 
@@ -835,16 +835,10 @@ public static void logParsingError(String exp, String method, String msg, boolea
 */
 
 public static String resolve(Name toResolve, IBeanDeclModel bdm) {
-	if (toResolve.isQualifiedName())
-		return toResolve.toString();
-	else 
 		return bdm.resolve(toResolve.toString());
 }
 
 public static String resolve(Name toResolve, ITypeResolver resolver) {
-	if (toResolve.isQualifiedName())
-		return toResolve.toString();
-	else 
 		return resolver.resolve(toResolve.toString());
 }
 
