@@ -11,13 +11,12 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.5 $  $Date: 2004-01-23 21:04:08 $ 
+ *  $Revision: 1.6 $  $Date: 2004-01-23 22:53:28 $ 
  */
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
