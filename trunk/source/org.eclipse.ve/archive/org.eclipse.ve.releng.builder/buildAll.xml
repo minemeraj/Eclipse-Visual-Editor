@@ -207,4 +207,57 @@
 		</exec>
 	</target>
 	
+	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
+		<!-- Publish to update site, but not push it. -->
+		<echo message="Publish the update site for the latest build."/>
+		<property name="updateRemoteDirectory" value="updates/1.0"/>
+		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
+		<delete dir="${updateLocalDirectory}"/>
+		<mkdir dir="${updateLocalDirectory}"/>
+		
+		<!-- Now copy the site update tools files into local directory for processing. -->
+		<copy todir="${updateLocalDirectory}">
+			<fileset dir="internalBuildTools/siteUpdateTools"/>
+		</copy>
+		
+		<!-- Now build the update program. -->
+	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/core.jar"/>
+
+		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
+		<exec dir="${updateLocalDirectory}" executable="unzip">
+			<arg line="-o -qq ${buildDirectory}/${buildLabel}/VE-SDK-*.zip -d ."/>
+	    </exec>
+		
+		<!-- Now get the current update site.xml from the download site so that we can update it. -->
+		<exec dir="." executable="rsync">
+			<arg line="-avz --password-file=${rsyncPWFile} --stats versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory} ${updateLocalDirectory}" />
+		</exec>
+
+		<!-- Now run the update process -->
+	    <java classname="org.eclipse.releng.generators.UpdateBuilder" >
+	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -cats ${updateLocalDirectory}/cats.properties" /> 
+	         <classpath>
+	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_3.0.1/core.jar" />
+	         </classpath>
+	    </java>
+
+	</target>
+	
+	<target name="pushupdatesite" if="rsyncpush" depends="init">
+		<echo message="Push the update site to the download site."/>
+		<property name="updateRemoteDirectory" value="updates/1.0"/>
+		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
+		
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site/**"/>
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site/**"/>		
+		<chmod dir="${updateLocalDirectory}" type="dir" perm="ugo+rx" includes="site/**"/>
+		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**"/>				
+		
+		<exec dir="." executable="rsync">
+			<arg line="-avz --password-file=${rsyncPWFile} --stats ${updateLocalDirectory}/site versync@download.eclipse.org::eclipseVeTools/${updateRemoteDirectory}" />
+		</exec>
+
+	</target>
+
 </project>
