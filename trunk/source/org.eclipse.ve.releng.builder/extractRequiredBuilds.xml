@@ -15,11 +15,9 @@
 				<isset property="zipname"/>
 			</and>
 		</condition>
-<echo>zipname=${zipname} url=${url}</echo>
 	</target>
 
 	<target name="testurl" if="urlzipset" depends="init">
-<echo>zipname=${zipname} url=${url}</echo>		
 		<property file="${buildDirectory}/../${zipname}.properties"/>
 		<condition property="sameurl">
 			<and>
@@ -27,11 +25,9 @@
 				<equals arg1="${downurl}" arg2="${url}"/>
 			</and>
 		</condition>
-		<echo>sameurl=${sameurl} downurl=${downurl}</echo>
 	</target>
 				
 	<target name="outofdate" if="zipname" unless="sameurl" depends="init,testurl">	
-<echo>zipname=${zipname} url=${url}</echo>
 		<delete>
 			<fileset dir="${buildDirectory}/..">
 			    <include name="${zipname}"/>
@@ -40,7 +36,6 @@
 	</target>
 		
 	<target name="download" if="urlzipset" depends="init,outofdate">
-<echo>zipname=${zipname} url=${url}</echo>
 		<get src="${url}" dest="${buildDirectory}/../${zipname}" usetimestamp="true"/>
 		<propertyfile file="${buildDirectory}/../${zipname}.properties">
 			<entry key="downurl" value="${url}"/>
@@ -48,7 +43,6 @@
 	</target>
 	
 	<target name="extract" if="urlzipset" depends="init,download">
-<echo>zipname=${zipname} url=${url}</echo>
 		<exec dir="${buildDirectory}/.." executable="unzip">
 			<arg line="-o -qq ${zipname}"/>
 	   	</exec>
