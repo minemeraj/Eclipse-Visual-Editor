@@ -10,21 +10,39 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2004-04-23 23:15:51 $ 
+ *  $Revision: 1.15 $  $Date: 2004-04-27 23:16:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.*;
-
-import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.PTExpression;
+import org.eclipse.jem.internal.instantiation.PTFieldAccess;
+import org.eclipse.jem.internal.instantiation.PTInstanceReference;
+import org.eclipse.jem.internal.instantiation.PTName;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
-
+import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -82,13 +100,18 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	/**
 	 * Convert an AST to resolved Parsed Tree
 	 * @param ast  (AST expression)
+	 * 
+	 * @param expMethodRef  The methodref in which the ast parameter is to be evaluated in. Strictly 
+	 * used for finding instance references which happen to be local variable. If <code>null</code>
+	 * is passed in, no local variable resolution will take place. 
+	 *  
 	 * @param bdm
 	 * @param ref will update the list with the referenced instances not null
 	 * @return
 	 * 
 	 * @since 1.0.0
 	 */
-	public  static PTExpression getParsedTree(Expression ast, final IBeanDeclModel bdm, final List ref) {
+	public  static PTExpression getParsedTree(Expression ast, final CodeMethodRef expMethodRef, final IBeanDeclModel bdm, final List ref) {
 		class Resolver extends ParseTreeCreationFromAST.Resolver{
 			public PTExpression resolveName(Name name) {
 				String n=null;
@@ -119,6 +142,19 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						ptref.setObject(o);
 						return ptref;
 					}
+					// possibly a ref. to a local variable - check bean with unique name
+					if(expMethodRef!=null){
+						String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, n);
+						bp = bdm.getABean(uniqueName);
+						if (bp!=null) {
+							PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+							IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
+							if (ref!=null && !ref.contains(o))
+							    ref.add(o);
+							ptref.setObject(o);
+							return ptref;
+						}
+					}
 					n = bdm.resolve(n);
 				}
 				if (n!=null) {
@@ -146,7 +182,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	public boolean decode() throws CodeGenException {
 		// TODO This is a temporary until we move to the new AST and use the converter
-		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),fbeanPart.getModel(),fReferences));
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		obj.setAllocation(alloc) ;
 		return true;

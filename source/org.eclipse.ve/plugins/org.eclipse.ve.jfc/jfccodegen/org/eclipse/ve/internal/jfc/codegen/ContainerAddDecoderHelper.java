@@ -11,28 +11,50 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-16 20:56:05 $ 
+ *  $Revision: 1.9 $  $Date: 2004-04-27 23:17:06 $ 
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.dom.*;
-
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.NullLiteral;
+import org.eclipse.jdt.core.dom.NumberLiteral;
+import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.StringLiteral;
+import org.eclipse.jdt.core.dom.ThisExpression;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.PTExpression;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
-
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.AbstractIndexedChildrenDecoderHelper;
+import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
+import org.eclipse.ve.internal.java.codegen.java.ConstructorDecoderHelper;
+import org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderAdapter;
+import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
+import org.eclipse.ve.internal.java.codegen.java.IExpressionDecoder;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
@@ -314,7 +336,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 				if (args.get(i) instanceof ClassInstanceCreation) {
 					ClassInstanceCreation ae = (ClassInstanceCreation) args.get(i);
 					String argType = CodeGenUtil. resolve (ae.getName(),fbeanPart.getModel()); 
-                    PTExpression pt = ConstructorDecoderHelper.getParsedTree(ae,fbeanPart.getModel(),null); 					
+					CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+                    PTExpression pt = ConstructorDecoderHelper.getParsedTree(ae,expOfMethod,fbeanPart.getModel(),null); 					
 //					result = addQualifier(result, ae.type.toString(), argType);
 //					result = resolveArgQualification(ae.arguments, result);
 				}
@@ -328,7 +351,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		// resolve class qualification 
 //		String initString = addQualifier(exp.toString(), exp.type.toString(), type);
 //		initString = resolveArgQualification(exp.arguments, initString);
-		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, fbeanPart.getModel(), null);
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fbeanPart.getModel(), null);
 		IJavaObjectInstance result = null;
 		try {
 			result = (IJavaObjectInstance) CodeGenUtil.createInstance(type, fbeanPart.getModel().getCompositionModel());

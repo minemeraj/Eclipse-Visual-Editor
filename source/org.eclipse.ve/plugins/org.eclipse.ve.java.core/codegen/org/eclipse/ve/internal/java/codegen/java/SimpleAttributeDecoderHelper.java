@@ -11,26 +11,43 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2004-04-20 20:48:51 $ 
+ *  $Revision: 1.13 $  $Date: 2004-04-27 23:16:22 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.*;
-
+import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.NullLiteral;
+import org.eclipse.jdt.core.dom.NumberLiteral;
+import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
-
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.util.*;
+import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -205,9 +222,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
     protected boolean dealwithInternalBean(ClassInstanceCreation exp) {
         
         try {
-        	
+          CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
           JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-          		ConstructorDecoderHelper.getParsedTree(exp,fbeanPart.getModel(),null));
+          		ConstructorDecoderHelper.getParsedTree(exp,expOfMethod,fbeanPart.getModel(),null));
 
           String resolved = CodeGenUtil.resolve(exp.getName(), fbeanPart.getModel()) ; 
           EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
