@@ -35,7 +35,7 @@ click <A href="directory.txt">here</A>.<BR></td>
 		<TR>
 			<TD>Eclipse build @eclipseBuildID@:</TD>
 			<TD>(<A href="@eclipseURL@/index.php">build page</A>) (<A
-				href="@eclipseZipURL@">download zip</A>)</TD>
+				href="@eclipseZipURL@">download win32 zip</A>)</TD>
 		</TR>
 		<TR>
 			<TD>EMF build @emfBuildID@:</TD>

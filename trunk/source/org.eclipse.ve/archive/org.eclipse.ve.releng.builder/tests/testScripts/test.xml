@@ -28,7 +28,7 @@
 	    </exec>
 	
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq GEF*.zip -d ${install}/eclipse"/>
+			<arg line="-o -qq gef*.zip -d ${install}/eclipse"/>
     	</exec>
 
 		<exec dir="." executable="unzip">

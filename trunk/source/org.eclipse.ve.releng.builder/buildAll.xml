@@ -16,6 +16,12 @@
 			</and>
 		</condition>
 		<property name="remoteDirectory" value="/home/www/tools/ve/downloads/drops"/>
+		<condition property="isWindows">
+			<equals arg1="${platform}" arg2="Win32" />
+		</condition>
+		<condition property="isLinuxGTK">
+			<equals arg1="${platform}" arg2="LinuxGTK" />
+		</condition>		
 	</target>
 
 	<target name="create.label.properties" unless="label.properties.exists">
@@ -71,9 +77,8 @@
 		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
 		<!--<parallel>-->
 
-		<ant antfile="${test.xml}">
-			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/win32-local" />
-		</ant>
+		<antcall target="test-win32-local"/>
+		<antcall target="test-linux-gtk-local"/>		
 
 		<!--ant antfile="${test.xml}">
 			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/win32" />
@@ -84,6 +89,18 @@
 		<!--</parallel>-->
 	</target>
 
+	<target name="test-win32-local" if="isWindows">
+		<ant antfile="${test.xml}">
+			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/win32-local" />
+		</ant>	
+	</target>
+	
+	<target name="test-linux-gtk-local" if="isLinuxGTK">
+		<ant antfile="${test.xml}">
+			<property name="tester" value="${basedir}/internalBuildTools/testConfigs/linux-gtk-local" />
+		</ant>	
+	</target>	
+	
 	<target name="publish" depends="init">
 		<property name="publish.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/publish.xml" />
 
@@ -101,7 +118,7 @@
 	 	<!--  Insert url for supported eclipse drop-->
 		<replace file="${result}/${indexFileName}" token="@eclipseBuildID@" value="${eclipseBuildID}"/>
 		<replace file="${result}/${indexFileName}" token="@eclipseURL@" value="${eclipseURL}"/>
-		<replace file="${result}/${indexFileName}" token="@eclipseZipURL@" value="${eclipseZipURL}"/>		
+		<replace file="${result}/${indexFileName}" token="@eclipseZipURL@" value="${eclipseWin32ZipURL}"/>		
 	
 	 	<!--  Insert url for supported EMF -->
 		<replace file="${result}/${indexFileName}" token="@emfBuildID@" value="${emfBuildID}"/>

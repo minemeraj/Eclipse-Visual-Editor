@@ -5,10 +5,10 @@
 		<copy file="${tester}/relengbuildwin2.bat" todir="${executionDir}" />
 
 		<!--copy the runtimes to install for testing, excluding the JUnit plug-in tests-->
-		<copy file="${buildDirectory}/${buildLabel}/VE-runtime-${buildId}.zip" todir="${executionDir}" />
 		<copy file="${buildDirectory}/../emf.zip" todir="${executionDir}" />
 		<copy file="${buildDirectory}/../gef.zip" todir="${executionDir}" />
-		<copy file="${buildDirectory}/../eclipse-SDK.zip" todir="${executionDir}" />
+		<get src="${eclipseWin32ZipURL}" dest="${testBase}/eclipse-SDK.zip" usetimestamp="true"/>		
+		<copy file="${testBase}/eclipse-SDK.zip" todir="${executionDir}" />
 	</target>
 
 	<target name="noDefault"/>
