@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-06 18:38:51 $ 
  */
 
 import java.util.Iterator;
@@ -194,8 +194,9 @@ public CodeExpressionRef getExistingExpressionRef(Object[] args) {
  */
 private Statement getInitExpression(String src) {
 		
-		
-	CompilationUnit cu = AST.parseCompilationUnit(src.toCharArray());
+	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+	parser.setSource(src.toCharArray());
+	CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 	Statement Stmt = null;	
 //		//TODO: this is a poor man's parsing, need revisit    
     List stmts =  ((TypeDeclaration)cu.types().get(0)).getMethods()[0].getBody().statements();
@@ -338,7 +339,9 @@ public static ICodeGenSourceRange getOffsetForFirstExpression (IMethod m) {
     CodeGenSourceRange sr=null ; 
     try {
         // No need to resolve anyting, just parse this thing
-		CompilationUnit jDom = AST.parseCompilationUnit(m.getCompilationUnit(),false) ;
+    	ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+    	parser.setSource(m.getCompilationUnit());
+    	CompilationUnit jDom = (CompilationUnit) parser.createAST(null);
 		Message[] errors = jDom.getMessages() ;
 		if (errors != null && errors.length > 0) {
 		    // TODO  Handle the case when errors are present in AST - should we give off,len pair ?

@@ -10,21 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-04 12:05:24 $ 
+ *  $Revision: 1.5 $  $Date: 2004-03-06 18:38:51 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
-import java.lang.reflect.Constructor;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.beaninfo.adapters.Utilities;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
-import org.eclipse.jem.internal.proxy.initParser.MethodHelper;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;

@@ -11,17 +11,16 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-04 12:05:24 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-06 18:38:51 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 
-import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaHelpers;
 
 /**
  * This interface provides one MOF extension point from which to get

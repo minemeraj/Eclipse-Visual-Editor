@@ -38,13 +38,13 @@
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.jface"/>
-      <import plugin="com.ibm.wtp.common"/>
+      <import plugin="com.ibm.wtp.common.util"/>
    </requires>
 
 
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
-      <container path="JRE_LIB">
+      <variable path="JRE_LIB">
          <beaninfos>
             <beaninfo
                   kind="plugin"
@@ -54,7 +54,7 @@
                </searchpath>
             </beaninfo>
          </beaninfos>
-      </container>
+      </variable>
    </extension>
 <!-- The followin will allow the visuals to come up in web/ejb projects -->
    <extension
@@ -109,8 +109,8 @@
       <variable
             contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
             path="JRE_LIB"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi"
-            paletteloc="last">
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
       </variable>
    </extension>
 <!-- The followin will allow the visuals to come up in web/ejb projects -->
@@ -119,8 +119,8 @@
       <variable
             contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
             path="SERVERJDK_PLUGINDIR/jre/lib/rt.jar"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi"
-            paletteloc="last">
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
       </variable>
    </extension>
    <extension
@@ -128,8 +128,8 @@
       <variable
             contributor="org.eclipse.ve.internal.jfc.core.JFCVisualContributor"
             path="SERVERJDK_50_PLUGINDIR/jre/lib/rt.jar"
-            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi"
-            paletteloc="last">
+            paletteloc="last"
+            palettecats="platform:/plugin/org.eclipse.ve.jfc/palette/javavisualbeanscats.xmi">
       </variable>
    </extension>
 <!-- ======================================================================== -->

@@ -12,8 +12,8 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2004-03-06 11:28:08 $ 
- */
+ *  $Revision: 1.5 $  $Date: 2004-03-06 18:38:51 $ 
+ */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -58,7 +58,6 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 	protected Class editorClass , labelProviderClass; // The editor class is cache'd to save repeated calculation - The instance however cannot be as this involves
 	private String editorClassNameAndData;
 	private String labelProviderClassNameAndData;
-	private BasePropertyDecorator baseDecorator;	
 	
 public CellEditor createPropertyEditor(Composite parent){
 	
@@ -161,7 +160,6 @@ public CellEditor createPropertyEditor(Composite parent){
 }
 	
 private static String[] EXPERT_FILTER_FLAGS = new String[] {IPropertySheetEntry.FILTER_ID_EXPERT};
-
 public String[] getFilterFlags(){
 	// Property sheet only worries about expert, so we will see if we are expert, and if so return that.
 	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)target);
@@ -313,11 +311,8 @@ protected EStructuralFeature getFeature(){
 	return (EStructuralFeature)getTarget();
 }
 protected BasePropertyDecorator getBaseDecorator() {
-	if(baseDecorator == null){
 	// Return the BasePropertyDecorator for this feature.
-		baseDecorator = (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
-	} 
-	return baseDecorator;
+	return (BasePropertyDecorator) findDecorator(((EModelElement) target).getEAnnotations(), BasePropertyDecorator.class);
 }
 /**
  * instantiate the  class passed in. If it has an ctor that

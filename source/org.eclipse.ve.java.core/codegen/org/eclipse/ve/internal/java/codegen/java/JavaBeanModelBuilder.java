@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.java;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.6 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.7 $  $Date: 2004-03-06 18:38:51 $ 
  */
 
 import java.util.*;
@@ -109,13 +109,14 @@ protected CompilationUnit ParseJavaCode() throws CodeGenException
 	//       to compile all of this, but rather bits of pieaces of this
 	
 	try {
-		CompilationUnit result;
-		if (fCU!=null)
-		   result = AST.parseCompilationUnit(fCU,true,null,null) ;
+		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		if (fCU != null)
+			parser.setSource(fCU);
 		else {
 			fFileContent = getFileContents();
-		    result = AST.parseCompilationUnit(fFileContent);
+			parser.setSource(fFileContent);
 		}
+		CompilationUnit result = (CompilationUnit) parser.createAST(null);		
 		   		
 		
 		IProblem[]	problems = result.getProblems();

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.visual;
  *******************************************************************************/
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2004-03-04 02:10:12 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-06 18:38:51 $ 
  */
 
 import java.util.*;
@@ -22,7 +22,6 @@ import org.eclipse.gef.requests.*;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
-import org.eclipse.ve.internal.java.visual.*;
 /**
  * Tree ContainerEditPolicy for SWT Composites
  */

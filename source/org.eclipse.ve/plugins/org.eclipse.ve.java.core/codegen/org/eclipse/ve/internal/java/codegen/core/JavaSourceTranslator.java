@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.8 $  $Date: 2004-03-05 22:07:37 $ 
+ *  $Revision: 1.9 $  $Date: 2004-03-06 18:38:51 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.Display;
@@ -274,7 +275,9 @@ String fUri;
   	}
   	
   	protected CompilationUnit parse(String source){
-  		return AST.parseCompilationUnit(source.toCharArray());
+   		ASTParser parser = ASTParser.newParser(AST.LEVEL_2_0);
+		parser.setSource(source.toCharArray());
+		return (CompilationUnit) parser.createAST(null);
   	}
   	
   	protected boolean containsParseErrors(CompilationUnit cuAST){
