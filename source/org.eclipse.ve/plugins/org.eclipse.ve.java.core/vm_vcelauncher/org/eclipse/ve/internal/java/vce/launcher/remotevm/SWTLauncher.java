@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-26 14:25:36 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-03 21:55:30 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -54,7 +54,7 @@ public class SWTLauncher implements ILauncher {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
 	 */
-	public boolean supportsLaunching(Class clazz, Object bean) {
+	public boolean supportsLaunching(Class clazz) {
 		shellList = new ArrayList();
 		String methodName;
 		Method createMethod = null;
@@ -119,7 +119,7 @@ public class SWTLauncher implements ILauncher {
 		
 		// should already be initialized by supportsLaunching, but be safe.
 		if (shellList == null) {
-			if (!supportsLaunching(clazz, bean)) {
+			if (!supportsLaunching(clazz)) {
 				return;
 			}
 		}

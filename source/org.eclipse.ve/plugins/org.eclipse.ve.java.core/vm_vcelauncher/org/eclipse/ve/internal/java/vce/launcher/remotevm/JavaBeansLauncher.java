@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JavaBeansLauncher.java,v $
- *  $Revision: 1.5 $  $Date: 2004-08-27 15:34:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-09-03 21:55:30 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -61,11 +61,6 @@ public static void main(String[] args){
 	// Try a number of different ways to launch the JavaBean
 	try {	
 		Class aClass = Class.forName(nameOfClassToLaunch);		
-		// new up an instance of the java bean
-		Constructor ctor = aClass.getDeclaredConstructor(null);
-		// Make sure we can intantiate it in case the class it not public
-		ctor.setAccessible(true);
-		Object javaBean = ctor.newInstance(null);
 		
 		List launchers = getLaunchers();
 		ILauncher selected = null;
@@ -73,12 +68,18 @@ public static void main(String[] args){
 		Iterator itr = launchers.iterator();
 		while(itr.hasNext()) {
 			current = (ILauncher)itr.next();
-			if (current.supportsLaunching(aClass, javaBean)) {
+			if (current.supportsLaunching(aClass)) {
 				selected = current;
 				break;
 			}
 		}
 		if (selected != null) {
+			// new up an instance of the java bean
+			Constructor ctor = aClass.getDeclaredConstructor(null);
+			// Make sure we can intantiate it in case the class it not public
+			ctor.setAccessible(true);
+			Object javaBean = ctor.newInstance(null);
+			
 			selected.launch(aClass, javaBean, args);
 		} else {
 			Method mainMethod = null;
@@ -91,6 +92,11 @@ public static void main(String[] args){
 				mainMethod.invoke(null, new Object[]{ args });
 			} else {
 				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO_"), new Object[]{nameOfClassToLaunch})); //$NON-NLS-1$
+				// new up an instance of the java bean
+				Constructor ctor = aClass.getDeclaredConstructor(null);
+				// Make sure we can intantiate it in case the class it not public
+				ctor.setAccessible(true);
+				Object javaBean = ctor.newInstance(null);
 			}
 		}
 	} catch ( ClassNotFoundException exc ){
