@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.19 $  $Date: 2004-04-01 21:35:08 $ 
+ *  $Revision: 1.20 $  $Date: 2004-04-02 00:11:35 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -71,7 +71,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
@@ -115,6 +114,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public final static int SELECT_JVE = 1;
 	public final static int SELECT_PROPERTY = 2;
 	public final static int SELECT_PROPERTY_CHANGE = 3;
+	
+	public final static int PARSE_ERROR_STATE = 3;	// Model controller update state to indicate parse error.
 	
 	public final static String PI_CLASS = "class";
 	public final static String PI_PALETTE = "palette";
@@ -350,6 +351,12 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 				currentSetRoot.eNotify(new ENotificationImpl((InternalEObject) currentSetRoot, CompositionProxyAdapter.RELEASE_PROXIES, null, null, null, false));
 		} finally {
 			currentSetRoot = root;
+		}
+		if (propertySheetPage != null) {
+			// At this point in time the property sheet may be in focus, so it is not listening to selection changes
+			// from us. Because of this it may have an active entries which are now pointing to the obsolete
+			// model. This model won't have a resource set, etc. So the entries need to be sent away.
+			propertySheetPage.selectionChanged(this, primaryViewer.getSelection());	
 		}
 	}
 
@@ -667,8 +674,8 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 			if (d != null) {
 				editDomain.setViewerData(primaryViewer, EditDomain.DIAGRAM_KEY, d);
 				setRootModel(modelBuilder.getModelRoot()); // Set into viewers.
-				loadingFigureController.showLoadingFigure(false);
 			}
+			loadingFigureController.showLoadingFigure(false);			
 			ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
 			rla.setEnabled(true);
 			modelChangeController.setHoldState(IModelChangeController.READY_STATE, null);	// Restore to allow updates.
@@ -1227,6 +1234,8 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
+							ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
+							rla.setEnabled(true);	// Because it was disabled.														
 						}
 					});	
 					return Status.CANCEL_STATUS;
@@ -1254,7 +1263,9 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
-							((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(true);	// Set it for parse error.
+							processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
+							ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);	// Now it can be enabled.
+							rla.setEnabled(true);	// Because it was disabled.							
 						}
 					});					
 					return Status.CANCEL_STATUS;
@@ -1354,7 +1365,7 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 				}
 				
 				public void parsingStatus (boolean error){
-					((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(error);
+					processParseError(error);
 				}
 				
 				public void parsingPaused(boolean paused) {
@@ -1621,6 +1632,11 @@ modelBuilder.setMsgRenderer(new IJVEStatus() {
 
 	}
 
+	private void processParseError(boolean parseError) {
+		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : IModelChangeController.READY_STATE, null);
+		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
