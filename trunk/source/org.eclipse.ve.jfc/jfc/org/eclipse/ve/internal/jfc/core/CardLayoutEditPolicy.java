@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-04 12:17:19 $ 
+ *  $Revision: 1.3 $  $Date: 2004-04-22 10:02:51 $ 
  */
 import java.util.*;
 
@@ -68,6 +68,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 		this.containerPolicy = containerPolicy;
 		helper.setContainerPolicy(containerPolicy);
 	}
+	
 	public void activate() {
 		containerPolicy.setContainer(getHost().getModel());
 		sfConstraintConstraint =
@@ -108,6 +109,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 			});
 		}
 	}
+	
 	protected void addCardListenerToChildren(EditPart ep) {
 		ep.addEditPartListener(cardListener);
 		Iterator childen = ep.getChildren().iterator();
@@ -237,9 +239,11 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	public void deactivate() {
 		Iterator children = getHost().getChildren().iterator();
 		while (children.hasNext()) {
-			EditPart child = (EditPart) children.next();
+			GraphicalEditPart child = (GraphicalEditPart) children.next();
 			removeCardListenerFromChildren(child);
 			removeComponentListener(child);
+			// We must set the visibility back otherwise the figure will not be selectable in the new layout manager - Bugzilla 58447
+			setCardVisible(child, true);				
 		}
 		super.deactivate();
 	}
