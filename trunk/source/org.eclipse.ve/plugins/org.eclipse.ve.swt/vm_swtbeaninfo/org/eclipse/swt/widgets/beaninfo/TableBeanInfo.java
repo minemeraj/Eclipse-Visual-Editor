@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.10 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -104,6 +104,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableMessages.getString("itemCountDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("itemCountSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// itemHeight
@@ -116,6 +117,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableMessages.getString("itemsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("itemsSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// linesVisible
@@ -128,12 +130,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableMessages.getString("selectionDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("selectionSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selectionCount
 			super.createPropertyDescriptor(getBeanClass(),"selectionCount", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableMessages.getString("selectionCountDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("selectionCountSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selectionIndex
@@ -152,6 +156,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableMessages.getString("topIndexDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("topIndexSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};
@@ -160,5 +165,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		handleException(exception);
 	};
 	return null;
+}
+
+protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
+	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+	
+	replacePropertyDescriptor(newPDs, "layout", null, new Object[] { 
+		DESIGNTIMEPROPERTY, Boolean.FALSE,
+		}
+	);
+
+	return newPDs;
 }
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,7 +37,7 @@ public class ShellBeanInfo extends IvjBeanInfo {
 		descriptor.setValue(
 			SweetHelper.STYLE_BITS_ID,
 		    new Object[] [] {
-				{ "modality" , ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				{ "modality" , ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Name") , Boolean.FALSE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.ApplicationModal") , "org.eclipse.swt.SWT.APPLICATION_MODAL" , new Integer(SWT.APPLICATION_MODAL) ,				 //$NON-NLS-1$ //$NON-NLS-2$
 				    ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.Modeless") , "org.eclipse.swt.SWT.MODELESS" , new Integer(SWT.MODELESS) , //$NON-NLS-1$ //$NON-NLS-2$
 					ShellMessages.getString("ShellBeanInfo.StyleBits.Modality.Value.PrimaryModal") , "org.eclipse.swt.SWT.PRIMARY_MODAL" , new Integer(SWT.PRIMARY_MODAL), //$NON-NLS-1$ //$NON-NLS-2$
@@ -83,6 +83,7 @@ public class ShellBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"imeInputMode", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, ShellMessages.getString("imeInputModeDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ShellMessages.getString("imeInputModeSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// location
@@ -95,6 +96,7 @@ public class ShellBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"region", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, ShellMessages.getString("regionDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ShellMessages.getString("regionSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// shell

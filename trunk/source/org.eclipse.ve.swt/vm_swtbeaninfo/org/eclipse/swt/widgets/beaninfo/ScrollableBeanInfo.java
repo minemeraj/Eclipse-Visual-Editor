@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrollableBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.7 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -60,18 +60,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ScrollableMessages.getString("clientAreaDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ScrollableMessages.getString("clientAreaSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// horizontalBar
 			super.createPropertyDescriptor(getBeanClass(),"horizontalBar", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ScrollableMessages.getString("horizontalBarDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ScrollableMessages.getString("horizontalBarSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// verticalBar
 			super.createPropertyDescriptor(getBeanClass(),"verticalBar", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ScrollableMessages.getString("verticalBarDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ScrollableMessages.getString("verticalBarSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};

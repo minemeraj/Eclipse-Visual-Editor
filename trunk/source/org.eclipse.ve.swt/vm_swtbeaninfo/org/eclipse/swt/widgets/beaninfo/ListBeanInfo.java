@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -83,12 +83,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ListMessages.getString("itemsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ListMessages.getString("itemsSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selection
 			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ListMessages.getString("selectionDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ListMessages.getString("selectionSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selectionCount
@@ -113,6 +115,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ListMessages.getString("topIndexDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ListMessages.getString("topIndexSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};

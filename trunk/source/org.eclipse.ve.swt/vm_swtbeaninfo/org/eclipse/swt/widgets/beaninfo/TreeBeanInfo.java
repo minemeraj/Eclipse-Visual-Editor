@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -80,6 +80,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TreeMessages.getString("itemsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TreeMessages.getString("itemsSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// parentItem
@@ -92,6 +93,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TreeMessages.getString("selectionDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TreeMessages.getString("selectionSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// selectionCount
@@ -104,6 +106,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"topItem", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TreeMessages.getString("topItemDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TreeMessages.getString("topItemSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};
@@ -112,5 +115,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		handleException(exception);
 	};
 	return null;
+}
+
+protected PropertyDescriptor[] overridePropertyDescriptors(PropertyDescriptor[] pds) {
+	PropertyDescriptor[] newPDs = (PropertyDescriptor[]) pds.clone();
+	
+	replacePropertyDescriptor(newPDs, "layout", null, new Object[] { 
+		DESIGNTIMEPROPERTY, Boolean.FALSE,
+		}
+	);
+
+	return newPDs;
 }
 }

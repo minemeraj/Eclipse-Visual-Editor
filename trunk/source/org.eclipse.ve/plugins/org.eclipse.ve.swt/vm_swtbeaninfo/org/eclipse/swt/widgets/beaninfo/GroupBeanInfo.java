@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GroupBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -37,7 +37,7 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 	    new Object[] [] {			
-			{ "noRadioGroup" , GroupMessages.getString("GroupBeanInfo.StyleBits.NoRadioGroup.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			{ "noRadioGroup" , GroupMessages.getString("GroupBeanInfo.StyleBits.NoRadioGroup.Name") , Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				GroupMessages.getString("GroupBeanInfo.StyleBits.NoRadioGroup.Value.NoRadioGroup") , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
 			{ "shadow" , GroupMessages.getString("GroupBeanInfo.StyleBits.Shadow.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
@@ -64,6 +64,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"clientArea", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, GroupMessages.getString("clientAreaDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, GroupMessages.getString("clientAreaSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// text

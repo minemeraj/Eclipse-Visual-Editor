@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -36,10 +36,10 @@ public BeanDescriptor getBeanDescriptor() {
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
 		new Object[] [] {
-			{ "noRadioGroup" , CompositeMessages.getString("CompositeBeanInfo.StyleBits.NoRadioGroup.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			{ "noRadioGroup" , CompositeMessages.getString("CompositeBeanInfo.StyleBits.NoRadioGroup.Name"), Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				CompositeMessages.getString("CompositeBeanInfo.StyleBits.NoRadioGroup.Value.NoRadioGroup") , "org.eclipse.swt.SWT.NO_RADIO_GROUP" , new Integer(SWT.NO_RADIO_GROUP) //$NON-NLS-1$ //$NON-NLS-2$
 			} },
-			{ "embedded" , CompositeMessages.getString("CompositeBeanInfo.StyleBits.Embedded.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+			{ "embedded" , CompositeMessages.getString("CompositeBeanInfo.StyleBits.Embedded.Name"), Boolean.TRUE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				CompositeMessages.getString("CompositeBeanInfo.StyleBits.Embedded.Value.Embedded") , "org.eclipse.swt.SWT.EMBEDDED" , new Integer(SWT.EMBEDDED) //$NON-NLS-1$ //$NON-NLS-2$
 			} },
 		}
@@ -59,7 +59,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"children", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, CompositeMessages.getString("childrenDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, CompositeMessages.getString("childrenSD"), //$NON-NLS-1$
-				DESIGNTIMEPROPERTY, Boolean.FALSE
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 			// layout
@@ -72,6 +72,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"tabList", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, CompositeMessages.getString("tabListDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, CompositeMessages.getString("tabListSD"), //$NON-NLS-1$
+				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
 		};

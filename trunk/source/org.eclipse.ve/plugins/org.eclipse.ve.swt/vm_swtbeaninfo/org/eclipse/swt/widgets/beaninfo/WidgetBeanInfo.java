@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -55,13 +55,14 @@ public class WidgetBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"data", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, WidgetMessages.getString("dataDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, WidgetMessages.getString("dataSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// display
 				super.createPropertyDescriptor(getBeanClass(),"display", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, WidgetMessages.getString("displayDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, WidgetMessages.getString("displaySD"), //$NON-NLS-1$
-					DESIGNTIMEPROPERTY, Boolean.FALSE
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// disposed

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -109,6 +109,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"doubleClickEnabled", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("doubleClickEnabledDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("doubleClickEnabledSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// echoChar
@@ -151,6 +152,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selection", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("selectionDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("selectionSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// selectionCount
@@ -169,6 +171,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"tabs", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("tabsDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("tabsSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// text
@@ -187,12 +190,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("topIndexDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("topIndexSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// topPixel
 			super.createPropertyDescriptor(getBeanClass(),"topPixel", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("topPixelDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("topPixelSD"), //$NON-NLS-1$
+				EXPERT, Boolean.TRUE,
 			}
 			),
 		};

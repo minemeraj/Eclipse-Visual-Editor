@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.8 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -79,7 +79,20 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ButtonMessages.getString("alignmentDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ButtonMessages.getString("alignmentSD"), //$NON-NLS-1$
-			}
+		      	ENUMERATIONVALUES, new Object[] {
+					ButtonMessages.getString("alignment.left"), new Integer(org.eclipse.swt.SWT.LEFT), //$NON-NLS-1$
+		      			"org.eclipse.swt.SWT.LEFT", //$NON-NLS-1$
+		      		ButtonMessages.getString("alignment.center"), new Integer(org.eclipse.swt.SWT.CENTER), //$NON-NLS-1$
+		      			"org.eclipse.swt.SWT.CENTER", //$NON-NLS-1$
+		      		ButtonMessages.getString("alignment.right"), new Integer(org.eclipse.swt.SWT.RIGHT), //$NON-NLS-1$
+		      			"org.eclipse.swt.SWT.RIGHT", //$NON-NLS-1$
+		      		ButtonMessages.getString("alignment.up"), new Integer(org.eclipse.swt.SWT.UP), //$NON-NLS-1$
+		      			"org.eclipse.swt.SWT.UP", //$NON-NLS-1$
+		      		ButtonMessages.getString("alignment.down"), new Integer(org.eclipse.swt.SWT.DOWN), //$NON-NLS-1$
+		      			"org.eclipse.swt.SWT.DOWN"	      			 //$NON-NLS-1$
+		    	},
+				EXPERT, Boolean.TRUE,
+		    }
 			),
 			// image
 			super.createPropertyDescriptor(getBeanClass(),"image", new Object[] { //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2004-06-25 18:40:10 $ 
+ *  $Revision: 1.5 $  $Date: 2004-06-25 21:26:06 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -74,6 +74,15 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, LabelMessages.getString("alignmentDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, LabelMessages.getString("alignmentSD"), //$NON-NLS-1$
+		      	ENUMERATIONVALUES, new Object[] {
+					LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Left"), new Integer(org.eclipse.swt.SWT.LEFT), //$NON-NLS-1$
+			      		"org.eclipse.swt.SWT.LEFT", //$NON-NLS-1$
+			      	LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Center"), new Integer(org.eclipse.swt.SWT.CENTER), //$NON-NLS-1$
+			      		"org.eclipse.swt.SWT.CENTER", //$NON-NLS-1$
+			      	LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Right"), new Integer(org.eclipse.swt.SWT.RIGHT), //$NON-NLS-1$
+			      		"org.eclipse.swt.SWT.RIGHT", //$NON-NLS-1$
+			    },
+				EXPERT, Boolean.TRUE,
 			}
 			),
 			// image
