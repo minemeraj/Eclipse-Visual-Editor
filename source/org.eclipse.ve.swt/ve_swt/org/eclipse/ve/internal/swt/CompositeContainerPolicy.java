@@ -6,9 +6,11 @@
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
@@ -24,6 +26,7 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
+import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
  * @author JoeWin
@@ -44,7 +47,46 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
-	
+	/**
+	 * Ensure that the child argument belongs to the correct parent for its ParseTreeAllocation
+	 * There are two situations where this is required
+	 * 1	-	Dropping from the palette for prototype instances such as CheckBox.xmi with {parentComposite} as a PTName to be replaced
+	 * 2	-	Moving between parents using GEF such as dragging in the tree or viewer	
+	 * 
+	 * @since 1.0.0
+	 */
+	public class EnsureCorrectParentCommand extends AbstractCommand{
+		private IJavaObjectInstance javaChild;
+		public EnsureCorrectParentCommand(IJavaObjectInstance aChild){
+			javaChild = aChild;
+		}
+		public void execute() {
+			if(javaChild.getAllocation() != null){
+				IJavaObjectInstance correctParent = (IJavaObjectInstance)getContainer();
+				PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
+				if(expression instanceof PTClassInstanceCreation){
+					PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
+					if(classInstanceCreation.getArguments().size() == 2){
+						Object firstArgument = classInstanceCreation.getArguments().get(0);
+						if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
+							PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+							parentRef.setObject(correctParent);
+							classInstanceCreation.getArguments().remove(0);
+							classInstanceCreation.getArguments().add(0,parentRef);
+						} else if (firstArgument instanceof PTInstanceReference){
+							PTInstanceReference instanceReference = (PTInstanceReference)firstArgument;
+							if(instanceReference.getObject() != correctParent){
+								instanceReference.setObject(correctParent);
+							}
+						}
+					}
+				} 			
+			}
+		}
+		protected boolean prepare() {
+			return true;
+		}
+	}	
 	
 	public Command getCreateCommand(Object child, Object positionBeforeChild) {
 		Command result = super.getCreateCommand(child, positionBeforeChild);
@@ -52,28 +94,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		// If we already have a java allocation then check to see whether it is a prototype instance with a 
 		// {parentComposite} that needs substituting with the real parent
 		if(javaChild.getAllocation() != null){
-			Command insertCorrectParentCommand = new AbstractCommand(){
-				public void execute() {
-					if(javaChild.getAllocation() != null){
-						PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
-						if(expression instanceof PTClassInstanceCreation){
-							PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
-							if(classInstanceCreation.getArguments().size() == 2){
-								Object firstArgument = classInstanceCreation.getArguments().get(0);
-								if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){
-									PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-									parentRef.setObject((IJavaObjectInstance)getContainer());
-									classInstanceCreation.getArguments().remove(0);
-									classInstanceCreation.getArguments().add(0,parentRef);
-								}
-							}
-						} 			
-					}
-				}
-				protected boolean prepare() {
-					return true;
-				}
-			};
+			Command insertCorrectParentCommand = new EnsureCorrectParentCommand((IJavaObjectInstance) child);
 			return insertCorrectParentCommand.chain(result);
 		} else {
 			return createInitStringCommand((IJavaObjectInstance)child).chain(result);
@@ -118,6 +139,29 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		
 		return applyCmd;		
 		
+	}
+	
+	public Command getOrphanChildrenCommand(List children) {
+
+		CompoundCommand cmd = new CompoundCommand();
+		Iterator iter = children.iterator();
+		while(iter.hasNext()){
+			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
+			cmd.append(new EnsureCorrectParentCommand(child));
+		}
+		cmd.append(super.getOrphanChildrenCommand(children));
+		return cmd;
+	}
+	
+	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		CompoundCommand cmd = new CompoundCommand();
+		Iterator iter = children.iterator();
+		while(iter.hasNext()){
+			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
+			cmd.append(new EnsureCorrectParentCommand(child));
+		}
+		cmd.append(super.primAddCommand(children, positionBeforeChild, containmentSF));
+		return cmd;
 	}
 
 	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {

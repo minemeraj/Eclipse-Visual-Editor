@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractButtonBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:33 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-12 18:49:57 $ 
  */
 
 import java.beans.*;
@@ -795,6 +795,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.ActionCommand.Desc"), //$NON-NLS-1$
 	    		}
 	    	),
+	    	// action
+			super.createPropertyDescriptor(getBeanClass(),"action", new Object[] { //$NON-NLS-1$
+			DISPLAYNAME, resAbstractButton.getString("PropDesc.action.Name"), //$NON-NLS-1$
+	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.action.Desc"), //$NON-NLS-1$
+	    		}
+	    	),			
 	    	// borderPainted
 			super.createPropertyDescriptor(getBeanClass(),"borderPainted", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.borderPainted.Name"), //$NON-NLS-1$

@@ -4,8 +4,9 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi" 
     featureName="eStructuralFeatures">
   <addedEObjects xsi:type="ecore:EReference" name="selectedCheckbox" unsettable="true">
-    <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.ReferencedPropertyJavaBeanCellEditor:java.awt.Checkbox,checkboxGroup"
+    <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" 
+    	labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider"
+        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.ReferencedPropertyJavaBeanCellEditor:java.awt.Checkbox"
         entryExpandable="false"/>
   </addedEObjects>
 </event:Add>

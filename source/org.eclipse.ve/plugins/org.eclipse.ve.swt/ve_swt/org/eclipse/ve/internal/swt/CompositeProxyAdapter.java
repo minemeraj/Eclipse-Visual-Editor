@@ -112,22 +112,19 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	}
 	
 	public void childValidated(ControlProxyAdapter childProxy) {
-		if(parentProxyAdapter != null){
-			super.childValidated(childProxy);
-		} else {
-			try {
-				// We are the top with no parents, do a layout() on us
-				invokeSyncExec(new DisplayManager.DisplayRunnable() {
-					public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-						// Call the layout() method
-						return layoutMethodProxy().invoke(getBeanProxy());
-					}
-				});
-				if(imSupport != null) refreshImage();
-			} catch (ThrowableProxy e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
+		// Do a layout on us
+		// TODO - this is only required if the parent's layout is null.  Add this later for performance checking ??
+		try {		
+			invokeSyncExec(new DisplayManager.DisplayRunnable() {
+				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+					// Call the layout() method
+					return layoutMethodProxy().invoke(getBeanProxy());
+				}
+			});
+			if(imSupport != null) refreshImage();
+		} catch (ThrowableProxy e) {
+			e.printStackTrace();
 		}
+		if(parentProxyAdapter != null) parentProxyAdapter.childValidated(this);		
 	}	
 }

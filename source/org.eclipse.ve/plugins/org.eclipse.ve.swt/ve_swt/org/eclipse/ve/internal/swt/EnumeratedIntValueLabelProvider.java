@@ -11,11 +11,17 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-08 14:50:01 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-12 18:50:31 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 /**
  * Label provider for the int Orientation field
  */
@@ -31,7 +37,12 @@ public EnumeratedIntValueLabelProvider(String[] NAMES, Integer[] VALUES){
 }
 
 public String getText(Object element){
-	int intValue = ((Integer)element).intValue();
+	int intValue = 0;
+	if(element instanceof IJavaDataTypeInstance){
+		intValue = ((IIntegerBeanProxy)BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance)element)).intValue();
+	} else {
+		intValue = ((Integer)element).intValue();		
+	}
 	// Match against the int value
 	for (int i=0; i<FILL_VALUES.length; i++){
 		if(FILL_VALUES[i].intValue() == intValue){
