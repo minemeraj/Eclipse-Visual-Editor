@@ -136,7 +136,7 @@
 		 		 // echo "<td><a href=license.php?license=drops/$fileName>$parts[1]</a></td>";
 		 		 
 		 		 // Comment the line below if we need click through licenses.
-		 		 echo "<td><a href=\"drops/$fileName/index.php\">$parts[1]</a></td>";
+		 		 echo "<td><a href=\"drops/$fileName/index.html\">$parts[1]</a></td>";
 		 		 
 		 		 echo "<td>$timeStamps[$fileName]</td>";
 		 		 echo "</tr>";
@@ -173,7 +173,7 @@
 		 		 		 		 		 // echo "<td><a href=\"license.php?license=drops/$innerValue\">$parts[1]</a></td>";
 		 		 		 		 		 
 		 		 		 		 		 // Comment the line below if we need click through licenses.
-		 		 		 		 		 echo "<td><a href=\"drops/$innerValue/index.php\">$parts[1]</a></td>";
+		 		 		 		 		 echo "<td><a href=\"drops/$innerValue/index.html\">$parts[1]</a></td>";
 
 		 		 		 		 		 echo "<td>$timeStamps[$innerValue]</td>
 		 		 		 		 		 </tr>";
