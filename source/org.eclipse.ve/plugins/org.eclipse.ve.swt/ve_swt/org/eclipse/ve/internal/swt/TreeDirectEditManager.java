@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: TreeDirectEditManager.java,v $
- *  $Revision: 1.2 $  $Date: 2004-08-27 15:35:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-10-11 21:05:25 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -31,7 +31,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
 public class TreeDirectEditManager {
 
-	public static final String VIEWER_DATA_KEY = "TreeDirectEditManager"; //$NON-NLS-1$
+	public static final String VIEWER_DATA_KEY = "SWT_TreeDirectEditManager"; //$NON-NLS-1$
 
 	private EditPartViewer viewer;
 	private Tree parentTree;
