@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridBagConstraintsTabPage.java,v $
- *  $Revision: 1.2 $  $Date: 2004-03-29 20:29:36 $ 
+ *  $Revision: 1.3 $  $Date: 2004-05-07 12:43:18 $ 
  */
 
 import java.util.Collections;
@@ -47,7 +47,6 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.jfc.core.JFCConstants;
-import org.eclipse.ve.internal.jfc.core.JVESpinner;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
@@ -117,7 +116,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	protected AnchorAction selectedAnchorAction;
 	protected int currentFillValue;
 	
-	protected JVESpinner topSpinner, leftSpinner, bottomSpinner, rightSpinner;
+	protected Spinner topSpinner, leftSpinner, bottomSpinner, rightSpinner;
 	protected Insets componentInsets = null;
 	public final static int INSETS_TOP = 0, INSETS_LEFT = 1, INSETS_BOTTOM = 2, INSETS_RIGHT = 3;
 
@@ -345,7 +344,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	/*
 	 * Return the commands to set the GridBagConstraints insets value for the selected editparts
 	 */
-	protected Command createInsetsCommand(List editparts, Insets changedInsets, int insetsPosition, JVESpinner spinner) {
+	protected Command createInsetsCommand(List editparts, Insets changedInsets, int insetsPosition, Spinner spinner) {
 		if (!editparts.isEmpty()) {
 			CommandBuilder cb = new CommandBuilder();
 			for (int i = 0; i < editparts.size(); i++) {
@@ -390,8 +389,8 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 	 * This command should be the last command executed after all the insets commands are complete
 	 */
 	protected class EnableSpinnerCommand extends AbstractCommand {
-		protected JVESpinner spinner;
-		public EnableSpinnerCommand(JVESpinner spinner) {
+		protected Spinner spinner;
+		public EnableSpinnerCommand(Spinner spinner) {
 			super();
 			this.spinner = spinner;
 		}
@@ -444,7 +443,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 			bottom = componentInsets.bottom;
 			right = componentInsets.right;
 		}
-		topSpinner = new JVESpinner(insetsGroup, SWT.NONE, top);
+		topSpinner = new Spinner(insetsGroup, SWT.NONE, top);
 		topSpinner.setEnabled(componentInsets != null ? true : false);
 		topSpinner.addModifyListener(new Listener() {
 			public void handleEvent(Event e) {
@@ -461,7 +460,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Left")); //$NON-NLS-1$
-		leftSpinner = new JVESpinner(insetsGroup, SWT.NONE, left);
+		leftSpinner = new Spinner(insetsGroup, SWT.NONE, left);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
 		leftSpinner.addModifyListener(new Listener() {
 			public void handleEvent(Event e) {
@@ -478,7 +477,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Bottom")); //$NON-NLS-1$
-		bottomSpinner = new JVESpinner(insetsGroup, SWT.NONE, bottom);
+		bottomSpinner = new Spinner(insetsGroup, SWT.NONE, bottom);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
 		bottomSpinner.addModifyListener(new Listener() {
 			public void handleEvent(Event e) {
@@ -495,7 +494,7 @@ public class GridBagConstraintsTabPage extends AlignmentTabPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.getString("GridBagConstraintsTabPage.InsetsGroup.Right")); //$NON-NLS-1$
-		rightSpinner = new JVESpinner(insetsGroup, SWT.NONE, right);
+		rightSpinner = new Spinner(insetsGroup, SWT.NONE, right);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
 		rightSpinner.addModifyListener(new Listener() {
 			public void handleEvent(Event e) {

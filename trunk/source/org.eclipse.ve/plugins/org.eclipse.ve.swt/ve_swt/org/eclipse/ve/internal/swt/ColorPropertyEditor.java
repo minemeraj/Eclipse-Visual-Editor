@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.Spinner;
 
 public class ColorPropertyEditor implements PropertyEditor {
 	
