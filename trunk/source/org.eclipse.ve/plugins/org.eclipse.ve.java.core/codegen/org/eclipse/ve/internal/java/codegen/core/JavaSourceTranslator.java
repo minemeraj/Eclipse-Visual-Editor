@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.59 $  $Date: 2005-02-17 23:05:47 $ 
+ *  $Revision: 1.60 $  $Date: 2005-02-21 14:41:29 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -550,30 +550,31 @@ public EditDomain getEditDomain() {
 /**
  * load the model from a file
  */
-public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeGenException  {
-		// loadModel is not synchronized as to
-		// not block calls to isBusy(), pause() and such while the loadModel is going on
-		pm.beginTask("", 100); //$NON-NLS-1$
-		pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
-		ReverseParserJob.cancelJobs(input.getFile());
-		floadInProgress = true;
-		if (fVEModel != null) {
-			if (fBeanModel != null && !fdisconnected) {
-				disconnect(false);
-				if (fBeanModel != null)
-					fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
-				fBeanModel = null;
-			}
-		}
-		fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
-
-		fFile = input.getFile();		
-				
-		decodeDocument(fFile, pm);					    					
-
-		pm.done();
+public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) throws CodeGenException  {	
+    
+    // Push the code through the change controller which is the gatekeeper for all model updates   
+    IModelChangeController changeController = (IModelChangeController) getEditDomain().getData(IModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+    changeController.beginTransaction(IModelChangeController.LOADING_PHASE);
+    
+    pm.beginTask("", 100); //$NON-NLS-1$
+    pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
+    ReverseParserJob.cancelJobs(input.getFile());
+    floadInProgress = true;
+    if (fVEModel != null) {
+        if (fBeanModel != null && !fdisconnected) {
+            disconnect(false);
+            if (fBeanModel != null)
+                fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+            fBeanModel = null;
+        }
+    }
+    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
+    fFile = input.getFile();		   					
+    decodeDocument(fFile, pm);					    					
+    pm.done();    
+    
+    changeController.endTransaction(IModelChangeController.LOADING_PHASE);
 }
- 
 /**
  *  Decode the expression (code) impact on the bean (part)
  */

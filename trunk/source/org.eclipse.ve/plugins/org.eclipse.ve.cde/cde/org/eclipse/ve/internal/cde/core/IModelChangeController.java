@@ -9,9 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.core;
+
 /*
  *  $RCSfile: IModelChangeController.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.6 $  $Date: 2005-02-21 14:41:07 $ 
  */
 
 /**
@@ -26,6 +27,10 @@ package org.eclipse.ve.internal.cde.core;
 public interface IModelChangeController {
 	
 	public static final String MODEL_CHANGE_CONTROLLER_KEY = "org.eclipse.ve.internal.cde.core.IModelChangeController"; //$NON-NLS-1$
+	
+	public static final Integer SETUP_PHASE = new Integer(0);
+	public static final Integer LOADING_PHASE = new Integer(1);
+	public static final Integer INIT_VIEWERS = new Integer(2);
 	
 	/**
 	 * Ready to process changes state.
@@ -101,7 +106,6 @@ public interface IModelChangeController {
 	 */
 	public int getHoldState();
 	
-
 	/**
 	 * Return the hold msg associated with the current hold state, or <code>null</code> if ready state.
 	 * @return msg or <code>null</code> if in ready state.
@@ -115,5 +119,56 @@ public interface IModelChangeController {
 	 * @return true if in a transaction
 	 */
 	public boolean inTransaction();
+	
+	/**
+	 * Execute the runnable after the change controller has finished
+	 * 
+	 * @since 1.0.2
+	 */	
+	public void asyncExec(Runnable aRunnable);
+
+    /**
+     * 
+     * 
+     * @since 1.0.2
+     */
+    public void beginTransaction(Object transactionKey);
+
+    /**
+     * 
+     * 
+     * @since 1.0.2
+     */
+    public void endTransaction(Object transactionKey);
+
+    /**
+     * @param runnable
+     * @param once - only do the runnable once per key
+     * 
+     * @since 1.0.2
+     */
+    public void asyncExec(Runnable runnable, Object once);
+
+    /**
+     * @param runnable
+     * @param once
+     * @param phase to omit
+     * Run the runnable, once and only once for the 2nd argument key, and do not run it if the currently executing phase
+     * is occuring
+     * 
+     * @since 1.0.2
+     */
+    public void asyncExec(Runnable runnable, Object once, Object excludingPhase);
+    
+    /**
+     * @param runnable
+     * @param once
+     * @param phase to omit
+     * Run the runnable, once and only once for the 2nd argument key, and do not run it if the currently executing phases
+     * are occurring
+     * 
+     * @since 1.0.2
+     */
+    public void asyncExec(Runnable runnable, Object once, Object[] excludingPhases);    
 	
 }
