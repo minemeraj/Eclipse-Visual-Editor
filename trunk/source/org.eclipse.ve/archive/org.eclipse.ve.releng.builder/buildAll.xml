@@ -71,20 +71,33 @@
 		<antcall target="push" />
 	</target>
 
-	<target name="buildAll" depends="init">
+	<target name="buildAll" depends="init,buildSDK,buildRuntime,buildExamples,buildTests">
+	</target>
+	
+	<target name="buildSDK" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
-		</ant>
+		</ant>	
+	</target>
+
+	<target name="buildRuntime" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="runtime" />
-		</ant>
+		</ant>	
+	</target>
+
+	<target name="buildExamples" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="examples" />
-		</ant>
+		</ant>	
+	</target>
+	
+	<target name="buildTests" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="tests" />
-		</ant>
+		</ant>	
 	</target>
+	
 
 	<target name="test" depends="init">
 		<property name="test.xml" value="../org.eclipse.releng.basebuilder/plugins/org.eclipse.build.tools/scripts/test.xml" />
