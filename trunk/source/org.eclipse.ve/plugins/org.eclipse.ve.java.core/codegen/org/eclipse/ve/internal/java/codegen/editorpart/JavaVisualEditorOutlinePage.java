@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.3 $  $Date: 2004-06-03 15:11:32 $ 
+ *  $Revision: 1.4 $  $Date: 2004-06-19 18:32:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -67,8 +67,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
 		public ShowOverviewAction() {
 			super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
-			setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));
-			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/showbasic_ps.gif"));	// Don't know what showbasic_ps is, but it looks good (looks like the show overview that GEF has in its logic example).
+			setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));			
 		}			
 
 		public void run() {
@@ -98,6 +97,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 			super(ResourceNavigatorMessages.getString("CollapseAllAction.title"), IAction.AS_PUSH_BUTTON); //$NON-NLS-1$
 			setToolTipText(ResourceNavigatorMessages.getString("CollapseAllAction.toolTip")); //$NON-NLS-1$
 			setImageDescriptor(getUIImageDescriptor("elcl16/collapseall.gif")); //$NON-NLS-1$
+			setDisabledImageDescriptor(getUIImageDescriptor("dlcl16/collapseall.gif")); //$NON-NLS-1$			
 		}
 		
 		public void run() {

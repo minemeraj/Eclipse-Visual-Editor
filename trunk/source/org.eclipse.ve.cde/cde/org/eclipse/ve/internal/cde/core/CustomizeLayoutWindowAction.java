@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.2 $  $Date: 2004-06-01 21:07:49 $ 
+ *  $Revision: 1.3 $  $Date: 2004-06-19 18:32:38 $ 
  */
 
 import java.util.ArrayList;
@@ -194,8 +194,7 @@ public class CustomizeLayoutWindowAction extends Action {
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$
 		setDisabledImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/aligndialog_obj.gif")); //$NON-NLS-1$
-		setHoverImageDescriptor(
-			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/aligndialog_obj.gif")); //$NON-NLS-1$
+		setHoverImageDescriptor(getImageDescriptor());
 			
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {

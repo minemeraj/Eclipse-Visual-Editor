@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2004-05-10 18:37:27 $ 
+ *  $Revision: 1.6 $  $Date: 2004-06-19 18:32:40 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -104,7 +104,9 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		markAsPartListener(customizeAction);
 		
 		alignmentWindowRetargetAction = new LabelRetargetAction(CustomizeLayoutWindowAction.ACTION_ID, ""); //$NON-NLS-1$
-		alignmentWindowRetargetAction.setHoverImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/clcl16/aligndialog_obj.gif")); //$NON-NLS-1$
+		alignmentWindowRetargetAction.setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$		
+		alignmentWindowRetargetAction.setHoverImageDescriptor(alignmentWindowRetargetAction.getImageDescriptor());
+		alignmentWindowRetargetAction.setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/aligndialog_obj.gif")); //$NON-NLS-1$		
 		alignmentWindowRetargetAction.setChecked(false);
 		markAsPartListener(alignmentWindowRetargetAction);		
 	}
