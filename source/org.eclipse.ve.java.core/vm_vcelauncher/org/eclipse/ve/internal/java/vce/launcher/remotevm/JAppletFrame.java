@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: JAppletFrame.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-17 18:24:35 $ 
  */
 
 import javax.swing.*;
@@ -19,13 +19,14 @@ import java.applet.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.*;
 /**
  * Frame to host an applet that allows control over starting, stopping, etc...
  */
-public class JAppletFrame extends JFrame implements AppletContext {
+public class JAppletFrame extends JFrame implements AppletContext, IAppletFrame {
 	
 	protected JApplet fApplet;
 	protected Map fAppletParms;
@@ -38,7 +39,7 @@ public class JAppletFrame extends JFrame implements AppletContext {
 		fAppletStub = new JavaLauncherAppletStub(appletParms,fApplet, this);	
 		fApplet.setStub(fAppletStub);			
 		fAppletParms = appletParms;
-		getContentPane().add(anApplet);
+		getContentPane().add(anApplet,BorderLayout.CENTER);
 		fLabel = new JLabel();
 		getContentPane().add(fLabel,BorderLayout.SOUTH);
 		createMenu();
@@ -114,5 +115,19 @@ public class JAppletFrame extends JFrame implements AppletContext {
 	 * Required for 1.4
 	 */
 	 public void setStream(String key, InputStream stream) throws IOException {		
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.IAppletFrame#getAdditionalSize()
+	 */
+	public Dimension getAdditionalSize() {
+		if (fLabel != null) {
+			Dimension size = fLabel.getSize();
+			if (getJMenuBar() != null) {
+				size.height += getJMenuBar().getHeight();
+			}
+			return size;
+		} else {
+			return null;
+		}
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: AppletFrame.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:48:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-06-17 18:24:35 $ 
  */
 
 import java.awt.*;
@@ -30,7 +30,7 @@ import java.util.*;
 /**
  * Frame to host an applet that allows control over starting, stopping, etc...
  */
-public class AppletFrame extends Frame implements AppletContext {
+public class AppletFrame extends Frame implements AppletContext, IAppletFrame {
 	
 	protected Applet fApplet;
 	protected Label fLabel;
@@ -116,6 +116,20 @@ public class AppletFrame extends Frame implements AppletContext {
 	 * Required for 1.4
 	 */
 	 public void setStream(String key, InputStream stream) throws IOException {		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.IAppletFrame#getAdditionalSize()
+	 */
+	public Dimension getAdditionalSize() {
+		// Can't do anything to figure out the height of the MenuBar.  Just add 20 by default.
+		if (fLabel != null) {
+			Dimension size = fLabel.getSize();
+			size.height += 20;
+			return size;
+		} else {
+			return null;
+		}
 	}
 
 }
