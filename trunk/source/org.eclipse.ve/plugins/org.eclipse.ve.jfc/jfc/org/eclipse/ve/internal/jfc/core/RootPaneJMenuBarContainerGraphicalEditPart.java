@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,69 +9,70 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: RootPaneJMenuBarContainerGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ * $RCSfile: RootPaneJMenuBarContainerGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 
+import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.cde.core.CDELayoutEditPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaClass;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
  * @author pwalker
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ * To change this generated comment edit the template variable "typecomment": Window>Preferences>Java>Templates. To enable and disable the creation
+ * of type comments go to Window>Preferences>Java>Code Generation.
  */
 public class RootPaneJMenuBarContainerGraphicalEditPart extends RootPaneContainerGraphicalEditPart {
+
 	private EStructuralFeature sf_jmenubar;
 
 	/**
 	 * Constructor for RootPaneJMenuBarContainerGraphicalEditPart.
+	 * 
 	 * @param model
 	 */
 	public RootPaneJMenuBarContainerGraphicalEditPart(Object model) {
 		super(model);
 	}
-	
-	private Adapter containerAdapter = new AdapterImpl() {
-		public void notifyChanged(Notification msg) {
-			if (msg.getFeature() == sf_jmenubar)
+
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
 				refreshChildren();
 		}
+
+		public void notifyChanged(Notification msg) {
+			if (msg.getFeature() == sf_jmenubar)
+				queueExec(RootPaneJMenuBarContainerGraphicalEditPart.this);
+		}
 	};
-	
+
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
+
 	public void deactivate() {
 		super.deactivate();
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
-	
-	
-	protected void createEditPolicies() {
-		super.createEditPolicies();
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
-	}
-	
+
 	protected EditPolicy createLayoutEditPolicy() {
 		return new CDELayoutEditPolicy(new RootPaneJMenuBarContainerPolicy(EditDomain.getEditDomain(this)));
 	}
-	
+
 	/**
 	 * Our logical child is the JMenuBar.
 	 */

@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,28 +9,30 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: RootPaneContainerTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ * $RCSfile: RootPaneContainerTreeEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
 /**
- * This is the tree editpart for any RootPaneContainer, such as JFrame. There is
- * a Swing interface called RootPaneContainer, and this is the general edit part for it.
+ * This is the tree editpart for any RootPaneContainer, such as JFrame. There is a Swing interface called RootPaneContainer, and this is the general
+ * edit part for it.
  */
 public class RootPaneContainerTreeEditPart extends ComponentTreeEditPart {
 
@@ -44,13 +45,18 @@ public class RootPaneContainerTreeEditPart extends ComponentTreeEditPart {
 		super(model);
 	}
 
-	private Adapter containerAdapter = new AdapterImpl() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+
 		public void notifyChanged(Notification msg) {
-		if (msg.getFeature() == sf_contentPane)
-			refreshChildren();			
+			if (msg.getFeature() == sf_contentPane)
+				queueExec(RootPaneContainerTreeEditPart.this);
 		}
 	};
-	
+
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
@@ -61,16 +67,14 @@ public class RootPaneContainerTreeEditPart extends ComponentTreeEditPart {
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
 
-
-
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject)model));
+		((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject) model));
 		return ep;
 	}
 
 	/**
-	 * Our children is the root pane.  We must create one for now if it is not there
+	 * Our children is the root pane. We must create one for now if it is not there
 	 */
 	protected void createEditPolicies() {
 		super.createEditPolicies();

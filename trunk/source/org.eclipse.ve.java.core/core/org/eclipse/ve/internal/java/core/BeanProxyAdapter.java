@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2004-03-22 23:49:37 $ 
+ *  $Revision: 1.12 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import java.util.*;
@@ -436,7 +436,8 @@ protected void processInstantiationError(Throwable exc){
 
 protected void clearError(Object key){
 	Object v = keyedErrors.remove(key);
-	if(keyedErrors.isEmpty() && fInstantiationError == null){
+	if(v != null && keyedErrors.isEmpty() && fInstantiationError == null){
+		// We had an error of this key, and it is now no errors and no instantiation error, so let all know it went clear.
 		fireSeverityError(IBeanProxyHost.ERROR_NONE);
 	}
 	

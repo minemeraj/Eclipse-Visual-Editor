@@ -1,10 +1,3 @@
-/*
- * Created on May 9, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -16,18 +9,14 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JListGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ * $RCSfile: JListGraphicalEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:07:38 $
  */
-
-
-
+package org.eclipse.ve.internal.jfc.core;
 
 /**
  * @author sri
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change the template for this generated type comment go to Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class JListGraphicalEditPart extends ComponentGraphicalEditPart {
 
@@ -38,13 +27,13 @@ public class JListGraphicalEditPart extends ComponentGraphicalEditPart {
 		super(model);
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
-//	protected void createEditPolicies() {
-//		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VisualModelEditPolicy("javax.swing.JList")); //$NON-NLS-1$
-//		super.createEditPolicies();
-//	}
-
+	//	protected void createEditPolicies() {
+	//		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VisualModelEditPolicy("javax.swing.JList")); //$NON-NLS-1$
+	//		super.createEditPolicies();
+	//	}
 }

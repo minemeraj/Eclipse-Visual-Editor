@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,39 +9,47 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JTableTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ * $RCSfile: JTableTreeEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 /**
  * JTable has a relationship "columns" which holds its children which are javax.swing.table.TableColumn instances
  */
 public class JTableTreeEditPart extends ComponentTreeEditPart {
 
 	protected EStructuralFeature sfColumns;
+
 	public JTableTreeEditPart(Object model) {
 		super(model);
 	}
-	
-	private Adapter containerAdapter = new AdapterImpl() {
+
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sfColumns)
-				refreshChildren();			
+				queueExec(JTableTreeEditPart.this);
 		}
 	};
-		
+
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
@@ -58,11 +65,10 @@ public class JTableTreeEditPart extends ComponentTreeEditPart {
 		// We don't care about being a Container with components
 		// We are just interested in showing the viewPortView as a child
 		super.createEditPolicies();
-		installEditPolicy(
-			EditPolicy.TREE_CONTAINER_ROLE,
-			new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(
-				new JTableContainerPolicy(EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new JTableContainerPolicy(
+				EditDomain.getEditDomain(this))));
 	}
+
 	public List getChildJavaBeans() {
 		return (List) ((EObject) getModel()).eGet(sfColumns);
 	}

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IModelChangeController.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 /**
@@ -26,6 +26,21 @@ package org.eclipse.ve.internal.cde.core;
 public interface IModelChangeController {
 	
 	public static final String MODEL_CHANGE_CONTROLLER_KEY = "org.eclipse.ve.internal.cde.core.IModelChangeController"; //$NON-NLS-1$
+	
+	/**
+	 * Ready to process changes state.
+	 */
+	public static final int READY_STATE = 0;
+	
+	/**
+	 * Change controller in busy state. Will not accept changes.
+	 */
+	public static final int BUSY_STATE = 1;
+	
+	/**
+	 * Generic no update permitted state (may be read-only, or it could be some error).
+	 */
+	public static final int NO_UPDATE_STATE = 2;
 	
 	/**
 	 * Call this method with a runnable. The runnable will
@@ -53,16 +68,41 @@ public interface IModelChangeController {
 	 * Note: as we go forwared, we should think of allowing multiple entities to
 	 *       call setHoldChanges with some type of caller signiture, so that only when
 	 *       all entities have clear the hold, would the controller keep on going.
+	 * @deprecated It will query from model builder instead.
 	 */
 	public void setHoldChanges(boolean flag, String reasonMsg) ;
 	
 	/**
+	 * To set it to a particular hold state.
+	 * 
+	 * @param stateFlag
+	 * 
+	 * @since 1.0.0
+	 */
+	public void setHoldState(int stateFlag);
+	
+	/**
 	 * Return the status of the hold state
+	 * @deprecated get hold state instead
 	 */
 	public boolean isHoldChanges() ;
 	
 	/**
+	 * Get the hold state. There are some states that are provided by the standard interface, but
+	 * the model controller implementation can provide more.
+	 * 
+	 * @return current state
+	 * 
+	 * @see IModelChangeController#READY_STATE
+	 * @see IModelChangeController#BUSY_STATE
+	 * @see IModelChangeController#NO_UPDATE_STATE
+	 * @since 1.0.0
+	 */
+	public int getHoldState();
+	
+	/**
 	 * Return the current hold msg.
+	 * @deprecated no hold msg stored anymore.
 	 */
 	public String getHoldMsg() ;
 	

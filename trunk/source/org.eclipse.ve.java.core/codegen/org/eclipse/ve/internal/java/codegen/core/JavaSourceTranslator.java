@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.13 $  $Date: 2004-03-18 22:52:34 $ 
+ *  $Revision: 1.14 $  $Date: 2004-03-26 23:08:01 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -74,7 +74,7 @@ boolean					fparseError=false;
 ArrayList				fListeners = new ArrayList();
 
 
-public static String    fPauseSig = CodegenMessages.getString("JavaSourceTranslator.Round_Tripping_is_Paused_1") ;  //$NON-NLS-1$
+public static String    fPauseSig = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSED") ;  //$NON-NLS-1$
 public static int       fCommitAndFlushNestGuard = 0 ;
 
 
@@ -120,7 +120,7 @@ IJVEStatus fMsgRenderer = null;
 		    throw new RuntimeException("should not be here") ;
 		    
   	    for (int i = 0; i < fListeners.size(); i++) {
-       		((IBuilderListener)fListeners.get(i)).reloadIsNeeded(true);
+       		((IBuilderListener)fListeners.get(i)).reloadIsNeeded();
 	
 	    }
  	}
@@ -319,7 +319,7 @@ IJVEStatus fMsgRenderer = null;
 		IBeanDeclModel bdm = null;
 		try {
 			bdm = modelBldr.build();
-		} catch (Exception e) {
+		} catch (CodeGenException e) {
 			JavaVEPlugin.log(e) ;
 		}
 		if(bdm!=null)
@@ -526,31 +526,40 @@ public EditDomain getEditDomain() {
  * load the model from a file
  */
 public  void loadModel(IFileEditorInput input, IProgressMonitor pm) throws CodeGenException  {
-    // loadModel is not synchronized as to
-    // not block calls to isBusy(), pause() and such while the loadModel is going on
-    synchronized (this) {     
-	  floadInProgress=true;	  	
-	   if (fVEModel != null) {
-		  if (fBeanModel!=null && !fdisconnected) {
-			disconnect(false);
-			if (fBeanModel!=null)
-			   fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
-			fBeanModel = null;			
-		  }				  
-	  }
-    }			
-	fFile = input.getFile();		
-	decodeDocument(fFile, pm);
-	
-   synchronized (this){
-      floadInProgress=false;
-      fmodelLoaded=true;
-   }
-	
-	for (int i = 0; i < fListeners.size(); i++) {
-	     ((IBuilderListener)fListeners.get(i)).parsingPaused(fdisconnected);
-		 ((IBuilderListener)fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")) ;  	
-	}
+		// loadModel is not synchronized as to
+		// not block calls to isBusy(), pause() and such while the loadModel is going on
+		pm.beginTask("", 100);
+		pm.subTask("Loading model from source code");
+		synchronized (this) {
+			floadInProgress = true;
+			if (fVEModel != null) {
+				if (fBeanModel != null && !fdisconnected) {
+					disconnect(false);
+					if (fBeanModel != null)
+						fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN, true);
+					fBeanModel = null;
+				}
+			}
+		}
+		for (int i = 0; i < fListeners.size(); i++) {
+			((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD"));
+		}
+		fFile = input.getFile();
+		try {
+			decodeDocument(fFile, pm);
+			synchronized (this) {
+				floadInProgress = false;
+				fmodelLoaded = true;
+			}
+			for (int i = 0; i < fListeners.size(); i++) {
+				((IBuilderListener) fListeners.get(i)).parsingPaused(fdisconnected);
+				((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC"));
+			}
+		} catch (CodeGenSyntaxError e) {
+			fireParseError(true);	// This exception is only for syntax errors, so that would be parse errors.
+		}
+		
+		pm.done();
 }
  
 /**
@@ -1160,6 +1169,14 @@ public boolean isReloadPending() {
     return false ;    	 	
 }
 
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder#startTransaction()
+ */
+public void startTransaction() {
+	// TODO do what you need to do.
+}
+
 /**
  * This one provide a Synchronous call to drive a commit process
  * This will induce CodeGen to remove any beans that were marked for deletion
@@ -1270,7 +1287,7 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	public void fireSnippetProcessing(boolean flag) {
 	    String msg;
 	    if (flag) {
-	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
+	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
 	    }
 	    else {
 	       msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
@@ -1284,7 +1301,8 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 		if (error==fparseError) return ;
 		fparseError=error;
 		for (int i = 0; i < fListeners.size(); i++) {
-       		((IBuilderListener)fListeners.get(i)).parsingStatus(error);					
+       		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
+       		((IBuilderListener) fListeners.get(i)).statusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"));
 	    }
 	}
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:37:06 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:07:50 $ 
  */
 
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.gef.EditPart;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Utilities for CDE functions that are not found in a more logical place.
@@ -190,5 +191,36 @@ public class CDEUtilities {
 			return new String(a);
 		} else
 			return name;
-	}	
+	}
+	
+	/**
+	 * Utility method to run the runnable ASAP. I.e. if currently on the display's display thread, execute
+	 * immediately. If not, do an asyncexec. This is a combination of syncexec and asyncexec. This way it will
+	 * never lock up.
+	 * 
+	 * @param display
+	 * @param runnable
+	 * 
+	 * @since 1.0.0
+	 */
+	public static void displayExec(Display display, Runnable runnable) {
+		if (Thread.currentThread() == display.getThread())
+			runnable.run();
+		else
+			display.asyncExec(runnable);
+	}
+	
+	/**
+	 * Utility method to run the runnable ASAP. Takes a GEF editpart as a convenience to find the display. Then
+	 * calls regular displayExec.
+	 * @param ep
+	 * @param runnable
+	 * 
+	 * @see CDEUtilities#displayExec(Display, Runnable)
+	 * @since 1.0.0
+	 */
+	public static void displayExec(EditPart ep, Runnable runnable) {
+		if (ep.isActive())
+			displayExec(ep.getViewer().getControl().getDisplay(), runnable);
+	}
 }

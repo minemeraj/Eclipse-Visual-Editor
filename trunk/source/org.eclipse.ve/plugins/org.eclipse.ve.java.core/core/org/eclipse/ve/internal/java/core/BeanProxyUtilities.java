@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2004-02-20 00:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2004-03-26 23:08:01 $ 
  */
 
 import java.util.List;
@@ -288,9 +288,26 @@ public class BeanProxyUtilities {
 	 * If that is possible, then should use the getBeanProxy(abean, aresourceset).
 	 */
 	public static IBeanProxy getBeanProxy(IJavaInstance aBean) {
+		return getBeanProxy(aBean, false);
+	}
+	
+	/**
+	 * This will get the bean proxy and instantiate if not instantiated. The flag <code>noInstantiateOnError</code>
+	 * means if <code>true</code> then if already tried to be instantiated but has an instantiation error, then don't
+	 * try to instantiate. Just return null.
+	 * 
+	 * @param aBean
+	 * @param noInstantiateOnError
+	 * @return
+	 * 
+	 * @since 1.0.0
+	 */
+	public static IBeanProxy getBeanProxy(IJavaInstance aBean, boolean noInstantiateOnError) {
 		if (aBean == null)
 			return null;
 		IBeanProxyHost aBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(aBean);
+		if (aBeanProxyHost.getErrorStatus() == IErrorHolder.ERROR_SEVERE)
+			return null;
 		aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
 	}

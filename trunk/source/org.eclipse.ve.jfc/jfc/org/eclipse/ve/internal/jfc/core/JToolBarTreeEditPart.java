@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,31 +9,34 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JToolBarTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ * $RCSfile: JToolBarTreeEditPart.java,v $ $Revision: 1.3 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
  * TreeEditPart for javax.swing.JToolBar.
  */
 public class JToolBarTreeEditPart extends ComponentTreeEditPart {
+
 	protected EStructuralFeature sfItems;
 
 	/**
 	 * Constructor for JPopupMenuTreeEditPart.
+	 * 
 	 * @param model
 	 */
 	public JToolBarTreeEditPart(Object model) {
@@ -44,16 +46,19 @@ public class JToolBarTreeEditPart extends ComponentTreeEditPart {
 	protected void createEditPolicies() {
 		// The TreeContainerEditPolicy is the CDE one
 		super.createEditPolicies();
-		installEditPolicy(
-			EditPolicy.TREE_CONTAINER_ROLE,
-			new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(
-				new JToolBarContainerPolicy(EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new JToolBarContainerPolicy(
+				EditDomain.getEditDomain(this))));
 	}
 
-	private Adapter containerAdapter = new AdapterImpl() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sfItems)
-				refreshChildren();
+				queueExec(JToolBarTreeEditPart.this);
 		}
 	};
 
@@ -67,7 +72,6 @@ public class JToolBarTreeEditPart extends ComponentTreeEditPart {
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
 
-
 	public List getChildJavaBeans() {
 		return (List) ((EObject) getModel()).eGet(sfItems);
 	}
@@ -75,9 +79,10 @@ public class JToolBarTreeEditPart extends ComponentTreeEditPart {
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
 		if (ep instanceof ComponentTreeEditPart)
-			((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject)model));
+			((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject) model));
 		return ep;
 	}
+
 	/*
 	 * @see EditPart#setModel(Object)
 	 */

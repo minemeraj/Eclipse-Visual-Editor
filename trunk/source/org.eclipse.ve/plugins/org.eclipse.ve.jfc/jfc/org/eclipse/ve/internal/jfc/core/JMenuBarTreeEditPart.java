@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -10,50 +9,50 @@ package org.eclipse.ve.internal.jfc.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JMenuBarTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 18:29:32 $ 
+ * $RCSfile: JMenuBarTreeEditPart.java,v $ $Revision: 1.2 $ $Date: 2004-03-26 23:07:38 $
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import java.util.List;
 
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
  * @author pwalker
- *
+ * 
  * Tree editpart for JMenuBar
  */
 public class JMenuBarTreeEditPart extends ComponentTreeEditPart {
+
 	protected EStructuralFeature sfMenus;
-	private Adapter containerAdapter = new Adapter() {
+
+	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+
+		public void run() {
+			if (isActive())
+				refreshChildren();
+		}
+
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfMenus)
-				refreshChildren();
-			
-		}
-
-		public Notifier getTarget() {
-			return null;
-		}
-
-		public void setTarget(Notifier newTarget) {
-		}
-
-		public boolean isAdapterForType(Object type) {
-			return false;
+				queueExec(JMenuBarTreeEditPart.this);
 		}
 	};
 
 	/**
 	 * Constructor for JMenuBarTreeEditPart.
+	 * 
 	 * @param model
 	 */
 	public JMenuBarTreeEditPart(Object model) {
@@ -69,24 +68,24 @@ public class JMenuBarTreeEditPart extends ComponentTreeEditPart {
 		super.deactivate();
 		((EObject) getModel()).eAdapters().remove(containerAdapter);
 	}
-	
+
 	protected void createEditPolicies() {
 		// The TreeContainerEditPolicy is the CDE one
 		super.createEditPolicies();
-		installEditPolicy(
-			EditPolicy.TREE_CONTAINER_ROLE,
-			new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(
-				new JMenuBarContainerPolicy(EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new JMenuBarContainerPolicy(
+				EditDomain.getEditDomain(this))));
 	}
+
 	public List getChildJavaBeans() {
 		return (List) ((EObject) getModel()).eGet(sfMenus);
 	}
 
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject)model));
+		((ComponentTreeEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject) model));
 		return ep;
 	}
+
 	/*
 	 * @see EditPart#setModel(Object)
 	 */

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JPopupMenuGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-13 16:18:06 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-26 23:07:38 $ 
  */
 
 import java.util.List;
@@ -29,8 +29,9 @@ import org.eclipse.jem.java.JavaClass;
  * GraphicalEditPart for javax.swing.JPopupMenu's.
  * This is not currently used because we don't know how to create
  * the children for Actions and Strings.
+ * <package protected> until we can use it.
  */
-public class JPopupMenuGraphicalEditPart extends ContainerGraphicalEditPart {
+class JPopupMenuGraphicalEditPart extends ContainerGraphicalEditPart {
 
 	protected EStructuralFeature sfItems;
 

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-02 20:49:10 $ 
+ *  $Revision: 1.3 $  $Date: 2004-03-26 23:07:38 $ 
  */
 
 import java.util.*;
@@ -210,7 +210,8 @@ public String[] getAvailableRegions() {
 		// The constraintsValue is the BorderComponent.  This holds the component and the constraints
 		IJavaObjectInstance constraintString = (IJavaObjectInstance)constraintsValue.eGet(sfConstraintConstraint);
 		// We know the constraints value should be a bean so we can use its toString to get the string value
-		String constraint = BeanProxyUtilities.getBeanProxy(constraintString).toBeanString();
+		IBeanProxy cp = BeanProxyUtilities.getBeanProxy(constraintString, true);
+		String constraint = cp != null ? cp.toBeanString() : "";
 		result.remove(constraint);
 		// Also need to remove the constraint's equivalent constraint if it's there
 		//  (i.e. If orientation is left to right, "West" and "BEFORE_LINE_BEGINS" are the same and needs to be removed)
@@ -325,7 +326,9 @@ public String[] getFilledRegions() {
 			IJavaObjectInstance constraintsValue = (IJavaObjectInstance)borderComponent.eGet(sfConstraintComponent);
 			if (constraintsValue != null) {
 				// A constraint was set - get the string from it
-				result.add( ((IStringBeanProxy)BeanProxyUtilities.getBeanProxy(constraintsValue)).stringValue() );
+				IBeanProxy cProxy = BeanProxyUtilities.getBeanProxy(constraintsValue, true);
+				if (cProxy instanceof IStringBeanProxy)
+					result.add( ((IStringBeanProxy)cProxy).stringValue() );
 			}
 		}
 	}

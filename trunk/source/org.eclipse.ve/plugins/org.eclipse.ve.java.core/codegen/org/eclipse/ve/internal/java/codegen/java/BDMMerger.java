@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.3 $  $Date: 2004-03-05 23:18:38 $ 
+ *  $Revision: 1.4 $  $Date: 2004-03-26 23:08:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -68,9 +68,6 @@ public class BDMMerger {
 		return merged ;
 	}
 	
-	protected void runSyncDisplay(Runnable run){
-		display.syncExec(run) ;
-	}
 	
 	/**
 	 * 
@@ -79,44 +76,39 @@ public class BDMMerger {
 	 * @since 1.0.0
 	 */
 	protected boolean updateFreeForm(){
-		final List exceptions = new ArrayList() ;
-		runSyncDisplay(new Runnable(){
-			public void run(){
-				try {
-					// Decoders have analyzed and acted on the Expressions - 
-					// it is time to hook them together withn the Compsition
-					// Model
-					Iterator itr = mainModel.getBeans().iterator() ;
-					while (itr.hasNext()) {
-						BeanPart bean = (BeanPart) itr.next() ;
-						
-						// if a bean was added to a container, the decoder will reflect this in the BeamModel
-						
-						// Model is build (but annotations).   Turn the model on, as the EditParts may slam dunc
-						// new element (e.g., a content pane).  We need to react and generate the appropriate code.
-						boolean previousUPDATINGJVEMODELState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL) ;
-						boolean previousUPANDRUNNINGState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING) ;
-						mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
-						mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
-						
-						connectBeanToBSC(bean,mainModel.getCompositionModel().getModelRoot()) ;
+		try {
+			// Decoders have analyzed and acted on the Expressions - 
+			// it is time to hook them together withn the Compsition
+			// Model
+			Iterator itr = mainModel.getBeans().iterator() ;
+			while (itr.hasNext()) {
+				BeanPart bean = (BeanPart) itr.next() ;
+				
+				// if a bean was added to a container, the decoder will reflect this in the BeamModel
+				
+				// Model is build (but annotations).   Turn the model on, as the EditParts may slam dunc
+				// new element (e.g., a content pane).  We need to react and generate the appropriate code.
+				boolean previousUPDATINGJVEMODELState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL) ;
+				boolean previousUPANDRUNNINGState = mainModel.isStateSet(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING) ;
+				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
+				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
+				
+				connectBeanToBSC(bean,mainModel.getCompositionModel().getModelRoot()) ;
 
-						mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, previousUPDATINGJVEMODELState) ;
-						mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING, previousUPANDRUNNINGState) ;
-						
-						if(	bean.getSimpleName().equals(BeanPart.THIS_NAME) ||
-								bean.isInstanceVar()){
-							if(bean.getFFDecoder()!=null)
-								bean.getFFDecoder().decode();
-						}
-					}
-				} catch (CodeGenException e) {
-					JavaVEPlugin.log(e, Level.WARNING) ;
-					exceptions.add(e) ;
+				mainModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, previousUPDATINGJVEMODELState) ;
+				mainModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING, previousUPANDRUNNINGState) ;
+				
+				if(	bean.getSimpleName().equals(BeanPart.THIS_NAME) ||
+						bean.isInstanceVar()){
+					if(bean.getFFDecoder()!=null)
+						bean.getFFDecoder().decode();
 				}
 			}
-		}) ;
-		return exceptions.size()<1;
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e, Level.WARNING) ;
+			return false;
+		}
+		return true;
 	}
 
 	protected void	connectBeanToBSC(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenException {
@@ -137,22 +129,18 @@ public class BDMMerger {
 	
 	protected boolean removeMethodRef(final CodeMethodRef m){
 		if(m != null ){
-			runSyncDisplay(new Runnable(){
-				public void run() {
-					Collection initBPs = mainModel.getBeansInitilizedByMethod(m);
-					BeanPart retBP = mainModel.getBeanReturned(m.getMethodName());
-					for (Iterator iter = initBPs.iterator(); iter.hasNext();) {
-						BeanPart bp = (BeanPart) iter.next();
-						logFiner("Disposing init bean "+bp.getSimpleName()+" when disposing method "+m.getMethodHandle());
-						bp.dispose() ;
-					}
-					if(retBP!=null && !initBPs.contains(retBP)){
-						logFiner("Disposing return bean "+retBP.getSimpleName()+" when disposing method "+m.getMethodHandle());
-						retBP.dispose() ;
-					}
-					m.dispose() ;
-				}
-			});
+			Collection initBPs = mainModel.getBeansInitilizedByMethod(m);
+			BeanPart retBP = mainModel.getBeanReturned(m.getMethodName());
+			for (Iterator iter = initBPs.iterator(); iter.hasNext();) {
+				BeanPart bp = (BeanPart) iter.next();
+				logFiner("Disposing init bean "+bp.getSimpleName()+" when disposing method "+m.getMethodHandle());
+				bp.dispose() ;
+			}
+			if(retBP!=null && !initBPs.contains(retBP)){
+				logFiner("Disposing return bean "+retBP.getSimpleName()+" when disposing method "+m.getMethodHandle());
+				retBP.dispose() ;
+			}
+			m.dispose() ;
 			return true ;
 		}
 		return false ;
@@ -233,36 +221,28 @@ public class BDMMerger {
 		switch(equivalencyLevel){
 			case 0:
 				logFiner("Updating changed expression "+newExp.getCodeContent());
-				runSyncDisplay(new Runnable(){
-					public void run() {
-						if(!mainExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
-							if(mainExp.getOffset()!=newExp.getOffset())
-								mainExp.setOffset(newExp.getOffset());
-							mainExp.refreshFromJOM(newExp);
-						}
-					}
-				});
+				if(!mainExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+					if(mainExp.getOffset()!=newExp.getOffset())
+						mainExp.setOffset(newExp.getOffset());
+					mainExp.refreshFromJOM(newExp);
+				}
 			   break;
 			case 1:
 				logFiner("Updating identical expression "+ newExp.getCodeContent());
-				runSyncDisplay(new Runnable(){
-					public void run() {
-						if(mainExp.getOffset()==newExp.getOffset()){
-							// Absolutely no change, even in location
-							mainExp.setContent(newExp.getContentParser())  ;
-						}else{
-							// Offset has been changed - might have to decode it as it might contain
-							// expression ordering in it. Ex: add(comp1); add(comp2) etc.
-							mainExp.setOffset(newExp.getOffset());
-							// No need to refresh when a shadow expression 
-							// We also do not care about event ordering
-							if(!newExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
-								!(newExp instanceof CodeEventRef))
-							   // Will take care of reordering of expressions
-							   mainExp.refreshFromJOM(newExp); 
-						}
-					}
-				});
+				if(mainExp.getOffset()==newExp.getOffset()){
+					// Absolutely no change, even in location
+					mainExp.setContent(newExp.getContentParser())  ;
+				}else{
+					// Offset has been changed - might have to decode it as it might contain
+					// expression ordering in it. Ex: add(comp1); add(comp2) etc.
+					mainExp.setOffset(newExp.getOffset());
+					// No need to refresh when a shadow expression 
+					// We also do not care about event ordering
+					if(!newExp.isStateSet(CodeExpressionRef.STATE_SHADOW) &&
+						!(newExp instanceof CodeEventRef))
+					   // Will take care of reordering of expressions
+					   mainExp.refreshFromJOM(newExp); 
+				}
 				break;
 		}
 		newExp.getBean().setProxy(null);
@@ -271,11 +251,7 @@ public class BDMMerger {
 
 	protected void removeDeletedExpression(final CodeExpressionRef deletedExp){
 		logFiner("Remove deleted expression "+deletedExp.getCodeContent());
-		runSyncDisplay(new Runnable() {
-			public void run() {
-				deletedExp.dispose() ;
-			}
-		});
+		deletedExp.dispose() ;
 	}
 
 	protected boolean processExpressions(Collection mainExpressions, Collection updatedExpressions) {
@@ -420,28 +396,23 @@ public class BDMMerger {
 	}
 	
 	protected boolean addNewExpression(final CodeExpressionRef updateExp) {
-		final List exceptions = new ArrayList();
 		logFiner("Adding new expression "+updateExp.getCodeContent());
-		runSyncDisplay(new Runnable(){
-			public void run() {
-				try {
-					// Potentially for now, we do not decode if this flag is set. The expression
-					// could still have a decoder though - for reasons like priority etc. 
-					if(updateExp==null || updateExp.getMethod()==null)
-						return ;
-					CodeMethodRef mainMethod = mainModel.getMethod(updateExp.getMethod().getMethodHandle()) ;
-					if(mainMethod==null)	
-						return ;
-					CodeExpressionRef newExp = createNewExpression(updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
-					if(newExp==null && updateExp instanceof CodeEventRef)
-						newExp = createNewEventExpression((CodeEventRef)updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
-				} catch (CodeGenException e) {
-					JavaVEPlugin.log(e, Level.WARNING) ;
-					exceptions.add(e) ;
-				}
-			}
-		});
-		return exceptions.size()<1;
+		try {
+			// Potentially for now, we do not decode if this flag is set. The expression
+			// could still have a decoder though - for reasons like priority etc. 
+			if(updateExp==null || updateExp.getMethod()==null)
+				return true;
+			CodeMethodRef mainMethod = mainModel.getMethod(updateExp.getMethod().getMethodHandle()) ;
+			if(mainMethod==null)	
+				return true;
+			CodeExpressionRef newExp = createNewExpression(updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));//((dExp.getState() & dExp.STATE_NO_OP) != dExp.STATE_NO_OP)) ; 
+			if(newExp==null && updateExp instanceof CodeEventRef)
+				newExp = createNewEventExpression((CodeEventRef)updateExp,mainMethod,!updateExp.isStateSet(CodeExpressionRef.STATE_NO_MODEL));
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e, Level.WARNING) ;
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -549,69 +520,64 @@ public class BDMMerger {
 	}
 	
 	protected boolean addNewBean(final BeanPart referenceBP){
-		final List exceptions = new ArrayList();
-		runSyncDisplay(new Runnable(){
-			public void run(){
-				// New bean - add it and any methods associated with it
-				BeanPart newBP ;
-				if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
-					newBP = new BeanPart((FieldDeclaration)referenceBP.getFieldDecl()) ;
-				else
-					newBP = new BeanPart((VariableDeclarationStatement)referenceBP.getFieldDecl());
-				newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
-				newBP.setInstanceVar(referenceBP.isInstanceVar()) ;
-				newBP.setModel(mainModel) ;
-				newBP.setIsInJVEModel(false) ;
-				mainModel.addBean(newBP);
-				logFiner("Created new BP "+newBP.getSimpleName());
-				
-				CodeMethodRef initMethod = null ;
-				if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
-					// Init method of the bean is not present in the main model - 
-					// add it to the main model, and hook the bean part up.
-					CodeMethodRef updatedMethodRef = referenceBP.getInitMethod() ;
-					initMethod =  new CodeMethodRef(
-							updatedMethodRef.getDeclMethod(), 
-							mainModel.getTypeRef(), 
-							updatedMethodRef.getMethodHandle(),
-							createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
-							updatedMethodRef.getContent()) ; 
-					
-					initMethod.setModel(mainModel) ;
-					
-					BeanPart updateReturnedBP = newModel.getBeanReturned(updatedMethodRef.getMethodName());
-					if(updateReturnedBP!=null){
-						BeanPart mainReturnedBP = mainModel.getABean(updateReturnedBP.getUniqueName());
-						if(mainReturnedBP!=null){
-							// we habe a bean which is returned with this method - hook them up
-							mainReturnedBP.addReturnMethod(initMethod);
-						}
-					}
-					
-					logFiner("Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName());
-				}
-				newBP.addInitMethod(initMethod);
-				
-				CodeMethodRef referenceReturnMethod = referenceBP.getReturnedMethod();
-				if(referenceReturnMethod!=null){
-					CodeMethodRef retMethod = mainModel.getMethod(referenceReturnMethod.getMethodHandle());
-					if(retMethod!=null)
-						newBP.addReturnMethod(retMethod);
-				}
-				
-				List errorBeans = createNewBeanJavaInstance(newBP) ;
-				if(errorBeans.size()>0){
-					// Error instantiaging the bean - error beans returned
-					for (Iterator iter = errorBeans.iterator(); iter.hasNext();) {
-						BeanPart errBP = (BeanPart) iter.next();
-						errBP.dispose() ;
-					}
-				}else{
-					// Instatiation went on successfully
+		// New bean - add it and any methods associated with it
+		BeanPart newBP ;
+		if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
+			newBP = new BeanPart((FieldDeclaration)referenceBP.getFieldDecl()) ;
+		else
+			newBP = new BeanPart((VariableDeclarationStatement)referenceBP.getFieldDecl());
+		newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
+		newBP.setInstanceVar(referenceBP.isInstanceVar()) ;
+		newBP.setModel(mainModel) ;
+		newBP.setIsInJVEModel(false) ;
+		mainModel.addBean(newBP);
+		logFiner("Created new BP "+newBP.getSimpleName());
+		
+		CodeMethodRef initMethod = null ;
+		if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
+			// Init method of the bean is not present in the main model - 
+			// add it to the main model, and hook the bean part up.
+			CodeMethodRef updatedMethodRef = referenceBP.getInitMethod() ;
+			initMethod =  new CodeMethodRef(
+					updatedMethodRef.getDeclMethod(), 
+					mainModel.getTypeRef(), 
+					updatedMethodRef.getMethodHandle(),
+					createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
+					updatedMethodRef.getContent()) ; 
+			
+			initMethod.setModel(mainModel) ;
+			
+			BeanPart updateReturnedBP = newModel.getBeanReturned(updatedMethodRef.getMethodName());
+			if(updateReturnedBP!=null){
+				BeanPart mainReturnedBP = mainModel.getABean(updateReturnedBP.getUniqueName());
+				if(mainReturnedBP!=null){
+					// we habe a bean which is returned with this method - hook them up
+					mainReturnedBP.addReturnMethod(initMethod);
 				}
 			}
-		});
-		return exceptions.size()<1 ;
+			
+			logFiner("Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName());
+		}
+		newBP.addInitMethod(initMethod);
+		
+		CodeMethodRef referenceReturnMethod = referenceBP.getReturnedMethod();
+		if(referenceReturnMethod!=null){
+			CodeMethodRef retMethod = mainModel.getMethod(referenceReturnMethod.getMethodHandle());
+			if(retMethod!=null)
+				newBP.addReturnMethod(retMethod);
+		}
+		
+		List errorBeans = createNewBeanJavaInstance(newBP) ;
+		if(errorBeans.size()>0){
+			// Error instantiaging the bean - error beans returned
+			for (Iterator iter = errorBeans.iterator(); iter.hasNext();) {
+				BeanPart errBP = (BeanPart) iter.next();
+				errBP.dispose() ;
+			}
+		}else{
+			// Instatiation went on successfully
+		}
+		return true;
 	}
 	
 	protected void logFiner(String message){
@@ -619,53 +585,49 @@ public class BDMMerger {
 	}
 	
 	protected boolean createThisBean(final BeanPart referenceBP){
-		runSyncDisplay(new Runnable(){
-			public void run(){
-				mainModel.setTypeDecleration(referenceBP.getModel().getTypeDecleration());
-				IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(mainModel).getRule(IThisReferenceRule.RULE_ID) ;
-				String typeName = referenceBP.getModel().resolveThis() ;
-				String superName = null ;
-				if (referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass() != null)
-					superName = CodeGenUtil.resolve(referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass(),referenceBP.getModel()) ;
-				ResourceSet rs = mainModel.getCompositionModel().getModelResourceSet() ;
-				// The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
-				// So, try the super first    
-				if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(typeName,rs))) {
-					BeanPartFactory bpg = new BeanPartFactory(mainModel,null) ;
-					// No Init method yet.
-					BeanPart thisBP = bpg.createThisBeanPartIfNeeded(null) ;
-					logFiner("Successfully created this bean part : "+ thisBP.getSimpleName());
+		mainModel.setTypeDecleration(referenceBP.getModel().getTypeDecleration());
+		IThisReferenceRule thisRule = (IThisReferenceRule) CodeGenUtil.getEditorStyle(mainModel).getRule(IThisReferenceRule.RULE_ID) ;
+		String typeName = referenceBP.getModel().resolveThis() ;
+		String superName = null ;
+		if (referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass() != null)
+			superName = CodeGenUtil.resolve(referenceBP.getModel().getTypeRef().getTypeDecl().getSuperclass(),referenceBP.getModel()) ;
+		ResourceSet rs = mainModel.getCompositionModel().getModelResourceSet() ;
+		// The rule uses MOF reflection to introspect attributes : this works when the file is saved at this point.
+		// So, try the super first    
+		if ((superName!= null && (thisRule.useInheritance(superName,rs)) || thisRule.useInheritance(typeName,rs))) {
+			BeanPartFactory bpg = new BeanPartFactory(mainModel,null) ;
+			// No Init method yet.
+			BeanPart thisBP = bpg.createThisBeanPartIfNeeded(null) ;
+			logFiner("Successfully created this bean part : "+ thisBP.getSimpleName());
 
-					CodeMethodRef initMethod = null ;
-					if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
-						// Init method of the bean is not present in the main model - 
-						// add it to the main model, and hook the bean part up.
-						CodeMethodRef updatedMethodRef = referenceBP.getInitMethod() ;
-						initMethod =  new CodeMethodRef(
-								updatedMethodRef.getDeclMethod(), 
-								mainModel.getTypeRef(), 
-								updatedMethodRef.getMethodHandle(),
-								createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
-								updatedMethodRef.getContent()) ; 
-						initMethod.setModel(mainModel) ;
-						logFiner("Successfully created init method for this bean part "+initMethod.getMethodHandle());
-					}
-					thisBP.addInitMethod(initMethod);
-					
-					List errorBeans = createNewBeanJavaInstance(thisBP);
-					if(errorBeans.size()>0){
-						// Error instantiaging the bean - error beans returned
-						for (Iterator iter = errorBeans.iterator(); iter.hasNext();) {
-							BeanPart errBP = (BeanPart) iter.next();
-							logFiner("Disposing bean part "+errBP.getSimpleName()+" when createing java instance for "+referenceBP.getSimpleName());
-							errBP.dispose() ;
-						}
-					}else{
-						// Instatiation went on successfully
-					}
-				}
+			CodeMethodRef initMethod = null ;
+			if( (initMethod = mainModel.getMethod(referenceBP.getInitMethod().getMethodHandle())) == null ){
+				// Init method of the bean is not present in the main model - 
+				// add it to the main model, and hook the bean part up.
+				CodeMethodRef updatedMethodRef = referenceBP.getInitMethod() ;
+				initMethod =  new CodeMethodRef(
+						updatedMethodRef.getDeclMethod(), 
+						mainModel.getTypeRef(), 
+						updatedMethodRef.getMethodHandle(),
+						createSourceRange(updatedMethodRef.getOffset(), updatedMethodRef.getLen()), 
+						updatedMethodRef.getContent()) ; 
+				initMethod.setModel(mainModel) ;
+				logFiner("Successfully created init method for this bean part "+initMethod.getMethodHandle());
 			}
-		});
+			thisBP.addInitMethod(initMethod);
+			
+			List errorBeans = createNewBeanJavaInstance(thisBP);
+			if(errorBeans.size()>0){
+				// Error instantiaging the bean - error beans returned
+				for (Iterator iter = errorBeans.iterator(); iter.hasNext();) {
+					BeanPart errBP = (BeanPart) iter.next();
+					logFiner("Disposing bean part "+errBP.getSimpleName()+" when createing java instance for "+referenceBP.getSimpleName());
+					errBP.dispose() ;
+				}
+			}else{
+				// Instatiation went on successfully
+			}
+		}
 		return true ;
 	}	
 	
@@ -688,11 +650,7 @@ public class BDMMerger {
 	protected boolean removeDeletedBean(final BeanPart b){
 		boolean remove = false ; 
 		if( b != null ){
-			runSyncDisplay(new Runnable(){
-				public void run(){
-					b.dispose();
-				}
-			});
+			b.dispose();
 			remove = true ;
 		}
 		return remove ;

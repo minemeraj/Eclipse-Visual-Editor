@@ -11,19 +11,19 @@ package org.eclipse.ve.examples.cdm.dept.dinner.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: DinnerContentsTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2003-10-27 17:42:30 $ 
+ *  $Revision: 1.2 $  $Date: 2004-03-26 23:08:12 $ 
  */
 
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramFigure;
+
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.DiagramContentsTreeEditPart;
 /**
  * Christmas Dinner Edit Part for the Tree Viewer.
  */
@@ -48,33 +48,20 @@ public class DinnerContentsTreeEditPart extends DiagramContentsTreeEditPart {
 		return new EntreeTreeEditPart(childModel);
 	}
 	
-	protected Adapter modelAdapter = new AdapterImpl() {
-		/**
-		 * @see org.eclipse.emf.common.notify.Adapter#notifyChanged(Notification)
-		 */
-		public void notifyChanged(Notification notification) {
-			Notification kvMsg = KeyedValueNotificationHelper.notifyChanged(notification, DinnerConstants.COMPANY_URL);
-			if (kvMsg != null) {
-				refreshChildren();
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.DiagramContentsTreeEditPart#createModelAdapter()
+	 */
+	protected DiagramAdapter createModelAdapter() {
+		return new DiagramAdapter() {
+			public void notifyChanged(Notification notification) {
+				Notification kvMsg = KeyedValueNotificationHelper.notifyChanged(notification, DinnerConstants.COMPANY_URL);
+				if (kvMsg != null)
+					refreshChildren();
+				else
+					super.notifyChanged(notification);
 			}
-		}
-	};
-	
-	
-	/**
-	 * @see org.eclipse.gef.EditPart#activate()
-	 */
-	public void activate() {
-		super.activate();
-		((Diagram) getModel()).eAdapters().add(modelAdapter);
-	}
-
-	/**
-	 * @see org.eclipse.gef.EditPart#deactivate()
-	 */
-	public void deactivate() {
-		((Diagram) getModel()).eAdapters().remove(modelAdapter);		
-		super.deactivate();
+		};
 	}
 
 	/**
