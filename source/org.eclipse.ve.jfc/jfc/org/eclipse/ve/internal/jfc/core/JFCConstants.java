@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.7 $  $Date: 2004-08-27 15:34:49 $ 
+ *  $Revision: 1.8 $  $Date: 2004-09-03 22:11:30 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -89,6 +89,8 @@ public class JFCConstants {
 		SF_JMENUBAR_MENUS,
 		SF_JMENU_ITEMS,
 		
+		SF_FRAME_TITLE,
+		
 		CLASS_CONTAINER_CONSTRAINTCOMPONENT,	// containerVisuals/ConstraintComponent
 		CLASS_JTABBEDPANE_JTABCOMPONENT;	// jtabbedPaneVisuals/JTabComponent	
 		
@@ -165,7 +167,7 @@ public class JFCConstants {
 		SF_TABLECOLUMN_MODELINDEX = URI.createURI("java:/javax.swing.table#TableColumn/modelIndex");	//$NON-NLS-1$		
 		SF_TABLECOLUMN_HEADERVALUE = URI.createURI("java:/javax.swing.table#TableColumn/headerValue");	//$NON-NLS-1$
 		SF_TABLECOLUMN_PREFERREDWIDTH = URI.createURI("java:/javax.swing.table#TableColumn/preferredWidth");	//$NON-NLS-1$
-
+		SF_FRAME_TITLE = URI.createURI("java:/java.awt#Frame/title"); //$NON-NLS-1$
 
 		SF_JMENUBAR_MENUS = URI.createURI("java:/javax.swing#JMenuBar/menus"); //$NON-NLS-1$
 		SF_JMENU_ITEMS = URI.createURI("java:/javax.swing#JMenu/items"); //$NON-NLS-1$
