@@ -7,15 +7,15 @@
  */
 
 
-echo "Hello, world -- this is version 2!";
+echo "Hello, world!";
 
-if (!($f2=fopen("public/tests2.new","w+")))
+if (!($f2=fopen("public/tests.new","w+")))
                   exit("Unable to open file.");
 fwrite($f2,"Testing\n");
 fclose($f2);
 
 
-if (!($f2=fopen("public/tests2.new","r")))
+if (!($f2=fopen("public/tests.new","r")))
                   exit("Unable to open file.");
 $string = fread($f2,8);
 fclose($f2);
