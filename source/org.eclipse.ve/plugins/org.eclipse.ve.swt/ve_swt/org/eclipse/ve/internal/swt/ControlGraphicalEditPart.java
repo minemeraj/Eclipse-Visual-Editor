@@ -4,18 +4,24 @@ import java.util.*;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.java.core.*;
 
 public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
@@ -26,6 +32,9 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	protected IPropertySource propertySource;	// This is the property source.
 	protected ControlVisualModelAdapter constraintHandler;	
 	protected boolean transparent;
+	
+	protected DirectEditManager manager = null;
+	protected EStructuralFeature sfDirectEditProperty = null;
 
 	public ControlGraphicalEditPart(Object model) {
 		setModel(model);
@@ -107,7 +116,10 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		// Default component role allows delete and basic behavior of a component within a parent edit part that contains it
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
 
-
+		sfDirectEditProperty = getDirectEditTargetProperty();
+		if (sfDirectEditProperty != null) {
+		    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ControlDirectEditPolicy());
+		}
 	}
 	protected IVisualComponent getVisualComponent() {
 		return (IVisualComponent) getControlProxy(); // For AWT, the component proxy is the visual component.
@@ -192,5 +204,41 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			result.add(i.next());
 		}
 		return result.isEmpty() ? Collections.EMPTY_LIST : result;
-	}	
+	}
+	
+	private EStructuralFeature getDirectEditTargetProperty() {
+		EStructuralFeature target = null;
+		IJavaObjectInstance component = (IJavaObjectInstance)getModel();
+		JavaClass modelType = (JavaClass) component.eClass();
+		
+		// Hard coded string properties to direct edit.
+		// If more than one is available, it'll choose the first in the list below
+				
+		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
+		if (target != null) {
+			return target;			
+		}
+		target = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
+		if (target != null) {
+			return target;
+		}
+		target = modelType.getEStructuralFeature("title"); //$NON-NLS-1$
+		return target;
+	}
+	
+	private void performDirectEdit(){
+		if(manager == null)
+			manager = new ControlDirectEditManager(this, 
+				TextCellEditor.class, new ControlCellEditorLocator(getFigure()), sfDirectEditProperty);
+		manager.show();
+	}
+
+	public void performRequest(Request request){
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
+			performDirectEdit();
+	}
+	
+	public EStructuralFeature getSfDirectEditProperty() {
+		return sfDirectEditProperty;
+	}
 }  
