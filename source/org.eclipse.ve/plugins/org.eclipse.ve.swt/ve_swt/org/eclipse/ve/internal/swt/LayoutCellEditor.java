@@ -11,20 +11,20 @@ package org.eclipse.ve.internal.swt;
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2004-01-21 14:21:50 $ 
+ *  $Revision: 1.3 $  $Date: 2004-01-21 22:02:19 $ 
  */
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.jem.java.*;
-import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IJavaCellEditor;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
 /**
@@ -56,8 +56,8 @@ protected Object doGetObject(int index) {
 		return null;
 	String layoutManagerClassName = fClassNames[index];
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
-	JavaHelpers javaClass = JavaClassImpl.reflect(layoutManagerClassName, rset);
-	return BeanUtilities.createJavaObject(javaClass, rset, null);
+	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
+	return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 }
 
 protected int doGetIndex(Object anObject){
