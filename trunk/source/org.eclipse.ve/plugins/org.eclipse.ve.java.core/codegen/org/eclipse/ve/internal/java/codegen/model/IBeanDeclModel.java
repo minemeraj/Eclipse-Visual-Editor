@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.model;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.5 $  $Date: 2004-03-16 20:55:59 $ 
+ *  $Revision: 1.6 $  $Date: 2004-04-02 14:34:34 $ 
  */
 
 import java.util.*;
@@ -25,7 +25,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.codegen.core.ICodeGenStatus;
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ITypeResolver;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
@@ -81,8 +80,6 @@ public interface IBeanDeclModel extends ITypeResolver{
     public ITypeHierarchy getClassHierarchy()  ;
     public Collection getBeansInitilizedByMethod(CodeMethodRef mref) ;
     public void updateBeanNameChange(BeanPart bp) ;
-	public ICodeGenStatus getFStatus() ;
-	public void setFStatus(ICodeGenStatus fStatus) ;
 	public EditDomain getDomain() ;
 	public List getEventHandlers() ;
 	public void driveExpressionChangedEvent(CodeMethodRef sourceMethod, int docOff, int delta) ;
