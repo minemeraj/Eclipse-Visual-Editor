@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-07 19:56:41 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -28,6 +28,8 @@ import org.osgi.framework.*;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
+import sun.misc.FileURLMapper;
 
 /**
  * @author Gili Mendel
@@ -98,39 +100,49 @@ public class TemplateUtil {
 	
 	private static void getBundleLibraries(Bundle bundle, List list) {
 		// Pick up the Jars
-		try {
-			String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
-			ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
-			if (elements != null) {
-				for (int i = 0; i < elements.length; i++) {
-					String name = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(bundle, elements[i].getValue());
-					if (!name.equals(".")) { //$NON-NLS-1$
-						list.add(getCorrectPath(name));
-					}
-				}
+		try {			
+			URL url = Platform.resolve(bundle.getEntry("/"));
+			if (url.getProtocol().equals("jar")) {
+				String path =  new URL(url.getFile().substring(0, url.getFile().indexOf("!/"))).getFile();					
+				list.add(getCorrectPath(path));
 			}
-			// If in DEV mode, hard-code the bin directory in the plugin. It is assumed to be bin because
-			// getting the actual one is hidden down in OSGi and I don't know how to access it. It is also
-			// assumed that when in dev mode, that the plugins are local, so that when we resolve the URL
-			// from getEntry that it will be a file type url.
-			if (DEV_MODE) {
-				URL bin = bundle.getEntry("bin/"); //$NON-NLS-1$
-				if (bin != null) {
-					try {
-						bin = Platform.resolve(bin);
-						if (bin.getProtocol() == "file") { //$NON-NLS-1$
-							String path = getCorrectPath(bin.getFile());
-							if (!list.contains(path))
-								list.add(bin.getFile());
+			else {
+				String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
+				ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
+				if (elements != null) {
+					for (int i = 0; i < elements.length; i++) {
+						String name = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(bundle, elements[i].getValue());
+						if (!name.equals(".")) { //$NON-NLS-1$
+							list.add(getCorrectPath(name));
 						}
-					} catch (IOException e) {
-						// Shouldn't occur. Nor do we care if it does.
 					}
 				}
+				// If in DEV mode, hard-code the bin directory in the plugin. It is assumed to be bin because
+				// getting the actual one is hidden down in OSGi and I don't know how to access it. It is also
+				// assumed that when in dev mode, that the plugins are local, so that when we resolve the URL
+				// from getEntry that it will be a file type url.
+				if (DEV_MODE) {
+					URL bin = bundle.getEntry("bin/"); //$NON-NLS-1$
+					if (bin != null) {
+						try {
+							bin = Platform.resolve(bin);
+							if (bin.getProtocol() == "file") { //$NON-NLS-1$
+								String path = getCorrectPath(bin.getFile());
+								if (!list.contains(path))
+									list.add(bin.getFile());
+							}
+						} catch (IOException e) {
+							// Shouldn't occur. Nor do we care if it does.
+						}
+					}
+				}		
 			}
 		} catch (BundleException e) {
 			JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
 		}
+	    catch (IOException e) {
+			JavaVEPlugin.log(e);
+	    }
 	}
 
 	/**
