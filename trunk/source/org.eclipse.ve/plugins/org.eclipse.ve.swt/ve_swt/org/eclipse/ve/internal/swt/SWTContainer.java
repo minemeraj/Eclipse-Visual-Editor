@@ -46,7 +46,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			{ "org.eclipse.jface.text", "jfacetext.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.core.runtime", "runtime.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
 			{ "org.eclipse.core.runtime.compatibility", "compatibility.jar" }, //$NON-NLS-1$ //$NON-NLS-2$			
-			{ "org.eclipse.osgi", "core.jar" } //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.osgi", "core.jar" }, //$NON-NLS-1$ //$NON-NLS-2$
+			{ "org.eclipse.core.commands", "." } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
 	public SWTContainer(IPath containerPath) {
@@ -63,8 +64,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				classpathlength += swtGTKLibraries.length;
 			ArrayList entries = new ArrayList() ;
 			
-
-			int ci = 0;
 			for (int i = 0; i < swtLibraries.length; i++) {
 				Path path = new Path(swtLibraries[i][1]);
 				URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(swtLibraries[i][0]), path);
@@ -99,6 +98,19 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				for (int j = 0; j < jfaceLibraries.length; j++) {
 					Path path = new Path(jfaceLibraries[j][1]);
 					URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(jfaceLibraries[j][0]), path);
+					if(locSrc[0]==null){
+						// Was not able to find in a plugin folder structure - 
+						// try to see if the plugin is a JAR instead
+						Bundle bundle = Platform.getBundle(jfaceLibraries[j][0]);
+						if(bundle==null)
+							continue;
+						URL url = Platform.resolve(bundle.getEntry("/"));
+						if (url.getProtocol().equals("jar")) {
+							String jarPath =  url.getFile().substring(0, url.getFile().indexOf("!/"));					
+							locSrc[0] = new URL(jarPath);
+							locSrc[1] = new URL(jarPath);
+						}
+					}
 					if (locSrc[0] == null)
 						continue;
 					path = new Path(Platform.resolve(locSrc[0]).getFile());
