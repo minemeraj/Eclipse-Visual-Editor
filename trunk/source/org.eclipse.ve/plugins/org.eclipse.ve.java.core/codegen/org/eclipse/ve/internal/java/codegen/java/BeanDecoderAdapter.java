@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-07 19:56:41 $ 
  */
 
 import java.util.*;
@@ -51,7 +51,7 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
   protected  BeanPart fBean=null ;			   // Component associated with this adapter
   Hashtable  fChildrens    = new Hashtable() ;    // Hold Exp. Decoder Adapters for components SF
   HashMap	 fSettings     = new HashMap() ;
-  private   ImageDescriptorRegistry fJavaImageRegistry= JavaPlugin.getImageDescriptorRegistry();
+  private   ImageDescriptorRegistry fJavaImageRegistry= null;
   Label		 fpreviousLabel = null ;  // remember the last label, in case we are paused
   
                         	
@@ -64,7 +64,11 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
   	 return fEventsSF ;
   }                        	
                         	
-                        	
+  private ImageDescriptorRegistry getImageRegistry() {
+		if (fJavaImageRegistry==null)
+		    fJavaImageRegistry= JavaPlugin.getImageDescriptorRegistry();
+		return fJavaImageRegistry;
+  }                      	
   
 /**
  * 
@@ -86,6 +90,7 @@ protected  class BeanDecoderRefAdapter extends BeanDecoderAdapter {
 		fSF = fDecoder.getSF() ;
 	}
 	
+
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.JFCBeanDecoderAdapter#addSettingAdapter(EStructuralFeature, ICodeGenAdapter)
 	 */
@@ -640,7 +645,7 @@ public Label getInstanceDisplayInformation() {
 	}
 	else
 	       d = JavaPluginImages.DESC_OBJS_LOCAL_VARIABLE ;
-    l.setIcon(fJavaImageRegistry.get(d)) ;
+    l.setIcon(getImageRegistry().get(d)) ;
     l.setText(fBean.getSimpleName()+"\t"+fBean.getType()) ;     //$NON-NLS-1$
     return l ;	
 } 
@@ -679,7 +684,7 @@ public Label getReturnMethodDisplayInformation() {
 		}
 		if (d == null)
 			d = JavaElementImageProvider.getMethodImageDescriptor(false, 0);
-		l.setIcon(fJavaImageRegistry.get(d));
+		l.setIcon(getImageRegistry().get(d));
 		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.getString("BeanDecoderAdapter.()_5")); //$NON-NLS-1$
 		fpreviousLabel = l ;
 	}

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Constants;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -86,7 +87,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						String filter = (String) frags[i].getHeaders().get("Eclipse-PlatformFilter");
 						if (filter.indexOf("osgi.ws")>=0) {
 								location = new Path(Platform.getInstallLocation().getURL().getPath());
-								String version = "_"+(String) frags[i].getHeaders().get("Bundle-Version");
+								String version = "_"+(String) frags[i].getHeaders().get(Constants.BUNDLE_VERSION);
 								location = location.append("plugins").append(frags[i].getSymbolicName()+version+".jar");
 					    }						
 					}

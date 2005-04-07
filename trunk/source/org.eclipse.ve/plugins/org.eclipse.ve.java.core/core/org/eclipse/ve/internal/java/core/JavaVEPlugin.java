@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.23 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.24 $  $Date: 2005-04-07 19:56:41 $ 
  */
 
 import java.util.Map;
@@ -42,6 +42,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME);  //$NON-NLS-1$
 	public static final String VE_PROJECT_MODEL_CACHE_ROOT = VE_CACHE_ROOT_NAME+"/emfmodel"; //$NON-NLS-1$ 
 	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final IPath  VE_GENERATED_SWT_LIBRARIES_CACHE = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("SWTLibraries");
 	// ID of the registrations extension point.
 
 	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$

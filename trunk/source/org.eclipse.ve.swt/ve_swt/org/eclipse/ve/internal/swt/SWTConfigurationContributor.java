@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-06 22:28:01 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-07 19:56:41 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -37,6 +37,8 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
+
+
 /**
  * SWT Configuration Contributor.
  * 
@@ -46,7 +48,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class SWTConfigurationContributor extends ConfigurationContributorAdapter {
 	
-	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	 //$NON-NLS-1$
+	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	 //$NON-NLS-1$	
 	
 	protected IJavaProject javaProject;
 	protected IConfigurationContributionInfo fConfigContributionInfo;
@@ -59,8 +61,7 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		this.javaProject = info.getJavaProject();
 		this.fConfigContributionInfo = info;
 	}
-
-private static IPath dllCache = JavaVEPlugin.VE_PLUGIN_CACHE_DESTINATION.append("swtDlls");	
+	
 public static void createDirectories (IPath finalDir) {
 	for (int i=0; i<finalDir.segmentCount(); i++) {
 		File f = finalDir.removeLastSegments(finalDir.segmentCount()-1-i).toFile();
@@ -68,7 +69,7 @@ public static void createDirectories (IPath finalDir) {
 	}
 }
 public static void createEntry (ZipEntry entry, InputStream in) {
-	IPath dest = dllCache.append(entry.getName());
+	IPath dest = JavaVEPlugin.VE_GENERATED_SWT_LIBRARIES_CACHE.append(entry.getName());
 	File f = dest.toFile();
 	if (entry.isDirectory()) {				
 		createDirectories(dest);		
@@ -98,7 +99,7 @@ static public URL generateSwtDllIfNeeded (IFragmentModel frag, String relativePa
 		String location = frag.getInstallLocation();
 		if (location == null)
 			return null;
-		File f = dllCache.append(relativePath).toFile();
+		File f = JavaVEPlugin.VE_GENERATED_SWT_LIBRARIES_CACHE.append(relativePath).toFile();
 		if (f.exists()) {
 			try {
 				return f.toURL();
