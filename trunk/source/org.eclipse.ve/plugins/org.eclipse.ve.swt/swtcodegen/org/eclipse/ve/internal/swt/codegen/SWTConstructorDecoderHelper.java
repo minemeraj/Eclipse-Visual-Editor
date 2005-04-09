@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-09 01:19:17 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -66,8 +66,8 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	protected BeanPart getParent() {
 		if (fParent!=null) return fParent;
-		if (fReferences.size()>0)
-		    fParent = fbeanPart.getModel().getABean((IJavaObjectInstance)fReferences.get(0));
+		if (getExpressionReferences().size()>0)
+		    fParent = fbeanPart.getModel().getABean((IJavaObjectInstance)getExpressionReferences().get(0));
 		else {
 			// decoder was not active yet
 			fParent = CodeGenUtil.determineParentBeanpart(fbeanPart);			
@@ -76,7 +76,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	protected boolean isControlFeatureNeeded() {
 		// Does the constructor refer to a parent
-		if (fReferences.size()>0) {
+		if (getExpressionReferences().size()>0) {
 			// check to see if both parent/child are defined on with the same method
 			// The assumption is that a call to the init method of teh child will create
 			// the control feature						
@@ -235,8 +235,8 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	public String generate(Object[] args) throws CodeGenException {
 		// let the constructor update the reference context
 		BeanPart parent = getParent();
-		if (parent != null && !fReferences.contains(parent.getEObject()))
-			fReferences.add(parent.getEObject());
+		if (parent != null && !getExpressionReferences().contains(parent.getEObject()))
+			getExpressionReferences().add(parent.getEObject());
 		if (isControlFeatureNeeded()) {
 			if (getControlIndex()<0) {
 			// Need to wait here for the control feature first

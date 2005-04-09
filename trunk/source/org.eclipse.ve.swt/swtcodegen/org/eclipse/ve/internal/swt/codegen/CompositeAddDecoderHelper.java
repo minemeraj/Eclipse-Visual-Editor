@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-21 22:51:22 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:17 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -29,7 +29,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -115,10 +116,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		else if (args.get(getAddedPartArgIndex(args.size())) instanceof SimpleName){
 			// Simple reference to a bean
 			String beanName =((SimpleName)args.get(getAddedPartArgIndex(args.size()))).getIdentifier();
-			bp = fOwner.getBeanModel().getABean(beanName) ;
-			if(bp==null)
-				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),beanName));
-			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
+			bp = CodeGenUtil.getBeanPart(fbeanPart.getModel(), beanName, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
 		}
 		else if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
 			if (fAddedInstance==null) {
@@ -130,7 +128,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 				JavaClass c = (JavaClass) obj.getJavaType() ;
 				if (c.isExistingType()) {
 					fAddedInstance = obj ;
-					obj.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null));
+					obj.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size()))));
 				}
 			}
 		}
@@ -427,19 +425,17 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	 * @todo Generated comment
 	 */
 	protected CodeExpressionRef getInitExpression() {
-		Iterator itr = fAddedPart.getRefExpressions().iterator();
-		while (itr.hasNext()) {
-			CodeExpressionRef e = (CodeExpressionRef) itr.next();
-			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
-				return e;
+		CodeExpressionRef init =  fAddedPart.getInitExpression();
+		if (init==null) {			
+			Iterator itr = fAddedPart.getNoSrcExpressions().iterator();
+			while (itr.hasNext()) {
+				CodeExpressionRef e = (CodeExpressionRef) itr.next();
+				if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+					return e;
+			}
+			return generateInitExpression();
 		}
-		itr = fAddedPart.getNoSrcExpressions().iterator();
-		while (itr.hasNext()) {
-			CodeExpressionRef e = (CodeExpressionRef) itr.next();
-			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
-				return e;
-		}
-		return generateInitExpression();
+		return init;
 	}
 	
 	/* (non-Javadoc)

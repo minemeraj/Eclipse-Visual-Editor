@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.20 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.21 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -231,7 +231,7 @@ protected void setConstructorString (BeanMethodTemplate tp, Object component, Li
     if (component instanceof IJavaObjectInstance) {
      // use the init string rather than default template string
         IJavaObjectInstance obj = (IJavaObjectInstance) component ;
-        String st = CodeGenUtil.getInitString(obj,fModel, imports) ;  
+        String st = CodeGenUtil.getInitString(obj,fModel, imports, null) ;  
         tp.setBeanConstructorString(st) ;
     }
 }
@@ -244,11 +244,12 @@ public void generateInLine(CodeMethodRef method,String beanName, List kids) thro
     freturnType = ((IJavaObjectInstance)fComponent).getJavaType().getQualifiedName() ;
     fName=beanName ;
     
-                   
+
     // Set up a new BeanPart in the decleration Model
     BeanPart bp = fModel.getABean(fName) ;
+    // TODO:GM need to be able to generate code that reuses beans.    
     if(bp==null)
-    	bp = fModel.getABean(BeanDeclModel.constructUniqueName(method,fName));//method.getMethodHandle()+"^"+fName);
+    	bp = fModel.getABean(BeanPartDecleration.createDeclerationHandle(method,fName));//method.getMethodHandle()+"^"+fName);
     
    StringBuffer sb = new StringBuffer () ;
     

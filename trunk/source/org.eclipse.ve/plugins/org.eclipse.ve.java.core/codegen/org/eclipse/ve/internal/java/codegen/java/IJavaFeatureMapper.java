@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -86,7 +86,7 @@ public static final int PRIORITY_DEFAULT =				10000;
 //Add to a container should be at the end all default expression settings 
 public static final int PRIORITY_ADD = 					PRIORITY_DEFAULT - 5000; 
 // Constructor Expression, all at the top
-public static final int PRIORITY_CONSTRUCTOR = 			100000;
+public static final int PRIORITY_CONSTRUCTOR = 			PRIORITY_DEFAULT;
 
 
 public static final VEexpressionPriority NOPriority = new VEexpressionPriority(-1,-1);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.30 $  $Date: 2005-03-23 19:55:34 $ 
+ *  $Revision: 1.31 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -204,7 +204,7 @@ public class BDMMerger {
 			if(bsc.getThisPart()==null || !bsc.getThisPart().equals(bp.getEObject()))
 				bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
 		}else 
-			if(bp.getContainer()==null && bp.isInstanceVar()){
+			if(bp.getContainer()==null && bp.getDecleration().isInstanceVar()){
 				 if(bp.getFFDecoder().isVisualOnFreeform()){
 				 	// should be on the FF
 				 	if(!bsc.getComponents().contains(bp.getEObject()))
@@ -1042,15 +1042,16 @@ public class BDMMerger {
 	protected boolean addNewBean(final BeanPart referenceBP){
 		// New bean - add it and any methods associated with it
 		BeanPart newBP ;
+		BeanPartDecleration decl;
 		if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
-			newBP = new BeanPart((FieldDeclaration)referenceBP.getFieldDecl()) ;
+			decl = new BeanPartDecleration((FieldDeclaration)referenceBP.getFieldDecl()) ;
 		else
-			newBP = new BeanPart((VariableDeclarationStatement)referenceBP.getFieldDecl());
+			decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
+		newBP = new BeanPart(decl);
 		newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
-		newBP.setInstanceVar(referenceBP.isInstanceVar()) ;
-		newBP.setModel(mainModel) ;
+		
 		newBP.setIsInJVEModel(false) ;
-		mainModel.addBean(newBP);
+		
 		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 			JavaVEPlugin.log("BDM Merger >> "+"Created new BP "+newBP.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 		
@@ -1061,8 +1062,14 @@ public class BDMMerger {
 			initMethod = createNewMainMethodRef(referenceBP.getInitMethod()) ;
 			if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 				JavaVEPlugin.log("BDM Merger >> "+"Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
+		}		
 		newBP.addInitMethod(initMethod);
+		if (referenceBP.getDecleration().isInstanceVar())
+			decl.setDeclaringMethod(null);
+		else
+			decl.setDeclaringMethod(initMethod);
+		newBP.setModel(mainModel) ;
+		mainModel.addBean(newBP);
 		
 		CodeMethodRef referenceReturnMethod = referenceBP.getReturnedMethod();
 		if(referenceReturnMethod!=null){
@@ -1197,8 +1204,9 @@ public class BDMMerger {
 			if(newModel.getABean(mainBean.getUniqueName())==null){
 				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-				removed = removed && removeDeletedBean( mainBean ); 
 				monitor.subTask(mainBean.getSimpleName());
+				removed = removed && removeDeletedBean( mainBean ); 
+				
 			}else{
 				// Remove bean if type has changed				
 				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());

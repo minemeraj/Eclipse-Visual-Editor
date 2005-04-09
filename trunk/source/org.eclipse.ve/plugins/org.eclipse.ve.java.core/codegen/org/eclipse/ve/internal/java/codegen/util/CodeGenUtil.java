@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.34 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 
@@ -535,14 +535,14 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 	return -1;
 }
 
-public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model, List importList) {
+public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model, List importList, List refList) {
 	JavaAllocation alloc = javaInstance.getAllocation();
 	if (alloc instanceof InitStringAllocation)
 		return ((InitStringAllocation) alloc).getInitString();
 	else if (alloc instanceof ParseTreeAllocation) {
 		PTExpression e = ((ParseTreeAllocation)javaInstance.getAllocation()).getExpression();
 		// Resolve references if needed
-		CodeGenExpFlattener f = new CodeGenExpFlattener(model, importList);
+		CodeGenExpFlattener f = new CodeGenExpFlattener(model, importList, refList);
 		e.accept(f);
 		return f.getResult();
 	} else {
@@ -929,6 +929,57 @@ public static BeanPart determineParentBeanpart(final BeanPart child){
 		}
 	}
 	return null;
+}
+/**
+ * This method will return a BeanPart instance that is related to a particular expOffset in a method.
+ * 
+ * 
+ * @param model
+ * @param name
+ * @param m method
+ * @param expOffset offset withing the method
+ * @return BeanPart if found, null if none
+ * 
+ * @since 1.1.0
+ */
+public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMethodRef m, int expOffset) {
+	BeanPartDecleration d = model.getModelDecleration(BeanPartDecleration.createDeclerationHandle(m,name));
+	BeanPart b = null;
+	if (d == null)
+		d = model.getModelDecleration(BeanPartDecleration.createDeclerationHandle((CodeMethodRef)null,name));
+	if (d!=null) {
+	  	b = d.getBeanPart(m,expOffset);
+	}
+	return b;
+}
+
+/**
+ * Add the references this object makes in his allocation (contructor),
+ * by traversing the allocation parsed tree.
+ * 
+ * @param o root object 
+ * 
+ * @since 1.1.0
+ */
+public static Collection getReferences(Object o, boolean includeO) {
+	final Collection refs = new ArrayList();
+	if (o!=null && o instanceof JavaObjectInstance) {
+		if (includeO)
+			refs.add(o);
+	  JavaAllocation alloc = ((JavaObjectInstance)o).getAllocation();
+	  if (alloc instanceof ParseTreeAllocation) {
+		ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
+		ParseVisitor visitor = new ParseVisitor() {
+			public boolean visit(PTInstanceReference node) {
+				IJavaObjectInstance r = node.getObject();				
+				refs.addAll(getReferences(r,true));	
+				return false;
+			}
+		};
+		ptAlloc.getExpression().accept(visitor);
+	  }
+	}
+	return refs;
 }
 
 

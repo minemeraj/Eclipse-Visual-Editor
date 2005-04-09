@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-25 23:07:18 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -216,7 +216,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		if (cur==null)
 			return false;		
 	  String curStr = ConstructorDecoderHelper.convertToString(cur.getAllocation());
-	  JavaAllocation pAlloc = getAllocation(proposed,null);
+	  JavaAllocation pAlloc = getAllocation(proposed);
 	  String proposedStr = ConstructorDecoderHelper.convertToString(pAlloc);
 	  return (curStr.equals(proposedStr));
 	}
@@ -228,7 +228,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			if (fRootObj!=null) {
 				if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
 				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
-				   JavaAllocation astAlloc = getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null);
+				   JavaAllocation astAlloc = getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())));
 				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
 				   if (!curAllocation.equals(astAllocation)) {
 				   	fAddedInstance.setAllocation(astAlloc);
@@ -409,9 +409,9 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 				// Brand new expression
 				BeanPart bp = parseAddedPart((MethodInvocation) getExpression(expr));
 				if (bp != null)
-					result = new Object[] { bp.getType() + "[" + bp.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$      	    
+					result = new Object[] { bp.getType() + "[" + bp.getUniqueName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$      	    
 			} else if (fAddedPart != null) {
-				return new Object[] { fAddedPart.getType() + "[" + fAddedPart.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
+				return new Object[] { fAddedPart.getType() + "[" + fAddedPart.getUniqueName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (CodeGenException e) {
 		}
@@ -508,11 +508,21 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		return true;
 	}
 	
-	protected JavaAllocation getAllocation (Expression exp, List ref) {
+	protected JavaAllocation getAllocation (Expression exp) {
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 		   JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
 		 		  ConstructorDecoderHelper.getParsedTree(exp,
-		 		  expOfMethod,fbeanPart.getModel(),ref));
+		 		  expOfMethod,fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences()));
 		return alloc;
 	}
+	
+	public Object[] getReferencedInstances() {
+		Collection result = CodeGenUtil.getReferences(fbeanPart.getEObject(),false);
+		Object[] added = getAddedInstance();
+		for (int i = 0; i < added.length; i++) 
+			result.addAll(CodeGenUtil.getReferences(added[i],true));			
+		return result.toArray();
+	}
+	
+
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.30 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.31 $  $Date: 2005-04-09 01:19:15 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -20,7 +20,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -36,18 +37,17 @@ import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.rules.IParentChildRelationship;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class BeanPart {
     
     public final static String         THIS_NAME = "this" ; //$NON-NLS-1$
     public final static String		 THIS_HANDLE = "_this_Annotation_handle"; //$NON-NLS-1$
+    
 	
-	String 	fName = null ;
-	String 	fType ;
-	ASTNode 		fFieldDecl = null ;
-	ArrayList		fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
+	
+	BeanPartDecleration fDecleration = null;	
+	ArrayList	    fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
 	ArrayList      	fBeanRefExpressions =  new ArrayList () ;		// JCMMethod/s which update bean attributes
 	ArrayList       fBeanEventExpressions = new ArrayList() ;
 	ArrayList		fBeanReturnMethods = new ArrayList () ;		// Metods/s which return the value of this bean
@@ -58,38 +58,22 @@ public class BeanPart {
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
 	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
-	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	
-	IBeanDeclModel	fModel = null ;    
-    BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel
-    boolean			fisInstanceVar = true ;					// Is the bean an instance variable ?
+	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	    
+    BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel    
     boolean			fisInstanceInstantiation = false ;         // Is this bean part initilized with its decleration ?
-    FreeFormAnnoationDecoder fFFDecoder = null ;				// Responsible parse/generate FF tags
-    String      	fFieldDeclHandle = null ;
+    FreeFormAnnoationDecoder fFFDecoder = null ;				// Responsible parse/generate FF tags   
     List        	fBadExpressions = null;
     boolean			isInJVEModel = false ;
     boolean			fSettingProcessingRequired = false ;
+    int				uniqueIndex = 0;
     
 
-
-public  BeanPart (FieldDeclaration decl) {
-	
-	fFieldDecl = decl ;
-	//TODO: support multi fields per decleration
-	processFragment((VariableDeclaration)decl.fragments().get(0), decl.getType());
-}
-
-protected void processFragment(VariableDeclaration vd, Type tp) {
-	fName = vd.getName().getIdentifier();
-	if (tp instanceof SimpleType)
-		setType(((SimpleType)tp).getName());
-	else if (tp instanceof PrimitiveType)
-		setType(((PrimitiveType)tp).getPrimitiveTypeCode().toString());
-}
-
-public  BeanPart (VariableDeclarationStatement decl) {	
-	fFieldDecl = decl ;
-	//TODO: support multi fields per decleration
-	processFragment((VariableDeclaration)decl.fragments().get(0), decl.getType());
+/**
+ *  Construct a BeanPart for a bean discovered from C. Model
+ */
+public  BeanPart (BeanPartDecleration decl) 	 {
+	 fDecleration = decl;  
+	 decl.addBeanPart(this);
 }
 
 /**
@@ -101,7 +85,7 @@ public FreeFormAnnoationDecoder getFFDecoder() {
        if (getSimpleName().equals(THIS_NAME)) 
           fFFDecoder = new FreeFormThisAnnotationDecoder(this) ;
        else
-          if(isInstanceVar())
+          if(fDecleration.isInstanceVar())
           	fFFDecoder = new FreeFormAnnoationDecoder(this) ;
           else
           	fFFDecoder = new FreeFormInnerVariableAnnotationDecoder(this);
@@ -136,75 +120,24 @@ public FreeFormAnnoationDecoder getFFDecoder() {
     return fFFDecoder ;    
 }
 
-public void setFieldDeclHandle(String dec) {
-    fFieldDeclHandle = dec ;
+public void setFieldDeclHandle(String handle) {
+    fDecleration.setFieldDeclHandle(handle);
 }
 
 public String getFieldDeclHandle() {
-    return fFieldDeclHandle ;
+    return fDecleration.getFieldDeclHandle();
 }
-
-/**
- *  
- */
-public  BeanPart (FieldDeclaration decl,CodeMethodRef method,boolean initMethod)  {
-	
-	this(decl) ;
-	
-    if (method != null) {	
-	  if (initMethod) fBeanInitMethods.add(method) ;
-	  else fBeanReturnMethods.add(method) ;
-    }		
-}
-
-
-/**
- *  
- */
-public  BeanPart (FieldDeclaration decl,CodeExpressionRef exp)  {
-	
-	this(decl) ;
-
-    if (exp != null)
-       fBeanRefExpressions.add(exp) ;	
-       
-}
-
-
-/**
- *  Construct a BeanPart for the class (this) we are parsing
- */
-public  BeanPart (String thisType) 	 {
-     this(THIS_NAME, thisType);
-}
-
-/**
- *  Construct a BeanPart for a bean discovered from C. Model
- */
-public  BeanPart (String name,String theType) 	 {
-     fName = name ;
-     setType(theType);
-}
-
-public boolean isInstanceVar() {
-    return fisInstanceVar ;
-}
-
-public void setInstanceVar(boolean flag) {
-    fisInstanceVar = flag ;
-}
-
 
 /**
  *   Add a method where the bean is created
  */
-public  void addInitMethod(CodeMethodRef methodRef) {	
+public  void addInitMethod(CodeMethodRef methodRef) {
 	if (!fBeanInitMethods.contains(methodRef))
 	   fBeanInitMethods.add(methodRef) ;
-	if (fModel != null) {
-	   fModel.addMethodInitializingABean(methodRef);
-	   methodRef.setModel(fModel) ;
-	   fModel.updateBeanNameChange(this);
+	if (fDecleration.getModel() != null) {
+		fDecleration.getModel().addMethodInitializingABean(methodRef);
+	   methodRef.setModel(fDecleration.getModel()) ;
+	   fDecleration.getModel().updateBeanNameChange(this);
 	}
 }
 
@@ -268,10 +201,10 @@ public CodeMethodRef getReturnedMethod() {
 public  void addReturnMethod(CodeMethodRef methodRef) {
 	if (!fBeanReturnMethods.contains(methodRef))
 	   fBeanReturnMethods.add(methodRef) ;
-	if (fModel != null)
+	if (fDecleration.getModel() != null)
 	  try {
-	   fModel.addMethodReturningABean(methodRef.getMethodName(),getUniqueName()) ;
-	   methodRef.setModel(fModel) ;
+	  	fDecleration.getModel().addMethodReturningABean(methodRef.getMethodName(),getUniqueName()) ;
+	   methodRef.setModel(fDecleration.getModel()) ;
 	  }
 	  catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
 	  	JavaVEPlugin.log(e, Level.WARNING) ;
@@ -325,27 +258,15 @@ public  void removeEventExpression(CodeEventRef exp) {
  *
  */
 public String getSimpleName () {
-	return fName ;
+	return fDecleration.getName() ;
 }
 
-protected String primGetUniqueName() {
-	if(!isInstanceVar() && getInitMethod()!=null){
-		return BeanDeclModel.constructUniqueName(getInitMethod(),getSimpleName()); //getInitMethod().getMethodHandle()+"^"+getSimpleName();
-	}else{
-		return getSimpleName();
-	}
-}
+
 
 public String getUniqueName() {
-	String base = primGetUniqueName() ;
-	String name = base ;
-	int i = 0 ;
-	while (fModel.getABean(name) != null) {
-		if(!fModel.getABean(name).equals(this))
-			name = base + Integer.toString(++i) ; // If other bean is present with name, change our unique name
-		else
-			break;
-	}
+	String name = fDecleration.getUniqueHandle(this);
+	if (uniqueIndex>0)
+		name+="{"+uniqueIndex+"}";
 	return name;
 }
 
@@ -412,28 +333,15 @@ public Collection getNoSrcExpressions() {
  *
  */
 public String getType () {
-	return fType ;
+	return fDecleration.getType() ;
 }
 
 /**
  *
  */
 public ASTNode getFieldDecl() {
-      return fFieldDecl ;	
+      return fDecleration.getFieldDecl();
 }
-///**
-// *
-// */
-//public boolean isInstanceVariable() {
-//	return fFieldDecl instanceof FieldDeclaration ;
-//}
-///**
-// *
-// */
-//public boolean isLocalVariable() {
-//	return fFieldDecl instanceof LocalDeclaration ;
-//}
-//	
 /**
  *
  */
@@ -487,48 +395,9 @@ public void setEObject (EObject obj) {
 		}
 	}
 	
-	if (fModel != null)	
-	   fModel.UpdateRefObjKey(this,old) ;
+	if (fDecleration.getModel() != null)	
+		fDecleration.getModel().UpdateRefObjKey(this,old) ;
 }
-
-/**
- * 
- * @param fType
- * 
- * @since 1.0.0
- * @deprecated use void setType(Name t)
- */
-protected void setType(String fType){	
-	// The BeanSubClassComposition pseodo bean part as an empty type
-    if (getModel() != null && fType !=null && !fType.equals("")) { //$NON-NLS-1$
-    	// TODO No need to check for compilation unit - resolver should return unresolved if unable to resolve
-    	if(getModel().getCompilationUnit()!=null){
-		  //IType t = CodeGenUtil.getMainType(getModel().getCompilationUnit()) ;
-		  //String rt = CodeGenUtil.resolveTypeComplex(t,fType) ;
-		Resolved rt = getModel().getResolver().resolveType(fType);
-		  if(rt!=null)
-		  	this.fType = rt.getName();
-		  else
-		  	this.fType = fType;
-    	}
-    }
-    else
-      this.fType = fType ;
-}
-
-protected void setType(Name t){	
-	// The BeanSubClassComposition pseodo bean part has an empty type
-	if (getModel() != null && t !=null) {
-		Resolved r=getModel().getResolver().resolveType(t);
-		if (r!=null)
-			fType=r.getName();
-		else
-			fType = t.getFullyQualifiedName();
-			
-	} else
-		fType=t.getFullyQualifiedName();
-}
-
 
 /**
  *
@@ -542,12 +411,12 @@ public final BeanPart[] getBackRefs() {
  */
 public void addBackRef (BeanPart bean, EReference sf) {
 	
-	IParentChildRelationship pcRule = (IParentChildRelationship) CodeGenUtil.getEditorStyle(fModel).getRule(IParentChildRelationship.RULE_ID) ;
+	IParentChildRelationship pcRule = (IParentChildRelationship) CodeGenUtil.getEditorStyle(fDecleration.getModel()).getRule(IParentChildRelationship.RULE_ID) ;
 		
 	if (!fbackReferences.contains(bean))
 	   fbackReferences.add(bean) ;
     // Refresh the bean's status
-    fModel.addBean(this) ;
+	fDecleration.getModel().addBean(this) ;
     if (bean != null && getModel().getCompositionModel() != null)
 	   if (pcRule.isChildRelationShip(sf))  {
 	   	  fContainer = bean.getEObject() ; 
@@ -568,8 +437,8 @@ public void removeBackRef (BeanPart bean, boolean updateFF) {
  */
 public void removeBackRef (EObject bean, boolean updateFF) {
 
-	if (fModel==null) return ;
-    BeanPart bp = fModel.getABean(bean) ;
+	if (fDecleration.getModel()==null) return ;
+    BeanPart bp = fDecleration.getModel().getABean(bean) ;
     if (bp != null)		
 	    fbackReferences.remove(bp) ;
 	if (bean != null && getModel().getCompositionModel() != null)
@@ -604,15 +473,13 @@ public IBeanDeclModel getModel () {
 	if (isProxy())
 	  return fProxyBeanPart.getModel() ;
 	else
-	  return fModel ;
+	  return fDecleration.getModel() ;
 }
 
 public void setModel(IBeanDeclModel model) {
-    if (fModel != null && model != null && fModel.equals(model)) 
+    if (fDecleration.getModel() != null && model != null && fDecleration.isInModel()) 
        return ;  // No need to set the type and resolve
-	fModel = model ;
-	if(fType!=null && model!=null)
-		setType(getType()) ; // Refresh Type
+	fDecleration.setModel(model) ;
     if (getFieldDeclHandle() == null && model!=null) {
     	IField f = CodeGenUtil.getFieldByName(getSimpleName(),model.getCompilationUnit()) ;
     	if (f !=null)
@@ -623,7 +490,7 @@ public void setModel(IBeanDeclModel model) {
 }
 
 public String toString () {
-   return super.toString() + "  " + fName + "(" + fType + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+   return super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 }
 
 
@@ -635,8 +502,6 @@ public void setProxy (BeanPart proxy) {
     
 	if(proxy==this) throw new IllegalArgumentException() ;	
 	fProxyBeanPart = proxy ;	
-	if(fType!=null)
-		setType(getType()) ; // Refresh Type
 }
 
 public BeanPart getProxy() {
@@ -672,18 +537,21 @@ public void disposeMethod (CodeMethodRef m, IBeanDeclModel model) {
 	}	
 }
 
+private boolean isDisposing = false;
 public  void dispose() {
 
-    IBeanDeclModel model = fModel ;
+	if (isDisposing) return ;
+	isDisposing=true;
+	
+    IBeanDeclModel model = fDecleration.getModel() ;
     
 
     if (fFFDecoder!=null)
     	fFFDecoder.dispose() ;
     fFFDecoder=null;
-	if (fModel != null)
-	  fModel.removeBean(this) ;	
-	else
-		System.out.println(this);
+	if (model != null)
+	  model.removeBean(this) ;	
+	
 	// TODO: This should not work on the child relationship... need to work 
 	//       on the inverse adapter instead
 	for (int i = 0; i < fbackReferences.size(); i++) {
@@ -737,7 +605,7 @@ public  void dispose() {
 	}	
 	if (isInJVEModel() && !model.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
 	   removeFromJVEModel() ;
-	fModel = null ;
+	fDecleration = null;
 	fEObject = null ;	
 }
 
@@ -889,7 +757,7 @@ public   void addToJVEModel() throws CodeGenException {
 	if (!thisPart) {
 		// Need to figure out who owns this bean part,
 		// Instance variables are owned/scoped by the composition
-		if (isInstanceVar()) {
+		if (fDecleration.isInstanceVar()) {
 			//  Composition is the owner		
 			bsc.getMembers().add(getEObject());
 		}
@@ -994,4 +862,26 @@ public   void removeFromJVEModel()  {
 		return fContainer;
 	}
 
+	public BeanPartDecleration getDecleration() {
+		return fDecleration;
+	}
+	public void setBeanPartDecleration(BeanPartDecleration d) {
+		fDecleration = d;
+		fDecleration.addBeanPart(this);
+	}
+	public CodeExpressionRef getInitExpression() {
+		Iterator itr = getRefExpressions().iterator();
+		while (itr.hasNext()) {
+			CodeExpressionRef e = (CodeExpressionRef) itr.next();
+			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+				return e;
+		}
+		return null;
+	}
+	public int getUniqueIndex() {
+		return uniqueIndex;
+	}
+	public void setUniqueIndex(int uniqueIndex) {
+		this.uniqueIndex = uniqueIndex;
+	}
 }

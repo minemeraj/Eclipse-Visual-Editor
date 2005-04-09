@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImplicitAllocationDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-04 19:33:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-09 01:19:17 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -248,4 +248,8 @@ public class ImplicitAllocationDecoder implements IExpressionDecoder{
 		
 	}
 	
+	public Object[] getReferencedInstances() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

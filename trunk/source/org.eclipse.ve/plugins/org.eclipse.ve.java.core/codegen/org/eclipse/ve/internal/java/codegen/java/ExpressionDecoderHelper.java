@@ -11,8 +11,12 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-09 01:19:15 $ 
  */
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,8 +26,7 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.codegen.util.ExpressionTemplate;
+import org.eclipse.ve.internal.java.codegen.util.*;
 
 public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelper {
 
@@ -32,7 +35,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 	protected Statement fExpr; // This hold the parsed Source
 	protected String fExprSig; // This holds the actual source
 	protected BeanPart fbeanPart = null;
-	protected ExpressionDecoderAdapter fexpAdapter = null;
+	protected ExpressionDecoderAdapter fexpAdapter = null;	
 
 	public ExpressionDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner) {
 		fOwner = owner;
@@ -224,5 +227,24 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 	}
 	protected Expression getExpression() {
 		return getExpression(fExpr);
+	}
+	public List getExpressionReferences() {
+		return fOwner.getExprRef().getReferences();
+	}
+	public Object[] getReferencedInstances() {
+		Collection result = CodeGenUtil.getReferences(fbeanPart.getEObject(), false);
+		EStructuralFeature sf = fFmapper.getFeature(fExpr) ;
+		Object[] o;
+		if (sf.isMany()) {
+			EList l = (EList) fbeanPart.getEObject().eGet(sf) ;
+			o = l.toArray();
+		}
+		else
+		    o = new Object[] { fbeanPart.getEObject().eGet(sf)};
+		
+		for (int i = 0; i < o.length; i++) {
+			result.addAll(CodeGenUtil.getReferences(o,true));						
+		}
+		return result.toArray();
 	}
 }

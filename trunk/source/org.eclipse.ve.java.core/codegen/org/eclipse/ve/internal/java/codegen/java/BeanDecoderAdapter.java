@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-07 19:56:41 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -618,7 +618,7 @@ public Label getInstanceDisplayInformation() {
 	Label l = new Label() ;
 	
 	ImageDescriptor	d = null ;
-	if (fBean.isInstanceVar()) {
+	if (fBean.getDecleration().isInstanceVar()) {
 		if (fBean.getFieldDeclHandle() != null) {
 			IJavaElement je = JavaCore.create(fBean.getFieldDeclHandle());
 			if (je instanceof IField) {

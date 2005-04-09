@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.38 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.39 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -274,7 +274,7 @@ protected void generateInitMethod(BeanPart bp, IJavaObjectInstance component, Co
  */
 protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance component, String varName, ICompilationUnit cu) throws CodeGenException {
 
-	IType cuType = CodeGenUtil.getMainType(cu);
+	IType cuType = CodeGenUtil.getMainType(cu);	  
 
 //	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getQualifiedName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Assume imports will be created by the init expression
@@ -484,6 +484,19 @@ protected JCMMethod getInitializingMethod(IJavaObjectInstance component) {
 	JCMMethod m = (JCMMethod) InverseMaintenanceAdapter.getFirstReferencedBy(component,sf) ;
 	return m ;
 }
+
+/**
+ * If a decleration for this instance already exists, use it.
+ * @since 1.1.0
+ */
+protected void normalizeDecleration(BeanPart bp, CodeMethodRef method) {
+	bp.getDecleration().setDeclaringMethod(method);
+	bp.setModel(fBeanModel);
+	BeanPartDecleration modelDecleration = fBeanModel.getModelDecleration(bp.getDecleration());
+	if (modelDecleration!=null)
+		bp.setBeanPartDecleration(modelDecleration);		
+}
+
 /**
  * This method is called when an instance is added to the JVE model.
  * It will only create the BeanPart, and generate the Instance Variable decleration
@@ -511,28 +524,40 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
       
       // Set up a new BeanPart in the decleration Model
       String bType = ((IJavaObjectInstance)component).getJavaType().getQualifiedName() ;
-      bp = new BeanPart (varName,bType) ;
-      bp.setModel(fBeanModel) ;
-      bp.setEObject(component) ;
-      bp.setSettingProcessingRequired(true) ;
-      bp.setIsInJVEModel(true) ;
-            
+      BeanPartDecleration decl = new BeanPartDecleration(varName,bType);      
+      bp = new BeanPart (decl) ;
+      boolean instanceVar = true;                 
       // Instance variable are always members of BSC
       boolean thisPart = false ;
       if (component.eContainer() instanceof BeanSubclassComposition) {
          if (component.equals(((BeanSubclassComposition)component.eContainer()).getThisPart()))
            thisPart=true ;
          else
-           bp.setInstanceVar(true) ;
+           instanceVar = true ;
       }
       else
-         bp.setInstanceVar(false) ;
-        
-      fBeanModel.addBean(bp) ;               
+         instanceVar=false ;
       
       MemberDecoderAdapter ma = null ;
+      CodeMethodRef decMethod = null;
+      if (instanceVar)
+      	normalizeDecleration(bp,null);
+      else {
+      	ma = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(component.eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
+     	decMethod = ma.getMethodRef() ;
+     	normalizeDecleration(bp,decMethod);
+      }
+           
+      bp.setEObject(component) ;
+      bp.setSettingProcessingRequired(true) ;
+      bp.setIsInJVEModel(true) ;
       
-      if (bp.isInstanceVar()) {
+      fBeanModel.addBean(bp) ;
+      
+      
+      
+      
+      if (instanceVar) {
          generateInstanceDecleration(bp, component,varName, cu) ;
          
          // Generatate a skelaton method         
@@ -557,12 +582,11 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
       else if (thisPart) {
       	throw new CodeGenException("this part processing") ; //$NON-NLS-1$
       }
-      else {      	       	 
-      	 ma = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(component.eContainer(),ICodeGenAdapter.JVE_MEMBER_ADAPTER) ;
-      	 CodeMethodRef mref = ma.getMethodRef() ;
-      	 bp.addInitMethod(mref) ;
+      else {      	       	       	       	 
+      	 bp.addInitMethod(decMethod) ;
       	 generateLocalVariable(component,ma.getMethodRef(),varName, cu) ;
       }
+      bp.setModel(fBeanModel) ;
       fBeanModel.refreshMethods();
 }
 
@@ -586,7 +610,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
 public void removeBeanPart (BeanPart bean) {
 	boolean jdtChangesMade = false ; // MethodRef offsets not being updated - hence check.
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
-	if (bean.isInstanceVar()) { 	  
+	if (bean.getDecleration().isInstanceVar()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
 	  if (f != null) {		// delete the field
 		try {
@@ -638,14 +662,14 @@ public void removeBeanPart (BeanPart bean) {
 			continue;
 		if(deleteDependentBeans.contains(bp))
 			continue;
-		if(bp.isInstanceVar())
+		if(bp.getDecleration().isInstanceVar())
 			areOtherInstanceVariablesFound = true;
 	}
 	
 	BeanPart returnedBean = mr==null?null:fBeanModel.getBeanReturned(mr.getMethodName());
 	isAnyNonInstanceVariableBeingReturned = returnedBean==null||
 											returnedBean.equals(bean)||
-											deleteDependentBeans.contains(returnedBean)?false:returnedBean.isInstanceVar();
+											deleteDependentBeans.contains(returnedBean)?false:returnedBean.getDecleration().isInstanceVar();
 	
 	boolean shouldMethodBeRemoved = mr!=null && !(areOtherInstanceVariablesFound || isAnyNonInstanceVariableBeingReturned);
 	Iterator itr=null ;
@@ -725,7 +749,11 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      
      if (bean == null) {    
        String tname = fBeanModel.getResolver().resolveMain().getName();
-       bean = new BeanPart (tname) ;	  
+       BeanPartDecleration decl = new BeanPartDecleration(BeanPart.THIS_NAME);       
+       decl.setType(tname);     
+       decl.setDeclaringMethod(null);
+       decl.setModel(fBeanModel);
+       bean = new BeanPart (decl) ;	       
        fBeanModel.addBean(bean) ;
      }
      if (initMethod != null)     
@@ -734,36 +762,6 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      return bean ;	
 }
 
-/**
- * Return the expression that create an instance of this bean. i.e., Foo x = new Foo() ;
- */
-public static CodeExpressionRef getInstanceInitializationExpr(BeanPart bp) {
-    if (bp == null) return null ;
-    for (Iterator itr = bp.getRefExpressions().iterator(); itr.hasNext();) {
-        CodeExpressionRef exp = (CodeExpressionRef) itr.next();
-        if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-//            if (exp.getExprStmt()!=null) {
-//                Expression e=null ;
-//                if (exp.getExprStmt() instanceof Assignment) {
-//                     e = ((Assignment)exp.getExprStmt()).expression ;
-//                }
-//                else if (exp.getExprStmt() instanceof LocalDeclaration) {
-//                     e = ((LocalDeclaration)exp.getExprStmt()).initialization ;
-//                }
-//                // If it is of type STAT_INI_EXPR .. this should be it.
-//                if (e != null && (e instanceof AllocationExpression ||
-//								   e instanceof ArrayAllocationExpression ||
-//                                   e instanceof CastExpression ||
-//                                   e instanceof MessageSend))
-//                            return exp ;
-//            }
-        	// Time to open this up.... any init expression will go - we should build
-        	// the proper Parsed tree for this
-        	return exp;
-        }       
-    }
-    return null ;
-}
 
 /**
  * Update the IJavaObjectInstance initialization string
@@ -772,7 +770,7 @@ public static CodeExpressionRef getInstanceInitializationExpr(BeanPart bp) {
 public static void updateInstanceInitString(BeanPart bp) {
     IJavaObjectInstance obj = (IJavaObjectInstance)bp.getEObject() ;
     if (obj == null) return ;
-    CodeExpressionRef exp = getInstanceInitializationExpr(bp) ;
+    CodeExpressionRef exp = bp!=null? bp.getInitExpression(): null ; 
     // if there is no constructor decoder, initialize the allocation directly from the code
     if (exp != null && exp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
     	// we should not be here anymore !!!!!!!!

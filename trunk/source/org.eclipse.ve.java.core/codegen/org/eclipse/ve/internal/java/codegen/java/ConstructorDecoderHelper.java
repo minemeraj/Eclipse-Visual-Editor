@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.34 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.35 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -35,10 +35,8 @@ import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
  * @author Gili Mendel
  * @since 1.0.0
  */
-public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
-	protected List fReferences = new ArrayList() ;
+public class ConstructorDecoderHelper extends ExpressionDecoderHelper {	
 	
-
 	/**
 	 * 
 	 * This decoder deals with simple constructors
@@ -56,7 +54,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @return  new AST
 	 * 
 	 * @since 1.0.0
-	 * @deprecated
 	 */
 	protected Expression  getAST() {
 		if (fExpr instanceof ExpressionStatement) {
@@ -75,7 +72,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 
 	public static class CGParseTreeCreationFromAST extends ParseTreeCreationFromAST {
 
-		private CGParseTreeCreationFromAST(ParseTreeCreationFromAST.Resolver resolver) {
+		public CGParseTreeCreationFromAST(ParseTreeCreationFromAST.Resolver resolver) {
 			super(resolver);
 		}
 
@@ -120,11 +117,14 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		private IBeanDeclModel bdm;
 		private List ref;
 		private CodeMethodRef expMethodRef;
+		private int	offset;
 		
-		public CGResolver(CodeMethodRef expMethodRef, IBeanDeclModel bdm, List ref) {
+		public CGResolver(CodeMethodRef expMethodRef, int off, IBeanDeclModel bdm, List ref) {
 			this.expMethodRef = expMethodRef;
 			this.bdm = bdm;
 			this.ref = ref;
+			offset = off;
+			
 		}
 		
 		/*
@@ -219,17 +219,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		 * variable or global. Return null if not.
 		 */
 		private PTExpression resolveToBean(SimpleName name) {
-			BeanPart bp = bdm.getABean(name.getIdentifier());
+			BeanPart bp = CodeGenUtil.getBeanPart(bdm, name.getIdentifier(), expMethodRef, offset);
 			if (bp!=null)
 				return createBeanPartExpression(ref, bp);
-			
-			// possibly a ref. to a local variable - check bean with unique name
-			if(expMethodRef!=null){
-				String uniqueName = BeanDeclModel.constructUniqueName(expMethodRef, name.getIdentifier());
-				bp = bdm.getABean(uniqueName);
-				if (bp!=null) 
-					return createBeanPartExpression(ref, bp);
-			}
 			return null;
 		}
 		
@@ -368,7 +360,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				if(isTypeImmutable(type)) {
 					// Immutable - try to get its value
 					// The immutable could have other immutables in it - so call this resolver on that again
-					ptExpression = getParsedTree(value, expMethodRef, bdm, ref);
+					ptExpression = getParsedTree(value, expMethodRef, offset, bdm, ref);
 				}
 			}
 			return ptExpression;
@@ -408,14 +400,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * used for finding instance references which happen to be local variable. If <code>null</code>
 	 * is passed in, no local variable resolution will take place. 
 	 *  
+	 * @param off offset within the method (to resolve proper model instance for a given expression)
 	 * @param bdm
 	 * @param ref will update the list with the referenced instances not null
 	 * @return
 	 * 
 	 * @since 1.0.0
 	 */
-	public  static PTExpression getParsedTree(Expression ast, CodeMethodRef expMethodRef, IBeanDeclModel bdm, List ref) {
-		ParseTreeCreationFromAST parser = new CGParseTreeCreationFromAST(new CGResolver(expMethodRef, bdm, ref));
+	public  static PTExpression getParsedTree(Expression ast, CodeMethodRef expMethodRef, int off, IBeanDeclModel bdm, List ref) {
+		ParseTreeCreationFromAST parser = new CGParseTreeCreationFromAST(new CGResolver(expMethodRef, off, bdm, ref));
 		return parser.createExpression(ast);
 	}
 	
@@ -438,7 +431,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public boolean decode() throws CodeGenException {
 		// Set the EMF object with a proper PT allocation
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences()));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		
 		// SMART UPDATE
@@ -460,7 +453,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public boolean restore() throws CodeGenException {
 		// Update the references (fReferences) from the allocation PT. 
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-		InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fbeanPart.getModel(),fReferences));
+		InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences()));
 		return true;
 	}	
 
@@ -471,7 +464,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
 			// ivjFoo = <allocation>;			
-		if (!fbeanPart.isInstanceVar()) {
+		if (!fbeanPart.getDecleration().isInstanceVar()) {
 			String type = fbeanPart.getType();
 			fOwner.getExprRef().getReqImports().add(type);
 			int idx = type.lastIndexOf('.');
@@ -481,9 +474,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			sb.append(type+" "); //$NON-NLS-1$
 		}
 		sb.append(fbeanPart.getSimpleName());
-		sb.append(" = "); //$NON-NLS-1$
-		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
-		sb.append(";"); //$NON-NLS-1$
+		sb.append(" = ");
+		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences()));
+		sb.append(";");
 		sb.append(fbeanPart.getModel().getLineSeperator());
 		return sb.toString();
 		
@@ -542,18 +535,19 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @return 3 for GlobalBlobal, 2 for Global local, and 1 for local local.
 	 */
 	public static int getDefaultBeanPriority(BeanPart b) {
-		int p = 10000000;
-		if (b.isInstanceVar()) {
-			if (b.getReturnedMethod() != null)
-				p+= 3;
-			else
-				p+= 2;			
-		}
-		else
-			p+= 1;
-		// Parent should come before its child.
-		//TODO: we actyally need to get the parent priority here
-		return p-100*getParentCount(b);
+		return 0;
+//		int p = 10000000;
+//		if (b.getDecleration().isInstanceVar()) {
+//			if (b.getReturnedMethod() != null)
+//				p+= 3;
+//			else
+//				p+= 2;			
+//		}
+//		else
+//			p+= 1;
+//		// Parent should come before its child.
+//		//TODO: we actyally need to get the parent priority here
+//		return p-100*getParentCount(b);
 	}
 	
 	protected static int getParentCount (BeanPart b) {
@@ -575,9 +569,12 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
 	protected int getIndexPriority() {
-		if(fbeanPart!=null){
-			return getDefaultBeanPriority(fbeanPart);
-		}
+//		if(fbeanPart!=null){
+//			return getDefaultBeanPriority(fbeanPart);
+//		}
 		return super.getIndexPriority();
+	}
+	public Object[] getReferencedInstances() {		
+		return CodeGenUtil.getReferences((IJavaObjectInstance)fbeanPart.getEObject(),false).toArray();
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.25 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.26 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.Iterator;
@@ -79,6 +79,7 @@ public CodeExpressionRef createInitExpression() {
 		return null;
 	}
 	String content;
+	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 		exp.clearState();
 		exp.setNoSrcExpression(false);
@@ -87,11 +88,11 @@ public CodeExpressionRef createInitExpression() {
 		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
 		exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
 		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-		    
+				    
 		
 		InitExpressionGenerator gen = new InitExpressionGenerator(fBeanPart.getEObject(),fBeanPart.getModel());
 		gen.setInitbeanName(fBeanPart.getSimpleName());
-		gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports()));
+		gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports(), exp.getReferences()));
 		if (obj.getAllocation() instanceof ParseTreeAllocation)
 		    gen.setInitbeanType(obj.getJavaType().getName());
 		   			
@@ -100,7 +101,7 @@ public CodeExpressionRef createInitExpression() {
 	else
 		content = exp.getContent();
 	
-	if (!fBeanPart.isInstanceVar()) {
+	if (!fBeanPart.getDecleration().isInstanceVar()) {
 		// Since inner variables also need to have an annotation now (VariableRule.ignoreVariable),
 		// we need to generate on and add it to the init expression.
 		try {

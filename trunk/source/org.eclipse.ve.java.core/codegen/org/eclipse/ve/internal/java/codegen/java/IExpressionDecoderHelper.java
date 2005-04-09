@@ -11,8 +11,10 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IExpressionDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-09 01:19:15 $ 
  */
+
+import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
@@ -98,10 +100,15 @@ public interface IExpressionDecoderHelper {
    public void setDecodingContent (Statement exp) ;
    public Object[] getArgsHandles(Statement exp) ;
    public Object[] getAddedInstance() ;
+   /**
+    * 
+    * @return evaluation of the references of this decoder.
+    * 
+    * @since 1.1.0
+    */
+   public Object[] getReferencedInstances();
    // is a change in this sf impact this decoder
    public boolean isRelevantFeature (EStructuralFeature sf) ;
-   
-   
    
    
 }

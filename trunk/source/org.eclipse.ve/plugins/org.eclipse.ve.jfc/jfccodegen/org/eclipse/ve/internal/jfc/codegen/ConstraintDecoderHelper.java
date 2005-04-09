@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-05 21:53:07 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:20 $ 
  */
 
 
@@ -219,7 +219,7 @@ protected boolean	addConstraintFeature(boolean addToEMFmodel) throws CodeGenExce
 					Object currentValue = target.eGet(sf);
 					if(currentValue!=null && currentValue instanceof IJavaObjectInstance){
 						IJavaObjectInstance joi = (IJavaObjectInstance) currentValue;
-						String currentConstraint = CodeGenUtil.getInitString(joi, fbeanPart.getModel(), null);
+						String currentConstraint = CodeGenUtil.getInitString(joi, fbeanPart.getModel(), null, getExpressionReferences());
 						if(newConstraint.equals(currentConstraint))
 							shouldCommit = false;
 					}
@@ -288,7 +288,7 @@ protected int[]   getCompositionConstraints() throws CodeGenException {
 
   IJavaObjectInstance curValue = (IJavaObjectInstance)fbeanPart.
                                  getEObject().eGet(fFmapper.getFeature(fExpr)) ;  
-  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));	
+  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences()));	
 } 
 /**
  *  Create initialization arguments

@@ -30,8 +30,10 @@ public class MethodSortTests extends TestCase {
 
 	CodeTypeRef   tr = new CodeTypeRef("dummyType", new BeanDeclModel());
 	CodeMethodRef method =  null;
-	BeanPart bp1 = new BeanPart ("DummyBean 1","noType");
-	BeanPart bp2 = new BeanPart ("DummyBean 2","noType");
+	BeanPartDecleration decl1 = new BeanPartDecleration("DummyBean 1","noType");
+	BeanPartDecleration decl2 = new BeanPartDecleration("DummyBean 2","noType");
+	BeanPart bp1 = new BeanPart (decl1);
+	BeanPart bp2 = new BeanPart (decl2);
 	
 	class DummyExpression extends  CodeExpressionRef {		
 	
@@ -207,7 +209,8 @@ public class MethodSortTests extends TestCase {
 	   //    b1      b2      b1     b2      b1       b2      b1      b2       b1           b2        
 	   // [[9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2],  [7, 1], <**> [6, 3]]
 	   //    0        1       2       3      4       5        6       7        8            9
-		CodeExpressionRef exp = create(new BeanPart ("DummyBean 3","noType"), 7, 1);
+		BeanPartDecleration decl = new BeanPartDecleration("DummyBean 3","noType");
+		CodeExpressionRef exp = create(new BeanPart (decl), 7, 1);
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {

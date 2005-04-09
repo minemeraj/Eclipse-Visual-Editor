@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -95,7 +95,7 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 				BeanPart bp = getBeanPart(instance);
 				if(bp!=null && bp.getModel().getCompilationUnit()!=null){
 					ICompilationUnit cu = bp.getModel().getCompilationUnit();
-					if(bp.isInstanceVar()){
+					if(bp.getDecleration().isInstanceVar()){
 						if(isDuplicateField(cu, name))
 							return CodegenEditorPartMessages.getString("FieldNameValidator.VariableNameExists_INFO_"); //$NON-NLS-1$
 					}else{

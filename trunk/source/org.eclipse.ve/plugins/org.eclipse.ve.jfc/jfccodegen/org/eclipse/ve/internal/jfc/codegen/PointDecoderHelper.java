@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-01 22:18:01 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-09 01:19:20 $ 
  */
 
 
@@ -178,7 +178,7 @@ protected int[]   getCompositionArgs() throws CodeGenException {
 
   IJavaObjectInstance curValue = (IJavaObjectInstance)fbeanPart.
                                  getEObject().eGet(fFmapper.getFeature(fExpr)) ;  
-  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel(),fOwner.getExprRef().getReqImports())) ;	
+  return parseArgs(CodeGenUtil.getInitString(curValue,fbeanPart.getModel(),fOwner.getExprRef().getReqImports(),null)) ;	
 } 
 /**
  *  Create initialization arguments
@@ -323,7 +323,7 @@ public Object[] getArgsHandles(Statement expr) {
 	        if (a != null)
 	          o.eAdapters().remove(a) ;
 		}
-	}
+	}	
 }
 
 

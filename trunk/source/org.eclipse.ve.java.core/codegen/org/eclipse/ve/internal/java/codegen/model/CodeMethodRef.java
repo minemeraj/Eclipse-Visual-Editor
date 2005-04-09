@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.25 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.26 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -372,64 +372,77 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 }
 protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp) throws CodeGenException {
 	// 
-	// The sorted list may not be sorted the way we prioratize expressions, so it is may
-	// be coming from the source code .... so we have to go through ALL expressions
+	// The sorted list may not be sorted the way we prioratize expressions, (it is may
+	// be coming from the source code like this) .... so we have to go through ALL expressions
 	// to find a window where we can add the expression.
 	
 	int index = -1;
 	VEexpressionPriority expPriority = exp.getPriority();
+	List dependantBeans = exp.getReferences();
+	
 	if (expPriority.equals(IJavaFeatureMapper.NOPriority)) {
 		// add to the end of the list
 		index=sortedList.size();
 	}
 	else {
-		// need to find out the first/last existing expressions we can insert
-		// the new exp.  Start from the end, as expression may not be sorted
-		// according to the priorities.
+		
+		// find a target insersion window (first/last)
+		// Start from the end, as expression may not be sorted
+		// according to the priorities and dependencies.
 		int first = -1, last = -1 ;
+		boolean firstBean = true;
+				
 		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
 		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);		   
-		   int compare = comparePriority(expPriority, cExp.getPriority());
+		   int compare;
+		   // If We are dependant on the bean associated with this expression, or
+		   // the current expression is the init expression of us
+		   // We have to come after this one.
+		   boolean sameBean = cExp.getBean()==exp.getBean();
+		   firstBean &= !sameBean;
+		   if (sameBean) {
+		   	 if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+		   	 	    // new expression must come before this expression
+		   	 		last = i;
+		   	 		continue;
+		   	 }
+		   	 else if (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+		   	 		compare = -1;  // new expression will come after the init expr
+		   	 else {
+		   	 	    // Check priorities within a BeanPart
+		   	 		compare = comparePriority(expPriority, cExp.getPriority());
+		   	 }
+		   }
+		   else if (dependantBeans.contains(cExp.getBean().getEObject())) {
+		   	        // Drive dependencies ordering
+		   			compare = -1; // 		   
+		   }
+		   else continue; 
+		   
 		   switch (compare) {
-		      case -1: // exp < current
+		      case -1: // exp < cExp
 		      	       // This is the top most 
 		               first = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 		               break;
-		      case  0: // exp == current
+		      case  0: // exp == cExp
 		      		   if (last<0) { // first one
 		      		   	 // bottom most
 		      		     last = (i+1)>=sortedList.size()? sortedList.size() : i+1;
-		      		   } 
+		      		   }
+		      		   break;		      		     
 		   }
 		}
 		   	   
 	   if (first>=0) {
-	      // have a top bound
-	      if (last>=0) {
-	          // try to group same bean expressions
-	          index = last-1;
-	          for (; index>=first; index--) {
-	          	 if (index>=sortedList.size())
-	          	 	continue;
-	             CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(index);
-	             if (cExp.getBean().equals(exp.getBean())) {
-	                index = index+1>sortedList.size() ? sortedList.size() : index+1;
-	                break;
-	             }
-	          }
-	          if (index<first) {
-	           	// No expressions on the same bean... put it at the end
-	           	index = last;
-	          }	          
-	      }
-	      else {	      	
-	      	 // since there is no last... first already points to the right location
-	         index = first;
-	      }
+	   	  index = last>=0 ? last : first;
 	   }
 	   else {
-	   	  // This expression is with the highest priority
-	   	  index = 0;
+	   	  if (firstBean)
+	   	  	index = 0; // New expression for a new Bean with no dependencies
+	   	  else
+  	   	    // This expression is likly with the highest priority
+	   	    index = last>=0 ? last : 0 ;
+	   	  
 	   }	   
 	}	
 	addExpression (sortedList, exp, index) ;	
@@ -439,12 +452,13 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 	ArrayList  sortedList = new ArrayList();
 	ArrayList  needSorting = new ArrayList();
 	
-	// Those that are already set in code, will not change
+	
 	for (int i=0; i<list.size(); i++) {
 		CodeExpressionRef exp = (CodeExpressionRef) list.get(i);
 		if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED))
 			needSorting.add(exp);
 		else {
+			// Those that are already set in code, will not change
 			sortedList.add(exp);
 			// sanity check
 			if (exp.getOffset()<0) throw new CodeGenException("Invalid Offset: "+exp);//$NON-NLS-1$
@@ -531,8 +545,8 @@ protected static Comparator getDefaultBeanOrderComparator(){
 				return Integer.MAX_VALUE;
 			else if (isReferenced(main, subMain)) // if main ref. subMain, subMain must come first
 				return Integer.MIN_VALUE;
-			int mV = main.isInstanceVar()? 1 : 0;
-			int sV = subMain.isInstanceVar() ? 1 : 0 ;
+			int mV = main.getDecleration().isInstanceVar()? 1 : 0;
+			int sV = subMain.getDecleration().isInstanceVar() ? 1 : 0 ;
 			if (mV>sV)  
 				return Integer.MIN_VALUE;
 			else if (mV<sV)
