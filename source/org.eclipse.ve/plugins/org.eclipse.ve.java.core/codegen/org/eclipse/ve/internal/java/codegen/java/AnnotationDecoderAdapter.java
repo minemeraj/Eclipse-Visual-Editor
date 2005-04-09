@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.20 $  $Date: 2005-04-09 01:19:15 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -321,7 +321,7 @@ public boolean isAdapterForType(Object type) {
 
 protected IField getField(ICompilationUnit cu, BeanPart bp){
 	IField field = null;
-	if(bp.isInstanceVar() && cu.findPrimaryType()!=null){
+	if(bp.getDecleration().isInstanceVar() && cu.findPrimaryType()!=null){
 		field = cu.findPrimaryType().getField(bp.getSimpleName());
 	}
 	return field;
@@ -329,7 +329,7 @@ protected IField getField(ICompilationUnit cu, BeanPart bp){
 
 protected IMethod getReturnMethod(ICompilationUnit cu, BeanPart bp){
 	IMethod returnMethod = null;
-	if(bp.isInstanceVar() && bp.getReturnedMethod()!=null && cu.findPrimaryType()!=null){
+	if(bp.getDecleration().isInstanceVar() && bp.getReturnedMethod()!=null && cu.findPrimaryType()!=null){
 		try {
 			TypeResolver resolver = bp.getModel().getResolver();
 			IMethod[] methods = cu.findPrimaryType().getMethods();
@@ -415,7 +415,7 @@ protected Object[] getInitMethodNameAndParamNames(ICompilationUnit cu, BeanPart 
 protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChangedBP, final String newFieldName, final IMethod bpRetMethod){
 	final String oldVarName = nameChangedBP.getSimpleName();
 	Object[] ret;
-	if(nameChangedBP.isInstanceVar()){
+	if(nameChangedBP.getDecleration().isInstanceVar()){
 		ret = new Object[]{null, null};
 	}else{
 		ret = getInitMethodNameAndParamNames(cu, nameChangedBP);

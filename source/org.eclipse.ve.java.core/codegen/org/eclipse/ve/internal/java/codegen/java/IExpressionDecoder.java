@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IExpressionDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.List;
@@ -53,6 +53,7 @@ public interface IExpressionDecoder extends IJVEDecoder {
    boolean isRelevantFeature (EStructuralFeature sf) ;
    // Get a list of added instances, if any
    public Object[] getAddedInstance() ;
+   public Object[] getReferencedInstances();
    
    /** 
 	* Should return whether this decoder can handle the change in MOF. Typically

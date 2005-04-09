@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-05 21:53:07 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-09 01:19:20 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -28,7 +28,8 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -163,11 +164,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		} else if (arg instanceof SimpleName) {
 			// Simple reference to a bean
 			String selector = ((SimpleName) arg).getIdentifier();
-			bp = fOwner.getBeanModel().getABean(selector);
-			if (bp == null) {
-				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), selector));
-				//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+selector);
-			}
+			bp = CodeGenUtil.getBeanPart(fbeanPart.getModel(), selector, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
 		} else if (arg instanceof ClassInstanceCreation) {
 			if (fAddedInstance==null) {
 			  Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)arg).getName());
@@ -179,7 +176,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			  JavaClass c = (JavaClass) obj.getJavaType();
 			  if (c.isExistingType()) {
 				fAddedInstance = obj;
-				fAddedInstance.setAllocation(getAllocation(arg,null));
+				fAddedInstance.setAllocation(getAllocation(arg));
 			  }
 			}
 		}
@@ -213,7 +210,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
             CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences()));
             fTitleInstance.setAllocation(alloc);
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
 		}
@@ -227,7 +224,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.Icon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null)));
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences())));
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fIconInstance);
 		}
 	}
@@ -244,7 +241,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
             CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences()));
             fToolTipInstance.setAllocation(alloc);
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fToolTipInstance);
 		}
@@ -336,7 +333,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		String AddedArg;
 		if (fAddedPart == null)
-			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
+			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 		else if (fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
 		else
@@ -346,19 +343,19 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		// TODO  Need to deal with non String instances
 		if (fTitleInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
+			finalArgs.add(CodeGenUtil.getInitString(fTitleInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		if (fIconInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fIconInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
+			finalArgs.add(CodeGenUtil.getInitString(fIconInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(),getExpressionReferences()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
 		finalArgs.add(AddedArg);
 
 		if (fToolTipInstance != null)
-			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports()));
+			finalArgs.add(CodeGenUtil.getInitString(fToolTipInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences()));
 		else
 			finalArgs.add(SimpleAttributeDecoderHelper.NULL_STRING);
 
@@ -551,5 +548,15 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 			fToolTipInstance = getToolTip(fRootObj);
 		}
 		return result;
+	}
+	public Object[] getReferencedInstances() {		
+		Collection result = CodeGenUtil.getReferences(fbeanPart.getEObject(),false);
+		Object[] added = getAddedInstance();
+		for (int i = 0; i < added.length; i++) 
+			result.addAll(CodeGenUtil.getReferences(added[i],true));
+		result.addAll(CodeGenUtil.getReferences(fIconInstance,true));
+		result.addAll(CodeGenUtil.getReferences(fTitleInstance,true));
+		result.addAll(CodeGenUtil.getReferences(fToolTipInstance,true));
+		return result.toArray();
 	}
 }

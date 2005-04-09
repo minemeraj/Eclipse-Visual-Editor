@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.22 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.23 $  $Date: 2005-04-09 01:19:20 $ 
  */
 
 import java.util.List;
@@ -753,7 +753,7 @@ public static boolean isValidBeanLocation(EditDomain domain, EObject childCompon
 			// as the child component.
 			EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) childComponent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
 			if (cRef != null && cRef instanceof JCMMethod) {
-				if (((JCMMethod) cRef).getReturn() == childComponent)
+				if (true || ((JCMMethod) cRef).getReturn() == childComponent)
 					return true;
 			}
 		}

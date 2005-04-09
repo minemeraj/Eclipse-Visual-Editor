@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -38,12 +38,13 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclModel {
 	
-	ArrayList   fBeans=null ;                           // Root Beans
-	Hashtable   fBeansKey = new Hashtable () ;   	    // Keep a hash key for the fBeans vector
-	Hashtable   fBeanReturns = new Hashtable() ;        // Keep a hash of Methods with return Beans ... e.g., getJButton1() ;
-	Hashtable	fBeanInitMethod = new Hashtable() ;     // Keep a hash to all Methods  that update beans 
-	Hashtable   fRefObjKey = new Hashtable () ;         // Keep a hash from a EObject to Bean Part
-    ArrayList   fBeanDeleteCandidates = new ArrayList() ; // Hold before an Editor command is completed
+	ArrayList fBeans=null ;                           // Root Beans
+	HashMap   fBeanDecleration = new HashMap();
+	HashMap   fBeansKey = new HashMap () ;   	    // Keep a hash key for the fBeans by unique manes
+	HashMap   fBeanReturns = new HashMap() ;        // Keep a hash of Methods with return Beans ... e.g., getJButton1() ;
+	HashMap	  fBeanInitMethod = new HashMap() ;     // Keep a hash to all Methods  that update beans 
+	HashMap   fRefObjKey = new HashMap () ;         // Keep a hash from a EObject to Bean Part
+    ArrayList fBeanDeleteCandidates = new ArrayList() ; // Hold before an Editor command is completed
 	
 	TypeDeclaration				fTypeDeclaration = null ;           // The class element of the JDOM model
 	CodeTypeRef                 fTypeRef = null ;
@@ -74,9 +75,9 @@ private boolean isPriority(BeanPart b) {
 public List getBeans() {
 	ArrayList v = new ArrayList() ;
 	
-	Enumeration e = fBeansKey.elements() ;
-	while (e.hasMoreElements()) {
-	  Object o = e.nextElement() ;	  
+	Iterator e = fBeansKey.values().iterator();
+	while (e.hasNext()) {
+	  Object o = e.next() ;	  
 	  if (isPriority((BeanPart)o))
 	     v.add(0,o);
 	  else
@@ -217,7 +218,7 @@ public void addBean (BeanPart bean) {
    }
    else
       getRootBeans().remove(bean) ;
-   fBeansKey.put(bean.getUniqueName(),bean) ;
+   fBeansKey.put(bean.getUniqueName(),bean) ;   
    if (bean.getEObject() != null)
      fRefObjKey.put(bean.getEObject(),bean) ;
 }
@@ -297,8 +298,10 @@ public void setCompositionModel(IVEModelInstance cm) {
 	
 	org.eclipse.ve.internal.jcm.BeanSubclassComposition c = cm.getModelRoot() ;
 	
-	   
-	BeanPart b = new BeanPart("BeanSubclassComposition","") ; //$NON-NLS-1$ //$NON-NLS-2$
+	BeanPartDecleration decl = new BeanPartDecleration("BeanSubclassComposition","");
+	decl.setDeclaringMethod(null);
+	BeanPart b = new BeanPart(decl) ; //$NON-NLS-1$ //$NON-NLS-2$
+	
 	if (!isStateSet(BDM_STATE_SNIPPET)) {
 	   // Main BDM, adaptet to the composition
 	   b.setModel(this) ;
@@ -488,18 +491,6 @@ public boolean isStateSet(int state){
 	return ((getState() & state) == state);
 }
 
-private static String constructUniqueName(String methodHandle, String simpleName){
-	return methodHandle+"^"+simpleName; //$NON-NLS-1$
-}
-
-public static String constructUniqueName(IMethod method, String simpleName){
-	return constructUniqueName(method.getHandleIdentifier(), simpleName);
-}
-
-public static String constructUniqueName(CodeMethodRef method, String simpleName){
-	return constructUniqueName(method.getMethodHandle(),simpleName);
-}
-
 public Collection getBeansInitilizedByMethod(CodeMethodRef mref) {
    // TODO  We should have a hash table for these
    if (mref == null) return null ;
@@ -649,5 +640,17 @@ public void updateBeanNameChange(BeanPart bp) {
 	}
 	public void resumeSynchronizer() {
 		fSrcSync.resumeProcessing();
+	}
+	public void addBeanDecleration (BeanPartDecleration d) {
+		fBeanDecleration.put(d.getDeclerationHandle(),d);
+	}
+	public void removeBeanDecleration (BeanPartDecleration d) {
+		fBeanDecleration.remove(d.getDeclerationHandle());
+	}
+	public BeanPartDecleration getModelDecleration(BeanPartDecleration d) {
+		return getModelDecleration(d.getDeclerationHandle());
+	}
+	public BeanPartDecleration getModelDecleration(String handle) {
+		return (BeanPartDecleration) fBeanDecleration.get(handle);
 	}
 }

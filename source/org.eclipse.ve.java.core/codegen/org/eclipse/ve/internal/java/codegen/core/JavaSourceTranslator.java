@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.66 $  $Date: 2005-03-11 17:45:46 $ 
+ *  $Revision: 1.67 $  $Date: 2005-04-09 01:19:15 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -685,7 +685,7 @@ void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenExcepti
 	        throw new CodeGenException ("this Already initialized") ; //$NON-NLS-1$
 	   bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
 	}
-	else if(bp.getContainer()==null && bp.isInstanceVar() && bp.getFFDecoder().isVisualOnFreeform())
+	else if(bp.getContainer()==null && bp.getDecleration().isInstanceVar() && bp.getFFDecoder().isVisualOnFreeform())
 	   bsc.getComponents().add(bp.getEObject()) ; 
 }
 

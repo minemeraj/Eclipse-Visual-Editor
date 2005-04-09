@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 
@@ -48,13 +48,7 @@ void processAReturnStatement() {
 
 		if (exp instanceof SimpleName) {
 			String value = ((SimpleName) exp).getIdentifier();
-			String localValue = BeanDeclModel.constructUniqueName(fMethod, value);
-			BeanPart bean;
-			// It is possible that we have a local decleration with the same name of an
-			// instance variable. If a local is defined, the return method is for it.
-			bean = fModel.getABean(localValue);
-			if (bean == null)
-				bean = fModel.getABean(value);
+			BeanPart bean = CodeGenUtil.getBeanPart(fModel, value, fMethod, fReturnStmt.getStartPosition()-fMethod.getOffset());
 			if (bean != null) {
 				bean.addReturnMethod(fMethod);
 				try {

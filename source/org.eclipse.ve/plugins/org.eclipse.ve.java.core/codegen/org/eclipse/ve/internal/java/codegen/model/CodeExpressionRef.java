@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.42 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.43 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
@@ -45,6 +46,7 @@ protected   ExpressionParser		fContentParser	= null ;
 protected 	VEexpressionPriority	fPriority		= null;      
 protected   CodeExpressionRef		fMasteredExpression = null;  // STATE_NO_SRC expressions may have a master expression
 protected   List					freqImports = new ArrayList();  // Imports required
+protected 	List fReferences = new ArrayList() ; // References to other BeanBarts
 
 
 /*********
@@ -291,6 +293,8 @@ public  boolean  decodeExpression() throws CodeGenException {
       	return false ;
       }
     
+      freqImports.clear();
+      fReferences.clear();
       // TODO Need to be able and work with a IProgressMonitor"
       if(getExpressionDecoder()!=null) // this may not aloways have a decoder (snippet)
 	      return getExpressionDecoder().decode() ; 
@@ -310,7 +314,7 @@ protected String removeWhiteSpace(String s) {
 	}
 	return s.substring(i) ;
 }
- 
+
 /**
  *  Generate this. expression 
  */
@@ -319,6 +323,8 @@ public  String  generateSource(EStructuralFeature sf) throws CodeGenException {
       if (!isStateSet(STATE_EXIST)) //((fState|STATE_EXIST)==0) 
       	return null ;
     
+      freqImports.clear();
+      fReferences.clear();
       // TODO Need to be able and work with a IProgressMonitor
       String result = getExpressionDecoder().generate(sf,fArguments) ; 
       if (result == null) return result ;
@@ -335,7 +341,17 @@ public  String  generateSource(EStructuralFeature sf) throws CodeGenException {
       try {
 	     refreshAST();
 	     getExpDecoder().setStatement(fexpStmt);
-      }
+	     // At this time not all decoders construct PT for all expressions; e.g., the AddDecoderHelper
+	     // does not need to construct a PT for elements that are not complex e.g., jPanel.add(jButton,null)
+	     // the jButton has its own allocatin, and so does the jPanel, but not the add()
+	     Object[] added = getDecoderReferences();
+	     for (int i = 0; i < added.length; i++) {
+			EObject o = (EObject)added[i];
+			if (fBean.getModel().getABean(o) != null && 
+				!getReferences().contains(o))
+				getReferences().add(o);			
+		}
+      }  
       catch (Exception e1) {
 //      	JavaVEPlugin.log(e1) ;
       }
@@ -672,11 +688,34 @@ public  void insertContentToDocument() {
 	if (isStateSet(STATE_NO_SRC) || isStateSet(STATE_DELETE)) return ;
 	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 		JavaVEPlugin.log("CodeExpressionRef: creating:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	try {
 		// mark a controlled update (Top-Down)		
-		setState(STATE_UPDATING_SOURCE, true); 
+		setState(STATE_UPDATING_SOURCE, true);
+		String txt = getContent();
 		int docOff = getOffset()+getMethod().getOffset() ;
-		updateDocument(docOff, 0, getContent()) ;		
-		setState(STATE_UPDATING_SOURCE, false); 	
+		if (isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			// add a new line -- mostly the case for local declerations
+			Iterator itr = getMethod().getExpressions();
+			if (itr.next()==this) {
+				// first in line			
+				txt = txt + fBean.getModel().getLineSeperator();				
+			}
+			else {
+				CodeExpressionRef e=null;
+				while (itr.hasNext())
+						e = (CodeExpressionRef)itr.next();
+				if (e==this) {
+					// last in line
+					txt = fBean.getModel().getLineSeperator() + txt;
+					setOffset(getOffset()+fBean.getModel().getLineSeperator().length());
+				}
+			}
+		}
+		updateDocument(docOff, 0, txt) ;
+	}
+	finally {
+		setState(STATE_UPDATING_SOURCE, false);
+	}
 }
 
 /**
@@ -696,7 +735,7 @@ public void refreshAST() {
         ASTNode ast = parser.createAST(null);
         ASTVisitor visitor = new ASTVisitor() {
 			public void endVisit(ExpressionStatement node) {
-				s[0] = node;			
+				s[0] = node;					
 			}
 			public void endVisit(VariableDeclarationStatement node) {
 				s[0] = node;
@@ -1003,6 +1042,12 @@ public void setNoSrcExpression(boolean noSource) {
 	}
 }
 
+public Object[] getDecoderReferences() {
+	if (fDecoder != null)
+		 return fDecoder.getReferencedInstances();
+	return null ;	
+}
+
 public Object[] getAddedInstances() {
 	if (fDecoder != null)
 		 return fDecoder.getAddedInstance();
@@ -1044,6 +1089,12 @@ public void setMasteredExpression(CodeExpressionRef masterExpression) {
  */
 public List getReqImports() {
 	return freqImports;
+}
+public List getReferences() {
+	return fReferences;
+}
+public void setReferences(List references) {
+	fReferences = references;
 }
 }
 

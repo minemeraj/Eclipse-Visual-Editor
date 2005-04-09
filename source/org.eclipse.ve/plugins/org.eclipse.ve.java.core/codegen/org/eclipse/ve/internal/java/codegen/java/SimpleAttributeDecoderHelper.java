@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.32 $  $Date: 2005-04-01 20:59:43 $ 
+ *  $Revision: 1.33 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.Iterator;
@@ -79,7 +79,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
     			
             CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
-            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fbeanPart.getModel(),null));
+            		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fOwner.getExprRef().getOffset(),fbeanPart.getModel(), getExpressionReferences()));
             
             EFactory fact = argType.getEPackage().getEFactoryInstance();
 			IJavaInstance result = (IJavaInstance) fact.create((EClass) argType);
@@ -147,7 +147,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			Object currentValue = target.eGet(sf);
 			String currentInitString;
 			if (currentValue != null)
-				currentInitString = CodeGenUtil.getInitString((IJavaInstance)currentValue, fOwner.getBeanModel(), null);
+				currentInitString = CodeGenUtil.getInitString((IJavaInstance)currentValue, fOwner.getBeanModel(), null, getExpressionReferences());
 			else
 				currentInitString = NULL_STRING;
 			if(currentInitString.equals(newInitString)) 
@@ -179,9 +179,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 			fPropInstance = (IJavaInstance) currentVal;
 			if (currentVal != null) {
 				if (currentVal instanceof IJavaObjectInstance)
-					return CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
+					return CodeGenUtil.getInitString((IJavaObjectInstance) currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 				else if (currentVal instanceof IJavaDataTypeInstance)
-					return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
+					return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 
 			} else { // Is it a null value ??
 				EObject eobj = fbeanPart.getEObject();			
@@ -378,4 +378,5 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	          fPropInstance.eAdapters().remove(a) ;
 		}
 	}
+
 }

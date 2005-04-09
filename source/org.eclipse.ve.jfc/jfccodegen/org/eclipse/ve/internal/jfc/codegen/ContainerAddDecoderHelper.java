@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-04-05 21:53:07 $ 
+ *  $Revision: 1.21 $  $Date: 2005-04-09 01:19:20 $ 
  */
 
 import java.util.*;
@@ -232,11 +232,11 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		cleanProperty(fAddedConstraintInstance);
 	}
 	
-	protected JavaAllocation getAllocation (Expression exp, List ref) {
+	protected JavaAllocation getAllocation (Expression exp) {
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 		   JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
 		 		  ConstructorDecoderHelper.getParsedTree(exp,
-		 		  expOfMethod,fbeanPart.getModel(),ref));
+		 		  expOfMethod,fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences()));
 		return alloc;
 	}
 
@@ -260,10 +260,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		} else if (args.get(0) instanceof SimpleName) {
 			// Simple reference to a bean
 			String beanName = ((SimpleName)args.get(0)).getIdentifier();
-			bp = fOwner.getBeanModel().getABean(beanName);
-			if (bp == null)
-				bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
-			//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
+			bp = CodeGenUtil.getBeanPart(fbeanPart.getModel(), beanName, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
 		} else if (args.get(0) instanceof ClassInstanceCreation) {
 			if (fAddedInstance==null) {
  			 Resolved resolved = fbeanPart.getModel().getResolver().resolveType(((ClassInstanceCreation)args.get(0)).getName());
@@ -275,7 +272,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			 JavaClass c = (JavaClass) obj.getJavaType();
 			 if (c.isExistingType()) {
 				  fAddedInstance = obj;
-			      fAddedInstance.setAllocation(getAllocation((Expression)args.get(0),null));
+			      fAddedInstance.setAllocation(getAllocation((Expression)args.get(0)));
 			 }
 			}
 		}
@@ -316,7 +313,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 	}
 	protected IJavaObjectInstance parseAllocatedConstraint(ClassInstanceCreation exp) {
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fbeanPart.getModel(), null);
+		PTExpression pt = ConstructorDecoderHelper.getParsedTree(exp, expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences());
 		IJavaObjectInstance result = null;
 		try {
 			result = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.Object", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
@@ -369,7 +366,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			if (fCC!=null) {
 				if (args.get(0) instanceof ClassInstanceCreation) {
 				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
-				   JavaAllocation astAlloc = getAllocation((Expression)args.get(0),null);
+				   JavaAllocation astAlloc = getAllocation((Expression)args.get(0));
 				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
 				   if (!curAllocation.equals(astAllocation)) {
 				   	fAddedInstance.setAllocation(astAlloc);
@@ -453,11 +450,9 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 							}
 						} else if (args.get(arg) instanceof SimpleName) {
 							// A Variable - like a bean name
-							String beanName = ((SimpleName)args.get(arg)).getIdentifier();
-							tmpConstraintBeanPart =
-								fbeanPart.getModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(), beanName));
-							if (tmpConstraintBeanPart == null)
-								tmpConstraintBeanPart = fbeanPart.getModel().getABean(beanName);
+							String beanName = ((SimpleName)args.get(arg)).getIdentifier();							
+							tmpConstraintBeanPart = CodeGenUtil.getBeanPart(fbeanPart.getModel(), 
+									     beanName, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
 							
 							// SMART UPDATE CHECK
 							if(!constraintChanged){
@@ -805,7 +800,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		String AddedArg;
 		if (fAddedPart == null) {
 			// Simple property: add(new JLabel("Boo"),null)
-			AddedArg = CodeGenUtil.getInitString(fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
+			AddedArg = CodeGenUtil.getInitString(fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 		} else if (
 			fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
@@ -860,7 +855,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			// get the contstraints value
 			BeanPart cbp = fbeanPart.getModel().getABean(fAddedConstraintInstance);
 			if (cbp == null) // Vanilla constraint
-				fnonResolvedAddedConstraint = fAddedConstraint = CodeGenUtil.getInitString(fAddedConstraintInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports());
+				fnonResolvedAddedConstraint = fAddedConstraint = CodeGenUtil.getInitString(fAddedConstraintInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 			else
 				fnonResolvedAddedConstraint = fAddedConstraint = cbp.getSimpleName();
 		}
@@ -914,9 +909,9 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 				// Brand new expression
 				BeanPart bp = parseAddedPart((MethodInvocation)getExpression());
 				if (bp != null)
-					result = new Object[] { bp.getType() + "[" + bp.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
+					result = new Object[] { bp.getType() + "[" + bp.getUniqueName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (fAddedPart != null) {
-				return new Object[] { fAddedPart.getType() + "[" + fAddedPart.getSimpleName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
+				return new Object[] { fAddedPart.getType() + "[" + fAddedPart.getUniqueName() + "]" }; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (CodeGenException e) {
 		}
@@ -949,4 +944,18 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 		return new Object[0];
 	}
+	
+	public Object[] getReferencedInstances() {
+		Collection result = CodeGenUtil.getReferences(fbeanPart.getEObject(),false);
+		if (fAddedPart!=null) 
+
+			result.addAll(CodeGenUtil.getReferences(fAddedPart.getEObject(),true));
+		else 
+			result.addAll (CodeGenUtil.getReferences(fAddedInstance,true));
+		
+			
+		result.addAll (CodeGenUtil.getReferences(fAddedConstraintInstance,true));
+		return result.toArray();
+	}
+	
 }

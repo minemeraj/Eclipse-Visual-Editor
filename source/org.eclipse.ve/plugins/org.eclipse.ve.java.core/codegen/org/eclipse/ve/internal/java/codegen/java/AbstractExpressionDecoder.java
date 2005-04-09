@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.16 $  $Date: 2005-03-09 23:23:09 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-09 01:19:15 $ 
  */
 import java.util.logging.Level;
 
@@ -390,6 +390,12 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	public Object[] getAddedInstance() {
 		if (fhelper != null)
 			return fhelper.getAddedInstance();
+		return new Object[0];
+	}
+	
+	public Object[] getReferencedInstances() {
+		if (fhelper != null)
+			return fhelper.getReferencedInstances();
 		return new Object[0];
 	}
 

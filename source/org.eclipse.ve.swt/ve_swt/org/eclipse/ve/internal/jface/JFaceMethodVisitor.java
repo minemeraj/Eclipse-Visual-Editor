@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-09 01:19:17 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -74,13 +74,16 @@ public class JFaceMethodVisitor extends MethodVisitor {
 		}
 		
 		// Create the bean part
-		BeanPart bp = new BeanPart(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ; //$NON-NLS-1$
-		model.addBean(bp) ;
+		BeanPartDecleration decl = new BeanPartDecleration(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ; //$NON-NLS-1$
+		decl.setDeclaringMethod(initMethod);
+		BeanPart bp = new BeanPart(decl);
 		if(initMethod!=null)
 			bp.addInitMethod(initMethod);
+		model.addBean(bp) ;
+		
 		
 		// Find out the 'this' BeanPart
-		BeanPart thisPart = model.getABean("this"); //$NON-NLS-1$
+		BeanPart thisPart = model.getABean(BeanPart.THIS_NAME); //$NON-NLS-1$
 		
 		// Create the expression 
 		CodeExpressionRef exp = new CodeExpressionRef(initMethod, bp);

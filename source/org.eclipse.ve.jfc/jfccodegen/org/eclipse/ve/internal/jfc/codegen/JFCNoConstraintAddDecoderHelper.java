@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-03-18 18:47:57 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-09 01:19:20 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -23,7 +23,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
@@ -121,10 +120,7 @@ protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException 
       else if (args.get(getAddedPartArgIndex(args.size())) instanceof SimpleName){
             // Simple reference to a bean
             String beanName = ((SimpleName)args.get(getAddedPartArgIndex(args.size()))).getIdentifier();
-            bp = fOwner.getBeanModel().getABean(beanName) ;
-            if(bp==null)
-            	bp = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),beanName));
-            	//bp = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+beanName);
+            bp = CodeGenUtil.getBeanPart(fbeanPart.getModel(), beanName, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
       }
       else if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
       	if (fAddedInstance==null) {
@@ -136,7 +132,7 @@ protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException 
       	  JavaClass c = (JavaClass) obj.getJavaType() ;
       	  if (c.isExistingType()) {
       	  	fAddedInstance = obj ;
-      	    fAddedInstance.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())),null));
+      	    fAddedInstance.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size()))));
       	  }      	  
       	}
       }

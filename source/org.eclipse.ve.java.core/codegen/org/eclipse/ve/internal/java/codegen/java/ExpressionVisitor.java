@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.22 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.23 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.text.MessageFormat;
@@ -46,16 +46,18 @@ public void initialize(CodeMethodRef method, Statement stmt,IBeanDeclModel model
 	}
 }
 
+
+private BeanPart getBeanPart (String name, CodeMethodRef m) {
+	return CodeGenUtil.getBeanPart(fModel, name, m, fExpression.getOffset());
+}
+
 /**
  *  Process a SingleNameReference, e.g., bean.setFoo()
  */
 BeanPart  processSingleNameReference (MethodInvocation stmt) { 
 	  // Check to see that the "bean" part is a part we are interested with
-	  String name = ((SimpleName)stmt.getExpression()).getIdentifier();	  
-	  BeanPart b = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,name));
-	  if(b==null)
-	      b = fModel.getABean(name);	
-   	  return b;
+	  String name = ((SimpleName)stmt.getExpression()).getIdentifier();
+	  return getBeanPart(name, fMethod);   	 
 }
 
 /**
@@ -64,17 +66,7 @@ BeanPart  processSingleNameReference (MethodInvocation stmt) {
 BeanPart  processRefToMessageSend  (MethodInvocation stmt) {	   
   	  	// Check to see if the Model already knows about 
 		String selector = ((MethodInvocation)stmt.getExpression()).getName().getIdentifier();
-//		if (stmt.getExpression() instanceof ThisExpression) {
-//			// VAJ typical pattern, we did not resolved what this method returns yet,
-//			// postpone the parsing to later
-//			if (fReTryLater != null) {
-//				fReTryLater.add(this);
-//				JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$
-//				return null;
-//			}
-//			selector = new String(((MethodInvocation) stmt.getExpression()).getName().getIdentifier());
-//		}
-//
+
 		BeanPart b = null;
 		if (selector != null) {
 			b = fModel.getBeanReturned(selector);
@@ -119,10 +111,7 @@ protected BeanPart processFieldAccess (MethodInvocation stmt) {
 	if (f.getExpression() instanceof ThisExpression) {
 		// this.ivjFoo.sendMethod()
 		String name = f.getName().getIdentifier();
-		BeanPart b =  fModel.getABean(BeanDeclModel.constructUniqueName(fMethod,name));
-		  if(b==null)
-		      b = fModel.getABean(name);			
-		return b;		
+		return getBeanPart(name,fMethod);		
 	}
 	return null;
 }
@@ -253,6 +242,29 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 		return false ;
 }
 
+
+   /**
+    * This method will return a BeanPart instance to be instantiated with the current name. 
+    * @param name
+    * @param m
+    * @return
+    * 
+    * @since 1.1.0
+    */
+   protected BeanPart getBeanWithNoInitExpression(String name, CodeMethodRef m) {
+		BeanPartDecleration d = fModel.getModelDecleration(BeanPartDecleration.createDeclerationHandle(m,name));
+		BeanPart b = null;
+		if (d == null)
+			d = fModel.getModelDecleration(BeanPartDecleration.createDeclerationHandle((CodeMethodRef)null,name));
+		if (d!=null) {
+		  	b = d.getBeanPartWithNoInitExpression();
+		}
+		if (d!=null && b==null) {
+			// We need a new instance for the current decleration.
+			b = d.createAnotherBeanPartInstance(m);
+		}
+		return b;   	
+   }
 /**
  *  Process a Send Message,
  */
@@ -263,9 +275,8 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 		Expression lhs = stmt.getLeftHandSide();
 		if (lhs instanceof SimpleName || (lhs instanceof FieldAccess && ((FieldAccess) lhs).getExpression() instanceof ThisExpression)) {
 			String name = lhs instanceof SimpleName ? ((SimpleName) lhs).getIdentifier() : ((FieldAccess) lhs).getName().getIdentifier();
-			bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));//fMethod.getMethodHandle()+"^"+name);
-			if (bean == null)
-				bean = fModel.getABean(name);
+			// We are looking for an instance Bean that requires an init expression
+			bean = getBeanWithNoInitExpression(name, fMethod);
 			if (bean != null) {
 				fExpression.setBean(bean);
 				boolean initExpr = false;
@@ -281,16 +292,16 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 					// Assume the MessageSend is a static that can be resolved by the target VM...
 					// need more work here.
 					// At this point, make sure this is a static method.
-					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
-							: ((CastExpression) stmt.getRightHandSide()).getExpression());
-					if (m.getExpression() instanceof Name) {
-						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
-						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
-						// TODO This should be in a rule: parse methodInvocation Initialization
-						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
+//					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
+//							: ((CastExpression) stmt.getRightHandSide()).getExpression());
+//					if (m.getExpression() instanceof Name) {
+//						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
+//						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
+//						// TODO This should be in a rule: parse methodInvocation Initialization
+//						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
 							initExpr = true;
-						}
-					}
+//						}
+//					}
 				}
 				if (initExpr) {
 					bean.addInitMethod(fMethod);
@@ -306,9 +317,7 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 
 			//char[][] tokens = ((QualifiedNameReference)stmt.lhs).tokens ;
 			String bName = ((QualifiedName) stmt.getLeftHandSide()).getQualifier().toString();
-			bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, bName));//fMethod.getMethodHandle()+"^"+bName);
-			if (bean == null)
-				bean = fModel.getABean(bName);
+			bean = getBeanPart(bName, fMethod);
 			if (bean != null) {
 				fExpression.setBean(bean);
 				bean.addRefExpression(fExpression);
@@ -335,9 +344,7 @@ protected void processLocalDeclarations() {
     	
     	 String name = dec.getName().getIdentifier();
          
-         BeanPart bean = fModel.getABean(BeanDeclModel.constructUniqueName(fMethod, name));  //(fMethod.getMethodHandle()+"^"+name)
-         if(bean==null)
-         	bean = fModel.getABean(name) ; 
+         BeanPart bean = getBeanWithNoInitExpression(name, fMethod); 
          fExpression.setBean(bean) ;
          bean.addInitMethod(fMethod) ;
          //fExpression.setState(fExpression.getState() | fExpression.STATE_IN_SYNC | fExpression.STATE_NO_OP) ;

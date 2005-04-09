@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -111,7 +111,10 @@ public interface IBeanDeclModel extends IScannerFactory {
 	
 	public void suspendSynchronizer() ;
 	public void resumeSynchronizer() ;
-	
+	public void addBeanDecleration (BeanPartDecleration d);
+	public void removeBeanDecleration (BeanPartDecleration d);
+	public BeanPartDecleration getModelDecleration(BeanPartDecleration d);
+	public BeanPartDecleration getModelDecleration(String handle);
 }
       
 	

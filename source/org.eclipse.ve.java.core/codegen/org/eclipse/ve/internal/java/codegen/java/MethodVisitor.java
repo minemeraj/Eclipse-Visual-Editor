@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.text.MessageFormat;
@@ -62,9 +62,13 @@ protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	IMethodVariableRule methodVarRule = (IMethodVariableRule) CodeGenUtil.getEditorStyle(fModel).getRule(IMethodVariableRule.RULE_ID) ;
 	if (methodVarRule!=null && methodVarRule.ignoreVariable(stmt,fModel.getResolver(),fModel.getCompositionModel())) return ;
 	
-	BeanPart bp = new BeanPart(stmt) ;
+	BeanPartDecleration decl = new BeanPartDecleration(stmt);
+	decl.setDeclaringMethod(fMethod);
+	if (fModel.getModelDecleration(decl)!=null)
+		decl = fModel.getModelDecleration(decl); // reuse the existing mone
+	BeanPart bp = new BeanPart(decl) ;
 	bp.setModel(fModel) ;
-	bp.setInstanceVar(false) ;
+	decl.setDeclaringMethod(fMethod); 
 	bp.addInitMethod(fMethod) ;
 	fModel.addBean (bp) ;
 	//TODO: deal with multi expression lines

@@ -11,8 +11,9 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-09 01:19:15 $ 
  */
+import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,13 +22,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.java.codegen.model.BeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -37,9 +35,8 @@ import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 
 public class ChildRelationshipDecoderHelper extends AbstractIndexedChildrenDecoderHelper {
 	
-static final String                   NULL_STRING ="null" ;	 //$NON-NLS-1$
-	
-	protected BeanPart                        fAddedPart = null ;
+	static final String							NULL_STRING ="null" ;	 //$NON-NLS-1$
+	protected BeanPart							fAddedPart = null ;
 
 public ChildRelationshipDecoderHelper(BeanPart bean, Statement exp,  IJavaFeatureMapper fm, IExpressionDecoder owner){
 	super (bean,exp,fm,owner) ;
@@ -181,10 +178,7 @@ protected BeanPart parseAddedPart(MethodInvocation expr)  throws CodeGenExceptio
      else if (args.get(0) instanceof SimpleName){
             // Simple reference to a bean
             String selector = ((SimpleName)args.get(0)).getIdentifier();
-            added = fOwner.getBeanModel().getABean(selector) ;
-            if(added == null)
-            	added = fOwner.getBeanModel().getABean(BeanDeclModel.constructUniqueName(fOwner.getExprRef().getMethod(),selector));
-            	//added = fOwner.getBeanModel().getABean(fOwner.getExprRef().getMethod().getMethodHandle()+"^"+selector);
+            added = CodeGenUtil.getBeanPart(fOwner.getBeanModel(), selector, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());            	
      }
           
      return added ;    
@@ -406,7 +400,7 @@ private String getSourceCodeArg()  {
       if (!(currentVal instanceof IJavaInstance))
              return NULL_STRING ;
       else         
-             return boxLayoutOveride(CodeGenUtil.getInitString((IJavaInstance)currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports())) ;
+             return boxLayoutOveride(CodeGenUtil.getInitString((IJavaInstance)currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences())) ;
    }
       
    StringBuffer st = new StringBuffer() ;
@@ -490,10 +484,10 @@ public Object[] getArgsHandles(Statement expr) {
       	
         BeanPart bp = parseAddedPart((MethodInvocation)getExpression(expr)) ;
         if (bp != null) 
-          result = new Object[] { bp.getType()+"["+bp.getSimpleName()+"]" } ; //$NON-NLS-1$ //$NON-NLS-2$
+          result = new Object[] { bp.getType()+"["+bp.getUniqueName()+"]" } ; //$NON-NLS-1$ //$NON-NLS-2$
        }
        else if (fAddedPart != null) {
-           return new Object[] { fAddedPart.getType()+"["+fAddedPart.getSimpleName()+"]" } ; //$NON-NLS-1$ //$NON-NLS-2$
+           return new Object[] { fAddedPart.getType()+"["+fAddedPart.getUniqueName()+"]" } ; //$NON-NLS-1$ //$NON-NLS-2$
        }
     }    
     catch (CodeGenException e) {}
@@ -536,5 +530,11 @@ public Object[] getArgsHandles(Statement expr) {
 		// Could not find a bean part from the JVE Model... it may have been deleted.
 		if (fAddedPart != null) return true;
 		else return false ;	
+	}
+	public Object[] getReferencedInstances() {
+		Collection result = CodeGenUtil.getReferences(fbeanPart.getEObject(),false);
+		if (fAddedPart!=null)
+			result.addAll(CodeGenUtil.getReferences(fAddedPart.getEObject(),true));
+		return result.toArray();
 	}
 }

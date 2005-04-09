@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -112,7 +112,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		finitbeanName = beanName ;
 		
 		IJavaObjectInstance obj = (IJavaObjectInstance)fComponent ;		
-		setBeanInitString(CodeGenUtil.getInitString(obj, fModel, imports));	
+		setBeanInitString(CodeGenUtil.getInitString(obj, fModel, imports, null));	
 		if (imports!=null)
 			setInitBeanType(obj.getJavaType().getSimpleName());
 				
@@ -278,14 +278,15 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 				
 		// Set up a new BeanPart in the decleration Model
 		BeanPart bp = fModel.getABean(beanName) ;
+		//TODO:GM Need the ability to generate locals that resue an existing instance name.
 		if(bp==null)
-			bp = fModel.getABean(BeanDeclModel.constructUniqueName(method,beanName));//method.getMethodHandle()+"^"+fName);
+			bp = fModel.getABean(BeanPartDecleration.createDeclerationHandle(method,beanName));//method.getMethodHandle()+"^"+fName);
 				
 		
 		CodeExpressionRef initExp = createInitExpression(bp);
 		// Allow the expression sorted to find a nice spot for this one
 		initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
-		initExp.setOffset(-1) ;
+		initExp.setOffset(-1);
 		try {   
 			method.updateExpressionOrder() ;
 		}

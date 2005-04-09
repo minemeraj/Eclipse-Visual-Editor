@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-09 01:19:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -39,10 +39,11 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 
 		IBeanDeclModel fmodel ;
 		List 		   fimportList;
+		List		   frefList; 
 		
 		
 		public CodeGenExpFlattener (IBeanDeclModel model) {
-			this(model, null);
+			this(model, null, null);
 		}
 		/**
 		 * Providing an import list, will not use qualified name resolutions,
@@ -50,12 +51,11 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		 * @param model
 		 * @param importList
 		 */
-		public CodeGenExpFlattener (IBeanDeclModel model, List importList) {
+		public CodeGenExpFlattener (IBeanDeclModel model, List importList, List refList) {
 			super() ;
 			fmodel = model ;
 			fimportList = importList;
-			if (fimportList!=null)
-				fimportList.clear();				
+			frefList = refList;			
 		} 
 
 		/* (non-Javadoc)
@@ -63,6 +63,8 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		 */
 		public boolean visit(PTInstanceReference node) {
 			IJavaObjectInstance obj = node.getObject() ;
+			if (frefList!= null && !frefList.contains(obj))
+				frefList.add(obj);
 		    BeanPart bp = fmodel.getABean(obj);
 		    if (bp!=null)
 		    	  getStringBuffer().append(bp.getSimpleName()) ;

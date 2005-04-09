@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-09 01:19:15 $ 
  */
 
 import java.util.*;
@@ -158,7 +158,8 @@ public void visit()  {
 				return ;
 			// Should we skip this field ??
 			if (instVarRule!=null && instVarRule.ignoreVariable(fields[i],fModel.getResolver(),fModel.getCompositionModel())) continue ;
-			BeanPart bp = new BeanPart(fields[i]) ;
+			BeanPartDecleration decl = new BeanPartDecleration(fields[i]);
+			BeanPart bp = new BeanPart(decl) ;
 			fModel.addBean(bp) ;
 			String overidInitMethod = instVarRule.getDefaultInitializationMethod(fields[i], fModel.getResolver(), (TypeDeclaration)fVisitedNode) ;
 			if (overidInitMethod!=null) {			
