@@ -215,6 +215,22 @@
             modes="run, debug"
             class="org.eclipse.ve.internal.java.vce.launcher.JavaBeanShortcut"
             id="org.eclipse.ve.internal.java.core.vce.localJavaShortcut">
+        <contextualLaunch>
+            <enablement>
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+               		<iterate>
+                 		<or>
+                   			<test property="org.eclipse.debug.ui.matchesPattern" value="*.java"/>
+                   			<test property="org.eclipse.debug.ui.matchesPattern" value="*.class"/>
+                 		</or>
+               		</iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
          <perspective
                id="org.eclipse.jdt.ui.JavaPerspective">
          </perspective>
