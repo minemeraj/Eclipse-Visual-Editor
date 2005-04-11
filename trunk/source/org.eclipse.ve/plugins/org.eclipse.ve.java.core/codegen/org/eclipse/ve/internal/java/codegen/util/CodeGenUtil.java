@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.34 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.35 $  $Date: 2005-04-11 19:43:11 $ 
  */
 
 
@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -948,7 +949,16 @@ public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMetho
 	if (d == null)
 		d = model.getModelDecleration(BeanPartDecleration.createDeclerationHandle((CodeMethodRef)null,name));
 	if (d!=null) {
+		// instance variable decleration
 	  	b = d.getBeanPart(m,expOffset);
+		// It is possible that the instance is declared in a different method.
+		if (b==null) {
+   		  BeanPart[] beans = d.getBeanParts();
+		  //TODO: we need to actually find the bean with an init method
+		  //      that calls this method
+		  if (beans.length>0)
+			  return beans[0];
+		}
 	}
 	return b;
 }
