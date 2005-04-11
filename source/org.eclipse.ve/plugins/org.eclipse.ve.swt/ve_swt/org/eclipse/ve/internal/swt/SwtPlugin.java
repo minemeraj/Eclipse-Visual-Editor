@@ -26,6 +26,7 @@ public class SwtPlugin extends Plugin {
 	public static String DELEGATE_CONTROL = "delegate_control";	 //$NON-NLS-1$
 	public static final String VIEWPART_CLASSNAME = "org.eclipse.ui.part.ViewPart"; //$NON-NLS-1$
 	public static final String CONCRETE_VIEWPART_CLASSNAME = "org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart";	 //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.ve.swt";
 	
 	//The shared instance.
 	private static SwtPlugin plugin;

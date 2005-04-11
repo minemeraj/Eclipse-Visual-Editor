@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellSourceContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-11 22:17:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards.contributors;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
 import org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor;
@@ -40,4 +42,14 @@ public class ShellSourceContributor implements IVisualClassCreationSourceContrib
 	 */
 	public URL getTemplateLocation() {
 		return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/ShellSourceTemplate.javajet"));	} //$NON-NLS-1$
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#getStatus(IResource)()
+	 */
+	public IStatus getStatus(IResource resource) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

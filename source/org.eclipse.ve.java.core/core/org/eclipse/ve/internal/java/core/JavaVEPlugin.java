@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.24 $  $Date: 2005-04-07 19:56:41 $ 
+ *  $Revision: 1.25 $  $Date: 2005-04-11 22:17:55 $ 
  */
 
 import java.util.Map;
@@ -49,6 +49,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.ve.java.core";
 	public static final String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
 	public static final String PI_RUNTIME = "runtime"; //$NON-NLS-1$
