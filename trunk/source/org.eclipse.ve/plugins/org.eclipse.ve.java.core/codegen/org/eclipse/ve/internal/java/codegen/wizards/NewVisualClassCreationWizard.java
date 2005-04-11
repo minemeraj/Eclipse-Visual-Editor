@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.25 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.26 $  $Date: 2005-04-11 22:17:55 $ 
  */
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
         setDialogSettings(JavaVEPlugin.getPlugin().getDialogSettings());		
 		setWindowTitle(CodegenMessages.getString("NewVisualClassCreationWizard.title")); //$NON-NLS-1$
 	}
-	
+		
 	/**
 	 * Sets the contributor who will be providing for the source of the input className
 	 * 

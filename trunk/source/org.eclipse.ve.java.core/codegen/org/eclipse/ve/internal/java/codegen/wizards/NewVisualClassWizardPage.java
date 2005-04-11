@@ -12,14 +12,21 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-11 22:17:55 $ 
  */
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.viewers.*;
@@ -53,6 +60,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	private static final String DEFAULT_ELEMENT_KEY = "org.eclipse.ve.core.other-Object-java.lang.Object"; //$NON-NLS-1$
 
 	private boolean useSuperClass;
+	private IStatus fContributorStatus = IVisualClassCreationSourceContributor.OK_STATUS;
 
 	public class TreePrioritySorter extends ViewerSorter {
 
@@ -107,13 +115,24 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 					for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 						Object domain = iterator.next();
 						if (domain instanceof VisualElementModel) {
-							setSuperClass(((VisualElementModel) domain).getSuperClass());
 							selectedElement = (VisualElementModel) domain;
+							fContributorStatus = selectedElement.getStatus(getContainerRoot());
+							setSuperClass(((VisualElementModel) domain).getSuperClass());							
+							handleFieldChanged(null);
+						} else {
+							fContributorStatus = IVisualClassCreationSourceContributor.OK_STATUS;
+							handleFieldChanged(null);							
 						}
 					}
 				}
 			}
 		});
+	}
+	
+	
+	
+	protected IResource getContainerRoot(){ 
+		return getWorkspaceRoot().findMember(getPackageFragmentRootText());
 	}
 
 	protected void createSuperClassControls(Composite composite, int nColumns) {
@@ -197,11 +216,17 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 						// If this visual element contains the superclass passed into this wizard or was the previous selection,
 						// select it so it's highlighted in the tree viewer.
 						if (useSuperClass) {
-							if (vem.getSuperClass().equals(getSuperClass()))
-								selectedElement = vem;
+							if (vem.getSuperClass().equals(getSuperClass())) {
+								// There is an Eclipse policy where wizards cannot open with errors
+								if(vem.getStatus(getContainerRoot()).isOK()){
+									selectedElement = vem;
+								}
+							}
 						} else if (vem.getCategory().equals(previousSelectedElementData[0]) && vem.getName().equals(previousSelectedElementData[1])) {
-							selectedElement = vem;
-							setSuperClass(previousSelectedElementData[2], true);
+							if(vem.getStatus(getContainerRoot()).isOK()){							
+								selectedElement = vem;
+								setSuperClass(previousSelectedElementData[2], true);
+							}
 						}
 					}
 
@@ -211,6 +236,14 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 
 		return treeRoot;
 	}
+	
+	protected void updateStatus(IStatus[] statusArg) {
+		// The array of status objects is the ones that the superclass provides
+		IStatus[] status = new IStatus[statusArg.length + 1];
+		System.arraycopy(statusArg,0,status,0,statusArg.length);
+		status[status.length - 1] = fContributorStatus;
+		super.updateStatus(StatusUtil.getMostSevere(status));
+	}	
 
 	public void setSuperClass(String name) {
 		useSuperClass = true;
@@ -251,11 +284,12 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		return localSuperclassButtonDialogField;
 	}
 
-	// We need to know when the superclass text field has changed so that we can deselect the buttons
-	// This will help the user to know that they are no longer subclassing a Frame or Panel or Applet
+	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
 	protected void handleFieldChanged(String fieldName) {
+		if (fieldName == CONTAINER && selectedElement != null){
+			fContributorStatus = selectedElement.getStatus(getContainerRoot());			
+		}		
 		super.handleFieldChanged(fieldName);
-
 	}
 
 	protected Composite createComposite(Composite aParent, int numColumns) {
@@ -298,7 +332,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		data.verticalAlignment = GridData.FILL;
 		spacer.setLayoutData(data);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

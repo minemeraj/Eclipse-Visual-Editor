@@ -11,9 +11,15 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-11 22:17:55 $ 
  */
+import java.util.logging.Level;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author pmuldoon
@@ -32,6 +38,8 @@ public class VisualElementModel {
 	public CategoryModel parent;
 
 	private IConfigurationElement configElement;
+
+	private IVisualClassCreationSourceContributor contributor;
 
 	public VisualElementModel(IConfigurationElement configElement) {
 		this.configElement = configElement;
@@ -89,4 +97,25 @@ public class VisualElementModel {
 	public String toString() {
 		return "category: " + getCategory() + ", name: " + getName() + ", type: " + getSuperClass(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
+	
+	/**
+	 * @param resource 
+	 * @return Returns a reason why the current element can't be used.  This could be because the build path
+	 * of the project or type doesn't allow it.
+	 * A null return value implies that the contribution can be used
+	 */
+	public IStatus getStatus(IResource resource) {
+		if(resource == null) return IVisualClassCreationSourceContributor.OK_STATUS;
+		if(contributor == null){
+			try {
+				contributor = (IVisualClassCreationSourceContributor) configElement.createExecutableExtension("contributor"); //$NON-NLS-1$ 
+			} catch (CoreException e) {
+				JavaVEPlugin.log(e, Level.FINEST);
+				return IVisualClassCreationSourceContributor.OK_STATUS;
+			} 
+		}
+		IStatus result = contributor.getStatus(resource);
+		return result == null ? IVisualClassCreationSourceContributor.OK_STATUS : result;				
+	}
+	
 }

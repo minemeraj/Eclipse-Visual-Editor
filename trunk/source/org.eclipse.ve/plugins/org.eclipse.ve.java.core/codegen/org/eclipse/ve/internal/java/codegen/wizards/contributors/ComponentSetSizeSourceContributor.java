@@ -17,38 +17,40 @@ package org.eclipse.ve.internal.java.codegen.wizards.contributors;
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentSetSizeSourceContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-11 22:17:55 $ 
  */
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
 
 import org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-
-/**
- * @author sri
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 public class ComponentSetSizeSourceContributor implements IVisualClassCreationSourceContributor{
 
 /* (non-Javadoc)
- * @see org.eclipse.ve.internal.java.core.codegen.wizards.IVisualClassCreationSourceContributor#needsFormatting()
+ * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#needsFormatting()
  */
 public boolean needsFormatting() {
 	return true;
 }
 
 /* (non-Javadoc)
- * @see org.eclipse.ve.internal.java.core.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
+ * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
  */
 public URL getTemplateLocation() {
 	return JavaVEPlugin.getPlugin().find(new Path("templates/org/eclipse/ve/internal/java/codegen/jjet/wizards/contributors/ComponentSetSizeSourceTemplate.javajet")); //$NON-NLS-1$
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#getStatus(IResource)()
+ */
+public IStatus getStatus(IResource resource) {
+	return null;
 }
 
 
