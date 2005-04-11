@@ -19,6 +19,8 @@ public class ViewPartHost {
 	private static Image IMAGE;
 	private static int fx;
 	private static int fy;
+	public static final int MIN_X = 300;
+	public static final int MIN_Y = 175;
 
 public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
@@ -51,13 +53,13 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 		public Point computeSize(int wHint,int hHint, boolean changed){
 			Point preferredSize = super.computeSize(wHint,hHint, changed);
 			Point result = new Point(
-					preferredSize.x > 250 ? preferredSize.x : 250,
-					preferredSize.y > 150 ? preferredSize.y : 150
+					preferredSize.x > MIN_X ? preferredSize.x : MIN_X,
+					preferredSize.y > MIN_Y ? preferredSize.y : MIN_Y
 					);
 			return result;
 		}		
     };
-	viewPartArgument.setLayout(new GridLayout(1,false));
+	viewPartArgument.setLayout(new FillLayout(SWT.HORIZONTAL));
 	viewForm.setContent(viewPartArgument);
     folder.setSelection(item);	
 	item.setImage(getDummyImage());
