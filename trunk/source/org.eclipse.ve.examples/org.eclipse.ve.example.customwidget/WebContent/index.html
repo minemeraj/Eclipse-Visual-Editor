@@ -51,14 +51,16 @@ the Visual Editor's palette, building a BeanInfo class and working with
 EMF<span style="font-style: italic;"> .override</span> files to
 introduce custom editor behavior.&nbsp; The
 reader of this tutorial is intended to be someone who wishes to
-customize the Visual Editor for a particular widget and understands there
+customize the Visual Editor for a particular widget and understands
+there
 are a number of touch points that can be used to achieve this.<br>
 </p>
 <p><b>Gili Mendel, IBM<br>
 Joe Winchester, IBM<br>
 Dave Orme, db4objects</b></p>
 <p><font size="1">
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March 31, 2005<!--webbot bot="Timestamp" endspan i-checksum="16899" --></font></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->March
+31, 2005<!--webbot bot="Timestamp" endspan i-checksum="16899" --></font></p>
 <hr width="100%">
 <h1>Table of Contents</h1>
 <ul>
@@ -621,7 +623,8 @@ listed above.<br>
 <blockquote class="PictureParagraph">
   <blockquote> </blockquote>
 </blockquote>
-Having created the plugin there are two major steps remaining.&nbsp; The
+Having created the plugin there are two major steps remaining.&nbsp;
+The
 first is to create the actual custom widget class itself and test it,
 and the second is to extend the visual editor to have the customized
 behavior described in the <a href="#Introduction">introduction</a>.<br>
@@ -825,13 +828,16 @@ test it.&nbsp; To do this create an Eclipse launch configuration using
 the <span style="font-weight: bold;">Run </span>menu to bring up the
 list of available launch configurations, selecting <span
  style="font-style: italic;">Eclipse Application</span> and <span
- style="font-style: italic;">New </span>and then running this using the default 
-application.<p><img border="0" src="images/launchConfig.jpg"></p>
+ style="font-style: italic;">New </span>and then running this using
+the default application.
+<p><img alt="" style="border: 1px solid ; width: 251px; height: 323px;"
+ src="images/launchConfig.jpg"></p>
 <p>
-<img src="images/note.gif" alt="Note: " height="13" width="62"> On Eclipse 3.0.x 
-an <i>Eclipse Application</i> launch configuration is called <i>Run-time 
-Workbench.</i></p>
-<p>This will launch a second Eclipse workbench - the first being your one
+<img src="images/note.gif" alt="Note: " height="13" width="62"> On
+Eclipse 3.0.x an <i>Eclipse Application</i> launch configuration is
+called <i>Run-time Workbench.</i></p>
+<p>This will launch a second Eclipse workbench - the first being your
+one
 that you are using to develop the plugin and the second being the one
 you are going to use to deploy the plugin into.&nbsp; In the deployed
 workbench create a Java project and add <i>customwidgets.jar</i> to
@@ -982,7 +988,8 @@ the container wizard page.&nbsp; This tutorial is using <img
 <br>
 </span>Having configured the wizard page and the container initializer
 this will now add an instance of the RegisteredClasspathContainer to
-the user's build path of their Java project.&nbsp; This needs to be told
+the user's build path of their Java project.&nbsp; This needs to be
+told
 where to locate the jars that contain the runtime code.&nbsp; There is
 an extension point used by the RegisteredClasspathContainer class named
 <span style="font-style: italic;">org.eclipse.ve.java.core.registrations.&nbsp;
@@ -1017,7 +1024,8 @@ location of the jar is relative to the plugin itself, so if <span
 directory called <span style="font-style: italic;">jars </span>within
 the plugin then the entry would be runtime="jars/.customwidgets.jar".<br>
 <br>
-Having updated the plugin.xml file to define the classpath container the
+Having updated the plugin.xml file to define the classpath container
+the
 next step is to test this.<br>
 <h2><a name="Using_a_classpath_container"></a>Using a classpath
 container<br>
@@ -1053,7 +1061,7 @@ Library </span>button<span style="font-style: italic;"><span
  style="font-weight: bold;"><span style="font-style: italic;"><span
  style="font-weight: bold;"><br>
 </span></span></span></span></p>
-<p><img style="width: 656px; height: 437px;" alt=""
+<p><img style="border: 1px solid ; width: 656px; height: 437px;" alt=""
  src="images/CustomPrompterContainerPage.JPG"><br>
 <span style="font-style: italic;"><span style="font-weight: bold;"><span
  style="font-style: italic;"><span style="font-weight: bold;"></span></span></span></span></p>
@@ -1076,7 +1084,7 @@ correct location for the customwidgets.jar as described in the <span
 runtinme="customwidgets.jar"&gt;</span> plugin.xml tag described <a
  href="#library_definition">earlier</a>.<br>
 <br>
-<img style="width: 267px; height: 138px;" alt=""
+<img style="border: 1px solid ; width: 267px; height: 138px;" alt=""
  src="images/TestProjectBuildPath.JPG"><br>
 <br>
 <img src="images/note.gif" alt="Note: " height="13" width="62"> The
@@ -1290,7 +1298,8 @@ behavior over and above that it inherits by virtue of extending <span
 has an <i>int</i> property named <i style="font-weight: bold;">type</i><span
  style="font-weight: bold;">
 </span>with <i>getType</i>() and <i>setType</i>(int aType)
-methods.&nbsp; While the signature of <i>setType</i> allows it to accept
+methods.&nbsp; While the signature of <i>setType</i> allows it to
+accept
 any int, the class itself only works with one of the three values 0, 1,
 or 2 The definition of the values is held in three static constants
 on the <span style="font-family: monospace;">MyPrompterClass</span>.<br>
@@ -1561,7 +1570,7 @@ generated with the initializationString as defined in the <span
  style="font-family: monospace;">BeanInfo </span>array.<br>
 <span style="color: rgb(255, 0, 0);"></span><br>
 <br>
-<img style="width: 910px; height: 804px;" alt=""
+<img style="border: 1px solid ; width: 910px; height: 804px;" alt=""
  src="images/index.53.jpg"><br>
 <br>
 The BeanInfo mechanism provides one technique to override default edit
@@ -1939,7 +1948,8 @@ returns the value.&nbsp; <br>
 specialized to return the value of the LableDialogContent, which
 represents the String entered by the user as the new <span
  style="font-style: italic;">text </span>property.&nbsp; This is so
-that the value can be referenced by the CustomLabelEditor itself when it
+that the value can be referenced by the CustomLabelEditor itself when
+it
 <img style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">has
 created the actual object that will be set into the Visual Editor
 model.<br>
@@ -1958,8 +1968,8 @@ createStringJavaObject(String aString);<br>
 <p>To create an <span style="font-family: monospace;">IJavaInstance </span>requires
 two steps.&nbsp; First the EMF
 <span style="font-family: monospace;">JavaClass </span>needs to be
-located and then an instance of <span
- style="font-family: monospace;">IJavaInstance </span>needs to be
+located and then an instance of <span style="font-family: monospace;">IJavaInstance
+</span>needs to be
 created using this with rules as to how the actual instantion of the
 live Java object should occur (both in code and by the target VM).<br>
 </p>
@@ -2111,8 +2121,8 @@ JVM.&nbsp;&nbsp;&nbsp; This proxy is an instance of <span
  style="font-family: monospace;">org.eclipse.jem.internal.proxy.core.IBeanProxy</span>
 and is able to perform tasks such as remote method&nbsp; invocation on
 the actual target VM instance. <br>
-The API for this is modelled on the<span
- style="font-family: monospace;"> java.lang.reflect</span> API however,
+The API for this is modelled on the<span style="font-family: monospace;">
+java.lang.reflect</span> API however,
 unlike the reflection API which performs dynamic invocation within a
 single JVM, the bean proxy mechanism works between the Eclipse
 workbench's JVM where the proxies are, and Visual Editor's target JVM
@@ -2581,20 +2591,13 @@ the black the new lines to add)<br>
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">     graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;<br>      &lt;/addedEObjects&gt; <br>    &lt;/event:Add&gt;<br>    <br><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                                &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                                                cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                &lt;/addedEObjects&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                &lt;/event:Add&gt;   </span><br
- style="color: rgb(153, 153, 153);"><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                &lt;/xmi:XMI&gt;                                                                                                                                                                                                             &lt;/xmi:XMI&gt;</span></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif"> &lt;event:Add featureName="eStructuralFeatures"&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"<br>          </span><span
+ style="color: rgb(153, 153, 153);">cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>      &lt;/addedEObjects&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>    &lt;/event:Add&gt;<br>  </span><span
+ style="color: rgb(153, 153, 153);">&lt;/xmi:XMI&gt;                                                                                                                                                                                                             &lt;/xmi:XMI&gt;</span></pre>
 <p>To specify that <span style="font-family: monospace;">BasePropertyDecorator
 </span>as annotating the <span style="font-style: italic;">type </span>structural
 feature (as was done for the CustomLabelEditor earlier) an&nbsp;<img
@@ -2749,8 +2752,8 @@ file in <span style="font-style: italic;">org.eclipse.ve.swt/overrides/org/eclip
 <br>
 <pre>    &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:<img
- style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">true"<br><span
- style="color: rgb(0, 153, 0);">                                                ...</span><br>    &lt;/addedEObjects&gt;<br></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">true"<span
+ style="color: rgb(0, 153, 0);"><br>    </span>&lt;/addedEObjects&gt;<br></pre>
 The&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag1.gif"> graphViewClassname is defined as
 pluginName/qualifiedClassNane:initData and the value of <img
@@ -2828,44 +2831,30 @@ This is declared in the <span style="font-style: italic;">MyCustomPrompter.overr
 </span>so the Visual Editor uses it.<br>
 </p>
 <pre><span style="color: rgb(192, 192, 192);"><span
- style="color: rgb(153, 153, 153);">   &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                        &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);"></span><span
- style="color: rgb(153, 153, 153);"></span><span
- style="color: rgb(153, 153, 153);">                                xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
+ style="color: rgb(153, 153, 153);">   &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><span
+ style="color: rgb(153, 153, 153);"><br>     &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><span
+ style="color: rgb(153, 153, 153);"><br>       xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"<br></span><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif"></span><span
- style="color: rgb(153, 153, 153);"> </span>xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
- style="color: rgb(153, 153, 153);"><br
+ style="color: rgb(153, 153, 153);"> </span>   xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"<span
  style="color: rgb(153, 153, 153);"></span><span
- style="color: rgb(153, 153, 153);">                                xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
+ style="color: rgb(153, 153, 153);"><br>       xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;</span><br><br><span
  style="color: rgb(153, 153, 153);"><img
- style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>     <span
- style="color: rgb(153, 153, 153);"> &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                                graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                &lt;/addedEObjects&gt; </span><br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span> &lt;event:AddMany featureName="eAnnotations"&gt;<br>      <span
+ style="color: rgb(153, 153, 153);">&lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"</span><span
+ style="color: rgb(153, 153, 153);"><br>        graphViewClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomWidgetGraphicalEditPart"&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>      &lt;/addedEObjects&gt; </span><br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">   &lt;addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass"<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">source="codegen.CodeGenHelperClass"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">     expDecoder="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomPrompterDecoder"/&gt;   <br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br>    <br><span
- style="color: rgb(153, 153, 153);">                                &lt;event:Add featureName="eStructuralFeatures"&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                                &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"          </span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                                                cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                                &lt;/addedEObjects&gt;</span><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                                &lt;/event:Add&gt;   </span><br
- style="color: rgb(153, 153, 153);"><br
- style="color: rgb(153, 153, 153);"><span
- style="color: rgb(153, 153, 153);">                &lt;/xmi:XMI&gt;</span></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif"> &lt;/event:AddMany&gt;<br><br>    <span
+ style="color: rgb(153, 153, 153);">&lt;event:Add featureName="eStructuralFeatures"&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>      &lt;addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>        &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"<br>          </span><span
+ style="color: rgb(153, 153, 153);">cellEditorClassname="org.eclipse.ve.example.customwidget/org.eclipse.ve.example.customwidget.CustomLabelEditor"/&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>      &lt;/addedEObjects&gt;</span><span
+ style="color: rgb(153, 153, 153);"><br>    &lt;/event:Add&gt;<br><br></span><span
+ style="color: rgb(153, 153, 153);">  &lt;/xmi:XMI&gt;</span></pre>
 <span style="color: rgb(192, 192, 192);"> </span><span
  style="color: rgb(153, 153, 153);"> </span>
 <p>Earlier when just the single ClassDecriptorDecorator was added as an
@@ -3084,7 +3073,8 @@ as shown below<br>
 <p>In&nbsp; this tutorial, we looked at a high level where to start
 and extend the Visual Editor and use specialized property cell editors,
 BeanInfo, GEF edit parts, palette, and CodeGen decoders.&nbsp; To do
-this required understanding how to use Java build path containers as the
+this required understanding how to use Java build path containers as
+the
 trigger point for Visual Editor custom behavior, and how to inject
 specialized code through the user of BeanInfo classes (for cross IDE
 extensions) and .override files (for Visual Editor only specific
