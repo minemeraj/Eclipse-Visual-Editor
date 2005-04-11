@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-11 15:58:15 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -27,6 +27,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
@@ -41,6 +42,7 @@ import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.swt.BeanSWTUtilities;
 import org.eclipse.ve.internal.swt.ControlManager;
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
@@ -257,13 +259,28 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
 			public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
 				// Now we have a ViewPart subclass, we want to get it correctly instantiated on the target VM
-				// 1) org.eclipse.ve.jface.targetvm.ViewPartHost.addViewPart(WorkbenchPart) with the ViewPart as the argument 		
+				// 1) org.eclipse.ve.jface.targetvm.ViewPartHost.addViewPart(WorkbenchPart,String) with the ViewPart as the argument
+				//    and the second argument the name of the text to appear as the ViewPart title
 			
 				IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
+				// Ensure the view part host is positioned off screen
+				org.eclipse.swt.graphics.Point offscreen = BeanSWTUtilities.getOffScreenLocation();
+				IIntegerBeanProxy intXBeanProxy = aBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.x);
+				IIntegerBeanProxy intYBeanProxy = aBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.y);
+				// This is done by invoking the method setLocation(int,int) on the ViewPartHost
+				IMethodProxy setLocationMethodProxy = viewPartHostTypeProxy.getMethodProxy("setLocation",
+						new IBeanTypeProxy[] {intXBeanProxy.getTypeProxy(),intYBeanProxy.getTypeProxy()});
+				setLocationMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {intXBeanProxy,intYBeanProxy});
+				
+				// Get the name of the type of ViewPart and use it as the title of the Tab folder
+				// This is an approximation as in the final runtime it will come from the plugin.xml
+				String javaTypeName = ((IJavaInstance)getTarget()).getJavaType().getName();
+				IBeanProxy javaTypeNameProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(javaTypeName);
+				
+				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ // $NON-NLS-3$
 				// The method addViewPart returns a two element array typed to org.eclipse.swt.Composite
 				// The first is the composite for the outer ViewPane, the second for the inner composite that is the argument to createPartControl(Composite)
-				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,aBeanProxy);
+				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,javaTypeNameProxy});
 				
 				viewPaneBeanProxy = compositeArrayBeanProxy.get(0);
 				compositeBeanProxy = compositeArrayBeanProxy.get(1);

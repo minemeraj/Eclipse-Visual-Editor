@@ -10,26 +10,19 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.WorkbenchPart;
+import org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener;
 
 public class ViewPartHost {
 
 	static Shell shell;
 	static Map viewPartToParentComposite = new HashMap(1);
 	private static Image IMAGE;
+	private static int fx;
+	private static int fy;
 
-public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart){
+public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
-	Composite parent = new Composite(getWorkbenchShell(),SWT.NONE){
-		public Point computeSize(int wHint,int hHint){
-			Point preferredSize = super.computeSize(wHint,hHint);
-			Point result = new Point(
-					preferredSize.x > 200 ? preferredSize.x : 200,
-					preferredSize.y > 200 ? preferredSize.y : 200
-					);
-			return result;
-		}
-	};
-
+	Composite parent = new Composite(getWorkbenchShell(),SWT.NONE);
 	parent.setLayout(new FillLayout());
 	
     CTabFolder folder = new CTabFolder(parent, SWT.BORDER);
@@ -53,8 +46,17 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart){
     viewForm.setTopLeft(viewMessage);
 
     CTabItem item = new CTabItem(folder, SWT.CLOSE);
-    item.setText("View Part Name"); //$NON-NLS-1$
-    Composite viewPartArgument = new Composite(viewForm, SWT.NONE);
+    item.setText(aTitle); //$NON-NLS-1$
+    Composite viewPartArgument = new Composite(viewForm, SWT.NONE){
+		public Point computeSize(int wHint,int hHint, boolean changed){
+			Point preferredSize = super.computeSize(wHint,hHint, changed);
+			Point result = new Point(
+					preferredSize.x > 250 ? preferredSize.x : 250,
+					preferredSize.y > 150 ? preferredSize.y : 150
+					);
+			return result;
+		}		
+    };
 	viewPartArgument.setLayout(new GridLayout(1,false));
 	viewForm.setContent(viewPartArgument);
     folder.setSelection(item);	
@@ -94,7 +96,7 @@ public static void layoutViewPart(WorkbenchPart aWorkbenchPart){
 public static void main(String[] args) {
 	
 	TestViewPartTest testViewPart = new TestViewPartTest(); 
-	addViewPart(testViewPart);
+	addViewPart(testViewPart,"View Part Name");
 	layoutViewPart(testViewPart);
 	while(!shell.isDisposed()){
 		if(!shell.getDisplay().readAndDispatch())shell.getDisplay().sleep();
@@ -102,11 +104,21 @@ public static void main(String[] args) {
 	
 }
 
+public static void setLocation(int x, int y){
+	fx = x;
+	fy = y;
+	if(shell != null){
+		shell.setLocation(x,y);
+	}
+}
+
 protected static Composite getWorkbenchShell(){
 	
 	if(shell == null){
-		shell = new Shell();
-		shell.setBounds(5,5,200,200);
+		Shell dialogParent = new Shell();
+		shell = new Shell(dialogParent,SWT.SHELL_TRIM);
+		shell.addShellListener(new PreventShellCloseMinimizeListener());
+		shell.setBounds(fx,fy,200,200);
 		shell.setText("View part host");
 		shell.setLayout(new RowLayout());
 		shell.open();
