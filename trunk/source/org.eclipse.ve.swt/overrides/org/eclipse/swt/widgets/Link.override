@@ -17,7 +17,10 @@
   </event:AddMany>
 
   <event:AddMany featureName="eAnnotations">
-  	<addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+  	<addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+  	      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkGraphicalEditPart">
+  	    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.creationtool.policy"
+	      value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTLinkCreationPolicy:Link,text"/>
     	<graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif"/>
 	</addedEObjects>
   </event:AddMany>
