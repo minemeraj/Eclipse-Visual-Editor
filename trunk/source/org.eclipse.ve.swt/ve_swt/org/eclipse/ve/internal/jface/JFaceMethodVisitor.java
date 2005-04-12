@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-09 01:19:17 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-12 22:08:39 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -41,17 +41,20 @@ public class JFaceMethodVisitor extends MethodVisitor {
 	}
 	
 	public void processJFaceContributions(MethodDeclaration method, IBeanDeclModel model) {
-		List parameters = method.parameters();
-		if(parameters!=null && parameters.size()==1){
-			Object param = parameters.get(0);
-			if (param instanceof SingleVariableDeclaration) {
-				SingleVariableDeclaration svd = (SingleVariableDeclaration) param;
-				String fqn = svd.getType().toString();
-				TypeResolver.Resolved resolved = model.getResolver().resolveType(svd.getType());
-				if(resolved!=null)
-					fqn = resolved.getName();
-				if("org.eclipse.swt.widgets.Composite".equals(fqn)){ //$NON-NLS-1$
-					createParamBeanPart(svd, model, method);
+		// This visitor is for WorkbenchPart class only
+		if (method.getName().getIdentifier().equals("createPartControl")) { //$NON-NLS-1$
+			List parameters = method.parameters();
+			if(parameters!=null && parameters.size()==1){
+				Object param = parameters.get(0);
+				if (param instanceof SingleVariableDeclaration) {
+					SingleVariableDeclaration svd = (SingleVariableDeclaration) param;
+					String fqn = svd.getType().toString();
+					TypeResolver.Resolved resolved = model.getResolver().resolveType(svd.getType());
+					if(resolved!=null)
+						fqn = resolved.getName();
+					if("org.eclipse.swt.widgets.Composite".equals(fqn)){ //$NON-NLS-1$
+						createParamBeanPart(svd, model, method);
+					}
 				}
 			}
 		}
@@ -73,13 +76,21 @@ public class JFaceMethodVisitor extends MethodVisitor {
 			}
 		}
 		
+		
 		// Create the bean part
 		BeanPartDecleration decl = new BeanPartDecleration(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ; //$NON-NLS-1$
 		decl.setDeclaringMethod(initMethod);
-		BeanPart bp = new BeanPart(decl);
-		if(initMethod!=null)
-			bp.addInitMethod(initMethod);
+		BeanPart bp = new BeanPart(decl);			
 		model.addBean(bp) ;
+
+		bp.addInitMethod(initMethod);
+	    //	 Force the creation of a method adapter 
+		if (fModel.getCompositionModel().isFromCache())
+			initMethod.restore();
+		else
+		    initMethod.getCompMethod();
+
+		
 		
 		
 		// Find out the 'this' BeanPart
