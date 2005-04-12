@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.44 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.45 $  $Date: 2005-04-12 21:56:28 $ 
  */
 
 
@@ -778,7 +778,17 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		else
 		  if (getBean() != null && exp1.getBean() == null) return -1 ;
 		
-		boolean beanEquivalency = getBean().isEquivalent(exp1.getBean());
+		boolean beanEquivalency ;
+		// If both expressions are init expressions, then we cant depend on the 
+		// bean's isEquivalent() API as it is INIT_EXPR offset based. Hence do 
+		// the simple compare.
+		// TODO: Need to revisit this
+		if(isStateSet(CodeExpressionRef.STATE_INIT_EXPR) && exp1.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+			beanEquivalency = getBean().getSimpleName().equals(exp1.getBean().getSimpleName()) &&
+								getBean().getType().equals(exp1.getBean().getType());
+		}else{
+			beanEquivalency = getBean().isEquivalent(exp1.getBean());;
+		}
 		
 //TODO: Need to deal with Local Declerations		
 		String expc1 = exp1.getMethodNameContent();
