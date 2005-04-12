@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-11 15:58:15 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-12 22:36:43 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -99,8 +99,15 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	}
 	
 	public void releaseBeanProxy() {
+		ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();		
 		releaseBeanProxy(getBeanProxy());
-		releaseBeanProxy(viewPaneBeanProxy);
+
+		if (registry.isValid()) {
+			registry.releaseProxy(viewPaneBeanProxy);
+			registry.releaseProxy(compositeBeanProxy);
+		}		
+		viewPaneBeanProxy = null;
+		compositeBeanProxy = null;
 	}
 	
 	protected void releaseBeanProxy(final IBeanProxy aBeanProxy){
@@ -280,7 +287,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ // $NON-NLS-3$
 				// The method addViewPart returns a two element array typed to org.eclipse.swt.Composite
 				// The first is the composite for the outer ViewPane, the second for the inner composite that is the argument to createPartControl(Composite)
-				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,javaTypeNameProxy});
+				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,javaTypeNameProxy});
 				
 				viewPaneBeanProxy = compositeArrayBeanProxy.get(0);
 				compositeBeanProxy = compositeArrayBeanProxy.get(1);
