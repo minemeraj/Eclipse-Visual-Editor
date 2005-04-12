@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.32 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.33 $  $Date: 2005-04-12 21:56:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -917,30 +917,45 @@ public class BDMMerger {
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 				}
 			}
+			pushInitExpressionsToTop(orderedMainExpressions);
+			pushInitExpressionsToTop(orderedUpdatedExpressions);
 			update = update && processExpressions(orderedMainExpressions, orderedUpdatedExpressions);
 		}
 		return update;
 	}
 	
+	private void pushInitExpressionsToTop(List orderedList) {
+		// Bring init expressions to top. Determination of the exact reused
+		// variable is based on the offset of init expression - hence need to 
+		// process them first.
+		if(orderedList.size()>1){
+			int nextInitExpIndex = 0;
+			for (int i = 0; i < orderedList.size(); i++) {
+				CodeExpressionRef exp = (CodeExpressionRef) orderedList.get(i);
+				if(exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+					if(i!=nextInitExpIndex){
+						orderedList.remove(exp);
+						orderedList.add(nextInitExpIndex, exp);
+					}
+					nextInitExpIndex++;
+				}
+			}
+		}
+	}
+
 	protected BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
 		BeanPart modelBP = null;
 		BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
 		BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
 		BeanPart[] modelBPs = modelBPDecl.getBeanParts();
-		BeanPart[] otherModelBPs = otherModelBPDecl.getBeanParts();
-		if(modelBPs!=null && otherModelBPs!=null){
-			int otherModelBPIndex = -1;
-			for (int i = 0; i < otherModelBPs.length; i++) {
-				if(otherModelBPs[i]==otherModelBP){
-					otherModelBPIndex=i;
+		if(modelBPs!=null && modelBPs.length>0){
+			for (int i = 0; i < modelBPs.length; i++) {
+				if(otherModelBP.isEquivalent(modelBPs[i])){
+					modelBP = modelBPs[i];
 					break;
 				}
 			}
-			if(otherModelBPIndex>-1 && otherModelBPIndex<modelBPs.length)
-				modelBP = modelBPs[otherModelBPIndex];
-		}
-		
-		if(modelBP==null){
+		}else{
 			// no bp decl - just ask by unique name
 			modelBP = model.getABean(otherModelBP.getUniqueName());
 		}
