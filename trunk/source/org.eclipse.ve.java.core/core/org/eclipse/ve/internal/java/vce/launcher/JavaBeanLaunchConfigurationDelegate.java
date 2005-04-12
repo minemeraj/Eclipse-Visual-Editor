@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-12 23:30:42 $ 
  */
 
 
@@ -23,15 +23,24 @@ package org.eclipse.ve.internal.java.vce.launcher;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jdt.launching.*;
-
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
+import org.eclipse.jdt.launching.ExecutionArguments;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMRunner;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
-
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
@@ -40,6 +49,7 @@ public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	static String LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JavaBeansLauncher"; //$NON-NLS-1$
 	static String JFC_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JFCLauncher"; //$NON-NLS-1$
 	static String SWT_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.SWTLauncher"; //$NON-NLS-1$
+	static String RCP_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.RCPLauncher"; //$NON-NLS-1$
 	static String PACK = " PACK"; //$NON-NLS-1$
 	static String LOCALE = "LOCALE"; //$NON-NLS-1$
 	static String APPLET_PARMS_NUMBER = "APPLET_PARMS_NUMBER"; //$NON-NLS-1$
@@ -146,6 +156,11 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		}
 	}
 	
+	// TODO: RCP hack
+	if ( isJFaceProject(verifyJavaProject(configuration)) ){
+		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
+	}
+	
 	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	// We always launch the program javaBeansLauncher on the target VM and we give it details about which JavaBean to test,
@@ -189,5 +204,15 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	};
 		
 	return args.toString();
+}
+
+private boolean isJFaceProject(IJavaProject proj) {
+	Map containers = new HashMap(), plugins = new HashMap();
+	try {
+		ProxyPlugin.getPlugin().getIDsFound(proj, containers, new HashMap(), plugins, new HashMap());
+		return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false; //$NON-NLS-1$ //$NON-NLS-2$
+	} catch (JavaModelException e) {
+	}
+	return false;
 }
 }
