@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.26 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.27 $  $Date: 2005-04-12 22:08:39 $ 
  */
 
 import java.util.*;
@@ -393,7 +393,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		boolean firstBean = true;
 				
 		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
-		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);		   
+		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);	
+		   if (cExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) continue;
 		   int compare;
 		   // If We are dependant on the bean associated with this expression, or
 		   // the current expression is the init expression of us
