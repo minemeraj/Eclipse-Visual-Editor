@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.94 $  $Date: 2005-04-04 22:21:24 $ 
+ *  $Revision: 1.95 $  $Date: 2005-04-12 12:34:04 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -871,6 +871,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					if (isDisposed())
 						return;
 					
+					modelBuilder.dispose();
 					loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
 					processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
 					setReloadEnablement(true);	// Because it was disabled.							
@@ -2140,7 +2141,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	}
 
-	private void processParseError(boolean parseError) {
+	private void processParseError(boolean parseError) {		
 		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : ModelChangeController.READY_STATE, null);
 		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
 	}

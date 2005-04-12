@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-12 12:34:04 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -168,6 +168,17 @@ public class VEModelCacheUtility {
 			}
 		}		
 		monitor.done();
+	}
+	
+	public static void removeCache (IVEModelInstance model) {
+		if (model!=null) {
+		   removeCache(model.getFile());		   
+		}
+	}
+	public static void removeCache (IFile file) {
+		if (file != null) {
+			getCachedPath(file).toFile().delete();
+		}
 	}
 	
 		
