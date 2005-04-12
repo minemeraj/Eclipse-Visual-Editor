@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.23 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.24 $  $Date: 2005-04-12 17:17:22 $ 
  */
 
 import java.text.MessageFormat;
@@ -292,16 +292,18 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 					// Assume the MessageSend is a static that can be resolved by the target VM...
 					// need more work here.
 					// At this point, make sure this is a static method.
-//					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
-//							: ((CastExpression) stmt.getRightHandSide()).getExpression());
-//					if (m.getExpression() instanceof Name) {
-//						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
-//						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
-//						// TODO This should be in a rule: parse methodInvocation Initialization
-//						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
+					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
+							: ((CastExpression) stmt.getRightHandSide()).getExpression());
+					while (m.getExpression() instanceof MethodInvocation)
+						m = (MethodInvocation)m.getExpression();
+					if (m.getExpression() instanceof Name) {
+						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
+						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
+						// TODO This should be in a rule: parse methodInvocation Initialization
+						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
 							initExpr = true;
-//						}
-//					}
+						}
+					}					
 				}
 				if (initExpr) {
 					bean.addInitMethod(fMethod);
