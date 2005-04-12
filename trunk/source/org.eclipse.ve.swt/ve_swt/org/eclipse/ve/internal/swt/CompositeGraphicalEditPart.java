@@ -9,13 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-04-06 22:28:21 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-04-12 14:06:34 $
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.emf.common.notify.Adapter;
@@ -25,10 +24,10 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
@@ -61,7 +60,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		super.createEditPolicies();
 		// Allow dropping of implicit controls such as JFace or other places where the control is created by a non-visual delgate
 		// This must be done before the layout edit policy because the implicit parent can be created by the implicit edit policy 
-		createImplicitEditPolicy();
+//		createImplicitEditPolicy();
 		
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); 
 		// This is a special policy that just
@@ -72,7 +71,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	}
 	
 	protected void createImplicitEditPolicy(){
-		EditPolicy implicitEditPolicy = new ImplicitEditPolicy(EditDomain.getEditDomain(this),getBean());
+		EditPolicy implicitEditPolicy = new ImplicitEditPolicy(EditDomain.getEditDomain(this),this.getBean());
 		installEditPolicy("IMPLICIT_CONTROL",implicitEditPolicy); //$NON-NLS-1$
 	}
 

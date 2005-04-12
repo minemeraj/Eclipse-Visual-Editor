@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.25 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.26 $  $Date: 2005-04-12 14:06:33 $ 
  */
 
 import org.eclipse.emf.common.util.BasicEMap;
@@ -141,7 +141,18 @@ public class BeanUtilities {
 		}
 	}
 	
-	protected static BasicEMap.Entry getMapEntry(Annotation annotation, Object key) {
+	public static String getBeanName(IJavaInstance javaBean, EditDomain anEditDomain){
+		Annotation annotation = anEditDomain.getAnnotationLinkagePolicy().getAnnotation(javaBean);
+		if (annotation != null) {
+			Entry keyValue = BeanUtilities.getMapEntry(annotation, NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			if(keyValue != null){
+				 return(String) keyValue.getValue();
+			}
+		}
+		return null;	
+	}
+	
+	public static BasicEMap.Entry getMapEntry(Annotation annotation, Object key) {
 		int keyPos = annotation.getKeyedValues().indexOfKey(key);
 		return keyPos != -1 ? (Entry) annotation.getKeyedValues().get(keyPos) : null;
 	}

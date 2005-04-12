@@ -10,25 +10,32 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.11 $$  $$Date: 2005-04-05 20:11:45 $$ 
+ *  $$Revision: 1.12 $$  $$Date: 2005-04-12 14:06:34 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicEMap.Entry;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+import org.eclipse.ve.internal.cdm.Annotation;
 
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
@@ -176,14 +183,70 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		cmd.append(super.primAddCommand(children, positionBeforeChild, containmentSF));
 		return cmd;
 	}
+	
+	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {
+		// If two or more of the child conntrols being deleted share the same instance variable do not allow deletion because we
+		// cannot correctly update the code yet so it's safer to disallow for now
+		List children;
+		if(child instanceof List){
+			children = (List)child;
+		} else {
+			children = new ArrayList(1);
+			children.add(child);			
+		}
+		if(areFieldNamesShared(children,containmentSF)){
+			return UnexecutableCommand.INSTANCE;			
+		} else {
+			return super.getDeleteDependentCommand(child, containmentSF);
+		}
+	}
+	
+	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		// If two or more of the child conntrols being moved share the same instance variable do not allow movement because we
+		// cannot correctly update the code yet so it's safer to disallow for now
+		if(areFieldNamesShared(children,containmentSF)){
+			return UnexecutableCommand.INSTANCE;
+		} else {
+			return super.getMoveChildrenCommand(children, positionBeforeChild,containmentSF);
+		}
+	}	
+	
+	protected boolean areFieldNamesShared(List children, EStructuralFeature containmentSF){
+	
+		IJavaInstance swtComposite = (IJavaInstance) getContainer();
+		List compositeControls = (List) swtComposite.eGet(containmentSF);
+		// 	Turn the list of controls into a their field names
+		HashMap controlNames = new HashMap(compositeControls.size());
+		Iterator allChildren = compositeControls.iterator();
+		while(allChildren.hasNext()){
+			IJavaInstance control = (IJavaInstance)allChildren.next();
+			String fieldName = BeanUtilities.getBeanName(control,getEditDomain());
+			controlNames.put(control,fieldName);
+		}
+	
+		// Walk the children who are asking to be moved and see if any of these share a name with any of the children
+		// (including those that aren't being moved)
+		Iterator iter = children.iterator();
+		while(iter.hasNext()){
+			// This is the control asking to be moved
+			IJavaInstance control = (IJavaInstance)iter.next();
+			String fieldName = BeanUtilities.getBeanName(control,getEditDomain());			
+			Iterator controlNamesIter = controlNames.keySet().iterator();
+			while(controlNamesIter.hasNext()){
+				Object controlToCompare = controlNamesIter.next();
+				if(controlToCompare != control && controlNames.get(controlToCompare).equals(fieldName)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}		
 
 	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Command getAddCommand(List componentConstraints, List childrenComponents, Object position) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
