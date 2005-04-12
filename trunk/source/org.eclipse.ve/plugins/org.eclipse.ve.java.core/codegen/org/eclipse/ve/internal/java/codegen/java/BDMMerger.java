@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-12 21:56:28 $ 
+ *  $Revision: 1.34 $  $Date: 2005-04-12 23:18:10 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -561,7 +561,7 @@ public class BDMMerger {
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 					int equivalency = -1;
 					try {
-						equivalency = mainExp.isEquivalent(updExp) ;
+						equivalency = isSpecialEquivalent(mainExp, updExp);
 					} catch (CodeGenException e) {} 
 					if ( equivalency < 0) 
 						continue ; // Not the same expressions
@@ -598,6 +598,41 @@ public class BDMMerger {
 				updatedExpTobeProcessed.remove(updatedExpTobeProcessed.indexOf(updExp));
 				updatedExpCount--;
 			}
+		}
+	}
+
+	/**
+	 * This is a special equivalence determining API which should be called
+	 * only from #updateChangedOffsetsAndMarkExpressions(Collection, Collection)
+	 * This API doesnt call the expression's isEquivalent() method if both expressions
+	 * are INIT expressions. The reason this is necessary is becuase an expression's
+	 * isEquivalent() is based on the offsets of the bean's INIT expressions. Since we are 
+	 * in the middle of updating the offsets for INIT expressions, we shouldnt rely on it.
+	 * 
+	 * 
+	 * @param mainExp
+	 * @param updExp
+	 * @return
+	 * @throws CodeGenException
+	 * 
+	 * @since 1.0.2
+	 */
+	private int isSpecialEquivalent(CodeExpressionRef mainExp, CodeExpressionRef updExp) throws CodeGenException {
+		if(mainExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR) && updExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+	        if (mainExp.equals(updExp))
+				return 1;
+			BeanPart mainBP = mainExp.getBean();
+			BeanPart updBP = updExp.getBean();
+	        if (mainBP==null && updBP!=null) 
+				return -1 ;
+			else if (mainBP!=null && updBP==null) 
+				return -1 ;
+			if(mainBP.getSimpleName().equals(updBP.getSimpleName()) &&
+		       mainBP.getType().equals(updBP.getType()))
+				return 1;
+			return -1;
+		}else{
+			return mainExp.isEquivalent(updExp) ;
 		}
 	}
 
