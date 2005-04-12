@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.95 $  $Date: 2005-04-12 12:34:04 $ 
+ *  $Revision: 1.96 $  $Date: 2005-04-12 21:50:43 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2019,22 +2019,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private boolean firstSelection = true ;  // First selection after activation
 	private ICommandManager commandMgr = PlatformUI.getWorkbench().getCommandSupport().getCommandManager();
 	private FocusListener focusListener = new FocusListener() {
-		private void enableDelCommand(boolean flag) {
-			//		TODO: this is a temporary workaround to the fact that the compilation unit editor
-			//      uses a package protected AdapterSourceViewer to handle command's target.
-			ICommand c = commandMgr.getCommand("org.eclipse.ui.edit.delete") ; //$NON-NLS-1$
-			try {
-				Class cmdClazz = c.getClass();				
-				Method m = cmdClazz.getDeclaredMethod("setDefined", new Class[] { boolean.class } ); //$NON-NLS-1$
-				m.setAccessible(true);
-				m.invoke(c, new Object[] {new Boolean(flag)}) ;				
-			} catch (Exception e1) {
-				JavaVEPlugin.log(e1);
-			}
-		}
 		public void focusGained(FocusEvent e) {			
 			textEditorFocus = textEditorActive = e.getSource() == getSourceViewer().getTextWidget();
-// TODO fix for Eclipse 3.1			enableDelCommand(textEditorFocus); // disable the del command if the GEF pane is in focus.
 			if (textEditorActive) {
 				
 				// Set the common actions up from the text editor.
@@ -2055,7 +2041,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		public void focusLost(FocusEvent e) {
 			if (textEditorActive)
 				textEditorFocus = false;
-//	TODO fix for Eclipse 3.1		enableDelCommand(true);  // ReActivate the command for other editors
 		}
 	};
 		
