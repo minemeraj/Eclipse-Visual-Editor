@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.39 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.40 $  $Date: 2005-04-12 16:26:32 $ 
  */
 
 import java.util.*;
@@ -652,7 +652,7 @@ public void removeBeanPart (BeanPart bean) {
 //		};
 //	}
 	
-	boolean areOtherInstanceVariablesFound = false;
+	boolean areOtherInstancesFound = false;
 	boolean isAnyNonInstanceVariableBeingReturned = false;
 	
 	bitr = beansInMethod.iterator();
@@ -662,8 +662,7 @@ public void removeBeanPart (BeanPart bean) {
 			continue;
 		if(deleteDependentBeans.contains(bp))
 			continue;
-		if(bp.getDecleration().isInstanceVar())
-			areOtherInstanceVariablesFound = true;
+		areOtherInstancesFound = true;
 	}
 	
 	BeanPart returnedBean = mr==null?null:fBeanModel.getBeanReturned(mr.getMethodName());
@@ -671,7 +670,7 @@ public void removeBeanPart (BeanPart bean) {
 											returnedBean.equals(bean)||
 											deleteDependentBeans.contains(returnedBean)?false:returnedBean.getDecleration().isInstanceVar();
 	
-	boolean shouldMethodBeRemoved = mr!=null && !(areOtherInstanceVariablesFound || isAnyNonInstanceVariableBeingReturned);
+	boolean shouldMethodBeRemoved = mr!=null && !(areOtherInstancesFound || isAnyNonInstanceVariableBeingReturned);
 	Iterator itr=null ;
 	if (shouldMethodBeRemoved) {
 		// a Seperate JCMMethod exist for this bean    	
