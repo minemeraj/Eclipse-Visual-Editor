@@ -64,8 +64,8 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
     folder.setSelection(item);	
 	item.setImage(getDummyImage());
 	item.setControl(viewForm);
-
-	viewPartToParentComposite.put(aWorkbenchPart,viewPartArgument);
+	// Record a map entry of the workbenchPart against the Composite argument and the CTabFolder that represents its trim
+	viewPartToParentComposite.put(aWorkbenchPart,new Composite[] {viewPartArgument, folder});
 	aWorkbenchPart.createPartControl(viewPartArgument);
 	getWorkbenchShell().layout(true);
 	return new Composite[] {folder,viewPartArgument};
@@ -80,9 +80,9 @@ public static Image getDummyImage(){
 }
 
 public static void removeViewPart(WorkbenchPart aWorkbenchPart){
-	
-	Composite c = (Composite)viewPartToParentComposite.get(aWorkbenchPart);
-	c.dispose();
+
+	// Dispose the CTabFolder that represents the outermost composite which will clean up all of the children
+	((Composite[])viewPartToParentComposite.get(aWorkbenchPart))[1].dispose();
 	viewPartToParentComposite.remove(aWorkbenchPart);	
 	
 }
