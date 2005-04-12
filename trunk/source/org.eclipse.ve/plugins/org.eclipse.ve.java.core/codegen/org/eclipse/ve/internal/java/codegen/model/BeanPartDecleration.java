@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-12 16:26:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -148,6 +148,40 @@ public class BeanPartDecleration {
 	public BeanPart[] getBeanParts() {
 		return (BeanPart[]) beanParts.toArray(new BeanPart[beanParts.size()]);
 	}	
+	
+	/**
+	 * Returns the index of the passed in bean part with reference
+	 * to similarly named bean parts in the same method. The determination
+	 * of the index is based on the offsets of the init expressions. If no
+	 * init expression is there for a bean, then that bean is placed last.
+	 * 
+	 * Ex:
+	 * 		GridLayout layout = new GridLayout();
+	 * 		...
+	 * 		layout = new GridLayout(GridLayout.FILL_BOTH);
+	 * 		...
+	 * 
+	 * @param bp
+	 * @return  index of the passed in bean with reference to other 
+	 * 			beans sharing the same declaration
+	 * 
+	 * @since 1.0.2
+	 */
+	public int getBeanPartIndex(BeanPart bp){
+		CodeExpressionRef bpInitExp = bp.getInitExpression();
+		int bpInitExpOffset = bpInitExp==null?Integer.MAX_VALUE:bpInitExp.getOffset();
+		BeanPart[] bps = getBeanParts();
+		int bpIndex = 0;
+		for (int i = 0; i < bps.length; i++) {
+			if(bp==bps[i])
+				continue;
+			CodeExpressionRef bpsInitExp = bps[i].getInitExpression();
+			int bpsInitExpOffset = bpsInitExp==null?Integer.MAX_VALUE:bpsInitExp.getOffset();
+			if(bpsInitExpOffset<bpInitExpOffset)
+				bpIndex++;
+		}
+		return bpIndex;
+	}
 	
 	public boolean isInstanceVar() {
 		return declaredMethod==null;

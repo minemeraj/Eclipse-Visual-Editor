@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.31 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.32 $  $Date: 2005-04-12 16:26:32 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -587,6 +587,7 @@ public  void dispose() {
 		bp.removeBackRef(this,true) ;
 	}
 	
+	fDecleration.removeBeanPart(this);
 
 	fBeanInitMethods.clear() ;
 	fEventInitMethods.clear() ;
@@ -611,10 +612,18 @@ public  void dispose() {
 
 public boolean isEquivalent(BeanPart b) {
    if (b==null) return false ;
-   
+   if(this==b) return true;
    if (getSimpleName().equals(b.getSimpleName()) &&
-       getType().equals(b.getType()))
-       return true ;
+       getType().equals(b.getType())){
+		BeanPartDecleration thisDecl = getDecleration();
+		BeanPartDecleration bDecl = b.getDecleration();
+		if(thisDecl!=null && bDecl!=null){
+			return thisDecl.getBeanPartIndex(this)== bDecl.getBeanPartIndex(b);
+		}else{
+			return true;
+		}
+
+   }
    return false ;
 }
 

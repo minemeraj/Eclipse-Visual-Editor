@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.31 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.32 $  $Date: 2005-04-12 16:26:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -258,16 +258,6 @@ public class BDMMerger {
 		return removed ;
 	}
 	
-	protected HashMap getUniquenameToBeanMap(List beanParts){
-		HashMap map = new HashMap(beanParts.size());
-		Iterator bpItr = beanParts.iterator();
-		while (bpItr.hasNext()) {
-			BeanPart bp = (BeanPart) bpItr.next();
-			map.put(bp.getUniqueName(), bp);
-		}
-		return map;
-	}
-	
 	protected boolean updateMethodOffsetAndContent(CodeMethodRef mainMethod, CodeMethodRef updatedMethod){
 		if(mainMethod==null || updatedMethod==null)
 			return false ;
@@ -368,7 +358,7 @@ public class BDMMerger {
 		BeanPart newBean = newExp.getBean();
 		if(newMethodRef!=null && newExp!=null){
 			CodeMethodRef mainMethod = mainModel.getMethod(newMethodRef.getMethodHandle());
-			BeanPart mainBean = mainModel.getABean(newBean.getUniqueName());
+			BeanPart mainBean = determineCorrespondingBeanPart(newBean, mainModel);
 			if(mainMethod!=null && mainBean!=null){
 				CodeCallBackRef callBack = new CodeCallBackRef(newExp.getExprStmt(), mainMethod);
 				callBack.setBean(mainBean);
@@ -460,7 +450,7 @@ public class BDMMerger {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected boolean updateBeanPart(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
+	protected boolean updateNonRegularBeanPartExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
 		updateMethodOffsetAndContent(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
 		updateReturnMethod(mainBeanPart, updatedBeanPart);
 		boolean update = updateCallBackExpressions(mainBeanPart, updatedBeanPart);
@@ -813,14 +803,7 @@ public class BDMMerger {
 	 * Get the coresponding BeanPart
 	 */
 	private BeanPart getMainBDMBean (BeanPart b) {
-		Iterator itr = mainModel.getBeans().iterator() ;
-		while (itr.hasNext()) {
-			BeanPart bean = (BeanPart) itr.next() ;
-			if (bean.isEquivalent(b)) 
-				if(bean.getUniqueName().equals(b.getUniqueName()))
-					return bean ;
-		}
-		return null ;
+		return determineCorrespondingBeanPart(b, mainModel);
 	}
 	
 	/**
@@ -835,6 +818,13 @@ public class BDMMerger {
 	 */
 	protected boolean mergeAllBeans(){
 		boolean merge = true ; 
+		merge = merge && updateNonRegularBeanPartExpressions();
+		merge = merge && updateRegularBeanPartExpressions();
+		return merge;
+	}
+	
+	protected boolean updateNonRegularBeanPartExpressions(){
+		boolean merge = true;
 		List mainModelBeans = mainModel.getBeans() ;
 		mainModelBeans = orderBeansToMerge(mainModelBeans);
 		// Update changed bean parts
@@ -849,18 +839,15 @@ public class BDMMerger {
 			// is disposed. Check to see if it is still in the model before proceeding with the merge.
 			if(mainBP.getModel()==null) 
 				continue;
-			BeanPart updateBP ;
-			if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
-				merge = merge && updateBeanPart(mainBP, updateBP);
+			BeanPart updateBP = determineCorrespondingBeanPart(mainBP, newModel);
+			if(updateBP != null){
+				merge = merge && updateNonRegularBeanPartExpressions(mainBP, updateBP);
 			}else{
 				JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 			}
 		}
-		
-		merge = merge && updateBeanPartRegularExpressions();
 		return merge;
 	}
-
 	protected void orderBeanPartExpressions(BeanPart bp, List orderedList){
 		if(bp==null || bp.getRefExpressions()==null)
 			return;
@@ -890,7 +877,7 @@ public class BDMMerger {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected boolean updateBeanPartRegularExpressions(){
+	protected boolean updateRegularBeanPartExpressions(){
 		boolean update = true;
 		// Update the regular expressions of all beans
 		HashMap beansInMethodMap = new HashMap();
@@ -919,8 +906,8 @@ public class BDMMerger {
 				BeanPart mainBP = (BeanPart) mainBeansItr.next();
 				if(mainBP.getModel()==null)
 					continue;
-				BeanPart updateBP ;
-				if((updateBP = newModel.getABean(mainBP.getUniqueName())) != null){
+				BeanPart updateBP = determineCorrespondingBeanPart(mainBP, newModel);
+				if(updateBP != null){
 
 					// Order the bean expressions
 					orderBeanPartExpressions(mainBP, orderedMainExpressions);
@@ -935,6 +922,31 @@ public class BDMMerger {
 		return update;
 	}
 	
+	protected BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
+		BeanPart modelBP = null;
+		BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
+		BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
+		BeanPart[] modelBPs = modelBPDecl.getBeanParts();
+		BeanPart[] otherModelBPs = otherModelBPDecl.getBeanParts();
+		if(modelBPs!=null && otherModelBPs!=null){
+			int otherModelBPIndex = -1;
+			for (int i = 0; i < otherModelBPs.length; i++) {
+				if(otherModelBPs[i]==otherModelBP){
+					otherModelBPIndex=i;
+					break;
+				}
+			}
+			if(otherModelBPIndex>-1 && otherModelBPIndex<modelBPs.length)
+				modelBP = modelBPs[otherModelBPIndex];
+		}
+		
+		if(modelBP==null){
+			// no bp decl - just ask by unique name
+			modelBP = model.getABean(otherModelBP.getUniqueName());
+		}
+		return modelBP;
+	}
+
 	/**
 	 * The passed in beans are ordered so that beans which are effected by the 
 	 * changed JDT handles in the CU are processed first than other beans. 
@@ -1042,14 +1054,21 @@ public class BDMMerger {
 	protected boolean addNewBean(final BeanPart referenceBP){
 		// New bean - add it and any methods associated with it
 		BeanPart newBP ;
-		BeanPartDecleration decl;
-		if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
-			decl = new BeanPartDecleration((FieldDeclaration)referenceBP.getFieldDecl()) ;
-		else
-			decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
+		String refBPHandle = referenceBP.getDecleration().getDeclerationHandle();
+		BeanPartDecleration decl = mainModel.getModelDecleration(refBPHandle);
+		int uniqueIndex = 0;
+		if(decl==null){
+			if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
+				decl = new BeanPartDecleration((FieldDeclaration)referenceBP.getFieldDecl()) ;
+			else
+				decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
+		}else{
+			int length = decl.getBeanParts().length;
+			uniqueIndex = length-1;
+		}
 		newBP = new BeanPart(decl);
 		newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
-		
+		newBP.setUniqueIndex(uniqueIndex);
 		newBP.setIsInJVEModel(false) ;
 		
 		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
@@ -1062,7 +1081,7 @@ public class BDMMerger {
 			initMethod = createNewMainMethodRef(referenceBP.getInitMethod()) ;
 			if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 				JavaVEPlugin.log("BDM Merger >> "+"Created new init method "+initMethod.getMethodHandle()+" for new bean part"+newBP.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}		
+		}
 		newBP.addInitMethod(initMethod);
 		if (referenceBP.getDecleration().isInstanceVar())
 			decl.setDeclaringMethod(null);
@@ -1162,7 +1181,7 @@ public class BDMMerger {
 				return false;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			final BeanPart beanPart = (BeanPart) newBeansItr.next();			
-			if( mainModel.getABean(beanPart.getUniqueName()) == null &&
+			if( determineCorrespondingBeanPart(beanPart, mainModel) == null &&
 				beanPart.getInitMethod()!=null){
 				monitor.subTask(beanPart.getSimpleName());
 				if(beanPart.getSimpleName().equals(BeanPart.THIS_NAME))
@@ -1201,7 +1220,7 @@ public class BDMMerger {
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
 			// Could have been deleted when a parent was deleted
 			if (mainBean.getModel()==null) continue;
-			if(newModel.getABean(mainBean.getUniqueName())==null){
+			if(determineCorrespondingBeanPart(mainBean, newModel)==null){
 				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 				monitor.subTask(mainBean.getSimpleName());
@@ -1209,7 +1228,7 @@ public class BDMMerger {
 				
 			}else{
 				// Remove bean if type has changed				
-				BeanPart newBean = newModel.getABean(mainBean.getUniqueName());
+				BeanPart newBean = determineCorrespondingBeanPart(mainBean, newModel);
 				String mainType;
 				String newType;
 				boolean isMainBeanThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
@@ -1276,7 +1295,7 @@ public class BDMMerger {
 		
 		BeanPart updateReturnedBP = newModel.getBeanReturned(newMethodRef.getMethodName());
 		if(updateReturnedBP!=null){
-			BeanPart mainReturnedBP = mainModel.getABean(updateReturnedBP.getUniqueName());
+			BeanPart mainReturnedBP = determineCorrespondingBeanPart(updateReturnedBP, mainModel);
 			if(mainReturnedBP!=null){
 				// we habe a bean which is returned with this method - hook them up
 				mainReturnedBP.addReturnMethod(mainMethodRef);

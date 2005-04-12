@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.16 $  $Date: 2005-04-12 16:26:32 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -92,8 +92,13 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
 			isAddingToEMFNeeded = false;
 		}
       }else{
-      	if(target.getEObject().eIsSet(fFmapper.getFeature(null)))
-      		isAddingToEMFNeeded = !( target.getEObject().eGet(fFmapper.getFeature(null)).equals(toAdd.getEObject()) );
+      	if(target.getEObject().eIsSet(fFmapper.getFeature(null))){
+			Object existingValue = target.getEObject().eGet(fFmapper.getFeature(null));
+			Object newValue = toAdd.getEObject();
+      		isAddingToEMFNeeded = 	(newValue==null && existingValue!=null) ||
+      								(newValue!=null && existingValue==null) ||
+      								(newValue!=null && existingValue!=null && !newValue.equals(existingValue));
+      	}
       }
       // SMART DECODING - check end
 	
