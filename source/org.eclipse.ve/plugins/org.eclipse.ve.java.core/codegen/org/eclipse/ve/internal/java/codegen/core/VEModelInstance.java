@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-12 12:34:04 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -99,8 +99,7 @@ public class VEModelInstance implements IVEModelInstance {
 
 			// TODO: workaround to the fact that if we load from cache, their may
 			//       be timing associated with the creation of an element from .xmi.
-			//       so, force the JCM package init() call by accessing it.
-			JCMPackage pkg = JCMPackage.eINSTANCE;
+			//       so, force the JCM package init() call by accessing it.			
 			if (!ignoreCache && 
 					(fResource=VEModelCacheUtility.doLoadFromCache(this, null))!=null){				
 				fRoot = (BeanSubclassComposition) fResource.getEObject("/"); //$NON-NLS-1$

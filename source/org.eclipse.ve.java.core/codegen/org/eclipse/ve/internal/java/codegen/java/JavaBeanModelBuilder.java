@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.27 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.28 $  $Date: 2005-04-12 12:34:04 $ 
  */
 
 import java.util.*;
@@ -48,11 +48,13 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class JavaBeanModelBuilder {
 
-	public static final String ASTNODE_SOURCE_PROPERTY = "org.eclipse.ve.codegen.source"; //$NON-NLS-1$
+  public static final String ASTNODE_SOURCE_PROPERTY = "org.eclipse.ve.codegen.source"; //$NON-NLS-1$
+  
   
   String     fFileName = null ;     //  Java Source 
   char[]    fFileContent = null ;
   char[][]  fPackageName = null ;
+  boolean errors = false;
   
  
   CompilationUnit				fastCU = null; 
@@ -379,6 +381,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	
     if (fMonitor.isCanceled()) {
     	fMonitor.done();
+		errors=true;
     	return null;
     }
 	CreateBeanDeclModel() ;
@@ -386,6 +389,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	
     if (fMonitor.isCanceled()) {
     	fMonitor.done();
+		errors=true;
     	return null;
     }
 
@@ -403,6 +407,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    visitType(mainType, fModel, jdtMethods, tryAgain, fMonitor, visitorFactoryRule) ;
 	    if (fMonitor.isCanceled()) {
 	    	fMonitor.done();
+			errors=true;
 	    	return null;
 	    }
 	
@@ -415,6 +420,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    
 	    if (fMonitor.isCanceled()) {
 	    	fMonitor.done();
+			errors=true;
 	    	return null;
 	    }
 
@@ -422,6 +428,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    fMonitor.worked(100);
 	    if (fMonitor.isCanceled()) {
 	    	fMonitor.done();
+			errors=true;
 	    	return null;
 	    }
 	    
@@ -437,14 +444,17 @@ public IBeanDeclModel build () throws CodeGenException {
 		fMonitor.worked(100);
 		
 	} catch(Exception e) {
+		errors = true;
 	    org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e) ;
 	}
 	finally {        
        JavaVEPlugin.log ("JavaBeanModelBuilder.build(), Done.", Level.FINE) ; //$NON-NLS-1$
        fMonitor.done();
 	}
-   if (fMonitor.isCanceled())
+   if (fMonitor.isCanceled()) {
    	 fModel=null;
+	 errors = true;
+   }
    return fModel ;
    
 }
@@ -492,6 +502,11 @@ protected void visitType(TypeDeclaration type, IBeanDeclModel model,  JavaElemen
 		v.visit()  ;
 	}
 	TimerTests.basicTest.stopStep("Creating Instance Var. BeanParts"); //$NON-NLS-1$
+}
+
+
+public boolean isErrors() {
+	return errors;
 }
 
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.67 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.68 $  $Date: 2005-04-12 12:34:04 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -698,11 +698,12 @@ protected boolean isDown(IProgressMonitor pm) {
 
 /**
  *  Given the BeanDOM, build the Composition Model
+ *  @return true if built ok, false if errors
  */
-void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
+protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	if (fBeanModel == null || fVEModel == null) throw new CodeGenException ("null Builder") ; //$NON-NLS-1$
 	
-	fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL,true) ;
+	fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL,true) ;	
 	
 	try{
 		TimerTests.basicTest.startStep("Create IJavaObject Instances"); //$NON-NLS-1$
@@ -718,8 +719,8 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		Iterator itr = fBeanModel.getBeans().iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
 		while (itr.hasNext()) {
-			if (isDown(pm))
-				return;
+			if (isDown(pm)) 
+				return false;
 		    BeanPart bean = (BeanPart) itr.next() ;
 			Collection expressions = new ArrayList(bean.getRefExpressions()) ;
 			expressions.addAll((Collection)bean.getRefEventExpressions()) ;
@@ -742,7 +743,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 			  expProgressMonitor.worked(1);
 		      }
 		      catch (Exception e) {
-		      	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+		      	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {					
 		      		JavaVEPlugin.log("Skipping expression: "+codeRef.getCodeContent(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$		      		
 		      		JavaVEPlugin.log(e, Level.WARNING);
 		      	}
@@ -753,7 +754,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		expProgressMonitor.done();
 		expProgressMonitor = null;
 		if (isDown(pm))
-			return ;
+			return false;
 		// Clean up
 		itr = badExprssions.iterator() ;
 		while (itr.hasNext()) {
@@ -772,7 +773,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 	      itr = fBeanModel.getBeans().iterator() ;
 		  while (itr.hasNext()) {
 		  	 if (isDown(pm))
-				return ;		 		  	
+				return false ;		 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	         bean.getBadExpressions().clear();
 	       
@@ -807,6 +808,7 @@ void	buildCompositionModel(IProgressMonitor pm) throws CodeGenException {
 		fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 		fVEModel.loadFromCacheComplete();
 	}
+	return true;
 } 
  
 /**
@@ -825,9 +827,17 @@ private int getTotalExpressionCount() {
 	return count;
 }
 
-protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
+/**
+ * 
+ * @param pm
+ * @return true of reverParse with no errors, false if errors encountered.
+ * @throws CodeGenException
+ * 
+ * @since 1.1.0
+ */
+protected boolean reverseParse (IProgressMonitor pm) throws CodeGenException {
 	
-	
+	boolean errors = false;
     try {
     	fSrcSync.getUpdateStatus().setBottomUpProcessing(true);
 		pm.beginTask(CodegenMessages.getString("JavaSourceTranslator.16"),100); //$NON-NLS-1$
@@ -840,17 +850,19 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 		    
 			builder.setDiagram(fVEModel) ;
 			fBeanModel = builder.build() ;
+			errors = builder.isErrors();
 			if (fBeanModel!=null)
 			   fBeanModel.setSourceSynchronizer(fSrcSync) ;	
 			TimerTests.basicTest.stopStep("Parsing"); //$NON-NLS-1$
 			
 			TimerTests.basicTest.startStep("Decoding"); //$NON-NLS-1$
-			buildCompositionModel(new SubProgressMonitor(pm,60)) ;
+			errors |= !buildCompositionModel(new SubProgressMonitor(pm,60)) ;
 		}
 		pm.done();
 		TimerTests.basicTest.stopStep("Decoding"); //$NON-NLS-1$
     }
     catch (CodeGenSyntaxError e) {
+		errors = true;
 		fireParseError(true);
 		floadInProgress = false ;
 		throw e;
@@ -866,16 +878,18 @@ protected void reverseParse (IProgressMonitor pm) throws CodeGenException {
 	fireProcessingPause(fdisconnected);
 	fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
 	TimerTests.basicTest.stopStep("Reverse Parsing"); //$NON-NLS-1$
+	return !errors;
 }
 
 /**
  *  Go for parsing a Java Source
  */ 
-public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws CodeGenException {
+public boolean  decodeDocument (final IFile sourceFile,IProgressMonitor pm) throws CodeGenException {
 	
 	if (sourceFile == null || !sourceFile.exists()) 
 	    throw new CodeGenException("Invalid Source File") ;	 //$NON-NLS-1$
 	
+	boolean errors = false;
 
 	
     reConnect(sourceFile) ;   
@@ -885,16 +899,26 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
     	// the GUI bulding go, and build the BDM and such in the background.
     	Job job = new ReverseParserJob(sourceFile) {
 			protected IStatus doRun(IProgressMonitor monitor) {
+				boolean removeCache = false;
 				try {						
 				  //fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC")); //$NON-NLS-1$
 				  fireSnippetProcessing(true);					
-				  reverseParse(monitor);					
+				  removeCache = ! reverseParse(monitor);					
 				} catch (Exception e) {
+					removeCache = true;
 					if (!isDown(monitor)) {
 						fireParseError(true);						
 						String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();						
 						return new Status(Status.ERROR,CDEPlugin.getPlugin().getPluginID(), 0, msg!=null?msg:"" ,e); //$NON-NLS-1$
 				    }
+				}
+				finally {
+					if (removeCache) {
+ 					  if (fBeanModel!=null) 
+						   VEModelCacheUtility.removeCache(fBeanModel.getCompositionModel());
+					  else
+						   VEModelCacheUtility.removeCache(sourceFile);
+					}
 				}
 				return Status.OK_STATUS;
 			}
@@ -905,21 +929,29 @@ public boolean  decodeDocument (IFile sourceFile,IProgressMonitor pm) throws Cod
     }
     else {
 		try {					
-			reverseParse(pm);
+			errors = !reverseParse(pm);			
 			// Save the file and cache the model into the .xmi file iff the code hasn't been changed.
-			if (!JavaUI.getDocumentProvider().canSaveDocument(fWorkingCopy.getEditor())) {
+			if (!errors && !JavaUI.getDocumentProvider().canSaveDocument(fWorkingCopy.getEditor()) &&
+				!VEModelCacheUtility.isValidCache(sourceFile)) {
+			  if (!JavaUI.getDocumentProvider().canSaveDocument(fWorkingCopy.getEditor())) {
 				// Create a cache in the background
-				Job job = new ReverseParserJob(sourceFile) {
+				  Job job = new ReverseParserJob(sourceFile) {
 
 					protected IStatus doRun(IProgressMonitor monitor) {
 						doSave(monitor);
 						return Status.OK_STATUS;
 					}
-				};
-				job.schedule();
+				  };
+				  job.schedule();
+			  }
 			}
 		} catch (Exception e) {
 			fSrcSync.resumeProcessing();
+			// Cache may not have been valid to begin with... remove it if needed
+			if (fBeanModel!=null) 
+				   VEModelCacheUtility.removeCache(fBeanModel.getCompositionModel());
+				else
+				   VEModelCacheUtility.removeCache(sourceFile);			
 			fireParseError(true);			
 		}
     	return true;
@@ -1333,10 +1365,15 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		  
 	}
 	public void doSave(IProgressMonitor monitor) {
-		if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+		if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN) && 
+			!fparseError && !fdisconnected) {
 		  VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
 		  // We may have stopped processing bottom up so that the model will not change.
 		  fSrcSync.resumeProcessing();
+		}
+		else {
+			// File is being saved, but our model is not in sync... remove the old cache
+			VEModelCacheUtility.removeCache(fFile);
 		}
 	}
 }
