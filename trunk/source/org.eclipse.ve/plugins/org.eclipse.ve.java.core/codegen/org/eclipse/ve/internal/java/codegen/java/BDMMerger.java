@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.36 $  $Date: 2005-04-13 13:11:16 $ 
+ *  $Revision: 1.37 $  $Date: 2005-04-13 14:51:49 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -628,9 +628,15 @@ public class BDMMerger {
 			else if (mainBP!=null && updBP==null) 
 				return -1 ;
 			if(mainBP.getSimpleName().equals(updBP.getSimpleName()) &&
-		       mainBP.getType().equals(updBP.getType()))
+		       mainBP.getType().equals(updBP.getType())){
+				if(!mainExp.isStateSet(CodeExpressionRef.STATE_NO_SRC) &&
+					!updExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
+					if(mainExp.getCodeContent().equals(updExp.getCodeContent()))
+						return 1;
+					return 0;
+				}
 				return 1;
-			return -1;
+			}return -1;
 		}else{
 			return mainExp.isEquivalent(updExp) ;
 		}
