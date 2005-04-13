@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodegenWizardsMessages.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-13 00:11:31 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
+import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -33,5 +34,13 @@ public class CodegenWizardsMessages {
 		} catch (MissingResourceException e) {
 			return '!' + key + '!';
 		}
+	}
+
+	public static String getFormattedString(String key, Object arg) {
+		return MessageFormat.format(getString(key),new Object[] {arg});
+	}
+
+	public static String getFormattedString(String key, Object arg1, Object arg2) {
+		return MessageFormat.format(getString(key),new Object[] {arg1,arg2});
 	}
 }

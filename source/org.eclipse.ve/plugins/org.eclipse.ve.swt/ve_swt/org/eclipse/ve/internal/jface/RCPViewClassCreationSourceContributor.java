@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-11 22:18:10 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-13 00:11:22 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -28,6 +28,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor;
+import org.eclipse.ve.internal.java.codegen.wizards.StatusInfo;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.swt.SwtPlugin;
  
@@ -61,21 +62,22 @@ public class RCPViewClassCreationSourceContributor implements IVisualClassCreati
 				isError = !ProxyPlugin.isPDEProject(javaProject);
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.FINEST);
-				return new IVisualClassCreationSourceContributor.StatusInfo(
+				return new StatusInfo(
 						IStatus.ERROR,
 						e.getMessage(),
 						SwtPlugin.PLUGIN_ID);
 			}
 		}
 
-		if(isError){
-			String errorMessage = "Project must be a Plug-in Project to create a ViewPart";	
-			return new IVisualClassCreationSourceContributor.StatusInfo(
+		if(isError){ 	
+			return new StatusInfo(
 					IStatus.ERROR,
-					errorMessage,
+					JFaceMessages.getFormattedString(
+							"RCPViewCreation.RCP_Project_ERROR",
+							project == null ? null : project.getName()),
 					SwtPlugin.PLUGIN_ID);
 		} else {
-			return IVisualClassCreationSourceContributor.OK_STATUS;
+			return StatusInfo.OK_STATUS;
 		}
 	}			
 		
