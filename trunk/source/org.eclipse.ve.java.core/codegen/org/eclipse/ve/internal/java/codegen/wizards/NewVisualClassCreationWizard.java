@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.26 $  $Date: 2005-04-11 22:17:55 $ 
+ *  $Revision: 1.27 $  $Date: 2005-04-13 00:11:31 $ 
  */
 
 import java.io.IOException;
@@ -297,8 +297,11 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 */
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		// Store the selected VisualElementModel if one is selected.
-		if (fPage.getSelectedElement() != null)
+		if (fPage.getSelectedElement() != null) {
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, getSelectedElementStringValue(fPage.getSelectedElement()));
+		} else {
+			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, "");			
+		}
 		monitor.beginTask("",300); //$NON-NLS-1$
 		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor
 		// Check for a class path container or plugin id this extension needs in this source folder

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualElementModel.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-11 22:17:55 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-13 00:11:31 $ 
  */
 import java.util.logging.Level;
 
@@ -105,17 +105,17 @@ public class VisualElementModel {
 	 * A null return value implies that the contribution can be used
 	 */
 	public IStatus getStatus(IResource resource) {
-		if(resource == null) return IVisualClassCreationSourceContributor.OK_STATUS;
+		if(resource == null) return StatusInfo.OK_STATUS;
 		if(contributor == null){
 			try {
 				contributor = (IVisualClassCreationSourceContributor) configElement.createExecutableExtension("contributor"); //$NON-NLS-1$ 
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.FINEST);
-				return IVisualClassCreationSourceContributor.OK_STATUS;
+				return StatusInfo.OK_STATUS;
 			} 
 		}
 		IStatus result = contributor.getStatus(resource);
-		return result == null ? IVisualClassCreationSourceContributor.OK_STATUS : result;				
+		return result == null ? StatusInfo.OK_STATUS : result;				
 	}
 	
 }

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-11 22:17:55 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-13 00:11:31 $ 
  */
 
 import java.util.HashMap;
@@ -27,8 +27,10 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
+import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -36,6 +38,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -60,7 +63,10 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	private static final String DEFAULT_ELEMENT_KEY = "org.eclipse.ve.core.other-Object-java.lang.Object"; //$NON-NLS-1$
 
 	private boolean useSuperClass;
-	private IStatus fContributorStatus = IVisualClassCreationSourceContributor.OK_STATUS;
+	private boolean isSelectingTemplate = false;
+	
+	private IStatus fContributorStatus = StatusInfo.OK_STATUS;
+	private IStatus fSourceFolderStatus = StatusInfo.OK_STATUS;
 
 	public class TreePrioritySorter extends ViewerSorter {
 
@@ -112,6 +118,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 				if (event.getSelection() instanceof IStructuredSelection) {
 					selectedElement = null;
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+					isSelectingTemplate = true;
 					for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
 						Object domain = iterator.next();
 						if (domain instanceof VisualElementModel) {
@@ -120,10 +127,11 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 							setSuperClass(((VisualElementModel) domain).getSuperClass());							
 							handleFieldChanged(null);
 						} else {
-							fContributorStatus = IVisualClassCreationSourceContributor.OK_STATUS;
+							fContributorStatus = StatusInfo.OK_STATUS;
 							handleFieldChanged(null);							
 						}
 					}
+					isSelectingTemplate = false;
 				}
 			}
 		});
@@ -239,8 +247,9 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	
 	protected void updateStatus(IStatus[] statusArg) {
 		// The array of status objects is the ones that the superclass provides
-		IStatus[] status = new IStatus[statusArg.length + 1];
+		IStatus[] status = new IStatus[statusArg.length + 2];
 		System.arraycopy(statusArg,0,status,0,statusArg.length);
+		status[status.length - 2] = fSourceFolderStatus;
 		status[status.length - 1] = fContributorStatus;
 		super.updateStatus(StatusUtil.getMostSevere(status));
 	}	
@@ -286,9 +295,38 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 
 	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
 	protected void handleFieldChanged(String fieldName) {
-		if (fieldName == CONTAINER && selectedElement != null){
-			fContributorStatus = selectedElement.getStatus(getContainerRoot());			
-		}		
+		if (fieldName == CONTAINER){
+			fSourceFolderStatus = StatusInfo.OK_STATUS;
+			try{
+				// Check the status of whether or not we are in a proper source folder
+				if(getContainerRoot() != null){
+					IProject project = getContainerRoot().getProject();
+					if(project != null){
+						JavaProject javaProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
+						if(javaProject != null){
+							if(ProxyPlugin.isPDEProject(javaProject) && !javaProject.isOnClasspath(getPackageFragmentRoot())){
+								fSourceFolderStatus = new StatusInfo(
+										IStatus.ERROR,
+										CodegenWizardsMessages.getFormattedString("SourceFolder.RCP_ERROR",project.getName()), //$NON-NLS-1$
+										JavaVEPlugin.PLUGIN_ID);
+							}
+						}
+					}
+				} 
+			} catch (CoreException e){
+				JavaVEPlugin.log(e, Level.FINEST);				
+			}
+			// 	Check the status of the contributor as the project may have changaed
+			if(selectedElement != null){
+				fContributorStatus = selectedElement.getStatus(getContainerRoot());				
+			}
+		} else if (fieldName == SUPER){
+			// If the user is changing the superclass by hand then we must blank out the template otherwise we get errors
+			// with using the wrong template for the superclass
+			if(!isSelectingTemplate && styleTreeViewer != null){
+				styleTreeViewer.setSelection(null);
+			}			
+		}
 		super.handleFieldChanged(fieldName);
 	}
 
