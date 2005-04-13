@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.32 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.33 $  $Date: 2005-04-13 14:33:33 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -587,7 +587,6 @@ public  void dispose() {
 		bp.removeBackRef(this,true) ;
 	}
 	
-	fDecleration.removeBeanPart(this);
 
 	fBeanInitMethods.clear() ;
 	fEventInitMethods.clear() ;
@@ -606,6 +605,7 @@ public  void dispose() {
 	}	
 	if (isInJVEModel() && !model.isStateSet(IBeanDeclModel.BDM_STATE_UPDATING_DOCUMENT))
 	   removeFromJVEModel() ;
+	fDecleration.removeBeanPart(this);
 	fDecleration = null;
 	fEObject = null ;	
 }
