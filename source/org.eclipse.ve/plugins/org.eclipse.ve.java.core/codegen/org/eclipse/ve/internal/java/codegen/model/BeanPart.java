@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-13 14:33:33 $ 
+ *  $Revision: 1.34 $  $Date: 2005-04-13 17:13:10 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -490,7 +490,10 @@ public void setModel(IBeanDeclModel model) {
 }
 
 public String toString () {
-   return super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+   String message = super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+   if(isDisposed())
+	   message+="[DISPOSED]";
+   return message;
 }
 
 
@@ -537,11 +540,10 @@ public void disposeMethod (CodeMethodRef m, IBeanDeclModel model) {
 	}	
 }
 
-private boolean isDisposing = false;
 public  void dispose() {
 
-	if (isDisposing) return ;
-	isDisposing=true;
+	if (isDisposed()) return ;
+	setDisposed(true);
 	
     IBeanDeclModel model = fDecleration.getModel() ;
     
@@ -572,19 +574,27 @@ public  void dispose() {
 		}
 	}
 	
-	for (int i = 0; i < fBeanInitMethods.size(); i++) 
-		disposeMethod((CodeMethodRef) fBeanInitMethods.get(i),model);
-	for (int i = 0; i < fEventInitMethods.size(); i++) 
-		disposeMethod((CodeMethodRef) fEventInitMethods.get(i),model);
+	// dipose bean init methods
+	CodeMethodRef[] beanInitMethods = (CodeMethodRef[]) fBeanInitMethods.toArray(new CodeMethodRef[fBeanInitMethods.size()]);
+	for (int i = 0; i < beanInitMethods.length; i++) 
+		disposeMethod(beanInitMethods[i],model);
 	
-	for (int i = 0; i < fNoSrcExpressions.size(); i++) {
-		((CodeExpressionRef)fNoSrcExpressions.get(i)).dispose();
+	// dispose event init methods
+	CodeMethodRef[] eventInitMethods = (CodeMethodRef[]) fEventInitMethods.toArray(new CodeMethodRef[fEventInitMethods.size()]);
+	for (int i = 0; i < eventInitMethods.length; i++) 
+		disposeMethod(eventInitMethods[i],model);
+	
+	// dispose no source expressions
+	CodeExpressionRef[] noSrcExpressions = (CodeExpressionRef[])fNoSrcExpressions.toArray(new CodeExpressionRef[fNoSrcExpressions.size()]);
+	for (int i = 0; i < noSrcExpressions.length; i++) {
+		noSrcExpressions[i].dispose();
 	}
 	
-	for (int i = 0; i < fbackReferences.size(); i++) {
+	// dipose back reference beans
+	BeanPart[] backReferences = (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
+	for (int i = 0; i < backReferences.length; i++) {
 		// This should be empty if decoders had the chance to do their thing
-		BeanPart bp = (BeanPart) fbackReferences.get(i);
-		bp.removeBackRef(this,true) ;
+		backReferences[i].removeBackRef(this,true) ;
 	}
 	
 
@@ -892,5 +902,13 @@ public   void removeFromJVEModel()  {
 	}
 	public void setUniqueIndex(int uniqueIndex) {
 		this.uniqueIndex = uniqueIndex;
+	}
+
+	private boolean isDisposed = false;
+	public boolean isDisposed() {
+		return isDisposed;
+	}
+	protected void setDisposed(boolean isDisposed) {
+		this.isDisposed = isDisposed;
 	}
 }
