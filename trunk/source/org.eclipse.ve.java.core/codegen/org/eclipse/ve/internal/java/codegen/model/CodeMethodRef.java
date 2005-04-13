@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.27 $  $Date: 2005-04-12 22:08:39 $ 
+ *  $Revision: 1.28 $  $Date: 2005-04-13 17:27:14 $ 
  */
 
 import java.util.*;
@@ -334,16 +334,29 @@ protected int comparePriority (VEexpressionPriority p1, VEexpressionPriority p2)
 protected void addExpression (List l, CodeExpressionRef exp, int index) throws CodeGenException {
 	int offset;
 	String filler;
-	
-	// Remove no source expressions - they are not needed to determine offsets
-	List noSourceExpressions = new ArrayList();
-	for (Iterator iter = l.iterator(); iter.hasNext();) {
-		CodeExpressionRef sourceExp = (CodeExpressionRef) iter.next();
-		if(sourceExp.isStateSet(CodeExpressionRef.STATE_NO_SRC))
-			noSourceExpressions.add(sourceExp);
+		
+	int prevIndex = index-1;  // Previous valid expression	
+	if (index<l.size()) {
+		// find the first insertion target
+		CodeExpressionRef targetExp = (CodeExpressionRef)l.get(index);	
+		while (index<l.size() && targetExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
+			index++;
+			if (index<l.size())
+			   targetExp = (CodeExpressionRef)l.get(index);
+		}
 	}
 	
-	if ((l.size()-noSourceExpressions.size())==0) {
+	if (prevIndex>0) {	
+		// find previous valid expression
+		CodeExpressionRef targetExp = (CodeExpressionRef)l.get(prevIndex);
+		while (prevIndex>=0 && targetExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+			prevIndex--;
+			if (prevIndex>=0)
+			   targetExp = (CodeExpressionRef)l.get(prevIndex);
+		}
+	}
+					
+	if (index>=l.size() && prevIndex<0) {
 	  // No expression to piggy on from
 	  Object[] result = getUsableOffsetAndFiller();	  
 	  offset = ((Integer)result[0]).intValue();
@@ -351,17 +364,15 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 	}
 	else {
 		CodeExpressionRef cExp;
-		if (index==0) {
-			// Use the first element's filler
-			// We are to be inserted instead of this expression
-			cExp = (CodeExpressionRef) l.get(index);
-			offset = cExp.getOffset();
+		if (prevIndex>=0) {
+			// use the previou's filler.. we come right after
+			cExp = (CodeExpressionRef) l.get(prevIndex);
+			offset = cExp.getOffset()+cExp.getLen();
 		}
 		else {
-			// Use the last element's filler
-			// We are to be inserted after this expression
-			cExp = (CodeExpressionRef) l.get(index-1);
-			offset = cExp.getOffset()+cExp.getLen();
+			// use the one we come in front off
+			cExp = (CodeExpressionRef) l.get(index);
+			offset = cExp.getOffset();
 		}
 		filler=cExp.getFillerContent();
 	}		
