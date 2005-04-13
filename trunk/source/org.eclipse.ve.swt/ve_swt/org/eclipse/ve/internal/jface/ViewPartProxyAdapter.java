@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-12 22:36:43 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-13 09:28:42 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -27,13 +27,24 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+import org.eclipse.jem.internal.proxy.core.IStandardBeanProxyFactory;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ve.internal.cde.core.IImageListener;
 import org.eclipse.ve.internal.cde.core.IVisualComponent;
 import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
@@ -270,14 +281,31 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				//    and the second argument the name of the text to appear as the ViewPart title
 			
 				IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-				// Ensure the view part host is positioned off screen
+				// Ensure the view part host is positioned off screen and that it has the correct tab style and theme colors
 				org.eclipse.swt.graphics.Point offscreen = BeanSWTUtilities.getOffScreenLocation();
-				IIntegerBeanProxy intXBeanProxy = aBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.x);
-				IIntegerBeanProxy intYBeanProxy = aBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(offscreen.y);
-				// This is done by invoking the method setLocation(int,int) on the ViewPartHost
-				IMethodProxy setLocationMethodProxy = viewPartHostTypeProxy.getMethodProxy("setLocation",
-						new IBeanTypeProxy[] {intXBeanProxy.getTypeProxy(),intYBeanProxy.getTypeProxy()});
-				setLocationMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {intXBeanProxy,intYBeanProxy});
+				IStandardBeanProxyFactory beanProxyFactory = aBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory();
+				IIntegerBeanProxy intXBeanProxy = beanProxyFactory.createBeanProxyWith(offscreen.x);
+				IIntegerBeanProxy intYBeanProxy = beanProxyFactory.createBeanProxyWith(offscreen.y);
+				// Tab style (square or rounded)
+				boolean traditionalTabStyle = PrefUtil.getAPIPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
+				IBooleanBeanProxy traditionalTabBeanProxy = beanProxyFactory.createBeanProxyWith(traditionalTabStyle);
+				// Tab location (top or bottom)
+				int tabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
+				IIntegerBeanProxy tabPositionBeanProxy = beanProxyFactory.createBeanProxyWith(tabPosition);
+				
+				// Invoking the method setDetails(...) on the ViewPartHost that passes in the
+				// details in a single method call to reduce target VM round trips (as opposed to lots of different method calls for each setting)
+				IMethodProxy setDetailsMethodProxy = viewPartHostTypeProxy.getMethodProxy("setDetails",
+						new IBeanTypeProxy[] {
+						intXBeanProxy.getTypeProxy(),
+						intYBeanProxy.getTypeProxy(),
+						traditionalTabBeanProxy.getTypeProxy(),
+						tabPositionBeanProxy.getTypeProxy()});
+				setDetailsMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {
+						intXBeanProxy,
+						intYBeanProxy,
+						traditionalTabBeanProxy,
+						tabPositionBeanProxy});
 				
 				// Get the name of the type of ViewPart and use it as the title of the Tab folder
 				// This is an approximation as in the final runtime it will come from the plugin.xml
