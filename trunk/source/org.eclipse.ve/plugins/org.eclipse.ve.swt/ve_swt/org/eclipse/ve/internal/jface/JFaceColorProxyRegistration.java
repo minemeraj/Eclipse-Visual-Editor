@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorProxyRegistration.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-13 21:14:10 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -33,6 +33,11 @@ import org.eclipse.jem.internal.proxy.core.*;
 public class JFaceColorProxyRegistration {
 
 	public static void initialize(ProxyFactoryRegistry registry) {
+		// To handle the case in which this is being called but there is no SWT in the remote vm,
+		// check to see if the SWT RGB class even exists. If not, just return.
+		if (registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.graphics.RGB") == null) //$NON-NLS-1$
+			return;
+		
 		RGB errorColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR);
 		RGB hyperLinkColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR);
 		RGB activeHyperLinkColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR);
