@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-13 17:53:03 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -201,7 +201,8 @@ protected boolean  addComponent () throws CodeGenException {
     fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
     
     if (oldAddedPart != null)
-       if (fAddedPart != oldAddedPart) {
+		// If we are coming from source, the old beanpart might have been disposed - check
+       if (fAddedPart != oldAddedPart && !oldAddedPart.isDisposed()) {
        	oldAddedPart.removeBackRef(fbeanPart,true) ;
        }
           
