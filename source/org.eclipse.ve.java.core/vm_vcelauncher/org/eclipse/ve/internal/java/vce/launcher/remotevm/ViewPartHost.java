@@ -21,6 +21,8 @@ public class ViewPartHost {
 	private int fy;
 	public final int MIN_X = 300;
 	public final int MIN_Y = 175;
+	private int fTabPosition = 0;
+	private boolean fTraditionalTabs = true;
 
 	public Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
@@ -31,6 +33,9 @@ public class ViewPartHost {
 	    folder.setUnselectedCloseVisible(false);
 	    folder.setMaximizeVisible(true);
 	    folder.setMinimizeVisible(true);
+
+		folder.setTabPosition(fTabPosition);
+		folder.setSimple(fTraditionalTabs);
 	
 	    ViewForm viewForm = new ViewForm(folder, SWT.NONE);
 	    viewForm.marginHeight = 0;
@@ -38,12 +43,14 @@ public class ViewPartHost {
 	    viewForm.verticalSpacing = 0;
 	    viewForm.setBorderVisible(false);
 	
-	    CLabel viewMessage = new CLabel(viewForm, SWT.NONE);
-	    viewMessage.setText("View Message"); //$NON-NLS-1$
-	    viewForm.setTopLeft(viewMessage);
-	
 	    CTabItem item = new CTabItem(folder, SWT.CLOSE);
-	    item.setText(aTitle); //$NON-NLS-1$
+	    item.setText(aTitle);
+		folder.addCTabFolder2Listener(new CTabFolder2Adapter(){
+			public void close(CTabFolderEvent event){
+				event.doit = false;
+			}
+		});
+		
 	    Composite viewPartArgument = new Composite(viewForm, SWT.NONE){
 			public Point computeSize(int wHint,int hHint, boolean changed){
 				Point preferredSize = super.computeSize(wHint,hHint, changed);
@@ -85,6 +92,11 @@ public class ViewPartHost {
 		}
 		
 		return shell;
+	}
+	
+	public void setDetails(boolean traditionalTabs, int tabPosition){
+		fTabPosition = tabPosition;
+		fTraditionalTabs = traditionalTabs;		
 	}
 }
 
