@@ -85,7 +85,7 @@ public static void removeViewPart(WorkbenchPart aWorkbenchPart){
 
 public static void layoutViewPart(WorkbenchPart aWorkbenchPart){
 	
-	Composite c = (Composite) viewPartToParentComposite.get(aWorkbenchPart);
+	Composite c = ((Composite[])viewPartToParentComposite.get(aWorkbenchPart))[0];
 	c.pack();
 	getWorkbenchShell().layout(true);
 	
