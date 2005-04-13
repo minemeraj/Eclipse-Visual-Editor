@@ -19,8 +19,10 @@ public class ViewPartHost {
 	private static Image IMAGE;
 	private static int fx;
 	private static int fy;
+	private static boolean fTraditionalTabs;	// Style for whether tabs are square or rounded
 	public static final int MIN_X = 300;
 	public static final int MIN_Y = 175;
+	private static int fTabPosition; // Location of the tab position (top or bottom)
 
 public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
@@ -29,23 +31,17 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 	
     CTabFolder folder = new CTabFolder(parent, SWT.BORDER);
     folder.setUnselectedCloseVisible(false);
-    folder.setEnabled(false);
     folder.setMaximizeVisible(true);
     folder.setMinimizeVisible(true);
+	
+	folder.setSimple(fTraditionalTabs);
+	folder.setTabPosition(fTabPosition);
 
     ViewForm viewForm = new ViewForm(folder, SWT.NONE);
     viewForm.marginHeight = 0;
     viewForm.marginWidth = 0;
     viewForm.verticalSpacing = 0;
     viewForm.setBorderVisible(false);
-    ToolBar toolBar = new ToolBar(viewForm, SWT.FLAT | SWT.WRAP);
-    ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
-
-    viewForm.setTopRight(toolBar);
-
-    CLabel viewMessage = new CLabel(viewForm, SWT.NONE);
-    viewMessage.setText("View Message"); //$NON-NLS-1$
-    viewForm.setTopLeft(viewMessage);
 
     CTabItem item = new CTabItem(folder, SWT.CLOSE);
     item.setText(aTitle); //$NON-NLS-1$
@@ -106,9 +102,11 @@ public static void main(String[] args) {
 	
 }
 
-public static void setLocation(int x, int y){
+public static void setDetails(int x, int y, boolean traditionalTabs, int tabLocation){
 	fx = x;
 	fy = y;
+	fTraditionalTabs = traditionalTabs;
+	fTabPosition = tabLocation;
 	if(shell != null){
 		shell.setLocation(x,y);
 	}
