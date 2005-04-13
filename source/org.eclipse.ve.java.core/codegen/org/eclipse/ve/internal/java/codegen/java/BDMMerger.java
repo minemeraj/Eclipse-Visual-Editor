@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.34 $  $Date: 2005-04-12 23:18:10 $ 
+ *  $Revision: 1.35 $  $Date: 2005-04-13 04:05:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -561,7 +561,7 @@ public class BDMMerger {
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 					int equivalency = -1;
 					try {
-						equivalency = isSpecialEquivalent(mainExp, updExp);
+						equivalency = mainExp.isEquivalent(updExp);
 					} catch (CodeGenException e) {} 
 					if ( equivalency < 0) 
 						continue ; // Not the same expressions
@@ -603,7 +603,7 @@ public class BDMMerger {
 
 	/**
 	 * This is a special equivalence determining API which should be called
-	 * only from #updateChangedOffsetsAndMarkExpressions(Collection, Collection)
+	 * only from #processInitExpressions(List, List)
 	 * This API doesnt call the expression's isEquivalent() method if both expressions
 	 * are INIT expressions. The reason this is necessary is becuase an expression's
 	 * isEquivalent() is based on the offsets of the bean's INIT expressions. Since we are 
@@ -617,7 +617,7 @@ public class BDMMerger {
 	 * 
 	 * @since 1.0.2
 	 */
-	private int isSpecialEquivalent(CodeExpressionRef mainExp, CodeExpressionRef updExp) throws CodeGenException {
+	protected int isSpecialEquivalent(CodeExpressionRef mainExp, CodeExpressionRef updExp) throws CodeGenException {
 		if(mainExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR) && updExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
 	        if (mainExp.equals(updExp))
 				return 1;
@@ -952,31 +952,90 @@ public class BDMMerger {
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 				}
 			}
-			pushInitExpressionsToTop(orderedMainExpressions);
-			pushInitExpressionsToTop(orderedUpdatedExpressions);
+			update = update && processInitExpressions(orderedMainExpressions, orderedUpdatedExpressions);
 			update = update && processExpressions(orderedMainExpressions, orderedUpdatedExpressions);
 		}
 		return update;
 	}
 	
-	private void pushInitExpressionsToTop(List orderedList) {
-		// Bring init expressions to top. Determination of the exact reused
-		// variable is based on the offset of init expression - hence need to 
-		// process them first.
-		if(orderedList.size()>1){
-			int nextInitExpIndex = 0;
-			for (int i = 0; i < orderedList.size(); i++) {
-				CodeExpressionRef exp = (CodeExpressionRef) orderedList.get(i);
-				if(exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
-					if(i!=nextInitExpIndex){
-						orderedList.remove(exp);
-						orderedList.add(nextInitExpIndex, exp);
-					}
-					nextInitExpIndex++;
-				}
+	protected boolean processInitExpressions(List orderedMainExpressions, List orderedUpdatedExpressions) {
+		boolean processed = true;
+		List mainInitExpressions = new ArrayList();
+		List updateInitExpressions = new ArrayList();
+		// populate the init expressions 
+		for (int i = 0; i < orderedMainExpressions.size(); i++) {
+			CodeExpressionRef exp = (CodeExpressionRef) orderedMainExpressions.get(i);
+			if(exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+				orderedMainExpressions.remove(exp);
+				i--;
+				mainInitExpressions.add(exp);
 			}
 		}
+		for (int i = 0; i < orderedUpdatedExpressions.size(); i++) {
+			CodeExpressionRef exp = (CodeExpressionRef) orderedUpdatedExpressions.get(i);
+			if(exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+				orderedUpdatedExpressions.remove(exp);
+				i--;
+				updateInitExpressions.add(exp);
+			}
+		}
+		
+		for (int updatedExpCount = 0 ; updatedExpCount < updateInitExpressions.size(); updatedExpCount++) {
+			CodeExpressionRef updExp = (CodeExpressionRef) updateInitExpressions.get(updatedExpCount);
+			boolean equivalentExpFound = false ;
+			for(int mainExpCount = 0; mainExpCount < mainInitExpressions.size(); mainExpCount++ ){
+				CodeExpressionRef mainExp = (CodeExpressionRef) mainInitExpressions.get(mainExpCount);
+				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
+					int equivalency = -1;
+					try {
+						equivalency = isSpecialEquivalent(mainExp, updExp);
+					} catch (CodeGenException e) {} 
+					if ( equivalency < 0) 
+						continue ; // Not the same expressions
+					equivalentExpFound = true;
+					processed = processed && processEquivalentExpressions(mainExp, updExp, equivalency);
+					mainInitExpressions.remove(mainInitExpressions.indexOf(mainExp)) ;
+					updateInitExpressions.remove(updateInitExpressions.indexOf(updExp)) ;
+					mainExpCount -- ;
+					updatedExpCount -- ;
+					break;
+				}
+			}
+			if(!equivalentExpFound){
+				// No Equivalent expression was found 
+				// Now add the newly added expressions
+				updateInitExpressions.remove(updateInitExpressions.indexOf(updExp));
+				updatedExpCount--;
+				processed = processed && addNewExpression(updExp);
+			}
+		}
+		// Now remove the old main expressions
+		for (int delExpCount = 0; delExpCount < mainInitExpressions.size(); delExpCount++) {
+			CodeExpressionRef mainExp = (CodeExpressionRef) mainInitExpressions.get(delExpCount);
+			removeDeletedExpression(mainExp);
+		}
+		
+		return processed;
 	}
+
+//	private void pushInitExpressionsToTop(List orderedList) {
+//		// Bring init expressions to top. Determination of the exact reused
+//		// variable is based on the offset of init expression - hence need to 
+//		// process them first.
+//		if(orderedList.size()>1){
+//			int nextInitExpIndex = 0;
+//			for (int i = 0; i < orderedList.size(); i++) {
+//				CodeExpressionRef exp = (CodeExpressionRef) orderedList.get(i);
+//				if(exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+//					if(i!=nextInitExpIndex){
+//						orderedList.remove(exp);
+//						orderedList.add(nextInitExpIndex, exp);
+//					}
+//					nextInitExpIndex++;
+//				}
+//			}
+//		}
+//	}
 
 	protected BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
 		BeanPart modelBP = null;
@@ -1113,8 +1172,26 @@ public class BDMMerger {
 			else
 				decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
 		}else{
-			int length = decl.getBeanParts().length;
-			uniqueIndex = length-1;
+			//find the least valued unique number
+			uniqueIndex=Integer.MAX_VALUE;
+			BeanPart[] bps = decl.getBeanParts();
+			for (int uniqueNum = 0; uniqueNum <= bps.length; uniqueNum++) {
+				boolean used = false;
+				for (int i = 0; i < bps.length; i++) {
+					if(bps[i].getUniqueIndex()==uniqueNum){
+						used = true;
+						break;
+					}
+				}
+				if(!used){
+					uniqueIndex = uniqueNum;
+					break;
+				}
+			}
+			if(uniqueIndex==Integer.MAX_VALUE){
+				JavaVEPlugin.log("Should be having an unique number!", Level.FINE);
+				uniqueIndex = bps.length;
+			}
 		}
 		newBP = new BeanPart(decl);
 		newBP.setInstanceInstantiation(referenceBP.isInstanceInstantiation()) ;
