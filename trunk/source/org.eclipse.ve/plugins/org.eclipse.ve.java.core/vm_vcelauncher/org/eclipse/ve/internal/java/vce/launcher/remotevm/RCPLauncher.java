@@ -55,12 +55,36 @@ public class RCPLauncher implements ILauncher {
 			System.exit(0);	
 		}
 		
+		// Get the RCP View Tab Preferences
+		int fTabPosition = 0;
+		boolean fTraditionalTabs = false;
+		
+		try {
+			fTabPosition = Integer.parseInt(System.getProperty("rcp.launcher.tabPosition")); //$NON-NLS-1$
+			if( "true".equalsIgnoreCase(System.getProperty("rcp.launcher.traditionalTabs"))){ //$NON-NLS-1$
+				fTraditionalTabs = true;
+			}
+		} catch (NumberFormatException e1){
+			e1.printStackTrace();	
+			System.exit(0);	
+		} catch (SecurityException e1){
+			e1.printStackTrace();	
+			System.exit(0);			
+		} catch (IllegalArgumentException e1){
+			e1.printStackTrace();	
+			System.exit(0);
+		} catch (NullPointerException e1){
+			e1.printStackTrace();
+			System.exit(0);
+		}
+		
 		ViewPart viewPart = (ViewPart) javaBean;
 		ViewPartHost viewPartHost = new ViewPartHost();
 		String className = viewPart.getClass().getName();
 		if(className.indexOf(".") != -1){
 			className = className.substring(className.lastIndexOf(".") + 1);
 		}
+		viewPartHost.setDetails(fTraditionalTabs, fTabPosition);
 		viewPartHost.addViewPart(viewPart, className);
 		runEventLoop((Shell)viewPartHost.getWorkbenchShell());
 		

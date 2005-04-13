@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-12 23:30:42 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-13 21:28:16 $ 
  */
 
 
@@ -26,21 +26,19 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
-import org.eclipse.jdt.launching.ExecutionArguments;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMRunner;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jdt.launching.*;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.util.PrefUtil;
+
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
@@ -159,6 +157,12 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// TODO: RCP hack
 	if ( isJFaceProject(verifyJavaProject(configuration)) ){
 		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
+		
+		int fTabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
+		boolean fTraditionalTabs = PrefUtil.getAPIPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
+		
+		args.append(" -Drcp.launcher.tabPosition=" + fTabPosition); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.traditionalTabs=" + fTraditionalTabs); //$NON-NLS-1$
 	}
 	
 	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$ //$NON-NLS-2$
