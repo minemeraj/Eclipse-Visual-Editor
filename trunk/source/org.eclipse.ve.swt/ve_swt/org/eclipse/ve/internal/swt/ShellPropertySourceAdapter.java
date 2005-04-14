@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-14 13:59:32 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,7 +22,7 @@ import org.eclipse.jem.internal.instantiation.PTExpression;
  * SWT Shell property source adapter.
  * @since 1.0.0
  */
-public class ShellPropertySourceAdapter extends ControlPropertySourceAdapter {
+public class ShellPropertySourceAdapter extends CompositePropertySourceAdapter {
 
 	private final String[] TRIM_STRINGS = new String[] {SWT_TYPE_ID, "SHELL_TRIM"}; //$NON-NLS-1$
 	/* (non-Javadoc)
