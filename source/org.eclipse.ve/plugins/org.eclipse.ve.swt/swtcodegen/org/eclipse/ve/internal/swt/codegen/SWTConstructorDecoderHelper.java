@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-09 01:19:17 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-14 23:39:53 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -86,7 +86,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		return false ;
 	}
 	
-	protected EStructuralFeature getControlSF() {
+	protected EStructuralFeature getIndexSF() {
 		return getParent().getEObject().eClass().getEStructuralFeature(constructorSF);
 	}
 	
@@ -97,7 +97,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 */
 	protected void createControlFeature(boolean updateEMFModel) {
 		
-		EStructuralFeature sf = getControlSF();
+		EStructuralFeature sf = getIndexSF();
 		CodeExpressionRef exp = fOwner.getExprRef();
 		
 		if (updateEMFModel) {
@@ -191,7 +191,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected int getControlIndex() {
 		int result = -1;
 		if (getParent()!=null) {
-			  List controls = (List)getParent().getEObject().eGet(getControlSF());
+			  List controls = (List)getParent().getEObject().eGet(getIndexSF());
 			  for (int i = 0; i < controls.size(); i++) 
 				if (controls.get(i).equals(fbeanPart.getEObject())) {
 					result = i ;
@@ -215,13 +215,15 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected int getIndexPriority() {
+	protected Object[] getIndexPriority() {
+		Object[] result = new Object[2];
+		result[1] = getIndexSF();
 		List controls = Collections.EMPTY_LIST;
 		if (getParent()!=null)
-			controls = (List)getParent().getEObject().eGet(getControlSF());
+			controls = (List)getParent().getEObject().eGet(getIndexSF());
 		// use a common method
-		int priority = getIndexPriority(fbeanPart, controls) ;
-		return priority;
+		result[0] = new Integer(getIndexPriority(fbeanPart, controls)) ;
+		return result;
 	}
 	
 	/** (non-Javadoc)

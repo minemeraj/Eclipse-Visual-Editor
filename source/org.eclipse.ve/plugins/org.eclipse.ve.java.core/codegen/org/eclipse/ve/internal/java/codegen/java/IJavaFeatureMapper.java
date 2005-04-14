@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-14 23:39:52 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -46,25 +46,81 @@ public boolean isFieldFeature() ;
 // be inserted in the code
 
 public class VEexpressionPriority {	
-    int priority;  // Expression "feature" level priority
-    int index;     // In the case of same "feature", index  (e.g., z order of add(Foo)
+    int priority;  // Expression "feature" level priority ordering withing a bean
+	Object[] index;  // First element is an Integer for index value, second is the SF to index on
+	                 // This will determine Z ordering priority between beans
     
-    public VEexpressionPriority (int p, int i) {
+    public VEexpressionPriority (int p, Object [] i) {
     	priority = p;
     	index=i;    	
     }
 	public int getProiority() {  		
 		return priority;
 	}
-	public int getProiorityIndex() {  	
+	public boolean isIndexed() {
+		return index!=null;
+	}
+	public Object[] getProiorityIndex() {  	
 		return index;
 	}
 	public String toString() {
+		StringBuffer st = new StringBuffer();
 		if (priority<0) 
-			return "[NO Priority]"; //$NON-NLS-1$
-		else
-			return "["+priority+", "+index+"]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			st.append("[NO Priority]"); //$NON-NLS-1$
+		else{
+			st.append("[");
+			st.append(priority);
+			st.append(":");
+			if (index!=null) {
+				st.append("(");
+				st.append(index[0]);
+				st.append(",");
+				st.append(((EStructuralFeature)index[1]).getName());
+				st.append(")]");
+			}
+			else {
+				st.append("NoIndex]");
+			}
+		}
+        return st.toString();
 	}
+	/**
+	 *  @return 0 if equal, 1 if this>p, -1 if this<p2
+	 **/
+	public int comparePriority (VEexpressionPriority p) {		   
+		   if (getProiority() == p.getProiority()) {
+			   if (isIndexed() && p.isIndexed())  {
+			      return compareIndex(p);
+			   }
+			   else
+				   return 0;  // Both are not indexed;
+		   }
+		   else 
+			   if (getProiority()>p.getProiority())
+		           return 1;
+		        else
+		           return -1;
+	}
+	/**
+	 * Assuming both priorities has an index
+	 * @param p
+	 * @return  0 if equal or not compared, 1 if this>p, -1 if this<p2
+	 * 
+	 * @since 1.1.0
+	 */
+	public int compareIndex(VEexpressionPriority p) {
+		if (getProiorityIndex()[1]==p.getProiorityIndex()[1]) { // same SF
+			  if (((Integer)(getProiorityIndex()[0])).intValue()>((Integer)(p.getProiorityIndex()[0])).intValue())
+				  return 1;
+			  else if (((Integer)(getProiorityIndex()[0])).intValue()<((Integer)(p.getProiorityIndex()[0])).intValue())
+				       return -1;
+			       else
+				       return 0;
+	      }
+	      else
+			  return 0;  // index is not on the same SF
+	}
+	
 }
 
 /**
@@ -89,7 +145,7 @@ public static final int PRIORITY_ADD = 					PRIORITY_DEFAULT - 5000;
 public static final int PRIORITY_CONSTRUCTOR = 			PRIORITY_DEFAULT;
 
 
-public static final VEexpressionPriority NOPriority = new VEexpressionPriority(-1,-1);
-public static final VEexpressionPriority DEFAULTPriority = new VEexpressionPriority(PRIORITY_DEFAULT,0);
+public static final VEexpressionPriority NOPriority = new VEexpressionPriority(-1,null);
+public static final VEexpressionPriority DEFAULTPriority = new VEexpressionPriority(PRIORITY_DEFAULT,null);
 
 }

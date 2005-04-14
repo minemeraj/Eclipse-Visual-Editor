@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.35 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.36 $  $Date: 2005-04-14 23:39:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -568,7 +568,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * 
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected int getIndexPriority() {
+	protected Object[] getIndexPriority() {
 //		if(fbeanPart!=null){
 //			return getDefaultBeanPriority(fbeanPart);
 //		}
