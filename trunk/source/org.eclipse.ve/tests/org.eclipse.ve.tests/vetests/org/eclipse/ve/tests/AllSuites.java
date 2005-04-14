@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests;
 /*
  *  $RCSfile: AllSuites.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-15 14:17:59 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-14 16:05:12 $ 
  */
 
 import org.eclipse.ve.tests.cde.CDESuite;
@@ -19,7 +19,7 @@ import org.eclipse.ve.tests.codegen.java.rules.CodegenRulesSuite;
 import org.eclipse.ve.tests.codegen.java.templates.CodegenJavaTemplatesSuite;
 import org.eclipse.ve.tests.codegen.resolve.ResolveSuite;
 import org.eclipse.ve.tests.codegen.util.CodegenUtilSuite;
-import org.eclipse.ve.tests.perf.PerfSuite;
+//import org.eclipse.ve.tests.perf.PerfSuite;
 import org.eclipse.ve.tests.vce.rules.VCERulesSuite;
 import org.eclipse.ve.tests.codegen.model.ModelTestsSuite;
 

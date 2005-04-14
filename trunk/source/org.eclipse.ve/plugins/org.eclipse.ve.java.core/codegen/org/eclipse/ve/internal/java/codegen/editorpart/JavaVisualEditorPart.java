@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.96 $  $Date: 2005-04-12 21:50:43 $ 
+ *  $Revision: 1.97 $  $Date: 2005-04-14 16:00:25 $ 
  */
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
@@ -69,7 +68,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
