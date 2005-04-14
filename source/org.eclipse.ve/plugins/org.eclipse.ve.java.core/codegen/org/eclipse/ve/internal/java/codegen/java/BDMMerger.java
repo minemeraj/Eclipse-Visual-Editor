@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.39 $  $Date: 2005-04-14 14:34:07 $ 
+ *  $Revision: 1.40 $  $Date: 2005-04-14 23:04:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1357,6 +1357,25 @@ public class BDMMerger {
 	protected boolean removeDeletedBean(final BeanPart b){
 		boolean remove = false ; 
 		if( b != null ){
+			EObject eObject = b.getEObject();
+			// remove expressions which reference this bean
+			List toDeleteExpressions = new ArrayList();
+			Iterator expItr = b.getInitMethod().getAllExpressions();
+			while (expItr.hasNext()) {
+				CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+				if(b.equals(exp.getBean()))
+					continue;
+				Object[] addedInstances = exp.getAddedInstances();
+				for (int i = 0; addedInstances!=null && i < addedInstances.length; i++) {
+					if(eObject==addedInstances[i])
+						if(!toDeleteExpressions.contains(exp))
+							toDeleteExpressions.add(exp);
+				}
+			}
+			for (Iterator iter = toDeleteExpressions.iterator(); iter.hasNext();) {
+				CodeExpressionRef exp = (CodeExpressionRef) iter.next();
+				exp.dispose();
+			}
 			b.dispose();
 			remove = true ;
 		}
@@ -1372,7 +1391,7 @@ public class BDMMerger {
 	 */
 	protected boolean removeDeletedBeans(){
 		boolean removed = true ;
-		
+		List visitedDecls = new ArrayList();
 		Iterator mainBeansItr = mainModel.getBeans().iterator();
 		while(mainBeansItr.hasNext()){
 			if (monitor.isCanceled())
@@ -1381,69 +1400,96 @@ public class BDMMerger {
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
 			// Could have been deleted when a parent was deleted
 			if (mainBean.isDisposed()) continue;
-			if(determineCorrespondingBeanPart(mainBean, newModel)==null){
-				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
-					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-				monitor.subTask(mainBean.getSimpleName());
-				removed = removed && removeDeletedBean( mainBean ); 
-				
-			}else{
-				// Remove bean if type has changed				
-				BeanPart newBean = determineCorrespondingBeanPart(mainBean, newModel);
-				String mainType;
-				String newType;
-				boolean isMainBeanThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
-				boolean isNewBeanThisPart = newBean.getSimpleName().equals(BeanPart.THIS_NAME);
-				Name mainBeanExtendsName = (isMainBeanThisPart && mainBean.getModel().getTypeDecleration()!=null) ? mainBean.getModel().getTypeDecleration().getSuperclass() : null;
-				Name newBeanExtendsName = (isNewBeanThisPart && newBean.getModel().getTypeDecleration()!=null) ? newBean.getModel().getTypeDecleration().getSuperclass() : null;
-				TypeResolver resolver = mainBean.getModel().getResolver();
-				if(isMainBeanThisPart && mainBeanExtendsName!=null)
-					mainType = resolver.resolveType(mainBeanExtendsName).getName();
-				else
-					mainType = mainBean.getType();
-				if(isNewBeanThisPart && newBeanExtendsName!=null)
-					newType = resolver.resolveType(newBeanExtendsName).getName() ;
-				else
-					newType = newBean.getType();
-				boolean typeChanged = !mainType.equals(newType) ;
-				if(typeChanged){
-					monitor.subTask(mainBean.getSimpleName());
-					// Type has changed 
-					// If extends has been removed, remove the bean
-					// If extends there, then reload from scratch
-					if(isMainBeanThisPart){
-						if(newBeanExtendsName==null){
-							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
-								JavaVEPlugin.log("BDM Merger >> "+"Removing THIS bean ", Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-							removed = removed && removeDeletedBean( mainBean );
-						}else{
-							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
-								JavaVEPlugin.log("BDM Merger >> "+"This part's type has changed - will need to reload", Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-							return false;
-						}
-					}else{
-						if (JavaVEPlugin.isLoggingLevel(Level.FINER))
-							JavaVEPlugin.log("BDM Merger >> "+"Removing changed type bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-						removed = removed && removeDeletedBean( mainBean );
-					}
-				}else{
-					CodeMethodRef mainMethod = mainBean.getInitMethod();
-					CodeMethodRef newMethod = newBean.getInitMethod();
-					if(mainMethod!=null && newMethod!=null){
-						String mainMethodHandle = mainMethod.getMethodHandle();
-						String newMethodHandle = newMethod.getMethodHandle();
-						if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
-							if (JavaVEPlugin.isLoggingLevel(Level.FINER))
-								JavaVEPlugin.log("BDM Merger >> "+"Removing changed init method bean "+mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
-							removed = removed && removeDeletedBean( mainBean );
-						}
-					}
+			
+			BeanPartDecleration mainBeanDecl = mainBean.getDecleration();
+			if(visitedDecls.contains(mainBeanDecl))
+				continue; // we have visited all beans in this bean decl
+			visitedDecls.add(mainBeanDecl);
+			BeanPart[] mainBPs = mainBeanDecl.getBeanParts();
+			if(mainBPs==null || mainBPs.length<1)
+				JavaVEPlugin.log("BDMMerger: BPDecl with no BPs - shouldnt be so", Level.WARNING);
+			
+			List toDeleteBeansList = new ArrayList();
+			BeanPartDecleration newBPDecl = newModel.getModelDecleration(mainBeanDecl);
+			BeanPart[] newBPs = newBPDecl==null?new BeanPart[0]: newBPDecl.getBeanParts();
+			if(mainBPs.length!=newBPs.length){
+				for (int i = 0; i < mainBPs.length; i++) {
+					toDeleteBeansList.add(mainBPs[i]);
 				}
+			}else{
+				for (int i = 0; i < mainBPs.length; i++) {
+					if(shouldRemoveMainBean(mainBPs[i], newBPs[i]))
+						toDeleteBeansList.add(mainBPs[i]);
+				}
+			}
+			
+			Iterator toDeleteBPItr = toDeleteBeansList.iterator();
+			while (toDeleteBPItr.hasNext()) {
+				BeanPart bp = (BeanPart) toDeleteBPItr.next();
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Removing deleted bean "+ bp.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+				monitor.subTask(bp.getSimpleName());
+				removed = removed && removeDeletedBean( bp ); 
 			}
 		}
 		return removed;
 	}
 	
+	protected boolean shouldRemoveMainBean(BeanPart mainBean, BeanPart newBean){
+		// Remove bean if type has changed	
+		boolean shouldRemove = false;
+		String mainType;
+		String newType;
+		boolean isMainBeanThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
+		boolean isNewBeanThisPart = newBean.getSimpleName().equals(BeanPart.THIS_NAME);
+		Name mainBeanExtendsName = (isMainBeanThisPart && mainBean.getModel().getTypeDecleration()!=null) ? mainBean.getModel().getTypeDecleration().getSuperclass() : null;
+		Name newBeanExtendsName = (isNewBeanThisPart && newBean.getModel().getTypeDecleration()!=null) ? newBean.getModel().getTypeDecleration().getSuperclass() : null;
+		TypeResolver resolver = mainBean.getModel().getResolver();
+		if(isMainBeanThisPart && mainBeanExtendsName!=null)
+			mainType = resolver.resolveType(mainBeanExtendsName).getName();
+		else
+			mainType = mainBean.getType();
+		if(isNewBeanThisPart && newBeanExtendsName!=null)
+			newType = resolver.resolveType(newBeanExtendsName).getName() ;
+		else
+			newType = newBean.getType();
+		boolean typeChanged = !mainType.equals(newType) ;
+		if(typeChanged){
+			monitor.subTask(mainBean.getSimpleName());
+			// Type has changed 
+			// If extends has been removed, remove the bean
+			// If extends there, then reload from scratch
+			if(isMainBeanThisPart){
+				if(newBeanExtendsName==null){
+					if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+						JavaVEPlugin.log("BDM Merger >> "+"Removing THIS bean ", Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+					shouldRemove = true;
+				}else{
+					if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+						JavaVEPlugin.log("BDM Merger >> "+"This part's type has changed - will need to reload", Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+					shouldRemove = true;
+				}
+			}else{
+				if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+					JavaVEPlugin.log("BDM Merger >> "+"Removing changed type bean "+ mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+				shouldRemove = true;
+			}
+		}else{
+			CodeMethodRef mainMethod = mainBean.getInitMethod();
+			CodeMethodRef newMethod = newBean.getInitMethod();
+			if(mainMethod!=null && newMethod!=null){
+				String mainMethodHandle = mainMethod.getMethodHandle();
+				String newMethodHandle = newMethod.getMethodHandle();
+				if(mainMethodHandle==null || newMethodHandle==null || !mainMethodHandle.equals(newMethodHandle)){
+					if (JavaVEPlugin.isLoggingLevel(Level.FINER))
+						JavaVEPlugin.log("BDM Merger >> "+"Removing changed init method bean "+mainBean.getSimpleName(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+					shouldRemove = true;
+				}
+			}
+		}
+		return shouldRemove;
+	}
+
 	protected CodeMethodRef createNewMainMethodRef(CodeMethodRef newMethodRef){
 		CodeMethodRef mainMethodRef =  new CodeMethodRef(
 				newMethodRef.getDeclMethod(), 
