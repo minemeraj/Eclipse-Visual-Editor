@@ -9,11 +9,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.10 $ $Date: 2005-04-05 20:11:46 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.11 $ $Date: 2005-04-14 13:59:32 $
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.PTExpression;
+import org.eclipse.jem.internal.instantiation.PTMethodInvocation;
+import org.eclipse.jem.internal.instantiation.PTName;
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
@@ -76,22 +80,46 @@ public class ResourceProxyAdapter extends BeanProxyAdapter {
 			throw new IAllocationProcesser.AllocationException(e);
 		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
 			throw (IAllocationProcesser.AllocationException) e.getCause();
+		} finally {
+			if(isSharedInstance(allocation)){
+				fOwnsProxy = false;
+			}
 		}
+	}
+	
+	public boolean isSharedInstance(JavaAllocation allocation){
+		// JFace colors and fonts can come from registries, in which case we can't release them as they are shared object
+		// JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+		// however some fonts can be released, e.g.
+		// new Font(top.getDisplay(), data);
+		// We don't have a clean way to distinguish which is which now so this has to look at the parse tree and be harded coded for
+		// JFace registries.  Bugzilla 91358 tracks the fact we should re-visit this solution		
+		if(allocation instanceof ParseTreeAllocation){
+			PTExpression expression = ((ParseTreeAllocation)allocation).getExpression();
+			if(expression instanceof PTMethodInvocation){
+				PTExpression getRegistryEntry = ((PTMethodInvocation)expression).getReceiver(); // JFaceResources.getFontRegistry().getBold(...);
+				if (getRegistryEntry instanceof PTMethodInvocation) {
+					PTExpression registryMethod = ((PTMethodInvocation)getRegistryEntry).getReceiver(); // JFaceResources.getFontRegistry()
+					if(registryMethod instanceof PTName  &&((PTName)registryMethod).getName().equals("org.eclipse.jface.resource.JFaceResources")){
+							return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	public void releaseBeanProxy() {
-		if(this.fOwnsProxy) {
-			if (isBeanProxyInstantiated()) {
-				JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(),
-					new DisplayManager.DisplayRunnable() {
-						public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-							IBeanProxy resourceBeanProxy = getBeanProxy();
-							IMethodProxy disposeWidgetMethodProxy = resourceBeanProxy.getTypeProxy().getMethodProxy("dispose"); //$NON-NLS-1$
-							disposeWidgetMethodProxy.invoke(resourceBeanProxy);
-							return null;
-						}
-				});
-			}
+		if(this.fOwnsProxy && isBeanProxyInstantiated()) {
+			JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(),
+				new DisplayManager.DisplayRunnable() {
+					public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+						IBeanProxy resourceBeanProxy = getBeanProxy();
+						IMethodProxy disposeWidgetMethodProxy = resourceBeanProxy.getTypeProxy().getMethodProxy("dispose"); //$NON-NLS-1$
+						disposeWidgetMethodProxy.invoke(resourceBeanProxy);
+						return null;
+				}
+			});
 		}
 		super.releaseBeanProxy();
 	}

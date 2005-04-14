@@ -15,6 +15,8 @@
     	treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"/>
     </addedEObjects>
+    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
+        propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositePropertySourceAdapter"/>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
         beanLocation="GLOBAL_GLOBAL"    
         beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter"/>
