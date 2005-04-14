@@ -11,12 +11,12 @@
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 /*
  *  $RCSfile: CompositePropertySourceAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-14 13:59:32 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-14 15:52:41 $ 
  */
 
 public class CompositePropertySourceAdapter extends ControlPropertySourceAdapter {
