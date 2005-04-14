@@ -2,7 +2,7 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: CompositeSourceTemplate.javajet,v $
- *  $Revision: 1.2 $ $Date: 2004-09-08 18:48:02 $
+ *  $Revision: 1.3 $ $Date: 2005-04-14 23:26:03 $
  */
 %>
 <%@ jet 
@@ -23,10 +23,11 @@ public class <%=typeName%> extends Composite {
 <% 	
 	if (argumentMatrix != null && ((String)argumentMatrix.get(org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassWizardPage.CREATE_MAIN)).equals("true")) {%>
 	public static void main(String[] args) {
-		/* Before this is run, be sure to set up the following in the launch configuration 
-		 * (Arguments->VM Arguments) for the correct SWT library path. 
-		 * The following is a windows example:
-		 * -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.0\os\win32\x86"
+		/* Before this is run, be sure to set up the launch configuration (Arguments->VM Arguments)
+		 * for the correct SWT library path in order to run with the SWT dlls. 
+		 * The dlls are located in the SWT plugin jar.  
+		 * For example, on Windows the Eclipse SWT 3.1 plugin jar is:
+		 *       installation_directory\plugins\org.eclipse.swt.win32_3.1.0.jar
 		 */
 		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();		
 		org.eclipse.swt.widgets.Shell shell = new org.eclipse.swt.widgets.Shell(display);
