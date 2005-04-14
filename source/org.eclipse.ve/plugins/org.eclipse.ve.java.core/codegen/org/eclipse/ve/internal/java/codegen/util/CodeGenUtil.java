@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.35 $  $Date: 2005-04-11 19:43:11 $ 
+ *  $Revision: 1.36 $  $Date: 2005-04-14 16:02:09 $ 
  */
 
 
@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;

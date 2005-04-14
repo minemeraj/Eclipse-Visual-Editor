@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelInstance.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-12 12:34:04 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-14 16:00:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -23,19 +23,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.ve.internal.cdm.CDMFactory;
-import org.eclipse.ve.internal.cdm.Diagram;
-
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-
-import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-import org.eclipse.ve.internal.jcm.JCMFactory;
-
+import org.eclipse.ve.internal.cdm.CDMFactory;
+import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.VEModelCacheUtility;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.JCMFactory;
 
 /**
  * @author Gili Mendel
