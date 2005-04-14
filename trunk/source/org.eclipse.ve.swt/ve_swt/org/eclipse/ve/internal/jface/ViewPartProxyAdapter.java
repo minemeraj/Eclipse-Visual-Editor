@@ -10,52 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-13 09:28:42 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-14 15:56:12 $ 
  */
 package org.eclipse.ve.internal.jface;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
-import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
-import org.eclipse.jem.internal.proxy.core.IStandardBeanProxyFactory;
-import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
-import org.eclipse.jem.internal.proxy.swt.DisplayManager;
-import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
-import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
-import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.ve.internal.cde.core.IImageListener;
-import org.eclipse.ve.internal.cde.core.IVisualComponent;
-import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
-import org.eclipse.ve.internal.cde.core.ImageNotifierSupport;
-import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.swt.BeanSWTUtilities;
-import org.eclipse.ve.internal.swt.ControlManager;
-import org.eclipse.ve.internal.swt.SwtPlugin;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.swt.*;
+
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.swt.*;
 
 
 public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualComponent , IControlProxyHost {

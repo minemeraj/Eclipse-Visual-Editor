@@ -10,35 +10,25 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.12 $$  $$Date: 2005-04-12 14:06:34 $$ 
+ *  $$Revision: 1.13 $$  $$Date: 2005-04-14 15:53:37 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.emf.common.util.BasicEMap.Entry;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.Annotation;
-
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 

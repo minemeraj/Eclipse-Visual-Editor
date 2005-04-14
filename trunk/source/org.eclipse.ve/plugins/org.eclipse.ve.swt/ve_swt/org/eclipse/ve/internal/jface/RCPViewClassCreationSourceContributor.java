@@ -10,21 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-13 00:11:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-14 15:56:12 $ 
  */
 package org.eclipse.ve.internal.jface;
 
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.JavaProject;
+
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor;

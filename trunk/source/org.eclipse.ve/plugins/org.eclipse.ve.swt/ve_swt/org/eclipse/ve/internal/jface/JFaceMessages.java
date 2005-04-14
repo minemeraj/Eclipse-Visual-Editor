@@ -11,14 +11,12 @@
 package org.eclipse.ve.internal.jface;
 /*
  *  $RCSfile: JFaceMessages.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-13 00:11:22 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-14 15:56:12 $ 
  */
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.eclipse.core.resources.IProject;
 
 public class JFaceMessages {
 
