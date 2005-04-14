@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.38 $  $Date: 2005-04-13 17:12:44 $ 
+ *  $Revision: 1.39 $  $Date: 2005-04-14 14:34:07 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -50,6 +50,7 @@ public class BDMMerger {
 	protected IProgressMonitor monitor;
 	
 	protected List needToRedecodeExpressions = new ArrayList();
+	protected HashMap newBDMToMainBDMBeanPartMap = new HashMap();
 	
 	/**
 	 * 
@@ -1045,19 +1046,45 @@ public class BDMMerger {
 
 	protected BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
 		BeanPart modelBP = null;
-		BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
-		BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
-		BeanPart[] modelBPs = modelBPDecl==null?null:modelBPDecl.getBeanParts();
-		if(modelBPs!=null && modelBPs.length>0){
-			for (int i = 0; i < modelBPs.length; i++) {
-				if(otherModelBP.isEquivalent(modelBPs[i])){
-					modelBP = modelBPs[i];
-					break;
+		if(newBDMToMainBDMBeanPartMap.size()>0){
+			// check to see if we created the bean part ourselves - without
+			// the init expression
+			if(newBDMToMainBDMBeanPartMap.containsKey(otherModelBP))
+				modelBP = (BeanPart) newBDMToMainBDMBeanPartMap.get(otherModelBP);
+			else if(newBDMToMainBDMBeanPartMap.containsValue(otherModelBP)){
+				Iterator keysItr = newBDMToMainBDMBeanPartMap.keySet().iterator();
+				while (keysItr.hasNext()) {
+					BeanPart keyBP = (BeanPart) keysItr.next();
+					if(newBDMToMainBDMBeanPartMap.get(keyBP)==otherModelBP)
+						modelBP = keyBP;
 				}
 			}
-		}else{
-			// no bp decl - just ask by unique name
-			modelBP = model.getABean(otherModelBP.getUniqueName());
+		}
+		if(modelBP==null){
+			BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
+			BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
+			BeanPart[] modelBPs = modelBPDecl==null?null:modelBPDecl.getBeanParts();
+			if(modelBPs!=null && modelBPs.length>0){
+				for (int i = 0; i < modelBPs.length; i++) {
+					if(otherModelBP.isEquivalent(modelBPs[i])){
+						modelBP = modelBPs[i];
+						break;
+					}
+				}
+			}else{
+				// no bp decl - just ask by unique name
+				modelBP = model.getABean(otherModelBP.getUniqueName());
+			}
+			if(modelBP!=null){
+				// found out a bean using equivalency tests 
+				// BUT the equivalency tests could be false if no init expressions
+				// were available for the beanparts we created - hence check our
+				// cache to see if the bean was created by us. If so we cant use 
+				// the equivalency tests
+				if(newBDMToMainBDMBeanPartMap.containsValue(modelBP) || 
+						newBDMToMainBDMBeanPartMap.containsKey(modelBP))
+					modelBP = null;
+			}
 		}
 		return modelBP;
 	}
@@ -1247,6 +1274,7 @@ public class BDMMerger {
 		}else{
 			// Instatiation went on successfully
 		}
+		newBDMToMainBDMBeanPartMap.put(referenceBP, newBP);
 		return true;
 	}
 	
