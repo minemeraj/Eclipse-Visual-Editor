@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImplicitAllocationDecoder.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-09 01:19:17 $ 
+ *  $Revision: 1.4 $  $Date: 2005-04-14 23:39:53 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -156,7 +156,7 @@ public class ImplicitAllocationDecoder implements IExpressionDecoder{
 	}*/
 
 	public VEexpressionPriority determinePriority() {
-		return new VEexpressionPriority(Integer.MIN_VALUE, 0);
+		return new VEexpressionPriority(Integer.MIN_VALUE, null);
 	}
 
 	public void setExpression(CodeExpressionRef expr) throws CodeGenException {

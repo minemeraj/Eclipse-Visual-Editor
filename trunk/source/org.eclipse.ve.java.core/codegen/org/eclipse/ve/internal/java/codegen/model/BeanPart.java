@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.34 $  $Date: 2005-04-13 17:13:10 $ 
+ *  $Revision: 1.35 $  $Date: 2005-04-14 23:39:52 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -41,10 +41,12 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class BeanPart {
     
-    public final static String         THIS_NAME = "this" ; //$NON-NLS-1$
+    public final static String       THIS_NAME = "this" ; //$NON-NLS-1$
     public final static String		 THIS_HANDLE = "_this_Annotation_handle"; //$NON-NLS-1$
     
-	
+	public interface IBeanSourceGenerator {
+		void generateFromFeatures(BeanPart bp) throws CodeGenException ;
+	}
 	
 	BeanPartDecleration fDecleration = null;	
 	ArrayList	    fBeanInitMethods = new ArrayList () ;			// JCMMethod/s where the Bean is created
@@ -66,6 +68,8 @@ public class BeanPart {
     boolean			isInJVEModel = false ;
     boolean			fSettingProcessingRequired = false ;
     int				uniqueIndex = 0;
+    IBeanSourceGenerator generator = null;
+	
     
 
 /**
@@ -910,5 +914,27 @@ public   void removeFromJVEModel()  {
 	}
 	protected void setDisposed(boolean isDisposed) {
 		this.isDisposed = isDisposed;
+	}
+	
+	public void setGenerator(IBeanSourceGenerator generator) {
+		this.generator = generator;
+	}
+	
+	/**
+	 * it is possible that when this bean was created, the init
+	 * expression was not available because it could not figure out
+	 * its index, at the time .... e.g., allocation is set, but control is not
+	 * 
+	 * A method generator can than part a call back to continue generation when
+	 * the init expression is generated.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	public void generateFeatures() throws CodeGenException {
+		if (generator!=null) {
+			generator.generateFromFeatures(this);
+			setGenerator(null);
+		}
 	}
 }

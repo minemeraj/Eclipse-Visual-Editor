@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.28 $  $Date: 2005-04-13 17:27:14 $ 
+ *  $Revision: 1.29 $  $Date: 2005-04-14 23:39:52 $ 
  */
 
 import java.util.*;
@@ -305,23 +305,7 @@ protected Object[] getUsableOffsetAndFiller() throws CodeGenException{
 	}
 	return new Object[] {new Integer(offset), filler};
 }
-/**
- *  @return 0 if equal, 1 if p1>p2, -1 if p1<p2
- **/
-protected int comparePriority (VEexpressionPriority p1, VEexpressionPriority p2) {
-   if (p1.getProiority() == p2.getProiority()) {
-      if (p1.getProiorityIndex() == p2.getProiorityIndex())
-          return 0 ;
-      else if (p1.getProiorityIndex()>p2.getProiorityIndex())
-              return 1;
-           else
-              return -1;
-   }
-   else if (p1.getProiority()>p2.getProiority())
-           return 1;
-        else
-           return -1;
-}
+
 
 /**
  * 
@@ -381,6 +365,23 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 	l.add(index, exp);
 }
+
+/**
+ * Sorting goes as following:
+ *     Expressions are grouped by beans, according to their priority.
+ *     New Bean will be created at the top of the method, unless they are dependant
+ *     on other beans.  This is a workaround for things like a GridBagConstraint, where 
+ *     expressions are generated before the dependency of the GridBagConstrait is placed,
+ *     and the dependency check does not work. 
+ *     Proirity's index order will be enforced across beans... event if it means
+ *     not grouping the expression with its bean.
+ * 
+ * @param sortedList
+ * @param exp
+ * @throws CodeGenException
+ * 
+ * @since 1.1.0
+ */
 protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp) throws CodeGenException {
 	// 
 	// The sorted list may not be sorted the way we prioratize expressions, (it is may
@@ -404,8 +405,13 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		boolean firstBean = true;
 				
 		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
-		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);	
-		   if (cExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) continue;
+			
+		   if (first>=0) break; 
+			
+		   CodeExpressionRef cExp = (CodeExpressionRef) sortedList.get(i);		   
+		   if (cExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) 
+			   continue;
+		   
 		   int compare;
 		   // If We are dependant on the bean associated with this expression, or
 		   // the current expression is the init expression of us
@@ -422,14 +428,34 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   	 		compare = -1;  // new expression will come after the init expr
 		   	 else {
 		   	 	    // Check priorities within a BeanPart
-		   	 		compare = comparePriority(expPriority, cExp.getPriority());
+		   	 		compare = expPriority.comparePriority(cExp.getPriority());
 		   	 }
 		   }
-		   else if (dependantBeans.contains(cExp.getBean().getEObject())) {
-		   	        // Drive dependencies ordering
-		   			compare = -1; // 		   
+		   // Not the same bean
+		   else {
+			   if ((cExp.getPriority().isIndexed() &&  // Z order comparison is needed
+					expPriority.isIndexed() &&
+				   cExp.getPriority().compareIndex(expPriority)>0) ||  		   // Z order forces us to come after 
+				   dependantBeans.contains(cExp.getBean().getEObject())) { // we are dependant
+		   
+			       // exp comes after cExp
+				   // Skip all expression on this bean.
+				   if (!dependantBeans.contains(cExp.getBean().getEObject()))
+						   dependantBeans.add(cExp.getBean().getEObject());
+				   int firstIndex = (i+1)>=sortedList.size()? sortedList.size() : i+1;
+				   // skip all expressions for this bean
+				   for (int j=i+1; j<sortedList.size(); j++) {
+						CodeExpressionRef skip = (CodeExpressionRef) sortedList.get(j);
+						if (skip.getBean()!=cExp.getBean())
+							break; // different grouping
+						firstIndex = (j+1)>=sortedList.size()? sortedList.size() : j+1;						
+				   }
+				   first = firstIndex;
+				   continue;
+			   }
+			   else
+				   continue;
 		   }
-		   else continue; 
 		   
 		   switch (compare) {
 		      case -1: // exp < cExp

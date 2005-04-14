@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractIndexedChildrenDecoderHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-14 23:39:52 $ 
  */
 
 import java.util.ArrayList;
@@ -73,7 +73,9 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected int getIndexPriority() {
+	protected Object[] getIndexPriority() {
+		Object[] result = new Object[2];
+		result[1] = fFmapper.getFeature(null);
 		List indexedEntries = getIndexedEntries();
 		Object entry = getIndexedEntry();
 		if(indexedEntries!=null && entry!=null){
@@ -86,9 +88,11 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 				}	
 			}
 			index++;
-			return Integer.MAX_VALUE-index;
+			result[0]= new Integer(Integer.MAX_VALUE-index);
+			return result;
 		}
-		return 0;
+		result[0]= new Integer(0);
+		return result;
 	}
 
 	/**

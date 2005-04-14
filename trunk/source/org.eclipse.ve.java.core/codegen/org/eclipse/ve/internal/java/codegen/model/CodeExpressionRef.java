@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.46 $  $Date: 2005-04-12 23:18:10 $ 
+ *  $Revision: 1.47 $  $Date: 2005-04-14 23:39:52 $ 
  */
 
 
@@ -712,6 +712,14 @@ public  void insertContentToDocument() {
 			}
 		}
 		updateDocument(docOff, 0, txt) ;
+		if (isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			 try {
+				fBean.generateFeatures();
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e);
+			}
+			  
+		}
 	}
 	finally {
 		setState(STATE_UPDATING_SOURCE, false);

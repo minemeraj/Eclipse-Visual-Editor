@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.26 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.27 $  $Date: 2005-04-14 23:39:52 $ 
  */
 
 import java.util.Iterator;
@@ -80,57 +80,57 @@ public CodeExpressionRef createInitExpression() {
 	}
 	String content;
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
-	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
-		exp.clearState();
-		exp.setNoSrcExpression(false);
-		exp.setState(CodeExpressionRef.STATE_EXIST, true);
-	
-		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
-		exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-				    
-		
-		InitExpressionGenerator gen = new InitExpressionGenerator(fBeanPart.getEObject(),fBeanPart.getModel());
-		gen.setInitbeanName(fBeanPart.getSimpleName());
-		gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports(), exp.getReferences()));
-		if (obj.getAllocation() instanceof ParseTreeAllocation)
-		    gen.setInitbeanType(obj.getJavaType().getName());
-		   			
-	    content = gen.generate();
-	}
-	else
-		content = exp.getContent();
-	
-	if (!fBeanPart.getDecleration().isInstanceVar()) {
-		// Since inner variables also need to have an annotation now (VariableRule.ignoreVariable),
-		// we need to generate on and add it to the init expression.
-		try {
-			String comment = fBeanPart.getFFDecoder().generate(null, null);
-			if(comment!=null && comment.length()>0){
-				comment = FreeFormAnnotationTemplate.ANNOTATION_PREFIX + comment;
-				if(content.indexOf(';')>-1){
-					content = content.substring(0, content.indexOf(';')+1) + comment + content.substring(content.indexOf(';')+1); 
-				}else{
-		    		content += comment;
-				}
-			}
-		} catch (CodeGenException e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-		}
-		
-		String classContent = classWrapper(content, true);
-		Statement Stmt = getInitExpression(classContent);
-		int contentStart = classContent.indexOf(content);
-		int start = Stmt.getStartPosition() - contentStart;
-		int end = ExpressionParser.indexOfLastSemiColon(classContent.substring(Stmt.getStartPosition(), Stmt.getStartPosition()+Stmt.getLength()), fBeanPart.getModel()) - 1 + Stmt.getStartPosition() - contentStart;
-		int len = end - start + 1;
-		
-		ExpressionParser p = new ExpressionParser (content, start, len, fBeanPart.getModel());
-		
-		exp.setContent(p) ;
-		exp.setExprStmt(Stmt);
-		exp.setOffset(p.getExpressionOff()) ;
-	}
+//	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+//		exp.clearState();
+//		exp.setNoSrcExpression(false);
+//		exp.setState(CodeExpressionRef.STATE_EXIST, true);
+//	
+//		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true) ;
+//		exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+//		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
+//				    
+//		
+//		InitExpressionGenerator gen = new InitExpressionGenerator(fBeanPart.getEObject(),fBeanPart.getModel());
+//		gen.setInitbeanName(fBeanPart.getSimpleName());
+//		gen.setInitbeanConstructionString(CodeGenUtil.getInitString(obj,fBeanPart.getModel(), exp.getReqImports(), exp.getReferences()));
+//		if (obj.getAllocation() instanceof ParseTreeAllocation)
+//		    gen.setInitbeanType(obj.getJavaType().getName());
+//		   			
+//	    content = gen.generate();
+//	}
+//	else
+//		content = exp.getContent();
+//	
+//	if (!fBeanPart.getDecleration().isInstanceVar()) {
+//		// Since inner variables also need to have an annotation now (VariableRule.ignoreVariable),
+//		// we need to generate on and add it to the init expression.
+//		try {
+//			String comment = fBeanPart.getFFDecoder().generate(null, null);
+//			if(comment!=null && comment.length()>0){
+//				comment = FreeFormAnnotationTemplate.ANNOTATION_PREFIX + comment;
+//				if(content.indexOf(';')>-1){
+//					content = content.substring(0, content.indexOf(';')+1) + comment + content.substring(content.indexOf(';')+1); 
+//				}else{
+//		    		content += comment;
+//				}
+//			}
+//		} catch (CodeGenException e) {
+//			JavaVEPlugin.log(e, Level.WARNING);
+//		}
+//		
+//		String classContent = classWrapper(content, true);
+//		Statement Stmt = getInitExpression(classContent);
+//		int contentStart = classContent.indexOf(content);
+//		int start = Stmt.getStartPosition() - contentStart;
+//		int end = ExpressionParser.indexOfLastSemiColon(classContent.substring(Stmt.getStartPosition(), Stmt.getStartPosition()+Stmt.getLength()), fBeanPart.getModel()) - 1 + Stmt.getStartPosition() - contentStart;
+//		int len = end - start + 1;
+//		
+//		ExpressionParser p = new ExpressionParser (content, start, len, fBeanPart.getModel());
+//		
+//		exp.setContent(p) ;
+//		exp.setExprStmt(Stmt);
+//		exp.setOffset(p.getExpressionOff()) ;
+//	}
 	fExpr = exp ;
 	return fExpr ;
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.17 $  $Date: 2005-04-14 23:39:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -228,25 +228,33 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 * @since 1.0.0
 	 */
 	protected void generateForSetFeatures (BeanPart bean) throws CodeGenException {
-		EObject obj = bean.getEObject() ;
-		BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(obj, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;		
-		Iterator itr = ((JavaClass)obj.eClass()).getEAllStructuralFeatures().iterator();
-		while (itr.hasNext()) {
-			EStructuralFeature sf = (EStructuralFeature) itr.next();
-			if (obj.eIsSet(sf)) {
-				if (ignoreSF(sf))
-					continue;
-				// Check if source was generated already
-				if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
-					continue;
-				CodeExpressionRef newExpr = GenerateAttribute(sf, bean);
-				String src = newExpr.getContent();
-				if (src == null)
-					throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-					JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
-			}
-		}
+		BeanPart.IBeanSourceGenerator gen = new BeanPart.IBeanSourceGenerator(){		
+			public void generateFromFeatures(BeanPart bp) throws CodeGenException {
+				EObject obj = bp.getEObject() ;
+				BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(obj, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;		
+				Iterator itr = ((JavaClass)obj.eClass()).getEAllStructuralFeatures().iterator();
+				while (itr.hasNext()) {
+					EStructuralFeature sf = (EStructuralFeature) itr.next();
+					if (obj.eIsSet(sf)) {
+						if (ignoreSF(sf))
+							continue;
+						// Check if source was generated already
+						if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
+							continue;
+						CodeExpressionRef newExpr = GenerateAttribute(sf, bp);
+						String src = newExpr.getContent();
+						if (src == null)
+							throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
+						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+							JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
+					}
+				}				
+			}		
+		};		
+		if (bean.getInitExpression()==null)
+			bean.setGenerator(gen);
+		else
+			gen.generateFromFeatures(bean);
 	}
 	
 
@@ -286,21 +294,22 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		CodeExpressionRef initExp = createInitExpression(bp);
 		// Allow the expression sorted to find a nice spot for this one
 		initExp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, false); // initExp.setState(initExp.getState()&~initExp.STATE_SRC_LOC_FIXED) ;
-		initExp.setOffset(-1);
-		try {   
-			method.updateExpressionOrder() ;
+		if (!initExp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
+			initExp.setOffset(-1);		
+			try {   
+				method.updateExpressionOrder() ;
+			}
+			catch (Throwable e) {
+				JavaVEPlugin.log(e, Level.SEVERE) ;
+				return   ;
+			}
+			// We may be processing a nested child, 
+			// and the method is not in the source yet
+			if (method.getMethodHandle() != null)
+				initExp.insertContentToDocument() ;
+			else
+				initExp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED,true) ;
 		}
-		catch (Throwable e) {
-			JavaVEPlugin.log(e, Level.SEVERE) ;
-			return   ;
-		}
-		// We may be processing a nested child, 
-		// and the method is not in the source yet
-		if (method.getMethodHandle() != null)
-			initExp.insertContentToDocument() ;
-		else
-			initExp.setState(CodeExpressionRef.STATE_EXP_NOT_PERSISTED,true) ;
-		
 		generateForSetFeatures(bp) ;							
 	}
 
