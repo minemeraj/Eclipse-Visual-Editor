@@ -1,5 +1,5 @@
 <?php 
-
+echo time();
 ?>
 <html>
 <head>
@@ -7,9 +7,10 @@
 </head>
 <body>
 <?php
-	echo "action="+_POST["action"];
+	echo "action=". _POST["action"];
 	echo "<BR>";
-	echo "pass="+_POST["pass"];
+	echo "pass=". _POST["pass"];
 ?>
+Helloo
 </body>
 </html>
