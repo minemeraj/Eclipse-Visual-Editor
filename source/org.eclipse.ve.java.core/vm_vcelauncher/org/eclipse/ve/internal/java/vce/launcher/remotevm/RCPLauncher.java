@@ -84,7 +84,7 @@ public class RCPLauncher implements ILauncher {
 		if(className.indexOf(".") != -1){
 			className = className.substring(className.lastIndexOf(".") + 1);
 		}
-		viewPartHost.setDetails(fTraditionalTabs, fTabPosition);
+		viewPartHost.setDetails(fTraditionalTabs, fTabPosition, clazz.getName());
 		viewPartHost.addViewPart(viewPart, className);
 		runEventLoop((Shell)viewPartHost.getWorkbenchShell());
 		

@@ -1,5 +1,6 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,6 @@ import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.WorkbenchPart;
 
@@ -23,6 +23,7 @@ public class ViewPartHost {
 	public final int MIN_Y = 175;
 	private int fTabPosition = 0;
 	private boolean fTraditionalTabs = true;
+	private String className = "";
 
 	public Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
@@ -87,16 +88,17 @@ public class ViewPartHost {
 		if(shell == null){
 			shell = new Shell(Display.getCurrent(),SWT.SHELL_TRIM);
 			shell.setBounds(fx,fy,200,200);
-			shell.setText("View Part Host");
-			shell.setLayout(new RowLayout());
+			shell.setText(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.FrameTitle.LaunchComponent"), new Object[] {className})); //$NON-NLS-1$
+			shell.setLayout(new FillLayout());
 		}
 		
 		return shell;
 	}
 	
-	public void setDetails(boolean traditionalTabs, int tabPosition){
+	public void setDetails(boolean traditionalTabs, int tabPosition, String name){
 		fTabPosition = tabPosition;
-		fTraditionalTabs = traditionalTabs;		
+		fTraditionalTabs = traditionalTabs;
+		className = name;
 	}
 }
 
