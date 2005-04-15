@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.34 $  $Date: 2005-02-23 23:19:39 $ 
+ *  $Revision: 1.35 $  $Date: 2005-04-15 23:25:00 $ 
  */
 
 import java.util.*;
@@ -227,7 +227,7 @@ protected Adapter getRegisteredAdapter(EObject eo, Object adapterType) {
 	return a;
 }
 
-protected void applied(EStructuralFeature sf , Object newValue , int position){
+protected void applied(EStructuralFeature sf , Object newValue , int position){	
 	if (isBeanProxyInstantiated()) {
 		if (!inInstantiation() && isInstantiationFeature(sf)) {
 			reinstantiateBeanProxy();
@@ -267,6 +267,9 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 				}
 			}
 		} 
+	} else if (!inInstantiation() && isInstantiationFeature(sf)) {
+		reinstantiateBeanProxy();
+		return;
 	}
 }
 
@@ -916,9 +919,12 @@ public void setBeanProxy(IBeanProxy beanProxy) {
  */
 protected void setupBeanProxy(IBeanProxy beanProxy) {
 	fBeanProxy = beanProxy;
-	if (beanProxy == null)
+	if (beanProxy == null) {
 		processInstantiationError(new IllegalStateException(JavaMessages.getString("BeanProxyAdapter.NoBeanInstantiatedForSomeReason_EXC_"))); //$NON-NLS-1$
-	else if (!beanProxy.getTypeProxy().isPrimitive()) {
+		return;
+	}
+	
+	if (!beanProxy.getTypeProxy().isPrimitive()) {
 		// We are trying to set a non-primitive and non-null proxy. Primitives aren't valid here because
 		// this proxy adapter is only valid for non-primitives.
 		String qualifiedClassName = beanProxy.getTypeProxy().getTypeName();
@@ -932,6 +938,7 @@ protected void setupBeanProxy(IBeanProxy beanProxy) {
 				((InternalEObject) target).eSetClass(javaClass);
 			}
 		}
+		processInstantiationError(null); 		
 	}
 }
 public int getErrorStatus(){
