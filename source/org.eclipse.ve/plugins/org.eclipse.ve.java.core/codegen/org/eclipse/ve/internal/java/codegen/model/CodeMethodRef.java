@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.29 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.30 $  $Date: 2005-04-15 22:30:09 $ 
  */
 
 import java.util.*;
@@ -433,9 +433,9 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   }
 		   // Not the same bean
 		   else {
-			   if ((cExp.getPriority().isIndexed() &&  // Z order comparison is needed
-					expPriority.isIndexed() &&
-				   cExp.getPriority().compareIndex(expPriority)>0) ||  		   // Z order forces us to come after 
+			   boolean indexsSet = cExp.getPriority().isIndexed() && expPriority.isIndexed();
+			   if ((indexsSet && // Z order comparison is needed					
+				   cExp.getPriority().compareIndex(expPriority)>0) || // Z order forces us to come after 
 				   dependantBeans.contains(cExp.getBean().getEObject())) { // we are dependant
 		   
 			       // exp comes after cExp
@@ -453,8 +453,11 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 				   first = firstIndex;
 				   continue;
 			   }
-			   else
-				   continue;
+			   else if (indexsSet && // Z order forced us to come before					
+					   cExp.getPriority().compareIndex(expPriority)<0) {
+				       last = i;
+			        }
+			   continue;
 		   }
 		   
 		   switch (compare) {
@@ -739,15 +742,20 @@ public String _debugExpressions() {
     int mOffset = getOffset() ;
     String   doc = fModel.getDocumentBuffer().getContents() ;
     Iterator itr = getExpressions() ;
-    while (itr.hasNext()) {
+	try {
+      while (itr.hasNext()) {
         CodeExpressionRef exp = (CodeExpressionRef)itr.next() ;
         sb.append(exp.toString()+"\n\"") ; //$NON-NLS-1$
-        if (!exp.isStateSet(CodeExpressionRef.STATE_DELETE))
+        if (!exp.isStateSet(CodeExpressionRef.STATE_DELETE) && !exp.isStateSet(CodeEventRef.STATE_NO_SRC))
             sb.append(doc.substring(mOffset+exp.getOffset(),mOffset+exp.getOffset()+exp.getLen())) ;
         else
             sb.append("STATE_NOT_EXISTANT") ; //$NON-NLS-1$
         sb.append("\"\n") ; //$NON-NLS-1$
-    }
+      }
+	}
+	catch (Exception e) {
+		sb.append("**Error***\n");
+	}
     return sb.toString() ;    
 }
 
@@ -862,4 +870,43 @@ public void updateExpressionsOffset(int offset, int delta) {
 	}
 }
 
+protected void refreshExpressionOrder(List currentList, CodeExpressionRef exp) throws CodeGenException {
+	currentList.remove(exp);
+	addExpressionToSortedList(currentList, exp);
+	
+}
+
+public void updateExpressionIndex(CodeExpressionRef exp) throws CodeGenException {
+	
+	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC) || 
+		exp.isStateSet(CodeExpressionRef.STATE_DELETE)) return ;
+	
+	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+		JavaVEPlugin.log("CodeExpressionRef: moving:\n"+getContent()+"\n", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	try {
+		// mark a controlled update (Top-Down)		
+		exp.setState(CodeExpressionRef.STATE_UPDATING_SOURCE, true);		
+		String txt = exp.getContent();
+		int docOff = exp.getOffset()+getOffset() ;
+		if (exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) {
+			// Have to remove this expression from the source first
+			exp.updateDocument(docOff, txt.length(),"");
+		}		
+		
+		if (fExpressions.indexOf(exp) >= 0) 
+			refreshExpressionOrder(fExpressions, exp);
+		else
+			if (fEventExpressions.indexOf(exp)>0)
+				refreshExpressionOrder(fEventExpressions, exp);
+		
+		txt = exp.getContent();
+		docOff = exp.getOffset()+getOffset() ;
+		exp.updateDocument(docOff, 0, txt) ;
+		
+	}
+	finally {
+		exp.setState(CodeExpressionRef.STATE_UPDATING_SOURCE, false);
+	}
+
+}
 }
