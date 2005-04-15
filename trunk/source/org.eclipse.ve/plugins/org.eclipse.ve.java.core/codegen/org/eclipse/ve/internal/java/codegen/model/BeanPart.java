@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.36 $  $Date: 2005-04-15 22:30:09 $ 
+ *  $Revision: 1.37 $  $Date: 2005-04-15 22:34:27 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -953,11 +953,11 @@ public   void removeFromJVEModel()  {
 				array[i].getMethod().updateExpressionIndex(array[i]);
 			
 		}
-		array = (CodeEventRef[])getRefEventExpressions().toArray(new CodeEventRef[getRefEventExpressions().size()]);
-		for (int i = 0; i < array.length; i++) {
-			if (array[i]!=init)
-				array[i].getMethod().updateExpressionIndex(array[i]);
-			
-		}
+//		array = (CodeEventRef[])getRefEventExpressions().toArray(new CodeEventRef[getRefEventExpressions().size()]);
+//		for (int i = 0; i < array.length; i++) {
+//			if (array[i]!=init)
+//				array[i].getMethod().updateExpressionIndex(array[i]);
+//			
+//		}
 	}
 }
