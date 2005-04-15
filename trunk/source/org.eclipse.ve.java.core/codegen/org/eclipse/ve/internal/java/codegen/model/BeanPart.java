@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.35 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.36 $  $Date: 2005-04-15 22:30:09 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.internal.corext.refactoring.code.CodeRefactoringUtil;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -923,9 +924,9 @@ public   void removeFromJVEModel()  {
 	/**
 	 * it is possible that when this bean was created, the init
 	 * expression was not available because it could not figure out
-	 * its index, at the time .... e.g., allocation is set, but control is not
+	 * its index at the time .... e.g., allocation is set, but control is not.
 	 * 
-	 * A method generator can than part a call back to continue generation when
+	 * A method generator can than park a call back to continue generation when
 	 * the init expression is generated.
 	 * 
 	 * 
@@ -935,6 +936,28 @@ public   void removeFromJVEModel()  {
 		if (generator!=null) {
 			generator.generateFromFeatures(this);
 			setGenerator(null);
+		}
+	}
+	
+	/**
+	 * It is possible that because of an init expression reOrdering,
+	 * other expression needs to be reordered 
+	 * 
+	 * @since 1.1.0
+	 */
+	public void forceExpressionOrdering() throws CodeGenException {
+		CodeExpressionRef init = getInitExpression();
+		CodeExpressionRef[] array = (CodeExpressionRef[])getRefExpressions().toArray(new CodeExpressionRef[getRefExpressions().size()]);
+		for (int i = 0; i < array.length; i++) {
+			if (array[i]!=init)
+				array[i].getMethod().updateExpressionIndex(array[i]);
+			
+		}
+		array = (CodeEventRef[])getRefEventExpressions().toArray(new CodeEventRef[getRefEventExpressions().size()]);
+		for (int i = 0; i < array.length; i++) {
+			if (array[i]!=init)
+				array[i].getMethod().updateExpressionIndex(array[i]);
+			
 		}
 	}
 }

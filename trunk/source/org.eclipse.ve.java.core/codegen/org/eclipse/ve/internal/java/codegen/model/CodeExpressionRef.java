@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.47 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.48 $  $Date: 2005-04-15 22:30:09 $ 
  */
 
 
@@ -612,7 +612,14 @@ public  void updateDocument(boolean updateSharedDoc) {
 		dispose() ;
 	}	
 }
-
+/**
+ * 
+ * @param docOff
+ * @param len current content
+ * @param newContent new content
+ * 
+ * @since 1.1.0
+ */
 protected void updateDocument(int docOff, int len, String newContent) {
 	IBeanDeclModel model = fBean.getModel() ;
 	
@@ -693,27 +700,29 @@ public  void insertContentToDocument() {
 		setState(STATE_UPDATING_SOURCE, true);
 		String txt = getContent();
 		int docOff = getOffset()+getMethod().getOffset() ;
-		if (isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
-			// add a new line -- mostly the case for local declerations
-			Iterator itr = getMethod().getExpressions();
-			if (itr.next()==this) {
-				// first in line			
-				txt = txt + fBean.getModel().getLineSeperator();				
-			}
-			else {
-				CodeExpressionRef e=null;
-				while (itr.hasNext())
-						e = (CodeExpressionRef)itr.next();
-				if (e==this) {
-					// last in line
-					txt = fBean.getModel().getLineSeperator() + txt;
-					setOffset(getOffset()+fBean.getModel().getLineSeperator().length());
-				}
-			}
-		}
+//		if (isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+//			// add a new line -- mostly the case for local declerations
+//			Iterator itr = getMethod().getExpressions();
+//			if (itr.next()==this) {
+//				// first in line			
+//				txt = txt + fBean.getModel().getLineSeperator();				
+//			}
+//			else {
+//				CodeExpressionRef e=null;
+//				while (itr.hasNext())
+//						e = (CodeExpressionRef)itr.next();
+//				if (e==this) {
+//					// last in line
+//					txt = fBean.getModel().getLineSeperator() + txt;
+//					setOffset(getOffset()+fBean.getModel().getLineSeperator().length());
+//				}
+//			}
+//		}
 		updateDocument(docOff, 0, txt) ;
 		if (isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
 			 try {
+				setState(STATE_UPDATING_SOURCE, false);
+				fBean.forceExpressionOrdering();
 				fBean.generateFeatures();
 			} catch (CodeGenException e) {
 				JavaVEPlugin.log(e);
@@ -979,7 +988,7 @@ public String toString(){
    	    states = states.concat("STATE_NO_SRC#"); //$NON-NLS-1$
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
-	states = states.concat("}"+" Offset: "+Integer.toString(getOffset())); //$NON-NLS-1$ //$NON-NLS-2$
+	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+getOffset()+getLen()); //$NON-NLS-1$ //$NON-NLS-2$
 	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
 		return fMasteredExpression.getContent() + states;
 	else
