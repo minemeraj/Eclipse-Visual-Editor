@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.6 $ $Date: 2005-02-16 00:59:17 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-04-15 23:11:24 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -81,7 +81,7 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
 	 */
 	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		if (!isBeanProxyInstantiated())
+		if (!isBeanProxyInstantiated()  && !isInstantiationFeature(sf))
 			return; // Nothing to apply to yet or could not construct.
 		super.applied(sf, newValue, position); // We letting the settings go through
 		if (getToolBarProxyAdapter() != null)

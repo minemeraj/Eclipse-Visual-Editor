@@ -368,7 +368,8 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	}
 	
 	protected void applied(EStructuralFeature as, Object newValue, int position) {
-		if (!isBeanProxyInstantiated())
+		// If the allocation is being applied then we must try to instantiate - bugzilla 91519
+		if (!isBeanProxyInstantiated() && !isInstantiationFeature(as))
 			return; // Nothing to apply to yet or could not construct.
 		if (as == sfComponentBounds)
 			appliedBounds(as, newValue, position); // Handle bounds

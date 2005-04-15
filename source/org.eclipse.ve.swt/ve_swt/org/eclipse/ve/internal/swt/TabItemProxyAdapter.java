@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-15 23:11:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -51,7 +51,7 @@ public class TabItemProxyAdapter extends WidgetProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
 	 */
 	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		if (!isBeanProxyInstantiated())
+		if (!isBeanProxyInstantiated()  && !isInstantiationFeature(sf))
 			return; // Nothing to apply to yet or could not construct.
 		super.applied(sf, newValue, position); // We letting the settings go through
 		if (((sf == sf_image)||(sf == sf_text)) && getTabFolderProxyAdapter() != null)
