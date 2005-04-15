@@ -15,7 +15,7 @@ if(strlen($action)<1){
 <h2>Manipulate test data using below buttons.</h2>
 
 <li>
-<form method="POST" action="test-data-action.php">
+<form method="POST" action="test-data.php">
 	<input type="password" value="" name="pass">
 	<input type="hidden" value="reset" name="action">
 	<input type="submit" value="Reset test data">
@@ -23,7 +23,7 @@ if(strlen($action)<1){
 </li>
 
 <li>
-<form method="POST" action="test-data-action.php">
+<form method="POST" action="test-data.php">
 	<input type="password" value="" name="pass">
 	<input type="hidden" value="view" name="action">
 	<input type="submit" value="View test data">
