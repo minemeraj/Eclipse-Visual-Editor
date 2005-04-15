@@ -54,7 +54,7 @@ public class MethodSortTests extends TestCase {
 			pri=p;
 		}
 		public String toString() {
-		   return pri.toString() + offset+"*"+ filler +"*";
+		   return fBean.getSimpleName()+": "+pri.toString() + "offset("+offset+")"+"filler<"+ filler +">";
 		}
 		
 		/* (non-Javadoc)
@@ -93,18 +93,30 @@ public class MethodSortTests extends TestCase {
 	   int pri= 10, index=3;
 	   BeanPart bp ;
 	   
-	   for (int i=0; i< 10; i++) {
-	       if (i%3==0) {
-	          pri--;
-	          index=3;
-	       }
+	   for (int i=0; i< 12; i++) {
+		   if (i<=4) {
+			   index=0;
+			   pri = 4-i;
+			   bp = bp1;
+		   }
+		   else if (i<=8) {
+			   index=0;
+			   pri = 8-i;
+			   bp = bp2;
+		   }
+		   else {
+			   index=1;
+			   if (i<=10) {
+				   bp = bp1;
+				   pri = 10-i;
+			   }
+			   else {
+				   bp = bp2;
+				   pri = 12-i;
+			   }			   
+		   }
 	       
-	       if (i%2==0)
-	          bp = bp1;
-	       else
-	         bp = bp2 ;
-	       
-	       VEexpressionPriority p = new VEexpressionPriority(pri,index--) ;
+	       VEexpressionPriority p = new VEexpressionPriority(pri,null) ;
 	       DummyExpression exp = new DummyExpression(bp);
 	       exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 	       exp.setOffset(10*i);
@@ -121,7 +133,7 @@ public class MethodSortTests extends TestCase {
 	}
 	
 	protected CodeExpressionRef create (BeanPart bp, int pri, int index) {
-	   	VEexpressionPriority p = new VEexpressionPriority(pri, index);
+	   	VEexpressionPriority p = new VEexpressionPriority(pri, null);
 		DummyExpression exp = new DummyExpression(bp);
 		exp.setPriority(p);		
 		return exp;
