@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-15 15:26:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -176,8 +176,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	 *      org.eclipse.emf.ecore.EStructuralFeature)
 	 */
 	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		return super.getMoveChildrenCommand(children, positionBeforeChild, containmentSF).chain(
-				getMoveTabItemCommand(children, (EObject) positionBeforeChild));
+		return getMoveTabItemCommand(children, (EObject) positionBeforeChild);
 	}
 
 	private Command getMoveTabItemCommand(final List children, final EObject positionBeforeChild) {
