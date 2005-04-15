@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-14 23:39:53 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-15 22:46:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -87,7 +87,9 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	protected EStructuralFeature getIndexSF() {
-		return getParent().getEObject().eClass().getEStructuralFeature(constructorSF);
+		if (getParent()!=null)
+		    return getParent().getEObject().eClass().getEStructuralFeature(constructorSF);
+		return null;
 	}
 	
 	/**
@@ -218,6 +220,9 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected Object[] getIndexPriority() {
 		Object[] result = new Object[2];
 		result[1] = getIndexSF();
+		if (result[1]==null) {
+			return null; // no index priority
+		}
 		List controls = Collections.EMPTY_LIST;
 		if (getParent()!=null)
 			controls = (List)getParent().getEObject().eGet(getIndexSF());
