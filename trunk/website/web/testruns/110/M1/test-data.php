@@ -4,7 +4,9 @@
 	if(strlen($pass)>0 && $pass!="jve")
 		exit('<h1>Incorrect password</h1>');
 		
-	$WRITEDIR='/home/data/httpd/www.eclipse.org/html/vep/writable';
+	$WRITEDIR='/home/data/httpd/www.eclipse.org/html/vep/writable/';
+	$DESTDIR = $WRITEDIR . "testruns/110/M1/";
+	$DESTFILE = $DESTDIR . "tests-ve1.1m1.txt";
 ?>
 <html>
 <head>
@@ -35,21 +37,29 @@ if(strlen($action)<1){
 </li>
 <?php
 }elseif ($action=="reset"){
-	if(chdir($WRITEDIR)){
-		if(!file_exists('testruns/110/M1')){
-			mkdir('testruns');
-			mkdir('testruns/110');
-			mkdir('testruns/110/M1');
-		}
-		if(chdir($WRITEDIR . "/testruns/110/M1")){
-			echo 'reset:WORKED'.getcwd();
+	$sourcefile = getcwd() . "/tests-ve1.1m1.txt.backup";
+	
+	if(!file_exists($DESTDIR)){
+		mkdir($WRITEDIR . "testruns");
+		mkdir($WRITEDIR . "testruns/110");
+		mkdir($WRITEDIR . "testruns/110/M1");
+	}
+	
+	if(chdir($DESTDIR)){
+		if(!copy($sourcefile, $DESTFILE)){
+			exit("<h1>Cannot restore file via copy</h1>");
 		}else{
-			exit("<h1>Cannot chdir to $WRITEDIR/testruns/110/M1");
+			echo "<h1>Success - file restored</h1>";
 		}
 	}else{
-		exit("<h1>Unable to change to $WRITEDIR</h1>");
+		exit("<h1>Cannot chdir to $DESTDIR");
 	}
+
 }elseif ($action=="view"){
+	$testfile = fopen($DESTFILE, "r");
+	$contents = fread($testfile, filesize($testfile));
+	fclose($testfile);
+	echo $contents;
 }
 ?>
 </body>
