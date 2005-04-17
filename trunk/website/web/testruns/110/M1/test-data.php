@@ -41,13 +41,13 @@ if(strlen($action)<1){
 			mkdir('testruns/110');
 			mkdir('testruns/110/M1');
 		}
-		if(chdir($WRITEDIR.'/testruns/110/M1'){
+		if(chdir($WRITEDIR . "/testruns/110/M1")){
 			echo 'reset:WORKED'.getcwd();
 		}else{
-			exit('<h1>Cannot chdir to $WRITEDIR/testruns/110/M1');
+			exit("<h1>Cannot chdir to $WRITEDIR/testruns/110/M1");
 		}
 	}else{
-		exit('<h1>Unable to change to $WRITEDIR</h1>');
+		exit("<h1>Unable to change to $WRITEDIR</h1>");
 	}
 }elseif ($action=="view"){
 }
