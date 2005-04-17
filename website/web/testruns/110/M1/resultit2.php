@@ -34,7 +34,7 @@
        		exit("unable to link $datafile");
        if(!copy($newdatafile, $datafile))
        		exit("unable to copy $newdatafile > $datafile");
-       if(unlink($newdatafile))
+       if(!unlink($newdatafile))
        		exit("unable to remove $newdatafile");
      ?>
 </body>
