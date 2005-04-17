@@ -34,6 +34,7 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
+       unlink($datafile);
        echo "<h2>replacing tests-ve1.1m1.txt.new>tests-ve1.1m1.txt</h2><br>";
        echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
        echo "$datafile exists? " . file_exists($datafile) . "<br>";
@@ -45,6 +46,8 @@
        echo "removing $newdatafile <br>";
        if(!unlink($newdatafile))
        	exit("unable to delete tests-ve1.1m1.txt.new");
+       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
+       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . "<br>";
      ?>			
 </body>
 
