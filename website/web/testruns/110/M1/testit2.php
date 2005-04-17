@@ -10,11 +10,13 @@
 </head>
 <body>
     <?php            
-       if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+    	$datafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt";
+    	$newdatafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new";
+       if (!($f=fopen($datafile,"r"))) 
                   exit("Unable to open file.");
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
-       if (!($f2=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new","w+"))) 
+       if (!($f2=fopen($newdatafile,"w+"))) 
                   exit("Unable to open file.");  
        while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
               list ($tst, $url, $tester, $status, $description) = $testinfo;
@@ -32,11 +34,16 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
-       if(!copy("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt"))
+       echo "<h2>replacing tests-ve1.1m1.txt.new>tests-ve1.1m1.txt</h2><br>";
+       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
+       echo "$datafile exists? " . file_exists($datafile) . "<br>;
+       if(!copy($newdatafile, $datafile))
        	exit("unable to copy tests-ve1.1m1.txt.new > tests-ve1.1m1.txt<br>");
-       if(!chmod ("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw"))
+       echo " changing permissions on $datafile <br>";
+       if(!chmod ($datafile,"ugo+rw"))
        	exit("chmod - no");
-       if(!unlink("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new"))
+       echo "removing $newdatafile <br>";
+       if(!unlink($newdatafile))
        	exit("unable to delete tests-ve1.1m1.txt.new");
      ?>			
 </body>
