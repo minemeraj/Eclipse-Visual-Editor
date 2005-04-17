@@ -41,13 +41,13 @@
        if(!(copy($newdatafile, $datafile)))
       		exit("unable to copy");
        echo " changing permissions on $datafile <br>";
-       if(!chmod ($datafile,"ugo+rw"))
-       	exit("chmod - no");
+//       if(!chmod ($datafile,"ugo+rw"))
+//       	exit("chmod - no");
        echo "removing $newdatafile <br>";
        if(!unlink($newdatafile))
        	exit("unable to delete tests-ve1.1m1.txt.new");
        echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
-       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . "<br>";
+       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . ", file size=" . filesize($datafile) . "<br>";
      ?>			
 </body>
 
