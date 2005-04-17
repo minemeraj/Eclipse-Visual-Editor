@@ -35,14 +35,14 @@ if(strlen($action)<1){
 </li>
 <?php
 }elseif ($action=="reset"){
-	if(chdir($WRITEDIR')){
+	if(chdir($WRITEDIR)){
 		if(!file_exists('testruns/110/M1')){
 			mkdir('testruns');
 			mkdir('testruns/110');
 			mkdir('testruns/110/M1');
 		}
 		if(chdir($WRITEDIR.'/testruns/110/M1'){
-			echo 'reser:WORKED'.getcwd();
+			echo 'reset:WORKED'.getcwd();
 		}else{
 			exit('<h1>Cannot chdir to $WRITEDIR/testruns/110/M1');
 		}
