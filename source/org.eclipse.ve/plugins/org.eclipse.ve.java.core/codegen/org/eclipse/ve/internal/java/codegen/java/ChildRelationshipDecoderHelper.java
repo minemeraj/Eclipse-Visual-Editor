@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-13 17:53:03 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-17 16:58:45 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -450,11 +450,15 @@ protected ExpressionTemplate getExpressionTemplate() throws CodeGenException {
 }
 
 protected boolean isChildRelationship() {
-	EStructuralFeature sf = fFmapper.getFeature(null) ;
+	return isChildRelationship(fFmapper.getFeature(null)) ;
+}
+
+public static boolean isChildRelationship(EStructuralFeature sf){
 	return  sf instanceof EAttribute ||
-			(sf instanceof EReference) && (
-				((EReference)sf).isContainment() ||
-				VCEPostSetCommand.isChildRelationShip((EReference)sf)) ;			  	
+	(sf instanceof EReference) && (
+		((EReference)sf).isContainment() ||
+		VCEPostSetCommand.isChildRelationShip((EReference)sf)) ;			  	
+
 }
 
 public String generate(Object[] args) throws CodeGenException {
