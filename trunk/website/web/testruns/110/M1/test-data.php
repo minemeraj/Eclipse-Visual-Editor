@@ -13,7 +13,7 @@
 <title>Test data initalizing page</title>
 </head>
 <body>
-10:57pm<br>
+11:02pm<br>
 <?php
 if(strlen($action)<1){
 ?>
@@ -62,10 +62,15 @@ if(strlen($action)<1){
 	}
 
 }elseif ($action=="view"){
-	$testfile = fopen($DESTFILE, "r");
-	$contents = fread($testfile, filesize($testfile));
-	fclose($testfile);
-	echo $contents;
+	echo "<h2>File contents:</h2><br>";
+	if(file_exists($DESTFILE)){
+		$testfile = fopen($DESTFILE, "r");
+		$contents = fread($testfile, filesize($testfile));
+		fclose($testfile);
+		echo $contents;
+	}else{
+		echo "Unable to find file $DESTFILE";
+	}
 }
 ?>
 </body>
