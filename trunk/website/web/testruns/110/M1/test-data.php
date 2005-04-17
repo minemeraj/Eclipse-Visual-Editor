@@ -12,7 +12,7 @@
 <head>
 <title>Test data initalizing page</title>
 </head>
-<body>
+<body>A
 <?php
 if(strlen($action)<1){
 ?>
@@ -45,12 +45,12 @@ if(strlen($action)<1){
 	}
 	
 	if(file_exists($DESTDIR)){
-//		echo "<li>source = $sourcefile";
-//		echo "<li>destination = $DESTFILE";
-//		echo "<li>is readble: " . is_readable($sourcefile);
-//		echo "<li>is writeable: " . is_writeable($DESTDIR);
-//		echo "<li>dest. exists?: " . file_exists($DESTFILE);
-//		echo "<li>src. exists?: " . file_exists($sourcefile);
+		echo "<li>source = $sourcefile";
+		echo "<li>destination = $DESTFILE";
+		echo "<li>is readble: " . is_readable($sourcefile);
+		echo "<li>is writeable: " . is_writeable($DESTDIR);
+		echo "<li>dest. exists?: " . file_exists($DESTFILE);
+		echo "<li>src. exists?: " . file_exists($sourcefile);
 		if(!copy($sourcefile, $DESTFILE)){
 			exit("<h1>Cannot restore file via copy</h1>");
 		}else{
