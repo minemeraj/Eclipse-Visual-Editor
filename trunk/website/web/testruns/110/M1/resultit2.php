@@ -1,15 +1,15 @@
 <?php 
-//header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
+header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
 ?>
 <html>
 <head>
 <title></title>
 </head>
-<body>
+<body>AA
     <?php        
     	$datafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt";
     	$newdatafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new";
-       if (!($f=fopen($datafile","r"))) 
+       if (!($f=fopen($datafile,"r")))
                   exit("Unable to open file.");
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
