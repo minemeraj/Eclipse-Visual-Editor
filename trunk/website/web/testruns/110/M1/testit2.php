@@ -32,9 +32,12 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
-       copy("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt");
-       chmod ("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw");
-       unlink("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new"); 
+       if(!copy("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt"))
+       	exit("unable to copy tests-ve1.1m1.txt.new > tests-ve1.1m1.txt<br>");
+       if(!chmod ("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw"))
+       	exit("chmod - no");
+       if(!unlink("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new"))
+       	exit("unable to delete tests-ve1.1m1.txt.new");
      ?>			
 </body>
 
