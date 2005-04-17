@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.40 $  $Date: 2005-04-14 23:04:06 $ 
+ *  $Revision: 1.41 $  $Date: 2005-04-17 16:58:45 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -38,6 +39,7 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
  
 /**
  * 
@@ -1367,9 +1369,12 @@ public class BDMMerger {
 					continue;
 				Object[] addedInstances = exp.getAddedInstances();
 				for (int i = 0; addedInstances!=null && i < addedInstances.length; i++) {
-					if(eObject==addedInstances[i])
+					if(eObject==addedInstances[i]){
+						if(ChildRelationshipDecoderHelper.isChildRelationship(exp.getSF()))
+							continue; // we only want to delete non-containment expressions
 						if(!toDeleteExpressions.contains(exp))
 							toDeleteExpressions.add(exp);
+					}
 				}
 			}
 			for (Iterator iter = toDeleteExpressions.iterator(); iter.hasNext();) {
