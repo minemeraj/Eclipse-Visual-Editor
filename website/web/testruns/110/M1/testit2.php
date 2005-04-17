@@ -8,11 +8,11 @@
 </head>
 <body>
     <?php            
-       if (!($f=fopen("/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+       if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
                   exit("Unable to open file.");
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
-       if (!($f2=fopen("/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt.new","w+"))) 
+       if (!($f2=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new","w+"))) 
                   exit("Unable to open file.");  
        while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
               list ($tst, $url, $tester, $status, $description) = $testinfo;
@@ -21,7 +21,7 @@
               if (($tst == $_POST["Test"]) && ($tester == "None") && ($a!="") && ($b=="")) {
                   $tester = $_POST["Email"];                  
                   // ve-dev@eclipse.org 
-                  mail("ve-dev@eclipse.org, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, 1.0.2 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
+                  mail("sgunturi@us.ibm.com, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, 1.0.2 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
 //                  mail("ve-dev@eclipse.org, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, M8 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: gmendel@us.ibm.com");                  
               }
               $out=sprintf("%s\t%s\t%s\t%s\t%s\n", $tst, $url, $tester, $status, $description);
@@ -30,9 +30,9 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
-       copy("/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt");
-       chmod ("/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw");
-       unlink("/home/data/httpd/download.eclipse.org/tools/ve/web/testruns/110/M1/tests-ve1.1m1.txt.new"); 
+       copy("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt");
+       chmod ("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw");
+       unlink("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new"); 
      ?>			
 </body>
 
