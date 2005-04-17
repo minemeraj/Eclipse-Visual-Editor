@@ -30,9 +30,12 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
-       unlink($datafile);
-       copy($newdatafile, $datafile);
-       unlink($newdatafile);
+       if(!unlink($datafile))
+       		exit("unable to link $datafile");
+       if(!copy($newdatafile, $datafile))
+       		exit("unable to copy $newdatafile > $datafile");
+       if(unlink($newdatafile))
+       		exit("unable to remove $newdatafile");
      ?>
 </body>
 
