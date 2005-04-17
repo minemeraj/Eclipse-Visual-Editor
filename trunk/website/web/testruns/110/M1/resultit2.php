@@ -7,11 +7,13 @@
 </head>
 <body>
     <?php        
-       if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+    	$datafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt";
+    	$newdatafile = "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new";
+       if (!($f=fopen($datafile","r"))) 
                   exit("Unable to open file.");
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
-       if (!($f2=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new","w+"))) 
+       if (!($f2=fopen($newdatafile,"w+"))) 
                   exit("Unable to open file.");  
        while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
               list ($tst, $url, $tester, $status, $description) = $testinfo;
@@ -28,10 +30,10 @@
        flock($f, LOCK_UN);
        fclose($f);
        fclose($f2);
-       copy("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new", "/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt");
-       unlink("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt.new");
-       chmod ("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","ugo+rw");      
-     ?>			
+       unlink($datafile);
+       copy($newdatafile, $datafile);
+       unlink($newdatafile);
+     ?>
 </body>
 
 </html>

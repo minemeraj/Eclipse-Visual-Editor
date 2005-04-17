@@ -1,6 +1,5 @@
 <?php 
-
-//header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
+header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
       if ($_POST["Email"]!= "")
           setcookie( "emailID", $_POST["Email"] , time()+60*60*24*30, "/");                       
 ?>
@@ -35,19 +34,16 @@
        fclose($f);
        fclose($f2);
        unlink($datafile);
-       echo "<h2>replacing tests-ve1.1m1.txt.new>tests-ve1.1m1.txt</h2><br>";
-       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
-       echo "$datafile exists? " . file_exists($datafile) . "<br>";
+//       echo "<h2>replacing tests-ve1.1m1.txt.new>tests-ve1.1m1.txt</h2><br>";
+//       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
+//       echo "$datafile exists? " . file_exists($datafile) . "<br>";
        if(!(copy($newdatafile, $datafile)))
       		exit("unable to copy");
-       echo " changing permissions on $datafile <br>";
-//       if(!chmod ($datafile,"ugo+rw"))
-//       	exit("chmod - no");
-       echo "removing $newdatafile <br>";
+//       echo "removing $newdatafile <br>";
        if(!unlink($newdatafile))
        	exit("unable to delete tests-ve1.1m1.txt.new");
-       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
-       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . ", file size=" . filesize($datafile) . "<br>";
+//       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
+//       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . ", file size=" . filesize($datafile) . "<br>";
      ?>			
 </body>
 
