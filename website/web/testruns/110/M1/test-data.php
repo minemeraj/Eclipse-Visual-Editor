@@ -1,7 +1,10 @@
 <?php 
 	$action = $_POST["action"] ; 
 	$pass = $_POST["pass"];
-	
+	if(strlen($pass)>0 && $pass!="jve")
+		exit('<h1>Incorrect password</h1>');
+		
+	$WRITEDIR='/home/data/httpd/www.eclipse.org/html/vep/writable';
 ?>
 <html>
 <head>
@@ -32,13 +35,21 @@ if(strlen($action)<1){
 </li>
 <?php
 }elseif ($action=="reset"){
-?>
-<h1>RESET</h1>
-<?php
+	if(chdir($WRITEDIR')){
+		if(!file_exists('testruns/110/M1')){
+			mkdir('testruns');
+			mkdir('testruns/110');
+			mkdir('testruns/110/M1');
+		}
+		if(chdir($WRITEDIR.'/testruns/110/M1'){
+			echo 'reser:WORKED'.getcwd();
+		}else{
+			exit('<h1>Cannot chdir to $WRITEDIR/testruns/110/M1');
+		}
+	}else{
+		exit('<h1>Unable to change to $WRITEDIR</h1>');
+	}
 }elseif ($action=="view"){
-?>
-<h1>VIEW</h1>
-<?php
 }
 ?>
 </body>
