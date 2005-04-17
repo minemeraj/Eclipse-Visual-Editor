@@ -46,6 +46,8 @@ if(strlen($action)<1){
 	}
 	
 	if(chdir($DESTDIR)){
+		echo "<li>source = $sourcefile";
+		echo "<li>destination = $DESTFILE";
 		if(!copy($sourcefile, $DESTFILE)){
 			exit("<h1>Cannot restore file via copy</h1>");
 		}else{
