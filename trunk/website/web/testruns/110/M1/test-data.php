@@ -51,6 +51,11 @@ if(strlen($action)<1){
 		echo "<li>is writeable: " . is_writeable($DESTDIR);
 		echo "<li>dest. exists?: " . file_exists($DESTFILE);
 		echo "<li>src. exists?: " . file_exists($sourcefile);
+		if(file_exists($DESTFILE)){
+			unlink($DESTFILE);
+		}
+		echo "<li>dest. exists?: " . file_exists($DESTFILE);
+
 		if(!copy($sourcefile, $DESTFILE)){
 			exit("<h1>Cannot restore file via copy</h1>");
 		}else{
