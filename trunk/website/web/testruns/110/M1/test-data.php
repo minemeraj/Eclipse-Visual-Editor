@@ -13,7 +13,7 @@
 <title>Test data initalizing page</title>
 </head>
 <body>
-11:04pm<br>
+11:06pm<br>
 <?php
 if(strlen($action)<1){
 ?>
@@ -64,9 +64,9 @@ if(strlen($action)<1){
 }elseif ($action=="view"){
 	echo "<h2>File contents:</h2><br>";
 	if(file_exists($DESTFILE)){
-		echo "File $DESTFILE readable: " . is_readable($DESTFILE);
+		echo "File $DESTFILE readable: " . is_readable($DESTFILE) . ", file size=" . filesize($DESTFILE);
 		$testfile = fopen($DESTFILE, "r");
-		$contents = fread($testfile, filesize($testfile));
+		$contents = fread($testfile, filesize($DESTFILE));
 		fclose($testfile);
 		echo $contents;
 	}else{
