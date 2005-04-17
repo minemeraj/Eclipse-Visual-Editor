@@ -13,7 +13,7 @@
 <title>Test data initalizing page</title>
 </head>
 <body>
-
+10:57pm<br>
 <?php
 if(strlen($action)<1){
 ?>
@@ -37,7 +37,7 @@ if(strlen($action)<1){
 </li>
 <?php
 }elseif ($action=="reset"){
-	$sourcefile = getcwd() . "/tests-ve1.1m1.txt.backup";
+	$sourcefile = "tests-ve1.1m1.txt.backup";
 	
 	if(!file_exists($DESTDIR)){
 		mkdir($WRITEDIR . "testruns");
@@ -45,7 +45,7 @@ if(strlen($action)<1){
 		mkdir($WRITEDIR . "testruns/110/M1");
 	}
 	
-	if(chdir($DESTDIR)){
+	if(file_exists($DESTDIR)){
 		echo "<li>source = $sourcefile";
 		echo "<li>destination = $DESTFILE";
 		echo "<li>is readble: " . is_readable($sourcefile);
@@ -58,7 +58,7 @@ if(strlen($action)<1){
 			echo "<h1>Success - file restored</h1>";
 		}
 	}else{
-		exit("<h1>Cannot chdir to $DESTDIR");
+		exit("<h1>Cannot find directory $DESTDIR</h1>");
 	}
 
 }elseif ($action=="view"){
