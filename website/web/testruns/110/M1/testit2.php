@@ -1,4 +1,6 @@
-<?php header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
+<?php 
+
+//header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/index.php"); 
       if ($_POST["Email"]!= "")
           setcookie( "emailID", $_POST["Email"] , time()+60*60*24*30, "/");                       
 ?>
