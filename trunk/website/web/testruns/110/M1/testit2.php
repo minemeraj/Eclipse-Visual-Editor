@@ -36,9 +36,9 @@
        fclose($f2);
        echo "<h2>replacing tests-ve1.1m1.txt.new>tests-ve1.1m1.txt</h2><br>";
        echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
-       echo "$datafile exists? " . file_exists($datafile) . "<br>;
-       if(!copy($newdatafile, $datafile))
-       	exit("unable to copy tests-ve1.1m1.txt.new > tests-ve1.1m1.txt<br>");
+       echo "$datafile exists? " . file_exists($datafile) . "<br>";
+       if(!(copy($newdatafile, $datafile)))
+      		exit("unable to copy");
        echo " changing permissions on $datafile <br>";
        if(!chmod ($datafile,"ugo+rw"))
        	exit("chmod - no");
