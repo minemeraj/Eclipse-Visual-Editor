@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-12 22:08:39 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-18 22:58:32 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -100,7 +100,7 @@ public class JFaceMethodVisitor extends MethodVisitor {
 		CodeExpressionRef exp = new CodeExpressionRef(initMethod, bp);
 		exp.setBean(bp);
 		exp.setNoSrcExpression(true);
-		exp.setDecoder(new ImplicitAllocationDecoder(thisPart, bp, "delegate_control")); //$NON-NLS-1$
+		exp.setDecoder(new ImplicitAllocationDecoder(thisPart, bp, exp, "delegate_control")); //$NON-NLS-1$
 		exp.setOffset(svd.getStartPosition()-method.getStartPosition());
 		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
 		updateContentParser(svd, model, exp);

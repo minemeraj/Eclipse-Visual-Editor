@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImplicitAllocationDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-14 23:39:53 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-18 22:58:32 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -46,10 +46,11 @@ public class ImplicitAllocationDecoder implements IExpressionDecoder{
 	protected String implicitSFName = null;
 	protected EStructuralFeature implicitSF;
 	
-	public ImplicitAllocationDecoder(BeanPart implicitParentBeanpart, BeanPart implicitChildBeanpart, String implcitSFName) {
+	public ImplicitAllocationDecoder(BeanPart implicitParentBeanpart, BeanPart implicitChildBeanpart, CodeExpressionRef exp, String implcitSFName) {
 		this.implicitParentBeanpart = implicitParentBeanpart;
 		this.implicitChildBeanpart = implicitChildBeanpart;
 		this.implicitSFName = implcitSFName;
+		this.codeExpressionRef = exp;
 	}
 
 	public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
@@ -100,10 +101,15 @@ public class ImplicitAllocationDecoder implements IExpressionDecoder{
 
 	public boolean decode() throws CodeGenException {
 		if(implicitParentBeanpart!=null && implicitChildBeanpart!=null && implicitParentBeanpart.getEObject()!=null && implicitChildBeanpart.getEObject()!=null){
-			boolean decoded = true;
-			applyDelegateControlSF();
-			applyImplicitAllocation();
-			return decoded;
+			boolean fromCache = getBeanModel().getCompositionModel().isFromCache();			
+			if (fromCache) 
+				getExprRef().getMethod().restore(); // Make sure our method is adapted					
+			else {				    			
+				boolean decoded = true;
+				applyDelegateControlSF();
+				applyImplicitAllocation();
+				return decoded;
+			}
 		}
 		return false;
 	}
