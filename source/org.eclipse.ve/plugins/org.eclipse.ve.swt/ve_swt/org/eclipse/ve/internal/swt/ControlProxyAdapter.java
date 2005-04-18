@@ -33,6 +33,7 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
@@ -329,14 +330,14 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
-		// Make sure the FreeFormControlHostAdapter exists
-		EObject container = ((EObject)newTarget).eContainer();
-		if(container instanceof BeanComposition){
-			Adapter existingAdapter = EcoreUtil.getExistingAdapter(container,FreeFormControlHostAdapter.class);		
+		// See whether or not we are on the free form
+		EObject beanComposition = (EObject)InverseMaintenanceAdapter.getFirstReferencedBy(newTarget,JCMPackage.eINSTANCE.getBeanComposition_Components());
+		if(beanComposition != null){
+			Adapter existingAdapter = EcoreUtil.getExistingAdapter(beanComposition,FreeFormControlHostAdapter.class);		
 			if(existingAdapter == null){
-				FreeFormControlHostAdapter adapter = new FreeFormControlHostAdapter(getBeanProxyDomain(),(BeanComposition)container);
-				adapter.setTarget(container);
-				container.eAdapters().add(adapter);	
+				FreeFormControlHostAdapter adapter = new FreeFormControlHostAdapter(getBeanProxyDomain(),(BeanComposition)beanComposition);
+				adapter.setTarget(beanComposition);
+				beanComposition.eAdapters().add(adapter);	
 				adapter.add(this);					
 			}
 			
@@ -348,8 +349,9 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public void setParentProxyHost(IControlProxyHost adapter) {
 		parentProxyAdapter = adapter;
-		if (fControlManager != null)
+		if (fControlManager != null) {
 			fControlManager.setControlParentBeanProxy(parentProxyAdapter != null ? parentProxyAdapter.getVisualControlBeanProxy() : null);
+		}
 	}
 
 	/* (non-Javadoc)

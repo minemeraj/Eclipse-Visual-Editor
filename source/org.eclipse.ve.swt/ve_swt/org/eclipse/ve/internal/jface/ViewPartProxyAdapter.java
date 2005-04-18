@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-14 15:56:12 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-18 16:59:41 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -54,6 +54,8 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 		
 		IControlProxyHost compositeProxyHost = (IControlProxyHost) BeanProxyUtilities.getBeanProxyHost(aComposite);
 		
+		if (compositeProxyHost.getParentProxyHost() == this) return;
+			
 		if(compositeProxyHost.getBeanProxy() == null){
 			compositeProxyHost.setParentProxyHost(null);			
 			compositeProxyHost.instantiateBeanProxy();
@@ -85,13 +87,15 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	}
 	
 	public void releaseBeanProxy() {
-		ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();		
-		releaseBeanProxy(getBeanProxy());
+		if(getBeanProxy() != null){
+			ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();		
+			releaseBeanProxy(getBeanProxy());
 
-		if (registry.isValid()) {
-			registry.releaseProxy(viewPaneBeanProxy);
-			registry.releaseProxy(compositeBeanProxy);
-		}		
+			if (registry.isValid()) {
+				registry.releaseProxy(viewPaneBeanProxy);
+				registry.releaseProxy(compositeBeanProxy);
+			}
+		}
 		viewPaneBeanProxy = null;
 		compositeBeanProxy = null;
 	}
