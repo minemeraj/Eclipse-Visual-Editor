@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LinkJavaClassCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-15 18:55:53 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-18 15:52:04 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -74,21 +74,23 @@ public class LinkJavaClassCellEditor extends DefaultJavaClassCellEditor {
 
 	protected void fireApplyEditorValue() {
 		super.fireApplyEditorValue();
-		int openA = value.indexOf("<a>"); //$NON-NLS-1$
-		int closeA = value.indexOf("</a>"); //$NON-NLS-1$
-		if ((openA == -1) || (closeA == -1) || (openA > closeA) && 
-				(!infoMessageDisplayed && isDirty() && value != null)) {
-			infoMessageDisplayed = true;
-			final Shell shell = Display.getCurrent().getActiveShell();
-			Display.getCurrent().asyncExec(new Runnable() {
+		if (value != null) {
+			int openA = value.indexOf("<a>"); //$NON-NLS-1$
+			int closeA = value.indexOf("</a>"); //$NON-NLS-1$
+			if (((openA == -1) || (closeA == -1) || (openA > closeA)) && (!infoMessageDisplayed && isDirty())) {
+				infoMessageDisplayed = true;
+				final Shell shell = Display.getCurrent().getActiveShell();
+				Display.getCurrent().asyncExec(new Runnable() {
 
-				public void run() {
-					if (!shell.isDisposed()) {
-						String message = MessageFormat.format(SWTMessages.getString("LinkJavaClassCellEditor.NoLink_INFO_"), new Object[] { value}); //$NON-NLS-1$
-						MessageDialog.openInformation(shell, SWTMessages.getString("LinkJavaClassCellEditor.NoLinkInfoTitle"), message); //$NON-NLS-1$
+					public void run() {
+						if (!shell.isDisposed()) {
+							String message = MessageFormat.format(
+									SWTMessages.getString("LinkJavaClassCellEditor.NoLink_INFO_"), new Object[] { value}); //$NON-NLS-1$
+							MessageDialog.openInformation(shell, SWTMessages.getString("LinkJavaClassCellEditor.NoLinkInfoTitle"), message); //$NON-NLS-1$
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 }
