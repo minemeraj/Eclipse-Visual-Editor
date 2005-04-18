@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-18 20:56:19 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-18 21:45:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -98,6 +98,7 @@ public class VEModelCacheUtility {
 		  	  monitor.worked(1);
 			  r = model.getModelResourceSet().getResource(uri,true);			  			  
 		  } catch (Exception e) {
+			getCachedPath(model.getFile()).toFile().delete();
 			JavaVEPlugin.log(e);
 		  }
 		}
