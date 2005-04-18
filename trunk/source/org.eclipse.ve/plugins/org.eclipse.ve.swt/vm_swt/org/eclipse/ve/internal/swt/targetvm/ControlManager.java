@@ -49,6 +49,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 		Environment.getDisplay().syncExec(new Runnable() {
 			public void run() {
 				fParentComposite = aComposite;
+				fControl.getShell().layout(new Control[] {fControl});
 				queue[0] = true;	
 			}
 		});
