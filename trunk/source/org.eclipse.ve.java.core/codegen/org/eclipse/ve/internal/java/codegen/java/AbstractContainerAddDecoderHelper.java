@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-19 22:41:34 $ 
  */
 
 import java.util.*;
@@ -226,7 +226,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		if(!addedInstanceChanged){
 			// We may be added a property (e.g., add(new Foo(), x, y z)		
 			if (fRootObj!=null) {
-				if (args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
+				if (args.size()>0 && args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
 				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
 				   JavaAllocation astAlloc = getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())));
 				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);

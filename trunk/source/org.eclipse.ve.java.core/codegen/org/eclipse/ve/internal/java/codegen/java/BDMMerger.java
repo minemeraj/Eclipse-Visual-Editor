@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.41 $  $Date: 2005-04-17 16:58:45 $ 
+ *  $Revision: 1.42 $  $Date: 2005-04-19 22:41:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -266,7 +266,7 @@ public class BDMMerger {
 			return false ;
 		if(mainMethod.getOffset() != updatedMethod.getOffset())
 			mainMethod.setOffset(updatedMethod.getOffset());
-		if(updatedMethod.getContent()!=null && updatedMethod.getContent().equals(mainMethod.getContent()))
+		if(updatedMethod.getContent()!=null && !updatedMethod.getContent().equals(mainMethod.getContent()))
 			mainMethod.setContent(updatedMethod.getContent());
 		return true ;
 	}
@@ -487,8 +487,33 @@ public class BDMMerger {
 					updateParentExpression.getMethod().getMethodHandle()!=null){
 				CodeMethodRef newExpMethod = mainModel.getMethod(updateParentExpression.getMethod().getMethodHandle());
 				if(newExpMethod!=null){
-					CodeExpressionRef newExp = new CodeExpressionRef(updateParentExpression.getExprStmt(), newExpMethod);
-					mainBeanPart.addParentExpression(newExp);
+					// If the main model already has an expression with the same 
+					// content - then all we need to do is update the offsets. 
+					// If it doesnt then we need to add a new parent expression 
+					// to the main BDM
+					CodeExpressionRef mainParentExp = null;
+					if(updateParentExpression.getCodeContent()!=null){
+						Iterator exps = newExpMethod.getAllExpressions();
+						while (exps.hasNext()) {
+							CodeExpressionRef mainExp = (CodeExpressionRef) exps.next();
+							if(mainExp.isStateSet(CodeExpressionRef.STATE_NO_SRC))
+								continue;
+							if(updateParentExpression.getCodeContent().equals(mainExp.getCodeContent())){
+									mainParentExp = mainExp;
+									break;
+							}
+						}
+					}
+					if(mainParentExp==null){
+						// no main BDM expression was found with the same 
+						// content - hence create a new parent expression
+						CodeExpressionRef newExp = new CodeExpressionRef(updateParentExpression.getExprStmt(), newExpMethod);
+						mainBeanPart.addParentExpression(newExp);
+					}else{
+						// main BDM expression was found with the same content
+						// hence just update the offsets
+						processEquivalentExpressions(mainParentExp, updateParentExpression, 1);
+					}
 				}
 			}
 		}
