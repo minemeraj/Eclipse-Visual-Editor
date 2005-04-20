@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.97 $  $Date: 2005-04-14 16:00:25 $ 
+ *  $Revision: 1.98 $  $Date: 2005-04-20 21:55:11 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2127,6 +2127,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private void processParseError(boolean parseError) {		
 		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : ModelChangeController.READY_STATE, null);
 		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
+		// force the removal of the cache... may be an overkill, but
+		// better no cache than stale cache.  It is possible that reverse parse
+		// built a bad model, and generated a cache
+		modelBuilder.doSave(null);
 	}
 	
 	/* (non-Javadoc)
