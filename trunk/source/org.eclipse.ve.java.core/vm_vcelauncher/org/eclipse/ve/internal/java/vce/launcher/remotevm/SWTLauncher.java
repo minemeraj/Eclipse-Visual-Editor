@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-20 15:40:10 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -20,6 +20,8 @@ import java.util.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
@@ -396,14 +398,20 @@ public class SWTLauncher implements ILauncher {
 				case PARENTCTOR:
 					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithShellMethod_INFO_"), new Object[]{clazz.getName(), controlCtor.toString()})); //$NON-NLS-1$
 					Shell parentShell = createParentShell(clazz);
-					controlCtor.newInstance(new Object[] {parentShell});
+					Object control = controlCtor.newInstance(new Object[] {parentShell});
+					if (control != null && control instanceof Control) {
+						setShellSize(parentShell, (Control) control); // Set shell size based on control size
+					}
 					runEventLoop(parentShell);
 					break;
 					
 				case PARENTSTYLECTOR:
 					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithShellMethod_INFO_"), new Object[]{clazz.getName(), controlCtor.toString()})); //$NON-NLS-1$
 					parentShell = createParentShell(clazz);
-					controlCtor.newInstance(new Object[] {parentShell, new Integer(SWT.NONE)});
+					control = controlCtor.newInstance(new Object[] {parentShell, new Integer(SWT.NONE)});
+					if (control != null && control instanceof Control) {
+						setShellSize(parentShell, (Control) control); // Set shell size based on control size
+					}
 					runEventLoop(parentShell);
 					break;
 					
@@ -424,6 +432,21 @@ public class SWTLauncher implements ILauncher {
 			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
 			e.printStackTrace();	
 			System.exit(0);	
+		}
+	}
+
+	/*
+	 * Get size information from the child (typically a Composite) and use this to set
+	 * the Shell (parent) size.
+	 */
+	private void setShellSize(Shell parentShell, Control child) {
+		Point point;
+		Rectangle rect;
+		point = child.getSize();
+		rect = parentShell.computeTrim(0, 0, point.x, point.y);
+		parentShell.setSize(rect.width, rect.height);
+		if (child instanceof Composite) {
+			((Composite) child).layout();
 		}
 	}
 	
