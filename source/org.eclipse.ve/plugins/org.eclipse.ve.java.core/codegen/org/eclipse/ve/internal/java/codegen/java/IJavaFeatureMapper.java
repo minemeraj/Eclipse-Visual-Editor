@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-20 15:46:12 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -49,6 +49,7 @@ public class VEexpressionPriority {
     int priority;  // Expression "feature" level priority ordering withing a bean
 	Object[] index;  // First element is an Integer for index value, second is the SF to index on
 	                 // This will determine Z ordering priority between beans
+	                 // lower index comes first.
     
     public VEexpressionPriority (int p, Object [] i) {
     	priority = p;
@@ -104,16 +105,16 @@ public class VEexpressionPriority {
 	/**
 	 * Assuming both priorities has an index
 	 * @param p
-	 * @return  0 if equal or not compared, 1 if this>p, -1 if this<p2
+	 * @return  0 if equal or not compared, 1 if this comes before p, -1 if this comes after p
 	 * 
 	 * @since 1.1.0
 	 */
 	public int compareIndex(VEexpressionPriority p) {
 		if (getProiorityIndex()[1]==p.getProiorityIndex()[1]) { // same SF
 			  if (((Integer)(getProiorityIndex()[0])).intValue()>((Integer)(p.getProiorityIndex()[0])).intValue())
-				  return 1;
+				  return -1;
 			  else if (((Integer)(getProiorityIndex()[0])).intValue()<((Integer)(p.getProiorityIndex()[0])).intValue())
-				       return -1;
+				       return 1;
 			       else
 				       return 0;
 	      }
