@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-20 15:46:11 $ 
+ *  $Revision: 1.20 $  $Date: 2005-04-20 20:13:26 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -97,10 +97,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	 * and create the proper Expression for the BDM
 	 * @since 1.0.0
 	 */
-	protected void createControlFeature(boolean updateEMFModel) {
+	protected void createControlFeature(boolean updateEMFModel) throws CodeGenException{
 		
 		EStructuralFeature sf = getIndexSF();
 		CodeExpressionRef exp = fOwner.getExprRef();
+		
 		
 		if (updateEMFModel) {
 			EObject parent = getParent().getEObject();
@@ -108,35 +109,44 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 
 			// find all the other "control" expressions
 			ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(sf);
+
 			HashMap map = new HashMap() ;
-			// Map "control" feature added part, to its expression
+			// Map child instance to the chile "add" expression
 			for (int i = 0; i < controls.length; i++) {
-				if (controls[i] instanceof ExpressionDecoderAdapter) 
-				  map.put(((ExpressionDecoderAdapter)controls[i]).getDecoder().getAddedInstance()[0],
-						  ((ExpressionDecoderAdapter)controls[i]).getDecoder().getExprRef());
+				if (controls[i] instanceof ExpressionDecoderAdapter) {
+				  ExpressionDecoderAdapter a = (ExpressionDecoderAdapter)controls[i];
+				  map.put(a.getDecoder().getAddedInstance()[0], a.getDecoder().getExprRef());
+				  if (a.getDecoder().getAddedInstance()[0]==fbeanPart.getEObject()) 
+						 masterExpression = a.getDecoder().getExprRef();
+				}
 			}
 						
 			EList controlList = (EList)parent.eGet(sf);
+
 			
 			// determine z order
 			int index = 0;
+			int curIndex=-1;
 			for (int i=0; i<controlList.size(); i++) {			
 				CodeExpressionRef cExpr = (CodeExpressionRef) map.get(controlList.get(i));
-				if (cExpr != null && cExpr.getOffset()<exp.getOffset()){
+				if (cExpr.getMasteredExpression()==fOwner.getExprRef()) 
+					curIndex=i;
+				else if (cExpr != null && cExpr.getOffset()<exp.getOffset()){
 					index=i+1;
 				}			
 			}
-			// Add a control feature
-			if(controlList.contains(fbeanPart.getEObject())){
-				if(controlList.indexOf(fbeanPart.getEObject())!=index){
-					controlList.move(index, fbeanPart.getEObject());
-				}
-			}else{
+			if (curIndex<0)
 				controlList.add(index, fbeanPart.getEObject());
-			}
+			else 
+			  if (curIndex!=index) {
+				if (curIndex<index) // our move will shift all to the left
+					controlList.move(index-1, fbeanPart.getEObject());
+				else
+					controlList.move(index, fbeanPart.getEObject());
+			  }
 		}
 		
-		if(masterExpression==null){
+		if(masterExpression==null){					
 			// Create a pseudo expression for the parent (no add(Foo) in SWT)
 			// This will drive the creation of a decoder with controls, and will
 			// establish the parent/child relationship in the BDM
@@ -150,6 +160,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 				JavaVEPlugin.log(e);
 			}
 		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -257,5 +268,31 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	public boolean primIsDeleted() {
 		boolean result = super.primIsDeleted() || fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_MASTER_DELETED);
 		return result;
+	}
+	
+	protected CodeExpressionRef getMasterExpression() {
+		if (masterExpression!=null) return masterExpression;
+		
+		if (getParent()!=null) {
+			EObject parent = getParent().getEObject();
+			BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+	
+			// find all the other "control" expressions
+			ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(getIndexSF());
+			for (int i = 0; i < controls.length; i++) 
+				if (controls[i] instanceof ExpressionDecoderAdapter) {
+					ExpressionDecoderAdapter a = (ExpressionDecoderAdapter)controls[i];
+			         if (a.getDecoder().getAddedInstance()[0]==fbeanPart.getEObject()) {
+						 masterExpression = a.getDecoder().getExprRef();
+						 break;
+			         }
+				}
+		}
+		return masterExpression;
+	}
+	public void removeFromModel() {
+		if (getMasterExpression()!=null)
+			masterExpression.dispose();
+		super.removeFromModel();		
 	}
 }
