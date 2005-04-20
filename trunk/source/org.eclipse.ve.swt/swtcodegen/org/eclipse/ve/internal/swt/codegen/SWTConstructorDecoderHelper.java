@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-15 22:46:45 $ 
+ *  $Revision: 1.19 $  $Date: 2005-04-20 15:46:11 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -204,14 +204,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	public static int getIndexPriority(BeanPart bean, List sieblings) {
-		int priority =  getDefaultBeanPriority(bean);		 
-		  for (int i = 0; i < sieblings.size(); i++) 
-			if (sieblings.get(i).equals(bean.getEObject())) {
-				priority += sieblings.size()-i;
-				break;
-			}
-		return priority;
-		
+		int priority =  getDefaultBeanPriority(bean);	
+		int index = sieblings.indexOf(bean.getEObject());
+		if (index>0)
+			priority+=index;
+		return priority;		
 	}
 	
 	/* (non-Javadoc)

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.30 $  $Date: 2005-04-15 22:30:09 $ 
+ *  $Revision: 1.31 $  $Date: 2005-04-20 15:46:12 $ 
  */
 
 import java.util.*;
@@ -368,13 +368,22 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 
 /**
  * Sorting goes as following:
- *     Expressions are grouped by beans, according to their priority.
+ * 
+ *     Priority is of the form [proirity:(index,feature)]
+ *     
+ *     Expressions are grouped by beans, according to their priority. 
+ *     Higher piority goes first.
+ *     
  *     New Bean will be created at the top of the method, unless they are dependant
  *     on other beans.  This is a workaround for things like a GridBagConstraint, where 
  *     expressions are generated before the dependency of the GridBagConstrait is placed,
  *     and the dependency check does not work. 
- *     Proirity's index order will be enforced across beans... event if it means
- *     not grouping the expression with its bean.
+ *     
+ *     Proirity's index order will be enforced across bean expression grouping.
+ *     This may force an expression not to be grouped with its bean's expressions.
+ *     Index will be enforced for same features only.
+ *     
+ *     
  * 
  * @param sortedList
  * @param exp
@@ -426,6 +435,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   	 }
 		   	 else if (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
 		   	 		compare = -1;  // new expression will come after the init expr
+		   	 else if (cExp.getPriority().isIndexed())
+				    compare = 1;  // cExp may be placed here because of index, not grouping
 		   	 else {
 		   	 	    // Check priorities within a BeanPart
 		   	 		compare = expPriority.comparePriority(cExp.getPriority());
@@ -435,8 +446,12 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   else {
 			   boolean indexsSet = cExp.getPriority().isIndexed() && expPriority.isIndexed();
 			   if ((indexsSet && // Z order comparison is needed					
-				   cExp.getPriority().compareIndex(expPriority)>0) || // Z order forces us to come after 
-				   dependantBeans.contains(cExp.getBean().getEObject())) { // we are dependant
+				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
+				   ||  
+				   (dependantBeans.contains(cExp.getBean().getEObject()) && // we are dependant
+				     (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)||
+				     !cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
+				   )) { 
 		   
 			       // exp comes after cExp
 				   // Skip all expression on this bean.
