@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PropertyEditorBeanProxyWrapper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-20 16:38:10 $ 
  */
 
 import java.util.logging.Level;
@@ -46,22 +46,6 @@ public void dispose() {
 		ProxyFactoryRegistry reg = propertyEditorProxy.getProxyFactoryRegistry();
 		reg.releaseProxy(propertyEditorProxy);
 		propertyEditorProxy = null;
-		if (fGetTagsMethodProxy != null)
-			reg.releaseProxy(fGetTagsMethodProxy);
-		if (fSetAsTextMethodProxy != null)
-			reg.releaseProxy(fSetAsTextMethodProxy);
-		if (fGetAsTextMethodProxy != null)
-			reg.releaseProxy(fGetAsTextMethodProxy);			
-		if (fGetValueMethodProxy != null)
-			reg.releaseProxy(fGetValueMethodProxy);			
-		if (fSetValueMethodProxy != null)
-			reg.releaseProxy(fSetValueMethodProxy);			
-		if (fGetJavaInitializationStringMethodProxy != null)
-			reg.releaseProxy(fGetJavaInitializationStringMethodProxy);
-		if (fSupportsCustomEditorMethodProxy != null)
-			reg.releaseProxy(fSupportsCustomEditorMethodProxy);
-		if (fGetCustomEditorMethodProxy != null)
-			reg.releaseProxy(fGetCustomEditorMethodProxy);						
 	}
 }
 
