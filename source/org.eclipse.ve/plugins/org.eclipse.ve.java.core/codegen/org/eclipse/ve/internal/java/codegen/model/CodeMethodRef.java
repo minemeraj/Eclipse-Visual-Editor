@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.31 $  $Date: 2005-04-20 15:46:12 $ 
+ *  $Revision: 1.32 $  $Date: 2005-04-20 20:24:06 $ 
  */
 
 import java.util.*;
@@ -435,8 +435,12 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   	 }
 		   	 else if (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
 		   	 		compare = -1;  // new expression will come after the init expr
-		   	 else if (cExp.getPriority().isIndexed())
-				    compare = 1;  // cExp may be placed here because of index, not grouping
+		   	 else if (cExp.getPriority().isIndexed()) {
+				    if (expPriority.isIndexed())
+						compare = expPriority.comparePriority(cExp.getPriority());
+				    else
+				        compare = 1;  // cExp may be placed here because of index, not grouping
+		   	      }
 		   	 else {
 		   	 	    // Check priorities within a BeanPart
 		   	 		compare = expPriority.comparePriority(cExp.getPriority());
