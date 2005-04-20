@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LinkJavaClassCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-20 12:54:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-20 14:40:23 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -74,8 +74,8 @@ public class LinkJavaClassCellEditor extends DefaultJavaClassCellEditor {
 
 	protected void fireApplyEditorValue() {
 		super.fireApplyEditorValue();
-		String lowCaseValue = value.toLowerCase();
 		if (value != null) {
+			String lowCaseValue = value.toLowerCase();
 			int openA = lowCaseValue.indexOf("<a>"); //$NON-NLS-1$
 			int closeA = lowCaseValue.indexOf("</a>"); //$NON-NLS-1$
 			if (((openA == -1) || (closeA == -1) || (openA > closeA)) && (!infoMessageDisplayed && isDirty())) {
