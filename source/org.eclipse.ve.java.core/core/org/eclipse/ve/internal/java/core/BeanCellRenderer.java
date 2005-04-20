@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanCellRenderer.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-20 18:44:07 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -31,13 +31,20 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
 import org.eclipse.ve.internal.propertysheet.ISourced;
 import org.eclipse.jem.internal.proxy.core.*;
 
+/**
+ * Standard Cell Renderer (Label Provider) to give up labels for features that use a standard java.beans.PropertyEditor
+ * to get the text (label). 
+ * <p>
+ * BeanCellRender's are cached in the BeanPropertyDescriptor. Since this is system wide, we need to cache any proxy
+ * registry info in the registry constants of the current registry at time of rendering.
+ * 
+ * @since 1.1.0
+ */
 public class BeanCellRenderer extends LabelProvider implements IExecutableExtension, INeedData, ISourced {
 
 	protected static Image BEAN_IMAGE;
 	protected String fJavaBeansPropertyEditorClassName;
-	protected PropertyEditorBeanProxyWrapper fPropertyEditorProxyWrapper;
 	protected EditDomain editDomain;
-	protected IJavaObjectInstance source;
 	protected boolean rebuildWrapper = true;
 
 	/**
@@ -49,12 +56,16 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 	public BeanCellRenderer() {
 	}
 
+    /**
+     * Construct with a property editor class name. It is the java beans property editor. It will run on the proxy registry.
+     * @param aPropertyEditorClassName
+     * 
+     * @since 1.1.0
+     */
 	public BeanCellRenderer(String aPropertyEditorClassName) {
 		fJavaBeansPropertyEditorClassName = aPropertyEditorClassName;
 	}
-	/**
-	 * By default use the toString() method on the bean
-	 */
+	
 	public String getText(Object element) {
 		if (element == null)
 			return ""; //$NON-NLS-1$
@@ -65,15 +76,17 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 		if (elementProxy == null)
 			return ""; //$NON-NLS-1$
 	
-		calculateJavaBeanPropertyEditor();
+        PropertyEditorBeanProxyWrapper proxyWrapper = calculateJavaBeanPropertyEditor(elementProxy.getProxyFactoryRegistry());
 		
-		if (fPropertyEditorProxyWrapper == null) {			
+		if (proxyWrapper == null) {			
 			// The property editor class not given, or could not be instantiate
 			// Look for a label provider on the class of object itself
 			if ( element instanceof IJavaObjectInstance && editDomain != null) {
 				IJavaObjectInstance javaComponent = (IJavaObjectInstance)element;
 				ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(javaComponent.getJavaType());
 				if ( labelProvider != null ) {
+                    if (labelProvider instanceof ISourced)
+                        ((ISourced) labelProvider).setSources(sources, pos, des);
 					return labelProvider.getText(javaComponent);
 				}
 			} 
@@ -81,40 +94,52 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 		} 
 		// The PropertyEditorBeanProxyWrapper wraps the java.beans.PropertyEditor on the remote VM
 		// Use its setValue(Object) and getAsText() API to get a string		
-		fPropertyEditorProxyWrapper.setValue(elementProxy);
-		// For debug purposes puts a * in front of the string so we can tell it came from a java property editor
-		return fPropertyEditorProxyWrapper.getAsText();
+		proxyWrapper.setValue(elementProxy);
+		return proxyWrapper.getAsText();
 	}
 	
 	
-	protected void calculateJavaBeanPropertyEditor() {
-		if (fPropertyEditorProxyWrapper != null && !rebuildWrapper)
-			return;	// We got one and no rebuild requested.
+    /**
+     * Get/create the property editor wrapper for the given registry.
+     * @param registry
+     * @return
+     * 
+     * @since 1.1.0
+     */
+	protected PropertyEditorBeanProxyWrapper calculateJavaBeanPropertyEditor(ProxyFactoryRegistry registry) {
+        if (fJavaBeansPropertyEditorClassName == null)
+            return null;
+        
+        PropertyEditorBeanProxyWrapper wrapper = (PropertyEditorBeanProxyWrapper) registry.getConstants(this);
+		if (!rebuildWrapper)
+			return wrapper;	// no rebuild requested.
 
 		rebuildWrapper = false;
+        registry.deregisterConstants(this);
+        if (wrapper != null)
+            wrapper.dispose();
 		// We should of been given a property editor class name, if not, we don't set one up.
 		if (fJavaBeansPropertyEditorClassName != null) {
 			IConstructorProxy ctor = null;
 			IBeanTypeProxy fPropertyEditorTypeProxy =
-				JavaEditDomainHelper.getBeanProxyDomain(editDomain).getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-					fJavaBeansPropertyEditorClassName);
+				registry.getBeanTypeProxyFactory().getBeanTypeProxy(fJavaBeansPropertyEditorClassName);
 			try {
 				// if there is an ISourced object, see if the property editor has a ctor that takes an object and pass it in.
-				if (source != null) {
+				if (sourceIsValid && sources[0] != null) {
 					ctor = fPropertyEditorTypeProxy.getConstructorProxy(new String[] { "java.lang.Object" }); //$NON-NLS-1$
 					if (ctor != null) {
 						// got a ctor? let's instantiate the property editor
-						fPropertyEditorProxyWrapper =
+						wrapper =
 							new PropertyEditorBeanProxyWrapper(
-								ctor.newInstance(new IBeanProxy[] { BeanProxyUtilities.getBeanProxy(source, JavaEditDomainHelper.getResourceSet(editDomain))}));
+								ctor.newInstance(new IBeanProxy[] { BeanProxyUtilities.getBeanProxy((IJavaInstance) sources[0], JavaEditDomainHelper.getResourceSet(editDomain))}));
 					} else {
 						// just instantiate with a null ctor
-						fPropertyEditorProxyWrapper =
+						wrapper =
 							new PropertyEditorBeanProxyWrapper(fPropertyEditorTypeProxy.newInstance());
 					}
 				} else {
 					// no ISourced object... just instantiate with a null ctor
-					fPropertyEditorProxyWrapper =
+					wrapper =
 						new PropertyEditorBeanProxyWrapper(fPropertyEditorTypeProxy.newInstance());
 				}
 			} catch (ThrowableProxy exc) {
@@ -122,7 +147,7 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 				// so let's try with the default ctor. But don't try again if the default ctor is the one that threw the exception.
 				if (ctor != null) {
 					try {
-						fPropertyEditorProxyWrapper =
+						wrapper =
 							new PropertyEditorBeanProxyWrapper(fPropertyEditorTypeProxy.newInstance());
 					} catch (ThrowableProxy e) {
 						// Still failed, so log it.
@@ -135,32 +160,41 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
 					
 			}
 		}
+        if (wrapper != null)
+            registry.registerConstants(this, wrapper);
+        return wrapper;
 	}
 
 	
 	
-	/**
-	 * This will only expect initData to be a string that contains the qualified name
-	 * of the java.beans.PropertyEditor class that is used to edit the feature
-	 */
 	public void setInitializationData(IConfigurationElement ce, String pName, Object initData) {
+        // This will only expect initData to be a string that contains the qualified name
+        // of the java.beans.PropertyEditor class that is used to edit the feature
 		if (initData instanceof String) {
 			fJavaBeansPropertyEditorClassName = ((String) initData).trim();
 		}
 	}
-	/**
-	 * @see INeedData#setData(Object)
-	 */
+	
 	public void setData(Object data) {
 		editDomain = (EditDomain) data;
 	}
+    
+    private Object[] sources;
+    private IPropertySource[] pos;
+    private IPropertyDescriptor[] des;
+    private boolean sourceIsValid;
 	
 	public void setSources(Object[] sources, IPropertySource[] pos, IPropertyDescriptor[] des) {
+        this.sources = sources;
+        this.pos = pos;
+        this.des = des;
 		if (sources[0] instanceof IJavaObjectInstance) {
-			rebuildWrapper = !(sources[0].equals(source));
-			source = (IJavaObjectInstance) sources[0];
-		} else
+            sourceIsValid = true;
+			rebuildWrapper = !(sources[0].equals(sources[0]));
+		} else {
+            sourceIsValid = false;
 			rebuildWrapper = true;
+        }
 	}	
 
 }
