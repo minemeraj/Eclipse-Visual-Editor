@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.42 $  $Date: 2005-04-19 22:41:34 $ 
+ *  $Revision: 1.43 $  $Date: 2005-04-20 21:03:04 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -973,7 +973,7 @@ public class BDMMerger {
 			// TODO - no need to order for null handles maybe?
 			while (mainBeansItr.hasNext()) {
 				BeanPart mainBP = (BeanPart) mainBeansItr.next();
-				if(mainBP.getModel()==null)
+				if(mainBP.isDisposed() || mainBP.getModel()==null)
 					continue;
 				BeanPart updateBP = determineCorrespondingBeanPart(mainBP, newModel);
 				if(updateBP != null){
