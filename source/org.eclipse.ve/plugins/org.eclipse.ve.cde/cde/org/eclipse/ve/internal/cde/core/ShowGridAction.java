@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowGridAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-20 14:27:11 $ 
  */
 
 
@@ -37,8 +37,12 @@ public ShowGridAction(IEditorPart part) {
 }
 
 public void run() {
-	// Get the grid controller for the selected container editpart
-	EditPart ep = (EditPart) ((IStructuredSelection)getEditorPart().getSite().getSelectionProvider().getSelection()).getFirstElement();
+	// Bugzilla 91826 - under some conditions the selection is not an edit part
+	Object selection = getEditorPart().getSite().getSelectionProvider().getSelection();
+	if(!(selection instanceof IStructuredSelection)) return;
+	Object selectedObject = ((IStructuredSelection)selection).getFirstElement();	
+	if(!(selectedObject instanceof EditPart)) return;
+	EditPart ep = (EditPart) selectedObject;
 	if (ep == null)
 		return;
 	GridController gridController = GridController.getGridController(ep);
