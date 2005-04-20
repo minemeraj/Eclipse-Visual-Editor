@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.20 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.21 $  $Date: 2005-04-20 18:44:07 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -271,7 +271,7 @@ public ILabelProvider getLabelProvider(){
 				// java.beans.PropertyEditorManager does not allow property editors to be de-registered
 				// Sun provide a number of defaults that we de-register by placing a placeholder 
 				// DummyPropertyEditor there that we must detect here
-				return new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
+				return labelProvider = new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
 			}
 			// 3	-	Look for the enumeration values
 			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
