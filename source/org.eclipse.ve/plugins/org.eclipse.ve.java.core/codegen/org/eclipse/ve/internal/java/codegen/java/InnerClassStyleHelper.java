@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-20 21:55:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -65,7 +65,7 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 			// Build a new Event Invocation, and compare it to the current one
 			// If need to change it go for it, if not throw it away
 			EventInvocation ee = JCMFactory.eINSTANCE.createEventInvocation();
-
+			ee.setEvent(((EventInvocation)fEventInvocation).getEvent());
 			if (exp instanceof SimpleName) {
 				// Instance of Event
 				SimpleName nr = (SimpleName) exp;
