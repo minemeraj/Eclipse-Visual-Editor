@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-20 16:17:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -67,7 +67,8 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 			JavaParameter p = (JavaParameter) m.getParameters().get(i) ;
 			SingleVariableDeclaration a = (SingleVariableDeclaration) md.parameters().get(i) ;
 			Resolved aType = resolver.resolveType(a.getType());
-			if (!p.getJavaType().getQualifiedName().equals(aType.getName())) {
+			String argTypeName = aType==null?a.getType().toString():aType.getName();
+			if (!p.getJavaType().getQualifiedName().equals(argTypeName)) {
 				result = false ;
 				break ;
 			}
@@ -199,12 +200,15 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 						result = false;
 				}
 				else {
+					String typeName = resolvedType==null?e.getName().getFullyQualifiedName():resolvedType.getName();
 					// Class may not be saved (inner/anonymouse class) and hence not in the JCM
-					StringBuffer b = new StringBuffer(resolvedType.getName()) ;
-					if (resolvedType.getName().indexOf("Adapter") >= 0) {   //$NON-NLS-1$
-					    b.replace(resolvedType.getName().indexOf("Adapter"), resolvedType.getName().length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
+					StringBuffer b = new StringBuffer(typeName) ;
+					final String ADAPTER = "Adapter"; 
+					if (typeName.indexOf(ADAPTER) >= 0) {   //$NON-NLS-1$
+						int index = typeName.indexOf(ADAPTER); 
+					    b.replace(index, index+ADAPTER.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    
 					}
-					if (!p.getJavaType().getQualifiedName().equals(resolvedType.getName()) &&
+					if (!p.getJavaType().getQualifiedName().equals(typeName) &&
 					    !p.getJavaType().getQualifiedName().equals(b.toString()))
 						result = false;
 					
