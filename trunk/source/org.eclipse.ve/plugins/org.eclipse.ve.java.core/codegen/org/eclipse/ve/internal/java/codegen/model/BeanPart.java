@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.37 $  $Date: 2005-04-15 22:34:27 $ 
+ *  $Revision: 1.38 $  $Date: 2005-04-20 14:31:13 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -442,7 +442,7 @@ public void removeBackRef (BeanPart bean, boolean updateFF) {
  */
 public void removeBackRef (EObject bean, boolean updateFF) {
 
-	if (fDecleration.getModel()==null) return ;
+	if (fDecleration==null || fDecleration.getModel()==null) return ;
     BeanPart bp = fDecleration.getModel().getABean(bean) ;
     if (bp != null)		
 	    fbackReferences.remove(bp) ;
