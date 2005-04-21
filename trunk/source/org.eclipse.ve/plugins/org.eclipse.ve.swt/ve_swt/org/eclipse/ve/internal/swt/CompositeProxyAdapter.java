@@ -22,14 +22,18 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.visual.VisualUtilities;
  
 public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldProcessing {
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
 	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
 	private IMethodProxy moveAboveMethodProxy, moveBelowMethodProxy;	// method proxy for move above and below
+	private IBeanTypeProxy compositeManager;
 	// TODO these method proxies should be off in the factory constants so we don't need to get it for each and every composite.
 
 	
@@ -78,7 +82,11 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 
 		if (as == sf_containerControls) {
 			addControl((IJavaObjectInstance) newValue, position);
-		} else {
+		} else if ("layout".equals(as.getName())) {
+			// If switching layouts we must ensure that the children's layoutData matches that of our new layout manager			
+			ensureChildLayoutDataCorrect(newValue);
+			super.applied(as, newValue, position);			
+		}else {
 			super.applied(as, newValue, position);
 		}
 	}
@@ -90,6 +98,41 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 			super.canceled(sf, oldValue, position);
 		}
 
+	}
+	
+	private void ensureChildLayoutDataCorrect(Object newLayout){
+		// Do not process if the layout manager is bad, possibly following a bad parse error
+		IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)newLayout);
+		layoutProxyHost.instantiateBeanProxy();
+		if(layoutProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) return;
+		// Some layouts physically set the layoutData of their child controls, for example
+		// GridLayout sets its composite's children to have a layoutData of GridData
+		// This is done on the target VM without the VE having a chance to model it
+		// If in code a user changes the layout from GridData to another then the layoutData
+		// needs fixing up as it will be incorrect and cause class cast exceptions
+		 ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(((EObject)newLayout).eClass(),null);
+		 JavaClass constraintClass = layoutPolicyFactory == null ?
+			 null :
+			 layoutPolicyFactory.getConstraintClass(((EObject)getTarget()).eResource().getResourceSet());
+		 // There is a target VM helper that does all of the checking and correcting to avoid VM traffic
+		 final IMethodProxy methodProxy = getCompositeManager().getMethodProxy("ensureChildLayoutDataCorrect",new String[] {"org.eclipse.swt.widgets.Composite","java.lang.String"});
+		 // Create a BeanProxy for the name of the constraint class
+		 final IBeanProxy constraintBeanProxy = constraintClass == null ?
+		     null :
+			 getBeanProxy().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(constraintClass.getQualifiedName());
+		 invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
+			 public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				 methodProxy.invokeCatchThrowableExceptions(getCompositeManager(),new IBeanProxy[] {getBeanProxy(),constraintBeanProxy});
+				return null;
+			}
+		});	
+	}
+	
+	private IBeanTypeProxy getCompositeManager(){
+		if(compositeManager == null){
+			compositeManager = getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.CompositeManager");
+		}
+		return compositeManager;
 	}
 	
 	

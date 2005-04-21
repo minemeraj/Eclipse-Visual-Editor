@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-21 18:18:50 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 
 /**
@@ -61,6 +62,13 @@ IPropertyDescriptor getConstraintPropertyDescriptor(EStructuralFeature sfConstra
  * the actual parent container to be passed in
  */
 IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset);
+
+/**
+ * @param ResourceSet for EMF
+ * @return the class of the Constraint for the layout manager
+ */
+JavaClass getConstraintClass(ResourceSet rSet);
+
 }
 
 

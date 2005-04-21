@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BoxLayoutPolicyFactory.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-21 18:19:12 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -88,5 +88,9 @@ public class BoxLayoutPolicyFactory implements ILayoutPolicyFactory {
 		JavaHelpers boxLayoutJavaClass = JavaRefFactory.eINSTANCE.reflectType("javax.swing.BoxLayout", rset); //$NON-NLS-1$		
 		
 		return BeanUtilities.createJavaObject(boxLayoutJavaClass, rset, alloc);
+	}
+
+	public JavaClass getConstraintClass(ResourceSet rSet) {
+		return null;
 	}
 }

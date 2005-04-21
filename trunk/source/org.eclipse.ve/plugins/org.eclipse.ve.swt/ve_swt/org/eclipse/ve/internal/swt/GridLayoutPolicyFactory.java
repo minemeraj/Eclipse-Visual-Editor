@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-21 18:19:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -18,8 +18,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
@@ -54,5 +56,8 @@ public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public JavaClass getConstraintClass(ResourceSet rSet) {
+		return Utilities.getJavaClass("org.eclipse.swt.layout.GridData",rSet);
+	}	
 
 }

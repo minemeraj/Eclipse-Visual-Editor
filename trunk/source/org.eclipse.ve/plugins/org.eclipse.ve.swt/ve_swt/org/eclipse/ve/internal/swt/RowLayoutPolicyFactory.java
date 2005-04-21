@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutPolicyFactory.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-21 18:19:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -18,7 +18,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
@@ -49,6 +51,10 @@ public class RowLayoutPolicyFactory implements ILayoutPolicyFactory {
 
 	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
 		return null;
+	}
+	
+	public JavaClass getConstraintClass(ResourceSet rSet) {
+		return Utilities.getJavaClass("org.eclipse.swt.layout.RowData",rSet);
 	}
 
 }
