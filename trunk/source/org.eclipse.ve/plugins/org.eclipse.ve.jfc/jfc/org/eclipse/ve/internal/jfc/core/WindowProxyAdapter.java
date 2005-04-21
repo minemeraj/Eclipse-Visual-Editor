@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-21 15:32:35 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-21 20:04:22 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -44,8 +44,10 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		if (!isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE) {
             // If not already instantiated, and not errors, try again. If already instantiated w/severe, don't waste time
 			instantiateBeanProxy();
-            applyLocation(false, BeanAwtUtilities.getOffScreenLocation());
+        }
+        if (isBeanProxyInstantiated()) {
             applyVisibility(false, Boolean.TRUE);
+            applyLocation(false, BeanAwtUtilities.getOffScreenLocation());            
         }
 
 		if (getErrorStatus() == ERROR_SEVERE)
