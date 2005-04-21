@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.68 $  $Date: 2005-04-12 12:34:04 $ 
+ *  $Revision: 1.69 $  $Date: 2005-04-21 19:11:10 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -560,6 +560,13 @@ public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) 
         pm.beginTask("", 100); //$NON-NLS-1$
         pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
         ReverseParserJob.cancelJobs(input.getFile());
+		while (true) {					  
+		  try {
+			ReverseParserJob.join(input.getFile(), pm);
+			break;
+		  } catch (OperationCanceledException e) {} 
+		    catch (InterruptedException e) {}
+		}
         floadInProgress = true;
         if (fVEModel != null) {
             if (fBeanModel != null && !fdisconnected) {
