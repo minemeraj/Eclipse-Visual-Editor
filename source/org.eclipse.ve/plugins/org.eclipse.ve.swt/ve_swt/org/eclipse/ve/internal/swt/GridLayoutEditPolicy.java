@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.7 $ $Date: 2005-02-15 23:51:47 $
+ * $Revision: 1.8 $ $Date: 2005-04-21 18:19:45 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -122,11 +122,18 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 				if (name == null)
 					name = GridController.GRID_THIS_PART;
-				if (gridStateData.contains(name))
+				if (gridStateData.contains(name)) {
 					if (gridController != null)
 						gridController.setGridShowing(true);
+				} else {
+					// If no explicit value changing the grid on/off use the default					
+					gridController.setGridShowing(CDEPlugin.getPlugin().getPreferenceStore().getBoolean(CDEPlugin.SHOW_GRID));					
+				}
 			}
-		}
+		} else {
+			// If no explicit value changing the grid on/off use the default
+			gridController.setGridShowing(CDEPlugin.getPlugin().getPreferenceStore().getBoolean(CDEPlugin.SHOW_GRID));
+		}	
 	}
 	
 	public void deactivate() {

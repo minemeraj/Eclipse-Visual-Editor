@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-21 18:18:50 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -59,8 +59,11 @@ public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanTypeProxy layoutB
  * @since 1.0.0
  */
 public static ILayoutPolicyFactory getLayoutPolicyFactory(EClassifier layoutManagerClass, EditDomain editDomain) {
-	// Get the decorator policy that is a decorator and find the layout policy factory 
-	ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
+	// Get the decorator policy that is a decorator and find the layout policy factory
+	ClassDescriptorDecoratorPolicy policy = new ClassDescriptorDecoratorPolicy();
+	if(editDomain != null) {
+		policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
+	}
 	BeanDecorator decr = (BeanDecorator) policy.findDecorator(layoutManagerClass, BeanDecorator.class, LAYOUT_POLICY_FACTORY_CLASSNAME_KEY);
 	String layoutFactoryClassname = null;
 	if (decr != null)

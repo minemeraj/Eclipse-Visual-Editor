@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.5 $ $Date: 2005-02-15 23:51:49 $
+ * $RCSfile: FillLayoutPolicyFactory.java,v $ $Revision: 1.6 $ $Date: 2005-04-21 18:19:45 $
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
 /**
@@ -45,4 +46,8 @@ public class FillLayoutPolicyFactory extends Object implements ILayoutPolicyFact
 	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
 		return null;
 	}
+	public JavaClass getConstraintClass(ResourceSet rSet) {
+		return null;
+	}
+	
 }

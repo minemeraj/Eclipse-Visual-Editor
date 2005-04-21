@@ -11,14 +11,16 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyFactory.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-21 18:19:12 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.visual.*;
@@ -59,5 +61,9 @@ public class NullLayoutPolicyFactory implements ILayoutPolicyFactory {
 	 */
 	public IJavaInstance getLayoutManagerInstance(IJavaObjectInstance container, JavaHelpers javaClass, ResourceSet rset) {
 		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
+	}
+	
+	public JavaClass getConstraintClass(ResourceSet rSet) {
+		return null;
 	}
 }
