@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-21 15:13:39 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -161,7 +161,19 @@ public abstract class PropertyChangeInvocationHelper extends EventDecoderHelper 
 		return PropetyChangeCallbacks;
 	}
 	protected boolean isDifferntEnvocation(AbstractEventInvocation ei) {
-		return false;
+		PropertyChangeEventInvocation e = (PropertyChangeEventInvocation)ei;	
+		if (fEventInvocation==null) return true;
+		List curProps = ((PropertyChangeEventInvocation)fEventInvocation).getProperties();
+		List ePropes = e.getProperties();
+		
+		if (curProps.size()!=ePropes.size()) return true;
+		
+		for (int i = 0; i < curProps.size(); i++) {
+			PropertyEvent cE = (PropertyEvent)curProps.get(i);
+			PropertyEvent eE = (PropertyEvent)ePropes.get(i);
+			if (cE.getPropertyName()!=eE.getPropertyName()) return true;		
+		}
+		return false;		
 	}
 
 	protected boolean isDiffrentDetails(AbstractEventInvocation ee) {
