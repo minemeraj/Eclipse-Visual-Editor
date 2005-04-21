@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.44 $  $Date: 2005-04-21 18:47:12 $ 
+ *  $Revision: 1.45 $  $Date: 2005-04-21 21:23:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -844,6 +844,8 @@ public class BDMMerger {
 			if (!newe.decodeExpression()) {
 				newe.dispose() ;
 				newe = null ;
+			}else{
+				CodeGenUtil.snoozeAlarm(b.getEObject(), mainModel.getCompositionModel().getModelResourceSet(), new HashMap());
 			}
 		}
 		return newe ;
