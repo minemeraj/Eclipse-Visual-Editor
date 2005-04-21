@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.43 $  $Date: 2005-04-20 21:03:04 $ 
+ *  $Revision: 1.44 $  $Date: 2005-04-21 18:47:12 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -564,7 +564,9 @@ public class BDMMerger {
 	protected void removeDeletedExpression(final CodeExpressionRef deletedExp){
 		if (JavaVEPlugin.isLoggingLevel(Level.FINER))
 			JavaVEPlugin.log("BDM Merger >> "+"Remove deleted expression "+deletedExp.getCodeContent(), Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
+		EObject o = deletedExp.getBean().getEObject();				
 		deletedExp.dispose() ;
+		CodeGenUtil.snoozeAlarm(o,mainModel.getCompositionModel().getModelResourceSet(), new HashMap());
 	}
 	
 	/*

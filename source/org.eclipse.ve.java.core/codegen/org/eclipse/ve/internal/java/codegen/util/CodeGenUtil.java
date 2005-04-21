@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.36 $  $Date: 2005-04-14 16:02:09 $ 
+ *  $Revision: 1.37 $  $Date: 2005-04-21 18:47:12 $ 
  */
 
 
@@ -721,7 +721,7 @@ public static Annotation addAnnotation(EObject obj) {
 public static void snoozeAlarm(EObject obj, ResourceSet rs, HashMap history) {
 	
 	// Should be in the model
-    if (obj != null && obj.eContainer() != null) {
+    if (obj != null && obj.eContainer() != null && rs!=null) {
     	// This adapter will maintain all references but no the container
     	history.put(obj, obj);
 		InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(obj, InverseMaintenanceAdapter.ADAPTER_KEY);
