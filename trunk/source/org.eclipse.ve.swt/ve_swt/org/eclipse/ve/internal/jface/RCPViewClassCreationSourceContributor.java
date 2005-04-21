@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-14 15:56:12 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-21 20:38:51 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -57,7 +57,11 @@ public class RCPViewClassCreationSourceContributor implements IVisualClassCreati
 		} else {
 			try {			
 				JavaProject javaProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
-				isError = !ProxyPlugin.isPDEProject(javaProject);
+				if(javaProject == null){
+					isError = true;
+				} else {
+					isError = !ProxyPlugin.isPDEProject(javaProject);
+				}
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.FINEST);
 				return new StatusInfo(
