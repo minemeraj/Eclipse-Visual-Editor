@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-13 00:11:31 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-21 20:38:51 $ 
  */
 
 import java.util.HashMap;
@@ -20,25 +20,22 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
-import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
-import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -248,9 +245,9 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	protected void updateStatus(IStatus[] statusArg) {
 		// The array of status objects is the ones that the superclass provides
 		IStatus[] status = new IStatus[statusArg.length + 2];
-		System.arraycopy(statusArg,0,status,0,statusArg.length);
-		status[status.length - 2] = fSourceFolderStatus;
-		status[status.length - 1] = fContributorStatus;
+		System.arraycopy(statusArg,0,status,1,statusArg.length);
+		status[status.length - 1] = fSourceFolderStatus;
+		status[0] = fContributorStatus;  //move our messages to the front
 		super.updateStatus(StatusUtil.getMostSevere(status));
 	}	
 
@@ -316,7 +313,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			} catch (CoreException e){
 				JavaVEPlugin.log(e, Level.FINEST);				
 			}
-			// 	Check the status of the contributor as the project may have changaed
+			// 	Check the status of the contributor as the project may have changed
 			if(selectedElement != null){
 				fContributorStatus = selectedElement.getStatus(getContainerRoot());				
 			}
