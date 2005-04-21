@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.69 $  $Date: 2005-04-21 19:11:10 $ 
+ *  $Revision: 1.70 $  $Date: 2005-04-21 20:57:19 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1382,5 +1382,16 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 			// File is being saved, but our model is not in sync... remove the old cache
 			VEModelCacheUtility.removeCache(fFile);
 		}
+	}
+
+	public void waitforNotBusy() {
+        ReverseParserJob.cancelJobs(fFile);
+		while (true) {					  
+		  try {
+			ReverseParserJob.join(fFile, null);
+			break;
+		  } catch (OperationCanceledException e) {} 
+		    catch (InterruptedException e) {}
+		}	
 	}
 }

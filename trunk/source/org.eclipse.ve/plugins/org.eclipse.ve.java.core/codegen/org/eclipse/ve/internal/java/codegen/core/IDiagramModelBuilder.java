@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-21 20:57:19 $ 
  */
 
 
@@ -210,6 +210,12 @@ public interface IDiagramModelBuilder  {
      * @since 1.0.0
      */
     public void doSave(IProgressMonitor monitor);
+	
+	/**
+	 * If isBusy() wait until it is not
+	 * @since 1.1.0
+	 */
+	public void waitforNotBusy() ;
     
 }
 
