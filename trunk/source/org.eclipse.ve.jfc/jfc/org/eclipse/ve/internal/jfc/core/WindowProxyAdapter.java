@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-18 18:46:00 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-21 15:32:35 $ 
  */
 
 import org.eclipse.draw2d.geometry.Dimension;
@@ -40,13 +40,13 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 	 */
 	public IBeanProxy instantiateOnFreeForm(IBeanProxy aFreeFormDialogHost) {
 
-		// Need to make sure location/visibility are good before we instantiate so that it won't flash on the screen.
-		applyLocation(false, BeanAwtUtilities.getOffScreenLocation());
-		applyVisibility(false, Boolean.TRUE);
 
-		if (!isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE)
+		if (!isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE) {
+            // If not already instantiated, and not errors, try again. If already instantiated w/severe, don't waste time
 			instantiateBeanProxy();
-		// If not already instantiated, and not errors, try again. If already instantiated w/severe, don't waste time
+            applyLocation(false, BeanAwtUtilities.getOffScreenLocation());
+            applyVisibility(false, Boolean.TRUE);
+        }
 
 		if (getErrorStatus() == ERROR_SEVERE)
 			return null; // It is bad, don't go on.
