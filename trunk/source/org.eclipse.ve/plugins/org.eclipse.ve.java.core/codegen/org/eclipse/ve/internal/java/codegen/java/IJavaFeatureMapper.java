@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-20 15:46:12 $ 
+ *  $Revision: 1.13 $  $Date: 2005-04-21 13:35:05 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -86,7 +86,9 @@ public class VEexpressionPriority {
         return st.toString();
 	}
 	/**
-	 *  @return 0 if equal, 1 if this>p, -1 if this<p2
+	 *  @return 0 if equal, 
+	 *          1 if this comes before p, 
+	 *          -1 if this comes after p
 	 **/
 	public int comparePriority (VEexpressionPriority p) {		   
 		   if (getProiority() == p.getProiority()) {

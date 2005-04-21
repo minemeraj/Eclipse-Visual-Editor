@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-20 20:26:40 $ 
+ *  $Revision: 1.34 $  $Date: 2005-04-21 13:35:05 $ 
  */
 
 import java.util.*;
@@ -367,6 +367,32 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 }
 
 /**
+ * Will determine if the expression (expressions[index]) is in the bp's
+ * grouping.  It is possible for an expression to be place out of grouping
+ * because of dependencies, or z order.
+ * 
+ * @param bp Is the grouping for this bean
+ * @param expressions Sorted method expression
+ * @param index for the expression to determine if in bp's grouping
+ * @return
+ * 
+ * @since 1.1.0
+ */
+protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
+	boolean result = false;
+	for (int i=index; i>=0; i--) {	
+	    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
+		if (exp.getBean()!=bp)
+			break; // Not in the grouping anymore
+		if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			result = true; 
+			break;
+		}
+	}
+	return result;
+}
+
+/**
  * Sorting goes as following:
  * 
  *     Priority is of the form [proirity:(index,feature)]
@@ -453,8 +479,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
 				   ||  
 				   (dependantBeans.contains(cExp.getBean().getEObject()) && // we are dependant
-				     (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)||
-				     !cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
+				    (isGrouping(cExp.getBean(), sortedList, i)) //||
+				     //!cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
 				   )) { 
 		   
 			       // exp comes after cExp
@@ -480,7 +506,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   }
 		   
 		   switch (compare) {
-		      case -1: // exp < cExp
+		      case -1: // exp < cExp (comes after)
 		      	       // This is the top most 
 		               first = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 		               break;
@@ -489,7 +515,10 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		      		   	 // bottom most
 		      		     last = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 		      		   }
-		      		   break;		      		     
+		      		   break;	
+		      case 1: // exp > cExp (comes before)
+				       last = i ;
+					   break;
 		   }
 		}
 		   	   
