@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.35 $  $Date: 2005-04-15 23:25:00 $ 
+ *  $Revision: 1.36 $  $Date: 2005-04-21 16:02:04 $ 
  */
 
 import java.util.*;
@@ -36,9 +36,6 @@ import org.eclipse.jem.java.*;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-
-import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
-
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
@@ -537,58 +534,46 @@ protected void canceledList(EStructuralFeature sf, List oldValues, int position)
  * canceled: A setting has been remove from the mof object,
  * now remove it from the bean.
  */
-protected void canceled(EStructuralFeature sf , Object oldValue, int position) {
-	if (isBeanProxyInstantiated()) {
-		if (!inInstantiation() && isInstantiationFeature(sf)) {
-			reinstantiateBeanProxy();
-			return;
-		}		
-		// We have something to remove from, so we are live
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) sf);
-		// Only cancel if it is not the this part, or if it is the
-		// this part, then only if it is a non-local attribute.
-		if (!isThisPart() || !isAttributeLocal(sf)) {
-			BeanFeatureDecorator featureDecor = null; 
-			if (propertyDecorator == null || propertyDecorator.getWriteMethod() == null) {
-				// Note: fields are handled in kludge way, need a better way of doing this. This is being put off until next release.
-				// This could be a field instead, see if it has a feature decor. 
-				// When we rewrite this, need to take into consideration that the field may be final, in which case it
-				// would be read only.
-				featureDecor = (BeanFeatureDecorator)Utilities.getDecorator((EModelElement)sf,BeanFeatureDecorator.class);
-			}			
-			
-			if ((propertyDecorator != null && propertyDecorator.getWriteMethod() != null) || featureDecor != null) {			
-				IBeanProxyHost value = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)oldValue);
+	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
+		if (isBeanProxyInstantiated()) {
+			if (!inInstantiation() && isInstantiationFeature(sf)) {
+				reinstantiateBeanProxy();
+				return;
+			}
+			// We have something to remove from, so we are live
+			PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement) sf);
+			// Only cancel if it is not the this part, or if it is the
+			// this part, then only if it is a non-local attribute.
+			if ((!isThisPart() || !isAttributeLocal(sf)) && (propertyDecorator != null && propertyDecorator.isWriteable())) {
+				IBeanProxyHost value = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) oldValue);
 				// Let the attribute cancel the setting. It is assumed that the value has
 				// been instantiated since it was previously applied. After canceling the
 				// setting, we will dispose of the bean proxy since it is not needed. It
 				// would then be recreated on the re-apply if an undo was done.
-				// This setting can be adapted to be a proxy			
+				// This setting can be adapted to be a proxy
 				synchronized (this) {
 					// Synchronize with the instantiate on this bean so that other threads can't actually
 					// cancel anything until after the instanciation is finished. Otherwise we could
 					// get race conditions of which cancel get's done first.
 					// Only apply the value if we actually do have one to apply
-					if ( fOrigSettingProxies != null && fOrigSettingProxies.containsKey(sf)){
-						applyBeanFeature(sf, propertyDecorator, (IBeanProxy)fOrigSettingProxies.get(sf));
+					if (fOrigSettingProxies != null && fOrigSettingProxies.containsKey(sf)) {
+						applyBeanFeature(sf, propertyDecorator, (IBeanProxy) fOrigSettingProxies.get(sf));
 					}
-					
-					clearError(sf);	// Clear the error for this feature, if one was created. This could of happened
-									// while canceling and we reinstantiated and this would of marked this feature in
-									// error. But since this feature is actually not set anymore, then there is no error.
-									// Or could of been bad already and our canceling it would clear it.
-					
+
+					clearError(sf); // Clear the error for this feature, if one was created. This could of happened
+					// while canceling and we reinstantiated and this would of marked this feature in
+					// error. But since this feature is actually not set anymore, then there is no error.
+					// Or could of been bad already and our canceling it would clear it.
+
 				}
 				// Always release the bean proxy, unless the feature is not composite, if not composite, somebody else owns it. They will take care of it.
 				if (value != null && (sf instanceof EAttribute || ((EReference) sf).isContainment()))
 					value.releaseBeanProxy();
 			}
 		}
-	}
 }
 /**
- * releaseBeanProxy: Get rid of the bean proxy being held.
- * This allows for recreation if needed.
+ * releaseBeanProxy: Get rid of the bean proxy being held. This allows for recreation if needed.
  */
 public void releaseBeanProxy() {
 	if (isBeanProxyInstantiated() || getErrorStatus() == ERROR_SEVERE) {
