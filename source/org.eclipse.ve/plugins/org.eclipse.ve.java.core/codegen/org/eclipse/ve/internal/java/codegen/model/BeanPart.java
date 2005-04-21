@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.38 $  $Date: 2005-04-20 14:31:13 $ 
+ *  $Revision: 1.39 $  $Date: 2005-04-21 15:03:58 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -706,7 +706,7 @@ public boolean isEquivalent(BeanPart b) {
 					parent.addRefExpression(e);
 					boolean ok = false;
 					try {
-						e.setArguments(new Object[] {this} );
+						e.setArguments(new Object[] {getEObject()} );
 						ok = e.decodeExpression();
 					} catch (CodeGenException e1) {
 					}

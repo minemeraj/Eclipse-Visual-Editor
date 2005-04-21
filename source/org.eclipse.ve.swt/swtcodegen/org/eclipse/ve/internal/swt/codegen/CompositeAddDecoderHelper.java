@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-14 23:39:53 $ 
+ *  $Revision: 1.20 $  $Date: 2005-04-21 15:03:58 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -475,7 +475,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		// as an argumet
 		if (fOwner.getExprRef().getArgs() == null || fOwner.getExprRef().getArgs().length<1)
 		   throw new CodeGenException("No Arguments !!! " + exp) ; //$NON-NLS-1$
-		return (BeanPart) fOwner.getExprRef().getArgs()[0];
+		return fOwner.getBeanModel().getABean((EObject)fOwner.getExprRef().getArgs()[0]);
 	}
 	
 	/**
