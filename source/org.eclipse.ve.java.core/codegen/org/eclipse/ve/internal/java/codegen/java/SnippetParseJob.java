@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-21 20:57:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swt.widgets.Display;
 
@@ -47,6 +49,17 @@ public class SnippetParseJob extends ReverseParserJob {
     private EditDomain fEditDomain;
     public static final String SNIPPET = "SNIPPET"; //$NON-NLS-1$
 	
+	IJobChangeListener doneListener = new IJobChangeListener() {	
+		public void sleeping(IJobChangeEvent event) {}	
+		public void scheduled(IJobChangeEvent event) {}	
+		public void running(IJobChangeEvent event) {}
+		public void done(IJobChangeEvent event) {
+			editorState.setBottomUpProcessing(false);
+		}
+		public void awake(IJobChangeEvent event) {}	
+		public void aboutToRun(IJobChangeEvent event) {}	
+	};
+	
 	/**
 	 * @param file
 	 * 
@@ -57,7 +70,8 @@ public class SnippetParseJob extends ReverseParserJob {
 		strategyRoutine=strategy;
 		curDisplay=disp;
 		this.cu=cu;
-
+		// Will force the done if the job is canceled before it had a chance to run
+        addJobChangeListener(doneListener);
 		editorState=state;
 		docEvents=events;		
 	}
@@ -76,8 +90,7 @@ public class SnippetParseJob extends ReverseParserJob {
 			String msg = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();			
 			return new Status(Status.WARNING,CDEPlugin.getPlugin().getPluginID(), 0, msg ,t);
 		}
-		finally {
-			editorState.setBottomUpProcessing(false);
+		finally {			
 			changeController.transactionEnded(SNIPPET);			
 		}
 		return Status.OK_STATUS;
