@@ -245,9 +245,15 @@ public abstract class ControlManager implements ICallback , ControlListener {
 							IImageCapture grabber = getImageCapturer();
 							//----
 							image = grabber.getImage(fControl, true);
-							final ImageData imageData = image.getImageData();
-							image.dispose();
-							image = null;
+							final ImageData imageData ;
+							if(image!=null){
+								imageData = image.getImageData();
+								image.dispose();
+								image = null;
+							}else{
+								// No image - maybe some native screen scrape didnt work - return a dummy image back
+								imageData = new ImageData(1,1,1, new PaletteData(new RGB[] {new RGB(0, 0, 0), new RGB(255,255,255)}));
+							}
 							final byte[] data = imageData.data;
 							// Send the length back to the IDE which is the total length and then width and height
 							fServer.doCallback(new ICallbackRunnable() {
