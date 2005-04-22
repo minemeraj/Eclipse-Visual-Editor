@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.37 $  $Date: 2005-04-15 22:30:09 $ 
+ *  $Revision: 1.38 $  $Date: 2005-04-22 20:15:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -419,8 +419,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		}else if (alloc instanceof ParseTreeAllocation) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
 			NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
-			ptAlloc.getExpression().accept(flattener);
-			return flattener.getResult();
+			if (ptAlloc.getExpression()!=null) {
+			  ptAlloc.getExpression().accept(flattener);
+			  return flattener.getResult();
+			}
 		}// Ignoring ImplicitAlloction for now
 		return null;
 	}

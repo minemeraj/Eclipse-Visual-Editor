@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.70 $  $Date: 2005-04-21 20:57:19 $ 
+ *  $Revision: 1.71 $  $Date: 2005-04-22 20:15:52 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -105,11 +105,6 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	 */
   	private  void Reload(Display disp,IProgressMonitor monitor) {
   		monitor.beginTask(CodegenMessages.getString("JavaSourceTranslator.0"),2); //$NON-NLS-1$
-  		ModelChangeController controller = (ModelChangeController) getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-  		// If the controller is inTransaction, that means top down on display thread.
-  		// CodeGen should have been marked as busy before it starts processing
-		if(controller!=null && controller.inTransaction())
-		    throw new RuntimeException(CodegenMessages.getString("JavaSourceTranslator.ShouldNotBeHere_EXC_")) ; //$NON-NLS-1$
 
 		// We have no idea when the load will be called by the editor.
 		// We need to stop the synch. from driving snippets, as we are going
