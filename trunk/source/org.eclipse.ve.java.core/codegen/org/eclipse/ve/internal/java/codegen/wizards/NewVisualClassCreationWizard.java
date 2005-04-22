@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.27 $  $Date: 2005-04-13 00:11:31 $ 
+ *  $Revision: 1.28 $  $Date: 2005-04-22 14:50:43 $ 
  */
 
 import java.io.IOException;
@@ -25,7 +25,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
+import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jface.text.formatter.ContentFormatter;
+import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
@@ -222,54 +225,74 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	
 	protected void merge(ICompilationUnit to, ICompilationUnit from, CodeFormatter formatter, IProgressMonitor monitor){
 		try {
-			IType toType = to.getTypes()[0];
-			IType fromType = from.getTypes()[0];
-			for(int i=0;i<fromType.getChildren().length;i++){
-				IJavaElement child = fromType.getChildren()[i];
-				if (child instanceof IField) {
-					IField field = (IField) child;
-					String source = getCompleteSource(field.getCompilationUnit(), field);
-					if(formatter!=null){
-//						TextEdit te = formatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS,source,0, source.length(), 1, NEWLINE);
-//						source = te.toString();
-					}
-					toType.createField(source, null, true, monitor);
-				}
-				if (child instanceof IMethod) {
-					IMethod method = (IMethod) child;
-					// There could be multiple target methods into which "method"s statements should go into.
-					IMethod[] targetMethods = null;
-					if(method.isConstructor()){
-						List constructors = new ArrayList();
-						IMethod[] allMethods = toType.getMethods();
-						for(int mc=0;mc<allMethods.length;mc++)
-							if(allMethods[mc].isConstructor())
-								constructors.add(allMethods[mc]);
-						targetMethods = new IMethod[constructors.size()];
-						constructors.toArray(targetMethods);
-					}else{
-						targetMethods = toType.findMethods(method);
-					}
-					if(targetMethods!=null && targetMethods.length>0){
-						for(int tmc=0;tmc<targetMethods.length;tmc++)
-							merge(targetMethods[tmc], method, formatter, monitor);
-					}else{
-						String source = getCompleteSource(method.getCompilationUnit(), method);
-//						if(formatter!=null)
-//							source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
-						toType.createMethod(source, null, true, monitor);
-					}
-				}
-				if (child instanceof IType) {
-					IType type = (IType) child;
-					String source = getCompleteSource(type.getCompilationUnit(), type);
-//					if(formatter!=null)
-//						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
-					toType.createType(source, null, true, monitor);
+			// Merge imports
+			IImportDeclaration[] fromImports = from.getImports();
+			for (int i = 0; fromImports!=null && i < fromImports.length; i++) {
+				IImportContainer importContainer = to.getImportContainer();
+				if(importContainer==null || !importContainer.exists() || !importContainer.hasChildren()){
+					// there are no imports hence put it at the top
+					to.createImport(fromImports[i].getElementName(), null, monitor);
+				}else{
+					// we need to put new imports before existing imports - 
+					// formatter at the end will take care of cleaning up ordering etc.
+					IJavaElement[] javaElements = importContainer.getChildren();
+					to.createImport(fromImports[i].getElementName(), javaElements[0], monitor);
 				}
 			}
+			
+			// Merge types
+			IType toType = to.getTypes()[0];
+			IType fromType = from.getTypes()[0];
+			merge(toType, fromType, formatter, monitor);
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.FINE);
+		}
+	}
+
+	protected void merge(IType toType, IType fromType, CodeFormatter formatter, IProgressMonitor monitor) throws JavaModelException {
+		for(int i=0;i<fromType.getChildren().length;i++){
+			IJavaElement child = fromType.getChildren()[i];
+			if (child instanceof IField) {
+				IField field = (IField) child;
+				String source = getCompleteSource(field.getCompilationUnit(), field);
+				if(formatter!=null){
+//						TextEdit te = formatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS,source,0, source.length(), 1, NEWLINE);
+//						source = te.toString();
+				}
+				toType.createField(source, null, true, monitor);
+			}
+			if (child instanceof IMethod) {
+				IMethod method = (IMethod) child;
+				// There could be multiple target methods into which "method"s statements should go into.
+				IMethod[] targetMethods = null;
+				if(method.isConstructor()){
+					List constructors = new ArrayList();
+					IMethod[] allMethods = toType.getMethods();
+					for(int mc=0;mc<allMethods.length;mc++)
+						if(allMethods[mc].isConstructor())
+							constructors.add(allMethods[mc]);
+					targetMethods = new IMethod[constructors.size()];
+					constructors.toArray(targetMethods);
+				}else{
+					targetMethods = toType.findMethods(method);
+				}
+				if(targetMethods!=null && targetMethods.length>0){
+					for(int tmc=0;tmc<targetMethods.length;tmc++)
+						merge(targetMethods[tmc], method, formatter, monitor);
+				}else{
+					String source = getCompleteSource(method.getCompilationUnit(), method);
+//						if(formatter!=null)
+//							source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
+					toType.createMethod(source, null, true, monitor);
+				}
+			}
+			if (child instanceof IType) {
+				IType type = (IType) child;
+				String source = getCompleteSource(type.getCompilationUnit(), type);
+//					if(formatter!=null)
+//						source = formatter.format(CodeFormatter.K_COMPILATION_UNIT,source,0, source.length(), 1, NEWLINE).toString();
+				toType.createType(source, null, true, monitor);
+			}
 		}
 	}
 	
@@ -287,6 +310,15 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			CodeFormatter formatter = contributor.needsFormatting()?ToolFactory.createCodeFormatter(null):null;
 			merge(originalCU, workingCopy, formatter, monitor);
 			workingCopy.discardWorkingCopy();
+			
+			// Format the source 
+			String content = originalCU.getSource();
+			TextEdit te = formatter.format(
+					CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, System.getProperties().getProperty("line.separator"));
+			content = CodeFormatterUtil.evaluateFormatterEdit(content, te, null);
+			originalCU.getBuffer().setContents(content);
+			originalCU.getBuffer().save(monitor, true);
+			
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.FINE);
 		}

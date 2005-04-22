@@ -2,14 +2,17 @@
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
 	class="RCPViewSourceGenerator" %>
+import org.eclipse.ui.part.ViewPart;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.SWT;
 
-public class <%=typeName%> extends org.eclipse.ui.part.ViewPart {
+public class <%=typeName%> extends ViewPart {
 
 	public static final String ID = "<%=superClassName%>.<%=typeName%>"; // TODO Needs to be whatever is mentioned in plugin.xml
 	
-	private org.eclipse.swt.widgets.Composite top = null;
+	private Composite top = null;
 	
-	public void createPartControl(org.eclipse.swt.widgets.Composite parent) {
-		top = new org.eclipse.swt.widgets.Composite(parent, org.eclipse.swt.SWT.NONE);		   
+	public void createPartControl(Composite parent) {
+		top = new Composite(parent, SWT.NONE);		   
 	}
 }
