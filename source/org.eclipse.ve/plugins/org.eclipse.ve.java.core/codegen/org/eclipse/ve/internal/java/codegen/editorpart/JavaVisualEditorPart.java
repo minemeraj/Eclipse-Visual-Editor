@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.98 $  $Date: 2005-04-20 21:55:11 $ 
+ *  $Revision: 1.99 $  $Date: 2005-04-22 14:56:56 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -102,8 +102,10 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
@@ -216,6 +218,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
 	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		JCMPackage.eINSTANCE.getClass(); // To prevent a race condition where the JVE cache is loaded
 		if (input instanceof IFileEditorInput) {
 			IProject proj = ((IFileEditorInput) input).getFile().getProject();
 			try {
