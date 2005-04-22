@@ -8,7 +8,7 @@ public class CompositeManager {
 public static void ensureChildLayoutDataCorrect(Composite aComposite, String layoutDataClassName) throws ClassNotFoundException {
 
 	Class layoutDataClass = null;
-	if(layoutDataClassName == null){
+	if(layoutDataClassName != null){
 		layoutDataClass = Class.forName(layoutDataClassName);	
 	}
 
