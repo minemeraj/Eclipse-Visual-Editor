@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import java.util.Iterator;
@@ -188,16 +188,8 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		
-		if (fRemoveAllColumnsMethodProxy != null) {
-			fRemoveAllColumnsMethodProxy.getProxyFactoryRegistry().releaseProxy(fRemoveAllColumnsMethodProxy);
-			fRemoveAllColumnsMethodProxy = null;
-		}
-		
-		if (fAddColumnMethodProxy != null) {
-			fAddColumnMethodProxy.getProxyFactoryRegistry().releaseProxy(fAddColumnMethodProxy);
-			fAddColumnMethodProxy = null;
-		}		
+		fRemoveAllColumnsMethodProxy = null;
+		fAddColumnMethodProxy = null;
 	}
 
 }

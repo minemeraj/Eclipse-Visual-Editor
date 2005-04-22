@@ -223,13 +223,17 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		// If they have been implicitly disposed on the target VM but the IBeanProxyHost doesn't know about this then i
 		// still thinks they are there and will try to re-dispose them and also it'll remain listening for changes 
 		// and this causes stack errors - bugzilla 60017
-		List controls = (List) ((IJavaObjectInstance)getTarget()).eGet(sf_containerControls);
-		Iterator iter = controls.iterator();
-		while(iter.hasNext()){
-			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance)iter.next());
-			if (value != null)
-				value.releaseBeanProxy();
-		}
+		if (isBeanProxyInstantiated()) {
+            List controls = (List) ((IJavaObjectInstance) getTarget())
+                    .eGet(sf_containerControls);
+            Iterator iter = controls.iterator();
+            while (iter.hasNext()) {
+                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                        .getBeanProxyHost((IJavaInstance) iter.next());
+                if (value != null)
+                    value.releaseBeanProxy();
+            }
+        }
 		super.releaseBeanProxy();
 	}
 	

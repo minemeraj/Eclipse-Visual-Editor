@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-21 20:57:19 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -29,6 +29,7 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
+import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.core.IEditorUpdateState;
 import org.eclipse.ve.internal.java.codegen.util.IBackGroundWorkStrategy;
 import org.eclipse.ve.internal.java.codegen.util.ReverseParserJob;
@@ -81,7 +82,13 @@ public class SnippetParseJob extends ReverseParserJob {
 	protected IStatus doRun(IProgressMonitor monitor) {		
 	    
 	    ModelChangeController changeController = (ModelChangeController)fEditDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-		try {
+		try {           
+//            // If the controller is inTransaction, that means top down on display thread.
+//            // CodeGen should have been marked as busy before it starts processing
+//            if(changeController!=null && changeController.inTransaction()) {   
+//                throw new RuntimeException(CodegenMessages.getString("JavaSourceTranslator.ShouldNotBeHere_EXC_")) ; //$NON-NLS-1$
+//            }
+
 		  changeController.transactionBeginning(SNIPPET);
 		  strategyRoutine.run(curDisplay,cu,editorState,docEvents,monitor);
 		}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-18 16:59:41 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-22 20:57:53 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -89,15 +89,16 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	public void releaseBeanProxy() {
 		if(getBeanProxy() != null){
 			ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();		
-			releaseBeanProxy(getBeanProxy());
 
 			if (registry.isValid()) {
+                releaseBeanProxy(getBeanProxy());
 				registry.releaseProxy(viewPaneBeanProxy);
 				registry.releaseProxy(compositeBeanProxy);
 			}
 		}
 		viewPaneBeanProxy = null;
 		compositeBeanProxy = null;
+        super.releaseBeanProxy();
 	}
 	
 	protected void releaseBeanProxy(final IBeanProxy aBeanProxy){
@@ -112,7 +113,6 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				return null;
 			}			
 		});
-		super.releaseBeanProxy();
 	}
 	
 	protected Object invokeSyncExecCatchThrowableExceptions(DisplayManager.DisplayRunnable runnable)  {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-23 23:13:00 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-22 20:57:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -146,4 +146,16 @@ public class ReloadAction extends Action {
 		setChecked(true);
 		run();
 	}
+    
+    /**
+     * This is when is explicitly unpaused due to a background reload.
+     * 
+     * 
+     * @since 1.1.0
+     */
+    public void unPause() {
+        setChecked(false);
+        setCorrectText();
+        setEnabled(true);
+    }
 }

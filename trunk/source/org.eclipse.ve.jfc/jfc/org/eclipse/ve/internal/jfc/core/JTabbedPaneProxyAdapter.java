@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import java.util.Iterator;
@@ -269,7 +269,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 	
 
 	public void releaseBeanProxy() {	
-		if (((EObject) target).eIsSet(sfTabs)) {
+		if (isBeanProxyInstantiated() && ((EObject) target).eIsSet(sfTabs)) {
 			// Need to release all of the tabs. This isn't being done in BeanProxyAdapter because
 			// the tabs aren't bean proxies directly.
 			List tabs = (List) ((EObject) target).eGet(sfTabs);

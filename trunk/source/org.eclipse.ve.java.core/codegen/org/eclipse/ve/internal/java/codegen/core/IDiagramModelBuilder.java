@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-21 20:57:19 $ 
+ *  $Revision: 1.14 $  $Date: 2005-04-22 20:57:55 $ 
  */
 
 
@@ -213,9 +213,11 @@ public interface IDiagramModelBuilder  {
 	
 	/**
 	 * If isBusy() wait until it is not
+	 * @param cancelJobs <code>true</code> cancel any waiting parsing jobs because you are about to do a complete reparse. <code>false</code> if
+     * any waiting jobs should complete normally.
 	 * @since 1.1.0
 	 */
-	public void waitforNotBusy() ;
+	public void waitforNotBusy(boolean cancelJobs) ;
     
 }
 
