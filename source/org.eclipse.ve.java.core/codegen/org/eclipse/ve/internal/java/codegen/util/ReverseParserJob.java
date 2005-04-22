@@ -12,11 +12,10 @@
  *  Created Jan 11, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReverseParserJob.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
-import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -41,7 +40,7 @@ public abstract class ReverseParserJob extends Job {
 	}
 	
 	public static Object getJobFamily(IFile file) {
-		return (REVERSE_PARSE_JOB_NAME+":"+file.getLocation().toString()).intern(); //$NON-NLS-1$
+		return file.isAccessible() ? (REVERSE_PARSE_JOB_NAME+":"+file.getLocation().toString()).intern() : null; //$NON-NLS-1$
 	}
 	
 	public ReverseParserJob (IFile file, String name) {
@@ -73,7 +72,8 @@ public abstract class ReverseParserJob extends Job {
 	 * @since 1.1.0
 	 */
 	public static Job[] getReverseParserJobs(IFile file) {
-		return InternalPlatform.getDefault().getJobManager().find(getJobFamily(file));
+        Object family = getJobFamily(file);
+		return family != null ? Platform.getJobManager().find(getJobFamily(file)) : new Job[0];
 	}
 	
 	public static void cancelJobs (IFile file) {
@@ -83,8 +83,10 @@ public abstract class ReverseParserJob extends Job {
 		}
 	}
 	
-	public static void join(IFile file, IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {		
-		InternalPlatform.getDefault().getJobManager().join(getJobFamily(file), monitor);
+	public static void join(IFile file, IProgressMonitor monitor) throws OperationCanceledException, InterruptedException {
+        Object family = getJobFamily(file);
+        if (family != null)
+		Platform.getJobManager().join(getJobFamily(file), monitor);
 	}
 
 }

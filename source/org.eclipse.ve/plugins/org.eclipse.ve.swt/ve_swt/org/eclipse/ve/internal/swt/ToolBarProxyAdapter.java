@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolBarProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-16 23:43:40 $ 
+ *  $Revision: 1.2 $  $Date: 2005-04-22 20:57:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -43,13 +43,17 @@ public class ToolBarProxyAdapter extends ItemParentProxyAdapter {
 	public void releaseBeanProxy() {
 		// Need to release all of the tool items. This is because they will be implicitly disposed anyway when super
 		// gets called because the target VM will dispose them as children
-		List items = (List) ((IJavaObjectInstance) getTarget()).eGet(sf_items);
-		Iterator iter = items.iterator();
-		while (iter.hasNext()) {
-			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) iter.next());
-			if (value != null)
-				value.releaseBeanProxy();
-		}
+		if (isBeanProxyInstantiated()) {
+            List items = (List) ((IJavaObjectInstance) getTarget())
+                    .eGet(sf_items);
+            Iterator iter = items.iterator();
+            while (iter.hasNext()) {
+                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                        .getBeanProxyHost((IJavaInstance) iter.next());
+                if (value != null)
+                    value.releaseBeanProxy();
+            }
+        }
 		super.releaseBeanProxy();
 	}
 

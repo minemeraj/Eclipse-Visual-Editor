@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-22 20:57:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -221,10 +221,11 @@ public class BeanPartDecleration {
 	public void setModel(IBeanDeclModel model) {
 		if (this.model == model) 
 			return ;
+        IBeanDeclModel currentModel = this.model;
 		this.model = model;
 		if (model == null)	{
-			if (this.model!=null)
-			   this.model.removeBeanDecleration(this);
+			if (currentModel!=null)
+			   currentModel.removeBeanDecleration(this);
 		}
 		else {
 			resolveType(null);

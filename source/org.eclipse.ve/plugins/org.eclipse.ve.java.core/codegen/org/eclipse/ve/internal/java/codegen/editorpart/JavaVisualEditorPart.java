@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.99 $  $Date: 2005-04-22 14:56:56 $ 
+ *  $Revision: 1.100 $  $Date: 2005-04-22 20:57:55 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.commands.ICommandManager;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -86,6 +85,9 @@ import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.CDEUtilities.EditPartNamePath;
@@ -93,8 +95,9 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.properties.*;
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
+
+import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -102,9 +105,6 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
-import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -290,7 +290,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelBuilder.pause();
 			}
 			public void reload() {
-				loadModel(true);
+				loadModel(true, false, true);
 			}
 		};
 		
@@ -308,11 +308,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		// The input has changed.
 		super.doSetInput(input);
-		loadModel(true);
+		loadModel(true, true, true);
 	}
 	
-	protected Job setupJob = null; 
-	protected void loadModel(boolean resetVMRecycleCounter) {
+	protected Setup setupJob = null; 
+	protected void loadModel(boolean resetVMRecycleCounter, boolean restartVM, boolean loadModel) {
 		if(!((IFileEditorInput) getEditorInput()).getFile().isAccessible())
 			return;	// File not there for some reason. Can't load. Leave alone. The next time the editor gets focus the text editor portion is smart enough to close down in this case.
 		if (resetVMRecycleCounter)
@@ -326,14 +326,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
 			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE")); //$NON-NLS-1$
-			setupJob.setPriority(Job.SHORT); // Make it slightly slower so that ui thread still active
+			setupJob.setPriority(Job.SHORT); 
 		}
-		setupJob.schedule();	// Start asap.
+		setupJob.scheduleJob(restartVM, loadModel);
 	}
 
 	private void setReloadEnablement(boolean enabled) {
 		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
-		rla.setEnabled(enabled);
+        if (enabled)
+            rla.unPause();
+        else
+            rla.setEnabled(enabled);
 		ReloadNowAction rlna = (ReloadNowAction) graphicalActionRegistry.getAction(ReloadNowAction.RELOADNOW_ACTION_ID);
 		rlna.setEnabled(enabled);
 	}
@@ -1006,6 +1009,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 */
 		public void registryTerminated(ProxyFactoryRegistry registry) {
 			// Need to deactivate all of the editparts because they don't work without a vm available.
+            if (++recycleCntr < 3)
+                restartVMNeeded = true; // Restart next time our editor is activated or given focus.
+            
 			Display.getDefault().asyncExec(new Runnable() {
 				/**
 				 * @see java.lang.Runnable#run()
@@ -1013,13 +1019,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void run() {
 					setLoadIsPending(true);
 					setRootModel(null);
-					if (++recycleCntr < 3) {
-						// We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
-						if (getSite().getWorkbenchWindow().getActivePage().getActiveEditor() == JavaVisualEditorPart.this && activationListener.shellActive) {
+                    // We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
+					if (recycleCntr < 3) {
+                        // If we still need to restart vm (because no load ran in between when we set it when thus async finally ran)
+                        // and we are active, then restart vm now. Otherwise let it go. When it becomes active, if restartVMNeeded
+                        // is still true, it will 
+						if (restartVMNeeded && getSite().getWorkbenchWindow().getActivePage().getActiveEditor() == JavaVisualEditorPart.this && activationListener.shellActive) {
 							restartVM();	// Our editor is the active (though a view could be the active part), our shell is active. Restart now.
-						} else
-							restartVMNeeded = true;	// Restart next time our editor is activated or given focus.
-					}
+						} 
+					} 
 				}
 			});
 		}
@@ -1034,7 +1042,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	private void restartVM() {
 		restartVMNeeded = false;
-		loadModel(false);
+		loadModel(false, true, false);
 	}
 
 	protected SelectionSynchronizer getSelectionSynchronizer() {
@@ -1525,7 +1533,42 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			super(name);
 		}
 			
+        
+        // Flags for should the job restart the vm and load the model.
+        private boolean restartVM, loadModel;
 		
+        /**
+         * Schedule the job with the given flags. If the job is waiting,
+         * it will just change the flags so that when it starts it will
+         * get these settings. If the job is not running, it will set the
+         * flags and then schedule it. If the job is already running, it will
+         * simply set the flags and reschedule it. In that case it could run
+         * twice, but that is safer than trying to cancel it in the middle. That
+         * should be a rare happening.
+         * <p>
+         * The flags are set only if the value is true. If the value is false, the
+         * flag is not changed. This is because if the flags are currently true,
+         * we don't want to undo that on a reschedule. If it was needed in the
+         * past it is still needed.
+         * <p>
+         * At the very least the job will always put a model back into the viewers.
+         * For example if the vm had been terminated, restart vm would be true but
+         * load model would be false. So we would restart the vm and then take the
+         * current model and put it back into the viewers.
+         *  
+         * @param restartVM restart the vm. Otherwise it will decide if it needs to restart the vm or not on its own.
+         * @param loadModel load the model. Otherwise it will decide if it needs to load the model or not on its own.
+         * 
+         * @since 1.1.0
+         */
+        public synchronized void scheduleJob(boolean restartVM, boolean loadModel) {
+            if (restartVM) 
+                this.restartVM = true;
+            if (loadModel)
+                this.loadModel = true;
+            schedule(0l); // Schedule, reschedule the job.
+        }
+        
 		/*
 		 * Start the create registry job.
 		 */
@@ -1536,6 +1579,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		
 		protected IStatus run(IProgressMonitor monitor) {
+            boolean lRestartVM, lLoadModel;
+            synchronized (this) {
+                lRestartVM = restartVM;
+                lLoadModel = loadModel;
+                // Reset the main flags back to default.
+                restartVM = loadModel = false;
+            }
+            
 			int curPriority = Thread.currentThread().getPriority();
 		    ModelChangeController changeController = (ModelChangeController) editDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);			
 			try {				
@@ -1557,6 +1608,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 200); //$NON-NLS-1$
 				if (!initialized) {
+                    lRestartVM = true;  // This is initialize, we will restart the vm.
 					initialize(new SubProgressMonitor(monitor, 50));
 				} else {
 					beanProxyAdapterFactory.setThisTypeName(null);	// Unset the this type since it could actually change after the load is done.
@@ -1565,14 +1617,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					// could be we were moved to another project entirely.
 					BeaninfoNature nature = (BeaninfoNature) editDomain.getData(NATURE_KEY);
 					IFile file = ((IFileEditorInput) getEditorInput()).getFile();					
-					if (nature == null || !nature.isValidNature() || !file.getProject().equals(nature.getProject()))
+					if (nature == null || !nature.isValidNature() || !file.getProject().equals(nature.getProject())) {
+                        lRestartVM = true;  // We are initializing for a project, we will restart the vm.
 						initializeForProject(file);
-					else {
-						boolean createFactory = false;
+                    } else {
 						synchronized (JavaVisualEditorPart.this) {
-							createFactory = proxyFactoryRegistry == null || !proxyFactoryRegistry.isValid();
+							if (proxyFactoryRegistry == null || !proxyFactoryRegistry.isValid())
+                                lRestartVM = true;;
 						}
-						if (createFactory)
+						if (lRestartVM)
 							startCreateProxyFactoryRegistry(file);	// The registry is gone, need new one.
 						monitor.worked(100);
 					}
@@ -1583,33 +1636,39 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					return canceled();
 				}
 				
-				DiagramData dd = modelBuilder.getModelRoot();
-				if (dd != null) {
-					// See if we have an old model, and if we do, get the root in progress lock and then clear
-					// the model. This will stop the set root from working on an old root by mistake.
-					// We don't want to hold up ui, so we will just hold it long enough to release old model.
-					setRootInProgressLock.acquire();
-					try {
-						Resource res = dd.eResource();
-						if (res != null) {
-							ResourceSet rset = res.getResourceSet();
-							if (rset != null)
-								rset.getResources().remove(res);
-						}
-					} finally {
-						setRootInProgressLock.release();
-					}
-				}
-			
-				TimerTests.basicTest.startStep("Load Model");				 //$NON-NLS-1$
-				if (doTimerStep)
-					PerformanceMonitorUtil.getMonitor().snapshot(114);	// Starting codegen loading for the first time
-				
-				modelBuilder.loadModel((IFileEditorInput) getEditorInput(), new SubProgressMonitor(monitor, 100));
-				
-				if (doTimerStep)
-					PerformanceMonitorUtil.getMonitor().snapshot(115);	// Ending codegen loading for the first time
-				TimerTests.basicTest.stopStep("Load Model"); //$NON-NLS-1$
+				if (lLoadModel) {
+                    DiagramData dd = modelBuilder.getModelRoot();
+                    if (dd != null) {
+                        // See if we have an old model, and if we do, get the root in progress lock and then clear
+                        // the model. This will stop the set root from working on an old root by mistake.
+                        // We don't want to hold up ui, so we will just hold it long enough to release old model.
+                        setRootInProgressLock.acquire();
+                        try {
+                            Resource res = dd.eResource();
+                            if (res != null) {
+                                ResourceSet rset = res.getResourceSet();
+                                if (rset != null)
+                                    rset.getResources().remove(res);
+                            }
+                        } finally {
+                            setRootInProgressLock.release();
+                        }
+                    }
+
+                    TimerTests.basicTest.startStep("Load Model"); //$NON-NLS-1$
+                    if (doTimerStep)
+                        PerformanceMonitorUtil.getMonitor().snapshot(114); // Starting codegen loading for the first time
+
+                    modelBuilder.loadModel((IFileEditorInput) getEditorInput(),
+                            new SubProgressMonitor(monitor, 100));
+
+                    if (doTimerStep)
+                        PerformanceMonitorUtil.getMonitor().snapshot(115); // Ending codegen loading for the first time
+                    TimerTests.basicTest.stopStep("Load Model"); //$NON-NLS-1$
+                } else {
+                    // Need the wait for model builder to be done doing things so that it is safe to go on.
+                    modelBuilder.waitforNotBusy(false);
+                }
 				
 				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
 
@@ -1617,45 +1676,46 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					setLoadIsPending(false);
 					return canceled();
 				}
-				dd = modelBuilder.getModelRoot();
+				DiagramData dd = modelBuilder.getModelRoot();
 				if (dd != null) {
 					editDomain.setDiagramData(dd);
-					InverseMaintenanceAdapter ia = new InverseMaintenanceAdapter() {
-						protected boolean subShouldPropagate(
-							EReference ref,
-							Object newValue) {
-							return !(newValue instanceof JavaAllocation) && !(newValue instanceof Diagram); // On the base BeanComposition, don't propagate into Diagram references or JavaAllocations.
-						}
-						
-						protected boolean subShouldReference(EReference ref, Object newValue) {
-							return !(newValue instanceof EClassifier);	// Never reference into the EClass structure
-						}
-					};
-					dd.eAdapters().add(ia);
-					ia.propagate();
-	
-//					TimerTests.basicTest.startStep("Join with remote vm");
-					joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
-//					TimerTests.basicTest.stopStep("Join with remote vm");
+					InverseMaintenanceAdapter ia = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(dd, InverseMaintenanceAdapter.ADAPTER_KEY);
+                    if (ia == null) {
+                        ia = new InverseMaintenanceAdapter() {
+    						protected boolean subShouldPropagate(
+    							EReference ref,
+    							Object newValue) {
+    							return !(newValue instanceof JavaAllocation) && !(newValue instanceof Diagram); // On the base BeanComposition, don't propagate into Diagram references or JavaAllocations.
+    						}
+    						
+    						protected boolean subShouldReference(EReference ref, Object newValue) {
+    							return !(newValue instanceof EClassifier);	// Never reference into the EClass structure
+    						}
+    					};
+    					dd.eAdapters().add(ia);
+    					ia.propagate();
+                    }
+
+                    if (lRestartVM)
+                        joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
-					if (EcoreUtil.getExistingAdapter(
+					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(
 							dd,
-							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)
-							== null) {
-						CompositionProxyAdapter a =
-							new CompositionProxyAdapter();
-						dd.eAdapters().add(a);
+							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
+                    if (a == null) {
+						a =	new CompositionProxyAdapter();
+                        dd.eAdapters().add(a);
+                    }
 						
-						TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					 //$NON-NLS-1$
-						if (doTimerStep)
-							PerformanceMonitorUtil.getMonitor().snapshot(116);
-						a.initBeanProxy();
-						if (doTimerStep)
-							PerformanceMonitorUtil.getMonitor().snapshot(117);
-						TimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						 //$NON-NLS-1$
-					}
+					TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					 //$NON-NLS-1$
+					if (doTimerStep)
+						PerformanceMonitorUtil.getMonitor().snapshot(116);
+					a.initBeanProxy();
+					if (doTimerStep)
+						PerformanceMonitorUtil.getMonitor().snapshot(117);
+					TimerTests.basicTest.stopStep("Create Bean Instances on Target VM");						 //$NON-NLS-1$
 					
 					if (!monitor.isCanceled())
 						getSite().getShell().getDisplay().asyncExec(new Runnable() {
@@ -1737,7 +1797,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		}
 
-
 		/**
 		 * @return
 		 * 
@@ -1755,6 +1814,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 				registryCreateJob = null;	// We waited and so no more. We don't care if there were any errors while creating the registry.
 			}
+            // We were canceled after starting to run, so we will
+            // set restartvm and loadmodel for next time we run
+            // because we are not sure what state we are in. Be
+            // safe and do the works.
+            synchronized (this) {
+                restartVM = loadModel = true;    
+            }
 			return Status.CANCEL_STATUS;
 		}
 
@@ -1853,7 +1919,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void reloadIsNeeded(){
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							loadModel(true);
+							loadModel(true, false, true);
 						}
 					});
 				}
@@ -2018,7 +2084,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private boolean textEditorActive = false;
 	private boolean textEditorFocus = false;
 	private boolean firstSelection = true ;  // First selection after activation
-	private ICommandManager commandMgr = PlatformUI.getWorkbench().getCommandSupport().getCommandManager();
 	private FocusListener focusListener = new FocusListener() {
 		public void focusGained(FocusEvent e) {			
 			textEditorFocus = textEditorActive = e.getSource() == getSourceViewer().getTextWidget();

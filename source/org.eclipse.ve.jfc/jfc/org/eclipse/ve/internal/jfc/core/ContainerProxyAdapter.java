@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.11 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import java.util.Iterator;
@@ -156,22 +156,34 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 		// It is possible the component or ourselves didn't instantiate, or has already been released.  We then can't cancel it.
 		if (aComponentBeanProxyHost != null) {
 			// Clear the the error setting, if set.
-			((ComponentProxyAdapter) aComponentBeanProxyHost).clearError(sfContainerComponents, aConstraintComponent);
-			if (aComponentBeanProxyHost.isBeanProxyInstantiated() && aComponentBeanProxyHost.getErrorStatus() != IBeanProxyHost.ERROR_SEVERE && isBeanProxyInstantiated() && getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {			
-				// It is a valid beanproxy, so remove it.
-				BeanAwtUtilities.invoke_remove_Component(getBeanProxy(), aComponentBeanProxyHost.getBeanProxy());
-				// This is required because AWT will not invalidate and relayout the container
-				revalidateBeanProxy();
-				
-				// Also it is possible that visibility was changed (for example CardLayout does this). Need to restore to default.
-				((ComponentProxyAdapter) aComponentBeanProxyHost).reapplyVisibility();
-			}
+			try {
+                ((ComponentProxyAdapter) aComponentBeanProxyHost).clearError(
+                        sfContainerComponents, aConstraintComponent);
+                if (aComponentBeanProxyHost.isBeanProxyInstantiated()
+                        && aComponentBeanProxyHost.getErrorStatus() != IBeanProxyHost.ERROR_SEVERE
+                        && isBeanProxyInstantiated()
+                        && getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+                    // It is a valid beanproxy, so remove it.
+                    BeanAwtUtilities.invoke_remove_Component(getBeanProxy(),
+                            aComponentBeanProxyHost.getBeanProxy());
+                    // This is required because AWT will not invalidate and relayout the container
+                    revalidateBeanProxy();
+
+                    // Also it is possible that visibility was changed (for example CardLayout does this). Need to restore to default.
+                    ((ComponentProxyAdapter) aComponentBeanProxyHost)
+                            .reapplyVisibility();
+                }
+            } catch (ClassCastException e) {
+                // It could be undefined and so not a component proxy adapter.
+            }
 // TODO we should do a release of both the component and the constraint, but don't have general way yet.	aComponentBeanProxyHost.releaseBeanProxy();			
 		}
 	}
 	
 	protected void addComponent(EObject aConstraintComponent, int position) throws ReinstantiationNeeded {
 		IJavaInstance constraintAttributeValue = null;
+        if (!isBeanProxyInstantiated())
+            return;
 		boolean constraintIsSet = false;
 		// Get the value of the constraint attribute of the component, the component in this case is a ConstraintsComponent.
 		if (aConstraintComponent.eIsSet(sfConstraintConstraint)) {
@@ -218,15 +230,22 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter implements IHol
 		}
 		IBeanProxyHost componentProxyHost =	BeanProxyUtilities.getBeanProxyHost(component);
 		// Ensure the bean is instantiated
-		IComponentProxyHost componentAdapter = (IComponentProxyHost) componentProxyHost;
-		componentProxyHost.instantiateBeanProxy();
-		// It is possible the component didn't instantiate.  We then can't apply it
-		// and we should flag it as having a warning error
-		if (componentProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE || getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) {
-			// Either we or the setting could not be instantiated, so don't add. This guy already has his error so we don't need to
-			// duplicate it.
-			return;
-		}
+        IComponentProxyHost componentAdapter;
+		try {
+            componentAdapter = (IComponentProxyHost) componentProxyHost;
+            componentProxyHost.instantiateBeanProxy();
+            // It is possible the component didn't instantiate.  We then can't apply it
+            // and we should flag it as having a warning error
+            if (componentProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE
+                    || getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) {
+                // Either we or the setting could not be instantiated, so don't add. This guy already has his error so we don't need to
+                // duplicate it.
+                return;
+            }
+        } catch (ClassCastException e) {
+            // It wasn't a component proxy host. Could happen because the class was undefined. Just return.
+            return;
+        }
 		if (!constraintIsSet) {
 			Adapter a = EcoreUtil.getExistingAdapter(component,ComponentNameAdapter.class);
 			if (a != null) 

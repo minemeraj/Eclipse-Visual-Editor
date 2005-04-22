@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.72 $  $Date: 2005-04-22 20:26:17 $ 
+ *  $Revision: 1.73 $  $Date: 2005-04-22 20:57:55 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -554,14 +554,7 @@ public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) 
     try{
         pm.beginTask("", 100); //$NON-NLS-1$
         pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
-        ReverseParserJob.cancelJobs(input.getFile());
-		while (true) {					  
-		  try {
-			ReverseParserJob.join(input.getFile(), pm);
-			break;
-		  } catch (OperationCanceledException e) {} 
-		    catch (InterruptedException e) {}
-		}
+        waitforNotBusy(true);
         floadInProgress = true;
         if (fVEModel != null) {
             if (fBeanModel != null && !fdisconnected) {
@@ -1382,14 +1375,19 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		}
 	}
 
-	public void waitforNotBusy() {
-        ReverseParserJob.cancelJobs(fFile);
-		while (true) {					  
-		  try {
-			ReverseParserJob.join(fFile, null);
-			break;
-		  } catch (OperationCanceledException e) {} 
-		    catch (InterruptedException e) {}
-		}	
+	public void waitforNotBusy(boolean cancelJobs) {
+        // See if there is an fFile, if not then there is no jobs waiting.
+        if (fFile != null) {
+            if (cancelJobs)
+                ReverseParserJob.cancelJobs(fFile);
+            while (true) {
+                try {
+                    ReverseParserJob.join(fFile, null);
+                    break;
+                } catch (OperationCanceledException e) {
+                } catch (InterruptedException e) {
+                }
+            } 
+        }	
 	}
 }

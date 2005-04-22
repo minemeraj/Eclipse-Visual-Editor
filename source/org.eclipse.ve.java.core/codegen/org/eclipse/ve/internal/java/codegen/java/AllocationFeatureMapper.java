@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -32,10 +32,14 @@ public class AllocationFeatureMapper extends AbstractFeatureMapper {
 	 * @see IJavaFeatureMapper#getFeature(Expression)
 	 */
 	public EStructuralFeature getFeature (Statement expr) {
-		if (fSF != null) 
-			return fSF ;
-		fSF = ((EObject)fRefObj).eClass().getEStructuralFeature(ALLOCATION_FEATURE) ;
-		fSFname = fSF.getName() ;
+        // KLUDGE: For now we need to get the allocation feature each time
+        // because if the class goes undefined the allocation feature will be 
+        // a physically different feature than when it was defined. (And visa-versa).
+		EStructuralFeature sf = ((EObject)fRefObj).eClass().getEStructuralFeature(ALLOCATION_FEATURE) ;
+        if (sf != fSF) {
+            fSF = sf;
+            fSFname = fSF.getName() ;
+        }
 		return fSF ;		
 	}
 	

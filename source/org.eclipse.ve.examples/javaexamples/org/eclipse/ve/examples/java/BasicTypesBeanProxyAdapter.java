@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.java;
 /*
  *  $RCSfile: BasicTypesBeanProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import java.util.Iterator;
@@ -38,17 +38,15 @@ public BasicTypesBeanProxyAdapter(IBeanProxyDomain domain){
 	super(domain);
 }	
 public void releaseBeanProxy(){
-	if (fOwnsProxy) {
-		if (getBeanProxy().isValid()) {
-			IMethodProxy disposeFrameMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("disposeFrame"); //$NON-NLS-1$
-			try {
-				disposeFrameMethodProxy.invoke(getBeanProxy());
-				disposeFrameMethodProxy.getProxyFactoryRegistry().releaseProxy(disposeFrameMethodProxy);
-			} catch ( ThrowableProxy exc ) {
-				JavaVEPlugin.log("Unable to dispose the BasicTypes by calling disposeFrame", Level.WARNING); //$NON-NLS-1$
-				exc.printProxyStackTrace();
-			}
-		}
+	if (fOwnsProxy && isBeanProxyInstantiated()) {
+		IMethodProxy disposeFrameMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("disposeFrame"); //$NON-NLS-1$
+        try {
+        	disposeFrameMethodProxy.invoke(getBeanProxy());
+        	disposeFrameMethodProxy.getProxyFactoryRegistry().releaseProxy(disposeFrameMethodProxy);
+        } catch ( ThrowableProxy exc ) {
+        	JavaVEPlugin.log("Unable to dispose the BasicTypes by calling disposeFrame", Level.WARNING); //$NON-NLS-1$
+        	exc.printProxyStackTrace();
+        }
 	}
 	super.releaseBeanProxy();
 		

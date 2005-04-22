@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JToolBarProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import java.util.Iterator;
@@ -180,15 +180,8 @@ public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		if (fRemoveAllMethodProxy != null) {
-			fRemoveAllMethodProxy.getProxyFactoryRegistry().releaseProxy(fRemoveAllMethodProxy);
-			fRemoveAllMethodProxy = null;
-		}
-		if (fAddActionMethodProxy != null) {
-			fAddActionMethodProxy.getProxyFactoryRegistry().releaseProxy(fAddActionMethodProxy);
-			fAddActionMethodProxy = null;
-		}
-		
+		fRemoveAllMethodProxy = null;
+		fAddActionMethodProxy = null;
 	}
 
 }

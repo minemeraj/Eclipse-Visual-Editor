@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -111,11 +111,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		
-		if (resetHeaderValueProxy != null) {
-			resetHeaderValueProxy.getProxyFactoryRegistry().releaseProxy(resetHeaderValueProxy);
-			resetHeaderValueProxy = null;
-		}		
+		resetHeaderValueProxy = null;
 	}
 
 }

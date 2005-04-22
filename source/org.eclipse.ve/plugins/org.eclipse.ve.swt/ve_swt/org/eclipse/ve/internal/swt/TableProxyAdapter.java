@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-21 20:02:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -93,13 +93,17 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 	public void releaseBeanProxy() {
 		// Need to release all of the table columns. This is because they will be implicitly disposed anyway when super
 		// gets called because the target VM will dispose them as children
-		List columns = (List) ((IJavaObjectInstance) getTarget()).eGet(sf_columns);
-		Iterator iter = columns.iterator();
-		while (iter.hasNext()) {
-			IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) iter.next());
-			if (value != null)
-				value.releaseBeanProxy();
-		}
+		if (isBeanProxyInstantiated()) {
+            List columns = (List) ((IJavaObjectInstance) getTarget())
+                    .eGet(sf_columns);
+            Iterator iter = columns.iterator();
+            while (iter.hasNext()) {
+                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                        .getBeanProxyHost((IJavaInstance) iter.next());
+                if (value != null)
+                    value.releaseBeanProxy();
+            }
+        }
 		super.releaseBeanProxy();
 	}
 

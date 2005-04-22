@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:54 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -85,15 +85,8 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
 		
-		if (fActivateFrameMethodProxy != null) {
-			fActivateFrameMethodProxy.getProxyFactoryRegistry().releaseProxy(fActivateFrameMethodProxy);
-			fActivateFrameMethodProxy = null;
-		}
-		
-		if (fGetDesktopManagerMethodProxy != null) {
-			fGetDesktopManagerMethodProxy.getProxyFactoryRegistry().releaseProxy(fGetDesktopManagerMethodProxy);
-			fGetDesktopManagerMethodProxy = null;
-		}		
+		fActivateFrameMethodProxy = null;
+		fGetDesktopManagerMethodProxy = null;
 	}
 
 }
