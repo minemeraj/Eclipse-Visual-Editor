@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.71 $  $Date: 2005-04-22 20:15:52 $ 
+ *  $Revision: 1.72 $  $Date: 2005-04-22 20:26:17 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1139,22 +1139,25 @@ public  void reconnect(org.eclipse.ui.IFileEditorInput input,IProgressMonitor pm
  */
 public synchronized void disconnect(boolean clearVCEModel) {
 
-    if (fSrcSync != null) {
+	try {
+      if (fSrcSync != null) {
        commit();    
        fSrcSync.disconnect() ;
-    }
+      }
 
-   fmodelLoaded=false;
-   // clearModel(clearVCEModel) ;
-    deCapitateModel();
+     fmodelLoaded=false;
+     // clearModel(clearVCEModel) ;
+     deCapitateModel();
         
-    if (fSrcSync != null) // fWorkingCopy may not be null yet if called from dispose
-       fWorkingCopy.disconnect() ;
+     if (fSrcSync != null) // fWorkingCopy may not be null yet if called from dispose
+        fWorkingCopy.disconnect() ;
    
-    fSrcSync = null;
-    
-    fdisconnected=true ;
-    fireProcessingPause(fdisconnected);
+     fSrcSync = null;
+	}
+	finally {
+		fdisconnected=true ;	
+		fireProcessingPause(fdisconnected);
+	}
     fireStatusChanged(fPauseSig);
     if (fFile!=null)
       ReverseParserJob.cancelJobs(fFile);
