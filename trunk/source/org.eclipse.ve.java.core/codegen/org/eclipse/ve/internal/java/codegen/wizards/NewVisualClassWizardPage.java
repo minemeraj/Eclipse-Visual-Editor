@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-22 14:33:07 $ 
+ *  $Revision: 1.15 $  $Date: 2005-04-22 14:56:56 $ 
  */
 
 import java.util.HashMap;
@@ -28,13 +28,6 @@ import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.pde.core.plugin.*;
-import org.eclipse.pde.core.plugin.IPluginImport;
-import org.eclipse.pde.core.plugin.IPluginModelBase;
-import org.eclipse.pde.internal.core.PDECore;
-import org.eclipse.pde.internal.core.PluginModelManager;
-import org.eclipse.pde.internal.core.bundle.Bundle;
-import org.eclipse.pde.internal.core.ibundle.IBundlePluginModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -297,18 +290,6 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		return localSuperclassButtonDialogField;
 	}
 	
-	protected boolean isUIPlugin(IPluginBase plugin, boolean root) {
-		if (plugin.getId().equals("org.eclipse.ui")) return true;
-		IPluginImport[] imp = plugin.getImports();		
-		for (int i = 0; i < imp.length; i++) {			
-			if (root || imp[i].isReexported()) {				
-				if (isUIPlugin(PDECore.getDefault().getModelManager().findModel(imp[i].getId()).getPluginBase(),false))
-					return true;
-			}
-		}
-		return false;
-	}
-
 	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
 	protected void handleFieldChanged(String fieldName) {
 		if (fieldName == CONTAINER){
@@ -328,17 +309,10 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 										JavaVEPlugin.PLUGIN_ID);
 								}
 								else {
-									// Must include the ui plugin
-									boolean uiIncluded = false;
-									IPluginModelBase[] plugins = PDECore.getDefault().getModelManager().getPlugins();
-									for (int i = 0; i < plugins.length; i++) {
-										if (plugins[i].isEditable() && plugins[i] instanceof IBundlePluginModel) {  // cut down on all the target plugins																					
-											if (project.getLocation().equals(new Path (plugins[i].getInstallLocation()))) {
-												uiIncluded = isUIPlugin(plugins[i].getPluginBase(),true);
-												break;
-											}											  
-										}										
-									}
+									// Must include the ui plugin									
+									HashMap plugins = new HashMap();
+									ProxyPlugin.getPlugin().getIDsFound(javaProject, new HashMap(), new HashMap(), plugins, new HashMap());
+									boolean uiIncluded = plugins.get("org.eclipse.ui")!=null;
 									if (!uiIncluded)
 										fSourceFolderStatus = new StatusInfo(
 												IStatus.ERROR,
