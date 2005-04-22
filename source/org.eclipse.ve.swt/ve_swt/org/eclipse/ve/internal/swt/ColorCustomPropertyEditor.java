@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-05 23:43:00 $ 
+ *  $Revision: 1.6 $  $Date: 2005-04-22 20:15:51 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -797,18 +797,20 @@ public class ColorCustomPropertyEditor extends Composite {
 		try {
 			//type: Color
 			IBeanProxy colorProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
-			IBeanTypeProxy colorType = colorProxy.getTypeProxy();
-
-			IMethodProxy getBlue = colorType.getMethodProxy("getBlue"); //$NON-NLS-1$
-			IMethodProxy getGreen = colorType.getMethodProxy("getGreen"); //$NON-NLS-1$
-			IMethodProxy getRed = colorType.getMethodProxy("getRed"); //$NON-NLS-1$
-
-			int blue = ((IIntegerBeanProxy) getBlue.invoke(colorProxy)).intValue();
-			int green = ((IIntegerBeanProxy) getGreen.invoke(colorProxy)).intValue();
-			int red = ((IIntegerBeanProxy) getRed.invoke(colorProxy)).intValue();
-
-			Color color = new Color(control.getDisplay(), red, green, blue); 
-			this.value = color;
+			if (colorProxy!=null) {
+				IBeanTypeProxy colorType = colorProxy.getTypeProxy();
+	
+				IMethodProxy getBlue = colorType.getMethodProxy("getBlue"); //$NON-NLS-1$
+				IMethodProxy getGreen = colorType.getMethodProxy("getGreen"); //$NON-NLS-1$
+				IMethodProxy getRed = colorType.getMethodProxy("getRed"); //$NON-NLS-1$
+	
+				int blue = ((IIntegerBeanProxy) getBlue.invoke(colorProxy)).intValue();
+				int green = ((IIntegerBeanProxy) getGreen.invoke(colorProxy)).intValue();
+				int red = ((IIntegerBeanProxy) getRed.invoke(colorProxy)).intValue();
+	
+				Color color = new Color(control.getDisplay(), red, green, blue); 
+				this.value = color;
+		    }
 		} catch (ThrowableProxy t) {
 			//failsafe
 		}

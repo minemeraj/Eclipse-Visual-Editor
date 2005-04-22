@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-22 20:15:51 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -205,13 +205,14 @@ public class FontCustomPropertyEditor extends Composite {
 		try {
 			// type: Font
 			IBeanProxy fontProxy = BeanProxyUtilities.getBeanProxy(this.fExistingValue);
-			IBeanTypeProxy fontType = fontProxy.getTypeProxy();
-			IMethodProxy getFontData = fontType.getMethodProxy("getFontData"); //$NON-NLS-1$
-			// type: FontData[]
-			IArrayBeanProxy fontDataArrayProxy = (IArrayBeanProxy) getFontData.invoke(fontProxy);
-			int len = fontDataArrayProxy.getLength();
-			FontData[] fontData = new FontData[len];
-			for (int i = 0; i < len; i++) {
+			if (fontProxy!=null) {
+ 			  IBeanTypeProxy fontType = fontProxy.getTypeProxy();
+			  IMethodProxy getFontData = fontType.getMethodProxy("getFontData"); //$NON-NLS-1$
+			  // type: FontData[]
+			  IArrayBeanProxy fontDataArrayProxy = (IArrayBeanProxy) getFontData.invoke(fontProxy);
+			  int len = fontDataArrayProxy.getLength();
+			  FontData[] fontData = new FontData[len];
+			  for (int i = 0; i < len; i++) {
 				// type: FontData
 				IBeanProxy fontDataProxy = fontDataArrayProxy.get(i);
 				IBeanTypeProxy fontDataType = fontDataProxy.getTypeProxy();
@@ -225,9 +226,10 @@ public class FontCustomPropertyEditor extends Composite {
 				String name = ((IStringBeanProxy) getName.invoke(fontDataProxy)).stringValue();
 
 				fontData[i] = new FontData(name, height, style);
+			  }
+			  Font newValue = new Font(control.getDisplay(), fontData);
+			  this.value = newValue;
 			}
-			Font newValue = new Font(control.getDisplay(), fontData);
-			this.value = newValue;
 		} catch (ThrowableProxy t) {
 			// failsafe
 		}
