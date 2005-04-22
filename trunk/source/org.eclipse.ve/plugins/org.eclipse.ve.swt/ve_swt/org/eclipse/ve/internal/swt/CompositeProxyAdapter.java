@@ -103,26 +103,32 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	private void ensureChildLayoutDataCorrect(Object newLayout){
 		// Do not process if the layout manager is bad, possibly following a bad parse error
 		IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)newLayout);
-		layoutProxyHost.instantiateBeanProxy();
-		if(layoutProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) return;
+		if(layoutProxyHost != null){
+			layoutProxyHost.instantiateBeanProxy();
+			if(layoutProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) return;
+		}
 		// Some layouts physically set the layoutData of their child controls, for example
 		// GridLayout sets its composite's children to have a layoutData of GridData
 		// This is done on the target VM without the VE having a chance to model it
 		// If in code a user changes the layout from GridData to another then the layoutData
 		// needs fixing up as it will be incorrect and cause class cast exceptions
-		 ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(((EObject)newLayout).eClass(),null);
-		 JavaClass constraintClass = layoutPolicyFactory == null ?
-			 null :
-			 layoutPolicyFactory.getConstraintClass(((EObject)getTarget()).eResource().getResourceSet());
-		 // There is a target VM helper that does all of the checking and correcting to avoid VM traffic
-		 final IMethodProxy methodProxy = getCompositeManager().getMethodProxy("ensureChildLayoutDataCorrect",new String[] {"org.eclipse.swt.widgets.Composite","java.lang.String"});
-		 // Create a BeanProxy for the name of the constraint class
-		 final IBeanProxy constraintBeanProxy = constraintClass == null ?
-		     null :
-			 getBeanProxy().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(constraintClass.getQualifiedName());
-		 invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
-			 public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-				 methodProxy.invokeCatchThrowableExceptions(getCompositeManager(),new IBeanProxy[] {getBeanProxy(),constraintBeanProxy});
+		IBeanProxy constraintBeanProxy = null;
+		if(newLayout != null){
+			ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory(((EObject)newLayout).eClass(),null);
+			JavaClass constraintClass = layoutPolicyFactory == null ?
+			    null :
+		        layoutPolicyFactory.getConstraintClass(((EObject)getTarget()).eResource().getResourceSet());
+			if(constraintClass != null){
+				 constraintBeanProxy = getBeanProxy().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(constraintClass.getQualifiedName());
+			}
+		}
+    	// There is a target VM helper that does all of the checking and correcting to avoid VM traffic
+		final IMethodProxy methodProxy = getCompositeManager().getMethodProxy("ensureChildLayoutDataCorrect",new String[] {"org.eclipse.swt.widgets.Composite","java.lang.String"});
+		final IBeanProxy finalConstraintBeanProxy = constraintBeanProxy;
+		// Create a BeanProxy for the name of the constraint class
+		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
+			public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+				methodProxy.invokeCatchThrowableExceptions(getCompositeManager(),new IBeanProxy[] {getBeanProxy(),finalConstraintBeanProxy});
 				return null;
 			}
 		});	
