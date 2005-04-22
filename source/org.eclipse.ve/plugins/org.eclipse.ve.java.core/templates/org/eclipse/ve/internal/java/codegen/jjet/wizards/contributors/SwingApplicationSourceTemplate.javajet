@@ -2,27 +2,41 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: SwingApplicationSourceTemplate.javajet,v $
- *  $Revision: 1.1 $ $Date: 2004-11-16 21:34:23 $
+ *  $Revision: 1.2 $ $Date: 2005-04-22 14:50:43 $
  */
 %>
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
 	class="SwingApplicationGenerator" %>
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
+import java.awt.BorderLayout;
+import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
 public class <%=typeName%> {
 
-	private javax.swing.JPanel jContentPane = null;
-	private javax.swing.JMenuBar jJMenuBar = null;
-	private javax.swing.JMenu fileMenu = null;
-	private javax.swing.JMenu editMenu = null;
-	private javax.swing.JMenu helpMenu = null;
-	private javax.swing.JMenuItem exitMenuItem = null;
-	private javax.swing.JMenuItem aboutMenuItem = null;
-	private javax.swing.JMenuItem cutMenuItem = null;
-	private javax.swing.JMenuItem copyMenuItem = null;
-	private javax.swing.JMenuItem pasteMenuItem = null;
-	private javax.swing.JMenuItem saveMenuItem = null;
-	
+	private JPanel jContentPane = null;
+	private JMenuBar jJMenuBar = null;
+	private JMenu fileMenu = null;
+	private JMenu editMenu = null;
+	private JMenu helpMenu = null;
+	private JMenuItem exitMenuItem = null;
+	private JMenuItem aboutMenuItem = null;
+	private JMenuItem cutMenuItem = null;
+	private JMenuItem copyMenuItem = null;
+	private JMenuItem pasteMenuItem = null;
+	private JMenuItem saveMenuItem = null;
+
 	/**
 	 * This is the default constructor
 	 */
@@ -30,14 +44,14 @@ public class <%=typeName%> {
 		super();
 		initialize();
 	}
-	
+
 	/**
 	 * This method initializes this
 	 * 
 	 * @return void
 	 */
 	private void initialize() {
-		this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setJMenuBar(getJJMenuBar());
 		this.setSize(300,200);
 		this.setContentPane(getJContentPane());
@@ -48,10 +62,10 @@ public class <%=typeName%> {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private javax.swing.JPanel getJContentPane() {
+	private JPanel getJContentPane() {
 		if(jContentPane == null) {
-			jContentPane = new javax.swing.JPanel();
-			jContentPane.setLayout(new java.awt.BorderLayout());
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new BorderLayout());
 		}
 		return jContentPane;
 	}
@@ -60,9 +74,9 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuBar	
 	 */    
-	private javax.swing.JMenuBar getJJMenuBar() {
+	private JMenuBar getJJMenuBar() {
 		if (jJMenuBar == null) {
-			jJMenuBar = new javax.swing.JMenuBar();
+			jJMenuBar = new JMenuBar();
 			jJMenuBar.add(getFileMenu());
 			jJMenuBar.add(getEditMenu());
 			jJMenuBar.add(getHelpMenu());
@@ -74,9 +88,9 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenu	
 	 */    
-	private javax.swing.JMenu getFileMenu() {
+	private JMenu getFileMenu() {
 		if (fileMenu == null) {
-			fileMenu = new javax.swing.JMenu();
+			fileMenu = new JMenu();
 			fileMenu.setText("File");
 			fileMenu.add(getSaveMenuItem());
 			fileMenu.add(getExitMenuItem());
@@ -88,9 +102,9 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenu	
 	 */    
-	private javax.swing.JMenu getEditMenu() {
+	private JMenu getEditMenu() {
 		if (editMenu == null) {
-			editMenu = new javax.swing.JMenu();
+			editMenu = new JMenu();
 			editMenu.setText("Edit");
 			editMenu.add(getCutMenuItem());
 			editMenu.add(getCopyMenuItem());
@@ -103,9 +117,9 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenu	
 	 */    
-	private javax.swing.JMenu getHelpMenu() {
+	private JMenu getHelpMenu() {
 		if (helpMenu == null) {
-			helpMenu = new javax.swing.JMenu();
+			helpMenu = new JMenu();
 			helpMenu.setText("Help");
 			helpMenu.add(getAboutMenuItem());
 		}
@@ -116,12 +130,12 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getExitMenuItem() {
+	private JMenuItem getExitMenuItem() {
 		if (exitMenuItem == null) {
-			exitMenuItem = new javax.swing.JMenuItem();
+			exitMenuItem = new JMenuItem();
 			exitMenuItem.setText("Exit");
-			exitMenuItem.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			exitMenuItem.addActionListener(new ActionListener() { 
+				public void actionPerformed(ActionEvent e) {    
 					System.exit(0);
 				}
 			});
@@ -133,13 +147,13 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getAboutMenuItem() {
+	private JMenuItem getAboutMenuItem() {
 		if (aboutMenuItem == null) {
-			aboutMenuItem = new javax.swing.JMenuItem();
+			aboutMenuItem = new JMenuItem();
 			aboutMenuItem.setText("About");
-			aboutMenuItem.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
-					new javax.swing.JDialog(<%=typeName%>.this, "About", true).show();
+			aboutMenuItem.addActionListener(new ActionListener() { 
+				public void actionPerformed(ActionEvent e) {    
+					new JDialog(<%=typeName%>.this, "About", true).show();
 				}
 			});
 		}
@@ -150,11 +164,11 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getCutMenuItem() {
+	private JMenuItem getCutMenuItem() {
 		if (cutMenuItem == null) {
-			cutMenuItem = new javax.swing.JMenuItem();
+			cutMenuItem = new JMenuItem();
 			cutMenuItem.setText("Cut");
-			cutMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.Event.CTRL_MASK, true));
+			cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, true));
 		}
 		return cutMenuItem;
 	}
@@ -163,11 +177,11 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getCopyMenuItem() {
+	private JMenuItem getCopyMenuItem() {
 		if (copyMenuItem == null) {
-			copyMenuItem = new javax.swing.JMenuItem();
+			copyMenuItem = new JMenuItem();
 			copyMenuItem.setText("Copy");
-			copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.Event.CTRL_MASK, true));
+			copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK, true));
 		}
 		return copyMenuItem;
 	}
@@ -176,11 +190,11 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getPasteMenuItem() {
+	private JMenuItem getPasteMenuItem() {
 		if (pasteMenuItem == null) {
-			pasteMenuItem = new javax.swing.JMenuItem();
+			pasteMenuItem = new JMenuItem();
 			pasteMenuItem.setText("Paste");
-			pasteMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.Event.CTRL_MASK, true));
+			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK, true));
 		}
 		return pasteMenuItem;
 	}
@@ -189,11 +203,11 @@ public class <%=typeName%> {
 	 * 	
 	 * @return javax.swing.JMenuItem	
 	 */    
-	private javax.swing.JMenuItem getSaveMenuItem() {
+	private JMenuItem getSaveMenuItem() {
 		if (saveMenuItem == null) {
-			saveMenuItem = new javax.swing.JMenuItem();
+			saveMenuItem = new JMenuItem();
 			saveMenuItem.setText("Save");
-			saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.Event.CTRL_MASK, true));
+			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK, true));
 		}
 		return saveMenuItem;
 	}

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.28 $  $Date: 2005-04-22 14:50:43 $ 
+ *  $Revision: 1.29 $  $Date: 2005-04-22 14:51:13 $ 
  */
 
 import java.io.IOException;
@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
-import org.eclipse.jface.text.formatter.ContentFormatter;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;

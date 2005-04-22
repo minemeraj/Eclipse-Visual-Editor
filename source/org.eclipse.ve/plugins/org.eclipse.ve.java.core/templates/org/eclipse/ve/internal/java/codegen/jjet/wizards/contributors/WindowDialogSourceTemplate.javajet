@@ -2,19 +2,21 @@
 /*
  * This was created from the javajet file: 
  *  $RCSfile: WindowDialogSourceTemplate.javajet,v $
- *  $Revision: 1.1 $ $Date: 2003-10-27 17:48:30 $
+ *  $Revision: 1.2 $ $Date: 2005-04-22 14:50:43 $
  */
 %>
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.java.codegen.jjet.wizards.contributors"
 	class="WindowDialogSourceGenerator" %>
+import java.awt.Frame;
+
 public class <%=typeName%> {
 
 	/**
 	 * @param owner
 	 */
-	public <%=typeName%>(java.awt.Frame owner) {
+	public <%=typeName%>(Frame owner) {
 		super(owner);
 		initialize();
 	}
