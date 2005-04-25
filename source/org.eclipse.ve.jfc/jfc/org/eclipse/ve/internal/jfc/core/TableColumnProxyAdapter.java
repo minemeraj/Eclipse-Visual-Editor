@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-22 20:57:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-25 16:09:11 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -31,7 +31,6 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	
 	protected EStructuralFeature sfModelIndex, sfHeaderValue, sfPreferredWidth;
 	protected EReference sfTableColumns;
-	protected IMethodProxy resetHeaderValueProxy;
 	
 	public TableColumnProxyAdapter(IBeanProxyDomain aDomain) {
 		super(aDomain);
@@ -96,14 +95,11 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	}
 	
 	protected IMethodProxy getResetHeaderValueProxy() {
-		if (resetHeaderValueProxy == null) {
-			resetHeaderValueProxy = getBeanProxy()
+		return getBeanProxy()
 				.getProxyFactoryRegistry()
 				.getBeanTypeProxyFactory()
 				.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager")	//$NON-NLS-1$
 				.getMethodProxy("resetHeaderValue", new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn"});	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
-		return resetHeaderValueProxy;
 	}	
 
 	/**
@@ -111,7 +107,6 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		resetHeaderValueProxy = null;
 	}
 
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:53 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-25 16:09:11 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -31,8 +31,6 @@ import org.eclipse.ve.internal.java.core.*;
  * @since 1.0.0
  */
 public class TableProxyAdapter extends CompositeProxyAdapter {
-
-	protected IMethodProxy headHeightMethodProxy;
 
 	private EReference sf_columns;
 
@@ -71,10 +69,7 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 	}
 
 	protected IMethodProxy getHeaderHeightMethodProxy() {
-		if (headHeightMethodProxy == null) {
-			headHeightMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getHeaderHeight"); //$NON-NLS-1$
-		}
-		return headHeightMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("getHeaderHeight"); //$NON-NLS-1$
 	}
 
 	public IIntegerBeanProxy getHeaderHeight() {

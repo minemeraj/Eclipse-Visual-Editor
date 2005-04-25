@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-04-15 23:11:24 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-04-25 16:09:11 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,7 +32,6 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	private EReference sf_items;
 	protected BeanProxyAdapter toolBarProxyAdapter;
 
-	private IMethodProxy boundsMethodProxy;
 
 	public ToolItemProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
@@ -115,10 +114,7 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	}
 
 	protected IMethodProxy getBoundsMethodProxy() {
-		if (boundsMethodProxy == null) {
-			boundsMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
-		}
-		return boundsMethodProxy;
+        return getBeanProxy().getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
 	}
 
 	/*

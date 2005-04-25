@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JToolBarProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-22 20:57:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-25 16:09:11 $ 
  */
 
 import java.util.Iterator;
@@ -36,7 +36,6 @@ import org.eclipse.jem.internal.proxy.core.*;
 public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	protected EStructuralFeature sfItems;
 	protected JavaClass classComponent, classAction;
-	protected IMethodProxy fAddActionMethodProxy, fRemoveAllMethodProxy;
 
 	/**
 	 * Constructor for JToolBarProxyAdapter.
@@ -120,10 +119,7 @@ public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	}
 
 	protected IMethodProxy getAddActionMethodProxy() {
-		if (fAddActionMethodProxy == null) {
-			fAddActionMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("add", "javax.swing.Action"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fAddActionMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("add", "javax.swing.Action"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/*
@@ -138,10 +134,7 @@ public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	}
 
 	protected IMethodProxy removeAllMethodProxy() {
-		if (fRemoveAllMethodProxy == null) {
-			fRemoveAllMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("removeAll"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fRemoveAllMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("removeAll"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected void removeComponent(EObject aComponent) {
@@ -180,8 +173,6 @@ public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		fRemoveAllMethodProxy = null;
-		fAddActionMethodProxy = null;
 	}
 
 }

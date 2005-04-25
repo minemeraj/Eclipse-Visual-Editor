@@ -31,10 +31,6 @@ import org.eclipse.ve.internal.java.visual.VisualUtilities;
 public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldProcessing {
 	//TODO AWT ContainerProxyAdapter has IHoldProcessing - does this need to be part of JBCF ?
 	protected EReference sf_containerControls;
-	private IMethodProxy layoutMethodProxy;  // Field for method proxy to layout();
-	private IMethodProxy moveAboveMethodProxy, moveBelowMethodProxy;	// method proxy for move above and below
-	private IBeanTypeProxy compositeManager;
-	// TODO these method proxies should be off in the factory constants so we don't need to get it for each and every composite.
 
 	
 	public CompositeProxyAdapter(IBeanProxyDomain domain) {
@@ -135,10 +131,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	}
 	
 	private IBeanTypeProxy getCompositeManager(){
-		if(compositeManager == null){
-			compositeManager = getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.CompositeManager");
-		}
-		return compositeManager;
+		return getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.CompositeManager");
 	}
 	
 	
@@ -163,24 +156,15 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	}
 
 	protected IMethodProxy layoutMethodProxy(){
-		if(layoutMethodProxy == null){
-			layoutMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("layout"); //$NON-NLS-1$
-		}
-		return layoutMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("layout"); //$NON-NLS-1$
 	}
 	
 	protected IMethodProxy moveAboveMethodProxy(){
-		if(moveAboveMethodProxy == null){
-			moveAboveMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveAbove", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return moveAboveMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("moveAbove", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
 	}	
 	
 	protected IMethodProxy moveBelowMethodProxy(){
-		if(moveBelowMethodProxy == null){
-			moveBelowMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("moveBelow", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return moveBelowMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("moveBelow", "org.eclipse.swt.widgets.Control"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {

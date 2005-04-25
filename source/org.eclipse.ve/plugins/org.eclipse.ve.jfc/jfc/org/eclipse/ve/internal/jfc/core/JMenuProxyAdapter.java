@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-22 20:57:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-25 16:09:11 $ 
  */
 
 import java.util.List;
@@ -38,8 +38,6 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	protected JavaClass classComponent,
 							classAction,
 							classString;
-	protected IMethodProxy fAddActionMethodProxy,
-							fAddStringMethodProxy;
 
 	/**
 	 * Constructor for JMenuProxyAdapter.
@@ -175,16 +173,10 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 		}
 	}
 	protected IMethodProxy getAddActionMethodProxy() {
-		if (fAddActionMethodProxy == null) {
-			fAddActionMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("add", "javax.swing.Action");	//$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fAddActionMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("add", "javax.swing.Action");	//$NON-NLS-1$ //$NON-NLS-2$
 	}
 	protected IMethodProxy getAddStringMethodProxy() {
-		if (fAddStringMethodProxy == null) {
-			fAddStringMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("add", "java.lang.String");	//$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fAddStringMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("add", "java.lang.String");	//$NON-NLS-1$ //$NON-NLS-2$
 	}
 	/**
 	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
@@ -192,8 +184,6 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
 		
-		fAddActionMethodProxy = null;
-		fAddStringMethodProxy = null;
 	}
 
 }

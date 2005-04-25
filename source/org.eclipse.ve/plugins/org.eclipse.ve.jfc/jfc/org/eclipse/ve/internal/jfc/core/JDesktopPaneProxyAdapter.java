@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:54 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-25 16:09:11 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -21,15 +21,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.core.*;
 
 public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
-	protected IMethodProxy fGetDesktopManagerMethodProxy;
-	protected IMethodProxy fActivateFrameMethodProxy;
 	protected JavaClass fJInternalFrameClass;
 
 	public JDesktopPaneProxyAdapter(IBeanProxyDomain domain) {
@@ -48,18 +45,10 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 		
 		// To activate the frame we need to first get the DesktopManager
 		// from the DesktopPane, then have the DTM activate the frame.
-		if (fGetDesktopManagerMethodProxy == null) {
-			fGetDesktopManagerMethodProxy =
-				getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager"); //$NON-NLS-1$
-		}
-		IBeanProxy dtMgrBeanProxy = fGetDesktopManagerMethodProxy.invokeCatchThrowableExceptions(getBeanProxy());
+		IBeanProxy dtMgrBeanProxy = getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager").invokeCatchThrowableExceptions(getBeanProxy());
 		if (dtMgrBeanProxy != null) {
-			if (fActivateFrameMethodProxy == null) {
-				fActivateFrameMethodProxy =
-					dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
 			IBeanProxy frameBeanProxy = BeanProxyUtilities.getBeanProxy(internalFrameModel);
-			fActivateFrameMethodProxy.invokeCatchThrowableExceptions(dtMgrBeanProxy, frameBeanProxy);
+            dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame").invokeCatchThrowableExceptions(dtMgrBeanProxy, frameBeanProxy);
 		}
 		revalidateBeanProxy();
 	}
@@ -84,9 +73,6 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		
-		fActivateFrameMethodProxy = null;
-		fGetDesktopManagerMethodProxy = null;
 	}
 
 }
