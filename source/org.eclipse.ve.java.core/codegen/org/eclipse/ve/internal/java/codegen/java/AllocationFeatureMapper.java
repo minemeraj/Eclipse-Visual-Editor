@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationFeatureMapper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
+ *  $Revision: 1.7 $  $Date: 2005-04-25 13:31:58 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 /**
  * @author Gili Mendel
@@ -28,6 +30,9 @@ public class AllocationFeatureMapper extends AbstractFeatureMapper {
 	public static final String ALLOCATION_FEATURE = "allocation" ;//$NON-NLS-1$
 	public static final String NEW = "new" ;//$NON-NLS-1$
 	
+	public AllocationFeatureMapper(EObject refObject) {
+		fRefObj=(IJavaInstance)refObject;
+	}
 		/*
 	 * @see IJavaFeatureMapper#getFeature(Expression)
 	 */
