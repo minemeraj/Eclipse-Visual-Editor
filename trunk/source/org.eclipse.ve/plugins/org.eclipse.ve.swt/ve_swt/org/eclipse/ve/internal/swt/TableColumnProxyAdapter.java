@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: TableColumnProxyAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-04-15 23:11:24 $
+ * $RCSfile: TableColumnProxyAdapter.java,v $ $Revision: 1.9 $ $Date: 2005-04-25 16:09:11 $
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -29,7 +29,6 @@ import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 public class TableColumnProxyAdapter extends WidgetProxyAdapter {
-	private IMethodProxy widthMethodProxy;
 	private EReference sf_columns;
 	protected BeanProxyAdapter tableProxyAdapter;
 
@@ -96,10 +95,7 @@ public class TableColumnProxyAdapter extends WidgetProxyAdapter {
 	}
 
 	protected IMethodProxy getWidthMethodProxy() {
-		if (widthMethodProxy == null) {
-			widthMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("getWidth"); //$NON-NLS-1$
-		}
-		return widthMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("getWidth"); //$NON-NLS-1$
 	}
 
 	public IIntegerBeanProxy getWidth() {

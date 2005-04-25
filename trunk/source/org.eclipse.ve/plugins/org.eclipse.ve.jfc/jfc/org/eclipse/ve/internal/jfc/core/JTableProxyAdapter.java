@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-22 20:57:54 $ 
+ *  $Revision: 1.10 $  $Date: 2005-04-25 16:09:11 $ 
  */
 
 import java.util.Iterator;
@@ -27,8 +27,6 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.ve.internal.java.core.*;
 public class JTableProxyAdapter extends ComponentProxyAdapter {
 
-	protected IMethodProxy fAddColumnMethodProxy;
-	protected IMethodProxy fRemoveAllColumnsMethodProxy;
 	protected EStructuralFeature sfColumns, sfAutoCreateColumns;
 
 	public JTableProxyAdapter(IBeanProxyDomain domain) {
@@ -167,29 +165,20 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 		getRemoveAllColumnsMethodProxy().invokeCatchThrowableExceptions(null, getBeanProxy());
 	}
 	protected IMethodProxy getAddColumnMethodProxy() {
-		if (fAddColumnMethodProxy == null) {
-			fAddColumnMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy("addColumn", "javax.swing.table.TableColumn");	//$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fAddColumnMethodProxy;
+		return getBeanProxy().getTypeProxy().getMethodProxy("addColumn", "javax.swing.table.TableColumn");	//$NON-NLS-1$ //$NON-NLS-2$
 	}
 	protected IMethodProxy getRemoveAllColumnsMethodProxy() {
-		if (fRemoveAllColumnsMethodProxy == null) {
-			fRemoveAllColumnsMethodProxy =
-				getBeanProxy()
+		return getBeanProxy()
 					.getProxyFactoryRegistry()
 					.getBeanTypeProxyFactory()
 					.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager")	//$NON-NLS-1$
 					.getMethodProxy("removeAllColumns", "javax.swing.JTable");	//$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return fRemoveAllColumnsMethodProxy;
 	}
 	/**
 	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
 	 */
 	public void releaseBeanProxy() {
 		super.releaseBeanProxy();
-		fRemoveAllColumnsMethodProxy = null;
-		fAddColumnMethodProxy = null;
 	}
 
 }
