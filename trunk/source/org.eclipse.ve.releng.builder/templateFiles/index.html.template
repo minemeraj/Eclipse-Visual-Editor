@@ -43,11 +43,14 @@ click <a href="directory.txt">here</a>.<br>
 be downloaded and installed before the Visual Editor can be installed.
 At this point in time since these are all drivers that are in
 development and are not release drivers, they cannot be mixed and
-matched. For VE to work they must match.<br>
-<span style="color: blue;">
-<b><u>Note:</u> JRE must be version 1.4.2 or greater for BeanInfo of SWT to work correctly.</b>
-</span>
+matched. For VE to work they must match.
 </p>
+<p><span style="color: blue;"><b><u>Note:</u>
+<ul>
+<li>JRE must be version 1.4.2 or greater for BeanInfo of SWT to work correctly.</li>
+<li>This build works with Eclipse 3.1M6 <u>only</u>.
+</ul></b></span>
+</p><br>
 <table>
   <tbody>
     <tr>
