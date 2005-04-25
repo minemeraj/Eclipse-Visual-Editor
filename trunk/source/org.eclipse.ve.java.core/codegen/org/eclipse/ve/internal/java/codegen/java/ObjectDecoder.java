@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.12 $  $Date: 2005-04-25 13:31:58 $ 
  */
 
 
@@ -54,14 +54,14 @@ public static EStructuralFeature getAllocationFeature (IJavaObjectInstance obj) 
 
 protected void initialFeatureMapper(){	
 	     if (fExprRef.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) // initialization expression
-	     	fFeatureMapper = new AllocationFeatureMapper();
+	     	fFeatureMapper = new AllocationFeatureMapper(fbeanPart.getEObject());
 	     else  // Use a Simple Attribute Mapper
             fFeatureMapper = new PropertyFeatureMapper()  ;                      
 }
 
 protected void initialFeatureMapper(EStructuralFeature sf) {
 	if (sf.equals(getAllocationFeature((IJavaObjectInstance)fbeanPart.getEObject()))){
-		fFeatureMapper = new AllocationFeatureMapper() ;
+		fFeatureMapper = new AllocationFeatureMapper(fbeanPart.getEObject()) ;
 	}
 	else {
          fFeatureMapper = new PropertyFeatureMapper() ;        
