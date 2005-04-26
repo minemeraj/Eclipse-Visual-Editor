@@ -67,7 +67,7 @@
 
 	<target name="getEMF" depends="getInit" description="Extract the EMF.">
 		<antcall target="extract">
-			<param name="url" value="${emfDirectURL$${emfZipURL}"/>
+			<param name="url" value="${emfDirectURL}${emfZipURL}"/>
 			<param name="zipname" value="emf.zip"/>
 		</antcall>
 	</target>
