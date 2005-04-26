@@ -1,0 +1,54 @@
+<%
+/*
+ * This was created from the javajet file: 
+ *  $RCSfile: CompositeSourceTemplate.javajet,v $
+ *  $Revision: 1.1 $ $Date: 2005-04-26 21:39:44 $
+ */
+%>
+<%@ jet 
+	skeleton="VisualClassSourceWizardSkeleton.java" 
+	package="org.eclipse.ve.internal.swt.codegen.jjet.wizards.contributors"
+	class="CompositeSourceGenerator" %><%
+	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassWizardPage.CREATE_MAIN)).equals("true"));
+	 %>
+
+<%if(createMain){%>
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.SWT;<%}%>
+import org.eclipse.swt.graphics.Point;
+
+
+public class <%=typeName%> extends Composite {
+
+	public <%=typeName%>(Composite parent, int style) {
+		super(parent, style);
+		initialize();
+	}
+	private void initialize() {
+		setSize(new Point(300,200));
+	}
+}
+<% 	
+	if (createMain) {%>
+	public static void main(String[] args) {
+		/* Before this is run, be sure to set up the launch configuration (Arguments->VM Arguments)
+		 * for the correct SWT library path in order to run with the SWT dlls. 
+		 * The dlls are located in the SWT plugin jar.  
+		 * For example, on Windows the Eclipse SWT 3.1 plugin jar is:
+		 *       installation_directory\plugins\org.eclipse.swt.win32_3.1.0.jar
+		 */
+		Display display = Display.getDefault();		
+		Shell shell = new Shell(display);
+		shell.setLayout(new FillLayout());
+		shell.setSize(new Point(300,200));
+		<%=typeName%> thisClass = new <%=typeName%>(shell, SWT.NONE);
+		shell.open();
+		
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) display.sleep ();
+		}
+		display.dispose();		
+	}<%
+	}%>

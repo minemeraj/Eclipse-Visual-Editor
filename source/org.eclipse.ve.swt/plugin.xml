@@ -212,7 +212,7 @@
 	    	     type="java.lang.Object"
 	        	 icon="icons/full/clcl16/shell_obj.gif"
 		         category="org.eclipse.ve.swt.cat"
-	    	     contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.ShellSourceContributor"
+	    	     contributor="org.eclipse.ve.internal.swt.codegen.wizards.contributors.ShellSourceContributor"
 	        	 name="%NewStyleComponent.Shell">
 			</visualElement>
 			<visualElement
@@ -221,7 +221,7 @@
 		         type="org.eclipse.swt.widgets.Composite"
 		         icon="icons/full/clcl16/composite_obj.gif"
 		         category="org.eclipse.ve.swt.cat"
-		         contributor="org.eclipse.ve.internal.java.codegen.wizards.contributors.CompositeSourceContributor"
+		         contributor="org.eclipse.ve.internal.swt.codegen.wizards.contributors.CompositeSourceContributor"
 		         name="%NewStyleComponent.Composite">
 			</visualElement>
   </extension>   
@@ -304,7 +304,7 @@
          priority="50"/>
    <visualElement
          category="org.eclipse.ve.rcp.cat"
-         contributor="org.eclipse.ve.internal.jface.RCPViewClassCreationSourceContributor"
+         contributor="org.eclipse.ve.internal.jface.codegen.wizards.contributors.RCPViewClassCreationSourceContributor"
          icon="icons/full/clcl16/rcp_app.gif"
          name="%NewStyleComponent.View"
          type="org.eclipse.ui.part.ViewPart"/>
