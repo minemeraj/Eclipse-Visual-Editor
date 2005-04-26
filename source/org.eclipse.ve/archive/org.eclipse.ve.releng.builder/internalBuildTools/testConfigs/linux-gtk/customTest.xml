@@ -8,9 +8,9 @@
 		</exec>
 	
 		<!--get eclipse linux-gtk SDK for testing then copy to test machine-->		
-		<get src="${eclipseURL}/eclipse-SDK-${eclipseBuildID}-linux-gtk.zip" dest="${tester}/eclipse-SDK-linux-gtk.zip" usetimestamp="true" />
+		<get src="${eclipseDirectURL}${eclipseLinuxGTKZipURL}" dest="${tester}/eclipse-SDK-linux-gtk.tar.gz" usetimestamp="true" />
 		<exec dir="${tester}" executable="rcp">
-			<arg line="${tester}/eclipse-SDK-linux-gtk.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
+			<arg line="${tester}/eclipse-SDK-linux-gtk.tar.gz" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />
 		</exec>
 		<exec dir="${tester}" executable="rcp">
 			<arg line="${buildDirectory}/../emf.zip" todir="${executionDir} ${testMachine}${rcpuser}:${executionDir}" />

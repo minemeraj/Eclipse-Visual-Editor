@@ -56,7 +56,7 @@
 
 	<target name="getBaseEclipse" depends="getInit" description="Extract the base eclipse.">
 		<antcall target="extract">
-			<param name="url" value="${eclipseWin32ZipURL}"/>
+			<param name="url" value="${eclipseDirectURL}${eclipseWin32ZipURL}"/>
 			<param name="zipname" value="eclipse-SDK.zip"/>
 		</antcall>
 		<!-- Extract doc.zip so we can create links in VE java doc -->
@@ -67,14 +67,14 @@
 
 	<target name="getEMF" depends="getInit" description="Extract the EMF.">
 		<antcall target="extract">
-			<param name="url" value="${emfZipURL}"/>
+			<param name="url" value="${emfDirectURL$${emfZipURL}"/>
 			<param name="zipname" value="emf.zip"/>
 		</antcall>
 	</target>
 
 	<target name="getGEF" depends="getInit" description="Extract the GEF.">
 		<antcall target="extract">
-			<param name="url" value="${gefZipURL}"/>
+			<param name="url" value="${gefDirectURL}${gefZipURL}"/>
 			<param name="zipname" value="gef.zip"/>
 		</antcall>
 	</target>
