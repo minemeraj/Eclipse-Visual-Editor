@@ -55,17 +55,17 @@ matched. For VE to work they must match.
   <tbody>
     <tr>
       <td>Eclipse build @eclipseBuildID@:</td>
-      <td>(<a href="@eclipseDirectURL@">build page</a>) (<a
+      <td>(<a href="@eclipseIndexURL@">build page</a>) (<a
  href="@eclipseMirrorURL@@eclipseWin32ZipURL@">download win32 zip</a>)</td>
     </tr>
     <tr>
       <td>EMF build @emfBuildID@:</td>
-      <td>(<a href="@emfDirectURL@">build page</a>) (<a href="@emfMirrorURL@@emfZipURL@">download
+      <td>(<a href="@emfIndexURL@">build page</a>) (<a href="@emfMirrorURL@@emfZipURL@">download
 zip</a>)</td>
     </tr>
     <tr>
       <td>GEF Build @gefBuildID@:</td>
-      <td>(<a href="@gefDirectURL@">build page</a>) (<a
+      <td>(<a href="@gefIndexURL@">build page</a>) (<a
  href="@gefMirrorURL@@gefZipURL@">download zip</a>)</td>
     </tr>
   </tbody>
