@@ -29,7 +29,7 @@
           resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/rcp_app.gif"/>
 	 </addedEObjects>
 	 <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-      	methodVisitor="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.JFaceMethodVisitor"/>
+      	methodVisitor="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.codegen.JFaceMethodVisitor"/>
   </event:AddMany>      
         
 </xmi:XMI>
