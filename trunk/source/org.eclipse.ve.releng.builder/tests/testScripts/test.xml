@@ -23,7 +23,7 @@
 		<mkdir dir="${install}" />
 				
 		<!--The eclipse SDK must exist before this script is executed-->
-		<untar src="eclipse-SDK.zip" dest="${install}" compression="gzip" />
+		<untar src="eclipse-SDK.tar.gz" dest="${install}" compression="gzip" />
 
 		<exec dir="." executable="unzip">
 			<arg line="-o -qq gef*.zip -d ${install}"/>

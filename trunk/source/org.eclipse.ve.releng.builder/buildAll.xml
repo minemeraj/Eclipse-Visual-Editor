@@ -155,17 +155,20 @@
 		<replace file="${result}/${indexFileName}">
 		 	<!--  Insert url for supported eclipse drop-->
 			<replacefilter token="@eclipseBuildID@" value="${eclipseBuildID}"/>
-			<replacefilter token="@eclipseURL@" value="${eclipseURL}"/>
-			<replacefilter token="@eclipseZipURL@" value="${eclipseWin32ZipURL}"/>		
+			<replacefilter token="@eclipseDirectURL@" value="${eclipseDirectURL}"/>
+			<replacefilter token="@eclipseMirrorURL@" value="${eclipseMirrorURL}"/>			
+			<replacefilter token="@eclipseWin32ZipURL@" value="${eclipseWin32ZipURL}"/>		
 	
 		 	<!--  Insert url for supported EMF -->
 			<replacefilter token="@emfBuildID@" value="${emfBuildID}"/>
-			<replacefilter token="@emfURL@" value="${emfURL}"/>
+			<replacefilter token="@emfDirectURL@" value="${emfDirectURL}"/>
+			<replacefilter token="@emfMirrorURL@" value="${emfMirrorURL}"/>
 			<replacefilter token="@emfZipURL@" value="${emfZipURL}"/>		
 
 		 	<!--  Insert url for supported GEF -->
 			<replacefilter token="@gefBuildID@" value="${gefBuildID}"/>
-			<replacefilter token="@gefURL@" value="${gefURL}"/>
+			<replacefilter token="@gefDirectURL@" value="${gefDirectURL}"/>
+			<replacefilter token="@gefMirrorURL@" value="${gefMirrorURL}"/>
 			<replacefilter token="@gefZipURL@" value="${gefZipURL}"/>
 		</replace>
 		
