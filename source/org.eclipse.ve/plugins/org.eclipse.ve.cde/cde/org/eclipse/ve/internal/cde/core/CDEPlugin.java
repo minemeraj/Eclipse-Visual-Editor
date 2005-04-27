@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-27 06:43:06 $ 
  */
 
 import java.net.MalformedURLException;
@@ -43,6 +43,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	public static final String ADAPTER_CLASS = "adapterclass"; // adapter class key		 //$NON-NLS-1$
 
 	private static CDEPlugin CDE_PLUGIN = null;
+	public static final String SHOW_GRID = "SHOW_GRID"; //$NON-NLS-1$	
 
 	public CDEPlugin() {
 		CDE_PLUGIN = this;
@@ -220,15 +221,11 @@ public final class CDEPlugin extends AbstractUIPlugin {
 			return ImageDescriptor.getMissingImageDescriptor();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#initializeDefaultPluginPreferences()
-	 */
-	protected void initializeDefaultPluginPreferences() {
-		Preferences prefs = getPluginPreferences();
-		prefs.setDefault(PREF_SHOW_OVERVIEW_KEY, false);
-		prefs.setDefault(SHOW_XML, false);
-		prefs.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);
-		prefs.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 0);
+	public static void initializeDefaultPluginPreferences(Preferences aStore) {
+		aStore.setDefault(SHOW_GRID,true);		
+		aStore.setDefault(PREF_SHOW_OVERVIEW_KEY, false);
+		aStore.setDefault(SHOW_XML, false);
+		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);
+		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 0);
 	}
-
 }

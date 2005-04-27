@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.18 $  $Date: 2005-04-27 06:43:08 $ 
  */
 
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ import org.eclipse.ui.*;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
+import org.eclipse.ve.internal.cde.core.CDEMessages;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -52,6 +53,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	public static final String PLUGIN_ITEM = "PLUGIN_ITEM"; //$NON-NLS-1$
 	public static final String LnF_DEFAULT = VCEMessages.getString("PreferencePage.LookAndFeel.Default"); //$NON-NLS-1$
 	protected Preferences fStore;
+	protected Preferences cdeStore;	
 	protected TabFolder tabFolder;
 	protected TabItem appearanceTab;
 	protected TabItem codeGenTab;
@@ -60,6 +62,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Label lookAndFeelLabel;
 	protected Table lookAndFeelTable;
 	protected ArrayList fLookAndFeelClasses = new ArrayList(4);
+	protected Button showGridCheckBox;
 	
 	protected Button showWindowCheckBox;
 	protected Button showXMLTextCheckBox;
@@ -317,6 +320,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// These are only shown if a special debug mode is set up
 		// with a .options whereby the live AWT/Swing windows can be seen and also
 		// the XML text for the JVE object model can be seen, both of which help debugging
+		
+		showGridCheckBox = createCheckBox(appearanceComposite, CDEMessages.getString("ShowGridAction.label"), 15); //$NON-NLS-1$
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowXMLText"), 15); //$NON-NLS-1$
@@ -629,10 +634,11 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 	}
 
-	protected Preferences getStore() {
+	private Preferences getStore() {
 		if (fStore != null)
 			return fStore;
 		fStore = VCEPreferences.getPlugin().getPluginPreferences();
+		cdeStore = CDEPlugin.getPlugin().getPluginPreferences();
 		return fStore;
 	}
 	
@@ -675,6 +681,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
+		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
 
@@ -768,7 +775,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.SHOW_LIVE_WINDOW, showWindowCheckBox.getSelection());
 		// Save whether to show the VCE and Source as a split pane or notebook
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
-
+		
+		cdeStore.setValue(CDEPlugin.SHOW_GRID,showGridCheckBox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
 
@@ -813,6 +821,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
 		showXMLTextCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SELECT_SOURCE));
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
+		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
 		for (int i = 0; i < items.length; i++) {

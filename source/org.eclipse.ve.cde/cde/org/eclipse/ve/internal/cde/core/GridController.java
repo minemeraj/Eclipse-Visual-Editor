@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridController.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-04-27 06:43:06 $ 
  */
 
 import java.util.*;
@@ -70,6 +70,10 @@ public class GridController {
 	private int gridWidth = 20;
 	private int gridHeight = 20;
 	private int gridMargin = 0; 
+	
+	public GridController(){
+		showGrid = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID);		
+	}
 	
 	/**
 	 * Static helper method to return the grid controller from the active editor, if any in the primary viewer is griddable

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-28 14:14:29 $ 
+ *  $Revision: 1.8 $  $Date: 2005-04-27 06:43:06 $ 
  */
 
 
@@ -31,6 +31,8 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.ve.internal.cdm.Annotation;
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
@@ -49,7 +51,8 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	protected XYLayoutGridConstrainer layoutConstrainer;
 	ArrayList feedbackList;
 	
-	protected boolean allowZooming = false, allowGridding = true;	// Whether zooming and gridding are allowed.
+	protected boolean allowZooming = false;
+	protected boolean allowGridding = true;
 	
 	
 /**
@@ -121,6 +124,7 @@ public void activate() {
  * The data is a HashSet with the annotation name as the key
  */	
 protected void initializeGrid() {
+	
 	EditDomain domain = EditDomain.getEditDomain(getHost());
 	HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
 	if (gridStateData != null) {

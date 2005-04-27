@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.9 $  $Date: 2005-04-27 06:43:08 $ 
  */
 
 import java.util.*;
@@ -45,6 +45,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	protected void createEditPolicies() {
 		VisualInfoXYLayoutEditPolicy ep = new VisualInfoXYLayoutEditPolicy(getContainerPolicy());
 		ep.setZoomable(true);
+		ep.setGriddable(false);
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, ep);
 	}
 	
