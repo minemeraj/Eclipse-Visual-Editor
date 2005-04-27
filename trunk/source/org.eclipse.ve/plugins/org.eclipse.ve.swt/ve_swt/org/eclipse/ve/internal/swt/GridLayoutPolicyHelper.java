@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 20:11:45 $
+ *  $Revision: 1.7 $  $Date: 2005-04-27 06:43:42 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -275,6 +275,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return value;
 	}
 
+	int[] expandableColumns, expandableRows;
 	/**
 	 * Return the GridLayout dimensions which is 2 dimensional array that contains 2 arrays:
 	 *  1. an int array of all the column widths
@@ -311,9 +312,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			e.printStackTrace();
 		}
 
-		IFieldProxy getColumnWidthsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("widths"); //$NON-NLS-1$
-		IFieldProxy getRowHeightsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("heights"); //$NON-NLS-1$
+		IFieldProxy getColumnWidthsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("columnWidths"); //$NON-NLS-1$
+		IFieldProxy getRowHeightsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("rowHeights"); //$NON-NLS-1$
 		try {
+			// Get the column widths and row heights from the target VM helper
 			IArrayBeanProxy arrayProxyColumnWidths = (IArrayBeanProxy) getColumnWidthsFieldProxy.get(gridLayoutHelperProxy);
 			if (arrayProxyColumnWidths != null) {
 				columnWidths = new int[arrayProxyColumnWidths.getLength()];
@@ -330,9 +332,28 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				}
 				result[1] = rowHeights;
 			}
+			// Get the expandableColumns and expandablerows from the target VM helper
+			IFieldProxy getExpandableColumnsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("expandableColumns"); //$NON-NLS-1$
+			IFieldProxy getExpandableRowsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("expandableRows"); //$NON-NLS-1$
+			IArrayBeanProxy arrayProxyExpandableColumns = (IArrayBeanProxy) getExpandableColumnsFieldProxy.get(gridLayoutHelperProxy);
+			if (arrayProxyExpandableColumns != null) {
+				expandableColumns = new int[arrayProxyExpandableColumns.getLength()];
+				for (int i = 0; i < arrayProxyExpandableColumns.getLength(); i++) {
+					expandableColumns[i] = ((IIntegerBeanProxy) arrayProxyExpandableColumns.get(i)).intValue();
+				}
+			}
+			getExpandableRowsFieldProxy.setAccessible(true);
+			IArrayBeanProxy arrayProxyExpandableRows = (IArrayBeanProxy) getExpandableRowsFieldProxy.get(gridLayoutHelperProxy);
+			if (arrayProxyExpandableRows != null) {
+				expandableRows = new int[arrayProxyExpandableRows.getLength()];
+				for (int i = 0; i < arrayProxyExpandableRows.getLength(); i++) {
+					expandableRows[i] = ((IIntegerBeanProxy) arrayProxyExpandableRows.get(i)).intValue();
+				}
+			}
 		} catch (ThrowableProxy exc) {
 			return null;
 		}
+		
 		return result;
 	}
 
@@ -360,42 +381,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 */
 	public int[][] getContainerExpandableDimensions() {
 
-		// For now just return the dimensions of the client area of the container
+		return new int[][] {expandableColumns,expandableRows};
 
-		int[] expandableColumns = null, expandableRows = null;
-		int[][] result = new int[2][];
-		result[0] = new int[0];
-		result[1] = new int[0];
-		if (true)
-			return result;
-
-		// Can't do the following code because the protected fields on GridLayout we used to read are no longer available in 3.1
-		// Hack to grab the column/row information from the private fields of a GridLayout
-		IFieldProxy getExpandableColumnsFieldProxy = getLayoutManagerBeanProxy().getTypeProxy().getDeclaredFieldProxy("expandableColumns"); //$NON-NLS-1$
-		IFieldProxy getExpandableRowsFieldProxy = getLayoutManagerBeanProxy().getTypeProxy().getDeclaredFieldProxy("expandableRows"); //$NON-NLS-1$
-		try {
-			getExpandableColumnsFieldProxy.setAccessible(true);
-			IArrayBeanProxy arrayProxyExpandableColumns = (IArrayBeanProxy) getExpandableColumnsFieldProxy.get(getLayoutManagerBeanProxy());
-			if (arrayProxyExpandableColumns != null) {
-				expandableColumns = new int[arrayProxyExpandableColumns.getLength()];
-				for (int i = 0; i < arrayProxyExpandableColumns.getLength(); i++) {
-					expandableColumns[i] = ((IIntegerBeanProxy) arrayProxyExpandableColumns.get(i)).intValue();
-				}
-				result[0] = expandableColumns;
-			}
-			getExpandableRowsFieldProxy.setAccessible(true);
-			IArrayBeanProxy arrayProxyExpandableRows = (IArrayBeanProxy) getExpandableRowsFieldProxy.get(getLayoutManagerBeanProxy());
-			if (arrayProxyExpandableRows != null) {
-				expandableRows = new int[arrayProxyExpandableRows.getLength()];
-				for (int i = 0; i < arrayProxyExpandableRows.getLength(); i++) {
-					expandableRows[i] = ((IIntegerBeanProxy) arrayProxyExpandableRows.get(i)).intValue();
-				}
-				result[1] = expandableRows;
-			}
-		} catch (ThrowableProxy exc) {
-			return null;
-		}
-		return result;
 	}
 
 	/**
