@@ -35,7 +35,7 @@ Editor Project</font></b><br>
 	<ul>
 		<li><b><font size="4" color="#0000FF">Test Cases not assigned to anyone yet</font></b><ul>
 		     <?php
-              if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+              if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
                   exit("Unable to open file.");
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
                 list ($tst, $url, $tester, $status, $description) = $testinfo;
@@ -57,7 +57,7 @@ Editor Project</font></b><br>
 		<li><font size="4" color="#0000FF"><b>Test Cases assigned and in 
 		progress</b></font><ul>
 		<?php
-              if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+              if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
                   exit("Unable to open file.");
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
                 list ($tst, $url, $tester, $status, $description) = $testinfo;
@@ -78,7 +78,7 @@ Editor Project</font></b><br>
 	<ul>
 		<li><font size="4" color="#0000FF"><b>Test Cases Completed</b></font><br>
 		<?php
-              if (!($f=fopen("/home/data/httpd/www.eclipse.org/html/vep/writable/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
+              if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/M1/tests-ve1.1m1.txt","r"))) 
                   exit("Unable to open file.");
               echo "<table border=\"0\" width=\"100%\" id=\"t3\">";
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
