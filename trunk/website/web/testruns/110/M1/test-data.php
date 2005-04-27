@@ -4,7 +4,7 @@
 	if(strlen($pass)>0 && $pass!="jve")
 		exit('<h1>Incorrect password</h1>');
 		
-	$WRITEDIR='/home/data/httpd/www.eclipse.org/html/vep/writable/';
+	$WRITEDIR='/home/data/httpd/writable/vep/';
 	$DESTDIR = $WRITEDIR . "testruns/110/M1/";
 	$DESTFILE = $DESTDIR . "tests-ve1.1m1.txt";
 ?>
