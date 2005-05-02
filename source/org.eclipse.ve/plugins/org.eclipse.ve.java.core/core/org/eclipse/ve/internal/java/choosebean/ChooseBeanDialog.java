@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.25 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.26 $  $Date: 2005-05-02 21:36:09 $ 
  */
 
 import java.util.*;
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.internal.corext.util.TypeInfo;
-import org.eclipse.jdt.internal.ui.dialogs.TypeSelectionDialog;
+import org.eclipse.jdt.internal.ui.dialogs.TypeSelectionDialog2;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -58,7 +58,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  * Swing Types: Subclasses of JComponent, JFrame, JDialog, JWindow, JApplet, TableColumn
  * AWT Types: Subclasses of Component, but not subclass of Swing Types.
  */
-public class ChooseBeanDialog extends TypeSelectionDialog {
+public class ChooseBeanDialog extends TypeSelectionDialog2 {
 
 	public static final String JBCF_CHOOSEBEAN_SELHIST_KEY = "JBCF_CHOOSEBEAN_SELHIST_KEY"; //$NON-NLS-1$
 	public static final Color green = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
@@ -98,11 +98,15 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	 * @since 1.0.0
 	 */
 	public ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
-		super(
-			shell, 
-			PlatformUI.getWorkbench().getProgressService(), 
-			IJavaSearchConstants.CLASS, 
-			SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}));
+//		super(
+//			shell, 
+//			PlatformUI.getWorkbench().getProgressService(), 
+//			IJavaSearchConstants.CLASS, 
+//			SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}));
+		super (shell, false, 
+			   PlatformUI.getWorkbench().getProgressService(), 
+			   SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}),
+			   IJavaSearchConstants.CLASS);
 		
 		this.selectedContributor = choice;
 		this.pkg = packageFragment;
@@ -113,7 +117,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		setTitle(ChooseBeanMessages.getString("MainDialog.title")); //$NON-NLS-1$
 		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
 		setStatusLineAboveButtons(true);
-		setMatchEmptyString(false);
+//		setMatchEmptyString(false);
 		if(!anyContributors())
 			selectedContributor = -1;
 		else if(!isValidContributor())
@@ -247,15 +251,15 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		return selectedContributor > -1 && selectedContributor < contributors.length ;
 	}
 	
-	/*
-	 * @see AbstractElementListSelectionDialog#createFilteredList(Composite)
-	 */
- 	protected FilteredList createFilteredList(Composite parent) {
- 		FilteredList list= super.createFilteredList(parent);
- 		if(isValidContributor())
- 			list.setFilterMatcher(contributors[selectedContributor].getFilter(project));
-		return list;
-	}
+//	/*
+//	 * @see AbstractElementListSelectionDialog#createFilteredList(Composite)
+//	 */
+// 	protected FilteredList createFilteredList(Composite parent) {
+// 		FilteredList list= super.createFilteredList(parent);
+// 		if(isValidContributor())
+// 			list.setFilterMatcher(contributors[selectedContributor].getFilter(project));
+//		return list;
+//	}
 
 	/**
 	 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(Composite)
@@ -387,10 +391,10 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	}
 
 	private void updateElements(){
-		if(isValidContributor())
-			fFilteredList.setFilterMatcher(contributors[selectedContributor].getFilter(project));
-		// Force the filtered list to reload
-		setFilter(getFilter());
+//		if(isValidContributor())
+//			fFilteredList.setFilterMatcher(contributors[selectedContributor].getFilter(project));
+//		// Force the filtered list to reload
+//		setFilter(getFilter());
 	}
 
 
@@ -661,7 +665,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		data.heightHint=0;
 		data.widthHint=0;
 		c.setLayoutData(data);
-		superFilterText = super.createFilterText(c);
+		//superFilterText = new Text(parent, SWT.BORDER);
 
 		filterCombo = new Combo(parent, SWT.DROP_DOWN);
 
@@ -672,7 +676,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		data.verticalAlignment= GridData.BEGINNING;
 		filterCombo.setLayoutData(data);
 
-		filterCombo.setText(getFilter()==null?"":getFilter()); //$NON-NLS-1$
+		//filterCombo.setText(getFilter()==null?"":getFilter()); //$NON-NLS-1$
 
 		for(int i=0;i<selectionHistory.size();i++)
 			if(selectionHistory.get(i)!=null)
@@ -731,7 +735,7 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	 * @see org.eclipse.ui.dialogs.AbstractElementListSelectionDialog#handleEmptyList()
 	 */
 	protected void handleEmptyList() {
-		super.handleEmptyList();
+//		super.handleEmptyList();
 		filterCombo.setEnabled(false);
 	}
 
@@ -739,20 +743,20 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	 * @see org.eclipse.ui.dialogs.TwoPaneElementSelector#createLowerList(Composite)
 	 */
 	protected Table createLowerList(Composite parent) {
-		Table table = super.createLowerList(parent);
+		Table table = new Table(parent, SWT.BORDER); //super.createLowerList(parent);
 		table.addSelectionListener(new SelectionListener() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
 			 */
 			public void widgetSelected(SelectionEvent e) {
-				updateStatus(getClassStatus(getLowerSelectedElement()));
+				//updateStatus(getClassStatus(getLowerSelectedElement()));
 			}
 
 			/**
 			 * @see org.ecloipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
 			 */
 			public void widgetDefaultSelected(SelectionEvent e) {
-				updateStatus(getClassStatus(getLowerSelectedElement()));
+				//updateStatus(getClassStatus(getLowerSelectedElement()));
 			}
 		});
 		return table;
@@ -762,21 +766,21 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 	 * @see org.eclipse.ui.dialogs.AbstractElementListSelectionDialog#handleSelectionChanged()
 	 */
 	protected void handleSelectionChanged() {
-		super.handleSelectionChanged();
-		updateStatus(getClassStatus(getLowerSelectedElement()));
+		//super.handleSelectionChanged();
+		//updateStatus(getClassStatus(getLowerSelectedElement()));
 	}
 	
 	protected void updateOkState() {
 		// Ensure a valid instanceVariable name first
-		if (beanLabelText!=null && beanLabelText.length()!=0) {
-			if (!JavaConventions.validateFieldName(beanLabelText).isOK()) {
-				Button okButton = getOkButton();
-			    if (okButton != null)
-					okButton.setEnabled(false);
-			    return ;
-			}			
-		}
-		super.updateOkState() ;
+//		if (beanLabelText!=null && beanLabelText.length()!=0) {
+//			if (!JavaConventions.validateFieldName(beanLabelText).isOK()) {
+//				Button okButton = getOkButton();
+//			    if (okButton != null)
+//					okButton.setEnabled(false);
+//			    return ;
+//			}			
+//		}
+//		super.updateOkState() ;
 	}
 
 	/* (non-Javadoc)
@@ -786,8 +790,8 @@ public class ChooseBeanDialog extends TypeSelectionDialog {
 		// Need to override because the default function doesn't see that the 
 		// ok button may already be disabled. It assumes that the validateCurrentSelection() method 
 		// does everything to make sure that everything is ok.
-		if (getOkButton().isEnabled())
-			super.handleDefaultSelected();
+//		if (getOkButton().isEnabled())
+//			super.handleDefaultSelected();
 	}
 
 	/**
