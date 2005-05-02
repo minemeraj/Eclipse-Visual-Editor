@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-27 06:43:06 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-02 22:16:37 $ 
  */
 
 
@@ -31,8 +31,6 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.ve.internal.cdm.Annotation;
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
@@ -115,6 +113,7 @@ public void activate() {
 		}
 	}
 	
+	CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), AlignmentXYGridPropertiesPage.class);
 	CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), AlignmentXYComponentPage.class);	
 }
 /*
