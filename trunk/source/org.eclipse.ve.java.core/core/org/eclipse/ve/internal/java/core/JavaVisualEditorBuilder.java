@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-07 19:56:41 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-02 21:36:09 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -170,7 +170,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(getProject()).toFile(),false);
 		   deleteDirectoryConntent(BeanInfoCacheController.getCacheDir(null).toFile(),false);
 		   markInMemoryBeaninfoStale(getProject());// Mark in-memory beaninfo stale
-		   deleteDirectoryConntent(JavaVEPlugin.VE_GENERATED_SWT_LIBRARIES_CACHE.toFile(),true);
+		   deleteDirectoryConntent(JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.toFile(),true);
 		}		
 		monitor.done();
 		currentProjectPath=null;

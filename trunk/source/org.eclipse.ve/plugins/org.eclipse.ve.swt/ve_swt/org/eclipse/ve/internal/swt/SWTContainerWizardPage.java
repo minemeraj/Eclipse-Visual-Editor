@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -66,11 +67,11 @@ public class SWTContainerWizardPage extends WizardPage implements IClasspathCont
 	}
 	
 	public boolean finish(){
-		Path path;
+		IPath path = new Path(SWTContainer.SWT_CONTAINER_SIGNITURE);
 		if (includeJFaceButton != null && includeJFaceButton.getSelection()) {
-			path = new Path("SWT_CONTAINER/JFACE"); //$NON-NLS-1$
+			path = path.append(SWTContainer.SWT_CONTAINER_JFACE_SIGNITURE);
 		} else {
-			path = new Path("SWT_CONTAINER"); //$NON-NLS-1$
+			path = new Path(SWTContainer.SWT_CONTAINER_SIGNITURE); //$NON-NLS-1$
 		}
 		setSelection(JavaCore.newContainerEntry(path));			
 		return true;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-07 19:56:41 $ 
+ *  $Revision: 1.20 $  $Date: 2005-05-02 21:36:08 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.zip.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -25,10 +26,19 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.osgi.framework.adaptor.core.AbstractFrameworkAdaptor;
+import org.eclipse.osgi.service.environment.Constants;
 import org.eclipse.pde.core.plugin.IFragmentModel;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.internal.core.*;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PluginModelManager;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
@@ -62,79 +72,152 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		this.fConfigContributionInfo = info;
 	}
 	
-public static void createDirectories (IPath finalDir) {
-	for (int i=0; i<finalDir.segmentCount(); i++) {
-		File f = finalDir.removeLastSegments(finalDir.segmentCount()-1-i).toFile();
-		f.mkdir();
-	}
+protected static boolean isInterestingLibFile(String name) {
+	return name.endsWith(".dll")
+			|| name.endsWith(".jnilib")
+			|| name.endsWith(".sl")
+			|| name.endsWith(".a")
+			|| name.indexOf(".so") != -1;
 }
-public static void createEntry (ZipEntry entry, InputStream in) {
-	IPath dest = JavaVEPlugin.VE_GENERATED_SWT_LIBRARIES_CACHE.append(entry.getName());
-	File f = dest.toFile();
-	if (entry.isDirectory()) {				
-		createDirectories(dest);		
-	}
-	else {
-	     try {
-			IPath parentDir = dest.removeLastSegments(1);
-			createDirectories(parentDir);
-			FileOutputStream file = new FileOutputStream(f);
-			try {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                   file.write(buffer, 0, bytesRead);
-                }                
-             }
-             finally {
-                file.close();
-             }
 
-		} catch (Exception e) {
-			JavaVEPlugin.log(e);
-		}
-	}
+static public URL generateLibCacheIfNeeded (IFragmentModel frag, String relativePath) {
+	return generateLibCacheIfNeeded(frag.getInstallLocation(), relativePath);
 }
-static public URL generateSwtDllIfNeeded (IFragmentModel frag, String relativePath) {
-		String location = frag.getInstallLocation();
-		if (location == null)
+static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePath) {		
+		if (srcJarFile == null)
 			return null;
-		File f = JavaVEPlugin.VE_GENERATED_SWT_LIBRARIES_CACHE.append(relativePath).toFile();
-		if (f.exists()) {
+		// Create a root path for each version of .dlls
+		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(srcJarFile.hashCode()));
+		File target = root.append(relativePath).toFile();
+		if (target.exists()) {
 			try {
-				return f.toURL();
+				return target.toURL();
 			} catch (MalformedURLException e1) {
 				JavaVEPlugin.log(e1);
 				return null;
 			}
 		}
+		target.mkdirs();
 				
-		File file = new File(location);
-		URL url = null;
-
-		if (file.isFile() && file.getName().endsWith(".jar")) { //$NON-NLS-1$
+		File src = new File(srcJarFile);
+		URL url = null;  // result
+		if (src.isFile() && src.getName().endsWith(".jar")) { //$NON-NLS-1$			
 			try {
-				ZipFile zip = new ZipFile(file);
-				Enumeration entries = zip.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = (ZipEntry) entries.nextElement();
-					if (entry.getName().startsWith(relativePath)) {
-						InputStream in = zip.getInputStream(entry);
-						createEntry(entry, in);
-						in.close();
+				ZipFile zip = new ZipFile(src);
+				try {				
+					for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
+						ZipEntry entry = (ZipEntry) entries.nextElement();
+						if (entry.getName().startsWith(relativePath) &&
+							isInterestingLibFile(entry.getName())) {
+							InputStream in = zip.getInputStream(entry);						
+							try {
+								if (in!=null) {
+									File dest = new File (root.toFile(), entry.getName());
+									AbstractFrameworkAdaptor.readFile(in, dest);
+									if (!Platform.getOS().equals(Constants.OS_WIN32))
+										Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor();
+								}
+							} catch (IOException e) {
+								JavaVEPlugin.log(e);
+							} catch (InterruptedException e) {
+								JavaVEPlugin.log(e);
+							}							
+							finally {
+								try {
+							     in.close();
+								}
+								catch (Exception e) {}
+							}
+						}
+						
 					}
-					
+					url = target.toURL();
+				} catch (IOException e) {				
+					JavaVEPlugin.log(e);
+				} 
+				finally {
+					try {
+						zip.close();
+					} catch (IOException e) {}
 				}
-				url = f.toURL();
-			} catch (Exception e) {
+			} catch (ZipException e) {
 				JavaVEPlugin.log(e);
-			}
+			} catch (IOException e) {
+				JavaVEPlugin.log(e);
+			}			
 		}
 		return url;		
 }
 		
-	
-	/*
+    protected void contributePluginLibrary(final IConfigurationContributionController controller) throws CoreException {
+		
+		PluginModelManager pm = PDECore.getDefault().getModelManager();
+		final IPluginModelBase swtModel = pm.findModel(SWTContainer.SWT_CONTAINER_LIB_FRAGMENT_NAME);
+		// Run it as a runnable, so that we can update the problems view
+	    ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+					final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
+					if (swtModel!=null && swtModel.isEnabled()) {			
+						final URL librarylocation = generateLibCacheIfNeeded(swtModel.getBundleDescription().getLocation(),"");			
+						if (librarylocation!=null) {						
+							controller.contributeClasspath(librarylocation, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
+							removeMarker(msg);
+						}
+						else
+							createMarker(msg);
+					}
+					else
+						createMarker(msg);
+				}
+	    }, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());		
+    }
+    protected void contributeLegacyPluginLibrary(final IConfigurationContributionController controller) throws CoreException {
+
+		// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController
+		
+		// Assume target's have the same platform/architecture/overrides
+		URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$")); //$NON-NLS-1$ //$NON-NLS-2$
+		IPath idePath = new Path(ide.getFile());
+		final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
+		
+		PluginModelManager pm = PDECore.getDefault().getModelManager();
+		IFragmentModel[] frags = pm.getFragments();			
+		URL os = null;
+		for (int i = 0; i < frags.length; i++) {
+			if (frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
+				// swt fragment					
+				if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
+					continue; // skip the nl ones
+				os = getResourceURL(frags[i], relPath.toPortableString());
+				if (os!=null){	
+					// if our DLL is inside a .jar extract it out to out private cache.
+				   if (os.toString().startsWith("jar"))
+						os = generateLibCacheIfNeeded(frags[i], relPath.toPortableString());
+				   break;
+				}
+			}
+		}
+        final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
+        final URL osURL = os;
+        ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				if (osURL!=null) {						
+				    controller.contributeClasspath(osURL, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
+				    removeMarker(msg);
+				}
+				else
+					createMarker(msg);				
+		}
+		}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+		
+		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
+		if(Platform.WS_GTK.equals(Platform.getWS())){
+			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
+		}		
+		
+    }
+
+	   /*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeClasspaths(org.eclipse.jem.internal.proxy.core.IConfigurationContributionController)
@@ -145,52 +228,18 @@ static public URL generateSwtDllIfNeeded (IFragmentModel frag, String relativePa
 		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "vm/jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
 		
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
- 		  // Get the location of the swt dll in the workbench path and add it.
-		  // we're assuming they are all under the same path, ie. some under os while others unders os/arch is not valid for us. current swt looks like all under one directory.
-		  controller.contributeClasspath(Platform.getBundle("org.eclipse.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
+			// SWT container would have contributed all the proper jars, and DLLs... if it is
+			// not in the class path, we may have many other issues.
 		}
 		else {
-			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController
-			
-			// Assume target's have the same platform/architecture/overrides
-			URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$")); //$NON-NLS-1$ //$NON-NLS-2$
-			IPath idePath = new Path(ide.getFile());
-			final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
-			
 			PluginModelManager pm = PDECore.getDefault().getModelManager();
-			IFragmentModel[] frags = pm.getFragments();			
-			URL os = null;
-			for (int i = 0; i < frags.length; i++) {
-				if (frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
-					// swt fragment					
-					if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
-						continue; // skip the nl ones
-					os = getResourceURL(frags[i], relPath.toPortableString());
-					if (os!=null){	
-						// if our DLL is inside a .jar extract it out to out private cache.
-					   if (os.toString().startsWith("jar"))
-							os = generateSwtDllIfNeeded(frags[i], relPath.toPortableString());
-					   break;
-					}
-				}
-			}
-            final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
-            final URL osURL = os;
-            ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					if (osURL!=null) {						
-					    controller.contributeClasspath(osURL, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
-					    removeMarker(msg);
-					}
-					else
-						createMarker(msg);				
-			}
-		}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
-		}
-		
-		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
-		if(Platform.WS_GTK.equals(Platform.getWS())){
-			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
+			IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt");
+			Version version = swtEntry.getBundleDescription().getVersion();
+			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController			
+			if (version.getMajor() < 3 || version.getMinor() < 1)
+				contributeLegacyPluginLibrary(controller);
+			else
+				contributePluginLibrary(controller);	
 		}
 	}
 
@@ -336,4 +385,102 @@ static public URL generateSwtDllIfNeeded (IFragmentModel frag, String relativePa
 		}
 		return url;
 	}
+	
+	private static IPath getFilePath(URL l) {
+		if (l.getProtocol().equals("file"))
+		     return  new Path (l.getFile());
+		else if (l.getProtocol().equals("jar")) {
+			String f = l.getFile();
+			int idx = f.lastIndexOf('!');
+			if (idx>=0)
+				f = f.substring(0,idx);
+			try {
+				return getFilePath (new URL(f));
+			} catch (MalformedURLException e) {}
+		}
+		return null;
+	}	
+	
+	
+	/**
+	 * return the class entry for the fragmentName associated with the pluginID with
+	 * a library path as an attribute if libPath is not null
+	 * @param pluginID
+	 * @param fragmentName
+	 * @return entry, or null if none
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IClasspathEntry getPlatformPath (String pluginID, String fragmentName, String libPath) {
+		Bundle bundle = null;
+		if (fragmentName!=null) {
+			Bundle[] frags = Platform.getFragments(Platform.getBundle(pluginID));
+			
+			for (int i = 0; i < frags.length; i++) {
+				if (!frags[i].getSymbolicName().equals(fragmentName) ||
+					  (frags[i].getState()!=Bundle.ACTIVE &&
+					   frags[i].getState()!=Bundle.RESOLVED))  // Bundle is not active yet
+					continue;
+				bundle = frags[i];
+				break;
+			}
+		}
+		else
+			bundle = Platform.getBundle(pluginID);
+		
+		IPath location = null;
+		try {				
+			// .jared fragment
+			URL l = Platform.resolve(bundle.getEntry("/"));				
+			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench
+			location = getFilePath(l).removeTrailingSeparator();
+			if (location !=null) {
+				IClasspathAttribute[] attr = new IClasspathAttribute[0];
+				if (libPath!=null) { // Create a lib path attribute to this entry						
+					// jar may be imported into the workbench, use it; if not cache it
+					URL libURL = project ? location.toFile().toURL() : 
+						         generateLibCacheIfNeeded(location.toPortableString(), libPath);
+					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
+							                                                getFilePath(libURL).toPortableString())};
+				}		
+				// TODO: this will not work if the fragment is not a .jar (imported to the IDE as a project)
+				return JavaCore.newLibraryEntry(location, location, null, new IAccessRule [0], attr, false);
+			}
+		} catch (IOException e) {
+			JavaVEPlugin.log(e, Level.INFO);
+		}
+		return null;
+	}
+	
+//	private String getExtractionLocation(File file) {
+//		long timestamp = file.lastModified() ^ file.getAbsolutePath().hashCode();
+//		File metadata = PDEPlugin.getDefault().getStateLocation().toFile();
+//		File cache = new File(metadata, Long.toString(timestamp) + ".swt");
+//		if (!cache.exists()){
+//			deleteStaleCache(metadata);
+//			cache.mkdirs();
+//			extractZipFile(file, cache);
+//		}		
+//		return cache.getAbsolutePath();
+//	}	
+//	private static String getLegacyNativeLibrariesLocation(BundleDescription fragment) {
+//		StringBuffer buffer = new StringBuffer();
+//		IPath path = new Path(fragment.getLocation());
+//		buffer.append(path.removeTrailingSeparator().toString());
+//		buffer.append(IPath.SEPARATOR);
+//		buffer.append("os"); //$NON-NLS-1$
+//		buffer.append(IPath.SEPARATOR);
+//		buffer.append(TargetPlatform.getOS());
+//		buffer.append(IPath.SEPARATOR);
+//		buffer.append(TargetPlatform.getOSArch());
+//		return buffer.toString();
+//	}	
+//	public static String getNativeLibrariesLocation(BundleDescription fragment) {
+//		Version version = fragment.getVersion();
+//		if (version.getMajor() < 3 || version.getMinor() < 1)
+//			return getLegacyNativeLibrariesLocation(fragment);
+//		
+//		File file = new File(fragment.getLocation());
+//		return file.isDirectory() ? fragment.getLocation() : getExtractionLocation(file);
+//	}
 }

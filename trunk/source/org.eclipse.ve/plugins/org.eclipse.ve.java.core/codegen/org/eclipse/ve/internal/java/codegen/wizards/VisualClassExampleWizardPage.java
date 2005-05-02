@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.wizards;
 /*
  *  $RCSfile: VisualClassExampleWizardPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-02 21:36:09 $ 
  */
 
 import java.io.*;
@@ -86,7 +86,7 @@ public class VisualClassExampleWizardPage extends NewClassWizardPage {
 			monitor= new NullProgressMonitor();
 		}
 
-		monitor.beginTask(NewWizardMessages.getString("NewTypeWizardPage.operationdesc"), 10); //$NON-NLS-1$
+		monitor.beginTask(NewWizardMessages.NewTypeWizardPage_operationdesc, 10); //$NON-NLS-1$
 		
 		ICompilationUnit createdWorkingCopy= null;
 		try {
