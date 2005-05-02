@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-02 21:36:08 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-02 21:58:32 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -178,7 +178,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		// Assume target's have the same platform/architecture/overrides
 		URL ide = Platform.find(Platform.getBundle("org.eclipse.swt"), new Path("$os$")); //$NON-NLS-1$ //$NON-NLS-2$
 		IPath idePath = new Path(ide.getFile());
-		final IPath relPath =  idePath.removeFirstSegments(idePath.segmentCount()-3);
+		final IPath relPath =  new Path("os/"+Platform.getOS()+"/"+Platform.getOSArch());
 		
 		PluginModelManager pm = PDECore.getDefault().getModelManager();
 		IFragmentModel[] frags = pm.getFragments();			
