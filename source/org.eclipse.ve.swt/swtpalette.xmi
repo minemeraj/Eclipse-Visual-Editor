@@ -120,12 +120,12 @@
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry8obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Group"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string8" string="Group"/>
-      </cmpEntries>  
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry101" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/sashform_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry101obj"
-          creationClassURI="java:/org.eclipse.swt.custom#SashForm"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="SashForm"/>
       </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry9" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry9obj"
+          creationClassURI="java:/org.eclipse.swt.widgets#Canvas"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string9" string="Canvas"/>
+      </cmpEntries>        
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry12" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tabfolder_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry12obj"
           creationClassURI="java:/org.eclipse.swt.widgets#TabFolder"/>
@@ -141,6 +141,56 @@
           creationClassURI="java:/org.eclipse.swt.widgets#CoolBar"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="CoolBar"/>
       </cmpEntries>    
+    </cmpGroups> 
+  </palette:CategoryCmp>
+  <palette:CategoryCmp xmi:id="swtCat2">
+    <categoryLabel xsi:type="utility:TranslatableString" xmi:id="string0" key="Palette.Category.SWTCustomControls" bundle="bundle"/>
+    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry300" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry300obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CBanner"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string300" string="CBanner"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry301" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry301obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CCombo"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string301" string="CCombo"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry302" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry302obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CLabel"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string302" string="CLabel"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry303" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry303obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CTabFolder"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string303" string="CTabFolder"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry304" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry304obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CTabItem"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string304" string="CTabItem"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry305" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry305obj"
+          creationClassURI="java:/org.eclipse.swt.custom#ScrolledComposite"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string305" string="ScrolledComposite"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry306" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry306obj"
+          creationClassURI="java:/org.eclipse.swt.custom#StyledText"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string306" string="StyledText"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry307" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/sashform_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry307obj"
+          creationClassURI="java:/org.eclipse.swt.custom#SashForm"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string307" string="SashForm"/>
+      </cmpEntries>
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry308" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry308obj"
+          creationClassURI="java:/org.eclipse.swt.custom#ViewForm"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string308" string="ViewForm"/>
+      </cmpEntries>
     </cmpGroups> 
   </palette:CategoryCmp>
   <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
