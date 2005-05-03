@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.33 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.34 $  $Date: 2005-05-03 22:28:16 $ 
  */
 
 import java.util.Iterator;
@@ -23,13 +23,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -101,6 +99,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 
         EClassifier argType = null ;
         String newInitString = NULL_STRING;
+		Expression newInitASTExpression = null;
         IJavaInstance newPropInstance = null;
         
         if (fFmapper.isFieldFeature()) {
@@ -111,8 +110,10 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
                newPropInstance = createPropertyInstance(((Assignment)getExpression()).getRightHandSide(), argType);
             else
                newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(sf);
-            if (newPropInstance!=null)
+            if (newPropInstance!=null){
                 newInitString = ((Assignment)getExpression()).getRightHandSide().toString();
+				newInitASTExpression = ((Assignment)getExpression()).getRightHandSide();
+            }
         }
         else {
             // Regular setter JCMMethod
@@ -126,8 +127,10 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		    	newPropInstance = createPropertyInstance((Expression)argExpr.get(0), argType);
 	        else
 	            newPropInstance = (IJavaInstance) fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));
-		    if (newPropInstance!=null)
+		    if (newPropInstance!=null){
                 newInitString = ((Expression)argExpr.get(0)).toString();
+				newInitASTExpression = ((Expression)argExpr.get(0));
+		    }
         }
         	    
 	    
@@ -142,15 +145,29 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		
   		// Smart decoding capability:
 		// If the value has not changed - no need to re-apply it
-		boolean currentValueSet = target.eIsSet(sf);
-		if(currentValueSet){
+		if(target.eIsSet(sf) && newInitASTExpression!=null){
+			boolean changed = true;
 			Object currentValue = target.eGet(sf);
-			String currentInitString;
-			if (currentValue != null)
-				currentInitString = CodeGenUtil.getInitString((IJavaInstance)currentValue, fOwner.getBeanModel(), null, getExpressionReferences());
-			else
-				currentInitString = NULL_STRING;
-			if(currentInitString.equals(newInitString)) 
+			if(currentValue==null){
+				// explicitly null value set - check if new value is null also
+				if(newInitASTExpression instanceof NullLiteral)
+					changed = false;
+			}else{
+				JavaAllocation currentAlloc = ((IJavaInstance)currentValue).getAllocation();
+				if (currentAlloc instanceof InitStringAllocation) {
+					InitStringAllocation currentInitStrAlloc = (InitStringAllocation) currentAlloc;
+					String currentInitString = currentInitStrAlloc.getInitString();
+					if(currentInitString.trim().equals(newInitString.trim()))
+						changed = false;
+				}else if(currentAlloc instanceof ParseTreeAllocation){
+					ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) currentAlloc;
+					PTExpression currentPTExpression = currentPTAlloc.getExpression();
+					CodeExpressionRef exp = fOwner.getExprRef();
+					PTExpression newInitPTExpression = ConstructorDecoderHelper.getParsedTree(newInitASTExpression, exp.getMethod(), exp.getOffset(), fbeanPart.getModel(),  getExpressionReferences());
+					changed = !CodeGenUtil.areParseTreesEqual(currentPTExpression, newInitPTExpression);
+				}
+			}
+			if(!changed) 
 				return true; 			
 		}
 		
