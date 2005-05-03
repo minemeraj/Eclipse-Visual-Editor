@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.37 $  $Date: 2005-04-21 18:47:12 $ 
+ *  $Revision: 1.38 $  $Date: 2005-05-03 22:28:16 $ 
  */
 
 
@@ -533,6 +533,12 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 			return index;
 	}
 	return -1;
+}
+
+public static boolean areParseTreesEqual(PTExpression exp1, PTExpression exp2){
+	PTExpressionComparator comparator = new PTExpressionComparator(exp2);
+	exp1.accept(comparator);
+	return comparator.isEqual();
 }
 
 public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel model, List importList, List refList) {
