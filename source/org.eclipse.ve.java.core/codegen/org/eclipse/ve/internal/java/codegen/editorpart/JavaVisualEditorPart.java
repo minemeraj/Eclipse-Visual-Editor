@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.100 $  $Date: 2005-04-22 20:57:55 $ 
+ *  $Revision: 1.101 $  $Date: 2005-05-04 15:13:16 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -910,18 +910,19 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		refreshTextPage();
 	}
 
-	private static final Map XML_TEXT_OPTIONS;
+	private static final Map XML_SAVE_CACHE_OPTIONS;
 	static {
-		XML_TEXT_OPTIONS = new HashMap(2);
-		XML_TEXT_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
-		XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
+		XML_SAVE_CACHE_OPTIONS = new HashMap(3);
+		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
+        XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
 	}
 	public void refreshTextPage() {
 		if (xmlTextPage != null && modelBuilder != null && modelBuilder.getModelRoot() != null) {
 			if (modelBuilder.getModelRoot().eResource() != null) {
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {
-					modelBuilder.getModelRoot().eResource().save(os, XML_TEXT_OPTIONS);
+					modelBuilder.getModelRoot().eResource().save(os, XML_SAVE_CACHE_OPTIONS);
 					xmlTextPage.setText(os.toString());
 				} catch (Exception e) {
 					JavaVEPlugin.log(e, Level.WARNING);

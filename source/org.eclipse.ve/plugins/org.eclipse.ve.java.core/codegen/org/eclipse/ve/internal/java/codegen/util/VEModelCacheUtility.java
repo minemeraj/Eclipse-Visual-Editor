@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-18 21:45:17 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-04 15:13:16 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -40,18 +40,19 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * @since 1.0.0
  */
 public class VEModelCacheUtility {	
-	private static final Map XML_TEXT_OPTIONS;
+	private static final Map XML_CACHE_SAVE_OPTIONS;
 	static {
 		// Normally focus on speed not readability
-		XML_TEXT_OPTIONS = new HashMap(3);
-		XML_TEXT_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
-		XML_TEXT_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
+		XML_CACHE_SAVE_OPTIONS = new HashMap(4);
+        XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
 		// /debug/consolelog option in the ve.java.core plugin
 		String option = JavaVEPlugin.getPlugin().getBundle().getSymbolicName()+VCEPreferences.DEBUG_CONSOLE_ECHO;
 		if ("true".equalsIgnoreCase(Platform.getDebugOption(option)))	     //$NON-NLS-1$
-           XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
+           XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
 		else
-		   XML_TEXT_OPTIONS.put(XMLResource.OPTION_FORMATTED, Boolean.FALSE);
+		   XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_FORMATTED, Boolean.FALSE);
 	}
 	
 	private static boolean isCacheDirectory = false;
@@ -151,14 +152,14 @@ public class VEModelCacheUtility {
 				monitor.worked(1);
 				if (model.getModelResource().getURI().equals(getCacheURI(model.getFile()))) {				   				   
 				   monitor.worked(1);
-				   model.getModelResource().save(XML_TEXT_OPTIONS);
+				   model.getModelResource().save(XML_CACHE_SAVE_OPTIONS);
 				}
 				else {
 				  File f = getCachedPath(model.getFile()).toFile();
 				  monitor.worked(1);
 				  monitor.subTask(Messages.getString("VEModelCacheUtility.4")+f.getName()); //$NON-NLS-1$
 				  FileOutputStream os = new FileOutputStream(f);				
-				  model.getModelResource().save(os, XML_TEXT_OPTIONS);
+				  model.getModelResource().save(os, XML_CACHE_SAVE_OPTIONS);
 				  os.close();
 				}
 			} catch (Exception e) {
