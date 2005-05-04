@@ -166,17 +166,12 @@
           creationClassURI="java:/org.eclipse.swt.custom#CTabFolder"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string303" string="CTabFolder"/>
       </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry304" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry304obj"
-          creationClassURI="java:/org.eclipse.swt.custom#CTabItem"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string304" string="CTabItem"/>
-      </cmpEntries>
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry305" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry305obj"
           creationClassURI="java:/org.eclipse.swt.custom#ScrolledComposite"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string305" string="ScrolledComposite"/>
       </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry306" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif">
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry306" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry306obj"
           creationClassURI="java:/org.eclipse.swt.custom#StyledText"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string306" string="StyledText"/>
