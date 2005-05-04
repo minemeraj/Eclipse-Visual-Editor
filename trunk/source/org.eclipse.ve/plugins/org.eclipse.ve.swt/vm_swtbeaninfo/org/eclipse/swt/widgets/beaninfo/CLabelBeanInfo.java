@@ -44,6 +44,12 @@ public class CLabelBeanInfo extends IvjBeanInfo {
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		try {
 			PropertyDescriptor aDescriptorList[] = {
+				// image
+				super.createPropertyDescriptor(getBeanClass(),"image", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CLabelMessages.getString("imageDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CLabelMessages.getString("imageSD"), //$NON-NLS-1$
+				}
+				),
 				// text
 				super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, CLabelMessages.getString("textDN"), //$NON-NLS-1$
