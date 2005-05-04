@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.9 $ $Date: 2005-04-21 19:24:48 $
+ * $Revision: 1.10 $ $Date: 2005-05-04 22:08:48 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -412,6 +412,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			addFeedback(getGridLayoutGridFigure());
 		
 		Polyline fb = getLineFeedback();
+		fb.setLineWidth(4);
 		
 		boolean before = true;
 		int epIndex = getFeedbackIndexFor(request);	
