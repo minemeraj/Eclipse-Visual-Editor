@@ -11,12 +11,12 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-04-05 21:53:36 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-05-04 21:12:20 $
  */
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -35,6 +35,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.java.core.*;
 
 /**
@@ -81,7 +82,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	protected IFigure createFigure() {
 		ImageFigure fig = new ImageFigure();
 		if (border)
-			fig.setBorder(new OutlineBorder());
+			fig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_DOT));
 		fig.setOpaque(!transparent);
 		if (!transparent) {
 			imageFigureController = new ImageFigureController();			
