@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-11 17:44:27 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-04 22:07:33 $ 
  */
 
 import org.eclipse.draw2d.ColorConstants;
@@ -74,7 +74,6 @@ protected void paintFigure(Graphics g){
 	// instead of dotted red lines. Setting the Graphics line width to 2 is a workaround and all the code
 	// for setting and restoring the linewidth should be removed once the bug is fixed.
 	int orgLineWidth = g.getLineWidth();
-	g.setLineWidth(2);
 	
 	g.setForegroundColor(ColorConstants.red);
 	g.setLineStyle(Graphics.LINE_DOT);
