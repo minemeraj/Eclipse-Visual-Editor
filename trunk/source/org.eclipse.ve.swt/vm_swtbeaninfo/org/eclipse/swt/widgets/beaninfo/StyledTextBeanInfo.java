@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: StyledTextBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-03 21:16:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-04 21:04:39 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -29,9 +29,13 @@ public class StyledTextBeanInfo extends IvjBeanInfo {
 	 */
 	public EventSetDescriptor[] getEventSetDescriptors() {
 		return new EventSetDescriptor[] {
-				//ExtendedModify, LineGetBackground, LineGetSegments, LineGetStyle, VerifyKey
+				BidiSegmentListenerEventSet.getEventSetDescriptor(getBeanClass()),
+				ExtendedModifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
+				LineBackgroundListenerEventSet.getEventSetDescriptor(getBeanClass()),
+				LineStyleListenerEventSet.getEventSetDescriptor(getBeanClass()),
 				ModifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
 				SelectionListenerEventSet.getEventSetDescriptor(getBeanClass()),
+				VerifyKeyListenerEventSet.getEventSetDescriptor(getBeanClass()),
 				VerifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
 		};
 	}
@@ -71,8 +75,16 @@ public class StyledTextBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"caretOffset", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("caretOffsetDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("caretOffsetSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
+				// content
+				super.createPropertyDescriptor(getBeanClass(),"content", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, StyledTextMessages.getString("contentDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, StyledTextMessages.getString("contentSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
+				}
+				),				
 				// double click enabled
 				super.createPropertyDescriptor(getBeanClass(),"doubleClickEnabled", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("doubleClickEnabledDN"), //$NON-NLS-1$
@@ -83,18 +95,33 @@ public class StyledTextBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"editable", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("editableDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("editableSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// horizontal index
 				super.createPropertyDescriptor(getBeanClass(),"horizontalIndex", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("horizontalIndexDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("horizontalIndexSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// horizontal pixel
 				super.createPropertyDescriptor(getBeanClass(),"horizontalPixel", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("horizontalPixelDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("horizontalPixelSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
+				}
+				),
+				// selectionBackground
+				super.createPropertyDescriptor(getBeanClass(),"selectionBackground", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, StyledTextMessages.getString("selectionBackgroundDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, StyledTextMessages.getString("selectionBackgroundSD"), //$NON-NLS-1$
+				}
+				),
+				// selectionForeground
+				super.createPropertyDescriptor(getBeanClass(),"selectionForeground", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, StyledTextMessages.getString("selectionForegroundDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, StyledTextMessages.getString("selectionForegroundSD"), //$NON-NLS-1$
 				}
 				),
 				// tabs
@@ -119,12 +146,14 @@ public class StyledTextBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"topIndex", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("topIndexDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("topIndexSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 				// topPixel
 				super.createPropertyDescriptor(getBeanClass(),"topPixel", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, StyledTextMessages.getString("topPixelDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, StyledTextMessages.getString("topPixelSD"), //$NON-NLS-1$
+					EXPERT, Boolean.TRUE,
 				}
 				),
 			};
