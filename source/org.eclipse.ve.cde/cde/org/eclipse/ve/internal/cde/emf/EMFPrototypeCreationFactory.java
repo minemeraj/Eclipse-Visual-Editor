@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFPrototypeCreationFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-04 21:59:48 $ 
  */
 
 import java.util.ArrayList;
@@ -53,6 +53,17 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 	public EMFPrototypeCreationFactory(String prototypeURIString) {
 		setPrototypeURI(URI.createURI(prototypeURIString));
 	}
+	
+	/**
+	 * Create using the given resource and the fragment referring to the main prototype.
+	 * @param protoTypeFragment
+	 * @param prototypeResource
+	 * 
+	 * @since 1.1.0
+	 */
+	public EMFPrototypeCreationFactory(String protoTypeFragment, Resource prototypeResource) {
+		getPrototypes(protoTypeFragment, prototypeResource);
+	}
 
 	public void setPrototypeURI(URI prototypeURI) {
 		this.prototypeURI = prototypeURI;
@@ -62,25 +73,36 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 	 * @see IDomainedFactory#setEditDomain(EditDomain)
 	 */
 	public void setEditDomain(EditDomain domain) {
-		// Now that we have a domain, find and set the actual prototype
-		// We are being activated, so this is a good time to do it.
-
-		prototype = null;
-		prototypes = null;
 		if (prototypeURI != null) {
-			ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
-			Resource res = rset.getResource(prototypeURI.trimFragment(), true);
-			if (res != null) {
-				prototype = res.getEObject(prototypeURI.fragment());
-				if (prototype != null) {
-					if (prototype.eContainer() != null) {
-						prototype = null;
-						System.out.println("Prototype from URI is not contained directly by the Resource. URI=" + prototypeURI); //$NON-NLS-1$
-					} else {
-						prototypes = new ArrayList(res.getContents()); // Make of copy of the list of all of the prototypes.
-					}
+			// Now that we have a domain, find and set the actual prototype
+			// We are being activated, so this is a good time to do it.
+
+			prototype = null;
+			prototypes = null;
+			if (prototypeURI != null) {
+				ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
+				Resource res = rset.getResource(prototypeURI.trimFragment(), true);
+				if (res != null) {
+					getPrototypes(prototypeURI.fragment(), res);
+					rset.getResources().remove(res); //Dispose of the resource.
 				}
-				rset.getResources().remove(res); //Dispose of the resource.
+			}
+		}
+	}
+
+	/**
+	 * @param res
+	 * 
+	 * @since 1.1.0
+	 */
+	private void getPrototypes(String prototypeFragment, Resource res) {
+		prototype = res.getEObject(prototypeFragment);
+		if (prototype != null) {
+			if (prototype.eContainer() != null) {
+				prototype = null;
+				System.out.println("Prototype from URI is not contained directly by the Resource. Res="+res.getURI()+ " Fragment=" + prototypeFragment); //$NON-NLS-1$
+			} else {
+				prototypes = new ArrayList(res.getContents()); // Make of copy of the list of all of the prototypes.
 			}
 		}
 	}
