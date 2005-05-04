@@ -36,7 +36,6 @@ public class FontPropertyEditor implements PropertyEditor, INeedData {
 	public Control createControl(Composite parent, int style) {
 		if (customFontEditor == null || customFontEditor.isDisposed()) {
 			customFontEditor = new FontCustomPropertyEditor(parent, style, value, fExistingValue, fEditDomain);
-			parent.setLayout(new FillLayout());
 		}
 		return customFontEditor;
 	}
