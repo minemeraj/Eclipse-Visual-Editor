@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-21 19:24:48 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-05 00:27:04 $ 
  */
 
 import java.util.*;
@@ -56,7 +56,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	protected IFigure fCursorFigure = null;
 	protected Label xCursorLabel = null;
 	protected Label yCursorLabel = null;
-	protected GridBagLayoutCursorHelper fCursorHelper = null;
+	protected CursorHelper fCursorHelper = null;
 	protected RectangleFigure fColumnFigure = null, fRowFigure = null;
 	protected GridBagLayoutPolicyHelper helper = new GridBagLayoutPolicyHelper();
 	protected ContainerPolicy containerPolicy; // Handles the containment functions
@@ -508,7 +508,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		// Now create the PopupHelper to contain the overall figure so that the cursor
 		// feedback will paint over the top of other views if necessary.
 		if (fCursorHelper == null) {
-			fCursorHelper = new GridBagLayoutCursorHelper(getHost().getViewer().getControl());
+			fCursorHelper = new CursorHelper(getHost().getViewer().getControl());
 		}
 		fCursorHelper.showCursorFigure(fCursorFigure, absolutePosition.x, absolutePosition.y);
 		

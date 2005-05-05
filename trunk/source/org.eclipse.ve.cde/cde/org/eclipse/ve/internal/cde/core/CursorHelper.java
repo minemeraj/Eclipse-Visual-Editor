@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.jfc.core;
+package org.eclipse.ve.internal.cde.core;
 /*
- *  $RCSfile: GridBagLayoutCursorHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $RCSfile: CursorHelper.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-05 00:27:04 $ 
  */
 
 import org.eclipse.draw2d.IFigure;
@@ -19,9 +19,9 @@ import org.eclipse.draw2d.PopUpHelper;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.widgets.Control;
 
-public class GridBagLayoutCursorHelper extends PopUpHelper {
+public class CursorHelper extends PopUpHelper {
 
-	public GridBagLayoutCursorHelper(Control c){
+	public CursorHelper(Control c){
 		super(c);
 	}
 	
