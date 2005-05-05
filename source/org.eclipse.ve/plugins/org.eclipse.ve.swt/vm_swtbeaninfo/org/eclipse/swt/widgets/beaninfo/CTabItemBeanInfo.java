@@ -43,6 +43,12 @@ public class CTabItemBeanInfo extends IvjBeanInfo {
 					SHORTDESCRIPTION, CTabItemMessages.getString("fontSD"), //$NON-NLS-1$
 				}
 				),
+				// control
+				super.createPropertyDescriptor(getBeanClass(),"control", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabItemMessages.getString("controlDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabItemMessages.getString("controlSD"), //$NON-NLS-1$
+				}
+				),
 				// toolTipText
 				super.createPropertyDescriptor(getBeanClass(),"toolTipText", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, CTabItemMessages.getString("toolTipTextDN"), //$NON-NLS-1$
