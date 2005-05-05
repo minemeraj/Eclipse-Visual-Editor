@@ -47,7 +47,8 @@ public class BeanSWTUtilities {
 		getLocationMethodProxy,
 		getChildrenMethodProxy,		
 		computeSizeMethodProxy,
-		setTabfolderSelectionMethodProxy;
+		setTabfolderSelectionMethodProxy,
+		setCTabfolderSelectionMethodProxy;
 
     public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
 
@@ -240,6 +241,28 @@ public class BeanSWTUtilities {
 
                         public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
                             return setTabfolderSelectionMethodProxy.invoke(aTabFolderBeanProxy, intBeanProxy);
+                        }
+                    });
+        }
+    }
+	
+    /**
+     * Set the selection on the CTabFolder which brings the respective tab to the front.
+     */
+    public static void invoke_ctabfolder_setSelection(final IBeanProxy aCTabFolderBeanProxy, final IIntegerBeanProxy intBeanProxy) {
+    	BeanSWTUtilities constants = getConstants(aCTabFolderBeanProxy);
+    	
+    	if (constants.setCTabfolderSelectionMethodProxy == null) {
+    		constants.setCTabfolderSelectionMethodProxy = aCTabFolderBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.custom.CTabFolder").getMethodProxy( //$NON-NLS-1$
+    			"setSelection", "int"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.setCTabfolderSelectionMethodProxy != null) {
+        	final IMethodProxy setCTabfolderSelectionMethodProxy = constants.setCTabfolderSelectionMethodProxy;
+            JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aCTabFolderBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return setCTabfolderSelectionMethodProxy.invoke(aCTabFolderBeanProxy, intBeanProxy);
                         }
                     });
         }
