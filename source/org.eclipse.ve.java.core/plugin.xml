@@ -155,7 +155,7 @@
                label="%PopupMenus.RenameAction.Label Rename field"
                class="org.eclipse.ve.internal.java.codegen.editorpart.RenameJavaBeanObjectActionDelegate"
                menubarPath="org.eclipse.gef.group.edit"
-               enablesFor="1"
+               enablesFor="+"
                id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
          </action>
       </objectContribution>

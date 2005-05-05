@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-05 22:34:27 $ 
  */
 
 
@@ -49,6 +49,9 @@ public class VCEPreferences {
 	public static final String MAX_AWT_COMPONENT_IMAGE_HEIGHT = "MAX_AWT_COMPONENT_IMAGE_HEIGHT";	//$NON-NLS-1$
 	public static final int DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT = 3000;
     
+	// Rename instance preferences
+	public static final String RENAME_INSTANCE_ASK_KEY ="RENAME_INSTANCE_ASK_KEY";
+	public static final boolean RENAME_INSTANCE_ASK_DEFAULT = true;
     
     // The following are run time options
     public static final String DEBUG_CONSOLE_ECHO   = "/debug/logtrace" ; // Dump all logs to console //$NON-NLS-1$
@@ -144,6 +147,7 @@ public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	aStore.setDefault(VCEPreferences.JVE_PATTERN_STYLE_ID, "GetterStyle");		 //$NON-NLS-1$
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_WIDTH, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_WIDTH);
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_HEIGHT, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT);
+	aStore.setDefault(VCEPreferences.RENAME_INSTANCE_ASK_KEY, VCEPreferences.RENAME_INSTANCE_ASK_DEFAULT);
 }
 
 /**

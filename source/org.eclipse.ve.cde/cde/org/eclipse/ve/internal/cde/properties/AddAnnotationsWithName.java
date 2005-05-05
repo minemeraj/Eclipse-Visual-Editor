@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.properties;
  *******************************************************************************/
 /*
  *  $RCSfile: AddAnnotationsWithName.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-05 22:34:28 $ 
  */
 import java.util.*;
 
@@ -20,10 +20,12 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.cde.commands.AddAnnotationsCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cdm.Annotation;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
@@ -46,24 +48,34 @@ public class AddAnnotationsWithName extends AddAnnotationsCommand {
 	 */
 	protected Command getAdditionalCommands(List annotations, EditDomain domain) {
 		CommandBuilder cb = new CommandBuilder();
+		
+		// First get the appropriate NameInComposition Property Descriptor.
+		// It could be that other property descritors want to do something special - like rename the name
 
-		HashSet addedNames = new HashSet(annotations.size());
-		Iterator anns = annotations.iterator();
-		while (anns.hasNext()) {
-			Annotation ann = (Annotation) anns.next();
-			Object ks = ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-			if (ks instanceof String) {
-				String newName = NameInCompositionPropertyDescriptor.getUniqueNameInComposition(domain, (String) ks, addedNames);
-				if (!newName.equals(ks)) {
-					// We need to apply the new unique name
-					addedNames.add(newName); // So that it won't be used again.
-					// We always apply an entire new keyvalue, not just modify the setting.
-					EStringToStringMapEntryImpl newKs =
-						(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
-					newKs.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-					newKs.setValue(newName);
-					cb.applyAttributeSetting(ann, newKs);
-				}
+		NameInCompositionPropertyDescriptor pd = 
+			(NameInCompositionPropertyDescriptor) domain.getKeyedPropertyDescriptor(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+		
+		Annotation[] annotationsArray = new Annotation[annotations.size()];
+		String[] names = new String[annotationsArray.length];
+		for(int aCount=0; aCount<annotations.size(); aCount++){
+			annotationsArray[aCount] = (Annotation) annotations.get(aCount);
+			Object ks = annotationsArray[aCount].getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			if(ks instanceof String)
+				names[aCount] = (String)ks;
+			else
+				names[aCount] = null;
+		}
+		
+		String[] uniqueNames = pd.getUniqueNamesInComposition(domain, names, annotationsArray);
+		
+		for (int unCount = 0; unCount < uniqueNames.length; unCount++) {
+			if (!uniqueNames[unCount].equals(names[unCount])) {
+				// We always apply an entire new keyvalue, not just modify the setting.
+				EStringToStringMapEntryImpl newKs =
+					(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+				newKs.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				newKs.setValue(uniqueNames[unCount]);
+				cb.applyAttributeSetting(annotationsArray[unCount], newKs);
 			}
 		}
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.27 $  $Date: 2005-05-03 21:08:35 $ 
+ *  $Revision: 1.28 $  $Date: 2005-05-05 22:34:27 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -43,7 +43,7 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
 /**
  * ChooseBeanDioalog - for selecting existing beans.
@@ -168,18 +168,23 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 		}
 		
 		// Variable name section
-		Composite beanNameComposite = new Composite(area, SWT.NONE);
-		beanNameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		beanNameComposite.setLayout(new GridLayout(2, false));
-		Label image = new Label(beanNameComposite, SWT.NONE);
-		image.setImage(JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_FIELD_PUBLIC));
-		Label beanNameLabel = new Label(beanNameComposite, SWT.NONE);
-		beanNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		beanNameLabel.setText("Bean name");
-		Label spacer = new Label(beanNameComposite, SWT.NONE);
-		spacer.setText(""); // to remove NO READ warning
-		beanNameText = new Text(beanNameComposite, SWT.BORDER|SWT.BORDER);
-		beanNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		if(!JavaVEPlugin.getPlugin().getPreferenceStore().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY)){
+			// Bean name dialog will not be used - rename here
+			
+			Composite beanNameComposite = new Composite(area, SWT.NONE);
+			beanNameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			beanNameComposite.setLayout(new GridLayout(2, false));
+			Label image = new Label(beanNameComposite, SWT.NONE);
+			image.setImage(JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_FIELD_PUBLIC));
+			Label beanNameLabel = new Label(beanNameComposite, SWT.NONE);
+			beanNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			beanNameLabel.setText("Bean name");
+			Label spacer = new Label(beanNameComposite, SWT.NONE);
+			spacer.setText(""); // to remove NO READ warning
+		
+			beanNameText = new Text(beanNameComposite, SWT.BORDER|SWT.BORDER);
+			beanNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		}
 		
 		// finished
         applyDialogFont(area);
@@ -234,19 +239,18 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 
 	public IStatus validate(Object[] selection) {
 		IStatus validate = null;
+		beanName = "";
 		if(selection!=null && selection.length>0){
 			validate = ChooseBeanDialogUtilities.getClassStatus(selection[0], pkg.getElementName(), resourceSet, javaSearchScope);
 			if(validate.getSeverity()==IStatus.OK){
 				if (selection[0] instanceof TypeInfo) {
 					TypeInfo ti = (TypeInfo) selection[0];
-					String name = ChooseBeanDialogUtilities.getFieldProposal(ti.getFullyQualifiedName(), editDomain, resourceSet);
-					beanNameText.setText(name==null?new String():name);
+					beanName = ChooseBeanDialogUtilities.getFieldProposal(ti.getFullyQualifiedName(), editDomain, resourceSet);
+					if(beanNameText!=null && !beanNameText.isDisposed())
+						beanNameText.setText(beanName==null?new String():beanName);
 				}
 			}
-		}else{
-			beanNameText.setText(new String());
 		}
-		beanName = beanNameText.getText();
 		return validate;
 	}
 
