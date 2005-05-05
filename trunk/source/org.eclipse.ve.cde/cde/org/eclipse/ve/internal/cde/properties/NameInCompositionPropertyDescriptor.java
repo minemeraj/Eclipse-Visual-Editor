@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-05 22:34:28 $ 
  */
 
+import java.util.*;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -213,5 +214,24 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			this.pos = pos;
 			this.des = des;
 		}
+	}
+
+	/**
+	 * Returns the list of unique names for names and annotations passed in.
+	 * 
+	 * @param domain
+	 * @param names  List of names of the passed in annotations
+	 * @param annotations  List of annotations
+	 * @return  unique names calculated from the names passed in
+	 * 
+	 * @since 1.1
+	 */
+	public String[] getUniqueNamesInComposition(EditDomain domain, String[] names, Annotation[] annotations) {
+		HashSet addedNames = new HashSet(names==null?0:names.length); //store already added names
+		String uniqueNames[] = new String[names==null?0:names.length];
+		for (int ac = 0; ac < uniqueNames.length; ac++) {
+			uniqueNames[ac] = getUniqueNameInComposition(domain, names[ac], addedNames);
+		}
+		return uniqueNames;
 	}
 }

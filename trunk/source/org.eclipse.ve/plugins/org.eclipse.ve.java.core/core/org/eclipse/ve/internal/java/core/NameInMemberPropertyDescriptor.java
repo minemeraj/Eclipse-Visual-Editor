@@ -10,25 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-05 22:34:27 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.swt.widgets.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
+import org.eclipse.ve.internal.cdm.AnnotationEMF;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
-import org.eclipse.ve.internal.cde.core.CDEMessages;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.jcm.MemberContainer;
+
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
 
 /**
@@ -39,7 +41,31 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
  */
 public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDescriptor {
 
+	/**
+	 * Dialog class to name beans when they are being added from the UI (Palette, ChooseBean, etc.)
+	 * 
+	 * @since 1.1
+	 */
+	public class NameChangeDialog extends AbstractRenameInstanceDialog{
+		public NameChangeDialog(Shell parentShell, String[] names, EObject[] annotates, EditDomain domain, boolean forceChange, boolean enableDontShowOption) {
+			super(parentShell, names, annotates, domain, forceChange, enableDontShowOption);
+		}
 
+		protected String getValidInstanceVariableName(EObject instance, String name, java.util.List currentNames) {
+			return getUniqueNameInComposition(domain, name, new HashSet(currentNames));
+		}
+
+		protected Control createDialogArea(Composite parent) {
+			setTitle("Bean Name");
+			setMessage("Provide names for beans");
+			return super.createDialogArea(parent);
+		}
+
+		protected void configureShell(Shell newShell) {
+			newShell.setText("Name");
+			super.configureShell(newShell);
+		}
+	}
 	/**
 	 * Member based name validator. It will validate name within the member container
 	 * of the source.
@@ -61,6 +87,66 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 			return getUniqueNameInMember(domain, (MemberContainer) container, name); 
 		}
 	}
+	
+//	public static class NameChangeDialog extends Dialog{
+//		
+//		protected String[] names = null;
+//		protected EObject[] annotates = null;
+//		protected EditDomain domain = null;
+//		protected ILabelProvider labelProvider = null;
+//		
+//		public NameChangeDialog(Shell parentShell, String[] names, EObject[] annotates, EditDomain domain) {
+//			super(parentShell);
+//			this.names = names;
+//			this.annotates = annotates;
+//			this.domain = domain;
+//			setShellStyle(getShellStyle()|SWT.RESIZE);
+//		}
+//		
+//		protected Control createDialogArea(Composite parent) {
+//			Composite top = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
+//			top.setLayout(new GridLayout(3, false));
+//			for (int nameCount = 0; nameCount < names.length; nameCount++) {
+//				Image image = JavaVEPlugin.getJavaBeanImage();
+//				String name = names[nameCount];
+//				if(annotates[nameCount]!=null){
+//					labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(domain).getLabelProvider(annotates[nameCount].eClass());
+//					if(labelProvider!=null){
+//						name = labelProvider.getText(annotates[nameCount]);
+//						image = labelProvider.getImage(annotates[nameCount]);
+//					}
+//				}
+//				Label imageLabel = new Label(top, SWT.NONE);
+//				imageLabel.setImage(image);
+//				
+//				Label nameLabel = new Label(top, SWT.NONE);
+//				nameLabel.setText(name);
+//				
+//				Text text = new Text(top, SWT.BORDER);
+//				text.setText(names[nameCount]);
+//				text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//			}
+//			
+//			Button checkbox = new Button(top, SWT.CHECK);
+//			checkbox.setText("Dont ask again");
+//			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+//			data.horizontalSpan=3;
+//			data.widthHint = 300;
+//			data.horizontalAlignment=SWT.END;
+//			checkbox.setLayoutData(data);
+//
+//			return top;
+//		}
+//		
+//		public String[] getCurrentNames(){
+//			return names;
+//		}
+//	    protected void createButtonsForButtonBar(Composite parent) {
+//	        // create OK button only
+//	        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+//	                true);
+//	    }
+//	}
 	
 	/**
 	 * 
@@ -152,6 +238,30 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 		}
 
 		return componentName;
+	}
+
+	/**
+	 * 
+	 * @since 1.1
+	 */
+	public String[] getUniqueNamesInComposition(EditDomain domain, String[] names, Annotation[] annotations) {
+		String[] uniques = super.getUniqueNamesInComposition(domain, names, annotations);
+		if(JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY)){
+			EObject[] annotates = new EObject[annotations.length];
+			for (int i = 0; i < annotations.length; i++) {
+				if (annotations[i] instanceof AnnotationEMF) {
+					AnnotationEMF annotationEMF = (AnnotationEMF) annotations[i];
+					annotates[i] = annotationEMF.getAnnotates();
+				}else{
+					annotates[i] = null;
+				}
+			}
+			NameChangeDialog dialog = new NameChangeDialog(domain.getEditorPart().getSite().getShell(), uniques, annotates, domain, false, true);
+			if(dialog.open()==Dialog.OK){
+				uniques = dialog.getFinalNames();
+			}
+		}
+		return uniques;
 	}
 
 }

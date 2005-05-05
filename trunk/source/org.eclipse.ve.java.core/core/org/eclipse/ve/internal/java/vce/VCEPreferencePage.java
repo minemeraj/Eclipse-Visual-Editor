@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-27 06:43:08 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-05 22:34:27 $ 
  */
 
 import java.util.ArrayList;
@@ -63,6 +63,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected Table lookAndFeelTable;
 	protected ArrayList fLookAndFeelClasses = new ArrayList(4);
 	protected Button showGridCheckBox;
+	protected Button renameAskCheckbox;
 	
 	protected Button showWindowCheckBox;
 	protected Button showXMLTextCheckBox;
@@ -322,6 +323,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// the XML text for the JVE object model can be seen, both of which help debugging
 		
 		showGridCheckBox = createCheckBox(appearanceComposite, CDEMessages.getString("ShowGridAction.label"), 15); //$NON-NLS-1$
+		renameAskCheckbox = createCheckBox(appearanceComposite, "Prompt for bean name during creation", 15);
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowXMLText"), 15); //$NON-NLS-1$
@@ -330,7 +332,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			showWindowCheckBox.setVisible(false);
 		if (!VCEPreferences.isXMLText())
 			showXMLTextCheckBox.setVisible(false);
-
 	}
 	protected int getButtonWidthHint(Button aButton) {
 		GC fGC = new GC(aButton);
@@ -682,6 +683,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID));
+		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
 
@@ -777,6 +779,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
 		
 		cdeStore.setValue(CDEPlugin.SHOW_GRID,showGridCheckBox.getSelection());
+		fStore.setValue(VCEPreferences.RENAME_INSTANCE_ASK_KEY, renameAskCheckbox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
 
@@ -822,6 +825,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		showXMLTextCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SELECT_SOURCE));
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID));
+		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
 		for (int i = 0; i < items.length; i++) {
