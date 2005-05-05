@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,19 +30,150 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class SWTContainer implements IClasspathContainer, IConfigurationContributor {
 	
-	public final static int SWT_CONTAINER_CUSTOMED_PATH = 	0x01 ;
-	public final static int SWT_CONTAINER_TARGET_PATH = 	0x02 ;
-	public final static int SWT_CONTAINER_PLATFORM_PATH = 	0x03 ;
-	public final static int SWT_CONTAINER_JFACE_PATH =		0x10 ;
+	public final static int SWT_CONTAINER_PATH_CUSTOM = 	0x01 ;
+	public final static int SWT_CONTAINER_PATH_PDE = 		0x02 ;
+	public final static int SWT_CONTAINER_PATH_PLATFORM = 	0x04 ;
 	
-	public static final String SWT_CONTAINER_SIGNITURE = "SWT_CONTAINER" ;
-	public static final String SWT_CONTAINER_JFACE_SIGNITURE = "JFACE";
+	final static int SWT_CONTAINER_PATH = 	SWT_CONTAINER_PATH_CUSTOM|
+											SWT_CONTAINER_PATH_PDE|
+											SWT_CONTAINER_PATH_PLATFORM;	
+	public final static int SWT_CONTAINER_JFACE =		0x10 ;
+	
+	public static final String SWT_CONTAINER_SIGNITURE = 				"SWT_CONTAINER" ;
+	public static final String SWT_CONTAINER_SIGNITURE_JFACE = 			"JFACE";			
+	public static final String SWT_CONTAINER_SIGNITURE_PATH_PLATFORM = 	"PLATFORM";
+	public static final String SWT_CONTAINER_SIGNITURE_PATH_PDE = 		"PDE";
+	public static final String SWT_CONTAINER_SIGNITURE_PATH_CUSTOM = 	"CUSTOM";	
+	
+	public static class ContainerType {
+		private int pathType = SWT_CONTAINER_PATH_PLATFORM;
+		private String customPath = null;
+		static String platformPath = null;
+		String pdePath = null;
+	
+	   public ContainerType (IPath containerPath) {
+		   super();
+		   parsePath(containerPath);
+	   }
+	   
+	   public ContainerType () {
+		   super();		   
+	   }	   
+	   protected void parsePath (IPath containerPath) {
+			if (!containerPath.segment(0).equals(SWT_CONTAINER_SIGNITURE))
+				throw new IllegalStateException("Invalid Container ID: "+containerPath);
+			pathType=SWT_CONTAINER_PATH_PLATFORM;
+			
+			for (int i=1; i<containerPath.segmentCount(); i++) {
+				if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_JFACE))
+					setPathType(SWT_CONTAINER_JFACE, true);
+				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PLATFORM))
+					setPathType(SWT_CONTAINER_PATH_PLATFORM, true);
+				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PDE))
+					setPathType(SWT_CONTAINER_PATH_PDE, true);
+				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_CUSTOM)) {
+					setPathType(SWT_CONTAINER_PATH_PDE, true);
+					customPath = containerPath.removeFirstSegments(i).toString();	
+					break;
+				}
+			}
+			
+		}
+		/**
+		 * 
+		 * @param pathType  [SWT_CONTAINER_TARGET_PATH, SWT_CONTAINER_CUSTOMED_PATH, SWT_CONTAINER_PLATFORM_PATH] | SWT_CONTAINER_JFACE_PATH 
+		 * @param customPath In the case of SWT_CONTAINER_CUSTOMED_PATH, target path
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		public  IPath getContainerPath () {
+			IPath result = new Path (SWT_CONTAINER_SIGNITURE);
+			
+			if ((pathType&SWT_CONTAINER_JFACE)>0)
+				result = result.append(SWT_CONTAINER_SIGNITURE_JFACE);
+			
+			int path = pathType & SWT_CONTAINER_PATH;
+			switch (path) {
+				case SWT_CONTAINER_PATH_PLATFORM:
+					result = result.append(SWT_CONTAINER_SIGNITURE_PATH_PLATFORM);
+					break;
+				case SWT_CONTAINER_PATH_PDE:				
+					result = result.append(SWT_CONTAINER_SIGNITURE_PATH_PDE);
+					break;
+				case SWT_CONTAINER_PATH_CUSTOM:
+					result = result.append(SWT_CONTAINER_SIGNITURE_PATH_CUSTOM).append(customPath);
+					break;
+			}
+			return result;		
+		}	   
+		public void setPathType (int type, boolean flag) {
+			if ((type&SWT_CONTAINER_PATH)>0 && flag)
+				pathType &= ~SWT_CONTAINER_PATH;  // only allow one path type to be set
+			if (flag)
+				pathType |= type;
+			else
+				pathType &= ~type;
+			
+			if ((pathType&SWT_CONTAINER_PATH)==0)
+				pathType &= SWT_CONTAINER_PATH_PLATFORM; // Forec a default
+		}		
+		public boolean isPlatformPath() {
+			return (pathType&SWT_CONTAINER_PATH_PLATFORM)>0;
+		}		
+		public boolean isTargetPath() {
+			return (pathType&SWT_CONTAINER_PATH_PDE)>0;
+		}		
+		public boolean isCustomPath() {
+			return (pathType&SWT_CONTAINER_PATH_CUSTOM)>0;
+		}		
+		public boolean includeJFace() {
+			return (pathType&SWT_CONTAINER_JFACE)>0;
+		}		
+		public String getCustomPath() {
+			if (customPath!=null)
+			   return customPath;
+			else
+			   return ("");
+		}		
+		public void setCustomPath(String path) {
+			IPath p = new Path (path);
+			customPath = p.toPortableString();
+		}		
+		public String getPdePath() {
+			if (pdePath==null)
+				pdePath = SWTConfigurationContributor.getPDEPath();
+			return pdePath;
+		}		
+		public String getPlatformPath() {
+			if (platformPath==null)
+				platformPath = SWTConfigurationContributor.getPlatformPath(swtLibraries[0][0], swtLibraries[0][3], swtLibraries[0][4]).getPath().toOSString();
+			return platformPath;
+		}
+		public String toString() {
+			return getContainerPath().toPortableString();
+		}
+		
+		public boolean equals(Object o) {
+			if (o ==null || !(o instanceof SWTContainer.ContainerType))
+				return false;
+			
+			// Deal with migration issues
+			SWTContainer.ContainerType ct = (SWTContainer.ContainerType)o;			
+			return (ct.getContainerPath().equals(getContainerPath()));
+		}
+	
+    }
+
+
+
 	
 	private IClasspathEntry[] fClasspathEntries;
 	
 	private IPath containerPath;	// path for container, NOT path for resolved entry
+		
+	private ContainerType containerType = null;
 	
-	private int pathType = SWT_CONTAINER_PLATFORM_PATH;
 	
 	private boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
 			
@@ -98,28 +230,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						null, null } //$NON-NLS-1$ //$NON-NLS-2$
 	};
 	
-	private void setPathType (int type, boolean flag) {
-		if (flag)
-			pathType |= type;
-		else
-			pathType &= ~type;
-	}
+
 	
-	private boolean isPlatformPath() {
-		return (pathType&SWT_CONTAINER_PLATFORM_PATH)>0;
-	}
-	
-	private boolean isTargetPath() {
-		return (pathType&SWT_CONTAINER_TARGET_PATH)>0;
-	}
-	
-	private boolean isCustomPath() {
-		return (pathType&SWT_CONTAINER_CUSTOMED_PATH)>0;
-	}
-	
-	private boolean includeJFace() {
-		return (pathType&SWT_CONTAINER_JFACE_PATH)>0;
-	}
+
 	
 	/**
 	 * Return the class path entry for the .jar resource inside a plugin/fragment.  This is 
@@ -193,7 +306,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				JavaVEPlugin.log("Could not location class path for: "+swtLibraries[i][0]);				
 		}
 
-		if (includeJFace()) {
+		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
 				IClasspathEntry e = SWTConfigurationContributor.getPlatformPath(jfaceLibraries[i][0], jfaceLibraries[i][3], jfaceLibraries[i][4]);
 				if (e!=null)
@@ -221,14 +334,15 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		
 	}
 	
+	
+
+	
 	public SWTContainer(IPath containerPath) {
 		this.containerPath = containerPath;
-		
-		 setPathType(SWT_CONTAINER_JFACE_PATH, SWT_CONTAINER_JFACE_SIGNITURE.equals(containerPath.segment(1)));		 
-
+		containerType = new ContainerType(containerPath);		
 		try {
 			
-		    if (isPlatformPath()) 
+		    if (containerType.isPlatformPath()) 
 				initPlatformPath(containerPath);
 			
 
