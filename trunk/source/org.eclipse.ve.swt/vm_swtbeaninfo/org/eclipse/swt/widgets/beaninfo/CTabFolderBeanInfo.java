@@ -23,7 +23,7 @@ public class CTabFolderBeanInfo extends IvjBeanInfo {
 	 */
 	public EventSetDescriptor[] getEventSetDescriptors() {
 		return new EventSetDescriptor[] {
-				//CTabFolder2
+				CTabFolder2ListenerEventSet.getEventSetDescriptor(getBeanClass()),
 				SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 		};
 	}
