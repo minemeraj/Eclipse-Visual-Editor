@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-02 22:16:37 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-05 00:27:32 $ 
  */
 
 
@@ -19,13 +19,16 @@ package org.eclipse.ve.internal.cde.core;
 import java.util.*;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
@@ -46,11 +49,18 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	private GridController gridController;
 	private GridFigure gridFigure;
 	private IFigure targetFeedback;
+	protected IFigure fCursorFigure = null;
+	protected Cursor currentFeedbackCursor;
+	protected CursorHelper fCursorHelper = null;
+	private Label cursorLabel = null;
+	private Label yCursorLabel = null;
 	protected XYLayoutGridConstrainer layoutConstrainer;
 	ArrayList feedbackList;
 	
 	protected boolean allowZooming = false;
 	protected boolean allowGridding = true;
+
+	private IFigure sizeOnDropFeedback = null;
 	
 	
 /**
@@ -489,11 +499,28 @@ protected IFigure createDragTargetFeedbackFigure(Rectangle rect) {
  */
 protected void eraseLayoutTargetFeedback(Request request) {
 	super.eraseLayoutTargetFeedback(request);
+	if (cursorLabel != null) {
+		cursorLabel = null;
+	}
+	if (yCursorLabel != null) {
+		yCursorLabel = null;
+	}
+	if (fCursorFigure != null) {
+		fCursorFigure = null;
+	}
+	if (fCursorHelper != null) {
+		fCursorHelper.dispose();
+		fCursorHelper = null;
+	}
 	if (feedbackList != null) {
 		for (int i=0; i < feedbackList.size(); i++) {
 			removeFeedback((IFigure)feedbackList.get(i));
 		}
 		feedbackList = null;
+	}
+	if (sizeOnDropFeedback != null) {
+		removeFeedback(sizeOnDropFeedback);
+		sizeOnDropFeedback  = null;
 	}
 	if (targetFeedback != null) {
 		removeFeedback(targetFeedback);
@@ -525,6 +552,82 @@ protected IFigure getRectangleFeedback(Request request) {
 	return targetFeedback;	
 }
 
+/**
+ * Show feedback next to the cursor to indicate the gridx and gridy values as the 
+ * mouse is moved over each cell in the grid bag.
+ */
+protected void showCursorFeedback(Request aRequest) {
+	//	Get the cell location (gridx, gridy) based on whether the row and/or column figures
+	// are showing (i.e. we're near a row or column). If near one, get the hidden row/column
+	// so we can drop into it as well.
+	Point position = getLocationFromRequest(aRequest).getCopy();
+	// This point is absolute.  Make it relative to the model
+	org.eclipse.swt.graphics.Point absolutePosition = getHost().getViewer().getControl().toDisplay(position.x, position.y);
+	absolutePosition.x += 13;
+	absolutePosition.y += 6;
+	position.translate(-getHostFigure().getBounds().x, -getHostFigure().getBounds().y);
+	/**
+	 * The cursor feedback consists of a PopupHelper that contains a standard Figure with a FlowLayout.
+	 * The Figure contains two Labels, one that contains the X value representing the gridx value,
+	 * and the other Label containts the Y value representing the gridY value.
+	 */
+	
+	// First create the X and Y Labels
+	if (cursorLabel == null) {
+		cursorLabel = new Label();
+		cursorLabel.setOpaque(true);
+		cursorLabel.setBorder(new MarginBorder(new Insets(0,2,0,0)));
+		cursorLabel.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		cursorLabel.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.NORMAL));
+	}
+	cursorLabel.setText(String.valueOf(position.x)+", "+String.valueOf(position.y));
+	
+//	if (yCursorLabel == null) {
+//		yCursorLabel = new Label();
+//		yCursorLabel.setOpaque(true);
+//		yCursorLabel.setBorder(new MarginBorder(new Insets(0,2,0,0)));
+//		yCursorLabel.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+//	}
+//	yCursorLabel.setText(String.valueOf(position.y));
+
+	if (fCursorFigure == null){
+		fCursorFigure = new Figure();
+		FlowLayout fl = new FlowLayout();
+		fl.setMinorSpacing(1);
+		fCursorFigure.setLayoutManager(fl);
+		fCursorFigure.setBorder(new LineBorder());
+		fCursorFigure.setOpaque(true);
+		fCursorFigure.setBackgroundColor(ColorConstants.black);
+	}
+	fCursorFigure.add(cursorLabel);
+//	fCursorFigure.add(yCursorLabel);
+	// Now create the PopupHelper to contain the overall figure so that the cursor
+	// feedback will paint over the top of other views if necessary.
+	if (fCursorHelper == null) {
+		fCursorHelper = new CursorHelper(getHost().getViewer().getControl());
+	}
+	fCursorHelper.showCursorFigure(fCursorFigure, absolutePosition.x, absolutePosition.y);
+	
+//	// Update the cursor with the default cursor if the create request allows it
+//	if ( aRequest instanceof CDERequest && ((CDERequest) aRequest).get(Cursor.class) == null ) {
+//		// Need to use the basic Arrow cursor so we can show the row/column number underneath it
+//		// If we already have a cursor, don't create another.
+//		Cursor defaultCursor = new Cursor(getHost().getViewer().getControl().getDisplay(), SWT.CURSOR_ARROW);
+//		((CDERequest)aRequest).put(Cursor.class,defaultCursor);
+//		currentFeedbackCursor = defaultCursor;
+//	}
+	
+}
+/**
+ * Helper that can get the location from heteregenous request types
+ */
+protected Point getLocationFromRequest(Request request) {
+	if (request instanceof CreateRequest)
+		return ((CreateRequest) request).getLocation();
+	if (request instanceof ChangeBoundsRequest)
+		return ((ChangeBoundsRequest) request).getLocation();
+	return null;
+}
 /*
  * Handle when the figure is moved or resized.
  * Provide feedback on the overall figure and the request figure.
@@ -605,11 +708,27 @@ protected XYLayoutGridConstrainer createGridConstrainer() {
 
 protected void showLayoutTargetFeedback(Request request) {
 	getRectangleFeedback(request);
+	showCursorFeedback(request);
 }
 
 protected void showSizeOnDropFeedback(CreateRequest request) {	
 	super.showSizeOnDropFeedback(request);
-	// TODO Need to get this snapping to the grid
+//	if (sizeOnDropFeedback == null) {
+//		sizeOnDropFeedback  = createDragTargetFeedbackFigure(new Rectangle());
+//		addFeedback(sizeOnDropFeedback);
+//	}
+//	Point p = new Point(request.getLocation().getCopy());
+//	Dimension size = request.getSize().getCopy();
+////	IFigure feedback = getSizeOnDropFeedback(request);
+////	sizeOnDropFeedback.translateToRelative(p);
+////	sizeOnDropFeedback.translateFromParent(p);
+////	sizeOnDropFeedback.translateToRelative(size);
+//	Rectangle rect = new Rectangle(p, size);
+//	if ( layoutConstrainer != null ) {
+//		// Let the layout constrainer adjust it
+//		rect = layoutConstrainer.adjustConstraintFor(rect);
+//	}
+//	sizeOnDropFeedback.setBounds(rect);
 }
 
 /**

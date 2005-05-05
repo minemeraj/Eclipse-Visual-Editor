@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-02 22:16:37 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-05 00:27:32 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -41,12 +41,14 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	protected Scale fGridWidthScale;
 	protected Scale fGridHeightScale;
 	protected Scale fGridMarginScale;
+	protected Button fShowGridCheckBox;
 
 	// working values
 	protected int fGridWidth;
 	protected int fGridHeight;
 	protected int fGridMargin;
 	protected boolean fWidthHeightSync = true;
+	protected boolean fShowGrid =  true;
 
 	public Control getControl(Composite parent) {
 
@@ -70,9 +72,27 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		data.grabExcessHorizontalSpace = true;
 		fieldsGroup.setLayoutData(data);
 
+		// Create show grid checkbox
+		fShowGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
+		fShowGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Show_Grid"));
+		data = new GridData();
+		data.horizontalSpan = 3;
+		fShowGridCheckBox.setLayoutData(data);
+		fShowGridCheckBox.setSelection(gridController.isGridShowing());
+		fShowGridCheckBox.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				if (fShowGridCheckBox.getSelection() != fShowGrid) {
+					fShowGrid = fShowGridCheckBox.getSelection();
+					gridController.setGridShowing(fShowGrid);
+				}
+				;
+			}
+		});
+
 		// Create width/height sync checkbox
 		fWidthHeightSyncCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fWidthHeightSyncCheckBox.setText("Keep width and height the same");
+		fWidthHeightSyncCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Keep_Width_Height_Same"));
 		data = new GridData();
 		data.horizontalSpan = 3;
 		fWidthHeightSyncCheckBox.setLayoutData(data);
@@ -91,7 +111,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid width label
 		Label widthLabel = new Label(fieldsGroup, SWT.NONE);
-		widthLabel.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.width")); //$NON-NLS-1$
+		widthLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.width")); //$NON-NLS-1$
 
 		data = new GridData();
 		data.widthHint = 40;
@@ -134,7 +154,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid height label
 		Label heightLabel = new Label(fieldsGroup, SWT.NONE);
-		heightLabel.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.height")); //$NON-NLS-1$
+		heightLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.height")); //$NON-NLS-1$
 		data = new GridData();
 		data.widthHint = 40;
 		heightLabel.setLayoutData(data);
@@ -175,7 +195,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid margin label
 		Label marginLabel = new Label(fieldsGroup, SWT.NONE);
-		marginLabel.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.margin")); //$NON-NLS-1$
+		marginLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.margin")); //$NON-NLS-1$
 		data = new GridData();
 		data.widthHint = 40;
 		marginLabel.setLayoutData(data);
@@ -228,7 +248,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	 */
 	protected String getLabelForSelection(ISelection newSelection) {
 		if (newSelection instanceof IStructuredSelection) {
-			if (((IStructuredSelection) newSelection).size() == 1) { return CDEMessages.getString("NullLayoutGridPropertiesPage.title"); //$NON-NLS-1$
+			if (((IStructuredSelection) newSelection).size() == 1) { return CDEMessages.getString("AlignmentXYGridPropertiesPage.title"); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -354,11 +374,11 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			fGridHeight = Integer.parseInt(fGridHeightText.getText());
 			if (fGridHeight <= 1) {
 				fGridHeightText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Height_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Height_Must_Be_Larger_Than_One")); //$NON-NLS-1$
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridHeightText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Height_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Height_Must_Be_Integer")); //$NON-NLS-1$
 		}
 
 		// Validate the grid width
@@ -366,22 +386,22 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			fGridWidth = Integer.parseInt(fGridWidthText.getText());
 			if (fGridWidth <= 1) {
 				fGridWidthText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Width_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Width_Must_Be_Larger_Than_One")); //$NON-NLS-1$
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridWidthText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Width_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Width_Must_Be_Integer")); //$NON-NLS-1$
 		}
 		// Validate the grid margin
 		try {
 			fGridMargin = Integer.parseInt(fGridMarginText.getText());
 			if (fGridMargin < 0) {
 				fGridMarginText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Margin_Must_Be_Positive")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Margin_Must_Be_Positive")); //$NON-NLS-1$
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridMarginText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("NullLayoutGridPropertiesPage.Margin_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Margin_Must_Be_Integer")); //$NON-NLS-1$
 		}
 		return fMessageLine.getText().length() > 0 ? false : true;
 	}
