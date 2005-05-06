@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-06 19:11:14 $ 
  */
 
 import java.util.ArrayList;
@@ -167,12 +167,7 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 			for (int count = 0; count < names.size(); count++) {
 				builder.append(((ICommandPropertyDescriptor) nameDescs.get(count)).setValue((IPropertySource)modelPSs.get(count), finalNames[count]));
 			}
-			ModelChangeController controller = (ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-			controller.doModelChanges(new Runnable() {
-				public void run() {
-					builder.getCompoundCommand().execute();
-				}
-			}, true);
+			domain.getCommandStack().execute(builder.getCommand());
 		}
 	}
 
