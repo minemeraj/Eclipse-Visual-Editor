@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-06 20:37:53 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,18 +143,18 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalAlignment=SWT.BEGINNING;
 			preferencesLink.setLayoutData(data);
-			preferencesLink.setText("<a>Preferences</a>");
+			preferencesLink.setText(MessageFormat.format("<a>{0}</a>", new Object[]{JavaMessages.getString("AbstractRenameInstanceDialog.Preferences")})); //$NON-NLS-1$ //$NON-NLS-2$
 			preferencesLink.addSelectionListener(new SelectionAdapter(){
 				public void widgetSelected(SelectionEvent e) {
 					Link link = (Link) e.getSource();
-					String prefID = "org.eclipse.ve.internal.java.vce.VCEPreferencePage";
+					String prefID = "org.eclipse.ve.internal.java.vce.VCEPreferencePage"; //$NON-NLS-1$
 					PreferencesUtil.createPreferenceDialogOn(link.getShell(), prefID, new String[]{prefID}, null).open();
 				}
 			});
 			
 			// dont ask again checkbox
 			Button checkbox = new Button(mainContainer, SWT.CHECK);
-			checkbox.setText("Do not ask again");
+			checkbox.setText(JavaMessages.getString("AbstractRenameInstanceDialog.Checkbox.DontAsk")); //$NON-NLS-1$
 			checkbox.setLayoutData(new GridData());
 			checkbox.setSelection(JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 			checkbox.addSelectionListener(new SelectionAdapter(){
@@ -194,7 +195,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 					String newNameSuggestion = getValidInstanceVariableName(annotates[nameCount], newNames[nameCount], currentNames);
 					if(!newNames[nameCount].equals(newNameSuggestion)){
 						// new name suggested
-						errorMessage = newNames[nameCount]+" is already being used. How about "+newNameSuggestion+" ?";
+						errorMessage = MessageFormat.format(JavaMessages.getString("AbstractRenameInstanceDialog.ErrorMsg.NotUnique"), new Object[]{newNames[nameCount], newNameSuggestion});  //$NON-NLS-1$
 						allNamesValid = false;
 						nameStatuses[nameCount].setImage(errorImage);
 						nameStatuses[nameCount].setToolTipText(errorMessage);

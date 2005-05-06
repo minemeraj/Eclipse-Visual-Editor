@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-06 20:37:53 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -56,13 +56,13 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 		}
 
 		protected Control createDialogArea(Composite parent) {
-			setTitle("Bean Name");
-			setMessage("Provide names for beans");
+			setTitle(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Dialog.Title")); //$NON-NLS-1$
+			setMessage(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Dialog.Message")); //$NON-NLS-1$
 			return super.createDialogArea(parent);
 		}
 
 		protected void configureShell(Shell newShell) {
-			newShell.setText("Name");
+			newShell.setText(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Shell.Title")); //$NON-NLS-1$
 			super.configureShell(newShell);
 		}
 	}
