@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-23 23:19:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-07 00:55:22 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -115,6 +115,10 @@ public class JSplitPaneProxyAdapter extends ContainerProxyAdapter {
 		if (!dividerSet && splitPaneManager != null)
 			splitPaneManager.resetToPreferredSizes();
 		super.childInvalidated(childProxy);
+	}
+	
+	public void revalidateBeanProxy() {
+		super.revalidateBeanProxy();
 	}
 
 	/* (non-Javadoc)

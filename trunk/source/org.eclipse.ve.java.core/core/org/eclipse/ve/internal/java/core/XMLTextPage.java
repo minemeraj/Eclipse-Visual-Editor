@@ -11,11 +11,12 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: XMLTextPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-07 00:55:29 $ 
  */
 
 
 
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Composite;
@@ -42,6 +43,10 @@ public void setText(final String aString){
 	} else {
 		fText = aString;
 	}
+}
+
+public String getSelectedText(){
+	return ((ITextSelection)viewer.getSelection()).getText();
 }
 
 public Control getControl() {

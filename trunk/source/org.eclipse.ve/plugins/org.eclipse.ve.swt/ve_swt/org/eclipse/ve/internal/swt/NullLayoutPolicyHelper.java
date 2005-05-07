@@ -77,7 +77,9 @@ public Command getCreateChildCommand(Object childComponent, Object parent, Objec
 		EStructuralFeature boundsSF = JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS);
 		if(child.eClass().getEStructuralFeature(boundsSF.getName())!=null){
 	   	  IJavaObjectInstance existing_constraint = (IJavaObjectInstance) child.eGet(JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS));
-		  if (existing_constraint != null) {
+		  // During a copy the constraint might be set before the child is in a state ready to be instantiated
+		  // if it was copied with a constraint so we must check the eContainer() before doing target VM work
+		  if (existing_constraint != null && child.eContainer() != null) {
 			 IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
 			 IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
 			 bounds =  new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
