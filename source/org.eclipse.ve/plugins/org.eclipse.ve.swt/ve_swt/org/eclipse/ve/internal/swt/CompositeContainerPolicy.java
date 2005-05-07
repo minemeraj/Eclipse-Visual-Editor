@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.13 $$  $$Date: 2005-04-14 15:53:37 $$ 
+ *  $$Revision: 1.14 $$  $$Date: 2005-05-07 00:55:19 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -67,7 +67,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 						PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
 						if(classInstanceCreation.getArguments().size() == 2){
 							Object firstArgument = classInstanceCreation.getArguments().get(0);
-							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals("{parentComposite}")){ //$NON-NLS-1$
+							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals(SwtPlugin.PARENT_COMPOSITE_TOKEN)){ //$NON-NLS-1$
 								PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
 								parentRef.setObject(correctParent);
 								classInstanceCreation.getArguments().remove(0);

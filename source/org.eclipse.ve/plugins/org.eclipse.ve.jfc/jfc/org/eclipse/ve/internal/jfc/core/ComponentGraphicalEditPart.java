@@ -11,32 +11,61 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-05-04 21:12:20 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-05-07 00:55:22 $
  */
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.core.runtime.*;
-import org.eclipse.draw2d.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.*;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
-
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
-
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.ContentsGraphicalEditPart;
+import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
+import org.eclipse.ve.internal.cde.core.IConstraintHandler;
+import org.eclipse.ve.internal.cde.core.IDirectEditableEditPart;
+import org.eclipse.ve.internal.cde.core.IVisualComponent;
+import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.cde.core.ImageFigureController;
+import org.eclipse.ve.internal.cde.core.OutlineBorder;
+import org.eclipse.ve.internal.java.codegen.core.CopyAction;
+import org.eclipse.ve.internal.java.codegen.core.DefaultCopyEditPolicy;
+import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
+import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.ErrorFigure;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.IErrorNotifier;
+import org.eclipse.ve.internal.java.core.IJavaBeanGraphicalContextMenuContributor;
+import org.eclipse.ve.internal.java.core.JavaBeanActionFilter;
+import org.eclipse.ve.internal.java.core.ToolTipAssistFactory;
+import org.eclipse.ve.internal.java.core.ToolTipContentHelper;
 
 /**
  * EditPart for a java.awt.Component. The parent editpart is responsible to set transparent. If transparent, then there won't be any image capture.
@@ -295,6 +324,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 				parent.installEditPolicy(FREEFORM_EDITPOLICY, new CompositionFreeFormComponentsEditPolicy());
 			}
 		}
+		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy());
 	}
 
 	private EStructuralFeature getDirectEditTargetProperty() {

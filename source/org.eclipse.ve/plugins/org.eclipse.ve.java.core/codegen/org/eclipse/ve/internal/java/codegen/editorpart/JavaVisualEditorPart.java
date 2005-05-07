@@ -11,101 +11,209 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.101 $  $Date: 2005-05-04 15:13:16 $ 
+ *  $Revision: 1.102 $  $Date: 2005-05-07 00:55:29 $ 
  */
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.gef.*;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.KeyHandler;
+import org.eclipse.gef.KeyStroke;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
-import org.eclipse.gef.palette.*;
+import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteDrawer;
+import org.eclipse.gef.palette.PaletteListener;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.CreationTool;
-import org.eclipse.gef.ui.actions.*;
-import org.eclipse.gef.ui.palette.*;
-import org.eclipse.gef.ui.parts.*;
+import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.DeleteAction;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
+import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.text.Assert;
-import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.actions.ActionContext;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.texteditor.IStatusField;
-import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.ui.views.properties.*;
-
 import org.eclipse.jem.internal.adapters.jdom.JavaClassJDOMAdaptor;
 import org.eclipse.jem.internal.adapters.jdom.JavaMethodJDOMAdaptor;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoClassAdapter;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
-
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
-
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.text.Assert;
+import org.eclipse.jface.util.ListenerList;
+import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.texteditor.IStatusField;
+import org.eclipse.ui.texteditor.RetargetTextEditorAction;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.ui.views.properties.IPropertySheetEntry;
+import org.eclipse.ui.views.properties.IPropertySheetEntryListener;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.PropertySheet;
+import org.eclipse.ve.internal.cde.core.CDEMessages;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.CustomSashForm;
+import org.eclipse.ve.internal.cde.core.DirectSelectionInput;
+import org.eclipse.ve.internal.cde.core.DistributeController;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.GridController;
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
+import org.eclipse.ve.internal.cde.core.PaletteToolEntryAction;
+import org.eclipse.ve.internal.cde.core.PaletteToolbarDropDownAction;
+import org.eclipse.ve.internal.cde.core.ZoomController;
 import org.eclipse.ve.internal.cde.core.CDEUtilities.EditPartNamePath;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.*;
-import org.eclipse.ve.internal.cde.palette.*;
-import org.eclipse.ve.internal.cde.properties.*;
-
-import org.eclipse.ve.internal.jcm.*;
-
+import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPartFactory;
+import org.eclipse.ve.internal.cde.emf.DefaultModelAdapterFactory;
+import org.eclipse.ve.internal.cde.emf.EMFAnnotationLinkagePolicy;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.palette.Category;
+import org.eclipse.ve.internal.cde.palette.Palette;
+import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.properties.AddAnnotationsWithName;
+import org.eclipse.ve.internal.cde.properties.DefaultLabelProviderWithName;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+import org.eclipse.ve.internal.cde.properties.PropertyDescriptorAdapterFactory;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapterFactory;
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
+import org.eclipse.ve.internal.java.codegen.core.CopyAction;
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
-import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.core.PasteActionTool;
+import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
+import org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderFactory;
+import org.eclipse.ve.internal.java.codegen.java.ICodeGenAdapter;
+import org.eclipse.ve.internal.java.codegen.java.ICodeGenSourceRange;
+import org.eclipse.ve.internal.java.codegen.java.MethodGeneratorFactory;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.vce.*;
+import org.eclipse.ve.internal.java.core.BasicAllocationProcesser;
+import org.eclipse.ve.internal.java.core.BeanProxyAdapterFactory;
+import org.eclipse.ve.internal.java.core.CompositionProxyAdapter;
+import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
+import org.eclipse.ve.internal.java.core.EventInvocationAndListener;
+import org.eclipse.ve.internal.java.core.IErrorHolder;
+import org.eclipse.ve.internal.java.core.IErrorNotifier;
+import org.eclipse.ve.internal.java.core.JavaCommandStackPropertySheetEntry;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+import org.eclipse.ve.internal.java.core.JavaModelSynchronizer;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.NameInMemberPropertyDescriptor;
+import org.eclipse.ve.internal.java.core.XMLTextPage;
+import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
+import org.eclipse.ve.internal.java.vce.VCEMessages;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
-
+import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
@@ -166,8 +274,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	/*
 	 *  Registry of just the graphical ones (i.e. not in common with text editor) that need to be accessed by action contributor. 
 	 */
-	protected ActionRegistry graphicalActionRegistry = new ActionRegistry();
-	
+	protected ActionRegistry graphicalActionRegistry = new ActionRegistry();	
 	// Registry of actions that are in common with the graph viewer and the java text editor that need to be accessed by action contributor.
 	// What is different is that these actions are all RetargetTextEditorActions. The focus listener will make sure that whichever
 	// viewer/editor is in focus, the appropriate action from either the text/graph viewer is set into the retarget action.
@@ -199,6 +306,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	private static int uiThreadPriority = -1;
 	private static Thread uiThread = null;
+	private ResourceWrapperAction cutAction;
 	private void bumpUIPriority(boolean up, Thread ui) {
 		// First time around this method must be called from the ui thread		
 		if (uiThread==null) {
@@ -267,6 +375,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
+		
+		RetargetTextEditorAction copyAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
+		copyAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyAction.setId(ActionFactory.COPY.getId());
+		commonActionRegistry.registerAction(copyAction);
+		
+		RetargetTextEditorAction pasteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
+		pasteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteAction.setId(ActionFactory.PASTE.getId());
+		commonActionRegistry.registerAction(pasteAction);
 		
 		// Create the toolbar palette actions that are needed right away.
 		PaletteToolEntryAction paction = new PaletteToolEntryAction(editDomain);
@@ -790,19 +908,33 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		if (setupJob != null && setupJob.getState() == Job.NONE)
 			initializeViewers();
-		final DeleteAction deleteAction = new DeleteAction((IWorkbenchPart) this);
+		// Setup the actions
+		final DeleteAction deleteAction = new DeleteAction(this);
 		deleteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(deleteAction);
+		
+		final PasteActionTool pasteAction = new PasteActionTool(this,editDomain);
+		pasteAction.setSelectionProvider(primaryViewer);
+		graphicalActionRegistry.registerAction(pasteAction);
+		
+		final CopyAction copyAction = new CopyAction(this);
+		copyAction.setSelectionProvider(primaryViewer);
+		graphicalActionRegistry.registerAction(copyAction);
+		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 		customizeAction.setSelectionProvider(primaryViewer);
 		primaryViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
+				copyAction.update();
+				pasteAction.update();
 				customizeAction.update();
 			}
 		});	
 		KeyHandler keyHandler = new KeyHandler();				
-		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);					
+		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);	
+		keyHandler.put(KeyStroke.getPressed('c',SWT.CTRL),copyAction);
+		keyHandler.put(KeyStroke.getPressed('v',SWT.CTRL),pasteAction);
 		primaryViewer.setKeyHandler(new GraphicalViewerKeyHandler(primaryViewer).setParent(keyHandler));
 		
 		paletteSplitter.hookDropTargetListener(primaryViewer);
@@ -847,6 +979,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					doTimerStep = false;	// Done with first load, don't do it again.
 					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.					
 				}
+				refreshTextPage();
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
 				throw e;
@@ -893,10 +1026,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		
 	}
-
+	private Action copyXMLAction;
 	protected void createXMLTextViewerControl(Composite parent) {
 		xmlTextPage = new XMLTextPage();
 		xmlTextPage.createControl(parent);
+		xmlTextPage.getControl().addFocusListener(focusListener);
 
 		// Add a command stack listener to refresh the text of the XML source page
 		// each time something happens
@@ -908,6 +1042,18 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Having created the page give it the initial source
 		refreshTextPage();
+		
+		copyXMLAction = new Action(){
+			public void runWithEvent(Event event){
+				Clipboard cb = new Clipboard(Display.getDefault());
+				cb.setContents(new Object[] {xmlTextPage.getSelectedText()}, new Transfer[] {TextTransfer.getInstance()});
+				cb.dispose();						
+			}
+			public void run(){
+				runWithEvent(null);
+			}
+		};
+		
 	}
 
 	private static final Map XML_SAVE_CACHE_OPTIONS;
@@ -2085,6 +2231,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private boolean textEditorActive = false;
 	private boolean textEditorFocus = false;
 	private boolean firstSelection = true ;  // First selection after activation
+	private boolean xmlEditorFocus = false;
 	private FocusListener focusListener = new FocusListener() {
 		public void focusGained(FocusEvent e) {			
 			textEditorFocus = textEditorActive = e.getSource() == getSourceViewer().getTextWidget();
@@ -2097,13 +2244,21 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					action.setAction(JavaVisualEditorPart.this.superGetAction(action.getId()));
 				}
 			} else {
-				// Set the common actions up from the graph editor.
-				Iterator itr = commonActionRegistry.getActions();
-				while (itr.hasNext()) {
-					RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
-					action.setAction(graphicalActionRegistry.getAction(action.getId()));
-				}				
-			}
+				// See if the GUI or the XMLTextArea is active
+				xmlEditorFocus = e.getSource() != primaryViewer.getControl();
+				if(xmlEditorFocus) {
+					// Change out the copy action so we can copy from the XML editor
+					RetargetTextEditorAction action = (RetargetTextEditorAction) commonActionRegistry.getAction(ActionFactory.COPY.getId());
+					action.setAction(copyXMLAction);	
+				} else {
+					// 	Set the common actions up from the graph editor.
+					Iterator itr = commonActionRegistry.getActions();
+					while (itr.hasNext()) {
+						RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
+						action.setAction(graphicalActionRegistry.getAction(action.getId()));
+					}
+				}
+			}				
 		}
 		public void focusLost(FocusEvent e) {
 			if (textEditorActive)

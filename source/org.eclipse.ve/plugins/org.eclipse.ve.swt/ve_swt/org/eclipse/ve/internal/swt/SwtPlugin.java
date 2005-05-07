@@ -27,6 +27,7 @@ public class SwtPlugin extends Plugin {
 	public static final String VIEWPART_CLASSNAME = "org.eclipse.ui.part.ViewPart"; //$NON-NLS-1$
 	public static final String CONCRETE_VIEWPART_CLASSNAME = "org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart";	 //$NON-NLS-1$
 	public static final String PLUGIN_ID = "org.eclipse.ve.swt";
+	public static final String PARENT_COMPOSITE_TOKEN = "{parentComposite}"; // Token to represent the parentComposite in a parse tree that will be replaced by the true parent	
 	
 	//The shared instance.
 	private static SwtPlugin plugin;

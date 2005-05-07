@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-07 00:55:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -51,6 +51,8 @@ import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
+import org.eclipse.ve.internal.java.codegen.core.CopyAction;
+import org.eclipse.ve.internal.java.codegen.core.PasteActionImmediate;
 import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
@@ -161,6 +163,8 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	private ShowOverviewAction showOverviewAction;
 	private CollapseAllAction collapseAllAction;
 	private DeleteAction deleteAction;
+	private CopyAction copyAction;
+	private PasteActionImmediate pasteAction;
 	
 	// The jve status field for when property sheet is in focus. It will be kept up to date through
 	// updateStatusField method in JavaVisualEditorPart. 
@@ -187,9 +191,14 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		// Set an action handler to redirect these to the action registry's actions so they work
 		// with the content outline without having to separately contribute these
 		// to the outline page's toolbar
-		deleteAction = new DeleteAction((IWorkbenchPart) jve);
+		deleteAction = new DeleteAction(jve);
+		copyAction = new CopyAction(jve);
+		pasteAction = new PasteActionImmediate(jve);
 		
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);	// However, we don't actually add it the beanslist toolbar, we use the retarget from the editor contributor instead.
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);		
+		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);		
+		
 		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), jve.getAction(ActionFactory.UNDO.getId()));
 		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), jve.getAction(ActionFactory.REDO.getId()));
 		actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID, jve.getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID));
@@ -274,6 +283,8 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
+				copyAction.update();
+				pasteAction.update();
 			}
 		});
 	}
