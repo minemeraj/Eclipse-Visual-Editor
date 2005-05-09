@@ -145,8 +145,12 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			customPath = p.toPortableString();
 		}		
 		public String getPdePath() {
-			if (pdePath==null)
-				pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getPluginID()).getInstallLocation();
+			if (pdePath==null) {				
+				if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion()))
+					pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getLegacyID()).getInstallLocation();
+				else 
+				   pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getPluginID()).getInstallLocation();
+			}
 			return pdePath;
 		}		
 		public String getPlatformPath() {
@@ -296,16 +300,18 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
 	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS());
 	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch());
+	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch();
 	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.platform.source";
 	 			
 	public final static JarInfo[] swtLibraries = new JarInfo[] {
-			 new JarInfo(	"org.eclipse.swt"+"."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(),
+			 new JarInfo(	"org.eclipse.swt"+SWT_CONTAINER_OS_PLUGIN_EXT,
 					 		true,
 							"org.eclipse.swt"+"."+Platform.getOS(),
 							SWT_CONTAINER_WS.append("swt.jar").toPortableString(), 
 							SWT_CONTAINER_OS.toPortableString(),
 							SWT_CONTAINER_SRC_PLUGIN,
-							"org.eclipse.platform."+Platform.getWS()+".source"
+//							"org.eclipse.platform."+Platform.getWS()+".source"
+							SWT_CONTAINER_SRC_PLUGIN+SWT_CONTAINER_OS_PLUGIN_EXT
 						)};
 					
 	
@@ -334,7 +340,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 
 	
-	private boolean isLegacy (String version) {		
+	public static boolean isLegacy (String version) {		
 		StringTokenizer tk = new StringTokenizer(version,".");
 		try {
 			int Major = Integer.parseInt(tk.nextToken());
