@@ -19,8 +19,8 @@ public class SWTContainerInitializer extends ClasspathContainerInitializer{
 			int size = containerPath.segmentCount();
 			if (size > 0) {
 				if (containerPath.segment(0).equals(SWTContainer.SWT_CONTAINER_SIGNITURE)) { //$NON-NLS-1$
-					SWTContainer container = new SWTContainer(containerPath);
-					JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
+					SWTContainer container = new SWTContainer(containerPath, project);
+					JavaCore.setClasspathContainer(container.getPath(), new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 				}
 			}
 		}	
