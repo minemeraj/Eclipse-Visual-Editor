@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SpinnerBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-09 15:38:08 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -61,6 +61,12 @@ public class SpinnerBeanInfo extends IvjBeanInfo {
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		try {
 			PropertyDescriptor aDescriptorList[] = {
+				// digits
+				super.createPropertyDescriptor(getBeanClass(),"digits", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, SpinnerMessages.getString("digitsDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, SpinnerMessages.getString("digitsSD"), //$NON-NLS-1$
+				}
+				),
 				// increment
 				super.createPropertyDescriptor(getBeanClass(),"increment", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, SpinnerMessages.getString("incrementDN"), //$NON-NLS-1$
