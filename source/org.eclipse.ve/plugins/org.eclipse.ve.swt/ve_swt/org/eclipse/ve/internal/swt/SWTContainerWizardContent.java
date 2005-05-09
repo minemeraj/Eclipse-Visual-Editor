@@ -12,7 +12,7 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-05 13:02:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-09 13:28:50 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -31,9 +31,9 @@ public class SWTContainerWizardContent extends Composite {
 	private Button pdeRadio = null;
 	private Button customRadio = null;
 	private Text customDir = null;
-	private Label label = null;
-	private Label label1 = null;
-	private Label label2 = null;
+	private Label platformVersion = null;
+	private Label pdeVersion = null;
+	private Label customVersion = null;
 	private Button browseButton = null;
 	
 	private SWTContainer.ContainerType containerType = null;
@@ -62,15 +62,15 @@ public class SWTContainerWizardContent extends Composite {
 		ideRadio = new Button(group, SWT.RADIO);
 		ideRadio.setText("IDE Platform");
 		ideRadio.setToolTipText("Use the IDE's jars and libraries");		
-		label = new Label(group, SWT.NONE);
+		platformVersion = new Label(group, SWT.NONE);
 		pdeRadio = new Button(group, SWT.RADIO);
 		pdeRadio.setText("PDE Target ");
 		pdeRadio.setToolTipText("Use the PDE Target's jars and libraries");
-		label1 = new Label(group, SWT.NONE);
+		pdeVersion = new Label(group, SWT.NONE);
 		customRadio = new Button(group, SWT.RADIO);
 		customRadio.setText("Custom location");
 		customRadio.setToolTipText("Specify a directory for jars and libraries");
-		label2 = new Label(group, SWT.NONE);
+		customVersion = new Label(group, SWT.NONE);
 		customDir = new Text(group, SWT.BORDER);
 		customDir.setToolTipText("Specify  a root directory where all jars/libraries are located");
 		customDir.setEditable(false);
@@ -82,8 +82,7 @@ public class SWTContainerWizardContent extends Composite {
 		pdeRadio.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if (pdeRadio.getSelection()) {
-					customDir.setText(containerType.getPdePath());
-					customDir.setToolTipText(containerType.getPdePath());				
+					setPDE(false);
 					containerType.setPathType(SWTContainer.SWT_CONTAINER_PATH_PDE, true);
 				}
 			}
@@ -91,8 +90,7 @@ public class SWTContainerWizardContent extends Composite {
 		ideRadio.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if (ideRadio.getSelection()) {
-					customDir.setText(containerType.getPlatformPath());
-					customDir.setToolTipText(containerType.getPlatformPath());				
+					setPlatform(false);
 					containerType.setPathType(SWTContainer.SWT_CONTAINER_PATH_PLATFORM, true);
 				}
 			}
@@ -102,8 +100,7 @@ public class SWTContainerWizardContent extends Composite {
 					customDir.setEditable(customRadio.getSelection());
 					browseButton.setEnabled(customRadio.getSelection());
 					if (customRadio.getSelection()) {
-						customDir.setText(containerType.getCustomPath());
-						customDir.setToolTipText(containerType.getCustomPath());					
+						setCustom(false);
 						containerType.setPathType(SWTContainer.SWT_CONTAINER_PATH_CUSTOM, true);
 					}
 			}
@@ -159,23 +156,47 @@ public class SWTContainerWizardContent extends Composite {
 		return containerType;
 	}
 	
+	protected void setPlatform(boolean setSelection) {
+		if (setSelection)
+		   ideRadio.setSelection(true);
+		platformVersion.setText(containerType.getPlatformVersion());
+		customDir.setText((containerType.getPlatformPath()));
+		customDir.setToolTipText((containerType.getPlatformPath()));
+		group.layout();
+	}
+	protected void setPDE(boolean setSelection) {
+		if (setSelection)
+		  pdeRadio.setSelection(true);
+		pdeVersion.setText(containerType.getPdeVersion());
+		customDir.setText(containerType.getPdePath());
+		customDir.setToolTipText(containerType.getPdePath());
+		group.layout();
+	}
+	
+	protected void setCustom (boolean setSelection) {
+		if (setSelection)
+		   customRadio.setSelection(true);
+		customDir.setText(containerType.getCustomPath());
+		customDir.setToolTipText(containerType.getCustomPath());
+		group.layout();
+	}
+	
 	public void setContainerType(SWTContainer.ContainerType containerType) {
 		this.containerType = containerType;
-		if (containerType.isTargetPath()) {
-			pdeRadio.setSelection(true);
-			customDir.setText(containerType.getPdePath());
-			customDir.setToolTipText(containerType.getPdePath());
+		if (containerType.isPDEPath()) {
+			setPDE(true);
+			platformVersion.setText(containerType.getPlatformVersion());
 		}
-		else if (containerType.isPlatformPath()) {
-			ideRadio.setSelection(true);
-			customDir.setText((containerType.getPlatformPath()));
-			customDir.setToolTipText((containerType.getPlatformPath()));
+		else if (containerType.isPlatformPath()) { 
+			setPlatform(true);
+			pdeVersion.setText(containerType.getPdeVersion());
 		}
 		else {
-			customRadio.setSelection(true);
-			customDir.setText(containerType.getCustomPath());
-			customDir.setToolTipText(containerType.getCustomPath());
+			setCustom(true);
+			pdeVersion.setText(containerType.getPdeVersion());
+			platformVersion.setText(containerType.getPlatformVersion());
 		}
+		
 		jFaceCheckButton.setSelection(containerType.includeJFace());
 	}
 

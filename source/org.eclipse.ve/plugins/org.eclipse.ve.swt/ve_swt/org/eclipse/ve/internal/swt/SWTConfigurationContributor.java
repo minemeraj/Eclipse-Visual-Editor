@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-05 13:02:27 $ 
+ *  $Revision: 1.23 $  $Date: 2005-05-09 13:28:50 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -28,11 +28,10 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.core.AbstractFrameworkAdaptor;
 import org.eclipse.osgi.service.environment.Constants;
-import org.eclipse.pde.core.plugin.IFragmentModel;
-import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.pde.core.plugin.*;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PluginModelManager;
-import org.osgi.framework.*;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -83,8 +82,9 @@ static public URL generateLibCacheIfNeeded (IFragmentModel frag, String relative
 static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePath) {		
 		if (srcJarFile == null)
 			return null;
+		File f = new File(srcJarFile);
 		// Create a root path for each version of .dlls
-		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(srcJarFile.hashCode()));
+		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(f.getAbsolutePath().hashCode()));
 		File target = root.append(relativePath).toFile();
 		if (target.exists()) {
 			try {
@@ -146,19 +146,10 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		return url;		
 }
 		
-    public static String getPDEPath() {
-		
-		PluginModelManager pm = PDECore.getDefault().getModelManager();
-		IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt");
-		return swtEntry.getBundleDescription().getLocation();
-    }
-	
-	
 	
     protected void contributePluginLibrary(final IConfigurationContributionController controller) throws CoreException {
-		
-		PluginModelManager pm = PDECore.getDefault().getModelManager();
-		final IPluginModelBase swtModel = pm.findModel(SWTContainer.SWT_CONTAINER_LIB_FRAGMENT_NAME);
+				
+		final IPluginModelBase swtModel = PDECore.getDefault().getModelManager().findModel(SWTContainer.swtLibraries[0].getPluginID());
 		// Run it as a runnable, so that we can update the problems view
 	    ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
@@ -195,6 +186,104 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		}	
 		return null;
 	}
+	
+	
+	static  String [] getSrcConfig (IPluginModelBase plugin) {
+		ArrayList configs = new ArrayList();
+		IPluginExtension[] extensions = plugin.getExtensions().getExtensions();
+		for (int i = 0; i < extensions.length; i++) {
+			IPluginExtension extension = extensions[i];
+			if ((PDECore.getPluginId() + ".source").equals(extension.getPoint())) { //$NON-NLS-1$
+				IPluginObject[] children = extension.getChildren();
+				for (int j = 0; j < children.length; j++) {
+					if (children[j].getName().equals("location")) { //$NON-NLS-1$
+						IPluginElement element = (IPluginElement) children[j];
+						String pathValue = element.getAttribute("path").getValue(); //$NON-NLS-1$b	
+						configs.add(pathValue);						
+					}
+				}
+			}
+		}	
+		return (String[]) configs.toArray(new String[configs.size()]);
+	}
+	
+	protected static IPath getPDESrceLocationFor(IPluginModelBase plugin, String pkgName, String srcPath, String srcPluginID) {
+		IPath result = (IPath) platformSrcPath.get(plugin);
+		if (result != null) return result;
+		String rel[] = getSrcConfig(plugin);			
+		if (rel.length==0)
+			result = getFilePath(getResourceURL(plugin, srcPath));
+		else
+			for (int i = 0; i < rel.length; i++) {
+				result = getFilePath(getResourceURL(plugin, rel[i]+"/"+srcPath));
+				if (result!=null) break;					
+			}
+		if (result!=null) {			   
+			platformSrcPath.put(plugin,result);
+			return result;
+		}
+			
+		if (pkgName.endsWith(".jar")) {
+			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar"));
+		}
+		
+		if (srcPluginID!=null) {
+			IPluginModelBase srcPlugin = PDECore.getDefault().getModelManager().findModel(srcPluginID);
+			if (srcPlugin==null) return null;
+			BundleDescription[] fragDesc = srcPlugin.getBundleDescription().getFragments();
+			ArrayList plugins = new ArrayList();
+			plugins.add(srcPlugin);
+			for (int i = 0; i < fragDesc.length; i++) 
+				plugins.add(PDECore.getDefault().getModelManager().findModel(fragDesc[i].getSymbolicName()));
+
+	        for (int i = 0; i < plugins.size(); i++) {
+				IPluginModelBase p = (IPluginModelBase)plugins.get(i);
+				rel = getSrcConfig(p);					
+				if (rel.length==0)
+					result = getFilePath(getResourceURL(p, pkgName+"/"+srcPath));
+				else
+					for (int j= 0; j < rel.length; j++) {
+						Path pre = new Path(rel[j]);
+						result = getFilePath(getResourceURL(p, pre.append(pkgName).append(srcPath).toPortableString()));
+						if (result!=null) break;					
+					}
+				if (result!=null) {
+					platformSrcPath.put(plugin, result);	
+					break;
+				}
+	        }
+		}	
+		return result;
+	}
+	
+	public static IClasspathEntry getLegacyPDEPath (String pluginID, String jarPath, String libPath, String srcPluginID) {
+							
+		IPluginModelBase base = PDECore.getDefault().getModelManager().findModel(pluginID);
+		IPath baseLocation = new Path (base.getInstallLocation());
+		IPath location = baseLocation.append(jarPath);
+		IPath libLocation = libPath!=null ? new Path (base.getInstallLocation()).append(libPath): null;		
+		String srcPath = jarPath.substring(0,jarPath.lastIndexOf('.'))+"src.zip";
+		IPath srcLocation = getPDESrceLocationFor(base, baseLocation.lastSegment(), srcPath, srcPluginID);
+		
+		IClasspathAttribute[] attr = new IClasspathAttribute[0];
+		if (libLocation!=null)			
+		    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
+		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
+	}
+	
+	public static IClasspathEntry getPDEPath (String pluginID, String srcPluginID, boolean lib) {		
+		IPluginModelBase base = PDECore.getDefault().getModelManager().findModel(pluginID);
+		IPath baseLocation = new Path (base.getInstallLocation());
+		IPath location = baseLocation;
+		IPath libLocation = lib? getFilePath(generateLibCacheIfNeeded(base.getBundleDescription().getLocation(),"")): null;		
+		String srcPath = "src.zip";
+		IPath srcLocation = getPDESrceLocationFor(base, baseLocation.lastSegment(), srcPath, srcPluginID);
+		
+		IClasspathAttribute[] attr = new IClasspathAttribute[0];
+		if (libLocation!=null)			
+		attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
+		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
+    }
 		
     protected void contributeLegacyPluginLibrary(final IConfigurationContributionController controller) throws CoreException {		
 		// Assume target's have the same platform/architecture/overrides
@@ -374,7 +463,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			}
 		}
 	}
-	private static URL getResourceURL(IFragmentModel frag, String relativePath) {
+	private static URL getResourceURL(IPluginModelBase frag, String relativePath) {
 		String location = frag.getInstallLocation();
 		if (location == null)
 			return null;
@@ -395,39 +484,80 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		return url;
 	}
 	
-	private static IPath getFilePath(URL l) {
-		if (l.getProtocol().equals("file"))
-		     return  new Path (l.getFile());
-		else if (l.getProtocol().equals("jar")) {
-			String f = l.getFile();
-			int idx = f.lastIndexOf('!');
-			if (idx>=0)
-				f = f.substring(0,idx);
-			try {
-				return getFilePath (new URL(f));
-			} catch (MalformedURLException e) {}
+	public static IPath getFilePath(URL l) {
+		if (l != null) {
+			if (l.getProtocol().equals("file"))
+			     return  new Path (l.getFile());
+			else if (l.getProtocol().equals("jar")) {
+				String f = l.getFile();
+				int idx = f.lastIndexOf('!');
+				if (idx>=0)
+					f = f.substring(0,idx);
+				try {
+					return getFilePath (new URL(f));
+				} catch (MalformedURLException e) {}
+			}
 		}
 		return null;
 	}	
+	
+	protected static String[] getSrcConfig(Bundle b) {				
+		Bundle[] frags = Platform.getFragments(b);		
+		if (frags==null)
+			frags = new Bundle[0];
+		String[] names = new String [frags.length+1];
+		names[0] = b.getSymbolicName();
+		for (int i = 1; i < names.length; i++) {
+			names[i]=frags[i-1].getSymbolicName();			
+		}
+		List fragNames = Arrays.asList(names);
+		
+		ArrayList result = new ArrayList();
+		IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.pde.core.source");
+		for (int i = 0; i < ces.length; i++) {	
+            if (!fragNames.contains((ces[i].getDeclaringExtension().getNamespace()))) 
+				continue;
+			String p = ces[i].getAttributeAsIs("path");
+			if (!result.contains(p))
+			result.add(p);
+		}
+		return (String[])result.toArray(new String[result.size()]);
+	}
 	
 	// cache bundle to src.zip path
 	private static HashMap platformSrcPath = new HashMap(10);
 	/**
 	 * 
+	 * We will NOT look at all the org.eclipse.pde.core.source contributions, this
+	 * is quite expensive on a large configuration
+	 * 
 	 * @param bundle 
-	 * @param name the pkged name of the bundle (id, version etc)
+	 * @param pkgName, String srcPluginID the pkged name of the bundle (id, version etc)
+	 * @param srcPluginID.. potential plugin that house the src. 
 	 * @return path for src.zip, null if can not find it
+	 * 
+	 * The source may be inside the bundle itself, one of its fragments, 
+	 * or in a different bundle (e.g., org.eclipse.platform.source)
 	 * 
 	 * @since 1.1.0
 	 */
-	public static IPath getPlatformSrcLocationFor(Bundle bundle, String name) {
+	public static IPath getPlatformSrcLocationFor(Bundle bundle, String pkgName, String srcPluginID) {
 		
+		// src looks on the FS... so cache it for the Platform
 		IPath result = (IPath) platformSrcPath.get(bundle);
 		if (result != null) return result;
 		
 		String srcFile = "src.zip";		
-		try {
-			URL u = bundle.getEntry(srcFile);
+		try {						
+			String rel[] = getSrcConfig(bundle);
+			URL u=null;
+			if (rel.length==0)
+			   u = bundle.getEntry(srcFile);
+			else
+				for (int i = 0; i < rel.length; i++) {
+					u = bundle.getEntry(rel[i]+"/"+srcFile);
+					if (u!=null) break;					
+				}
 			if (u!=null) {
 			    result = getFilePath(Platform.resolve(u));
 				platformSrcPath.put(bundle,result);
@@ -435,37 +565,27 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			}
 		} catch (IOException e) {}
 		
-		if (name.endsWith(".jar")) {
-			name = name.substring(0,name.lastIndexOf(".jar"));
+		if (pkgName.endsWith(".jar")) {
+			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar"));
 		}
 		
-
-		IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.pde.core.source");
-		
-		for (int i = 0; i < ces.length; i++) {
-			IPath srcsrch = new Path(ces[i].getAttributeAsIs("path"));			
-			Bundle srcBundle = Platform.getBundle(ces[i].getDeclaringExtension().getNamespace());
-			Bundle[] fragments = Platform.getFragments(srcBundle);
-			List bundles;
-			if (fragments!=null)
-				bundles = new ArrayList(Arrays.asList(Platform.getFragments(srcBundle)));
+		if (srcPluginID!=null) {
+			Bundle srcBundle = Platform.getBundle(srcPluginID);
+			String rel[] = getSrcConfig(srcBundle);
+			URL u = null;
+			if (rel.length==0)
+				u = Platform.find(srcBundle, new Path(pkgName).append(srcFile));
 			else
-				bundles = new ArrayList(1);
-			bundles.add(srcBundle);
-			for (int j = 0; j < bundles.size(); j++) {
-				Bundle b = (Bundle) bundles.get(j);
-				URL srcUrl = null;
-				if (b==bundle)
-					srcUrl = Platform.find(b, srcsrch.append(srcFile));
-				else
-					srcUrl = Platform.find(b, srcsrch.append(name).append(srcFile));				
-				if (srcUrl != null) {
-					try {
-						result = getFilePath(Platform.resolve(srcUrl));
-						platformSrcPath.put(bundle,result);
-						return result;
-					} catch (IOException e) {}
+				for (int i = 0; i < rel.length; i++) {
+					u = Platform.find(srcBundle, new Path(rel[i]).append(pkgName).append(srcFile));
+					if (u!=null) break;					
 				}
+			if (u!=null) {
+			   try {
+				result = getFilePath(Platform.resolve(u));
+				platformSrcPath.put(bundle,result);
+				return result;
+			   } catch (IOException e) {}			   
 			}
 		}
 		return null;
@@ -480,13 +600,10 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 	 * 
 	 * @since 1.1.0
 	 */
-	public static IClasspathEntry getPlatformPath (String pluginID, String fragmentName, String libPath) {
-		Bundle pBundle = Platform.getBundle(pluginID);
-		Bundle bundle = null;
-		if (fragmentName!=null) 
-			bundle = Platform.getBundle(fragmentName);		
-		else
-			bundle = pBundle;
+	public static IClasspathEntry getPlatformPath (String pluginID,  boolean libPath, String srcPluginID) {
+		
+
+		Bundle bundle = Platform.getBundle(pluginID);
 		
 		if (bundle.getState()!=Bundle.ACTIVE &&
 		    bundle.getState()!=Bundle.RESOLVED)
@@ -496,19 +613,19 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		try {				
 			// .jared fragment
 			URL l = Platform.resolve(bundle.getEntry("/"));	
-			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench
+			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench... 			
 			location = getFilePath(l).removeTrailingSeparator();
-			if (location !=null) {
-				IPath src = getPlatformSrcLocationFor(bundle, location.lastSegment());
+			// not supporting a worbench project at this time ... .jar only
+			if (location !=null && location.lastSegment().endsWith(".jar")) {
+				IPath src = getPlatformSrcLocationFor(bundle, location.lastSegment(), srcPluginID);
 				IClasspathAttribute[] attr = new IClasspathAttribute[0];
-				if (libPath!=null) { // Create a lib path attribute to this entry						
+				if (libPath) { // Create a lib path attribute to this entry						
 					// jar may be imported into the workbench, use it; if not cache it
 					URL libURL = project ? location.toFile().toURL() : 
-						         generateLibCacheIfNeeded(location.toPortableString(), libPath);
+						         generateLibCacheIfNeeded(location.toPortableString(), "");
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
 							                                                getFilePath(libURL).toPortableString())};
-				}					
-				// TODO: this will not work if the fragment is not a .jar (imported to the IDE as a project)
+				}										
 				return JavaCore.newLibraryEntry(location, src, null, new IAccessRule [0], attr, false);
 			}
 		} catch (IOException e) {

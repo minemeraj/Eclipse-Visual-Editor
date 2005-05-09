@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.internal.core.PDECore;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Constants;
 
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -37,6 +39,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	final static int SWT_CONTAINER_PATH = 	SWT_CONTAINER_PATH_CUSTOM|
 											SWT_CONTAINER_PATH_PDE|
 											SWT_CONTAINER_PATH_PLATFORM;	
+	
 	public final static int SWT_CONTAINER_JFACE =		0x10 ;
 	
 	public static final String SWT_CONTAINER_SIGNITURE = 				"SWT_CONTAINER" ;
@@ -45,11 +48,14 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_PDE = 		"PDE";
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_CUSTOM = 	"CUSTOM";	
 	
+	
 	public static class ContainerType {
 		private int pathType = SWT_CONTAINER_PATH_PLATFORM;
 		private String customPath = null;
 		static String platformPath = null;
+		static String platformVersion=null;
 		String pdePath = null;
+		String pdeVersion = null;
 	
 	   public ContainerType (IPath containerPath) {
 		   super();
@@ -62,7 +68,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	   protected void parsePath (IPath containerPath) {
 			if (!containerPath.segment(0).equals(SWT_CONTAINER_SIGNITURE))
 				throw new IllegalStateException("Invalid Container ID: "+containerPath);
-			pathType=SWT_CONTAINER_PATH_PLATFORM;
+			
+			pathType=SWT_CONTAINER_PATH_PLATFORM; // default
 			
 			for (int i=1; i<containerPath.segmentCount(); i++) {
 				if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_JFACE))
@@ -79,14 +86,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			}
 			
 		}
-		/**
-		 * 
-		 * @param pathType  [SWT_CONTAINER_TARGET_PATH, SWT_CONTAINER_CUSTOMED_PATH, SWT_CONTAINER_PLATFORM_PATH] | SWT_CONTAINER_JFACE_PATH 
-		 * @param customPath In the case of SWT_CONTAINER_CUSTOMED_PATH, target path
-		 * @return
-		 * 
-		 * @since 1.1.0
-		 */
+
+	   
 		public  IPath getContainerPath () {
 			IPath result = new Path (SWT_CONTAINER_SIGNITURE);
 			
@@ -106,22 +107,25 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					break;
 			}
 			return result;		
-		}	   
+		}
+		
+		
 		public void setPathType (int type, boolean flag) {
 			if ((type&SWT_CONTAINER_PATH)>0 && flag)
 				pathType &= ~SWT_CONTAINER_PATH;  // only allow one path type to be set
+			
 			if (flag)
 				pathType |= type;
 			else
 				pathType &= ~type;
 			
 			if ((pathType&SWT_CONTAINER_PATH)==0)
-				pathType &= SWT_CONTAINER_PATH_PLATFORM; // Forec a default
+				pathType &= SWT_CONTAINER_PATH_PLATFORM; // Force a default
 		}		
 		public boolean isPlatformPath() {
 			return (pathType&SWT_CONTAINER_PATH_PLATFORM)>0;
 		}		
-		public boolean isTargetPath() {
+		public boolean isPDEPath() {
 			return (pathType&SWT_CONTAINER_PATH_PDE)>0;
 		}		
 		public boolean isCustomPath() {
@@ -142,12 +146,14 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		}		
 		public String getPdePath() {
 			if (pdePath==null)
-				pdePath = SWTConfigurationContributor.getPDEPath();
+				pdePath = PDECore.getDefault().getModelManager().findModel(swtLibraries[0].getPluginID()).getInstallLocation();
 			return pdePath;
 		}		
 		public String getPlatformPath() {
 			if (platformPath==null)
-				platformPath = SWTConfigurationContributor.getPlatformPath(swtLibraries[0][0], swtLibraries[0][3], swtLibraries[0][4]).getPath().toOSString();
+				try {
+				   platformPath = SWTConfigurationContributor.getFilePath(Platform.resolve(Platform.getBundle(swtLibraries[0].getPluginID()).getEntry("/"))).toOSString();
+				} catch (IOException e) {}
 			return platformPath;
 		}
 		public String toString() {
@@ -162,15 +168,109 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			SWTContainer.ContainerType ct = (SWTContainer.ContainerType)o;			
 			return (ct.getContainerPath().equals(getContainerPath()));
 		}
+		public  String getPlatformVersion() {
+			if (platformVersion==null)
+				platformVersion=(String)Platform.getBundle(swtLibraries[0].getPluginID()).getHeaders().get(Constants.BUNDLE_VERSION);
+			return platformVersion;
+		}
+		public String getPdeVersion() {			
+			if (pdeVersion==null)
+				pdeVersion=PDECore.getDefault().getModelManager().findModel("org.eclipse.swt").getBundleDescription().getVersion().toString();
+			return pdeVersion;
+		}
 	
     }
+	
+	/**
+	 * The idea is to specify exactly where things are, so to not spend time
+	 * looking for jars/src on the file system/src Contribution
+	 * @since 1.1.0
+	 */
+	public static class JarInfo  {
+		String pluginID;		// The Plugin/Fragment where the .jar is in
+		boolean includesLibraries = false;
+		String legacyID;    	// Pre 3.1
+		String legacyJarPath;	// Relative to the plugin (Pre 3.1) 
+		String legacyLibPath;	// Relative to the plubin (Pre 3.1)
+		String srcPluginID;		// Search for src. also in this plugin
+		String legacySrcPluginID;
+		
+		/**
+		 * 
+		 * @param pluginID same id for both legacy/current
+		 * @param legacyJarPath  legacy path
+		 * @param srcPluginID
+		 * 
+		 * @since 1.1.0
+		 */
+		public JarInfo (String pluginID, String jarPath, String srcPluginID) {		
+			this.pluginID=pluginID;			
+			legacyID=pluginID;			
+			this.legacyJarPath=jarPath;
+			this.srcPluginID=srcPluginID;
+			this.legacySrcPluginID=srcPluginID;
+			legacyLibPath=null;
+		}
+		
+		public JarInfo (String pluginID, boolean includeLibraries, String legacyID, String jarPath, String libPath, String srcPluginID, String legacySrcPluginID) {
+			this.pluginID=pluginID;
+			this.legacyID=legacyID;
+			this.legacyJarPath=jarPath;
+			this.srcPluginID=srcPluginID;								
+			this.legacyLibPath=libPath;			
+			this.includesLibraries=includeLibraries;
+			this.legacySrcPluginID=legacySrcPluginID;
+		}
+		
+		public String getLegacyJarPath() {
+			return legacyJarPath;
+		}
+		public String getLegacyLibPath() {
+			return legacyLibPath;
+		}
+		public String getPluginID() {		
+			return pluginID;
+		}		
+		public String getSrcPluginID() {
+			return srcPluginID;
+		}		
+		public String getLegacyID() {
+			return legacyID;
+		}		
+		public boolean isIncludesLibraries() {
+			return includesLibraries;
+		}
+		public String toString() {
+			StringBuffer sb = new StringBuffer("pluginID=");
+			sb.append(pluginID);
+			if (includesLibraries)
+				sb.append(" [With Libraries]");
+			else
+				sb.append(" [No Libraries]");
+			sb.append(", legacyID=");
+			sb.append(legacyID);
+			sb.append(", legacyJarPath=");
+			sb.append(legacyJarPath);
+			sb.append(", legacyLibPath=");
+			sb.append(legacyLibPath);
+			sb.append(", srcPluginID=");
+			sb.append(srcPluginID);				
+			return sb.toString();
+		}
+
+		
+		public String getLegacySrcPluginID() {
+			return legacySrcPluginID;
+		}
+	}
 
 
 
 	
-	private IClasspathEntry[] fClasspathEntries;
+	private IClasspathEntry[] fClasspathEntries = new IClasspathEntry[0];
 	
 	private IPath containerPath;	// path for container, NOT path for resolved entry
+	private IJavaProject project;
 		
 	private ContainerType containerType = null;
 	
@@ -183,102 +283,59 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	 * [ <pluginID>,  
 	 *        <pre 3.1 jar name>, <pre 3.1 lib path>,
 	 *        <post 3.1 fragment name> <post 3.1 lib Path> ]
-	 *   <pluginID> required
-	 *   <pre 3.1 jar name> .jar inside the plugin
-	 *   <pre 3.1 lib Path> optional library that is required by this jar
-	 *   <post 3.1 fragment name> optional jared fragment name, if not the plugin itself  
-	 *   <post 3.1 lib Path> optional required library. path is within the jared fragement
+	 * 0  <pluginID> required
+	 * 1  <pre 3.1 fragment name> optional fragment plugin name, if not in the plugin itself
+	 * 2  <pre 3.1 jar name> .jar inside the plugin	    
+	 * 3  <pre 3.1 lib Path> optional library that is required by this jar
+	 * 
+	 * 4  <post 3.1 fragment name> optional jared fragment name, if not the plugin itself  
+	 * 5  <post 3.1 lib Path> optional required library. path is within the jared fragement
 	 *   
 	 */
 	
-	public final static String SWT_CONTAINER_LIB_FRAGMENT_NAME = "org.eclipse.swt"+"."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch();
+	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
+	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS());
+	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch());
+	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.platform.source";
 	 			
-	private final static String[][] swtLibraries = new String[][] {
-			{ "org.eclipse.swt", 
-					"$ws$/swt.jar", null,
-					SWT_CONTAINER_LIB_FRAGMENT_NAME, ""  } //$NON-NLS-1$ //$NON-NLS-2$
-	};
+	public final static JarInfo[] swtLibraries = new JarInfo[] {
+			 new JarInfo(	"org.eclipse.swt"+"."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(),
+					 		true,
+							"org.eclipse.swt"+"."+Platform.getOS(),
+							SWT_CONTAINER_WS.append("swt.jar").toPortableString(), 
+							SWT_CONTAINER_OS.toPortableString(),
+							SWT_CONTAINER_SRC_PLUGIN,
+							"org.eclipse.platform."+Platform.getWS()+".source"
+						)};
+					
 	
-	private final static String[][] swtGTKLibraries = new String[][]{
+	
+	private final static JarInfo[] swtGTKLibraries = new JarInfo[]{
 		    // GTK libraries are all part of the swt fragment included in the swtLibraries in 3.1
-			{"org.eclipse.swt.gtk", 
-					"$ws$/swt-pi.jar", null, 
-					null, null },  //$NON-NLS-1$ //$NON-NLS-2$
-			{"org.eclipse.swt.gtk", 
-					"$ws$/swt-mozilla.jar", null, 
-					null, null } //$NON-NLS-1$ //$NON-NLS-2$
-	};
+			new JarInfo(	"org.eclipse.swt.gtk", 
+							SWT_CONTAINER_WS.append("swt-pi.jar").toPortableString(),
+							null),
+			new JarInfo(	"org.eclipse.swt.gtk", 
+							SWT_CONTAINER_WS.append("swt-mozilla.jar").toPortableString(), 
+							null)
+			};
 	
-	private final static String[][] jfaceLibraries = new String[][] {
-			{ "org.eclipse.jface", 
-					"jface.jar", null, 
-					null, null }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "org.eclipse.jface.text", 
-					"jfacetext.jar", null, 
-					null, null }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "org.eclipse.core.runtime", 
-					"runtime.jar", null, 
-					null, null  }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "org.eclipse.core.runtime.compatibility", 
-					"compatibility.jar", null, 
-					null, null }, //$NON-NLS-1$ //$NON-NLS-2$			
-			{ "org.eclipse.osgi", 
-					"core.jar", null, 
-					null, null }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "org.eclipse.core.commands", 
-						".", null, 
-						null, null } //$NON-NLS-1$ //$NON-NLS-2$
+	private final static JarInfo[] jfaceLibraries = new JarInfo[] {
+			new JarInfo("org.eclipse.jface", "jface.jar", SWT_CONTAINER_SRC_PLUGIN), 
+			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN), 
+			new JarInfo("org.eclipse.core.runtime", "runtime.jar", SWT_CONTAINER_SRC_PLUGIN), 
+			new JarInfo("org.eclipse.core.runtime.compatibility", "compatibility.jar", SWT_CONTAINER_SRC_PLUGIN), 			
+			new JarInfo("org.eclipse.osgi", "core.jar", SWT_CONTAINER_SRC_PLUGIN), 					
+			new JarInfo("org.eclipse.core.commands", ".", SWT_CONTAINER_SRC_PLUGIN) 
+
 	};
 	
 
 	
 
 	
-	/**
-	 * Return the class path entry for the .jar resource inside a plugin/fragment.  This is 
-	 * the way jars were packaged before Eclipse 3.1
-	 * @param pluginID
-	 * @param jarPath
-	 * @return entry, null if not.
-	 * 
-	 * @since 1.1.0
-	 */
-	private IClasspathEntry getPlatformLegacyPath (String pluginID, String jarPath, String libPath) {
-		URL[] locSrc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(pluginID), new Path(jarPath));		 				
-		Path  path;
-		Path srcPath;
-		try {
-			path = new Path(Platform.resolve(locSrc[0]).getFile());
-			srcPath = null;
-			if (locSrc.length>1 && locSrc[1] != null)
-				srcPath = new Path(Platform.resolve(locSrc[1]).getFile());
-			if (libPath==null)
-			   return JavaCore.newLibraryEntry(path, srcPath, null);
-			else {
-				IClasspathAttribute[] attr = getPlatformLegacyLibraryPath(pluginID, libPath);
-				return JavaCore.newLibraryEntry(path, srcPath, null, new IAccessRule [0], attr, false);
-			}
-		} catch (IOException e) {
-			JavaVEPlugin.log(e, Level.INFO);
-		}
-		return null;				
-	}
-	
-	private IClasspathAttribute [] getPlatformLegacyLibraryPath(String pluginID, String libPath) {
-		URL[] loc = ProxyPlugin.getPlugin().findPluginJarAndAttachedSource(Platform.getBundle(pluginID), new Path(libPath));		 				
-		try {
-			String path = Platform.resolve(loc[0]).getFile(); 	
-			return new IClasspathAttribute[]{JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY,path)};			
-		} catch (IOException e) {
-			JavaVEPlugin.log(e, Level.INFO);
-		}
-		return null;				
-		
-	}
-		
-	private boolean isLegacy (Bundle b, String[] pathInfo) {
-		if (pathInfo[2]==null) return true;  // No bundle information
-		StringTokenizer tk = new StringTokenizer((String) b.getHeaders().get("Bundle-Version"),".");
+	private boolean isLegacy (String version) {		
+		StringTokenizer tk = new StringTokenizer(version,".");
 		try {
 			int Major = Integer.parseInt(tk.nextToken());
 			int Minor = Integer.parseInt(tk.nextToken());
@@ -288,29 +345,98 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		return true;
 	}
 	
+	/**
+	 * Platform is 3.1
+	 * @param containerPath current signiture
+	 * @throws IOException
+	 * 
+	 * @since 1.1.0
+	 */
 	protected void initPlatformPath(IPath containerPath) throws IOException {
 
 		ArrayList entries = new ArrayList() ;		
 		for (int i = 0; i < swtLibraries.length; i++) {
 			IClasspathEntry e = null;
-			Bundle b = Platform.getBundle(swtLibraries[i][0]);	
+			Bundle b = Platform.getBundle(swtLibraries[i].getPluginID());	
 			if (b!=null) {
-//				 if (!isLegacy(b,swtLibraries[i])) 
-					e = SWTConfigurationContributor.getPlatformPath(swtLibraries[i][0], swtLibraries[i][3], swtLibraries[i][4]);
-//				 if (e==null)
-//				 e = getPlatformLegacyPath(swtLibraries[i][0],swtLibraries[i][1]);				
+					e = SWTConfigurationContributor.getPlatformPath(swtLibraries[i].getPluginID(),swtLibraries[i].isIncludesLibraries(), swtLibraries[i].getSrcPluginID());
 				 if (e!=null)
 					entries.add(e);
+				 else {					 
+					 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {swtLibraries[i].getPluginID()})); //$NON-NLS-1)
+				 }
 			}
 			else
-				JavaVEPlugin.log("Could not location class path for: "+swtLibraries[i][0]);				
+				JavaVEPlugin.log("Could not location class path for: "+swtLibraries[i].getPluginID());				
 		}
 
 		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
-				IClasspathEntry e = SWTConfigurationContributor.getPlatformPath(jfaceLibraries[i][0], jfaceLibraries[i][3], jfaceLibraries[i][4]);
+				IClasspathEntry e = SWTConfigurationContributor.getPlatformPath(jfaceLibraries[i].getPluginID(), jfaceLibraries[i].isIncludesLibraries(), jfaceLibraries[i].getSrcPluginID());
 				if (e!=null)
 					entries.add(e);
+				 else {					 
+					 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {jfaceLibraries[i].getPluginID()})); //$NON-NLS-1)
+				 }
+			}
+		}
+		fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
+		
+	}
+	
+	
+	protected void removeProblems() {
+		try {
+			IMarker[] markers = project.getProject().findMarkers(SWTConfigurationContributor.SWT_BUILD_PATH_MARKER, false, IResource.DEPTH_ZERO );
+			for (int i = 0; i < markers.length; i++) {
+				markers[i].delete();				
+			}
+		} catch (CoreException e) {
+			JavaVEPlugin.log(e, Level.INFO);
+		}				
+	}
+	
+	protected void addProblem (final String msg) {
+		IMarker marker;
+		try {
+			marker = project.getProject().createMarker(SWTConfigurationContributor.SWT_BUILD_PATH_MARKER);		
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+			marker.setAttribute(IMarker.MESSAGE, msg);
+		} catch (CoreException e) {
+			JavaVEPlugin.log(e, Level.INFO);
+		}	
+	}
+	
+	protected void initLegacyPDE(IPath containerPath) throws IOException {		
+		ArrayList entries = new ArrayList() ;		
+		for (int i = 0; i < swtLibraries.length; i++) {
+			IClasspathEntry e = null;
+			IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(swtLibraries[i].getLegacyID());	
+			if (pluginBase!=null) {
+				e = SWTConfigurationContributor.getLegacyPDEPath(swtLibraries[i].getLegacyID(), swtLibraries[i].getLegacyJarPath(), swtLibraries[i].getLegacyLibPath(), swtLibraries[i].getLegacySrcPluginID());
+				 if (e!=null)
+					entries.add(e);
+				 else {					 
+					 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1)
+				 }
+			}
+			else
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+swtLibraries[i].getLegacyID());				
+		}
+
+		if (containerType.includeJFace()) {
+			for (int i = 0; i < jfaceLibraries.length; i++) {
+				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getLegacyID());
+				if (pluginBase!=null) {
+					IClasspathEntry e = SWTConfigurationContributor.getLegacyPDEPath(jfaceLibraries[i].getLegacyID(), jfaceLibraries[i].getLegacyJarPath(), jfaceLibraries[i].getLegacyLibPath(), jfaceLibraries[i].getLegacySrcPluginID());
+					if (e!=null)
+						entries.add(e);
+					 else {					 
+						 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1)
+					 }
+				}
+				else
+					JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+jfaceLibraries[i].getLegacyID());	
 			}
 		}
 
@@ -331,27 +457,95 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 //			
 //		}
 		fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
-		
+	}
+	protected void initPDE(IPath containerPath) throws IOException {
+		ArrayList entries = new ArrayList() ;		
+		for (int i = 0; i < swtLibraries.length; i++) {
+			IClasspathEntry e = null;
+			IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(swtLibraries[i].getPluginID());	
+			if (pluginBase!=null) {
+				e = SWTConfigurationContributor.getPDEPath(swtLibraries[i].getPluginID(), swtLibraries[i].getSrcPluginID(), swtLibraries[i].isIncludesLibraries());
+				 if (e!=null)
+					entries.add(e);
+				 else {					 
+					 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1)
+				 }
+			}
+			else
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+swtLibraries[i].getLegacyID());				
+		}
+
+		if (containerType.includeJFace()) {
+			for (int i = 0; i < jfaceLibraries.length; i++) {
+				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getLegacyID());
+				if (pluginBase!=null) {
+					IClasspathEntry e = SWTConfigurationContributor.getPDEPath(jfaceLibraries[i].getPluginID(), jfaceLibraries[i].getSrcPluginID(), jfaceLibraries[i].isIncludesLibraries());
+					if (e!=null)
+						entries.add(e);
+					 else {					 
+						 addProblem(MessageFormat.format("Could not add {0} JAR to the class path", new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1)
+					 }
+				}
+				else
+					JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+jfaceLibraries[i].getLegacyID());	
+			}
+		}
+		fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
+	}
+	/**
+	 * PDE may be 3.1 or earlier
+	 * @param containerPath
+	 * @throws IOException
+	 * 
+	 * @since 1.1.0
+	 */
+	private String currentPDEPath = null;
+	protected void initPDEPath(IPath containerPath) throws IOException {
+		ContainerType ct = new ContainerType(containerPath);
+		if (currentPDEPath!=null && currentPDEPath.equals(ct.getPdePath())) return ;		
+		currentPDEPath = ct.getPdePath();
+		containerType=ct;
+				
+		if (isLegacy(PDECore.getDefault().getModelManager().getTargetVersion())) 
+			initLegacyPDE(containerPath);
+		else
+			initPDE(containerPath);
 	}
 	
-	
-
-	
-	public SWTContainer(IPath containerPath) {
+	public SWTContainer(final IPath containerPath, IJavaProject project) {
 		this.containerPath = containerPath;
-		containerType = new ContainerType(containerPath);		
+		this.project = project;
+		containerType = new ContainerType(containerPath);
+					    
 		try {
-			
-		    if (containerType.isPlatformPath()) 
-				initPlatformPath(containerPath);
-			
-
-
-		} catch (IOException e) {
+			// Wrap this in a runnable so that we can add errors to the problems view
+			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+				public void run(IProgressMonitor monitor) throws CoreException {
+					try {
+					 removeProblems();	
+					 if (containerType.isPlatformPath())						
+							initPlatformPath(containerPath);
+					 else if (containerType.isPDEPath()) {
+						    initPDEPath(containerPath);
+					 }
+					 
+					} catch (IOException e) {
+						JavaVEPlugin.log(e, Level.INFO);
+					}							
+				}
+			}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());						
+		} catch (CoreException e) {
 			JavaVEPlugin.log(e, Level.INFO);
 		}
 	}
 	public IClasspathEntry[] getClasspathEntries() {
+		if (containerType.isPDEPath()) // Target may have changed
+			try {
+				// noOp if target did not change
+				initPDEPath(containerPath);
+			} catch (IOException e) {
+				JavaVEPlugin.log(e, Level.INFO);
+			}
 		return fClasspathEntries;
 	}
 
