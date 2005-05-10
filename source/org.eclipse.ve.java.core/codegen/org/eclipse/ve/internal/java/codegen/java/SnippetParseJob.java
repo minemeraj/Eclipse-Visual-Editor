@@ -12,7 +12,7 @@
  *  Created Feb 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: SnippetParseJob.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-10 22:39:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -29,7 +29,6 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
-import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.core.IEditorUpdateState;
 import org.eclipse.ve.internal.java.codegen.util.IBackGroundWorkStrategy;
 import org.eclipse.ve.internal.java.codegen.util.ReverseParserJob;

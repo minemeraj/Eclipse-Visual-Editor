@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: UnknownLayoutPolicyFactory.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-21 18:19:12 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-10 22:40:32 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.*;
