@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-07 00:55:19 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-10 10:50:22 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -31,6 +31,11 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	
 	protected void normalize(IJavaInstance javaBean) {
 		super.normalize(javaBean);
+		
+		// Only normalize our host otherwise we end up turning children to point to the {parentComposite}
+		// when they should still point to use
+		if(!(javaBean == getHost().getModel())) return;
+		
 		// The allocation may contain references to the parent Composite
 		// These should be replaced with the {parentComposite} for when it is pasted into the new target
 		JavaAllocation allocation = javaBean.getAllocation();

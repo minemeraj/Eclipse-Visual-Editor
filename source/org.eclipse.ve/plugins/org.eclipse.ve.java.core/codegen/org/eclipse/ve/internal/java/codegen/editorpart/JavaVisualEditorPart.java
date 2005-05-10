@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.103 $  $Date: 2005-05-10 00:16:30 $ 
+ *  $Revision: 1.104 $  $Date: 2005-05-10 10:49:39 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -306,6 +306,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	private static int uiThreadPriority = -1;
 	private static Thread uiThread = null;
+	private RetargetTextEditorAction copyAction;
+	private RetargetTextEditorAction pasteAction;
 	private void bumpUIPriority(boolean up, Thread ui) {
 		// First time around this method must be called from the ui thread		
 		if (uiThread==null) {
@@ -375,12 +377,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
 		
-		RetargetTextEditorAction copyAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
+		copyAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
 		copyAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setId(ActionFactory.COPY.getId());
 		commonActionRegistry.registerAction(copyAction);
 		
-		RetargetTextEditorAction pasteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
+		pasteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
 		pasteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setId(ActionFactory.PASTE.getId());
 		commonActionRegistry.registerAction(pasteAction);
@@ -916,16 +918,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		pasteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(pasteAction);
 		
-		final CopyAction copyAction = new CopyAction(this);
-		copyAction.setSelectionProvider(primaryViewer);
-		graphicalActionRegistry.registerAction(copyAction);
+		final CopyAction copyBeanAction = new CopyAction(this){
+			public void run(){
+				super.run();
+				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
+				// whether it should or shouldn't be enabled
+				pasteAction.update();
+			}
+		};
+		copyBeanAction.setSelectionProvider(primaryViewer);
+		graphicalActionRegistry.registerAction(copyBeanAction);
 		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 		customizeAction.setSelectionProvider(primaryViewer);
 		primaryViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
-				copyAction.update();
+				copyBeanAction.update();
+				copyAction.setEnabled(copyBeanAction.isEnabled());
 				pasteAction.update();
 				customizeAction.update();
 			}
