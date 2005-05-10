@@ -13,7 +13,6 @@ package org.eclipse.ve.internal.swt;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 

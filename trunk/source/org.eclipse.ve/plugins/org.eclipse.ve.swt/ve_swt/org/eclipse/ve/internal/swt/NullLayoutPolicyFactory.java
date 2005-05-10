@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutPolicyFactory.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-21 18:19:45 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-10 22:42:05 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;

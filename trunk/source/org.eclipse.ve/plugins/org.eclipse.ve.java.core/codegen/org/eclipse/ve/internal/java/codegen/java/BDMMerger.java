@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.45 $  $Date: 2005-04-21 21:23:02 $ 
+ *  $Revision: 1.46 $  $Date: 2005-05-10 22:39:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -30,16 +29,13 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cdm.Annotation;
-
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
  
 /**
  * 

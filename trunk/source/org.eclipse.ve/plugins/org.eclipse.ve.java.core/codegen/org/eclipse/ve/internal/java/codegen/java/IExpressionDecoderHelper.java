@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IExpressionDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-10 22:39:37 $ 
  */
-
-import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
