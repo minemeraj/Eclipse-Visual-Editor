@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-05-07 00:55:22 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-05-10 23:12:41 $
  */
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,8 +54,7 @@ import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.cde.core.ImageFigureController;
 import org.eclipse.ve.internal.cde.core.OutlineBorder;
-import org.eclipse.ve.internal.java.codegen.core.CopyAction;
-import org.eclipse.ve.internal.java.codegen.core.DefaultCopyEditPolicy;
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
 import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;

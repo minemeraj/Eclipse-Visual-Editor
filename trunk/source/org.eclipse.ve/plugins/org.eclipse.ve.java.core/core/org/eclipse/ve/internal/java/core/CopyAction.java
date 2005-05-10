@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CopyAction.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-07 00:55:29 $ 
+ *  $Revision: 1.1 $  $Date: 2005-05-10 23:12:39 $ 
  */
-package org.eclipse.ve.internal.java.codegen.core;
+package org.eclipse.ve.internal.java.core;
 
 import java.util.Iterator;
 
@@ -27,7 +27,6 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 public class CopyAction extends SelectionAction {
 	
 	public static final String REQ_COPY = "VE_REQ_COPY";
-	private Object template;
 	private Command copyCommand;
 	private EditDomain editDomain;
 

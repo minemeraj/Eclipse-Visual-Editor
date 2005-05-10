@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.java.codegen.core;
+package org.eclipse.ve.internal.java.core;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import org.eclipse.ve.internal.cde.emf.EMFPrototypeCreationFactory;
 public class PasteActionImmediate extends SelectionAction {
 
 	private EditDomain editDomain;
-	private boolean executeImmediately = false;
 
 	public PasteActionImmediate(IWorkbenchPart part) {
 		super(part);
