@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-10 10:50:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-10 23:12:41 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -25,7 +25,8 @@ import org.eclipse.jem.internal.instantiation.PTInstanceReference;
 import org.eclipse.jem.internal.instantiation.PTName;
 import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.codegen.core.DefaultCopyEditPolicy;
+
+import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	

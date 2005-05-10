@@ -9,24 +9,22 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-07 00:55:29 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-10 23:12:39 $
  */
 package org.eclipse.ve.internal.java.core;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart;
-import org.eclipse.ve.internal.java.codegen.core.CopyAction;
-import org.eclipse.ve.internal.java.codegen.core.DefaultCopyEditPolicy;
 
 public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
 

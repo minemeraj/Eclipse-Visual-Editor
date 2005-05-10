@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteActionTool.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-07 00:55:29 $ 
+ *  $Revision: 1.1 $  $Date: 2005-05-10 23:12:39 $ 
  */
-package org.eclipse.ve.internal.java.codegen.core;
+package org.eclipse.ve.internal.java.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,7 +34,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFPrototypeCreationFactory;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class PasteActionTool extends SelectionAction {
 

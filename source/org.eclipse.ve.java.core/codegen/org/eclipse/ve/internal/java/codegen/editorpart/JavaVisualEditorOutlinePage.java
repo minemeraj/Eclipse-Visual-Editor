@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-07 00:55:29 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-10 23:12:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -51,8 +51,7 @@ import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
-import org.eclipse.ve.internal.java.codegen.core.CopyAction;
-import org.eclipse.ve.internal.java.codegen.core.PasteActionImmediate;
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
