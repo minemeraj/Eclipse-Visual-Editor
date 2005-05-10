@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-10 10:49:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-10 14:56:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -79,6 +79,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				XML_TEXT_OPTIONS.put(
 						XMLResource.OPTION_PROCESS_DANGLING_HREF, 
 						XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+				XML_TEXT_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
 				XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));		
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {
@@ -86,12 +87,11 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				} catch (IOException e) {
 					JavaVEPlugin.log(e);
 				}
-				template = os.toString();
 				// Append the string "{*** VE TRANSFER ***} to the front to make sure that paste only takes object that are valid VE objects
 				// We don't use a custom transfer type as it is nice to actually work with the clipboard contents as a String 
-				template = PasteActionTool.TRANSFER_HEADER + template;
+				template = PasteActionTool.TRANSFER_HEADER + os.toString();
 				// Paste the string of the object to copy to the clipboard
-				Clipboard cb = new Clipboard(Display.getDefault());
+				Clipboard cb = new Clipboard(Display.getCurrent());
 				cb.setContents(new Object[] {template}, new Transfer[] {TextTransfer.getInstance()});
 				cb.dispose();				
 			}
