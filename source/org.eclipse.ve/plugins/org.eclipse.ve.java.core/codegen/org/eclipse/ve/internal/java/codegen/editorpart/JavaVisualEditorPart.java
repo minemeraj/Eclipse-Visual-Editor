@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.102 $  $Date: 2005-05-07 00:55:29 $ 
+ *  $Revision: 1.103 $  $Date: 2005-05-10 00:16:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -306,7 +306,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	private static int uiThreadPriority = -1;
 	private static Thread uiThread = null;
-	private ResourceWrapperAction cutAction;
 	private void bumpUIPriority(boolean up, Thread ui) {
 		// First time around this method must be called from the ui thread		
 		if (uiThread==null) {
