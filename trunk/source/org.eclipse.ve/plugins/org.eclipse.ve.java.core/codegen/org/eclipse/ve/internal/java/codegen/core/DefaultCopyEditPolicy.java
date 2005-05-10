@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-07 00:55:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-10 00:16:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.core;
 
@@ -36,8 +36,6 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ve.internal.cdm.AnnotationEMF;
-import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class DefaultCopyEditPolicy extends AbstractEditPolicy {
