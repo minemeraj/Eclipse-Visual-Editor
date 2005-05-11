@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.internal.core.*;
+import org.eclipse.pde.internal.core.IPluginModelListener;
 import org.eclipse.pde.internal.core.PDECore;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
@@ -40,13 +42,20 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 											SWT_CONTAINER_PATH_PDE|
 											SWT_CONTAINER_PATH_PLATFORM;	
 	
-	public final static int SWT_CONTAINER_JFACE =		0x10 ;
+	public final static int SWT_CONTAINER_JFACE =			0x10 ;
 	
 	public static final String SWT_CONTAINER_SIGNITURE = 				"SWT_CONTAINER" ;
 	public static final String SWT_CONTAINER_SIGNITURE_JFACE = 			"JFACE";			
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_PLATFORM = 	"PLATFORM";
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_PDE = 		"PDE";
 	public static final String SWT_CONTAINER_SIGNITURE_PATH_CUSTOM = 	"CUSTOM";	
+	
+	
+	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
+	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS());
+	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch());
+	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch();
+	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.platform.source";	
 	
 	
 	public static class ContainerType {
@@ -58,35 +67,40 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		String pdeVersion = null;
 	
 	   public ContainerType (IPath containerPath) {
-		   super();
+		   this();
 		   parsePath(containerPath);
 	   }
 	   
 	   public ContainerType () {
-		   super();		   
+		   super();		
+		   pathType=SWT_CONTAINER_PATH_PLATFORM; 
 	   }	   
+	   /*
+	    * containerPath may be null, when it is first created
+	    */
 	   protected void parsePath (IPath containerPath) {
-			if (!containerPath.segment(0).equals(SWT_CONTAINER_SIGNITURE))
+			if (containerPath!=null && !containerPath.segment(0).equals(SWT_CONTAINER_SIGNITURE))
 				throw new IllegalStateException("Invalid Container ID: "+containerPath);
+						
+			pathType=SWT_CONTAINER_PATH_PLATFORM;
 			
-			pathType=SWT_CONTAINER_PATH_PLATFORM; // default
-			
-			for (int i=1; i<containerPath.segmentCount(); i++) {
-				if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_JFACE))
-					setPathType(SWT_CONTAINER_JFACE, true);
-				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PLATFORM))
-					setPathType(SWT_CONTAINER_PATH_PLATFORM, true);
-				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PDE))
-					setPathType(SWT_CONTAINER_PATH_PDE, true);
-				else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_CUSTOM)) {
-					setPathType(SWT_CONTAINER_PATH_PDE, true);
-					customPath = containerPath.removeFirstSegments(i).toString();	
-					break;
+			if (containerPath!=null){
+				for (int i=1; i<containerPath.segmentCount(); i++) {
+					if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_JFACE))
+						setPathType(SWT_CONTAINER_JFACE, true);
+					else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PLATFORM))
+						setPathType(SWT_CONTAINER_PATH_PLATFORM, true);
+					else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_PDE))
+						setPathType(SWT_CONTAINER_PATH_PDE, true);
+					else if (containerPath.segment(i).equals(SWT_CONTAINER_SIGNITURE_PATH_CUSTOM)) {
+						setPathType(SWT_CONTAINER_PATH_PDE, true);
+						customPath = containerPath.removeFirstSegments(i).toString();	
+						break;
+					}
 				}
 			}
 			
 		}
-
 	   
 		public  IPath getContainerPath () {
 			IPath result = new Path (SWT_CONTAINER_SIGNITURE);
@@ -278,6 +292,66 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		
 	private ContainerType containerType = null;
 	
+	private IPluginModelListener pdeModelListener = new IPluginModelListener() {			
+		public void modelsChanged(PluginModelDelta delta) {
+			// TODO can be more efficient here; for now anyting is a refresh
+			try {
+				JavaCore.setClasspathContainer(
+						getPath(),
+						new IJavaProject[] {project},
+						new IClasspathContainer[] { SWTContainer.this },
+						null);
+			} catch (JavaModelException e) {
+				JavaVEPlugin.log(e);
+			}
+		}			
+	};
+	
+	
+	private boolean isClassPathChanged(IJavaElementDelta[] deltas) {
+		if (deltas==null)
+			return false;
+		for (int i = 0; i < deltas.length; i++) {
+			IResourceDelta[] rdeltas = deltas[i].getResourceDeltas();			
+			if (rdeltas!=null && rdeltas.length>0) {
+				for (int j = 0; j < deltas.length; j++) {
+					if (rdeltas[j].getFullPath().lastSegment().equals(".classpath")) {						
+						return true;
+					}					
+				}
+			}
+			if (isClassPathChanged(deltas[i].getChangedChildren()))
+				return true;
+		}
+		return false;
+	}
+	
+	private IElementChangedListener javaModelListener = new IElementChangedListener() {	
+		public void elementChanged(ElementChangedEvent event) {
+			if (isClassPathChanged(new IJavaElementDelta[] {event.getDelta()})) {
+				// Check to see if we are still "the" SWT container for this project
+				try {
+//					IClasspathEntry[] entries = project.getRawClasspath();
+//					boolean sigExists = false;
+//					for (int i = 0; i < entries.length; i++) {
+//						if (entries[i].getPath().equals(getPath())) {
+//						   sigExists=true;
+//						   break;
+//						}
+//					}
+					// Container could be cached on the projet even if it is not on the classpath.
+					IClasspathContainer c = JavaCore.getClasspathContainer(containerType.getContainerPath(), project);
+					if (c==null || c!=SWTContainer.this)						
+						removelisteners();
+				} catch (JavaModelException e) {
+					JavaVEPlugin.log(e);
+				}
+			}
+				
+	
+		}	
+	};
+	
 	
 	private boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
 			
@@ -297,11 +371,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	 *   
 	 */
 	
-	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
-	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS());
-	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch());
-	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch();
-	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.platform.source";
 	 			
 	public final static JarInfo[] swtLibraries = new JarInfo[] {
 			 new JarInfo(	"org.eclipse.swt"+SWT_CONTAINER_OS_PLUGIN_EXT,
@@ -336,9 +405,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 	};
 	
-
-	
-
 	
 	public static boolean isLegacy (String version) {		
 		StringTokenizer tk = new StringTokenizer(version,".");
@@ -518,6 +584,21 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			initPDE(containerPath);
 	}
 	
+	protected void addListeners() {
+		if (containerType.isPDEPath()) {
+			PDECore.getDefault().getModelManager().addPluginModelListener(pdeModelListener);
+		}
+		JavaCore.addElementChangedListener(javaModelListener, ElementChangedEvent.POST_CHANGE);
+		
+	}
+	
+	protected void removelisteners() {
+		if (containerType.isPDEPath()) {
+			PDECore.getDefault().getModelManager().removePluginModelListener(pdeModelListener);
+		}
+		JavaCore.removeElementChangedListener(javaModelListener);
+	}
+	
 	public SWTContainer(final IPath containerPath, IJavaProject project) {
 		this.containerPath = containerPath;
 		this.project = project;
@@ -543,6 +624,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		} catch (CoreException e) {
 			JavaVEPlugin.log(e, Level.INFO);
 		}
+		addListeners();
 	}
 	public IClasspathEntry[] getClasspathEntries() {
 		if (containerType.isPDEPath()) // Target may have changed
