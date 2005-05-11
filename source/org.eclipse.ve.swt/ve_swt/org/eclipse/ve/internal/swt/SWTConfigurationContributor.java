@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.23 $  $Date: 2005-05-09 13:28:50 $ 
+ *  $Revision: 1.24 $  $Date: 2005-05-11 17:52:27 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -53,8 +53,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class SWTConfigurationContributor extends ConfigurationContributorAdapter {
 	
-	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	 //$NON-NLS-1$
-	public static final IPath SWT_OS_PATH =  new Path("os/"+Platform.getOS()+"/"+Platform.getOSArch());
+	public static final String SWT_BUILD_PATH_MARKER = "org.eclipse.ve.swt.buildpath";	 //$NON-NLS-1$	
 	
 	protected IJavaProject javaProject;
 	protected IConfigurationContributionInfo fConfigContributionInfo;
@@ -79,9 +78,15 @@ protected static boolean isInterestingLibFile(String name) {
 static public URL generateLibCacheIfNeeded (IFragmentModel frag, String relativePath) {
 	return generateLibCacheIfNeeded(frag.getInstallLocation(), relativePath);
 }
+
+static private Set libraryCaches = new HashSet();  // Store the configured caches in this session
+static final private String argSeperator = "|";
 static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePath) {		
 		if (srcJarFile == null)
 			return null;
+		// These are cache locations that we were dependant on at some time this
+		// session
+		libraryCaches.add((srcJarFile+argSeperator+relativePath).intern());
 		File f = new File(srcJarFile);
 		// Create a root path for each version of .dlls
 		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(f.getAbsolutePath().hashCode()));
@@ -178,7 +183,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				// swt fragment					
 				if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$
 					continue; // skip the nl ones
-				os = getResourceURL(frags[i], SWT_OS_PATH.toPortableString());
+				os = getResourceURL(frags[i], SWTContainer.SWT_CONTAINER_OS.toPortableString());
 				if (os!=null){	
 				  return os;
 				}
@@ -292,7 +297,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		if (os!=null){	
 			// if our DLL is inside a .jar extract it out to out private cache.
 		   if (os.toString().startsWith("jar"))
-				os = generateLibCacheIfNeeded(getFilePath(os).toPortableString(), SWT_OS_PATH.toPortableString());
+				os = generateLibCacheIfNeeded(getFilePath(os).toPortableString(), SWTContainer.SWT_CONTAINER_OS.toPortableString());
 		}
 
         final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
@@ -328,8 +333,20 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
 			// SWT container would have contributed all the proper jars, and DLLs... if it is
 			// not in the class path, we may have many other issues.
+			//
+			// But, it is possible that a project clean removed the library cache since
+			// the time the container created it.
+			// Typically the expectation is 1 (or a few)cache locations
+			for (Iterator itr = libraryCaches.iterator(); itr.hasNext();){
+				StringTokenizer st = new StringTokenizer((String)itr.next(),argSeperator);
+				if (st.countTokens()>1)
+					generateLibCacheIfNeeded(st.nextToken(),st.nextToken());
+				else
+					generateLibCacheIfNeeded(st.nextToken(),"");
+			}
 		}
 		else {
+			// This is only to suppor the SWT's Libraries
 			PluginModelManager pm = PDECore.getDefault().getModelManager();
 			IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt");
 			Version version = swtEntry.getBundleDescription().getVersion();

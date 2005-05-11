@@ -45,24 +45,27 @@ public  class SWTContainerWizardPage extends WizardPage implements IClasspathCon
 	protected void initializeFromSelection() {
 		SWTContainerWizardContent page = (SWTContainerWizardContent) getControl();		
 		if (page != null) {			
-			if (fClassPathEntry != null) {
-				containerType = new SWTContainer.ContainerType(fClassPathEntry.getPath());
-				page.setContainerType(containerType);							
-			}
+			if (fClassPathEntry != null) 
+				containerType = new SWTContainer.ContainerType(fClassPathEntry.getPath());													
+			else 
+				containerType = new SWTContainer.ContainerType();			
+			page.setContainerType(containerType);
 		}			
 	}
 	
 	public boolean finish(){		
 		SWTContainer.ContainerType ori = new SWTContainer.ContainerType(initialPath);
 		// Compatible with older versions of Path signiture
-		if (!ori.equals(containerType))
+		if (initialPath==null || !ori.equals(containerType))
 		   setSelection(JavaCore.newContainerEntry(containerType.getContainerPath()));			
 		return true;
 	}
 	
 	public void setSelection(IClasspathEntry containerEntry) {
 		fClassPathEntry = containerEntry;
-		initialPath = containerEntry.getPath();
+		if (containerEntry!=null)
+		    initialPath = containerEntry.getPath();
+		
 		initializeFromSelection();		
 	}
 	public IClasspathEntry getSelection() {
