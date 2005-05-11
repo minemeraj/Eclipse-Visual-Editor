@@ -88,6 +88,7 @@ public class ImageCapture implements IImageCapture{
 		   						aControl instanceof OleFrame;
 		try {
 			specialClass |= aControl instanceof Spinner;
+			specialClass |= aControl instanceof Link;
 		}
 		catch (NoClassDefFoundError e) {} // might not be on 3.1 of SWT
 		if(specialClass){
