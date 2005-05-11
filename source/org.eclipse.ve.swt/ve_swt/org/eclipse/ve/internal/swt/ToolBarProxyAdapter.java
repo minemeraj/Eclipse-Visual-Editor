@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolBarProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-22 20:57:53 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,7 +48,7 @@ public class ToolBarProxyAdapter extends ItemParentProxyAdapter {
                     .eGet(sf_items);
             Iterator iter = items.iterator();
             while (iter.hasNext()) {
-                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                IBeanProxyHost value = BeanProxyUtilities
                         .getBeanProxyHost((IJavaInstance) iter.next());
                 if (value != null)
                     value.releaseBeanProxy();

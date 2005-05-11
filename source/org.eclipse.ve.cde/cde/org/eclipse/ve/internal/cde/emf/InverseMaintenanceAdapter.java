@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -485,20 +485,19 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	protected void handleAddRef(EReference feature, EObject newValue) {
 		if (newValue != null && !(newValue instanceof AnnotationEMF)) {
 			// Do not do anything with values of AnnotationEMF
-			EReference ref = (EReference) feature;
 			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(newValue, ADAPTER_KEY);											
-			if (ref.isContainment()) {
-				if (inverseAdapter == null && shouldPropagate(ref, newValue)) {
+			if (feature.isContainment()) {
+				if (inverseAdapter == null && shouldPropagate(feature, newValue)) {
 					inverseAdapter = addAdapter(newValue);	// add new adapter.
 					if (inverseAdapter != null)	// It got added.
 						inverseAdapter.primPropagate();	// Propagate (prim because we know it is not propagated and is in same resource).
 				} else if (inverseAdapter != null && !inverseAdapter.isPropagated())
 					inverseAdapter.primPropagate();	// Propagate (prim because we know it is not propagated and is in same resource). 
-			} else if (shouldReference(ref, newValue)) {
+			} else if (shouldReference(feature, newValue)) {
 				if (inverseAdapter == null)
 					inverseAdapter = addAdapter(newValue);
 				if (inverseAdapter != null)
-					inverseAdapter.addBackRef(ref, getTarget());	// Could be propagated or already existed.
+					inverseAdapter.addBackRef(feature, getTarget());	// Could be propagated or already existed.
 			}
 		}
 	}
@@ -561,7 +560,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 			// No need to even look if is an AnnotationEMF.
 			InverseMaintenanceAdapter inverseAdapter = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(oldValue, ADAPTER_KEY);
 			if (inverseAdapter != null)
-				inverseAdapter.removeBackRef((EReference) feature, getTarget());
+				inverseAdapter.removeBackRef(feature, getTarget());
 		}
 	}
 

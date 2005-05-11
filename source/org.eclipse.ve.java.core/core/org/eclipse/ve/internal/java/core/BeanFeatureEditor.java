@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.text.MessageFormat;
@@ -574,7 +574,7 @@ public class BeanFeatureEditor
 	}
 	protected void setCellEditorNewValue() {
 		setProxyValue(fValue);	// Set in the new value since we got a new value now (actually it could also of come from the actual apply value, but then it would be the same value anyhow).
-		((IWrappedCellEditor) fActualCellEditor).newValue(getAsText());
+		fActualCellEditor.newValue(getAsText());
 	}
 	/**
 	 * This will only expect initData to be a string that contains the qualified name

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: NumberCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:34 $ 
  */
 
 
@@ -122,7 +122,7 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 	}
 	
 	protected String isCorrectString(String value) {
-		String text = ((String) value).trim();
+		String text = value.trim();
 		Number result = null;
 		if ((fNumberType == DOUBLE || fNumberType == FLOAT) && (text.indexOf('e') != -1 || text.indexOf('E') != -1)) {
 			// We have a double/float with an exponent. This is scientific notation. Formatter handles them badly, so use parse instead.

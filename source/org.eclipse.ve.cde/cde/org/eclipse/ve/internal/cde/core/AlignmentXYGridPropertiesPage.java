@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-05 00:27:32 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -324,7 +324,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart) parent).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(parent.getModel());
 				if (ep != null)
 					parent = ep;
 			}
@@ -346,7 +346,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart) target).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(target.getModel());
 				if (ep != null)
 					target = ep;
 			}

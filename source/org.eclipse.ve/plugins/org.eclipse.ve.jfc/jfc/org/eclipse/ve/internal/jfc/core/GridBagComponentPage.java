@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.Collections;
@@ -754,8 +754,8 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 
 	protected int getAnchorValue(EditPart ep) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
 			if (gridbagconstraint != null) {
 				Object anchorPV = gridbagconstraint.getPropertyValue(sfAnchor);
@@ -768,8 +768,8 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		return anchorAWTValue[CENTER];
 	}
 	protected int getFillValue(EditPart ep) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
 			if (gridbagconstraint != null) {
 				Object fillPV = gridbagconstraint.getPropertyValue(sfFill);
@@ -786,14 +786,14 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected Insets getInsetsValue(EditPart ep) {
 		int top = 0, left = 0, bottom = 0, right = 0;
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
 			if (gridbagconstraint != null) {
 				IPropertySource insetsPS = (IPropertySource)gridbagconstraint.getPropertyValue(sfInsets);
 				Object insetsPV = insetsPS.getEditableValue();
 				if (insetsPV != null && insetsPV instanceof IJavaObjectInstance) {
-					IBeanProxy insetsProxy = (IBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaObjectInstance) insetsPV, rset);
+					IBeanProxy insetsProxy = BeanProxyUtilities.getBeanProxy((IJavaObjectInstance) insetsPV, rset);
 					if (insetsProxy != null) {
 						IIntegerBeanProxy intProxy = null;
 						try {
@@ -865,7 +865,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)parent).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(parent.getModel());
 				if (ep != null)
 					parent = ep;
 			}

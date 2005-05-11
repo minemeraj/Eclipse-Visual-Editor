@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-25 13:31:58 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:31 $ 
  */
 
 
@@ -114,7 +114,7 @@ protected boolean isSimpleObject(IJavaObjectInstance obj) {
 protected boolean isChildValue(EStructuralFeature sf, IJavaInstance val, boolean checkAttributes) {
     if (sf == null || val == null || !(val instanceof IJavaObjectInstance)) return false ;
     // Known SF to be ignored
-    if (MethodTextGenerator.isNotToBeCodedAttribute(sf,(EObject)val)) return false ;
+    if (MethodTextGenerator.isNotToBeCodedAttribute(sf,val)) return false ;
     // Known Instances to be ignored
     if (isSimpleObject((IJavaObjectInstance)val)) return false ;
     if (checkAttributes)

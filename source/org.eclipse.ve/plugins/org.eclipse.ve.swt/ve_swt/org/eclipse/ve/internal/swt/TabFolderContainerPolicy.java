@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-15 15:26:17 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -97,7 +97,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 							positionBeforeChild);
 				IJavaObjectInstance tabItem = createTabItem();
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting((EObject) tabItem, sf_tabItemControl, child);
+				cb.applyAttributeSetting(tabItem, sf_tabItemControl, child);
 				cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeItem);
 				command = cb.getCommand();
 				command.execute();
@@ -130,7 +130,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 				EObject tabItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
 						(EObject) child);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.cancelAttributeSetting((EObject) tabItem, sf_tabItemControl);
+				cb.cancelAttributeSetting(tabItem, sf_tabItemControl);
 				cb.cancelAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem);
 				command = cb.getCommand();
 				command.execute();

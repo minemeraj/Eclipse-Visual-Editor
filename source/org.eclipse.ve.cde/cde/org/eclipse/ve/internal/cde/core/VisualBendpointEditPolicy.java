@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualBendpointEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.util.*;
@@ -169,11 +169,11 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 	}
 
 	protected Command getMoveBendpointCommand(BendpointRequest request) {
-		List currentPoints = (List) getCurrentPoints();
+		List currentPoints = getCurrentPoints();
 		if (currentPoints == null)
 			return null; // We have no points to move.
 
-		currentPoints = (List) new ArrayList(currentPoints); // We will be modifying it.
+		currentPoints = new ArrayList(currentPoints); // We will be modifying it.
 
 		// The absolute location is the coordinate on the graph viewer
 		// We may be zoomed up in which case we need to adjust by the zoom factor, so we get a copy to make changes.
@@ -186,7 +186,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
 		int index = request.getIndex();
-		List currentPoints = (List) getCurrentPoints();
+		List currentPoints = getCurrentPoints();
 		if (currentPoints == null || index >= currentPoints.size())
 			return null; // We have no points to delete, or the point is outside the list.
 

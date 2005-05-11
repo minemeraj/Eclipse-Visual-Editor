@@ -12,7 +12,7 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-09 13:28:50 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -33,7 +33,6 @@ public class SWTContainerWizardContent extends Composite {
 	private Text customDir = null;
 	private Label platformVersion = null;
 	private Label pdeVersion = null;
-	private Label customVersion = null;
 	private Button browseButton = null;
 	
 	private SWTContainer.ContainerType containerType = null;
@@ -70,7 +69,7 @@ public class SWTContainerWizardContent extends Composite {
 		customRadio = new Button(group, SWT.RADIO);
 		customRadio.setText("Custom location");
 		customRadio.setToolTipText("Specify a directory for jars and libraries");
-		customVersion = new Label(group, SWT.NONE);
+		new Label(group, SWT.NONE);
 		customDir = new Text(group, SWT.BORDER);
 		customDir.setToolTipText("Specify  a root directory where all jars/libraries are located");
 		customDir.setEditable(false);

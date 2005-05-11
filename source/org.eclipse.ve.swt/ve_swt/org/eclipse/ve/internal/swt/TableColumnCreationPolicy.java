@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-22 19:05:05 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -50,7 +50,7 @@ public class TableColumnCreationPolicy implements CreationPolicy {
 				IJavaInstance intObj = BeanUtilities.createJavaObject(fIntHelper, JavaEditDomainHelper.getResourceSet(domain), fDefaultWidth);
 				EStructuralFeature sf_headerVisible = model.eClass().getEStructuralFeature(fWidth);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting((EObject) model, sf_headerVisible, intObj);
+				cb.applyAttributeSetting(model, sf_headerVisible, intObj);
 				cb.getCommand().execute();
 
 			}

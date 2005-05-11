@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NullLayoutSwitcher.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -65,7 +65,7 @@ public class NullLayoutSwitcher extends LayoutSwitcher {
 			IJavaObjectInstance comp = (IJavaObjectInstance) comps.next();
 			IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(comp);
 			
-			IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) BeanSWTUtilities.invoke_getBounds(compProxy);
+			IRectangleBeanProxy rectProxy = BeanSWTUtilities.invoke_getBounds(compProxy);
 			Rectangle newRect = new Rectangle(rectProxy.getX(), rectProxy.getY(), rectProxy.getWidth(), rectProxy.getHeight());
 			constraints.add(new NullLayoutPolicyHelper.NullConstraint(newRect, true, true));
 		}

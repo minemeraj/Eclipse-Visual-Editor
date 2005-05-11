@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.28 $  $Date: 2005-05-10 22:39:37 $ 
+ *  $Revision: 1.29 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.Iterator;
@@ -77,7 +77,6 @@ public CodeExpressionRef createInitExpression() {
 		JavaVEPlugin.log(e1);
 		return null;
 	}
-	String content;
 	exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 //	if (exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 //		exp.clearState();
@@ -237,7 +236,7 @@ private Statement getInitExpression(String src) {
     		
     	}    	      
     }
-	return (Statement)Stmt ;    
+	return Stmt ;    
 //		org.eclipse.jdt.internal.compiler.ast.Statement st[] = cudecl.types[0].methods[1].statements ;
 //		if (st != null) {
 //			if (st[0] instanceof org.eclipse.jdt.internal.compiler.ast.LocalDeclaration

@@ -153,7 +153,7 @@ Both container and plugin can be specified, but at least one of them must be spe
   &lt;contributor
    class=&quot;com.example.ContributorImplementation&quot;
    container=&quot;MY_CONTAINER&quot;&gt;
-  &lt;contributor&gt;
+  &lt;/contributor&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
 This will use an instance of &lt;samp&gt;com.example.ContributorImplementation&lt;/samp&gt; to supply contributions for the container &quot;MY_CONTAINER&quot;.

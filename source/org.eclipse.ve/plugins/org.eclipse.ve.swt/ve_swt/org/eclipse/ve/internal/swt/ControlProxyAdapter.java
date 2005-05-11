@@ -323,14 +323,14 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	
 	public void childValidated(IControlProxyHost childProxy) {
 		if (parentProxyAdapter != null){
-			((IControlProxyHost)parentProxyAdapter).childValidated(childProxy);
+			parentProxyAdapter.childValidated(childProxy);
 		}
 	}
 		
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
 		// See whether or not we are on the free form
-		EObject beanComposition = (EObject)InverseMaintenanceAdapter.getFirstReferencedBy(newTarget,JCMPackage.eINSTANCE.getBeanComposition_Components());
+		EObject beanComposition = InverseMaintenanceAdapter.getFirstReferencedBy(newTarget,JCMPackage.eINSTANCE.getBeanComposition_Components());
 		if(beanComposition != null){
 			Adapter existingAdapter = EcoreUtil.getExistingAdapter(beanComposition,FreeFormControlHostAdapter.class);		
 			if(existingAdapter == null){
@@ -384,7 +384,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				
 				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-				IJavaInstance inst = (IJavaInstance)  BeanUtilities.createJavaObject("int",rset,String.valueOf(-1)); //$NON-NLS-1$
+				IJavaInstance inst = BeanUtilities.createJavaObject("int",rset,String.valueOf(-1)); //$NON-NLS-1$
 				IIntegerBeanProxy defval =  (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(inst);
 				
 				IJavaObjectInstance control = (IJavaObjectInstance) getTarget();

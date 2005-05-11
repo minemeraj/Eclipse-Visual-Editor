@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:20 $ 
  */
 
 import java.io.*;
@@ -316,7 +316,7 @@ public class ImageDataCollector implements ICallback {
 						for (int i=0; i<rgbCnt; i++) {
 							// The bytes need to be unsigned, but java doesn't have that, so we need to do it
 							// RGB takes ints range 0-255, not -128 to 127
-							rgbs[i] = new RGB(((int) is.readByte()) & 0x000000ff, ((int) is.readByte()) & 0x000000ff, ((int) is.readByte()) & 0x000000ff);
+							rgbs[i] = new RGB(is.readByte() & 0x000000ff, is.readByte() & 0x000000ff, is.readByte() & 0x000000ff);
 						}
 						palette = new PaletteData(rgbs);
 						break;

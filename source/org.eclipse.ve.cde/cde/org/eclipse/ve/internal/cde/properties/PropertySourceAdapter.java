@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -165,7 +165,7 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 	 */
 	protected IPropertyDescriptor createPropertyDescriptorFromInfo(EStructuralFeature sfeature) {
 		PropertyDescriptorInformation descInfo =
-			(PropertyDescriptorInformation) getDecorator((EModelElement) sfeature, PropertyDescriptorInformation.class);
+			(PropertyDescriptorInformation) getDecorator(sfeature, PropertyDescriptorInformation.class);
 		if (descInfo != null && !descInfo.isAdapter() && descInfo.getPropertyDescriptorClassname() != null) {
 			String cname = descInfo.getPropertyDescriptorClassname();
 			try {

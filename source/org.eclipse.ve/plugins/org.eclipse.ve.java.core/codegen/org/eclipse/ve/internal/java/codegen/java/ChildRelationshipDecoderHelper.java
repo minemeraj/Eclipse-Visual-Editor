@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-17 16:58:45 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-11 22:41:31 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -240,7 +240,7 @@ protected BeanPart getCurrentAddedPart(Object arg) {
 				}
 			}
 			if(added!=null)
-				currentBean = fOwner.getBeanModel().getABean((EObject)added);
+				currentBean = fOwner.getBeanModel().getABean(added);
 		}
 	
 	return currentBean ;  

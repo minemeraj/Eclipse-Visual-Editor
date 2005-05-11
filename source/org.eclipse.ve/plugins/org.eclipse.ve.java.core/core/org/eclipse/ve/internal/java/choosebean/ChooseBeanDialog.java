@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.28 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.29 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -58,7 +58,6 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 	private IPackageFragment pkg;
 	private IChooseBeanContributor[] contributors = null;
 	private int selectedContributor = -1;
-	private boolean disableOthers = false;
 	private EditDomain editDomain = null ;
 	private IJavaSearchScope javaSearchScope = null;
 
@@ -128,7 +127,6 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 		this.selectedContributor = choice;
 		this.pkg = packageFragment;
 		this.project = packageFragment.getJavaProject();
-		this.disableOthers = disableOthers;
 		this.contributors = contributors != null ? contributors : ChooseBeanDialogUtilities.determineContributors(project);
 		if(contributors==null || contributors.length < 1)
 			selectedContributor = -1;

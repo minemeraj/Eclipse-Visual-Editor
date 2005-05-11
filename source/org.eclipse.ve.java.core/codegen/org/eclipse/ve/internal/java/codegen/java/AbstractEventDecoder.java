@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.12 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:31 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -122,7 +122,7 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 		if (!(expr instanceof CodeEventRef))  throw new CodeGenException("Invalid Parameter") ; //$NON-NLS-1$
 	
 		fEventRef = (CodeEventRef) expr;
-		fExpr = (Statement) expr.getExprStmt();
+		fExpr = expr.getExprStmt();
 		fEventRef.setDecoder(this);
 		if (fExpr != null)
 			fdebugString = fExpr.toString();

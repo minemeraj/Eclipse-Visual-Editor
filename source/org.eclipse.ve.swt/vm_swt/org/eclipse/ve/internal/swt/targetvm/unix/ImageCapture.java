@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:38 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -178,7 +178,7 @@ public class ImageCapture implements IImageCapture{
 				} else {
 					ImageData imageData = decoration.getImage().getImageData();
 					double factor = (double)barHeight / (double)imageBounds.height;
-					int newWidth = (int)((double)imageBounds.width * factor);
+					int newWidth = (int)(imageBounds.width * factor);
 					imageData = imageData.scaledTo(newWidth, barHeight);
 					Image newImage = new Image(decoration.getDisplay(), imageData);
 					gc.drawImage(newImage, 0, 0);

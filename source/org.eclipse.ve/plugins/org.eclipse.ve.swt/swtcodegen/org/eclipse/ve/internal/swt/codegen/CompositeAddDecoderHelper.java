@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-04-21 15:03:58 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -395,7 +395,7 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 		if (fAddedPart!=null)
 			 obj = (IJavaObjectInstance)fAddedPart.getEObject();
 		else
-			 obj = (IJavaObjectInstance)fAddedInstance;
+			 obj = fAddedInstance;
 		
 		EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy(obj,JCMPackage.eINSTANCE.getJCMMethod_Initializes());
 		if (cRef == null) return false;

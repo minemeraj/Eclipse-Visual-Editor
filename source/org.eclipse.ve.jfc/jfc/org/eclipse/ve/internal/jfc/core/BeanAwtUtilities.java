@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.25 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.26 $  $Date: 2005-05-11 22:41:20 $ 
  */
 
 import java.util.List;
@@ -1533,7 +1533,7 @@ public class BeanAwtUtilities {
 			if (beanComposition.getMembers().indexOf(childComponent) != -1) {
 				// Check for Global/Global by ensuring the return from the initialize method is the same
 				// as the child component.
-				EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) childComponent, JCMPackage.eINSTANCE
+				EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, JCMPackage.eINSTANCE
 						.getJCMMethod_Initializes());
 				if (cRef != null && cRef instanceof JCMMethod) {
 					if (((JCMMethod) cRef).getReturn() == childComponent)

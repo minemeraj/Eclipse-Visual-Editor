@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-06 20:37:53 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -225,7 +225,7 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 			}
 			Iterator itr = container.getMembers().iterator();
 			while (itr.hasNext()) {
-				Annotation an = (Annotation) policy.getAnnotation(itr.next());
+				Annotation an = policy.getAnnotation(itr.next());
 				if (an != null) {
 					BasicEMap.Entry ks = getMapEntry(an, NAME_IN_COMPOSITION_KEY);
 					if (ks != null && componentName.equals(ks.getValue())) {

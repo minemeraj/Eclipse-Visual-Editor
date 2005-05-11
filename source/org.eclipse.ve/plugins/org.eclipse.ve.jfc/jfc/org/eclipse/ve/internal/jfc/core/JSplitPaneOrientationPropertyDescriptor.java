@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneOrientationPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -71,24 +71,24 @@ public class JSplitPaneOrientationPropertyDescriptor extends BeanPropertyDescrip
 			if (splitpane.eIsSet(sfLeftComponent)) {
 				EObject leftComp = (EObject) ((EObject) splitpane).eGet(sfLeftComponent);
 				cb.cancelAttributeSetting(splitpane, sfLeftComponent);
-				afterCB.applyAttributeSetting((EObject) splitpane, sfTopComponent, leftComp);
+				afterCB.applyAttributeSetting(splitpane, sfTopComponent, leftComp);
 			}
 			if (splitpane.eIsSet(sfRightComponent)) {
 				EObject rightComp = (EObject) ((EObject) splitpane).eGet(sfRightComponent);
 				cb.cancelAttributeSetting(splitpane, sfRightComponent);
-				afterCB.applyAttributeSetting((EObject) splitpane, sfBottomComponent, rightComp);
+				afterCB.applyAttributeSetting(splitpane, sfBottomComponent, rightComp);
 			}
 			// Handle the case where the orientation is now horizontal
 		} else if (orientation == HORIZONTAL_SPLIT) {
 			if (splitpane.eIsSet(sfTopComponent)) {
 				EObject topComp = (EObject) ((EObject) splitpane).eGet(sfTopComponent);
 				cb.cancelAttributeSetting(splitpane, sfTopComponent);
-				afterCB.applyAttributeSetting((EObject) splitpane, sfLeftComponent, topComp);
+				afterCB.applyAttributeSetting(splitpane, sfLeftComponent, topComp);
 			}
 			if (splitpane.eIsSet(sfBottomComponent)) {
 				EObject bottomComp = (EObject) ((EObject) splitpane).eGet(sfBottomComponent);
 				cb.cancelAttributeSetting(splitpane, sfBottomComponent);
-				afterCB.applyAttributeSetting((EObject) splitpane, sfRightComponent, bottomComp);
+				afterCB.applyAttributeSetting(splitpane, sfRightComponent, bottomComp);
 			}
 		}
 		// apply the orientation value to the splitpane, but this is under rule control because there is an old and new value to handle.
@@ -120,12 +120,12 @@ public class JSplitPaneOrientationPropertyDescriptor extends BeanPropertyDescrip
 		if (splitpane.eIsSet(sfTopComponent)) {
 			EObject topComp = (EObject) ((EObject) splitpane).eGet(sfTopComponent);
 			cb.cancelAttributeSetting(splitpane, sfTopComponent);
-			afterCB.applyAttributeSetting((EObject) splitpane, sfLeftComponent, topComp);
+			afterCB.applyAttributeSetting(splitpane, sfLeftComponent, topComp);
 		}
 		if (splitpane.eIsSet(sfBottomComponent)) {
 			EObject bottomComp = (EObject) ((EObject) splitpane).eGet(sfBottomComponent);
 			cb.cancelAttributeSetting(splitpane, sfBottomComponent);
-			afterCB.applyAttributeSetting((EObject) splitpane, sfRightComponent, bottomComp);
+			afterCB.applyAttributeSetting(splitpane, sfRightComponent, bottomComp);
 		}
 
 		// Cancel the orientation under rule control.

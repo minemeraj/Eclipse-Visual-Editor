@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -271,11 +271,11 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		}
 		if (cb.isEmpty()) {
 			// No gridbag constraint found, create a new one with the specific gridx & gridy settings
-			GridBagConstraint gridbagconstraint = helper.getConstraint((IJavaObjectInstance) component, cellLocation.x, cellLocation.y);
+			GridBagConstraint gridbagconstraint = helper.getConstraint(component, cellLocation.x, cellLocation.y);
 			cb.append(helper.getCreateChildCommand(component, gridbagconstraint, null));
 		}
 		// get the commands for other components that may have been affect by inserting a column and/or row
-		cb.append(getAdjustConstraintsCommand((IJavaObjectInstance)component, position, cellLocation));
+		cb.append(getAdjustConstraintsCommand(component, position, cellLocation));
 		return cb.getCommand();
 	}
 	/**
@@ -621,7 +621,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 */
 	public Command getCommand(Request request) {
 		if (REQ_GRIDBAGLAYOUT_SPAN.equals(request.getType()))
-			return getSpanChildrenCommand((ChangeBoundsRequest)request);
+			return getSpanChildrenCommand(request);
 
 		return super.getCommand(request);
 	}
@@ -658,7 +658,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		CommandBuilder cb = new CommandBuilder();
 		cb.append(createAddCommand((EditPart)editParts.get(0), cellLocation));
 		// get the commands for other components that may have been affect by inserting a column and/or row
-		cb.append(getAdjustConstraintsCommand((IJavaObjectInstance)((EditPart)editParts.get(0)).getModel(), position, cellLocation));
+		cb.append(getAdjustConstraintsCommand(((EditPart)editParts.get(0)).getModel(), position, cellLocation));
 		return cb.getCommand();
 	}
 	protected Command getSpanChildrenCommand(Request generic) {

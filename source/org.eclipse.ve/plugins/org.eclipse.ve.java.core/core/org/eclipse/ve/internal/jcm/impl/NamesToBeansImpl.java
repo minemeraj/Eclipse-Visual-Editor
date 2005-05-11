@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: NamesToBeansImpl.java,v 1.2 2005-02-15 23:23:54 sgunturi Exp $
+ * $Id: NamesToBeansImpl.java,v 1.3 2005-05-11 22:41:32 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -123,7 +123,7 @@ public class NamesToBeansImpl extends EObjectImpl implements BasicEMap.Entry {
 	public EObject getTypedValue() {
 		if (value != null && value.eIsProxy()) {
 			EObject oldValue = value;
-			value = (EObject)eResolveProxy((InternalEObject)value);
+			value = eResolveProxy((InternalEObject)value);
 			if (value != oldValue) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.NAMES_TO_BEANS__VALUE, oldValue, value));

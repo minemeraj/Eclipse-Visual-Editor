@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:21 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -236,7 +236,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 							if (notification.isPostReinstantiation() && notification.getFeature() == sfName) {
 								EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference(ContainerProxyAdapter.this
 										.getEObject(), sfContainerComponents, sfConstraintComponent, (Notifier) msg.getNotifier());
-								changeConstraint((EObject) constraintComponent, notification.getExpression());
+								changeConstraint(constraintComponent, notification.getExpression());
 							}
 						} catch (ClassCastException e) {
 							// Ignore this. It means someone sent their own kind of notification but used out notification type.

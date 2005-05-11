@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.11 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:31 $ 
  */
 
 import java.util.List;
@@ -86,10 +86,7 @@ protected void updateModelPositions(CompilationUnit decl){
 		if(methods!=null && methodStarts!=null){
 			int usefulMethodIndex = 0;
 			for(int mc=0;mc<methods.length;mc++){
-				if(	methods[mc]!=null && 
-						// Since Methods are the only things we care about
-						methods[mc] instanceof MethodDeclaration &&
-						!((MethodDeclaration)methods[mc]).isConstructor()) {
+				if(!methods[mc].isConstructor()) {
 							methods[mc].setSourceRange(methodStarts[usefulMethodIndex], methodEnds[usefulMethodIndex]-methodStarts[usefulMethodIndex]+1);
 							usefulMethodIndex++;
 				}

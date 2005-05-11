@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteActionTool.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-10 23:12:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -65,7 +65,7 @@ public class PasteActionTool extends SelectionAction {
 
 	private CreationFactory getFactory(Object template) {
 		// Load the contents of the clipboard and assume they are well formed XMI
-		EObject root = (EObject)editDomain.getDiagramData();
+		EObject root = editDomain.getDiagramData();
 		ResourceSet targetResourceSet = root.eResource().getResourceSet();
 		// Use a dummy URI for the resource that is unique
 		Resource clipboardResource = targetResourceSet.createResource(root.eResource().getURI().appendSegment(":" + System.currentTimeMillis()));

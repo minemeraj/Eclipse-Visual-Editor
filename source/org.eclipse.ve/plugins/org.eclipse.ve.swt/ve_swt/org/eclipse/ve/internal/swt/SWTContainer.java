@@ -353,7 +353,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	};
 	
 	
-	private boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
 			
 	/**
 	 * The following path info. provides both pre and post 3.1 locations
@@ -384,17 +383,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						)};
 					
 	
-	
-	private final static JarInfo[] swtGTKLibraries = new JarInfo[]{
-		    // GTK libraries are all part of the swt fragment included in the swtLibraries in 3.1
-			new JarInfo(	"org.eclipse.swt.gtk", 
-							SWT_CONTAINER_WS.append("swt-pi.jar").toPortableString(),
-							null),
-			new JarInfo(	"org.eclipse.swt.gtk", 
-							SWT_CONTAINER_WS.append("swt-mozilla.jar").toPortableString(), 
-							null)
-			};
-	
+		
 	private final static JarInfo[] jfaceLibraries = new JarInfo[] {
 			new JarInfo("org.eclipse.jface", "jface.jar", SWT_CONTAINER_SRC_PLUGIN), 
 			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN), 

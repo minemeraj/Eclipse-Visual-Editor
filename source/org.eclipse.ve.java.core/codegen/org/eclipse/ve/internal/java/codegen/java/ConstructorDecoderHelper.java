@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.38 $  $Date: 2005-04-22 20:15:52 $ 
+ *  $Revision: 1.39 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -578,6 +578,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		return super.getIndexPriority();
 	}
 	public Object[] getReferencedInstances() {		
-		return CodeGenUtil.getReferences((IJavaObjectInstance)fbeanPart.getEObject(),false).toArray();
+		return CodeGenUtil.getReferences(fbeanPart.getEObject(),false).toArray();
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.40 $  $Date: 2005-04-12 16:26:32 $ 
+ *  $Revision: 1.41 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -278,7 +278,7 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 
 //	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getQualifiedName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Assume imports will be created by the init expression
-	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getSimpleName(), INSTANCE_VAR_DEFAULT_COMMENT);
+	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, component.getJavaType().getSimpleName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Create it as the last field
 	ft.setSeperator(fBeanModel.getLineSeperator());
 	setFreeFormAnnotation(ft, bp);
@@ -307,7 +307,7 @@ protected boolean isNeedToCallInit(BeanPart b) {
 
     JavaHelpers AppletType = JavaRefFactory.eINSTANCE.reflectType("java.applet.Applet",b.getEObject()) ; //$NON-NLS-1$
 	return !AppletType.isAssignableFrom(
-	                    (EClassifier) ((IJavaObjectInstance) b.getEObject()).getJavaType()) ;
+	                    ((IJavaObjectInstance) b.getEObject()).getJavaType()) ;
 }
 
 protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMethod) {
@@ -365,7 +365,7 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
                         // If the class can't be created then just drop down and let the regular command be returned
                     }
                     if (policy != null) {
-                        String superOveride = policy.getDefaultSuperString((EClass)superClazz) ;
+                        String superOveride = policy.getDefaultSuperString(superClazz) ;
                         if (superOveride != null)
                            template.setSuperInitString(superOveride+";") ; //$NON-NLS-1$
                     }
@@ -523,7 +523,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
      }
       
       // Set up a new BeanPart in the decleration Model
-      String bType = ((IJavaObjectInstance)component).getJavaType().getQualifiedName() ;
+      String bType = component.getJavaType().getQualifiedName() ;
       BeanPartDecleration decl = new BeanPartDecleration(varName,bType);      
       bp = new BeanPart (decl) ;
       boolean instanceVar = true;                 

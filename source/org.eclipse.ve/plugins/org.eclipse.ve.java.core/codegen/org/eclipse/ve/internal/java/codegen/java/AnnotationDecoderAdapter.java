@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.20 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -508,7 +508,7 @@ protected void performGlobalRename(BeanPart nameChangedBP, final IField bpField,
 				try {
 					RenameSupport rename =
 							RenameSupport.create(
-								(IField) bpField,
+								bpField,
 								newFieldName,
 								RenameSupport.UPDATE_GETTER_METHOD
 									| RenameSupport.UPDATE_TEXTUAL_MATCHES

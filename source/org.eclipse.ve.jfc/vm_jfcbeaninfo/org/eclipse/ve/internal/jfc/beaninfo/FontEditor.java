@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: FontEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import java.awt.*;
@@ -29,7 +29,7 @@ public class FontEditor extends PropertyEditorSupport {
 		System.err.print("Value not a font = " + getValue());
 		exc.printStackTrace();
 	}
-	if (font == null || !(font instanceof Font))
+	if (font == null)
 		return "";	//$NON-NLS-1$
 	if (font.isBold()) {
 		strStyle = font.isItalic() ? resabtedit.getString("bolditalic") : resabtedit.getString("bold"); //$NON-NLS-2$ //$NON-NLS-1$

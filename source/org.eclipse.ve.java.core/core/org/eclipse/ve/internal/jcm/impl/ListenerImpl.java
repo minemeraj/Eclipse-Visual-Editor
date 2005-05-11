@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.Collection;
@@ -177,12 +177,12 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 		if (eContainerFeatureID >= 0) {
 			switch (eContainerFeatureID) {
 				case JCMPackage.LISTENER__LISTENER_TYPE:
-					return ((InternalEObject)eContainer).eInverseRemove(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
+					return eContainer.eInverseRemove(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
 				default:
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return ((InternalEObject)eContainer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
 	}
 
 	/**

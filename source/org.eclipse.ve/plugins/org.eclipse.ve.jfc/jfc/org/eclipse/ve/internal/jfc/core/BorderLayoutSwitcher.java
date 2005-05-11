@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutSwitcher.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -84,7 +84,7 @@ protected Command getChangeConstraintsCommand(List children) {
 	// are left to be assigned.
 	while (!remComps.isEmpty() && !regions.isEmpty()) {
 		constraints.add(regions.get(0));
-		compsWithConstraints.add((IJavaObjectInstance)remComps.get(0));
+		compsWithConstraints.add(remComps.get(0));
 		regions.remove(regions.get(0));
 		remComps.remove(remComps.get(0));
 	}

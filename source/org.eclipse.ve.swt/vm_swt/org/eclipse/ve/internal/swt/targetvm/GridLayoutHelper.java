@@ -557,7 +557,7 @@ public class GridLayoutHelper {
 				int widgetX = 0, widgetY = 0;
 
 				//
-				GridData spec = (GridData) row[c];
+				GridData spec = row[c];
 				if (fGridLayout.makeColumnsEqualWidth) {
 					columnWidth = fComposite.getClientArea().width - 2 * (fGridLayout.marginWidth)  - ((fGridLayout.numColumns - 1) * fGridLayout.horizontalSpacing);
 					columnWidth = columnWidth / fGridLayout.numColumns;

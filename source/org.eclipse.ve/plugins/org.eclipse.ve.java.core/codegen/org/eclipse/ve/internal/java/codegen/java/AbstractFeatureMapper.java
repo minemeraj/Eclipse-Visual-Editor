@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:31 $ 
  */
 import java.util.logging.Level;
 
-import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
 
@@ -50,8 +49,8 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 		fSF = sf;
 		if (sf != null) {
 			try {
-				fSFname = ((EStructuralFeature) fSF).getName();
-				fPD = Utilities.getPropertyDecorator((EModelElement) sf);
+				fSFname = fSF.getName();
+				fPD = Utilities.getPropertyDecorator(sf);
 			} catch (Throwable e) {
 				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
 					JavaVEPlugin.log("Utilities.getPropertyDecorator on:" + sf, Level.WARNING); //$NON-NLS-1$

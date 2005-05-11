@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cdm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: DiagramImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:16:26 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
  */
 import java.util.Collection;
 
@@ -281,12 +281,12 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 		if (eContainerFeatureID >= 0) {
 			switch (eContainerFeatureID) {
 				case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-					return ((InternalEObject)eContainer).eInverseRemove(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
+					return eContainer.eInverseRemove(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
 				default:
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return ((InternalEObject)eContainer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
 	}
 
 	/**

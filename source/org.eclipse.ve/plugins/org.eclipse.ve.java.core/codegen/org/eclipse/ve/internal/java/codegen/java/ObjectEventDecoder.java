@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectEventDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -65,7 +65,7 @@ public class ObjectEventDecoder extends AbstractEventDecoder {
 						}
 					}
 				}
-				else if (((MethodInvocation) mi).arguments().size() == 2 && getEventInvocation() instanceof PropertyChangeEventInvocation) {
+				else if (mi.arguments().size() == 2 && getEventInvocation() instanceof PropertyChangeEventInvocation) {
 					// "property",Listener signiture
 					helper = new PropertyChangedAllocationStyleHellper(fbeanPart, exp, this);
 				}

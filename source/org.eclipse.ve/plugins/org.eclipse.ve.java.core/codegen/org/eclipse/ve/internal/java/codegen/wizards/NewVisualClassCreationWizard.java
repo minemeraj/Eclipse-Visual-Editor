@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.29 $  $Date: 2005-04-22 14:51:13 $ 
+ *  $Revision: 1.30 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.io.IOException;
@@ -299,10 +299,9 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		IVisualClassCreationSourceGenerator gen = getGeneratorInstance(contributor.getTemplateLocation());
 		try {
 			ICompilationUnit originalCU = type1.getCompilationUnit(); 
-			NewVisualClassWizardPage page = (NewVisualClassWizardPage) fPage;
 			
-			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName, page.getArgumentMatrix());
-			ICompilationUnit workingCopy = (ICompilationUnit) originalCU.getWorkingCopy(null) ;
+			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName, fPage.getArgumentMatrix());
+			ICompilationUnit workingCopy = originalCU.getWorkingCopy(null) ;
 			workingCopy.getBuffer().setContents(src);
 			workingCopy.reconcile(ICompilationUnit.NO_AST, true, null, new NullProgressMonitor());
 			

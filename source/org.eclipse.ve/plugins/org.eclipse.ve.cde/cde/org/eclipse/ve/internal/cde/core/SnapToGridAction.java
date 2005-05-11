@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: SnapToGridAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 
@@ -30,15 +30,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class SnapToGridAction extends SelectionAction implements IPropertyChangeListener {
 	public static final String ACTION_ID = "cde.SNAPTOGRID"; //$NON-NLS-1$
 
 	public SnapToGridAction(IEditorPart part, ShowGridAction showGridAction) {
-		super((IWorkbenchPart) part);
+		super(part);
 		setText(CDEMessages.getString("SnapToGridAction.label")); //$NON-NLS-1$
 		setToolTipText(CDEMessages.getString("SnapToGridAction.tooltip")); //$NON-NLS-1$
 		setId(ACTION_ID);

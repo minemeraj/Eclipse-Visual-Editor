@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.73 $  $Date: 2005-04-22 20:57:55 $ 
+ *  $Revision: 1.74 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -718,7 +718,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 				return false;
 		    BeanPart bean = (BeanPart) itr.next() ;
 			Collection expressions = new ArrayList(bean.getRefExpressions()) ;
-			expressions.addAll((Collection)bean.getRefEventExpressions()) ;
+			expressions.addAll(bean.getRefEventExpressions()) ;
 		    Iterator refs = expressions.iterator() ;
 		    // Process the expression referencing the bean, and build the 
 		    // Composition.

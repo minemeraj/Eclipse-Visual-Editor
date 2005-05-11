@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.46 $  $Date: 2005-05-10 22:39:37 $ 
+ *  $Revision: 1.47 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1620,7 +1620,7 @@ public class BDMMerger {
 			CodeMethodRef updMethod = (CodeMethodRef) updatedEHMethods.get(updMtdCount);
 			new CodeMethodRef(
 				updMethod.getDeclMethod(), 
-				(CodeTypeRef) mainEH, 
+				mainEH, 
 				updMethod.getMethodHandle(),
 				createSourceRange(updMethod.getOffset(), updMethod.getLen()),
 				updMethod.getContent());
@@ -1696,7 +1696,7 @@ public class BDMMerger {
 			CodeMethodRef updateEventHandlerMethod = (CodeMethodRef) iter.next();
 			new CodeMethodRef(
 				updateEventHandlerMethod.getDeclMethod(), 
-				(CodeTypeRef) newEventHandler, 
+				newEventHandler, 
 				updateEventHandlerMethod.getMethodHandle(),
 				createSourceRange(updateEventHandlerMethod.getOffset(), updateEventHandlerMethod.getLen()),
 				updateEventHandlerMethod.getContent());

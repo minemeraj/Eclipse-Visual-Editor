@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-16 00:33:44 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -140,7 +140,7 @@ public EStructuralFeature getFeature (Statement exprStmt) {
 		processHardCodedProperty(fMethodName, fRefObj);
 	}
 	else {
-		Iterator itr = getPropertiesIterator((EObject) fRefObj);
+		Iterator itr = getPropertiesIterator(fRefObj);
 		// Find a write method that matches the one in the Expression.
 		while (itr.hasNext()) {
 			try {
@@ -178,7 +178,7 @@ public EStructuralFeature getFeature (Statement exprStmt) {
 	}
 
 	if (fSF != null) {
-		fSFname = ((EStructuralFeature) fSF).getName();
+		fSFname = fSF.getName();
 	}
 	return fSF;	
 }

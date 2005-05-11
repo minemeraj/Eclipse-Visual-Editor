@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.38 $  $Date: 2005-05-03 22:28:16 $ 
+ *  $Revision: 1.39 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 
@@ -417,8 +417,8 @@ private static IJavaObjectInstance getParent (IBeanDeclModel model, IJavaObjectI
    if (parent==null || child==null) return null ;
    if (parent.equals(child)) return null ;
    
-   IExpressionDecoder decoder = getDecoderFactory(model).getExpDecoder((IJavaObjectInstance)parent) ;
-   Iterator itr = decoder.getChildren((IJavaObjectInstance)parent).iterator() ;
+   IExpressionDecoder decoder = getDecoderFactory(model).getExpDecoder(parent) ;
+   Iterator itr = decoder.getChildren(parent).iterator() ;
    while (itr.hasNext()) {
    	IJavaObjectInstance c = (IJavaObjectInstance) itr.next() ;
    	itr.next() ; // Skip the SF

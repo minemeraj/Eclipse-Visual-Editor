@@ -152,7 +152,7 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 	public EObject getReturn() {
 		if (return_ != null && return_.eIsProxy()) {
 			EObject oldReturn = return_;
-			return_ = (EObject)eResolveProxy((InternalEObject)return_);
+			return_ = eResolveProxy((InternalEObject)return_);
 			if (return_ != oldReturn) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.JCM_METHOD__RETURN, oldReturn, return_));

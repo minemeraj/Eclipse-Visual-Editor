@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:15 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -383,12 +383,12 @@ public class PropertyDescriptorDecoratorImpl
 		if (eContainerFeatureID >= 0) {
 			switch (eContainerFeatureID) {
 				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					return ((InternalEObject)eContainer).eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
+					return eContainer.eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
 				default:
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return ((InternalEObject)eContainer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
 	}
 
 	/**

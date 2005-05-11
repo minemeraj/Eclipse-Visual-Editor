@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: AbstractConstraintPropertyDescriptor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
  */
 import java.util.logging.Level;
 
@@ -74,7 +74,7 @@ public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropert
 			// use it. Else just have one that does a toBeanString().
 			ILabelProvider provider = null;
 		
-			BasePropertyDecorator bdec = (BasePropertyDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature((EClassifier) ((EObject) element).eClass(), BasePropertyDecorator.class, DecoratorsPackage.eINSTANCE.getBasePropertyDecorator_LabelProviderClassname());
+			BasePropertyDecorator bdec = (BasePropertyDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(((EObject) element).eClass(), BasePropertyDecorator.class, DecoratorsPackage.eINSTANCE.getBasePropertyDecorator_LabelProviderClassname());
 			if (bdec != null) {
 				try {
 					String classNameAndData = bdec.getLabelProviderClassname();

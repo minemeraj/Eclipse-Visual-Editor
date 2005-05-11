@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -156,7 +156,7 @@ public BorderLayoutPolicyHelper() {
 
 protected IJavaObjectInstance convertConstraint(Object constraint) {
 	if (constraint instanceof String) {
-		int ndx = REAL_INTERNAL_TAGS.indexOf((String) constraint);
+		int ndx = REAL_INTERNAL_TAGS.indexOf(constraint);
 		return (IJavaObjectInstance) (ndx > -1 ?
 			BeanUtilities.createJavaObject("java.lang.String", getContainer().eResource().getResourceSet(), CODEGEN_TAGS[ndx]) :	// $NONS-NLS-1$ //$NON-NLS-1$
 			BeanUtilities.createString(getContainer().eResource().getResourceSet(), (String) constraint));

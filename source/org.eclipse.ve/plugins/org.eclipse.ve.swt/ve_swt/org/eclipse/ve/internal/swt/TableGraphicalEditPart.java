@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -173,7 +173,7 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 				TableColumnGraphicalEditPart columnEP = (TableColumnGraphicalEditPart) children.get(i);
 				TableColumnProxyAdapter proxyAdapter = columnEP.getControlProxy();
 				if (proxyAdapter != null && proxyAdapter.isBeanProxyInstantiated()) {
-					columnWidth = ((IIntegerBeanProxy) columnEP.getControlProxy().getWidth()).intValue();
+					columnWidth = columnEP.getControlProxy().getWidth().intValue();
 					columnEP.setBounds(new Rectangle(nextColumnLocation.x, nextColumnLocation.y, columnWidth, columnHeight));
 					columnEP.refresh();
 					nextColumnLocation.x += columnWidth;

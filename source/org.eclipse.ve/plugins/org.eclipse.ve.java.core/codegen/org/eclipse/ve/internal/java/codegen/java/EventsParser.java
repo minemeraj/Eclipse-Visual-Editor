@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.11 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:31 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -108,7 +108,7 @@ public class EventsParser {
 				   v.initialize(b, fModel, addSignitures, fastDom, visitorFactoryRule); 
 				} else {
 				  try {
-					MethodDeclaration md = (MethodDeclaration) domMethods[idx];
+					MethodDeclaration md = domMethods[idx];
 					CodeMethodRef mref = getMethodRef(md,cuMethods[idx]) ;
 					v = visitorFactoryRule.getEventMethodVisitor();
 					v.initialize(md, mref, b, fModel, addSignitures, fastDom,visitorFactoryRule);

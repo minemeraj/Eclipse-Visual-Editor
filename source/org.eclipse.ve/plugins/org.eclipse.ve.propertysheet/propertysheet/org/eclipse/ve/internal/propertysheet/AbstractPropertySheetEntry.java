@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:34 $ 
  */
 
 
@@ -1038,7 +1038,7 @@ public void setShowNulls(boolean showNulls) {
 	fShowNulls = showNulls;
 	if (childEntries != null) {
 		for (int i=0; i<childEntries.length; i++)
-			((IDescriptorPropertySheetEntry) childEntries[i]).setShowNulls(showNulls);
+			childEntries[i].setShowNulls(showNulls);
 	}
 }
 
@@ -1046,7 +1046,7 @@ public void setShowReadOnly(boolean showReadOnly){
 	fShowReadOnly = showReadOnly;
 	if (childEntries != null){
 		for (int i= 0; i < childEntries.length; i++)
-			((IDescriptorPropertySheetEntry) childEntries[i]).setShowReadOnly(showReadOnly);
+			childEntries[i].setShowReadOnly(showReadOnly);
 	}
 }
 
@@ -1057,7 +1057,7 @@ public void setShowSetValues(boolean showSet) {
 	fShowSet = showSet;
 	if (childEntries != null) {
 		for (int i=0; i<childEntries.length; i++)
-			((IDescriptorPropertySheetEntry) childEntries[i]).setShowSetValues(showSet);
+			childEntries[i].setShowSetValues(showSet);
 	}
 }
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.StringTokenizer;
@@ -140,7 +140,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();
 		if (aValue != null) {
-				iconDialog.setValue(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue).getAllocation()));
+				iconDialog.setValue(getPathFromInitializationAllocation(aValue.getAllocation()));
 		}
 		
 		int returnCode = iconDialog.open();

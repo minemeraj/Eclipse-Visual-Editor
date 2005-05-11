@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.dinner.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: EntreePropertySource.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:13 $ 
  */
 
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -73,7 +73,7 @@ public class EntreePropertySource implements IPropertySource {
 			EStringToStringMapEntryImpl newKV =
 				(EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
 			newKV.setKey(propertyKey);
-			newKV.setValue((String) value);
+			newKV.setValue(value);
 			int keyPos = entree.getKeyedValues().indexOfKey(propertyKey);
 			if (keyPos != -1)
 				entree.getKeyedValues().set(keyPos, newKV);

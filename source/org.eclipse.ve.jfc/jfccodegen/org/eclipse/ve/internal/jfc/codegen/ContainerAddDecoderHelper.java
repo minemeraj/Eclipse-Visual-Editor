@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-04-09 01:19:20 $ 
+ *  $Revision: 1.22 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import java.util.*;
@@ -113,7 +113,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 	public static EObject getNewCC(IVEModelInstance cm) {
 		EClass ccClass = (EClass) cm.getModelResourceSet().getEObject(ConstraintComponentURI, true);
-		return (EObject) ccClass.getEPackage().getEFactoryInstance().create(ccClass);
+		return ccClass.getEPackage().getEFactoryInstance().create(ccClass);
 	}
 
 	/**

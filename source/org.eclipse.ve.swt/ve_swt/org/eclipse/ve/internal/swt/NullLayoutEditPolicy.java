@@ -267,7 +267,7 @@ public static boolean adjustForPreferredSizeAndPosition(IBeanProxy childProxy, I
 protected static Point findNextAvailablePosition(Rectangle bounds, IJavaObjectInstance parentComposite, int marginWidth, int marginHeight) {
 	int requestedWidth = bounds.width + 2 * marginWidth; // Increase by double margin width (one on each side)
 	int requestedHeight = bounds.height + 2 * marginHeight;
-	IBeanProxy compositeBeanProxy = (IBeanProxy) BeanProxyUtilities.getBeanProxy(parentComposite);
+	IBeanProxy compositeBeanProxy = BeanProxyUtilities.getBeanProxy(parentComposite);
 	IRectangleBeanProxy boundingRect = BeanSWTUtilities.invoke_getBounds(compositeBeanProxy);
 	// Gather the bounds for all the children in the container
 	

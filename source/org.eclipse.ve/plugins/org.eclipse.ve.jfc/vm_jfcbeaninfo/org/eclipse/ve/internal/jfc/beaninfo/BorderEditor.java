@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import javax.swing.border.Border;
@@ -48,7 +48,7 @@ public String getJavaInitializationString(){
 
 public Object getValue(){
 	if (fCustomEditor != null){
-		return (Object)fCustomEditor.getBorderValue();
+		return fCustomEditor.getBorderValue();
 	}else{
 		return super.getValue();
 	}

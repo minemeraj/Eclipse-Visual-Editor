@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:32 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -440,8 +440,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	 * @see ILaunchConfigurationTab#performApply(ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy config) {
-		config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String)fProjText.getText());
-		config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, (String)fMainText.getText());
+		config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, fProjText.getText());
+		config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, fMainText.getText());
 		// Try and set the look and feel class for the target VM
 		// For <default> this is blank, 
 		// otherwise get the class from the preferenes page static, remembering that

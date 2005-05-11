@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
@@ -179,7 +178,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 				// Create new allocation and set the model in order to trigger the notifications to force code generation
 				JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 				RuledCommandBuilder cb = new RuledCommandBuilder(EditDomain.getEditDomain(thisEditPart));
-				cb.applyAttributeSetting((EObject) thisModel, thisModel.eClass().getEStructuralFeature("allocation"), alloc); //$NON-NLS-1$
+				cb.applyAttributeSetting(thisModel, thisModel.eClass().getEStructuralFeature("allocation"), alloc); //$NON-NLS-1$
 				command = cb.getCommand();
 				command.execute();
 			}

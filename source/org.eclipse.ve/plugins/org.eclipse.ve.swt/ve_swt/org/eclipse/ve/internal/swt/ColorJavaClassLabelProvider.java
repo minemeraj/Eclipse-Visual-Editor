@@ -61,7 +61,7 @@ public class ColorJavaClassLabelProvider extends LabelProvider {
 				return colorLabelBuffer.toString();
 			}
 		} else
-			return BeanProxyUtilities.getBeanProxy((IJavaInstance) element).toBeanString();
+			return BeanProxyUtilities.getBeanProxy(element).toBeanString();
 		
 		return ""; //$NON-NLS-1$
 	}

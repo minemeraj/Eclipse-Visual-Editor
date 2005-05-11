@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PropertyEditorBeanProxyWrapper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-20 16:38:10 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.logging.Level;
@@ -118,7 +118,7 @@ public void setAsText(String aString){
 		fSetAsTextMethodProxy = propertyEditorProxy.getTypeProxy().getMethodProxy("setAsText" , "java.lang.String"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	try {
-		IStringBeanProxy textProxy = (IStringBeanProxy)propertyEditorProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(aString);
+		IStringBeanProxy textProxy = propertyEditorProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(aString);
 		fSetAsTextMethodProxy.invoke(propertyEditorProxy,textProxy);
 	} catch ( ThrowableProxy exc ) {
 		// Rethrow this an an IllegalArgumentException with the string of the original exception

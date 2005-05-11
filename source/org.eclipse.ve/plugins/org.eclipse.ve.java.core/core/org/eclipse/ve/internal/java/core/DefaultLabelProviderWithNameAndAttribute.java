@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultLabelProviderWithNameAndAttribute.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.text.MessageFormat;
 
@@ -58,20 +58,18 @@ public class DefaultLabelProviderWithNameAndAttribute extends DefaultJavaBeanLab
 			String mainPart = super.getText(element);
 			EObject ref = (EObject) element;
 			EClass meta = ref.eClass();
-			if (meta instanceof EClass) {
-				EStructuralFeature sf = meta.getEStructuralFeature(attributeName);
-				if (sf != null) {
-					Object setting = ref.eGet(sf);
-					if (setting instanceof IJavaInstance)
-						setting = BeanProxyUtilities.getBeanProxy((IJavaInstance) setting, JavaEditDomainHelper.getResourceSet(domain));
-					if (setting instanceof IStringBeanProxy)
-						setting = ((IStringBeanProxy) setting).stringValue();
-					if (setting instanceof String) {
-						String label = (String) setting;
-						if (label.length() > 20)
-							label = MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.DottedVersion"), new Object[] {label.substring(0, 20)});	// Too large, so truncate it. //$NON-NLS-1$
-						return MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.FullVersion"), new Object[] {mainPart, label}); //$NON-NLS-1$
-					}
+			EStructuralFeature sf = meta.getEStructuralFeature(attributeName);
+			if (sf != null) {
+				Object setting = ref.eGet(sf);
+				if (setting instanceof IJavaInstance)
+					setting = BeanProxyUtilities.getBeanProxy((IJavaInstance) setting, JavaEditDomainHelper.getResourceSet(domain));
+				if (setting instanceof IStringBeanProxy)
+					setting = ((IStringBeanProxy) setting).stringValue();
+				if (setting instanceof String) {
+					String label = (String) setting;
+					if (label.length() > 20)
+						label = MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.DottedVersion"), new Object[] {label.substring(0, 20)});	// Too large, so truncate it. //$NON-NLS-1$
+					return MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.FullVersion"), new Object[] {mainPart, label}); //$NON-NLS-1$
 				}
 			}
 			return mainPart;

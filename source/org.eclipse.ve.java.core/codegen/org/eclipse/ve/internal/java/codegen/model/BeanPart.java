@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.39 $  $Date: 2005-04-21 15:03:58 $ 
+ *  $Revision: 1.40 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -22,8 +22,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.internal.corext.refactoring.code.CodeRefactoringUtil;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 

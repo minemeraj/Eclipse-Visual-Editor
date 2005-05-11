@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-22 19:05:05 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -51,9 +51,9 @@ public class TableCreationPolicy implements CreationPolicy {
 				EStructuralFeature sf_headerVisible = model.eClass().getEStructuralFeature(fHeaderVisible);
 				EStructuralFeature sf_linesVisible = model.eClass().getEStructuralFeature(fLinesVisible);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting((EObject) model, sf_headerVisible, booleanObj);
+				cb.applyAttributeSetting(model, sf_headerVisible, booleanObj);
 				booleanObj = BeanUtilities.createJavaObject(fBooleanHelper, JavaEditDomainHelper.getResourceSet(domain), "true"); //$NON-NLS-1$
-				cb.applyAttributeSetting((EObject) model, sf_linesVisible, booleanObj);
+				cb.applyAttributeSetting(model, sf_linesVisible, booleanObj);
 				cb.getCommand().execute();
 
 			}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-28 14:14:29 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.util.List;
@@ -156,7 +156,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)parent).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(parent.getModel());
 				if (ep != null)
 					parent = ep;
 			}

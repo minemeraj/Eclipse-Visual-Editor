@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.HashMap;
@@ -136,17 +136,15 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			if (init instanceof ClassInstanceCreation || init instanceof ArrayCreation) {
 				String[] methods = VCEPrefContributor.getMethodsFromStore();
 				MethodDeclaration mDeclarations[] = typeDec.getMethods();
-				if (methods == null || methods.length == 0 || mDeclarations == null || mDeclarations.length == 0)
+				if (methods.length == 0 || mDeclarations == null || mDeclarations.length == 0)
 					return null;
 				for (int i = 0; i < methods.length; i++) {
 					for (int j = 0; j < mDeclarations.length; j++) {
-						if (mDeclarations[j] instanceof MethodDeclaration) {
-							MethodDeclaration declaration = (MethodDeclaration) mDeclarations[j];
-							if (methods[i].equals(declaration.getName().getIdentifier())) {
-								fInitMethod = methods[i];
-								fInitMethodSet = true;
-								return fInitMethod;
-							}
+						MethodDeclaration declaration = mDeclarations[j];
+						if (methods[i].equals(declaration.getName().getIdentifier())) {
+							fInitMethod = methods[i];
+							fInitMethodSet = true;
+							return fInitMethod;
 						}
 					}
 				}
