@@ -1,9 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: ScrolledCompositeBeanInfo.java,v $
+ *  $Revision: 1.2 $  $Date: 2005-05-11 21:33:55 $ 
+ */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
 import java.beans.PropertyDescriptor;
-
-import org.eclipse.swt.SWT;
 
 
 public class ScrolledCompositeBeanInfo extends IvjBeanInfo {
@@ -17,22 +28,6 @@ public class ScrolledCompositeBeanInfo extends IvjBeanInfo {
 		return org.eclipse.swt.custom.ScrolledComposite.class;
 	}
 	
-	public BeanDescriptor getBeanDescriptor() {
-		BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
-		descriptor.setValue(
-			SweetHelper.STYLE_BITS_ID,
-		    new Object[] [] {
-				{ "horizontalScroll" , ScrolledCompositeMessages.getString("ScrolledCompositeBeanInfo.StyleBits.HorizontalScroll.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
-				    ScrolledCompositeMessages.getString("ScrolledCompositeBeanInfo.StyleBits.HorizontalScroll.Value.HScroll") , "org.eclipse.swt.SWT.H_SCROLL" , new Integer(SWT.H_SCROLL) , //$NON-NLS-1$ //$NON-NLS-2$
-				} },
-				{ "verticalScroll" , ScrolledCompositeMessages.getString("ScrolledCompositeBeanInfo.StyleBits.VerticalScroll.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
-				    ScrolledCompositeMessages.getString("ScrolledCompositeBeanInfo.StyleBits.VerticalScroll.Value.VScroll") , "org.eclipse.swt.SWT.V_SCROLL" , new Integer(SWT.V_SCROLL) , //$NON-NLS-1$ //$NON-NLS-2$
-				} }
-			}
-		);
-		return descriptor;
-	}	
-
 	/**
 	 * Return the property descriptors for this bean.
 	 * 
@@ -45,6 +40,13 @@ public class ScrolledCompositeBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"alwaysShowScrollBars", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, ScrolledCompositeMessages.getString("alwaysShowScrollBarsDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ScrolledCompositeMessages.getString("alwaysShowScrollBarsSD"), //$NON-NLS-1$
+				}
+				),
+				// content
+				super.createPropertyDescriptor(getBeanClass(),"content", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ScrolledCompositeMessages.getString("contentDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ScrolledCompositeMessages.getString("contentSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
 				}
 				),
 				// expandHorizontal
