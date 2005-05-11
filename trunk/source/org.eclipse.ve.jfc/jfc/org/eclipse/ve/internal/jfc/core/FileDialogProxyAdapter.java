@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FileDialogProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
  */
+import org.eclipse.jem.internal.proxy.core.IExpression;
+
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
 /**
@@ -31,24 +33,9 @@ public class FileDialogProxyAdapter extends DialogProxyAdapter {
 		super(domain);
 	}
 
-	/**
-	 * @see BeanProxyAdapter#primInstantiateBeanProxy()
-	 */
-	protected void primInstantiateBeanProxy() {
-		super.primInstantiateBeanProxy();
-		
-		if (isBeanProxyInstantiated()) {
-			super.applyVisibility(false, Boolean.FALSE);	// KLUDGE Must never become visible. FileDialogs cause problems if they do.
-		}
+	
+	public void overrideVisibility(boolean visibility, IExpression expression) {
+		// KLUDGE It must never become visible. FileDialogs cause problems if they do.
+		super.overrideVisibility(false, expression);
 	}
-
-	/**
-	 * @see ComponentProxyAdapter#applyVisibility(boolean, Boolean)
-	 */
-	public void applyVisibility(boolean apply, Boolean setToVisibility) {
-		// KLUDGE There is also another kludge in that we can't let it be visible either. FileDialogs will always show up
-		// in the right corner on Windows(TM) no matter what it was set to if it becomes visible.		
-		super.applyVisibility(false, Boolean.FALSE);
-	}
-
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -26,7 +26,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.ParseTreeAllocationInstantiationVisitor;
 import org.eclipse.jem.internal.instantiation.base.ParseTreeAllocationInstantiationVisitor.ProcessingException;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.initParser.tree.IExpressionConstants.NoExpressionValueException;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
 
 /**
  * The basic allocation processer. It handles the basic allocations.
@@ -65,14 +66,8 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTInstanceReference)
 		 */
 		public boolean visit(PTInstanceReference node) {
-			try {
-				IBeanProxy reference = BeanProxyUtilities.getBeanProxy(node.getObject());
-				getExpression().createProxyExpression(getNextExpression(), reference);
-			} catch (ThrowableProxy e) {
-				throw new ProcessingException(e);
-			} catch (NoExpressionValueException e) {
-				throw new ProcessingException(e);
-			}				
+			IBeanProxy reference = BeanProxyUtilities.getBeanProxy(node.getObject());
+			getExpression().createProxyExpression(getNextExpression(), reference);				
 			return false;
 		}
 
@@ -89,10 +84,6 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 				try {
 					getExpression().createProxyExpression(getNextExpression(), thisType);
 				} catch (IllegalStateException e) {
-					throw new ProcessingException(e);
-				} catch (ThrowableProxy e) {
-					throw new ProcessingException(e);
-				} catch (NoExpressionValueException e) {
 					throw new ProcessingException(e);
 				}
 				return false;
@@ -121,7 +112,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		else if (allocClass == InstantiationPackage.eINSTANCE.getImplicitAllocation())
 			return allocate((ImplicitAllocation) allocation);
 		else
-			throw new IllegalArgumentException(MessageFormat.format(JavaMessages.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[]{allocClass.toString()})); //$NON-NLS-1$
+			throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[]{allocClass.toString()}))); //$NON-NLS-1$
 	}
 	
 	/**
@@ -134,6 +125,71 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 */
 	protected IBeanProxy allocate(ParseTreeAllocation allocation) throws AllocationException {
 		return BasicAllocationProcesser.instantiateWithExpression(allocation.getExpression(), domain);
+	}
+	
+	/**
+	 * Allocate from a parse tree allocation and an expression.
+	 * @param allocation
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ExpressionProxy allocate(ParseTreeAllocation allocation, IExpression expression) throws AllocationException {
+		ParseAllocation allocator = new ParseAllocation(domain.getThisType());
+		try {
+			return allocator.getProxy(allocation.getExpression(), expression);
+		} catch (ProcessingException e) {
+			throw new AllocationException(e.getCause());
+		} catch (RuntimeException e) {
+			throw new AllocationException(e);
+		}
+	
+	}
+	/**
+	 * Allocate with an initstring and an expression.
+	 * @param initString
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ExpressionProxy allocate(InitStringAllocation initString, IExpression expression) throws AllocationException {
+		// The container of the allocation is the IJavaInstance being instantiated.
+		String qualifiedClassName = ((IJavaInstance) initString.eContainer()).getJavaType().getQualifiedNameForReflection();
+		String initializationString = initString.getInitString();
+		IProxyBeanType targetClass = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, qualifiedClassName);
+		if (targetClass == null || (targetClass.isBeanProxy() && ((IBeanTypeProxy) targetClass).getInitializationError() != null)) {
+			// The target class is invalid.
+			Throwable exc = new ExceptionInInitializerError(targetClass != null ? ((IBeanTypeProxy) targetClass).getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {JavaMessages.getString("BasicAllocationProcesser.unknown_ERROR_")})); //$NON-NLS-1$ //$NON-NLS-2$
+			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+				JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				JavaVEPlugin.log(exc, Level.WARNING);
+			}
+			throw new AllocationException(exc);			
+		}
+		
+		return instantiateWithString(initializationString, targetClass, expression);
+	}
+	
+	/**
+	 * Allocate for an implicit with an expression.
+	 * @param implicit
+	 * @param expression
+	 * @return The allocation
+	 * 
+	 * @since 1.0.0
+	 */
+	protected IProxy allocate(ImplicitAllocation implicit, IExpression expression) {
+		EObject source = implicit.getParent();
+		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
+		// TODO Remove when we collapse the proxyhost2 into proxy host.
+		if (proxyhost instanceof IInternalBeanProxyHost2)
+			return ((IInternalBeanProxyHost2) proxyhost).getBeanPropertyProxyValue(implicit.getFeature(), expression, ForExpression.ROOTEXPRESSION);
+		else
+			return proxyhost.getBeanPropertyProxyValue(implicit.getFeature());
 	}
 	
 	/**
@@ -228,6 +284,55 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 				JavaVEPlugin.log(exc, Level.WARNING);
 			}
 			throw new AllocationException(exc);			
+		}
+	}
+	
+	/**
+	 * Instantiate with an initstring using the expression. 
+	 * 
+	 * @param initString the initstring or <code>null</code> if should use default ctor.
+	 * @param beanType the type to create. It must not be a primitive type. Those are handled differently.
+	 * @param expression the expression to use. The expression will be valid after this call if it was valid upon entry.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static ExpressionProxy instantiateWithString(String initString, IProxyBeanType beanType, IExpression expression) {
+		if (initString == null) {
+			// Use default ctor.
+			ExpressionProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, beanType, 0);
+			return result;
+		} else {
+			// This more tricky. Need to use the init string parser through the expression.
+			ExpressionProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			((Expression) expression).createNewInstance(ForExpression.ASSIGNMENT_RIGHT, initString, beanType);
+			return result;
+		}
+	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IAllocationProcesser#allocate(org.eclipse.jem.internal.instantiation.JavaAllocation, org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	public IProxy allocate(JavaAllocation allocation, IExpression expression) throws AllocationException {
+		int mark = expression.mark();
+		try {
+			EClass allocClass = allocation.eClass();
+			// We are using explicit tests here for type of allocation so that these can be overridden by
+			// others. If we used instanceof, then the overrides that are subclasses may be grabbed here
+			// instead of where intended.
+			if (allocClass == InstantiationPackage.eINSTANCE.getParseTreeAllocation())
+				return allocate((ParseTreeAllocation) allocation, expression);
+			else if (allocClass == InstantiationPackage.eINSTANCE.getInitStringAllocation())
+				return allocate((InitStringAllocation) allocation, expression);
+			else if (allocClass == InstantiationPackage.eINSTANCE.getImplicitAllocation())
+				return allocate((ImplicitAllocation) allocation, expression);
+			else
+				throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages
+						.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[] { allocClass.toString()}))); //$NON-NLS-1$
+		} finally {
+			expression.endMark(mark);
 		}
 	}
 

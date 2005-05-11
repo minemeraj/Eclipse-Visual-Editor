@@ -20,8 +20,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Point;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
@@ -45,12 +43,13 @@ public class BeanSWTUtilities {
 		setBoundsMethodProxy,
 		getBoundsMethodProxy,
 		getLocationMethodProxy,
-		getChildrenMethodProxy,		
+		getChildrenMethodProxy,
+		getParentMethodProxy,
 		computeSizeMethodProxy,
 		setTabfolderSelectionMethodProxy,
 		setCTabfolderSelectionMethodProxy;
 
-    public static final String REGISTRY_KEY = "org.eclipse.ve.internal.swt.BeanSWTUtilities"; //$NON-NLS-1$
+    public static final Object REGISTRY_KEY = new Object();
 
     public static BeanSWTUtilities getConstants(ProxyFactoryRegistry registry) {
         BeanSWTUtilities constants = (BeanSWTUtilities) registry.getConstants(REGISTRY_KEY);
@@ -215,6 +214,26 @@ public class BeanSWTUtilities {
         }
     	return null;
     }
+	
+    public static IBeanProxy invoke_getParent(final IBeanProxy aControlProxy){
+    	BeanSWTUtilities constants = getConstants(aControlProxy);
+    	
+    	if (constants.getParentMethodProxy == null) {
+    		constants.getParentMethodProxy = aControlProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Control").getMethodProxy("getParent"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+        if (constants.getParentMethodProxy != null) {
+        	final IMethodProxy getParentMethodProxy = constants.getParentMethodProxy;
+            return (IRectangleBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aControlProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            return getParentMethodProxy.invoke(aControlProxy);
+                        }
+                    });
+        }
+    	return null;
+    }
+	
     public static Point getOffScreenLocation(){
     	
     	boolean showWindow = VCEPreferences.isLiveWindowOn();

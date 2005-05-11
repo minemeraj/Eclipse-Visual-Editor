@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -41,21 +41,28 @@ public class JMenuContainerPolicy extends JavaContainerPolicy {
 	 */
 	public JMenuContainerPolicy(EditDomain domain) {
 		super(null, domain);
+		// Can't set the containment SF until after we get the container. This is because
+		// this class is used both for JMenu and JPopupMenu, and the "items" feature
+		// is not the same physical feature.
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
 		classAction = Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
 		classString = Utilities.getJavaClass("java.lang.String", rset); //$NON-NLS-1$
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#isValidChild(java.lang.Object, org.eclipse.emf.ecore.EStructuralFeature)
+	 */
 	protected boolean isValidChild(Object component, EStructuralFeature containmentSF) {
-		// Also need to verify that the component is valid 
 		return classComponent.isInstance(component)	|| 
 				classAction.isInstance(component)	||
 				classString.isInstance(component);
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#setContainer(Object)
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#setContainer(java.lang.Object)
 	 */
 	public void setContainer(Object container) {
 		super.setContainer(container);
@@ -63,11 +70,5 @@ public class JMenuContainerPolicy extends JavaContainerPolicy {
 			JavaClass modelType = (JavaClass) ((EObject) container).eClass();
 			containmentSF = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
 		}
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.JavaContainerPolicy#isValidBeanLocation(java.lang.Object)
-	 */
-	protected boolean isValidBeanLocation(Object child) {
-		return child instanceof EObject && BeanAwtUtilities.isValidBeanLocation(domain, (EObject)child);
 	}
 }

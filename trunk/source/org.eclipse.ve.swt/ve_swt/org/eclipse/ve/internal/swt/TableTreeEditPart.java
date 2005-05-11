@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:51:47 $
+ * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -46,7 +46,7 @@ public class TableTreeEditPart extends ControlTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sfColumns)
-				queueExec(TableTreeEditPart.this);
+				queueExec(TableTreeEditPart.this, "COLUMNS");
 		}
 	};
 

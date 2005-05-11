@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JScrollPaneTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:38 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -45,7 +45,7 @@ public class JScrollPaneTreeEditPart extends ContainerTreeEditPart {
 		
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_scrollpaneViewportView)
-				queueExec(JScrollPaneTreeEditPart.this);
+				queueExec(JScrollPaneTreeEditPart.this, "VIEW");
 		}
 	};
 

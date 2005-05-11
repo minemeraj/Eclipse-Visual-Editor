@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,57 +10,76 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageNotifierSupport.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
+package org.eclipse.ve.internal.cde.core;
 
-import java.util.*;
+import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.graphics.ImageData;
+
 /**
- * This is an image notifier support class. It maintains
- * the listeners for an image notifier and does the firing.
- * Implementers of IImageNotifier only need an instance
- * of this class to manage the listener lists and can forward
- * them to here. Use an VisualComponentSupport class for 
- * the IVisualComponent non-image portion.
+ * This is an image notifier support class. It maintains the listeners for an image notifier and does the firing. Implementers of IImageNotifier only
+ * need an instance of this class to manage the listener lists and can forward them to here. Use an VisualComponentSupport class for the
+ * IVisualComponent non-image portion.
+ * 
+ * @since 1.0.0
  */
 public class ImageNotifierSupport {
-	protected List imageListeners = null;	// Listeners for IComponentNotification.
+
+	protected ListenerList imageListeners = null;
 
 	/**
-	 * addImageListener.
+	 * Add image listener.
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.0.0
 	 */
 	public synchronized void addImageListener(IImageListener aListener) {
 		if (imageListeners == null)
-			imageListeners = new ArrayList(2);
+			imageListeners = new ListenerList(2);
 		imageListeners.add(aListener);
 	}
-	
+
 	/**
 	 * Fire image changed notification.
+	 * 
+	 * @param imageData
+	 * 
+	 * @since 1.0.0
 	 */
 	public void fireImageChanged(ImageData imageData) {
 		// Probably should make a copy of the notification list to prevent
 		// modifications while firing, but we'll see if this gives any problems.
-		if (imageListeners != null) {
-			for (int i=0; i<imageListeners.size(); i++) {
-				IImageListener listener = (IImageListener) imageListeners.get(i);
-				listener.imageChanged(imageData);
+		if (imageListeners != null && !imageListeners.isEmpty()) {
+			Object[] listeners = imageListeners.getListeners();
+			for (int i = 0; i < listeners.length; i++) {
+				((IImageListener) listeners[i]).imageChanged(imageData);
 			}
 		}
 	}
-	
+
 	/**
-	 * hasListeners method..
+	 * Is anyone listening?
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
 	 */
 	public boolean hasImageListeners() {
 		return imageListeners != null && !imageListeners.isEmpty();
 	}
-	
+
 	/**
-	 * removeImageListener method.
+	 * Remove listener.
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.0.0
 	 */
 	public synchronized void removeImageListener(IImageListener aListener) {
-		imageListeners.remove(aListener);
+		if (imageListeners != null)
+			imageListeners.remove(aListener);
 	}
 
 }

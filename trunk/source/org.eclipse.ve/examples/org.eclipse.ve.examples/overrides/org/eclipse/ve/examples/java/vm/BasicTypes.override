@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
+<xmi:XMI xmi:version="2.0"
+    xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi">
+  <event:Add
     featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.examples/org.eclipse.ve.examples.java.BasicTypesBeanProxyAdapter"/>
-</event:Add>
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.examples/org.eclipse.ve.examples.java.BasicTypesBeanProxyAdapter"/>
+  </event:Add>
+  <event:Add featureName="eStructuralFeatures">
+    <!-- Add feature "string" so that it will be first of those applied at this level. Features are applied
+         in the order created from the top class down to the bottom class. By defining the order of features
+         here for this class, these features will be first in this order. Any other features will be added
+         after this if they result from introspection/reflection. -->
+    <addedEObjects xsi:type="ecore:EReference" name="string" unsettable="true"/>
+  </event:Add>
+</xmi:XMI>    

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.105 $  $Date: 2005-05-10 23:12:39 $ 
+ *  $Revision: 1.106 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,6 @@ import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -87,6 +86,9 @@ import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.emf.workbench.JavaProjectUtilities;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
+import org.eclipse.ve.internal.cdm.Diagram;
+import org.eclipse.ve.internal.cdm.DiagramData;
+
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.CDEUtilities.EditPartNamePath;
@@ -94,16 +96,16 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.properties.*;
-import org.eclipse.ve.internal.cdm.Diagram;
-import org.eclipse.ve.internal.cdm.DiagramData;
-import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
-import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
+
+import org.eclipse.ve.internal.jcm.*;
+
+import org.eclipse.ve.internal.java.codegen.core.*;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
-import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
@@ -438,8 +440,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			try {
 				if (currentSetRoot != root && currentSetRoot != null)
-					currentSetRoot.eNotify(new ENotificationImpl((InternalEObject) currentSetRoot, CompositionProxyAdapter.RELEASE_PROXIES, null,
-							null, null, false));
+					((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(currentSetRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy();
 			} finally {
 				currentSetRoot = root;
 			}
@@ -800,7 +801,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (setupJob != null && setupJob.getState() == Job.NONE)
 			initializeViewers();
 		// Setup the actions
-		final DeleteAction deleteAction = new DeleteAction(this);
+		final DeleteAction deleteAction = new DeleteAction((IWorkbenchPart) this);
 		deleteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(deleteAction);
 		
@@ -1055,27 +1056,34 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 */
 		public void registryTerminated(ProxyFactoryRegistry registry) {
 			// Need to deactivate all of the editparts because they don't work without a vm available.
-            if (++recycleCntr < 3)
-                restartVMNeeded = true; // Restart next time our editor is activated or given focus.
-            
-			Display.getDefault().asyncExec(new Runnable() {
-				/**
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run() {
-					setLoadIsPending(true);
-					setRootModel(null);
-                    // We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
-					if (recycleCntr < 3) {
-                        // If we still need to restart vm (because no load ran in between when we set it when thus async finally ran)
-                        // and we are active, then restart vm now. Otherwise let it go. When it becomes active, if restartVMNeeded
-                        // is still true, it will 
-						if (restartVMNeeded && getSite().getWorkbenchWindow().getActivePage().getActiveEditor() == JavaVisualEditorPart.this && activationListener.shellActive) {
-							restartVM();	// Our editor is the active (though a view could be the active part), our shell is active. Restart now.
-						} 
-					} 
-				}
-			});
+			// Slight possibility if there were errors that the registry was still live, and we had
+			// not removed ourselves as a listener, but we had disposed. In which case don't do this.
+			if (!isDisposed()) {
+				if (++recycleCntr < 3)
+					restartVMNeeded = true; // Restart next time our editor is activated or given focus.
+
+				Display.getDefault().asyncExec(new Runnable() {
+
+					/**
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run() {
+						setLoadIsPending(true);
+						setRootModel(null);
+						// We went down prematurely, so recycle the vm. But we haven't gone down three times in a row prematurely.
+						if (recycleCntr < 3) {
+							// If we still need to restart vm (because no load ran in between when we set it when thus async finally ran)
+							// and we are active, then restart vm now. Otherwise let it go. When it becomes active, if restartVMNeeded
+							// is still true, it will
+							if (restartVMNeeded && getSite().getWorkbenchWindow().getActivePage().getActiveEditor() == JavaVisualEditorPart.this
+									&& activationListener.shellActive) {
+								restartVM(); // Our editor is the active (though a view could be the active part), our shell is active. Restart
+												// now.
+							}
+						}
+					}
+				});
+			}
 		}
 	};
 
@@ -1174,7 +1182,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// we won't be calling finalDispose except if there is no Setup job active. 
 		if (proxyFactoryRegistry != null) {
 			TimerTests.basicTest.startStep("Dispose Proxy Registry"); //$NON-NLS-1$
-			
+
 			// Now we can terminate
 			proxyFactoryRegistry.terminateRegistry();
 			proxyFactoryRegistry = null;
@@ -1747,11 +1755,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
-					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(
-							dd,
+					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(dd,
 							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
                     if (a == null) {
-						a =	new CompositionProxyAdapter();
+						a =	new CompositionProxyAdapter(beanProxyAdapterFactory, modelChangeController);
                         dd.eAdapters().add(a);
                     }
 						
@@ -2247,13 +2254,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	}
 
-	private void processParseError(boolean parseError) {		
+	private void processParseError(boolean parseError) {
 		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : ModelChangeController.READY_STATE, null);
 		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
 		// force the removal of the cache... may be an overkill, but
 		// better no cache than stale cache.  It is possible that reverse parse
 		// built a bad model, and generated a cache
-		modelBuilder.doSave(null);
+		if (parseError)
+		   modelBuilder.doSave(null);
 	}
 	
 	/* (non-Javadoc)
@@ -2352,16 +2360,18 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			// If more than one is selected then don't bother 
 			if (selection.size() == 1 && selection.getFirstElement() instanceof EditPart) {
 				EditPart editPart = (EditPart) selection.getFirstElement();
-				if (editPart.getModel() instanceof Notifier) {
-					IErrorNotifier errNotifier =
-						(IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) editPart.getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE);
-					if (errNotifier != null) {
-						// See whether or not there are any errors associated with the part - if so show them on the taskBar
-						if (errNotifier.getErrorStatus() != IErrorNotifier.ERROR_NONE) {
-							Iterator errors = errNotifier.getErrors().iterator();
-							IErrorHolder.ErrorType error = (IErrorHolder.ErrorType) errors.next();
-							setStatusMsg(actionBars,error.getMessage(),error.getImage());
-						}
+				IErrorHolder errHolder = (IErrorHolder) editPart.getAdapter(IErrorHolder.class);
+				if (errHolder == null) {
+					// We don't have one from the editpart, try from the model itself.
+					if (editPart.getModel() instanceof Notifier)
+						errHolder =	(IErrorHolder) EcoreUtil.getExistingAdapter((Notifier) editPart.getModel(), IErrorHolder.ERROR_HOLDER_TYPE);
+				}
+				if (errHolder != null) {
+					// See whether or not there are any errors associated with the part - if so show them on the taskBar
+					if (errHolder.getErrorStatus() != IErrorNotifier.ERROR_NONE) {
+						Iterator errors = errHolder.getErrors().iterator();
+						IErrorHolder.ErrorType error = (IErrorHolder.ErrorType) errors.next();
+						setStatusMsg(actionBars,error.getMessage(),error.getImage());
 					}
 				}
 				

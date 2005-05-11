@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:04 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.io.*;
@@ -367,18 +367,24 @@ public class ImageDataCollector implements ICallback {
 					case ImageDataConstants.CMD_DONE:
 						// We're done for some reason.
 						int status = is.readInt();
-						if (status == ImageDataConstants.SINGLE_FRAME_DONE ||
-								status == ImageDataConstants.STATIC_IMAGE_DONE) {
-							if (imageData == null) {
-								// We got no bit data but we got a complete. So just create an empty image.							
-								imageData = new ImageData(width, height, depth, palette);
-								if (transparentPixel != -1)
-									imageData.transparentPixel = transparentPixel;
-							}																
-							fDataCollectedRunnable.imageData(imageData);	// It was good.
-						} else {
-							// It was not good.
-							fDataCollectedRunnable.imageNotCollected(status);
+						switch (status) {
+							case ImageDataConstants.SINGLE_FRAME_DONE:
+							case ImageDataConstants.STATIC_IMAGE_DONE:
+								if (imageData == null) {
+									// We got no bit data but we got a complete. So just create an empty image.							
+									imageData = new ImageData(width, height, depth, palette);
+									if (transparentPixel != -1)
+										imageData.transparentPixel = transparentPixel;
+								}																
+								fDataCollectedRunnable.imageData(imageData);	// It was good.
+								break;
+							case ImageDataConstants.IMAGE_EMPTY:
+								fDataCollectedRunnable.imageData(null);	// We have an empty.
+								break;
+							default:
+								// It was not good.
+								fDataCollectedRunnable.imageNotCollected(status);
+								break;
 						}						
 						return;	// We're done, leave the loop and return the stream.
 					default:

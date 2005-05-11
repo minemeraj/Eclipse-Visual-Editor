@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:30 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -93,7 +93,7 @@ public Command resetValue(IPropertySource source){
 	// layout property to the container and the constraint commands for each of the children.
 	IBeanProxyHost containerProxyHost = BeanProxyUtilities.getBeanProxyHost(container);
 	EditDomain domain = containerProxyHost.getBeanProxyDomain().getEditDomain();
-	IBeanProxy defaultLayoutManager = (IBeanProxy) containerProxyHost.getOriginalSettingsTable().get(getTarget());
+	IBeanProxy defaultLayoutManager = (IBeanProxy) ((IInternalBeanProxyHost) containerProxyHost).getOriginalSettingsTable().get(getTarget());
 	EClassifier layoutManagerClass = null;
 	if (defaultLayoutManager != null)
 		layoutManagerClass = (EClassifier) BeanProxyUtilities.getJavaType(defaultLayoutManager, container.eResource().getResourceSet());

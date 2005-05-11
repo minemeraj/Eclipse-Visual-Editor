@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -25,7 +25,6 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.HoldProcessingCommand;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;
 /**
@@ -46,6 +45,8 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		IJavaObjectInstance containerBean = getContainerBean();
 		
 		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain(), "change layout"); //$NON-NLS-1$
+	
+		cb.applyAttributeSetting(containerBean, sf, newManager);	// Change the layout manager.
 		
 		List constraintComponents = (List) containerBean.eGet(JavaInstantiation.getSFeature(containerBean, JFCConstants.SF_CONTAINER_COMPONENTS));
 		ArrayList children = new ArrayList(constraintComponents.size());
@@ -66,14 +67,13 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			ILayoutPolicyHelper lpHelper = lpFactory.getLayoutPolicyHelper(policy);			
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}
-		
-		cb.applyAttributeSetting(containerBean, sf, newManager);
+	
 		
 		// Now get the change constraint commands themselves to add the children at the right constraints.
 		if (!children.isEmpty())
 			cb.append(getChangeConstraintsCommand(children));
 			
-		return new HoldProcessingCommand(cb.getCommand(), containerBean);
+		return cb.getCommand();
 	}
 	
 	/**
@@ -87,6 +87,8 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			return null;	// Not set, nothing to cancel.
 		
 		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain(), "cancel layout"); //$NON-NLS-1$
+		
+		cb.cancelAttributeSetting(containerBean, sf);	// Cancel the layout.
 		
 		List constraintComponents = (List) containerBean.eGet(JavaInstantiation.getSFeature(containerBean, JFCConstants.SF_CONTAINER_COMPONENTS));
 		ArrayList children = new ArrayList(constraintComponents.size());
@@ -108,13 +110,13 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 			cb.append(lpHelper.getOrphanConstraintsCommand(children));
 		}
 
-		cb.cancelAttributeSetting(containerBean, sf);
+		
 		
 		// Now get the change constraint commands themselves to add the children at the right constraints.
 		if (!children.isEmpty())
 			cb.append(getChangeConstraintsCommand(children));
 			
-		return new HoldProcessingCommand(cb.getCommand(), containerBean);
+		return cb.getCommand();
 	}	
 	
 	/**

@@ -10,31 +10,23 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt.targetvm;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class GridLayoutHelper {
 
 	private Composite fComposite;
-	private GridLayout gridLayout;
 	public int[] columnWidths;
 	public int[] rowHeights;
 	public int[] expandableColumns;
 	public int[] expandableRows;
 	private GridLayout fGridLayout;
-	private Field cacheWidthField;
-	private Field cacheHeightField;
 	private java.util.List grid = new ArrayList();
 
 	public void setComposite(Composite aComposite) {
@@ -42,46 +34,6 @@ public class GridLayoutHelper {
 		fComposite = aComposite;
 		fGridLayout = (GridLayout) aComposite.getLayout();
 		computeValues();
-
-	}
-
-	private int getCacheWidth(GridData aGridData) {
-		if (cacheWidthField == null) {
-			try {
-				cacheWidthField = GridData.class.getDeclaredField("cacheWidth");
-				cacheWidthField.setAccessible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			Integer cacheWidth = (Integer) cacheWidthField.get(aGridData);
-			return cacheWidth.intValue();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	private int getCacheHeight(GridData aGridData) {
-		if (cacheHeightField == null) {
-			try {
-				cacheHeightField = GridData.class.getDeclaredField("cacheHeight");
-				cacheHeightField.setAccessible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			Integer cacheWidth = (Integer) cacheHeightField.get(aGridData);
-			return cacheWidth.intValue();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	private void setCacheWidth(GridData aGridData, int aWidth) {
 
 	}	
 	
@@ -603,7 +555,6 @@ public class GridLayoutHelper {
 				int spannedWidth = 0, spannedHeight = 0;
 				int hAlign = 0, vAlign = 0;
 				int widgetX = 0, widgetY = 0;
-				int widgetW = 0, widgetH = 0;
 
 				//
 				GridData spec = (GridData) row[c];
@@ -653,10 +604,7 @@ public class GridLayoutHelper {
 							widgetX = widgetX + spec.horizontalIndent;
 						}
 					if (hAlign == GridData.FILL) {
-						widgetW = spannedWidth - spec.horizontalIndent;
 						widgetX = columnX + spec.horizontalIndent;
-					} else {
-						widgetW = childExtent.x;
 					}
 
 					// Calculate the y and height values for the control.
@@ -669,11 +617,8 @@ public class GridLayoutHelper {
 							widgetY = widgetY + spannedHeight - childExtent.y;
 						}
 					if (vAlign == GridData.FILL) {
-						widgetH = spannedHeight;
 						widgetY = rowY;
-					} else {
-						widgetH = childExtent.y;
-					}
+					} 
 				}
 				// Update the starting x value.
 				columnX = columnX + columnWidths[c] + fGridLayout.horizontalSpacing;

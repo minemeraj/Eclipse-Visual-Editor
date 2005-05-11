@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LocalePropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.awt.*;
@@ -101,9 +101,9 @@ private void createLocaleValues(){
 	}
 	int fSize = myLocales.size();
 	fLocaleLanguages = new LocaleLanguage[fSize];
-	Enumeration enum = myLocales.elements();
-	for (int i = 0; i < fSize && enum.hasMoreElements(); i++){
-		fLocaleLanguages[i] = (LocaleLanguage)enum.nextElement();
+	Enumeration enumer = myLocales.elements();
+	for (int i = 0; i < fSize && enumer.hasMoreElements(); i++){
+		fLocaleLanguages[i] = (LocaleLanguage)enumer.nextElement();
 	}
 	//need to sort fLocaleLanguages according to language names 
 	sortLocaleLanguages();

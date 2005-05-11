@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-03-21 22:48:08 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -35,6 +35,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 import org.eclipse.ve.internal.java.core.*;
 
 /**
@@ -55,7 +56,7 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
 				return;
 			// Else assume a refresh is needed.
-			queueExec(TableColumnGraphicalEditPart.this);
+			queueExec(TableColumnGraphicalEditPart.this, "REFRESH");
 		}
 
 		public void run() {
@@ -163,5 +164,6 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 		}
 		
 	}
+	
 
 }

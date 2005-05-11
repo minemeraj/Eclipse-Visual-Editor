@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,64 +10,60 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSliderProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+import org.eclipse.jem.internal.proxy.core.IProxy;
+
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 /**
- * @author richkulp
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * JSlider proxy adapter.
+ * 
+ * @since 1.1.0
  */
 public class JSliderProxyAdapter extends ComponentProxyAdapter {
 
 	protected EStructuralFeature sfMajorTicks, sfLabelTable;
+
 	/**
 	 * Constructor for JSliderProxyAdapter.
+	 * 
 	 * @param domain
 	 */
 	public JSliderProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
-		
+
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		sfMajorTicks = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_MAJORTICKS);		
-		sfLabelTable = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_LABELTABLE);		
+		sfMajorTicks = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_MAJORTICKS);
+		sfLabelTable = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_LABELTABLE);
 	}
 	
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(EStructuralFeature, Object, int)
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator, org.eclipse.jem.internal.proxy.core.IProxy, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
-	protected void applied(EStructuralFeature sf, Object newValue, int position) {
+	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
+			throws NoSuchMethodException, NoSuchFieldException {
 		// Because of the way the labels work on JSlider, once you set the majorTicks it creates
 		// the labels, but if you then change the majorTicks again, the labels are not changed again.
-		// So we need to test to see if it is major ticks, and if it is, then request reinstantiation
-		// if not in instantiation.
-		if (sf == sfMajorTicks && !inInstantiation() && !getEObject().eIsSet(sfLabelTable))
-			throw new ReinstantiationNeeded();
-		super.applied(sf, newValue, position);
-	}
+		// So we need to test to see if it is major ticks, and if it is, and label table NOT set, then we need to ALSO apply null
+		// to the label table first so that it will always recreate the labels on each major tick change.
+		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfMajorTicks && !getEObject().eIsSet(sfLabelTable)) {
+			super.applyBeanProperty(Utilities.getPropertyDecorator(sfLabelTable), null, expression, false);
+		}
 
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(EStructuralFeature, Object, int)
-	 */
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-		// Because of the way the labels work on JSlider, once you set the majorTicks it creates
-		// the labels, but if you then change the majorTicks again, the labels are not changed again.
-		// So we need to test to see if it is major ticks, and if it is, then request reinstantiation
-		// if not in instantiation.
-		if (sf == sfMajorTicks && !inInstantiation() && !getEObject().eIsSet(sfLabelTable))
-			throw new ReinstantiationNeeded();		
-		super.canceled(sf, oldValue, position);
+		return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
 	}
 
 }

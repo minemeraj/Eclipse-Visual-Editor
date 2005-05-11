@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,41 +10,63 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualComponentListener.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
+package org.eclipse.ve.internal.cde.core;
 
-
+import java.util.EventListener;
 
 /**
  * Listener for visual component changes
+ * 
+ * @since 1.1.0
  */
-public interface IVisualComponentListener extends java.util.EventListener {
+public interface IVisualComponentListener extends EventListener {
+
 	/**
 	 * The listened component was hidden
+	 * 
+	 * 
+	 * @since 1.1.0
 	 */
 	public void componentHidden();
-	
+
 	/**
-	 * The listened component moved, the point moved to is passed on.
+	 * The listened component moved. The point moved to is passed on.
+	 * <p>
+	 * The origin that the point is relative to is IVisualComponent implementation specific. Listeners will need to know who they are listening to.
+	 * For example, the point may be relative to the direct parent, or may be relative to some absolute coordinate.
+	 * 
+	 * @param x
+	 * @param y
+	 * 
+	 * @since 1.1.0
 	 */
 	public void componentMoved(int x, int y);
-	
+
 	/**
-	 * The listened component has changed in some way,
-	 * but can't give a specific. So refresh.
-	 * (an example is the underlying component
-	 * that the visual component is
-	 * monitoring has been replaced, so refresh the bounds).
+	 * The listened component has changed in some way, but can't give a specific. So refresh. (an example is the underlying component that the visual
+	 * component is monitoring has been replaced, so refresh the bounds).
+	 * 
+	 * @since 1.1.0
 	 */
 	public void componentRefreshed();
-	
+
 	/**
 	 * The listened component was resized. The new size is passed also.
+	 * 
+	 * @param width
+	 * @param height
+	 * 
+	 * @since 1.1.0
 	 */
 	public void componentResized(int width, int height);
-	
+
 	/**
-	 * The listened component was shown
+	 * The listened component was shown.
+	 * 
+	 * 
+	 * @since 1.1.0
 	 */
 	public void componentShown();
 }

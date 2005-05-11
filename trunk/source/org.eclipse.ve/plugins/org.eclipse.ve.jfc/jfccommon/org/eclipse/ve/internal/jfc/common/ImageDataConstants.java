@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.common;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataConstants.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 /**
@@ -30,8 +30,8 @@ public interface ImageDataConstants {
 	// Image Started status codes.
 	public final static int	
 		IMAGE_NOT_STARTED = -1,				// Image was not started and no collection done.
-		IMAGE_STARTED = 0,					// Image collection started ok
-		COMPONENT_IMAGE_CLIPPED = 1;		// Component image collection was clipped. Requested max size was smaller then component size.
+		IMAGE_STARTED = 0;					// Image collection started ok
+		
 	
 	// The stream for feeding image data back will be wrappered into a Data...Stream
 	// so that some structured data may be sent.
@@ -58,35 +58,49 @@ public interface ImageDataConstants {
 		
 		/**
 		 * One frame of the image is complete but there are more frames
-		 * to be delivered.
+		 * to be delivered. This is not sent to image listener.
 		 */
 		SINGLE_FRAME_DONE = 2,
 		
 		/**
 		 * The image is complete and there are no more pixels or frames
-		 * to be delivered.
+		 * to be delivered. This is not sent to image listener.
 		 */
 		STATIC_IMAGE_DONE = 3,
 		
 		/**
-		 * The image creation process was deliberately aborted.
+		 * The image creation process was deliberately aborted. This is sent to image listener.
 		 */
 		IMAGE_ABORTED = 4,
 		
 		/**
-		 * Unknown status code from ImageProducer.
+		 * Unknown status code from ImageProducer. This is sent to image listener.
 		 */
 		UNKNOWN_STATUS = 5,
 		
 		/**
-		 * Consume in progress.
+		 * Consume in progress. This is not sent to image listener.
 		 */
 		IN_PROGRESS = 6,
 		
 		/**
-		 * Consume not in progress.
+		 * Consume not in progress. This is not sent to image listener.
 		 */
-		NOT_IN_PROGRESS = -1;
+		NOT_IN_PROGRESS = -1,
 		
+		/**
+		 * Image was a (0,0) sized image. Nothing sent. This is sent to image listener.
+		 */
+		IMAGE_EMPTY = -2,
+	
+		/**
+		 * The image is complete and successful. This is sent to image listener.
+		 */
+		IMAGE_COMPLETE = -3,
+	
+		/**
+		 * Image was clipped. Requested max size was smaller than component size. This is sent to image listener.
+		 */
+		COMPONENT_IMAGE_CLIPPED = -4;
 
 }

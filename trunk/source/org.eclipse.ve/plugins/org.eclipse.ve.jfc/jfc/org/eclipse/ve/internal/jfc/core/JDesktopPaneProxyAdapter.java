@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-25 16:09:11 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -41,38 +42,45 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
      * so it can be brought to the front in the desktop pane.
 	 */
 	public void activateFrame(IJavaObjectInstance internalFrameModel) {
-		if (!fJInternalFrameClass.isInstance(internalFrameModel)) return;
-		
-		// To activate the frame we need to first get the DesktopManager
-		// from the DesktopPane, then have the DTM activate the frame.
-		IBeanProxy dtMgrBeanProxy = getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager").invokeCatchThrowableExceptions(getBeanProxy());
-		if (dtMgrBeanProxy != null) {
-			IBeanProxy frameBeanProxy = BeanProxyUtilities.getBeanProxy(internalFrameModel);
-            dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame").invokeCatchThrowableExceptions(dtMgrBeanProxy, frameBeanProxy);
+		if (isBeanProxyInstantiated()) {
+			if (!fJInternalFrameClass.isInstance(internalFrameModel))
+				return;
+
+			// To activate the frame we need to first get the DesktopManager
+			// from the DesktopPane, then have the DTM activate the frame.
+			IBeanProxy dtMgrBeanProxy = getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager").invokeCatchThrowableExceptions(
+					getBeanProxy());
+			if (dtMgrBeanProxy != null) {
+				IBeanProxy frameBeanProxy = BeanProxyUtilities.getBeanProxy(internalFrameModel);
+				dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame").invokeCatchThrowableExceptions(
+						dtMgrBeanProxy, frameBeanProxy);
+			}
+			revalidateBeanProxy();
 		}
-		revalidateBeanProxy();
 	}
-	/**
-	 * @see BeanProxyAdapter#applied(EStructuralFeature, Object, int)
-	 */
-	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		if (sf == sfContainerComponents) {
-			// We are adding a new guy. Need to make it always visible.
-			// Get the value of the constraint attribute of the component, the component in this case is a ConstraintsComponent.
-			if (((EObject) newValue).eIsSet(sfConstraintComponent)) {
-				IJavaInstance constraintAttributeValue = (IJavaInstance) ((EObject) newValue).eGet(sfConstraintComponent);
+	
+	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {		
+		if (feature == sfContainerComponents) {
+			if (((EObject) value).eIsSet(sfConstraintComponent)) {
+				IJavaInstance constraintAttributeValue = (IJavaInstance) ((EObject) value).eGet(sfConstraintComponent);
+				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities
+						.getBeanProxyHost(constraintAttributeValue);
+				componentProxyHost.overrideVisibility(true, expression);
+			}
+		}				
+		super.applySetting(feature, value, index, expression);
+	}
+	
+	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {				
+		super.cancelSetting(feature, oldValue, index, expression);
+		if (feature == sfContainerComponents) {
+			// We are removing a guy. Need to remove the visibility override.
+			// Get the value of the constraintComponent attribute of the component, the component in this case is a ConstraintsComponent.
+			if (((EObject) oldValue).eIsSet(sfConstraintComponent)) {
+				IJavaInstance constraintAttributeValue = (IJavaInstance) ((EObject) oldValue).eGet(sfConstraintComponent);
 				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost(constraintAttributeValue);
-				componentProxyHost.applyVisibility(false, Boolean.TRUE);
+				componentProxyHost.removeVisibilityOverride(expression);
 			}
 		}		
-		super.applied(sf, newValue, position);				
 	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
-	 */
-	public void releaseBeanProxy() {
-		super.releaseBeanProxy();
-	}
-
 }

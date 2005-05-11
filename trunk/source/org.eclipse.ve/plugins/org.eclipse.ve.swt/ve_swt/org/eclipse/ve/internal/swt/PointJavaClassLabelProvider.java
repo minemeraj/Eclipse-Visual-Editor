@@ -15,6 +15,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IPointBeanProxy;
 /**
  * Render an SWT Point in a usable form, e.g. 100,100
  */

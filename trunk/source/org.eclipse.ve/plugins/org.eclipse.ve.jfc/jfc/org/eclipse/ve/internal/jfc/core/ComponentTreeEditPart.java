@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -23,6 +24,8 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
+
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
@@ -33,13 +36,31 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 
 	private EStructuralFeature sfDirectEditProperty;
 	protected IPropertySource propertySource;
+	private IErrorNotifier otherNotifier;
+	protected IErrorNotifier.CompoundErrorNotifier errorNotifier = new IErrorNotifier.CompoundErrorNotifier();	
 	
 	TreeDirectEditManager manager;
 
 	public ComponentTreeEditPart(Object model) {
 		super(model);
 	}
+	
+	protected IErrorNotifier getErrorNotifier() {
+		return errorNotifier;
+	}
 
+	public void activate() {
+		super.activate();
+		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
+		errorNotifier.addErrorNotifier(otherNotifier);
+
+	}
+	
+	public void deactivate() {
+		errorNotifier.dispose();
+		super.deactivate();
+	}
+	
 	public Object getAdapter(Class type) {
 		if (type == IPropertySource.class)
 			if (propertySource != null)
@@ -51,10 +72,36 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 	}
 
 
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as the property source. This is used by ContainerGraphicalEditPart, or JTabbedPaneEditPart, or
+	 * any other container type editpart that uses an intermediate object. The intermediate object will
+	 * be responsible for showing through the correct awt.Component properties.
+	 * @param source
+	 * 
+	 * @since 1.1.0
+	 */
 	public void setPropertySource(IPropertySource source) {
 		propertySource = source;
 	}
 	
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as an error notifier. This is used by ContainerGraphicalEditPart, or JTabbedPaneEditPart, or
+	 * any other container type editpart that uses an intermediate object. This component will then
+	 * show the errors from itself (the awt.Component) and from the error notifier set in. Only
+	 * one can be set at a time. A new set will remove the old one from the list.
+	 * @param otherNotifier
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setErrorNotifier(IErrorNotifier otherNotifier) {
+		if (this.otherNotifier != null)
+			errorNotifier.removeErrorNotifier(this.otherNotifier);
+		this.otherNotifier = otherNotifier;
+		if (isActive())
+			errorNotifier.addErrorNotifier(this.otherNotifier);	// Don't do if not active. When activated it will add it.
+	}	
 	/**
 	 * Get the structural feature for the property for which Direct Edit
 	 * will be available.  This will return null if there is no

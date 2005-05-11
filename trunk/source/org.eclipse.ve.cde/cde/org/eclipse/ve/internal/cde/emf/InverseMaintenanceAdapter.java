@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -98,6 +98,26 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	
 	protected boolean allowCrossDoc;	// Are we allowing cross-document traversal.
 	private boolean propagated;	// Have we propagated?
+	
+	/**
+	 * Interface customers implement to visit ALL features, objects that have a shared reference
+	 * to this Notifier.
+	 * 
+	 * @see InverseMaintenanceAdapter#visitAllReferences(Visitor)
+	 * @since 1.1.0
+	 */
+	public interface Visitor {
+		/**
+		 * Called to visit a feature and the reference object that refers to the 
+		 * notifier. Return an object to stop the visiting. 
+		 * @param feature
+		 * @param reference
+		 * @return <code>null</code> to continue visit, anything else to stop the visiting and return that value from the entire visit.
+		 * 
+		 * @since 1.1.0
+		 */
+		public Object visit(EStructuralFeature feature, EObject reference);
+	}
 
 	/**
 	 * Constructor for InverseMaintenanceAdapter.
@@ -261,6 +281,51 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	private static final EObject[] EMPTY_EOBJECTS = new EObject[0];
 	
 	/**
+	 * Visit all references pointing to this notifier.
+	 * @param visitor
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Object visitAllReferences(Visitor visitor) {
+		if (backRefs == null || backRefs.isEmpty())
+			return null;
+		else {
+			Iterator refsItr = backRefs.entrySet().iterator();
+			Object result = null;
+			while (result == null && refsItr.hasNext()) {
+				Map.Entry entry = (Map.Entry) refsItr.next();
+				Object ref = entry.getValue();
+				if (ref instanceof WeakReference) {
+					EObject eobject = (EObject) ((WeakReference) entry.getValue()).get();
+					if (eobject != null)
+						result = visitor.visit((EStructuralFeature) entry.getKey(), eobject);
+					else
+						refsItr.remove();	// The ref. has been GC'd. Get rid of it.
+				} else {
+					List refs = (List) ref;
+					if (refs.isEmpty()) {
+						refsItr.remove();	// Nothing in the list, get rid of the entry.
+					} else {
+						EStructuralFeature sf = (EStructuralFeature) entry.getKey();
+						Iterator refItr = refs.iterator();
+						while (result == null && refItr.hasNext()) {
+							EObject eobject = (EObject) ((WeakReference) refItr.next()).get();
+							if (eobject != null)
+								result = visitor.visit(sf, eobject);
+							else
+								refItr.remove();	// The ref. has been GC'd. Get rid of it.
+						}
+						if (refs.isEmpty())
+							refsItr.remove();	// The list is now empty, get rid of it.
+					}
+				}
+			}
+			return result;
+		}
+	}
+	
+	/**
 	 * Return the list of back objects referenced by a feature.
 	 * 
 	 * @param feature The feature looked for.
@@ -346,6 +411,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	}
 	
 	private static final EReference[] EMPTY_FEATURES = new EReference[0];
+	
 	/**
 	 * Return the set features.
 	 * 
@@ -579,7 +645,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		if(getTarget() instanceof FeatureValueProvider){
 			FeatureValueProvider obj = (FeatureValueProvider) getTarget();
 			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
-				public void isSet(EStructuralFeature feature, Object value) {
+				public Object isSet(EStructuralFeature feature, Object value) {
 					if(feature instanceof EReference){
 						EReference ref = (EReference)feature;
 						if(ref.isMany()){
@@ -591,6 +657,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 							handleAddRef(ref, (EObject) value);
 						}
 					}
+					return null;
 				}
 			});
 		} else {
@@ -598,6 +665,10 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		}				
 	}
 	
+	/*
+	 * Propagate on an EObject instead of a FeatureValueProvider. The FeatureValueProvider gives a more efficient mechanism
+	 * to walk set features.
+	 */
 	private void eObjectPropagate(){
 		
 		EObject obj = (EObject)getTarget();

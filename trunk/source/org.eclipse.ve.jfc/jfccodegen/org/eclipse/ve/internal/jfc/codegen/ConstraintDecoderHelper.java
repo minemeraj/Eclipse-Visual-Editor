@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ConstraintDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:20 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 
@@ -27,8 +27,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;

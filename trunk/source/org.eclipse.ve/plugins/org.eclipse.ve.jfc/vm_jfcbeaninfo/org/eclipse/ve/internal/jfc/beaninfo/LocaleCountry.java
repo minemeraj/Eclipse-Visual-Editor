@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LocaleCountry.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.util.*;
@@ -33,9 +33,9 @@ public LocaleVariant[] getVariants(){
 	int fSize = fVariants.size();
 	variants = new LocaleVariant[fSize];
 	
-	Enumeration enum = fVariants.elements();
-	for (int i = 0; i < fSize && enum.hasMoreElements(); i++){
-		variants[i] = (LocaleVariant)enum.nextElement();
+	Enumeration enumer = fVariants.elements();
+	for (int i = 0; i < fSize && enumer.hasMoreElements(); i++){
+		variants[i] = (LocaleVariant)enumer.nextElement();
 	}
 	
 	//sort variants into ascending order

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-11 19:01:38 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -17,7 +17,8 @@ import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -49,14 +50,14 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 	}
 
 	protected IFigure createFigure() {
-		IFigure fig = super.createFigure();
-		fig.setLayoutManager(new XYLayout());
-		return fig;
+		ContentPaneFigure cf = (ContentPaneFigure) super.createFigure();
+		cf.getContentPane().setLayoutManager(new XYLayout());
+		return cf;
 	}
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); // This is a special policy that just
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false)); // This is a special policy that just
 		// handles the size/position of visual
 		// components wrt/the figures. It does not
 		// handle changing size/position.
@@ -116,7 +117,7 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 		public void run() {
 			if (isActive()) {
 				refreshChildren();
-				// Now we need to run through the children and set the Property source correctly.
+				// Now we need to run through the children and set the Property source/Error Notifier correctly.
 				// This is needed because the child could of been removed and then added back in with
 				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
 				// doesn't see the child as being different so it doesn't create a new child editpart, and
@@ -126,17 +127,20 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 				int s = children.size();
 				for (int i = 0; i < s; i++) {
 					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ComponentGraphicalEditPart) 
-						setPropertySource((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+					try {
+						setupComponent((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+					} catch (ClassCastException e) {
+						// For the rare case not a component graphical editpart, such as undefined class.
+					}
 				}
 			}
 		}
 		
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_containerComponents) {
-				queueExec(ContainerGraphicalEditPart.this);
+				queueExec(ContainerGraphicalEditPart.this, "COMPONENTS");
 			} else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerGraphicalEditPart.this, new Runnable() {
+				queueExec(ContainerGraphicalEditPart.this, "LAYOUT", new Runnable() {
 
 					public void run() {
 						if (isActive())
@@ -161,19 +165,25 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 
 	protected EditPart createChild(Object model) {
 		EditPart ep = super.createChild(model);
-		if (ep instanceof ComponentGraphicalEditPart) {
-			setPropertySource((ComponentGraphicalEditPart) ep, (EObject) model);
-			((ComponentGraphicalEditPart) ep).setTransparent(true); // So that it doesn't create an image, we subsume it here.
+			try {
+				ComponentGraphicalEditPart componentGraphicalEditPart = (ComponentGraphicalEditPart) ep;
+				setupComponent(componentGraphicalEditPart, (EObject) model);
+				componentGraphicalEditPart.setTransparent(true); // So that it doesn't create an image, we subsume it here.
+			} catch (ClassCastException e) {
+				// For the rare case not a component graphical edit part, such as undefined class.
 		}
 		return ep;
 	}
 
-	protected void setPropertySource(ComponentGraphicalEditPart childEP, EObject child) {
+	protected void setupComponent(ComponentGraphicalEditPart childEP, EObject child) {
 		EObject componentConstraintObject = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_containerComponents, sf_constraintComponent, child);
-		if (componentConstraintObject != null)
+		if (componentConstraintObject != null) {
 			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(componentConstraintObject, IPropertySource.class)); // This is the property source of the actual model which is part of the constraintComponent.
-		else
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(componentConstraintObject, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+		} else {
 			childEP.setPropertySource(null);	// No CC.
+			childEP.setErrorNotifier(null);
+		}
 	}
 
 	/*

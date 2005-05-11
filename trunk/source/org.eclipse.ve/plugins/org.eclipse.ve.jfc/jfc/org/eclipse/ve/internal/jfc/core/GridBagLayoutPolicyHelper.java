@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -28,7 +28,6 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;

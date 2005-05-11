@@ -1,10 +1,3 @@
-/*
- * Created on Jun 23, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -17,45 +10,47 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ChoiceProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
+
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * @author richkulp
- *
- * TODO
- * This is for AWT Choice component. It is actually a Linux bug.
- * Sun Bug Parade #188992 has been opened to fix it. The problem
- * is that on Linux you can't do a printAll of a choice that has
- * no entries. You get a null pointer exception. So to get around
- * it we will automatically add in one empty string so that it won't
- * be empty. Since at the moment we don't respond to add(String) 
- * as properties anyway, the live object wouldn't see any add's
+ * 
+ * This is for AWT Choice component. It is actually a Linux bug. Sun Bug Parade #188992 has been opened to fix it. The problem is that on Linux you
+ * can't do a printAll of a choice that has no entries. You get a null pointer exception. So to get around it we will automatically add in one empty
+ * string so that it won't be empty. Since at the moment we don't respond to add(String) as properties anyway, the live object wouldn't see any add's
  * in the code. So an empty string will be just fine.
+ * <p>
+ * <b>Note: </b>This was marked as "Fixed" for 1.4.1, but the fix was "Not reproducable". So we don't know if it is really fixed, so we'll just keep
+ * this permanently.
  */
 public class ChoiceProxyAdapter extends ComponentProxyAdapter {
 
 	/**
+	 * Construct it.
+	 * 
 	 * @param domain
 	 */
 	public ChoiceProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
-	
-	
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#primInstantiateBeanProxy()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected void primInstantiateBeanProxy() {
-		super.primInstantiateBeanProxy();
-		
-		if (getErrorStatus() != ERROR_SEVERE) {
-			// No errors so do the add.
-			getBeanProxy().getTypeProxy().getMethodProxy("add", "java.lang.String").invokeCatchThrowableExceptions(getBeanProxy(), getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith("")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}		
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		IProxy bean = super.primInstantiateBeanProxy(expression);
+		// See header of this class as to why we are doing what we are doing here.
+		expression.createSimpleMethodInvoke(getBeanTypeProxy("java.awt.Choice", expression).getMethodProxy(expression, "add",
+				new String[] {"java.lang.String"}), bean, new IProxy[] {getBeanProxyFactory().createBeanProxyWith("")}, false);
+		return bean;
 	}
-
 }

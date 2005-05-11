@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.11 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.IErrorHolder;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 
 
 /**
@@ -136,14 +137,30 @@ public class ToolTipAssistFactory {
 	
 	static class ErrorProcessor implements ToolTipAssistFactory.TooltipDetails {
 		
-		IJavaInstance javaInstance;
 		private Figure figure;
 		private IErrorNotifier errNotifier;
 		private Display display;
 		
-		public ErrorProcessor(IJavaInstance aJavaInstance){
-			javaInstance = aJavaInstance;
+		/**
+		 * Construct with a given notifier.
+		 * @param notifier
+		 * 
+		 * @since 1.1.0
+		 */
+		public ErrorProcessor(IErrorNotifier notifier){
+			errNotifier = notifier;
 		}
+		
+		private IErrorNotifier.ErrorListener errorListener = new IErrorNotifier.ErrorListenerAdapter(){
+			public void errorStatusChanged() {	
+				display.asyncExec(new Runnable(){
+					public void run(){
+						updateFigure();
+					}
+				});
+			}				
+		};
+		
 		/* 
 		 * Iterate over the errors creating a composite figure that arranges them all
 		 */
@@ -155,18 +172,9 @@ public class ToolTipAssistFactory {
 			layout.setMinorSpacing(0);						
 			figure.setLayoutManager(layout);
 			// Get the errors
-			errNotifier =(IErrorNotifier) EcoreUtil.getExistingAdapter(javaInstance, IErrorNotifier.ERROR_NOTIFIER_TYPE);
 			updateFigure();
 			// The error severity could change, in which case we must refresh our figure
-			errNotifier.addErrorListener(new IErrorNotifier.ErrorListenerAdapter(){
-				public void errorStatusChanged() {	
-					CDEUtilities.displayExec(display,new Runnable(){
-						public void run(){
-							updateFigure();
-						}
-					});
-				}				
-			});
+			errNotifier.addErrorListener(errorListener);
 			return figure;
 		}
 		private void updateFigure(){
@@ -219,8 +227,8 @@ public class ToolTipAssistFactory {
 		}
 	}
         
-    public static ToolTipAssistFactory.TooltipDetails[] createToolTipProcessors (IJavaInstance javaInstance) {
-    	ToolTipAssistFactory.TooltipDetails errorProcessor = new ErrorProcessor(javaInstance);    	
+    public static ToolTipAssistFactory.TooltipDetails[] createToolTipProcessors (IJavaInstance javaInstance, IErrorNotifier errorNotifier) {
+    	ToolTipAssistFactory.TooltipDetails errorProcessor = new ErrorProcessor(errorNotifier);    	
     	ToolTipAssistFactory.TooltipDetails instanceProcessor = new DefaultInstanceProcessor(javaInstance);
     	ToolTipAssistFactory.TooltipDetails methodProcessor = new DefaultMethodProcessor(javaInstance);
 		return new ToolTipAssistFactory.TooltipDetails[] { errorProcessor , methodProcessor, instanceProcessor } ;		

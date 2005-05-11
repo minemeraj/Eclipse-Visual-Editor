@@ -9,43 +9,65 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
+
 /*
  *  $RCSfile: AppletProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
-
 
 import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-/* Applets have to have special code run when they are created and destroyed
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+
+/**
+ * Applet proxy adapter
+ * 
+ * @since 1.1.0
  */
 public class AppletProxyAdapter extends ContainerProxyAdapter {
-	
-public AppletProxyAdapter(IBeanProxyDomain domain){
-	super(domain);
-}
-/* When an applet is first loaded the spec states that the init method should be called
- */ 
-protected void primInstantiateBeanProxy(){
-	super.primInstantiateBeanProxy();
 
-	if (getErrorStatus() != ERROR_SEVERE /* TODO when we have instantiateUsing back, bring this back && !((IJavaObjectInstance)target).isSetInstantiateUsing() */) {
-		// We didn't use instantiateUsing, so we need to use the DummyAppletStub.
-		IBeanTypeProxy dummyStubType = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub"); //$NON-NLS-1$
-		dummyStubType.getMethodProxy("initializeApplet", "java.applet.Applet").invokeCatchThrowableExceptions(null, getBeanProxy()); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
+	 * Construct Applet proxy adapter
+	 * @param domain
+	 * 
+	 * @since 1.1.0
+	 */
+	public AppletProxyAdapter(IBeanProxyDomain domain) {
+		super(domain);
 	}
-}
-/* When an applet is removed from the system it should be called with destroy so it 
- * can free up any resources it allocated
- */
-public void releaseBeanProxy(){
-	if (isBeanProxyInstantiated()) {
-		IMethodProxy destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy("destroy"); //$NON-NLS-1$
-		destroyMethod.invokeCatchThrowableExceptions(getBeanProxy());
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		// We need to initialize the applet after creation. Applets should actually be instantiated using java.lang.reflect.Beans.instantiate()
+		// but we don't recognize this. So we do normal instantiation and then initialize with our dummy applet stub that we provide.
+		IProxy result = super.primInstantiateBeanProxy(expression);
+
+		IProxyBeanType dummyStubType = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub", expression);
+		IProxyMethod initializeMethod = dummyStubType.getMethodProxy(expression, "initializeApplet", new String[] { "java.applet.Applet"});
+		expression.createSimpleMethodInvoke(initializeMethod, null, new IProxy[] { result}, false);
+		return result;
 	}
-	super.releaseBeanProxy();	
-}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	public void releaseBeanProxy(IExpression expression) {
+		// When an applet is removed from the system it should be called with destroy so it
+		// can free up any resources it allocated
+
+		if (isBeanProxyInstantiated()) {
+			IProxyMethod destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy(expression, "destroy", (IProxyBeanType[]) null);
+			expression.createSimpleMethodInvoke(destroyMethod, getProxy(), null, false);
+		}
+		super.releaseBeanProxy(expression);
+	}
 
 }
-
 

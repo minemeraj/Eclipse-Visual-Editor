@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
 import java.util.*;
 
@@ -28,15 +28,17 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+
 import org.eclipse.ve.internal.cde.core.IVisualComponent;
 import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * Edit policy for handling a java.awt.CardLayout in the Graph viewer.
@@ -339,7 +341,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 
 		IJavaObjectInstance component = (IJavaObjectInstance) card.getModel();
 		IBeanProxyHost componentProxy = BeanProxyUtilities.getBeanProxyHost(component);
-		if (!componentProxy.isBeanProxyInstantiated() || componentProxy.getErrorStatus() == IErrorHolder.ERROR_SEVERE)
+		if (!componentProxy.isBeanProxyInstantiated())
 			return;	// component not valid for some reason.
 			
 		IBeanProxyHost containerProxyHost =

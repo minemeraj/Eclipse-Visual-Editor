@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-05 00:27:04 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -100,9 +100,9 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		sfConstraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
 		sfGridX = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDX);
 		sfGridY = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDY);
-		ComponentProxyAdapter beanProxy = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
-		if (beanProxy != null)
-			beanProxy.addImageListener(getGrigBagImageListener());
+		IImageNotifier imageNotifier = (IImageNotifier) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
+		if (imageNotifier != null)
+			imageNotifier.addImageListener(getGrigBagImageListener());
 		getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
 		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridBagComponentPage.class);	
 	}
@@ -136,9 +136,9 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			gridController.removeGridListener(this);
 			GridController.unregisterEditPart(getHost());
 		}
-		ComponentProxyAdapter beanProxy = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
-		if (beanProxy != null)
-			beanProxy.removeImageListener(getGrigBagImageListener());
+		IImageNotifier imageNotifier = (IImageNotifier) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
+		if (imageNotifier != null)
+			imageNotifier.removeImageListener(getGrigBagImageListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
 		super.deactivate();
 	}
@@ -234,7 +234,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 */
 	protected Command getConstraintCommands(EditPart ep, Point position) {
 		Point cellLocation = getGridBagLayoutGridFigure().getCellLocation(position.x, position.y);
-		Point childPosition = ((GraphicalEditPart)ep).getFigure().getBounds().getLocation();
+		Point childPosition = ((GraphicalEditPart)ep).getContentPane().getBounds().getLocation();
 		Point childCellLocation = getGridBagLayoutGridFigure().getCellLocation(childPosition.x, childPosition.y);
 		IJavaObjectInstance component = (IJavaObjectInstance) ep.getModel();
 		// If this component is added or moved from within this or another gridbag layout, use it's existing constraint so
@@ -309,7 +309,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	}
 	protected GridBagLayoutGridFigure getGridBagLayoutGridFigure() {
 		if (fGridBagLayoutGridFigure == null) {
-			IFigure f = ((GraphicalEditPart) getHost()).getFigure();
+			IFigure f = ((GraphicalEditPart) getHost()).getContentPane();
 			int [][] layoutDimensions = null;
 			Point layoutOrigin = null;
 			/*
@@ -678,7 +678,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		Point startPosition = new Point(spanToPosition.x - dim.width - handleSizeOffset, spanToPosition.y - dim.height - handleSizeOffset);
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart)editParts.get(0);
-		Point childPosition = ep.getFigure().getBounds().getLocation();
+		Point childPosition = ep.getContentPane().getBounds().getLocation();
 		Point childCellLocation = getGridBagLayoutGridFigure().getCellLocation(childPosition.x, childPosition.y);
 		Point startCellLocation = getGridBagLayoutGridFigure().getCellLocation(startPosition.x, startPosition.y);
 		// If the cell location where the pointer is located is different from the original cell location where we started,
@@ -708,7 +708,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart)request.getEditParts().get(0);
-		Point childPosition = ep.getFigure().getBounds().getLocation();
+		Point childPosition = ep.getContentPane().getBounds().getLocation();
 		// Get the start and end cell bounds in order to determine the entire bounds of the cell feedback figure.
 		Rectangle startCellBounds = getGridBagLayoutGridFigure().getCellBounds(childPosition.x, childPosition.y);
 		Rectangle endCellBounds = getGridBagLayoutGridFigure().getCellBounds(spanToPosition.x, spanToPosition.y);

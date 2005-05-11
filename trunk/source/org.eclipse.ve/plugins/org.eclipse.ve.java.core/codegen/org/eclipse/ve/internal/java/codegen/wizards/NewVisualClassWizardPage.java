@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-22 14:56:56 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.HashMap;
@@ -289,7 +289,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		}
 		return localSuperclassButtonDialogField;
 	}
-	
+
 	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
 	protected void handleFieldChanged(String fieldName) {
 		if (fieldName == CONTAINER){

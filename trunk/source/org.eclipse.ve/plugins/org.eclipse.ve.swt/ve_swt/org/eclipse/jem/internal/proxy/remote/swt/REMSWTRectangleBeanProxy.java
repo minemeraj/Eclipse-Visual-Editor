@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jem.internal.proxy.remote.swt;
 
-import org.eclipse.jem.internal.proxy.remote.*;
-import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.swt.*;
+import org.eclipse.jem.internal.proxy.remote.REMBeanProxy;
+import org.eclipse.jem.internal.proxy.remote.REMProxyFactoryRegistry;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 
 public class REMSWTRectangleBeanProxy extends REMBeanProxy implements IRectangleBeanProxy {
 

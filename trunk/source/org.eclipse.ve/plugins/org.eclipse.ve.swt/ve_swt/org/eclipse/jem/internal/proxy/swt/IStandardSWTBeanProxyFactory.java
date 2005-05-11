@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jem.internal.proxy.swt;
 
-import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 /**
  * The Standard awt bean proxy factory.

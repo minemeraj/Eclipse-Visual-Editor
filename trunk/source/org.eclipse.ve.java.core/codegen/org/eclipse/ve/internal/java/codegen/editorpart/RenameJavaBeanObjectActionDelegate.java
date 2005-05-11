@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-06 19:11:14 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.ModelChangeController;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;

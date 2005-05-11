@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-07 19:56:41 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -28,8 +28,6 @@ import org.osgi.framework.*;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
-import sun.misc.FileURLMapper;
 
 /**
  * @author Gili Mendel

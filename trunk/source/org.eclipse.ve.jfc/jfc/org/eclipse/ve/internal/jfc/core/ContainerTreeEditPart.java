@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-02-16 00:39:59 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-11 19:01:38 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -30,11 +30,11 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.*;
 
 /**
@@ -84,16 +84,16 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 				for (int i = 0; i < s; i++) {
 					EditPart ep = (EditPart) children.get(i);
 					if (ep instanceof ComponentTreeEditPart) 
-						setPropertySource((EObject) ep.getModel(), (ComponentTreeEditPart) ep);
+						setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
 				}
 			}				
 		}
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_containerComponents)
-				queueExec(ContainerTreeEditPart.this);
+				queueExec(ContainerTreeEditPart.this, "COMPONENTS");
 			else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerTreeEditPart.this, new Runnable() {
+				queueExec(ContainerTreeEditPart.this, "LAYOUT", new Runnable() {
 					public void run() {
 						if (isActive())
 							createLayoutPolicyHelper();
@@ -117,14 +117,20 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		if (ep instanceof ComponentTreeEditPart) setPropertySource((EObject) model, (ComponentTreeEditPart) ep);
+		if (ep instanceof ComponentTreeEditPart)
+			setupComponent((ComponentTreeEditPart) ep, (EObject) model);
 		return ep;
 	}
 
-	protected void setPropertySource(EObject child, ComponentTreeEditPart childEP) {
-		childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(InverseMaintenanceAdapter.getFirstReferencedBy(child,
-				sf_constraintComponent), IPropertySource.class)); // This is the property source of the actual model which is part of the
-																  // constraintComponent.
+	protected void setupComponent(ComponentTreeEditPart childEP, EObject child) {
+		EObject componentConstraintObject = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_containerComponents, sf_constraintComponent, child);
+		if (componentConstraintObject != null) {
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(componentConstraintObject, IPropertySource.class)); // This is the property source of the actual model which is part of the constraintComponent.
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(componentConstraintObject, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+		} else {
+			childEP.setPropertySource(null);	// No CC.
+			childEP.setErrorNotifier(null);
+		}
 	}
 
 	protected void createEditPolicies() {
@@ -141,7 +147,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			IJavaInstance container = (IJavaInstance) getModel();
 			// It is possible the live JavaBean failed to create
 			ILayoutPolicyHelper lpHelper = null;
-			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+			if (BeanProxyUtilities.getBeanProxyHost(container).isBeanProxyInstantiated()) {
 				// Get the layout policy helper for the correct layout manager
 				IJavaInstance layoutManager =  (IJavaInstance) container.eGet(sf_containerLayout);
 				if(layoutManager != null){

@@ -9,34 +9,30 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
+
 /*
  *  $RCSfile: JPopupMenuGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
-import java.util.List;
-
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.jem.java.JavaClass;
+import org.eclipse.ve.internal.cde.core.CDELayoutEditPolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart;
 
 /**
  * @author pwalker
- *
- * GraphicalEditPart for javax.swing.JPopupMenu's.
- * This is not currently used because we don't know how to create
- * the children for Actions and Strings.
- * <package protected> until we can use it.
+ * 
+ * GraphicalEditPart for javax.swing.JPopupMenu's. This is currently just an icon that you can drop children onto it. Though it will always add to the
+ * end of the current set of children and you need to use the beans viewer to manipulate them. <package protected> until we can use it.
  */
-class JPopupMenuGraphicalEditPart extends ContainerGraphicalEditPart {
-
-	protected EStructuralFeature sfItems;
+public class JPopupMenuGraphicalEditPart extends JavaBeanGraphicalEditPart {
 
 	/**
 	 * Constructor for JPopupMenuTreeEditPart.
+	 * 
 	 * @param model
 	 */
 	public JPopupMenuGraphicalEditPart(Object model) {
@@ -46,30 +42,8 @@ class JPopupMenuGraphicalEditPart extends ContainerGraphicalEditPart {
 	/**
 	 * Use a JPopupMenuLayoutPolicy which is a FlowLayout
 	 */
-	protected void createLayoutEditPolicy() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new JPopupMenuLayoutEditPolicy(this));
-	}
-
-	public List getModelChildren() {
-		return (List) ((EObject) getModel()).eGet(sfItems);
-	}
-	public void notifyChanged(
-		Notifier notifier,
-		int eventType,
-		EObject sf,
-		Object oldValue,
-		Object newValue,
-		int pos) {
-		if (sf == sfItems)
-			refreshChildren();
-	}
-
-	/*
-	 * @see EditPart#setModel(Object)
-	 */
-	public void setModel(Object model) {
-		super.setModel(model);
-		JavaClass modelType = (JavaClass) ((EObject) model).eClass();
-		sfItems = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
+	protected void createEditPolicies() {
+		super.createEditPolicies();
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new CDELayoutEditPolicy(new JMenuContainerPolicy(EditDomain.getEditDomain(this))));
 	}
 }

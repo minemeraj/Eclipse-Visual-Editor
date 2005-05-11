@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-22 20:57:53 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -314,6 +314,13 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 
 	public IBeanProxy getVisualControlBeanProxy() {
 		return viewPaneBeanProxy;
+	}
+
+	public Point getAbsoluteLocation() {
+		if(fControlManager == null){
+			initializeControlManager();
+		}
+		return fControlManager.getAbsoluteLocation();
 	}
 	
 }

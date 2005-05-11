@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,49 +10,54 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:38 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
-import org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter;
-
-/*
- * Created on Jun 23, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 
 /**
- * @author pwalker
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * JTextComponent proxy adapter.
+ * 
+ * @since 1.1.0
  */
 public class JTextComponentProxyAdapter extends ComponentProxyAdapter {
+
 	protected EStructuralFeature sfSelectionStart, sfSelectionEnd;
 
 	/**
+	 * Construct JTextComponentProxyAdapter
+	 * 
 	 * @param domain
+	 * 
+	 * @since 1.1.0
 	 */
 	public JTextComponentProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart")); //$NON-NLS-1$
-		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd")); //$NON-NLS-1$
+		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart"));
+		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd"));
 	}
-	/* (non-Javadoc)
-	 * Need to reinstanciate the bean when the selectionStart or selectionEnd is reset
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected void canceled(EStructuralFeature as, Object oldValue, int position) {
-		if ((as == sfSelectionStart || as == sfSelectionEnd) && !inInstantiation())
-			throw new ReinstantiationNeeded();
-		super.canceled(as, oldValue, position);
+	protected void canceled(EStructuralFeature feature, Object value, int index, IExpression expression) {
+		// If selection start or selection end are canceled, need to reinstantiate,
+		// so do apply if feature is neither start nor end, or reinstantiate didn't occur.
+		if ((feature != sfSelectionStart && feature != sfSelectionEnd) || !reinstantiate(expression))
+			super.canceled(feature, value, index, expression);
 	}
 
 }

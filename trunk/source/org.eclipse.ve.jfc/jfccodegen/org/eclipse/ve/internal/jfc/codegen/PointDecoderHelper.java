@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: PointDecoderHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-09 01:19:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 
@@ -29,8 +29,8 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IPointBeanProxy;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;

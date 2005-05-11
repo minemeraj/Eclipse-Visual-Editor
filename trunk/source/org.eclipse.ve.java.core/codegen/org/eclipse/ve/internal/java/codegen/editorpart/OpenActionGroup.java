@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: OpenActionGroup.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -30,11 +30,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.OpenWithMenu;
-import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.java.adapters.JavaReflectionAdaptor;
 import org.eclipse.jem.internal.java.adapters.ReadAdaptor;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 /**
  * This ActionGroup is for handling the Open actions on the
@@ -131,7 +130,7 @@ public class OpenActionGroup extends ActionGroup {
 			return; 
 
 		// Create a menu flyout.
-		IMenuManager submenu= new MenuManager(ResourceNavigatorMessages.getString("ResourceNavigator.openWith")); //$NON-NLS-1$
+		IMenuManager submenu= new MenuManager(CodegenEditorPartMessages.getString("OpenWithAction.label")); //$NON-NLS-1$
 		submenu.add(new OpenWithMenu(site.getPage(), (IFile) resource));
 
 		// Add the submenu.

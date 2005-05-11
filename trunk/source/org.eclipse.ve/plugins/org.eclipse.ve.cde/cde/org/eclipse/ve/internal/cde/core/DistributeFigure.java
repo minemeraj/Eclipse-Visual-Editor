@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DistributeFigure.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 
@@ -129,7 +129,9 @@ protected void setPointsBasedOnRectangle() {
 	pl.addPoint(fBounds.getBottomLeft());
 	pl.addPoint(fBounds.getTopLeft());
 	setPoints(pl);
-	fireMoved();	// Need to do this because handles are listening for changes and setting points doesn't fire move.
+	fireFigureMoved();	// Need to do this because handles are listening for changes and setting points doesn't fire move.
+	if (isCoordinateSystem())
+		fireCoordinateSystemChanged();	// ? if moved and has local coordinate system, fire this too. Don't understand why, it's just the way GEF works.
 }
 /* (non-Javadoc)
  * @see org.eclipse.draw2d.Shape#outlineShape(org.eclipse.draw2d.Graphics)

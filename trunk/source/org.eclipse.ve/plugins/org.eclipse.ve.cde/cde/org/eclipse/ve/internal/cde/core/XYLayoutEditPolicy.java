@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-05 00:27:32 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 
@@ -20,6 +20,8 @@ import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -115,7 +117,7 @@ public void activate() {
 		if (gridController != null) {
 			gridFigure = createGridFigure();
 			gridFigure.setVisible(gridController.isGridShowing());
-			IFigure fig = ((GraphicalEditPart) getHost()).getContentPane();
+			IFigure fig = ((GraphicalEditPart) getHost()).getFigure();
 			fig.add(gridFigure, 0);	// grid needs to be first so it doesn't overlay the children
 			gridController.addGridListener(this);
 			GridController.registerEditPart(getHost(), gridController);
@@ -159,7 +161,7 @@ public void deactivate() {
 		gridController.removeGridListener(this);
 		GridController.unregisterEditPart(getHost());
 		gridController = null;
-		IFigure fig = ((GraphicalEditPart) getHost()).getContentPane();
+		IFigure fig = ((GraphicalEditPart) getHost()).getFigure();
 		fig.remove(gridFigure);
 		gridFigure = null;		
 	}	

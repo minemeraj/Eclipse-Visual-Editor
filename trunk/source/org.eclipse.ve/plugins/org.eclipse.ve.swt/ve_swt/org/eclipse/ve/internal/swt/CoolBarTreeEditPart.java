@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:51:49 $
+ * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -115,7 +115,7 @@ public class CoolBarTreeEditPart extends CompositeTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(CoolBarTreeEditPart.this);
+				queueExec(CoolBarTreeEditPart.this, "ITEMS");
 		}
 	};
 }

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-10 23:12:39 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:20 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -17,90 +17,77 @@ import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.DefaultGraphicalEditPart;
 
+/**
+ * Default Non-visual bean graphical edit part.
+ * 
+ * @since 1.1.0
+ */
 public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implements IJavaBeanGraphicalContextMenuContributor {
 
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
-	protected IJavaInstance bean;
+
+	protected ErrorFigure fErrorIndicator;
 
 	public JavaBeanGraphicalEditPart(Object model) {
 		setModel(model);
 	}
 
-	public IJavaInstance getBean(){
-		if(bean == null){
-			bean = (IJavaInstance)getModel();
-		}
-		return bean;
+	public IJavaInstance getBean() {
+		return (IJavaInstance) getModel();
+	}
+
+	public void setModel(Object model) {
+		super.setModel(model);
+	}
+
+	protected IErrorNotifier getErrorNotifier() {
+		return (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE);
 	}
 	
 	protected void createEditPolicies() {
+		super.createEditPolicies();
 		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy());
 	}	
 	
 	public void activate() {
 		super.activate();
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(getBean());
-		if (fBeanProxyErrorListener == null) {
-			fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
-				public void errorStatusChanged(){
-					CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, new Runnable() {
-						public void run() {
-							if (isActive())
-								refreshVisuals();
-						}
-					});
-				}
-			};
-		}
-		beanProxyHost.addErrorListener(fBeanProxyErrorListener);
+		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
+
+			public void errorStatusChanged() {
+				CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() {
+
+					public void run() {
+						if (JavaBeanGraphicalEditPart.this.isActive())
+							setSeverity(getErrorNotifier().getErrorStatus());
+					}
+				});
+			}
+		};
+
+		IErrorNotifier errorNotifier = getErrorNotifier();
+		setSeverity(errorNotifier.getErrorStatus()); // Set the initial status
+		errorNotifier.addErrorListener(fBeanProxyErrorListener);
+	}
+
+	protected void setSeverity(int severity) {
+		fErrorIndicator.setSeverity(severity);
 	}
 
 	public void deactivate() {
 		if (fBeanProxyErrorListener != null) {
-			IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-			beanProxyHost.removeErrorListener(fBeanProxyErrorListener);
-		}
-		if (fOverlayImage != null) {
-			fOverlayImage.dispose();
+			getErrorNotifier().removeErrorListener(fBeanProxyErrorListener);
+			fBeanProxyErrorListener = null;
 		}
 		super.deactivate();
-	}
-
-	protected Image fOverlayImage;
-
-	protected int fOverlaySeverity;
-
-	protected void setFigureImage(Label aLabel, Image anImage) {
-
-		// See whether or not the JavaBean is in error
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-		int beanProxyStatus = beanProxyHost.getErrorStatus();
-		// If there is no error then just use the image
-		if (beanProxyStatus == IBeanProxyHost.ERROR_NONE) {
-			super.setFigureImage(aLabel, anImage);
-		} else {
-			// If we already have an overlay image and it is not for the same error severity then dispose it
-			if (fOverlayImage != null && fOverlaySeverity != beanProxyStatus) {
-				fOverlayImage.dispose();
-				fOverlayImage = null;
-			}
-			// If we don't have an overlay image then create one
-			if (fOverlayImage == null && anImage != null) {
-				fOverlayImage = new Image(getViewer().getControl().getDisplay(), new JavaBeanTreeEditPart.JavaBeansImageDescriptor(anImage,
-						beanProxyStatus).getImageData());
-				fOverlaySeverity = beanProxyStatus;
-			}
-			super.setFigureImage(aLabel, fOverlayImage);
-		}
 	}
 
 	public Object getAdapter(Class aKey) {
@@ -110,6 +97,8 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 			return result;
 		} else if (aKey == IActionFilter.class)
 			return getJavaActionFilter();
+		else if (aKey == IErrorHolder.class)
+			return getErrorNotifier();
 		else {
 			Iterator mofAdapters = ((IJavaInstance) getModel()).eAdapters().iterator();
 			while (mofAdapters.hasNext()) {
@@ -143,7 +132,10 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	 */
 	protected IFigure createFigure() {
 		IFigure fig = super.createFigure();
-		ToolTipContentHelper.AssistedToolTipFigure toolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
+		fErrorIndicator = new ErrorFigure();
+		fig.add(fErrorIndicator);
+		ToolTipContentHelper.AssistedToolTipFigure toolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(
+				getBean(), getErrorNotifier()));
 		fig.setToolTip(toolTipFig);
 		return fig;
 	}

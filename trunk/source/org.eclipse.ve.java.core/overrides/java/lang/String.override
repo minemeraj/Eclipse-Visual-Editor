@@ -9,10 +9,9 @@
           hidden="true"/>
     </addedEObjects>
   </event:Add>
-  <event:AddMany  featureName="eAnnotations">
+  <event:Add  featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
         labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassLabelProvider"
         cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringJavaClassCellEditor"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.StringProxyAdapter"/>
-  </event:AddMany>
+  </event:Add>
 </xmi:XMI>

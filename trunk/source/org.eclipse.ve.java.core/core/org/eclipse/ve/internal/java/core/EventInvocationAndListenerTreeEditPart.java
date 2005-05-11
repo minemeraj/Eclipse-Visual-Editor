@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:20 $
  */
 
 package org.eclipse.ve.internal.java.core;
@@ -119,7 +119,7 @@ public class EventInvocationAndListenerTreeEditPart extends AbstractTreeEditPart
 				// it has been removed from the parent ( both of them register interest in the same EventInvocation )
 				// so to stop GEF exceptions occuring we need to check to see whether we're still in the tree before we refresh ourself
 				if (getParent() != null && getWidget() != null) {
-					CDEUtilities.displayExec(EventInvocationAndListenerTreeEditPart.this, new Runnable() {
+					CDEUtilities.displayExec(EventInvocationAndListenerTreeEditPart.this, "REFRESH", new Runnable() {
 						public void run() {
 							if (isActive()) {
 								refreshVisuals();

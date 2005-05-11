@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -162,6 +162,7 @@ public class JavaVisualEditorVMController {
 						BeaninfoNature.getRuntime(getProject()).getConfigurationContributor(), jcmCont};
 
 				ProxyFactoryRegistry registry = ProxyLaunchSupport.startImplementation(getProject(), vmName, contribs, monitor);
+//				ProxyFactoryRegistry registry = IDERegistration.startAnImplementation(contribs, true, getProject(), vmName, null, monitor);
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 				

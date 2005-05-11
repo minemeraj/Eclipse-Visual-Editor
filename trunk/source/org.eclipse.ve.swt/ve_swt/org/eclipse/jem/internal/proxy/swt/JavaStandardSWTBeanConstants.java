@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
  */
 public final class JavaStandardSWTBeanConstants {
 		
-	public static final String REGISTRY_KEY = "STANDARDPROXYSWTCONSTANTS:"; //$NON-NLS-1$
+	public static final Object REGISTRY_KEY = new Object();
 			
 	final IBeanTypeProxy environmentBeanTypeProxy;
 	IBeanProxy displayProxy;

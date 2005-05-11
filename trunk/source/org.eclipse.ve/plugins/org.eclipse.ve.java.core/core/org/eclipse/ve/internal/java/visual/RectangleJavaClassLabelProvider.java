@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: RectangleJavaClassLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 /**

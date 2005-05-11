@@ -20,6 +20,8 @@
         expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTableDecoder"/>        
   </event:AddMany>
   <event:AddMany  featureName="eStructuralFeatures">
+    <!-- Keep this order so that autocreate will be applied before columns during instantiation. -->
+    <addedEObjects xsi:type="ecore:EReference" name="autoCreateColumnsFromModel"/>
     <addedEObjects xsi:type="ecore:EReference" name="columns" eType="org.eclipse.jem.java:JavaClass java:/javax.swing.table#TableColumn"
         upperBound="-1">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"

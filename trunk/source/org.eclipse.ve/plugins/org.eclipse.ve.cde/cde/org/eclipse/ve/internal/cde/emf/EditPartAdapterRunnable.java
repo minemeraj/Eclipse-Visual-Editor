@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartAdapterRunnable.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
 package org.eclipse.ve.internal.cde.emf;
 
@@ -76,9 +76,8 @@ public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
 	}
 
 	/**
-	 * Queue up this object so that the <code>run</code> method of <code>this</code> will be executed either 
-	 * immediately if on the display thread of the viewer associated with the <code>ep</code>,
-	 * or if not, then doing an asyncExec on that display.
+	 * Queue up this object so that the <code>run</code> method of <code>this</code> will be executed at the
+	 * end of the next transaction.
 	 * 
 	 * @param ep the EditPart to determine the display to use.
 	 * 
@@ -89,9 +88,8 @@ public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
 	}
 	
 	/**
-	 * Queue up this object so that the <code>run</code> method of the given runnable will be executed either 
-	 * immediately if on the display thread of the viewer associated with the <code>ep</code>,
-	 * or if not, then doing an asyncExec on that display.
+	 * Queue up this object so that the <code>run</code> method of the given runnable will be executed at
+	 * the end of the next transaction.
 	 * 
 	 * @param ep the EditPart to determine the display to use.
 	 * @param runnable the runnable to execute. This can be used if another runnable is needed instead of the <code>this</code>
@@ -101,5 +99,34 @@ public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
 	 */
 	protected void queueExec(EditPart ep, Runnable runnable) {
 		CDEUtilities.displayExec(ep, runnable);
+	}
+	
+	/**
+	 * Queue up this object so that the <code>run</code> method of <code>this</code> will be executed at the
+	 * end of the next transaction.
+	 * 
+	 * @param ep the EditPart to determine the display to use.
+	 * @param once the key to limit to only one queue up of the run for this editpart.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void queueExec(EditPart ep, Object once) {
+		CDEUtilities.displayExec(ep, once, this);
+	}
+
+	/**
+	 * Queue up the runable will be executed at the
+	 * end of the next transaction.
+	 * 
+	 * @param ep the EditPart to determine the display to use.
+	 * @param once the key to limit to only one queue up of the runnable for this editpart.
+	 * @param runnable
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void queueExec(EditPart ep, Object once, Runnable runnable) {
+		CDEUtilities.displayExec(ep, once, runnable);
 	}
 }

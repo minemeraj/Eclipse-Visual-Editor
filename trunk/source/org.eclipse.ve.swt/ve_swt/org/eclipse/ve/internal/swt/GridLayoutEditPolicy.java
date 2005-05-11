@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.10 $ $Date: 2005-05-04 22:08:48 $
+ * $Revision: 1.11 $ $Date: 2005-05-11 19:01:30 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -175,7 +175,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		Point startPosition = new Point(spanToPosition.x - dim.width - handleSizeOffset, spanToPosition.y - dim.height - handleSizeOffset);
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart)editParts.get(0);
-		Point childPosition = ep.getFigure().getBounds().getLocation();
+		Point childPosition = ep.getContentPane().getBounds().getLocation();
 		Point childCellLocation = getGridLayoutGridFigure().getCellLocation(childPosition.x, childPosition.y);
 		Point startCellLocation = getGridLayoutGridFigure().getCellLocation(startPosition.x, startPosition.y);
 		// If the cell location where the pointer is located is different from the original cell location where we started,
@@ -212,7 +212,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	
 	protected GridLayoutGridFigure getGridLayoutGridFigure() {
 		if (fGridLayoutGridFigure == null) {
-			IFigure f = ((GraphicalEditPart) getHost()).getFigure();
+			IFigure f = ((GraphicalEditPart) getHost()).getContentPane();
 			int [][] layoutDimensions = null;
 			int [][] expandableDimensions = null;
 			Rectangle layoutSpacing = null;
@@ -288,7 +288,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart)request.getEditParts().get(0);
-		Point childPosition = ep.getFigure().getBounds().getLocation();
+		Point childPosition = ep.getContentPane().getBounds().getLocation();
 		// Get the start and end cell bounds in order to determine the entire bounds of the cell feedback figure.
 		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(childPosition.x, childPosition.y);
 		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(spanToPosition.x, spanToPosition.y);
@@ -358,8 +358,8 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	// modifying the feedback behavior from FlowLayoutEditPolicy
 	
 	private Rectangle getAbsoluteBounds(GraphicalEditPart ep) {
-		Rectangle bounds = ep.getFigure().getBounds().getCopy();
-		ep.getFigure().translateToAbsolute(bounds);
+		Rectangle bounds = ep.getContentPane().getBounds().getCopy();
+		ep.getContentPane().translateToAbsolute(bounds);
 		return bounds;
 	}
 	

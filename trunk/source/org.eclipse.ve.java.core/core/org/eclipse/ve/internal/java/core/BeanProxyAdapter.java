@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.36 $  $Date: 2005-04-21 16:02:04 $ 
+ *  $Revision: 1.37 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.*;
@@ -33,15 +33,15 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.*;
 
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.ModelChangeController;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Adapter to wrap a MOF Bean and its bean proxy.
  */
-public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost {
+public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost, IInternalBeanProxyHost {
 	
 	private IBeanProxy fBeanProxy;	// It should be accessed only through accessors, even subclasses.
 	private boolean inInstantiation = false;	// Are we in instantiation. If so, reinstantiate has special processing.
@@ -258,7 +258,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 					}					
 					// Apply the value by firing a set method
 					if (settingBean != null && settingBean.getErrorStatus() == ERROR_SEVERE)
-						processError(sf, ((ExceptionError) settingBean.getErrors().get(0)).error);
+						processError(sf, ((ExceptionError) settingBean.getErrors().get(0)).getException());
 					else
 						applyBeanFeature(sf, propertyDecorator, settingBean != null ? settingBean.getBeanProxy() : null);
 				}
@@ -311,7 +311,11 @@ protected final void applyBeanFeature(EStructuralFeature sf , PropertyDecorator 
 protected void primApplyBeanFeature(EStructuralFeature sf , PropertyDecorator propDecor , IBeanProxy settingBeanProxy) throws ThrowableProxy {
 
 	if (propDecor != null && propDecor.isWriteable()) {
-			BeanProxyUtilities.writeBeanFeature(propDecor , getBeanProxy() , settingBeanProxy);	
+			try {
+				BeanProxyUtilities.writeBeanFeature(propDecor , getBeanProxy() , settingBeanProxy);
+			} catch (NoSuchMethodException e) {
+				processError(sf,e);
+			}	
 			return;
 	}
 }
@@ -391,7 +395,7 @@ protected void processError(EStructuralFeature sf, Throwable exc, Object object)
 	}
 
 	//TODO We need a better way of deciding the error severity than looking up the type - JRW
-	ErrorType error = new MultiPropertyError(object, exc, exc instanceof InstantiationException ? ERROR_INFO : ERROR_WARNING , sf);
+	ErrorType error = new BeanPropertyError(exc instanceof InstantiationException ? ERROR_INFO : ERROR_WARNING, exc, sf, object);
 	((List) errors).add(error);
 	
 	fireErrorStatusChanged();
@@ -434,7 +438,7 @@ protected void clearError(EStructuralFeature sf, Object object) {
 		if (errors instanceof List) {
 			Iterator itr = ((List) errors).iterator();
 			while (itr.hasNext()) {
-				MultiPropertyError merr = (MultiPropertyError) itr.next();
+				BeanPropertyError merr = (BeanPropertyError) itr.next();
 				if (object == merr.getErrorObject()) {
 					itr.remove();
 					fireClearedError(merr);
@@ -458,7 +462,7 @@ protected boolean isValidFeature(EStructuralFeature sf, Object object) {
 		if (errors instanceof List) {
 			Iterator itr = ((List) errors).iterator();
 			while (itr.hasNext()) {
-				MultiPropertyError e = (MultiPropertyError) itr.next();
+				BeanPropertyError e = (BeanPropertyError) itr.next();
 				if (object == e.getErrorObject())
 					return false;
 			}
@@ -503,7 +507,7 @@ protected void applyAllSettings() {
 	JavaObjectInstance eTarget = (JavaObjectInstance) getTarget();
 	
 	eTarget.visitSetFeatures(new FeatureValueProvider.Visitor(){
-		public void isSet(EStructuralFeature feature, Object value) {
+		public Object isSet(EStructuralFeature feature, Object value) {
 			if(feature.isMany()){
 				appliedList(feature,(List)value, Notification.NO_INDEX, true);	// Test validity because we are applying all.
 			} else {
@@ -512,6 +516,7 @@ protected void applyAllSettings() {
 					applied(feature,value, Notification.NO_INDEX);			
 				} 					
 			}
+			return null;
 		}
 	});
 }
@@ -651,7 +656,12 @@ protected IBeanProxy getInternalBeanPropertyProxyValue(EStructuralFeature aBeanP
 
 protected IBeanProxy primReadBeanFeature(PropertyDecorator propDecor, IBeanProxy aSource) throws ThrowableProxy{
 	
-	return BeanProxyUtilities.readBeanFeature(propDecor, aSource);
+	try {
+		return BeanProxyUtilities.readBeanFeature(propDecor, aSource);
+	} catch (NoSuchMethodException e) {
+		JavaVEPlugin.log(e, Level.FINE);
+		return null;
+	}
 		
 }
 
@@ -933,7 +943,7 @@ public int getErrorStatus(){
 	} 
 	ErrorType mostSeverePropertyError = getMostSeverPropertyError();
 	if(mostSeverePropertyError != null){
-		return mostSeverePropertyError.severity;
+		return mostSeverePropertyError.getSeverity();
 	} else {
 		return IErrorHolder.ERROR_NONE;
 	}	
@@ -1037,6 +1047,14 @@ public void validateBeanProxy() {
 
 protected ModelChangeController getModelChangeController(){
     return (ModelChangeController)getBeanProxyDomain().getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+}
+
+public boolean isSettingInOriginalSettingsTable(EStructuralFeature feature) {
+	return fOrigSettingProxies != null && fOrigSettingProxies.containsKey(feature);
+}
+
+public List getInstantiationError() {
+	return fInstantiationError == null ? Collections.EMPTY_LIST : Collections.singletonList(fInstantiationError);
 }
 
 }

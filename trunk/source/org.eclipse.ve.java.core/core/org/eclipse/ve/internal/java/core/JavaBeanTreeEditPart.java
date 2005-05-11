@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:20 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -21,6 +21,7 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -34,6 +35,7 @@ import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPart;
@@ -51,7 +53,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	protected IErrorNotifier.ErrorListener fErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 		public void errorStatusChanged() {
-			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, new Runnable() {
+			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "REFRESH_VISUALS", new Runnable() {
 
 				public void run() {
 					if (isActive())
@@ -89,8 +91,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	public void activate() {
 		super.activate();
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-		beanProxyHost.addErrorListener(fErrorListener);
+		getErrorNotifier().addErrorListener(fErrorListener);
 		((EObject) getModel()).eAdapters().add(getListenerAdapter());
 	}
 
@@ -125,7 +126,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeature() == getSFObjectEvents())
-						queueExec(JavaBeanTreeEditPart.this);
+						queueExec(JavaBeanTreeEditPart.this, "EVENTS");
 				}
 			};
 		}
@@ -134,8 +135,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	public void deactivate() {
 		((EObject) getModel()).eAdapters().remove(getListenerAdapter());
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-		beanProxyHost.removeErrorListener(fErrorListener);
+		getErrorNotifier().removeErrorListener(fErrorListener);
 		// Make sure we not listening to stale event invocations as these may still try and signal us when we are deactivated
 		if (eventInvocationsListenedTo != null) {
 			Iterator iter = eventInvocationsListenedTo.iterator();
@@ -182,15 +182,19 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			drawImage(bg, 0, 0);
 			Point size = getSize();
 			ImageData data = null;
-			if (fSeverity == IBeanProxyHost.ERROR_SEVERE) {
-				data = IErrorHolder.ErrorType.getSevereErrorImageOverlay().getImageData();
-				drawImage(data, 0, size.y - data.height);
-			} else if (fSeverity == IBeanProxyHost.ERROR_WARNING) {
-				data = IErrorHolder.ErrorType.getWarningErrorImageOverlay().getImageData();
-				drawImage(data, 0, size.y - data.height);
-			} else if (fSeverity == IBeanProxyHost.ERROR_INFO) {
-				data = IErrorHolder.ErrorType.getInformationErrorImageOverlay().getImageData();
-				drawImage(data, 0, size.y - data.height);
+			switch (fSeverity) {
+				case IErrorHolder.ERROR_SEVERE:
+					data = IErrorHolder.ErrorType.getSevereErrorImageOverlay().getImageData();
+					drawImage(data, 0, size.y - data.height);
+					break;
+				case IErrorHolder.ERROR_WARNING:
+					data = IErrorHolder.ErrorType.getWarningErrorImageOverlay().getImageData();
+					drawImage(data, 0, size.y - data.height);
+					break;
+				case IErrorHolder.ERROR_INFO:
+					data = IErrorHolder.ErrorType.getInformationErrorImageOverlay().getImageData();
+					drawImage(data, 0, size.y - data.height);
+					break;
 			}
 		}
 
@@ -199,16 +203,27 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		}
 	}
 
+	/**
+	 * Get the error notifier to use for this editpart. Subclasses may override and supply a different one.
+	 * The default is the error notifier that is on the model.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IErrorNotifier getErrorNotifier() {
+		return (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE);
+	}
+	
 	protected Image getImage() {
 		// See whether or not the JavaBean is in error
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-		int beanProxyStatus = beanProxyHost.getErrorStatus();
+		IErrorNotifier errorNotifier = getErrorNotifier();
+		int errorStatus = errorNotifier.getErrorStatus();
 		// If no error then just use the image
-		if (beanProxyStatus == IBeanProxyHost.ERROR_NONE) {
+		if (errorStatus == IErrorHolder.ERROR_NONE) {
 			return super.getImage();
 		} else {
 			// Otherwise we use an overlay image. If we have an existing overlay image and it is for the wrong severity dispose it
-			if (fOverlayImage != null && fOverlayImageSeverity != beanProxyStatus) {
+			if (fOverlayImage != null && fOverlayImageSeverity != errorStatus) {
 				fOverlayImage.dispose();
 				fOverlayImage = null;
 			}
@@ -216,8 +231,8 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			if (fOverlayImage == null) {
 				Image anImage = super.getImage();
 				if (anImage != null) {
-					fOverlayImage = new Image(Display.getCurrent(), new JavaBeansImageDescriptor(anImage, beanProxyStatus).getImageData());
-					fOverlayImageSeverity = beanProxyStatus;
+					fOverlayImage = new Image(Display.getCurrent(), new JavaBeansImageDescriptor(anImage, errorStatus).getImageData());
+					fOverlayImageSeverity = errorStatus;
 				}
 			}
 			return fOverlayImage;
@@ -276,6 +291,8 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			return result;
 		} else if (aKey == IActionFilter.class) {
 			return getActionFilter();
+		} else if (aKey == IErrorHolder.class) {
+			return getErrorNotifier();
 		} else {
 			// See if any of the MOF adapters on our target can return a value for the request
 			Iterator mofAdapters = ((IJavaInstance) getModel()).eAdapters().iterator();
@@ -331,7 +348,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 				
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeatureID(AbstractEventInvocation.class) == JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS)
-						queueExec(JavaBeanTreeEditPart.this);
+						queueExec(JavaBeanTreeEditPart.this, "CALLBACKS");
 				}
 			};
 		}
@@ -348,7 +365,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeatureID(PropertyChangeEventInvocation.class) == JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES)
-						queueExec(JavaBeanTreeEditPart.this);
+						queueExec(JavaBeanTreeEditPart.this, "EVENT_PROPERTIES");
 				}
 			};
 		}

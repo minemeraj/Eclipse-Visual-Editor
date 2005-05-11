@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import java.util.Iterator;
@@ -275,9 +275,9 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			(org.eclipse.draw2d.geometry.Rectangle) ((GraphicalEditPart) getHost()).getContentPane().getLayoutManager().getConstraint(
 				((GraphicalEditPart) child).getFigure());
 
-		if (rect == null)
-			rect = new org.eclipse.draw2d.geometry.Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, width, height);
-		else
+		if (rect == null) {
+			rect = XYLayoutUtility.modifyPreferredRectangle(new org.eclipse.draw2d.geometry.Rectangle(0, 0, width, height), true, false, false);
+		} else
 			rect = rect.getCopy().setSize(width, height);
 		setConstraintToFigure(child, rect);
 	}
@@ -294,16 +294,17 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * Translate to figure constraint, need to take zoom into account.
 	 */
 	protected Object modelToFigureConstraint(Object modelConstraint) {
-		if (modelConstraint == null)
-			modelConstraint = new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+		if (modelConstraint == null) {
+			modelConstraint =  XYLayoutUtility.modifyPreferredCDMRectangle(new Rectangle(), true, true, true);
+		}
 		Rectangle r = (Rectangle) modelConstraint;
 		org.eclipse.draw2d.geometry.Rectangle figureConstraint =
 			new org.eclipse.draw2d.geometry.Rectangle(r.x, r.y, r.width, r.height);
 		ZoomController zoomController = getZoomController();
 		if (zoomController != null) {
-			if (figureConstraint.x != Integer.MIN_VALUE)
+			if (figureConstraint.x != XYLayoutUtility.PREFERRED_LOC)
 				figureConstraint.x = zoomController.zoomCoordinate(figureConstraint.x);
-			if (figureConstraint.y != Integer.MIN_VALUE)
+			if (figureConstraint.y != XYLayoutUtility.PREFERRED_LOC)
 				figureConstraint.y = zoomController.zoomCoordinate(figureConstraint.y);
 		}
 		return figureConstraint;
@@ -324,9 +325,13 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		return getChildConstraint(child, vi.getKeyedValues().get(CDMModelConstants.VISUAL_CONSTRAINT_KEY));
 	}
 
-	protected Object getChildConstraint(EditPart child, Object kv) {	
-		Rectangle constraint =
-			kv instanceof Rectangle ? new Rectangle((Rectangle) kv) : new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+	protected Object getChildConstraint(EditPart child, Object kv) {
+		Rectangle constraint;
+		if (kv instanceof Rectangle)
+			constraint = (Rectangle) kv;
+		else {
+			constraint = XYLayoutUtility.modifyPreferredCDMRectangle(new Rectangle(), true, true, true);
+		}
 		IConstraintHandler handler = getConstraintHandler(child);
 		if (handler != null) {
 			int x = constraint.x;
@@ -409,7 +414,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		
 		private void queueRefreshFromEditPart(final Object constraint) {
 			if (getHost() != null)
-				CDEUtilities.displayExec(getHost(), new Runnable() {
+				CDEUtilities.displayExec(getHost(), "REFRESH_FROM_EDITPART", new Runnable() {
 				public void run() {
 					if (!deactivated)
 						refreshFromEditPart(getHost(), constraint);
@@ -433,8 +438,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		}
 
 		public void sizeChanged(final int width, final int height) {
-			// Needs to be done on UI thread.
-			CDEUtilities.displayExec(getHost().getViewer().getControl().getDisplay(), new Runnable() {
+			CDEUtilities.displayExec(getHost(), new Runnable() {
 				public void run() {
 					if (!deactivated) {
 						setNewSize(getHost(), width, height);

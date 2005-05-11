@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-04-09 01:19:20 $ 
+ *  $Revision: 1.20 $  $Date: 2005-05-11 19:01:39 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -28,8 +28,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -49,6 +48,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	public static final String TAB_EMPTY_STRING = ""; //$NON-NLS-1$
 
 	IJavaObjectInstance fTitleInstance = null, fToolTipInstance = null, fIconInstance = null;
+	boolean titleInstanceSet, toolTipInstanceSet, iconInstanceSet;
 
 	/**
 	 * Constructor for JTabbedPaneAddDecoderHelper.
@@ -117,13 +117,13 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		//                    toAdd.getRefObject()) ;
 		CodeGenUtil.eSet(root, root.eClass().getEStructuralFeature(COMPONENT_ATTR_NAME), toAdd, -1);
 
-		if (fTitleInstance != null)
+		if (titleInstanceSet)
 			root.eSet(root.eClass().getEStructuralFeature(TAB_TITLE_ATTR_NAME), fTitleInstance);
 
-		if (fToolTipInstance != null)
+		if (toolTipInstanceSet)
 			root.eSet(root.eClass().getEStructuralFeature(TAB_TOOLTIP_ATTR_NAME), fToolTipInstance);
 
-		if (fIconInstance != null)
+		if (iconInstanceSet)
 			root.eSet(root.eClass().getEStructuralFeature(TAB_ICON_ATTR_NAME), fIconInstance);
 
 		// target's add feature
@@ -200,27 +200,28 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	}
 
 	protected void processTitle(Expression arg) throws CodeGenException {
-		if (arg instanceof NullLiteral)
+		if (arg instanceof NullLiteral) {
 			fTitleInstance = null;
-		else if (arg instanceof StringLiteral) {
-			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			setInitString(fTitleInstance, ((StringLiteral)arg).getLiteralValue());
-			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
+			titleInstanceSet = true;
 		}else if(arg != null){
+			titleInstanceSet = true;
 			fTitleInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
             CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
             		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(),getExpressionReferences()));
             fTitleInstance.setAllocation(alloc);
 			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fTitleInstance);
-		}
+		} else
+			titleInstanceSet = false;
 	}
 
 	protected void processIcon(Expression arg) throws CodeGenException {
 		// TODO  Need to support local declarations
-		if (arg instanceof NullLiteral)
+		if (arg instanceof NullLiteral) {
 			fIconInstance = null;
-		else if (arg != null) {
+			iconInstanceSet = true;
+		} else if (arg != null) {
+			iconInstanceSet = true;
 			fIconInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("javax.swing.Icon", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
 			CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 			fIconInstance.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(
@@ -231,13 +232,11 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 	protected void processToolTip(Expression arg) throws CodeGenException {
 
-		if (arg instanceof NullLiteral)
+		if (arg instanceof NullLiteral) {
 			fToolTipInstance = null;
-		else if (arg instanceof StringLiteral) {
-			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
-			setInitString(fToolTipInstance, ((StringLiteral) arg).getLiteralValue());
-			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fToolTipInstance);
+			toolTipInstanceSet = true;
 		}else if(arg != null){
+			toolTipInstanceSet = true;
 			fToolTipInstance = (IJavaObjectInstance) CodeGenUtil.createInstance("java.lang.String", fbeanPart.getModel().getCompositionModel()); //$NON-NLS-1$
             CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
@@ -250,23 +249,75 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	protected boolean parseAndAddArguments(List args) throws CodeGenException {
 		//  fAddedConstraintInstance = null ;
 		if (fAddedPart != null || fAddedInstance != null) {
-			// process the Title
-
-			if (args.size() >= 4) {
-				processTitle((Expression)args.get(0));
-				processIcon((Expression)args.get(1));
-				processToolTip((Expression)args.get(3));
-			} else if (args.size() == 2) {
-				if (args.get(0) instanceof StringLiteral)
-					processTitle((Expression)args.get(0));
-			}
+			// process the args.
 
 			int index = -1;
-			if (args.size() == 5 && args.get(4) instanceof NumberLiteral) {
-				fAddedIndex = args.get(4).toString();
-				index = Integer.parseInt(fAddedIndex);
+			switch (args.size()) {
+				case 1:
+					break;	// add(Component)	- nothing else set.
+				case 2:
+					// add(Component, index), add(Component, Object), add(String, Component), or addTab(String, Component)
+					String methodName = fFmapper.getMethodName();
+					// RLK: Right now I don't know how to distinquish at this point add() because if complicated 
+					// then it could be anyone. Try for if arg0=StringLiteral then add(String, Component) else it is add(Component, ...).
+					if (JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB.equals(methodName)) {
+						// addTab(String, Component)
+						processTitle((Expression)args.get(0));
+					} else {
+						if (args.get(0) instanceof StringLiteral) {
+							// add(String, Component)
+							processTitle((Expression)args.get(0));
+						} else {
+							// For now use if NumberLiteral then add(Component, index). Can't handle more complex type at this time.
+							// If it is a StringLiteral, then treat as title. Anything else is too complex and we will ignore it.
+							if (args.get(1) instanceof NumberLiteral) {
+								fAddedIndex = args.get(1).toString();
+								index = Integer.parseInt(fAddedIndex);
+							} else if (args.get(1) instanceof StringLiteral) {
+								// add(Component, Object) but if Object is a String, then it is title.
+								processTitle((Expression)args.get(1));
+							}
+						}
+					}
+					break;
+				case 3:
+					// add(Component, Object, index) or addTab(String Component)
+					methodName = fFmapper.getMethodName();
+					if (JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB.equals(methodName)) {
+						// addTab(String, Icon, Component)
+						processTitle((Expression)args.get(0));
+						processIcon((Expression)args.get(1));						
+					} else {
+						// add(Component, Object, index)
+						if (args.get(1) instanceof StringLiteral) {
+							// add(Component, Object, index) but if Object is a String, then it is title. - index has to be a NumberLiteral for us right now.
+							processTitle((Expression)args.get(1));
+						}
+						if (args.get(2) instanceof NumberLiteral) {
+							fAddedIndex = args.get(2).toString();
+							index = Integer.parseInt(fAddedIndex); 
+						}						
+					}
+					break;
+				case 4:
+					// addTab(String, Icon, Component, Tooltip)
+					processTitle((Expression)args.get(0));
+					processIcon((Expression)args.get(1));						
+					processToolTip((Expression)args.get(3));
+					break;
+				case 5:
+					// insertTab(String, Icon, Component, Tooltip, index) - index has to be a NumberLiteral for us right now.
+					processTitle((Expression)args.get(0));
+					processIcon((Expression)args.get(1));						
+					processToolTip((Expression)args.get(3));
+					if (args.get(4) instanceof NumberLiteral) {
+						fAddedIndex = args.get(4).toString();
+						index = Integer.parseInt(fAddedIndex);
+					}
+					break;
+				default:
+					throw new IllegalArgumentException("Bad number of Arguments !!! "); //$NON-NLS-1$
 			}
-
 			if (fAddedPart != null)
 				add(fAddedPart, fbeanPart, index);
 			else
@@ -529,15 +580,35 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractContainerAddDecoderHelper#getAddedPartArgIndex()
 	 */
-	protected int getAddedPartArgIndex(int argsSize) {	
-		if (argsSize >= 4)
-			return 2;
-		else if (argsSize == 2)
-			return 1;
-		else if (argsSize == 1)
-			return 0;
-		else 
-			throw new IllegalArgumentException("Bad number of Arguments !!! "); //$NON-NLS-1$		
+	protected int getAddedPartArgIndex(int argsSize) {
+		switch (argsSize) {
+			case 1:
+				return 0;	// add(Component)
+			case 2:
+				// add(Component, index), add(Component, Object), add(String, Component), or addTab(String, Component)
+				String methodName = fFmapper.getMethodName();
+				// RLK: Right now I don't know how to distinquish at this point add() because if complicated 
+				// then it could be anyone. Try for if arg0=StringLiteral then add(String, Component) else it is add(Component, ...).
+				if (JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB.equals(methodName))
+					return 1;	// addTab(String, Component)
+				List args = ((MethodInvocation) getExpression(fExpr)).arguments();
+				if (args.get(0) instanceof StringLiteral)
+					return 1;	// add(String, Component)
+				return 0;
+			case 3:
+				// add(Component, Object, index) or addTab(String Component)
+				methodName = fFmapper.getMethodName();
+				if (JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB.equals(methodName))
+					return 2;	// addTab(String, Icon, Component)
+				else
+					return 0;	// add(Component, Object, index)
+			case 4:
+				return 2;	// addTab(String, Icon, Component, Tooltip)
+			case 5:
+				return 2;	// insertTab(String, Icon, Component, Tooltip, index)
+			default:
+				throw new IllegalArgumentException("Bad number of Arguments !!! "); //$NON-NLS-1$
+		}
 	}
 
 	public boolean restore() throws CodeGenException {

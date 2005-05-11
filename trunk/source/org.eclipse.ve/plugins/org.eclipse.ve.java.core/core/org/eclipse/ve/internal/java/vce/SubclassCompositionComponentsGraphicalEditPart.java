@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-02-15 23:23:54 $
+ * 1.1 $ $Date: 2005-05-11 19:01:20 $
  */
 import java.util.*;
 
@@ -58,7 +58,8 @@ public class SubclassCompositionComponentsGraphicalEditPart
 		public void notifyChanged(Notification msg) {
 			switch (msg.getFeatureID(BeanSubclassComposition.class)) {
 				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART :
-					queueRefreshChildren();
+					if (!msg.isTouch())
+						queueRefreshChildren();
 					break;
 			}
 		}

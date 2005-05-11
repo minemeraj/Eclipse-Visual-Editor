@@ -1,4 +1,5 @@
 package org.eclipse.ve.internal.cde.core;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,20 +12,23 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentSupport.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import org.eclipse.jface.util.ListenerList;
+
 /**
- * This is a visual component support class. It maintains
- * the listeners for a component and does the firing.
- * Implementers of IVisualComponent only need an instance
- * of this class to manage the listener lists and can forward
- * them to here. Use an ImageNotifierSupport class for 
- * the image notification portion.
+ * This is a visual component support class. It maintains the listeners for a component and does the firing. Implementers of IVisualComponent only
+ * need an instance of this class to manage the listener lists and can forward them to here. Use an ImageNotifierSupport class for the image
+ * notification portion.
  */
 public class VisualComponentSupport {
+
 	protected ListenerList componentListeners = null; // Listeners for IComponentNotification.
+
+	public boolean hasListeners() {
+		return componentListeners != null && !componentListeners.isEmpty();
+	}
 
 	/**
 	 * addComponentListener.
@@ -39,8 +43,6 @@ public class VisualComponentSupport {
 	 * Fire component hidden notification.
 	 */
 	public void fireComponentHidden() {
-		// Probably should make a copy of the notification list to prevent
-		// modifications while firing, but we'll see if this gives any problems.
 		if (componentListeners != null) {
 			Object[] lists = null;
 			synchronized (this) {
@@ -57,8 +59,6 @@ public class VisualComponentSupport {
 	 * Fire component moved notification.
 	 */
 	public void fireComponentMoved(int x, int y) {
-		// Probably should make a copy of the notification list to prevent
-		// modifications while firing, but we'll see if this gives any problems.
 		if (componentListeners != null) {
 			Object[] lists = null;
 			synchronized (this) {
@@ -70,12 +70,11 @@ public class VisualComponentSupport {
 			}
 		}
 	}
+
 	/**
 	 * Fire component refreshed notification.
 	 */
 	public void fireComponentRefreshed() {
-		// Probably should make a copy of the notification list to prevent
-		// modifications while firing, but we'll see if this gives any problems.
 		if (componentListeners != null) {
 			Object[] lists = null;
 			synchronized (this) {
@@ -87,12 +86,11 @@ public class VisualComponentSupport {
 			}
 		}
 	}
+
 	/**
 	 * Fire component resized notification.
 	 */
 	public void fireComponentResized(int width, int height) {
-		// Probably should make a copy of the notification list to prevent
-		// modifications while firing, but we'll see if this gives any problems.
 		if (componentListeners != null) {
 			Object[] lists = null;
 			synchronized (this) {
@@ -104,12 +102,11 @@ public class VisualComponentSupport {
 			}
 		}
 	}
+
 	/**
 	 * Fire component shown notification.
 	 */
 	public void fireComponentShown() {
-		// Probably should make a copy of the notification list to prevent
-		// modifications while firing, but we'll see if this gives any problems.
 		if (componentListeners != null) {
 			Object[] lists = null;
 			synchronized (this) {
@@ -126,7 +123,8 @@ public class VisualComponentSupport {
 	 * removeComponentListener method..
 	 */
 	public synchronized void removeComponentListener(IVisualComponentListener aListener) {
-		componentListeners.remove(aListener);
+		if (componentListeners != null)
+			componentListeners.remove(aListener);
 	}
 
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-10 23:12:59 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -44,7 +44,6 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
-import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
@@ -67,8 +66,8 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
 	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif"); //$NON-NLS-1$
 	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif"); //$NON-NLS-1$
-	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title"); //$NON-NLS-1$
-	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
+	private static final String TITLE = CodegenEditorPartMessages.getString("CollapseAllAction.label"); //$NON-NLS-1$
+	private static final String TOOL_TIP = CodegenEditorPartMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
 	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
@@ -190,7 +189,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		// Set an action handler to redirect these to the action registry's actions so they work
 		// with the content outline without having to separately contribute these
 		// to the outline page's toolbar
-		deleteAction = new DeleteAction(jve);
+		deleteAction = new DeleteAction((IWorkbenchPart)jve);
 		copyAction = new CopyAction(jve);
 		pasteAction = new PasteActionImmediate(jve);
 		

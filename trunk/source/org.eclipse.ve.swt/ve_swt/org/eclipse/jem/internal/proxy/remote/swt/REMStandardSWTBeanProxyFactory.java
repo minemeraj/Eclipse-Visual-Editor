@@ -11,7 +11,6 @@
 package org.eclipse.jem.internal.proxy.remote.swt;
 
 import org.eclipse.jem.internal.proxy.swt.*;
-import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
 public class REMStandardSWTBeanProxyFactory implements IStandardSWTBeanProxyFactory {

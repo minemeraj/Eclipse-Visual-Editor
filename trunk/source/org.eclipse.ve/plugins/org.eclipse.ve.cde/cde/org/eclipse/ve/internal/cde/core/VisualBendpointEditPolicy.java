@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualBendpointEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import java.util.*;
@@ -41,6 +41,9 @@ import org.eclipse.gef.requests.BendpointRequest;
 
 public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZoomListener {
 
+	
+	private static final Object REFRESH_BENDPOINTS = new Object();
+	
 	protected ZoomController zoomController;
 	protected VisualInfoPolicy.VisualInfoListener viListener;
 
@@ -64,21 +67,12 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 						// The bendpoints keyedvalue was changed
 						switch (kvMsg.getEventType()) {
 							case Notification.SET : // It was changed.
-								CDEUtilities.displayExec(getHost(), new Runnable() {
+							case Notification.UNSET : // It was removed
+								CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 									public void run() {
 										// if goes inactive, then diagram will be null
 										if (diagram != null)
 											refreshBendpoints(((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
-									}
-								});
-								break;
-
-							case Notification.UNSET : // It was removed
-								CDEUtilities.displayExec(getHost(), new Runnable() {
-									public void run() {
-										// if goes inactive, then diagram will be null
-										if (diagram != null)
-											refreshBendpoints(null);
 									}
 								});
 								break;
@@ -89,7 +83,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 
 			public void notifyVisualInfo(int eventType, VisualInfo oldVI, VisualInfo newVI) {
 				// A visual info was either added or removed
-				CDEUtilities.displayExec(getHost(), new Runnable() {
+				CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 					public void run() {
 						// if goes inactive, then diagram will be null
 						if (diagram != null)
@@ -100,7 +94,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 
 			public void notifyAnnotationChanges(Notification msg) {
 				// An annotation was either added or removed
-				CDEUtilities.displayExec(getHost(), new Runnable() {
+				CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 					public void run() {
 						// if goes inactive, then diagram will be null
 						if (diagram != null)

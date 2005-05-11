@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-23 23:12:41 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 
@@ -23,10 +23,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.gef.*;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.SharedCursors;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -200,36 +197,38 @@ public class CDEUtilities {
 			return name;
 	}
 	
+	
 	/**
-	 * Utility method to run the runnable ASAP. I.e. if currently on the display's display thread, execute
-	 * immediately. If not, do an asyncexec. This is a combination of syncexec and asyncexec. This way it will
-	 * never lock up.
-	 * 
-	 * @param display
+	 * Utility method to run the runnable at end of current transaction. Takes a GEF editpart as a convenience to find the model change controller.
+	 * It will then queue it up to the end of the transaction.
+	 * @param ep the editpart. If the editpart is not active then nothing added.
+	 * @param Object once key to run once, it will be merged with the editpart, so that the combination of the two will determine the once. 
 	 * @param runnable
 	 * 
+	 * @see ModelChangeController#execAtEndOfTransaction(Runnable, Object)
+	 * @see ModelChangeController#createHashKey(Object, Object)
 	 * @since 1.0.0
 	 */
-	public static void displayExec(Display display, Runnable runnable) {
-		if (Thread.currentThread() == display.getThread())
-			runnable.run();
-		else
-			display.asyncExec(runnable);
+	public static void displayExec(EditPart ep, Object once, Runnable runnable) {
+		if (ep.isActive()) {
+			((ModelChangeController) EditDomain.getEditDomain(ep).getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).execAtEndOfTransaction(runnable, ModelChangeController.createHashKey(ep, once));
+		}
 	}
 	
 	/**
-	 * Utility method to run the runnable ASAP. Takes a GEF editpart as a convenience to find the display. Then
-	 * calls regular displayExec.
-	 * @param ep
+	 * Utility method to run the runnable at end of current transaction. Takes a GEF editpart as a convenience to find the model change controller.
+	 * It will then queue it up to the end of the transaction.
+	 * @param ep the editpart. If the editpart is not active then nothing added.
 	 * @param runnable
 	 * 
-	 * @see CDEUtilities#displayExec(Display, Runnable)
+	 * @see ModelChangeController#execAtEndOfTransaction(Runnable)
 	 * @since 1.0.0
 	 */
 	public static void displayExec(EditPart ep, Runnable runnable) {
-		if (ep.isActive())
-			displayExec(ep.getViewer().getControl().getDisplay(), runnable);
-	}
+		if (ep.isActive()) {
+			((ModelChangeController) EditDomain.getEditDomain(ep).getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).execAtEndOfTransaction(runnable);
+		}
+	}	
 	
 	/**
 	 * This is to be used in GEF Tools in CDE so that the cursor can be set to busy or not allowed as necessary depending on 

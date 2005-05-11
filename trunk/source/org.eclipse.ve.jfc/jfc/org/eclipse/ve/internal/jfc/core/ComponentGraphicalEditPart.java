@@ -11,60 +11,34 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-05-11 14:38:34 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-05-11 19:01:39 $
  */
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
+import org.eclipse.core.runtime.*;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.ContentsGraphicalEditPart;
-import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
-import org.eclipse.ve.internal.cde.core.IConstraintHandler;
-import org.eclipse.ve.internal.cde.core.IDirectEditableEditPart;
-import org.eclipse.ve.internal.cde.core.IVisualComponent;
-import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
-import org.eclipse.ve.internal.cde.core.ImageFigureController;
-import org.eclipse.ve.internal.cde.core.OutlineBorder;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
-import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.ErrorFigure;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.ve.internal.java.core.IErrorNotifier;
-import org.eclipse.ve.internal.java.core.IJavaBeanGraphicalContextMenuContributor;
-import org.eclipse.ve.internal.java.core.JavaBeanActionFilter;
-import org.eclipse.ve.internal.java.core.ToolTipAssistFactory;
-import org.eclipse.ve.internal.java.core.ToolTipContentHelper;
 
 /**
  * EditPart for a java.awt.Component. The parent editpart is responsible to set transparent. If transparent, then there won't be any image capture.
@@ -107,20 +81,38 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			border = Boolean.valueOf((String) data).booleanValue();
 	}
 
+	/**
+	 * Get the main figure as a {@link ContentPaneFigure}.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ContentPaneFigure getContentPaneFigure() {
+		return (ContentPaneFigure)getFigure();
+	}
+	
+	public IFigure getContentPane() {
+		return getContentPaneFigure().getContentPane();
+	}
+	
+	protected IErrorNotifier.CompoundErrorNotifier errorNotifier = new IErrorNotifier.CompoundErrorNotifier();
+	
 	protected IFigure createFigure() {
-		ImageFigure fig = new ImageFigure();
+		ContentPaneFigure cfig = new ContentPaneFigure();
+		ImageFigure ifig = new ImageFigure();
 		if (border)
-			fig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
-		fig.setOpaque(!transparent);
+			ifig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
+		ifig.setOpaque(!transparent);
 		if (!transparent) {
 			imageFigureController = new ImageFigureController();			
-			imageFigureController.setImageFigure(fig);
+			imageFigureController.setImageFigure(ifig);
 		}
-		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
-		fig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
-		fig.setToolTip(ToolTipFig);
-		return fig;
+		cfig.setContentPane(ifig);
+		fErrorIndicator = new ErrorFigure();
+		cfig.add(fErrorIndicator);
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
+		cfig.setToolTip(ToolTipFig);
+		return cfig;
 	}
 
 	private class ComponentVisualModelAdapter extends ComponentModelAdapter {
@@ -153,6 +145,12 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentRefreshed()
 			 */
 			public void componentRefreshed() {
+				// Treat this as a resized, but get the new size.
+				Dimension dim = getVisualComponent().getSize();
+				Object[] listens = listeners.getListeners();
+				for (int i = 0; i < listens.length; i++) {
+					((IConstraintHandlerListener) listens[i]).sizeChanged(dim.width, dim.height);
+				}				
 			}
 
 			/*
@@ -240,6 +238,8 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			return constraintHandler;
 		} else if (type == IActionFilter.class)
 			return getComponentActionFilter();
+		else if (type == IErrorHolder.class)
+			return errorNotifier;
 		Object result = super.getAdapter(type);
 		if (result != null) {
 			return result;
@@ -258,10 +258,39 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		return null;
 	}
 
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as the property source. This is used by ContainerGraphicalEditPart, or JTabbedPaneEditPart, or
+	 * any other container type editpart that uses an intermediate object. The intermediate object will
+	 * be responsible for showing through the correct awt.Component properties.
+	 * @param source
+	 * 
+	 * @since 1.1.0
+	 */
 	public void setPropertySource(IPropertySource source) {
 		propertySource = source;
 	}
+	
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as an error notifier. This is used by ContainerGraphicalEditPart, or JTabbedPaneEditPart, or
+	 * any other container type editpart that uses an intermediate object. This component will then
+	 * show the errors from itself (the awt.Component) and from the error notifier set in. Only
+	 * one can be set at a time. A new set will remove the old one from the list.
+	 * @param otherNotifier
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setErrorNotifier(IErrorNotifier otherNotifier) {
+		if (this.otherNotifier != null)
+			errorNotifier.removeErrorNotifier(this.otherNotifier);
+		this.otherNotifier = otherNotifier;
+		if (isActive())
+			errorNotifier.addErrorNotifier(this.otherNotifier);	// Don't do if not active. When activated it will add it.
+	}
 
+	private IErrorNotifier otherNotifier;
+	
 	protected ErrorFigure fErrorIndicator;
 
 	/**
@@ -273,37 +302,36 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		if (!transparent) {
 			imageFigureController.setImageNotifier(getVisualComponent());
 		}
-		// Listen to the IBeanProxyHost so it tells us when errors occur
+		// Listen to the error notifier so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(ComponentGraphicalEditPart.this,  new Runnable() {
+				CDEUtilities.displayExec(ComponentGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() {
 					public void run() {
-						setSeverity(getComponentProxy().getErrorStatus());
+						setSeverity(errorNotifier.getErrorStatus());
 					}
 				}); 
 			}
 		};
-		setSeverity(getComponentProxy().getErrorStatus()); // Set the initial
-		// status
-		getComponentProxy().addErrorListener(fBeanProxyErrorListener);
+		
+		errorNotifier.addErrorListener(fBeanProxyErrorListener);
+		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
+		errorNotifier.addErrorNotifier(otherNotifier);
 	}
 
 	protected void setSeverity(int severity) {
-		fErrorIndicator.sevSeverity(severity);
-		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
+		fErrorIndicator.setSeverity(severity);
+		getFigure().setVisible(!(severity == IErrorHolder.ERROR_SEVERE));
 	}
 
 	public void deactivate() {
 		if (imageFigureController != null)
 			imageFigureController.deactivate();
 		if (fBeanProxyErrorListener != null) {
-			IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-			beanProxyHost.removeErrorListener(fBeanProxyErrorListener);
+			errorNotifier.removeErrorListener(fBeanProxyErrorListener);
 		}
+		errorNotifier.dispose();
 		super.deactivate();
 	}
-
-	private static final String FREEFORM_EDITPOLICY = "free_form editpolicy"; //$NON-NLS-1$
 
 	/**
 	 * createInputPolicies method comment.
@@ -314,16 +342,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		if (sfDirectEditProperty != null) {
 			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
-		if (getParent() instanceof ContentsGraphicalEditPart) {
-			// TODO At the moment a bit of kludge to get the FreeForm Dialogs
-			// working.
-			// It will only add when parent is the FreeForm.
-			EditPart parent = getParent();
-			if (parent.getEditPolicy(FREEFORM_EDITPOLICY) == null) {
-				parent.installEditPolicy(FREEFORM_EDITPOLICY, new CompositionFreeFormComponentsEditPolicy());
-			}
-		}
-		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy());
 	}
 
 	private EStructuralFeature getDirectEditTargetProperty() {
@@ -424,11 +442,11 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	public void emphasizeChildren(List childEditParts) {		
 		if (imageFigureController != null) {
 			// Lighten our figure
-			imageFigureController.addLightenFigure(getFigure());
+			imageFigureController.addLightenFigure(getContentPane());
 			Iterator editParts = childEditParts.iterator();
 			while (editParts.hasNext()) {
 				// Get the figures for each of the edit parts and add them to a set to unlighten				
-				IFigure figure = ((GraphicalEditPart) editParts.next()).getFigure();
+				IFigure figure = ((GraphicalEditPart) editParts.next()).getContentPane();
 				imageFigureController.addUnlightenFigure(figure);
 			}
 		}
@@ -440,23 +458,23 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			Iterator editParts = childEditParts.iterator();
 			while (editParts.hasNext()) {
 				// Get the figures for each of the edit parts and add them to a set to unlighten				
-				IFigure figure = ((GraphicalEditPart) editParts.next()).getFigure();
+				IFigure figure = ((GraphicalEditPart) editParts.next()).getContentPane();
 				imageFigureController.removeUnLightenFigure(figure);
 			}			
 			// If there are no children being lightened then unlighten the overall figure
 			if (!imageFigureController.hasUnlightenedFigures()){
-				imageFigureController.removeLightenFigure(getFigure());
+				imageFigureController.removeLightenFigure(getContentPane());
 			}
 		}
 	}
 	
 	public void unEmphasizeChild(GraphicalEditPart childEditPart){
 		if(imageFigureController != null){
-			IFigure figure = childEditPart.getFigure();
+			IFigure figure = childEditPart.getContentPane();
 			imageFigureController.removeUnLightenFigure(figure);
 			// If there are no children being lightened then unlighten the overall figure
 			if (!imageFigureController.hasUnlightenedFigures()){
-				imageFigureController.removeLightenFigure(getFigure());
+				imageFigureController.removeLightenFigure(getContentPane());
 			}			
 		}
 	}

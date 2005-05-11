@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:39 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -28,6 +28,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
@@ -64,15 +65,18 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 				int s = children.size();
 				for (int i = 0; i < s; i++) {
 					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ComponentTreeEditPart) 
-						setPropertySource((ComponentTreeEditPart) ep, (EObject) ep.getModel());
+					try {
+						setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
+					} catch (ClassCastException e) {
+						// For the rare case it is not a component tree edit part, such as undefined class.
+					}
 				}
 			}
 		}
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfTabs)
-				queueExec(JTabbedPaneTreeEditPart.this);
+				queueExec(JTabbedPaneTreeEditPart.this, "TABS");
 		}
 	};
 
@@ -100,9 +104,14 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 	protected EditPart createChildEditPart(Object model) {
 		EditPart ep = super.createChildEditPart(model);
-		setPropertySource((ComponentTreeEditPart) ep, (EObject) model);
-		// keep the following for the future so we can show the tab title in the beans viewer.
-		((ComponentTreeEditPart) ep).setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator((EObject)model));
+		try {
+			ComponentTreeEditPart componentTreeEditPart = (ComponentTreeEditPart) ep;
+			setupComponent(componentTreeEditPart, (EObject) model);
+			// keep the following for the future so we can show the tab title in the beans viewer.
+			componentTreeEditPart.setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator((EObject) model));
+		} catch (ClassCastException e) {
+			// For rare case not component tree editpart, such as undefined class.
+		}
 		return ep;
 	}
 
@@ -136,13 +145,15 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		sfComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_COMPONENT);
 	}
 	
-	protected void setPropertySource(ComponentTreeEditPart childEP, EObject child) {
+	protected void setupComponent(ComponentTreeEditPart childEP, EObject child) {
 		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sfTabs, sfComponent, child);
-		// This is the property source of the actual child, which is the tab.
-		if (tab != null)
-			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
-		else
-			childEP.setPropertySource(null);
+		if (tab != null) {
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class)); // This is the property source of the actual model which is part of the tab.
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+		} else {
+			childEP.setPropertySource(null);	// No tab.
+			childEP.setErrorNotifier(null);
+		}
 	}
 
 	/**

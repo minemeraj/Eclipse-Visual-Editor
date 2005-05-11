@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-27 06:43:42 $
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -25,7 +25,6 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;

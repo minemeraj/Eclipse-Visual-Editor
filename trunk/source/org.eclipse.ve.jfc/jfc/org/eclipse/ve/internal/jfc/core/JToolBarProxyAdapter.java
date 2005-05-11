@@ -11,22 +11,20 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JToolBarProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-25 16:09:11 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
-import java.util.Iterator;
-import java.util.List;
-
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+import org.eclipse.jem.internal.proxy.core.IProxy;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.jem.internal.proxy.core.*;
 
 /**
  * @author pwalker
@@ -34,8 +32,8 @@ import org.eclipse.jem.internal.proxy.core.*;
  * Proxy adapter for JToolBar. Allows adding Actions to the JToolBar.
  */
 public class JToolBarProxyAdapter extends ComponentProxyAdapter {
+	
 	protected EStructuralFeature sfItems;
-	protected JavaClass classComponent, classAction;
 
 	/**
 	 * Constructor for JToolBarProxyAdapter.
@@ -44,135 +42,78 @@ public class JToolBarProxyAdapter extends ComponentProxyAdapter {
 	public JToolBarProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		classComponent = Utilities.getJavaClass("java.awt.Component", rset); //$NON-NLS-1$
-		classAction = Utilities.getJavaClass("javax.swing.Action", rset); //$NON-NLS-1$
+		sfItems = JavaInstantiation.getReference(rset, JFCConstants.SF_JTOOLBAR_ITEMS);		
 	}
-
-	protected void applied(EStructuralFeature as, Object newValue, int position) {
-
-		if (as == getSFItems()) {
-			// Instantiate just this one. applyItems will only apply those that are instantiated.
-			IJavaInstance item = (IJavaInstance) newValue;
-			IBeanProxyHost itemBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(item);
-			itemBeanProxyHost.instantiateBeanProxy();
-			if (itemBeanProxyHost.getErrorStatus() == ERROR_SEVERE)
-				processError(getSFItems(), ((ExceptionError) itemBeanProxyHost.getErrors().get(0)).error, item);
-			else {						
-				removeItems();
-				applyItems();
-				revalidateBeanProxy();
-			}
-		} else {
-			super.applied(as, newValue, position);
-		}
-	}
-
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-
-		if (sf == getSFItems()) {
-			removeComponent((EObject) oldValue);
-		} else {
-			super.canceled(sf, oldValue, position);
-		}
-
-	}
-
-	/** 
-	 * Iterate over the items in the JToolBar and add them.
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
+	 *      org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
-	protected void applyItems() {
-
-		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
-			return;
-
-		EStructuralFeature sfitems = getSFItems();
-		List items = (List) ((EObject) getTarget()).eGet(sfitems);
-		Iterator iter = items.iterator();
-		while (iter.hasNext()) {
-			IJavaObjectInstance item = (IJavaObjectInstance) iter.next();
-			if (!isValidFeature(sfitems, item))
-				continue;	// It wasn't valid for some reason.
-			// There is a hole here in that we may of changed something and is not valid to apply, but it is difficult if we need
-			// to not test for validity. The appliedList(...boolean testValidity) usually handles this, but that only applies
-			// to the one setting. So for now once it goes bad it stays bad until reload from scratch.
-			IBeanProxyHost itemBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(item);			
-			if (itemBeanProxyHost.isBeanProxyInstantiated() && itemBeanProxyHost.getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
-				try {
-					IBeanProxy itemBeanProxy = itemBeanProxyHost.getBeanProxy();					
-					// Invoke a method to add the item (a component or Action) to the JToolBar.
-					if (classComponent.isInstance(item)) {
-						BeanAwtUtilities.invoke_add_Component(getBeanProxy(), itemBeanProxy);
-						// Now that we've added it, set the parent component.
-						IComponentProxyHost componentAdapter = (IComponentProxyHost) itemBeanProxyHost;
-						componentAdapter.setParentComponentProxyHost((IComponentProxyHost) this);
-					} else if (classAction.isInstance(item)) {
-						IMethodProxy addActionMethodProxy = getAddActionMethodProxy();
-						if (addActionMethodProxy != null) {
-							addActionMethodProxy.invoke(getBeanProxy(), itemBeanProxy);
-						}
-					}
-				} catch (ThrowableProxy e) {
-					processError(getSFItems(), e, item);
-				}
-			}
+	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
+		if (feature == sfItems) {
+			if (isTouch)
+				return; // Don't want to apply if all we did was touch.
 		}
+		super.applied(feature, value, index, isTouch, expression, testValidity);
 	}
-
-	protected IMethodProxy getAddActionMethodProxy() {
-		return getBeanProxy().getTypeProxy().getMethodProxy("add", "javax.swing.Action"); //$NON-NLS-1$ //$NON-NLS-2$
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 *      org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
+		if (feature == sfItems)
+			addComponent((EObject) value, index, expression);
+		else
+			super.applySetting(feature, value, index, expression);
 	}
 
 	/*
-	 * Return the "items" structural feature for JToolBar
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected EStructuralFeature getSFItems() {
-		if (sfItems == null) {
-			JavaClass modelType = (JavaClass) ((EObject) getTarget()).eClass();
-			sfItems = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
+	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
+		if (feature == sfItems) {
+			removeComponent((EObject) oldValue, expression);
+		} else
+			super.cancelSetting(feature, oldValue, index, expression);
+	}
+
+	private void addComponent(EObject aComponent, int position, IExpression expression) {
+		IJavaInstance component = (IJavaInstance) aComponent;
+		IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
+		IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, sfItems, aComponent);
+		if (componentProxy == null)
+			return; // It failed creation, don't go any further.
+
+		IProxy beforeBeanProxy; // The beanproxy to go before, if any.
+		if (position != Notification.NO_INDEX) {
+			beforeBeanProxy = getProxyAt(position + 1, sfItems); 
+			// Need to do +1 because we (componentBeanProxy) are already at that position in the EMF list.
+			// So we want to go before next guy.
+		} else
+			beforeBeanProxy = null;
+
+		BeanAwtUtilities.invoke_JToolBar_addComponent(getProxy(), componentProxy, beforeBeanProxy, expression);
+	}
+
+	/*
+	 * Remove the component. @param aComponent @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	private void removeComponent(EObject aComponent, IExpression expression) {
+		IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) aComponent);
+		// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
+		if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
+			BeanAwtUtilities.invoke_JToolBar_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);
 		}
-		return sfItems;
-	}
-
-	protected IMethodProxy removeAllMethodProxy() {
-		return getBeanProxy().getTypeProxy().getMethodProxy("removeAll"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	protected void removeComponent(EObject aComponent) {
-		clearError(getSFItems(), aComponent);
-
-		// The component to actually remove is within the ConstraintComponent too.
-		IBeanProxyHost aComponentBeanProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) aComponent);
-
-		// It is possible the component or ourselves didn't instantiate.  We then can't cancel it.
-		if (aComponentBeanProxyHost.getErrorStatus() != IBeanProxyHost.ERROR_SEVERE
-			&& getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
-			if (classComponent.isInstance(aComponent))
-				BeanAwtUtilities.invoke_remove_Component(getBeanProxy(), aComponentBeanProxyHost.getBeanProxy());
-			else if (classAction.isInstance(aComponent))
-				BeanAwtUtilities.invoke_jtoolbar_remove_item_action(
-					getBeanProxy(),
-					aComponentBeanProxyHost.getBeanProxy());
-
-			aComponentBeanProxyHost.releaseBeanProxy();
-			// This is required because AWT will not invalidate and relayout the container
-			revalidateBeanProxy();
-		}
-	}
-	/* 
-	 * Remove all items
-	 */
-	protected void removeItems() {
-		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
-			return;
-
-		removeAllMethodProxy().invokeCatchThrowableExceptions(getBeanProxy());
-	}
-	
-	/**
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
-	 */
-	public void releaseBeanProxy() {
-		super.releaseBeanProxy();
 	}
 
 }

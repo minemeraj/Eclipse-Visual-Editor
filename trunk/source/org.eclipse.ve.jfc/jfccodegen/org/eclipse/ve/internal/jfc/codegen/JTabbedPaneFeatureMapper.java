@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneFeatureMapper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -43,14 +43,14 @@ public class JTabbedPaneFeatureMapper extends AbstractFeatureMapper {
 	public String getMethodName(Statement expr) {
 		String name = super.getMethodName(expr) ;
 		if (name == null) 
-		   name = JTabbedPaneDecoder.JTABBED_PANE_METHOD ;
+		   name = JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB ;
 		return name ;
 	}
 
 	public String getMethodName() {
 		String name = super.getMethodName() ;
 		if (name == null) 
-		   name = JTabbedPaneDecoder.JTABBED_PANE_METHOD;
+		   name = JTabbedPaneDecoder.JTABBED_PANE_METHOD_ADDTAB;
 		return name ;
 	}
 	public String getIndexMethodName() {

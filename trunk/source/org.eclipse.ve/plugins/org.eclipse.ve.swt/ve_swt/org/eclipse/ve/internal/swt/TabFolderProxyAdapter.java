@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-07 21:28:39 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -50,7 +50,7 @@ public class TabFolderProxyAdapter extends ItemParentProxyAdapter {
 	 * the edit parts to bring a selected tab to the front so it can be viewed and edited.
 	 */
 	public void setSelection(int index) {
-		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
+		if (!isBeanProxyInstantiated())
 			return;
 		IIntegerBeanProxy intProxy = getBeanProxy().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(index);
 		BeanSWTUtilities.invoke_tabfolder_setSelection(getBeanProxy(), intProxy);

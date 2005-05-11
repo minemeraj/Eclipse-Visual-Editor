@@ -11,7 +11,6 @@
 package org.eclipse.jem.internal.proxy.remote.swt;
 
 import org.eclipse.jem.internal.proxy.remote.*;
-import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 

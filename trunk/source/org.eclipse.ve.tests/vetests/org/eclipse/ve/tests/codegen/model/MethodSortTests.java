@@ -90,22 +90,19 @@ public class MethodSortTests extends TestCase {
 	
 	    method = new CodeMethodRef(tr, "dummyMethod") ;
 	   // Add dummy expressions... high to low priorities
-	   int pri= 10, index=3;
+	   int pri= 10;
 	   BeanPart bp ;
 	   
 	   for (int i=0; i< 12; i++) {
 		   if (i<=4) {
-			   index=0;
 			   pri = 4-i;
 			   bp = bp1;
 		   }
 		   else if (i<=8) {
-			   index=0;
 			   pri = 8-i;
 			   bp = bp2;
 		   }
 		   else {
-			   index=1;
 			   if (i<=10) {
 				   bp = bp1;
 				   pri = 10-i;

@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,128 +10,121 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JLayeredPaneProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
  */
-import java.util.*;
+package org.eclipse.ve.internal.jfc.core;
 
-import org.eclipse.emf.common.notify.Notification;
+import java.util.*;
+import java.util.logging.Level;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.jem.internal.proxy.core.IArrayBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
+import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.java.core.*;
 
 /**
- * PRoxy adapter for JLayeredPane
- * @author richkulp
+ * Proxy adapter for JLayeredPanes.
+ * 
+ * @since 1.1.0
  */
 public class JLayeredPaneProxyAdapter extends ContainerProxyAdapter {
-		
 
-	protected boolean addingAll = false;
 	/**
 	 * Constructor for JLayeredPaneProxyAdapter.
+	 * 
 	 * @param domain
 	 */
 	public JLayeredPaneProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
-	
-	
-	
+
+	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
+		if (feature == sfContainerComponents && !inInstantiation()) {
+			// We are not in instantiation, and we are adding a component. For this we must
+			// NOT apply until the end of transaction, and then re-add all components back in the correct
+			// order. JLayeredPane's insertion index DOES NOT mean z-order. This is because the
+			// index is the index within the layer the component is on. It is not the overall index
+			// of the component in the parent.
+			layoutChanged(expression);
+		} else
+			super.applySetting(feature, value, index, expression);
+	}
+
 	/**
-	 * Return the current order of the children, as the mof objects.
+	 * Return the children (awt.components, not constraintComponents) in the order found on the vm. This is necessary because the order they show on
+	 * the vm is different than the order they are added. Because of this and to get painting and clipping working correctly on the outlines in the
+	 * graphical view, we need them in the live order.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
 	public List getCurrentOrder() {
 		List children = Collections.EMPTY_LIST;
-		if (getErrorStatus() != ERROR_SEVERE) {
-			instantiateBeanProxy();	// Make sure instantiated, else this will fail.
-			IArrayBeanProxy childrenArray = BeanAwtUtilities.invoke_getComponents(getBeanProxy());
-			int clen = childrenArray.getLength();
-			// The order of paint is reverse of GEF, awt paints from end to first, while gef paints
-			// first to end. So we will reverse it here.
-			children = new ArrayList(clen);
-			for (int i=clen-1; 0<=i; i--) {
-				try {
-					children.add(childrenArray.get(i));
-				} catch (ThrowableProxy e) {
-				}
+		if (isBeanProxyInstantiated()) {
+			processPendingLayoutChange();
+			IArrayBeanProxy childrenArrayProxy = BeanAwtUtilities.invoke_getComponents(getBeanProxy());
+			IBeanProxy[] childrenArray;
+			try {
+				childrenArray = childrenArrayProxy.getSnapshot();
+			} catch (ThrowableProxy e) {
+				JavaVEPlugin.log(e, Level.WARNING); // This shouldn't occur.
+				childrenArray = new IBeanProxy[0];
 			}
-			childrenArray.getProxyFactoryRegistry().getBeanProxyFactory().releaseProxy(childrenArray);
-		}
-		
-		List constraintComponentsEMF = (List) getEObject().eGet(sfContainerComponents);
-		EObject[] childrenEMF = new EObject[constraintComponentsEMF.size()];
-		int notfound = childrenEMF.length;
-		for (Iterator iter = constraintComponentsEMF.iterator(); iter.hasNext();) {
-			EObject element = (EObject) iter.next();
-			EObject child = (EObject) element.eGet(sfConstraintComponent);
-			if (child != null) {
-				IBeanProxyHost host = (IBeanProxyHost) EcoreUtil.getExistingAdapter(child,IBeanProxyHost.BEAN_PROXY_TYPE);
-				if (host != null) {
-					int childIndex = children.indexOf(host.getBeanProxy());
-					if (childIndex != -1) {
-						childrenEMF[childIndex] = child;
-						continue;
+			childrenArrayProxy.getProxyFactoryRegistry().getBeanProxyFactory().releaseProxy(childrenArrayProxy);
+
+			// The order of paint is reverse of GEF, awt paints from end to first, while gef paints
+			// first to end. So when compute the order, we will compute it in reverse from this list.
+
+			// The sort we are using O(n*2) but the number of entries will probably be small.
+
+			// There may be more components returned from the bean proxy then there are components in the
+			// EMF model. That is because we could be subclassing and there may be others we didn't add.
+			List constraintComponentsEMF = (List) getEObject().eGet(sfContainerComponents);
+
+			// To make the comparisons quicker, we will first put the entries into the array
+			// as IBeanProxyHost's. And as they are found, we will convert them to the EMF object to be returned as the children.
+			Object[] childrenEMF = new Object[constraintComponentsEMF.size()];
+			for (int i = 0; i < constraintComponentsEMF.size(); ++i) {
+				IJavaInstance child = (IJavaInstance) ((EObject) constraintComponentsEMF.get(i)).eGet(sfConstraintComponent);
+				if (child != null)
+					childrenEMF[i] = (IBeanProxyHost) getSettingBeanProxyHost(child);
+			}
+
+			// The sort will be to go in reverse order through the array from the live bean, find the cooresponding bean in
+			// the childrenEMF array, and swap it to the current merge point in the childrenEMF array, turning it in the EMF
+			// object as we do so. This way the EMF objects will be in the reverse order from the bean proxy.
+			int mergePoint = 0;
+			for (int c = childrenArray.length - 1; c >= 0; c--) {
+				IBeanProxy child = childrenArray[c];
+				// Find the child, at or after the merge point that matches this guy.
+				for (int ce = mergePoint; ce < childrenEMF.length; ce++) {
+					Object childEMF = childrenEMF[ce];
+					if (childEMF != null && child == ((IBeanProxyHost) childrenEMF[ce]).getBeanProxy()) {
+						// We found the child. Swap it to the merge point, converting it back to the EMF object, and increment mergepoint.
+						Object swap = childrenEMF[mergePoint];
+						childrenEMF[mergePoint] = ((IBeanProxyHost) childrenEMF[ce]).getTarget();
+						if (ce != mergePoint)
+							childrenEMF[ce] = swap;
+						mergePoint++;
+						break; // Go on to next child from beanproxy.
 					}
 				}
-				childrenEMF[--notfound] = child;	// Not found, so add at the end, in reverse order, just so we don't lose it.
 			}
-		}
-		
-		return Arrays.asList(childrenEMF);
-	}
 
-	/**
-	 * @see org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter#addComponentWithConstraint(EObject, IJavaInstance, int)
-	 */
-	protected void addComponentWithConstraint(EObject aConstraintComponent, IJavaInstance constraintAttributeValue, int position, boolean constraintSet)
-		throws ReinstantiationNeeded {
-		if (addingAll) 
-			super.addComponentWithConstraint(aConstraintComponent, constraintAttributeValue, position, constraintSet);	// Go ahead do it, we are in rebuild.		
-		else
-			readdAll(false);
-	}
-	
-	/*
-	 * Need to readd all of them. Any add requires do from top.
-	 */
-	protected void readdAll(boolean testValidity) {
-		addingAll = true;
-		try {
-			BeanAwtUtilities.invoke_removeAll_Components(getBeanProxy());
-			super.appliedList(sfContainerComponents, (List) getEObject().eGet(sfContainerComponents), Notification.NO_INDEX, testValidity);
-		} finally {
-			addingAll = false;
+			// Finally, if mergePoint is not the same as the size of the childrenEMF array, we have some EMF components not found on bean proxy.
+			// Leave them at the end but convert back to EMF objects.
+			while (mergePoint < childrenEMF.length) {
+				Object childEMF = childrenEMF[mergePoint];
+				if (childEMF != null)
+					childrenEMF[mergePoint] = ((IBeanProxyHost) childEMF).getTarget();
+				mergePoint++;
+			}
+			children = Arrays.asList(childrenEMF);
 		}
+		return children;
 	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applyAllSettings()
-	 */
-	protected void applyAllSettings() {
-		// If we are applying all settings, then we are doing an add all.
-		addingAll = true;
-		try {
-			super.applyAllSettings();
-		} finally {
-			addingAll = false;
-		}
-	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#appliedList(EStructuralFeature, List, int, boolean)
-	 */
-	protected void appliedList(EStructuralFeature sf, List newValues, int position, boolean testValidity) {
-		if (sf != sfContainerComponents || addingAll)
-			super.appliedList(sf, newValues, position, testValidity);
-		else if (!addingAll) {
-			readdAll(testValidity);	// Not adding all, so we need to re add all, but pass in the validity test.
-		}
-	}
-
 }

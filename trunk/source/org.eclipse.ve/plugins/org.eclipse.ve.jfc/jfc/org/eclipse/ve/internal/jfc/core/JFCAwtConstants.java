@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCAwtConstants.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 
@@ -37,7 +37,7 @@ import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
  */
 public final class JFCAwtConstants {
 		
-	public static final String REGISTRY_KEY = "JFC.PROXY.AWT.CONSTANTS:"; //$NON-NLS-1$
+	public static final Object REGISTRY_KEY = new Object();
 	
 		
 	private ProxyFactoryRegistry fRegistry;

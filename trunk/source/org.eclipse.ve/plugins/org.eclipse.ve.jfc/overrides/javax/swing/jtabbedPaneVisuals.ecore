@@ -19,22 +19,21 @@
         <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" hidden="true"/>
         <eAnnotations xsi:type="jcm:BeanFeatureDecorator" linkType="CHILD"/>         
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabTitle" name="tabTitle"
-        eType="java:JavaClass java:/java.lang#String">
-        <eAnnotations xsi:type="decorators:BasePropertyDecorator" nullInvalid="true"/>  
-        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabTitle" unsettable="true" name="tabTitle"
+        eType="java:JavaClass java:/java.lang#String"> 
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator">
           <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabTitle" bundle="jtabbedPaneBundle"/>
         </eAnnotations>
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabTooltipText" name="tabTooltipText"
+      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabTooltipText" unsettable="true" name="tabTooltipText"
         eType="java:JavaClass java:/java.lang#String">
-        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="true">
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator">
           <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabTooltipText" bundle="jtabbedPaneBundle"/>
         </eAnnotations>
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabIcon" name="tabIcon"
+      <eStructuralFeatures xsi:type="ecore:EReference" xmi:id="JTabComponent/tabIcon" unsettable="true" name="tabIcon"
         eType="java:JavaClass java:/javax.swing#Icon">
-        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator" nullInvalid="false">
+        <eAnnotations xsi:type="decorators:PropertyDescriptorDecorator">
           <displayNameString xsi:type="utility:TranslatableString" key="JTabComponent.tabIcon" bundle="jtabbedPaneBundle"/>
         </eAnnotations> 
       </eStructuralFeatures>
