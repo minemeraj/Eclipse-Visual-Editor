@@ -63,6 +63,12 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 	// Record a map entry of the workbenchPart against the Composite argument and the CTabFolder that represents its trim
 	viewPartToParentComposite.put(aWorkbenchPart,new Composite[] {viewPartArgument, folder});
 	aWorkbenchPart.createPartControl(viewPartArgument);
+	// Need to set the layout data to null because some workbench parts set the children's
+	// layout data to other than FillLayoutData.
+	Control [] children = viewPartArgument.getChildren();
+	for (int i = 0; i < children.length; i++) {
+		children[i].setLayoutData(null);
+	}
 	getWorkbenchShell().layout(true);
 	return new Composite[] {folder,viewPartArgument};
 		

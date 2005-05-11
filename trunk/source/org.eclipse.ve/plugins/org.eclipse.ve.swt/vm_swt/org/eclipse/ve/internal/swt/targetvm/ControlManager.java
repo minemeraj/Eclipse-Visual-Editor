@@ -52,7 +52,6 @@ public abstract class ControlManager implements ICallback , ControlListener {
 				try {
 					fControl.getShell().layout(new Control[] { fControl});
 				} catch (ClassCastException e) {
-					e.printStackTrace();
 				}
 				queue[0] = true;	
 			}
