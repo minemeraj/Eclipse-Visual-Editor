@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -168,7 +168,7 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 
 		// Add the child to the component.
 		CommandBuilder cb = new CommandBuilder();
-		cb.applyAttributeSetting((EObject) jtabComponent, sfComponent, child);	
+		cb.applyAttributeSetting(jtabComponent, sfComponent, child);	
 		cb.append(super.primCreateCommand(jtabComponent, positionBeforeChild != null ? InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) containmentSF, sfComponent, (EObject) positionBeforeChild) : null, containmentSF));
 		return cb.getCommand();
 	}

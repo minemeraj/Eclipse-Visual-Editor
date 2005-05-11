@@ -10,39 +10,24 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:38 $ 
  */
 package org.eclipse.ve.internal.jface;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
+
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
 
 public class ViewPartTreeEditPart extends JavaBeanTreeEditPart {
 	
-	private EReference sf_delegate_control;	
-
 	public ViewPartTreeEditPart(Object aModel) {
 		super(aModel);
-	}
-	
-	public void setModel(Object aModel) {
-		super.setModel(aModel);
-		ResourceSet rset = ((IJavaObjectInstance) aModel).eResource().getResourceSet();
-		sf_delegate_control = JavaInstantiation.getReference(
-				rset, 
-				URI.createURI("java:/org.eclipse.ui.part#WorkbenchPach/delegate_control"));		 //$NON-NLS-1$						
 	}
 	
 	protected List getChildJavaBeans() {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.26 $  $Date: 2005-04-12 14:06:33 $ 
+ *  $Revision: 1.27 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import org.eclipse.emf.common.util.BasicEMap;
@@ -171,7 +171,7 @@ public class BeanUtilities {
 		sentry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 		sentry.setValue(name);
 						
-		return AnnotationPolicy.applyAnnotationSetting(newJavaBean, (BasicEMap.Entry)sentry, domain);
+		return AnnotationPolicy.applyAnnotationSetting(newJavaBean, sentry, domain);
 	}
 	
 	/** 

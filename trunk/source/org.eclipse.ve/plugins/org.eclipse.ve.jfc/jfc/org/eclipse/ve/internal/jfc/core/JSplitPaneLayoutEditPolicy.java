@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import org.eclipse.gef.*;
@@ -79,9 +79,9 @@ protected Command getCreateCommand(CreateRequest request) {
 	Command createContributionCmd = null;
 	if (RequestConstants.REQ_CREATE.equals(request.getType())) {
 		if (containerPolicy.isRightComponentOccupiedAndOnlyComponent())
-			createContributionCmd = containerPolicy.getCreateCommand(((CreateRequest) request).getNewObject(), getHost().getChildren().get(0));
+			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), getHost().getChildren().get(0));
 		else 
-			createContributionCmd = containerPolicy.getCreateCommand(((CreateRequest) request).getNewObject(), null);
+			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), null);
 	}
 	if (createContributionCmd == null)
 		return UnexecutableCommand.INSTANCE;	// It can't be created.

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyAnnotationCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 
@@ -85,7 +85,7 @@ public class ApplyAnnotationCommand extends CommandWrapper {
 		
 		ApplyKeyedValueCommand c = new ApplyKeyedValueCommand();
 		c.setTarget(annotation);
-		c.setValue((BasicEMap.Entry) newSetting);
+		c.setValue(newSetting);
 		cb.append(c);
 		
 		if (createdAnnotation) {

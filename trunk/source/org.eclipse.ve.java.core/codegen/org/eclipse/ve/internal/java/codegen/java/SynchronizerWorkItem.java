@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SynchronizerWorkItem.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:31 $ 
  */
 
 import java.util.*;
@@ -909,7 +909,7 @@ public class SynchronizerWorkItem {
 		private String[] getIRangeSources(ISourceRange[] ranges){
 			String[] sources = new String[ranges.length];
 			for(int i=0;i<ranges.length;i++){
-				ISourceRange range = (ISourceRange) ranges[i];
+				ISourceRange range = ranges[i];
 				sources[i] = getIRangeSource(range);
 			}
 			return sources;

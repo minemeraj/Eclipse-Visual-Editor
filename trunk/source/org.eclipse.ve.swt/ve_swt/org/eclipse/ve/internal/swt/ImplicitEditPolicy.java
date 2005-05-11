@@ -13,7 +13,6 @@ import org.eclipse.ve.internal.java.rules.IChildRule;
 public class ImplicitEditPolicy extends ContainerEditPolicy {
 	
 	private EditDomain editDomain;
-	private Command command;
 	private IJavaInstance container;
 
 	public ImplicitEditPolicy(EditDomain anEditDomain, IJavaInstance aContainer){

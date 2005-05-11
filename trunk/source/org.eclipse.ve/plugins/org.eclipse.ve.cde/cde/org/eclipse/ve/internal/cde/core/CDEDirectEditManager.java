@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDirectEditManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-21 22:48:08 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:15 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -52,7 +52,7 @@ public abstract class CDEDirectEditManager extends DirectEditManager {
 			initialText = getPropertyValue(sfProperty);
 		getCellEditor().setValue(initialText);
 		Text text = (Text) getCellEditor().getControl();
-		IFigure figure = ((GraphicalEditPart) getEditPart()).getFigure();
+		IFigure figure = getEditPart().getFigure();
 		scaledFont = figure.getFont();
 		FontData data = scaledFont.getFontData()[0];
 		Dimension fontSize = new Dimension(0, data.getHeight());

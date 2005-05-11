@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutSwitcher.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class NullLayoutSwitcher extends LayoutSwitcher {
 			IJavaObjectInstance comp = (IJavaObjectInstance) comps.next();
 			IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(comp);
 			
-			IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) BeanAwtUtilities.invoke_getBounds(compProxy);
+			IRectangleBeanProxy rectProxy = BeanAwtUtilities.invoke_getBounds(compProxy);
 			Rectangle newRect = new Rectangle(rectProxy.getX(), rectProxy.getY(), rectProxy.getWidth(), rectProxy.getHeight());
 			constraints.add(new NullLayoutPolicyHelper.NullConstraint(newRect, true, true));
 		}

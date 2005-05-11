@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.34 $  $Date: 2005-04-21 13:35:05 $ 
+ *  $Revision: 1.35 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -585,7 +585,7 @@ public  void updateExpressionOrder() throws CodeGenException {
 protected static Enumeration determineBeanOrder(Enumeration beans){
 	SortedSet beanSorter = new TreeSet(getDefaultBeanOrderComparator());
 	while(beans.hasMoreElements()){
-		boolean added = beanSorter.add((BeanPart) beans.nextElement());
+		boolean added = beanSorter.add(beans.nextElement());
 		if(!added)
 			JavaVEPlugin.log("No addition to the treeset", Level.FINE); //$NON-NLS-1$
 	};

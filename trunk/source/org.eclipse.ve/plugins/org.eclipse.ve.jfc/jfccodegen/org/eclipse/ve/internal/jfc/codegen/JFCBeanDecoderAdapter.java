@@ -11,12 +11,10 @@ package org.eclipse.ve.internal.jfc.codegen;
  *******************************************************************************/
 /*
  *  $RCSfile: JFCBeanDecoderAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.java.BeanDecoderAdapter;
@@ -44,7 +42,7 @@ protected IJavaObjectInstance getComponentFromSpecialRoot(EObject root) {
 	if (comp==null)
 		if (CodeGenUtil.isTabPaneComponentValue(root))
 	      return (IJavaObjectInstance) root.eGet(
-	                   (EStructuralFeature) root.eClass().
+	                   root.eClass().
 	                   getEStructuralFeature(JTabbedPaneAddDecoderHelper.COMPONENT_ATTR_NAME)) ; 
     return null ;      
 }

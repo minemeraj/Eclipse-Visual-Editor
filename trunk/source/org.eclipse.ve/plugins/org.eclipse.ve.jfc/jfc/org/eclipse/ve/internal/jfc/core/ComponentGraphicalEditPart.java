@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-05-11 20:08:30 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-05-11 22:41:21 $
  */
 import java.util.*;
 
@@ -410,7 +410,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	 * 
 	 */
 	protected IVisualComponent getVisualComponent() {
-		return (IVisualComponent) getComponentProxy(); // For AWT, the
+		return getComponentProxy(); // For AWT, the
 		// component proxy is
 		// the visual component.
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.11 $ $Date: 2005-05-11 19:01:30 $
+ * $Revision: 1.12 $ $Date: 2005-05-11 22:41:37 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -153,7 +153,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	 */
 	public Command getCommand(Request request) {
 		if (REQ_GRIDLAYOUT_SPAN.equals(request.getType()))
-			return getSpanChildrenCommand((ChangeBoundsRequest)request);
+			return getSpanChildrenCommand(request);
 
 		return super.getCommand(request);
 	}

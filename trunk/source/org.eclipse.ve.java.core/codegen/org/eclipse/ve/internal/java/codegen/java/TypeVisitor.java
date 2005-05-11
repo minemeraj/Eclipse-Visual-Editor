@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -183,15 +183,10 @@ public void visit()  {
 			if (progressMonitor.isCanceled())
 				return ;
 			try {
-				if(	(methods[i]!=null) &&
-					(methods[i] instanceof MethodDeclaration) &&
-					(!((MethodDeclaration)methods[i]).isConstructor())){
+				if(!methods[i].isConstructor()){
 					String thisMethodHandle = ""; //$NON-NLS-1$
-					if (methods[i] instanceof MethodDeclaration) {
-						thisMethodHandle = methodHandles[methodHandleUseCount];
-						methodHandleUseCount++;						
-					}
-// TODO Need to move the updateMethodOffset to this visitor, so that the logic is encapsulated
+					thisMethodHandle = methodHandles[methodHandleUseCount];
+					methodHandleUseCount++;
    					
 					// Please see CodeSnippetModelBuilder.updateMethodOffsets() to see how
 					// the declaration Source starts, and the declaration source ends are 
@@ -217,9 +212,8 @@ public void visit()  {
 				return ;
 			try {
 				// Visit each method with the correct visitor
-				if ( cuMethods[i] != null && 
-					methods[i] instanceof MethodDeclaration ) {
-					visitAMethod(methods[i],fModel,fReTryLater,fType,((JavaElementInfo)cuMethods[i]).getHandle(),
+				if ( cuMethods[i] != null) {
+					visitAMethod(methods[i],fModel,fReTryLater,fType,cuMethods[i].getHandle(),
 								cuMethods[i].getSourceRange(),
 								cuMethods[i].getContent()) ;
 				}

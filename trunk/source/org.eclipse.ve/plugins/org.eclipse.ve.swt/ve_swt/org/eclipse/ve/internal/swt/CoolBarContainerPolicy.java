@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:37 $ 
  */
 
 import java.util.*;
@@ -114,7 +114,7 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 				JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 				coolItem.setAllocation(alloc);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting((EObject) coolItem, sf_coolItemControl, child);
+				cb.applyAttributeSetting(coolItem, sf_coolItemControl, child);
 				cb.applyAttributeSetting((EObject) getContainer(), sf_coolbarItems, coolItem, positionBeforeItem);
 				command = cb.getCommand();
 				command.execute();
@@ -172,7 +172,7 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 				EObject coolItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_coolbarItems, sf_coolItemControl,
 						(EObject) child);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.cancelAttributeSetting((EObject) coolItem, sf_coolItemControl);
+				cb.cancelAttributeSetting(coolItem, sf_coolItemControl);
 				cb.cancelAttributeSetting((EObject) getContainer(), sf_coolbarItems, coolItem);
 				command = cb.getCommand();
 				command.execute();

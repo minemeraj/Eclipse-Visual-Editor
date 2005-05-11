@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.37 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.38 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -232,7 +232,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
 		}
 		// We have something to set into, so we are live
 		// Get the decorator that contains the introspected BeanInfo properties
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) sf);
+		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( sf);
 		// Only apply if this if it is not the this part, or if it is the
 		// this part, then only if it is a non-local attribute.
 		if (!isThisPart() || !isAttributeLocal(sf)) {			
@@ -274,7 +274,7 @@ protected void applied(EStructuralFeature sf , Object newValue , int position){
  * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#applyBeanPropertyProxyValue(EStructuralFeature, IBeanProxy)
  */
 public void applyBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature, IBeanProxy aproxy) {
-	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) aBeanPropertyFeature);
+	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( aBeanPropertyFeature);
 	// Only apply if this if it is not the this part, or if it is the
 	// this part, then only if it is a non-local attribute.
 	if (!isThisPart() || !isAttributeLocal(aBeanPropertyFeature)) {
@@ -546,7 +546,7 @@ protected void canceledList(EStructuralFeature sf, List oldValues, int position)
 				return;
 			}
 			// We have something to remove from, so we are live
-			PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement) sf);
+			PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(sf);
 			// Only cancel if it is not the this part, or if it is the
 			// this part, then only if it is a non-local attribute.
 			if ((!isThisPart() || !isAttributeLocal(sf)) && (propertyDecorator != null && propertyDecorator.isWriteable())) {
@@ -644,7 +644,7 @@ public IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttr
 }
 
 protected IBeanProxy getInternalBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute){
-	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)aBeanPropertyAttribute);
+	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(aBeanPropertyAttribute);
 	// If we have a properyt decorator then it has a get method so just call it
 	if ( propertyDecorator != null && propertyDecorator.isReadable()) {
 		return getBeanProxyValue(aBeanPropertyAttribute, propertyDecorator);

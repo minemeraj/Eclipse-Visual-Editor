@@ -293,7 +293,7 @@ public class BeanSWTUtilities {
 		// Check the child's init method and the target init method. It's valid if the same
 		// since the adding is done in the same init method.
 		EObject childRef = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
-		EObject targetRef = InverseMaintenanceAdapter.getFirstReferencedBy((EObject) targetContainer, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+		EObject targetRef = InverseMaintenanceAdapter.getFirstReferencedBy(targetContainer, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
 		// If the child's init method and the target init method is the same, this is valid.
 		if (childRef instanceof JCMMethod && targetRef instanceof JCMMethod && childRef == targetRef)
 			return true;

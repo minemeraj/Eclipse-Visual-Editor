@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: ThisReferenceRule.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-16 00:36:56 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.Iterator;
@@ -111,26 +111,24 @@ public class ThisReferenceRule implements IThisReferenceRule {
 	public boolean useInheritance(String superClass, ResourceSet rs) {
 
 		JavaHelpers clazz = JavaRefFactory.eINSTANCE.reflectType(superClass, rs);
-		if (clazz instanceof EClass) {
-			EList feature = ((JavaClass) clazz).getAllProperties();
-			for (Iterator iterator = feature.iterator(); iterator.hasNext();) {
-				EStructuralFeature f = (EStructuralFeature) iterator.next();
-				if (f.isTransient())
-					continue;
-				if (ignoreAttribute(f.getName()))
-					continue;
-				// Check to see if the attribute is a design time attribute
-				PropertyDecorator pd = Utilities.getPropertyDecorator((EModelElement) f);
-				if (pd != null) {
-					if (pd.isSetDesignTime()) {
-						if (!pd.isDesignTime())
-							continue;
-					}
-					if (pd.getField() != null)
+		EList feature = ((JavaClass) clazz).getAllProperties();
+		for (Iterator iterator = feature.iterator(); iterator.hasNext();) {
+			EStructuralFeature f = (EStructuralFeature) iterator.next();
+			if (f.isTransient())
+				continue;
+			if (ignoreAttribute(f.getName()))
+				continue;
+			// Check to see if the attribute is a design time attribute
+			PropertyDecorator pd = Utilities.getPropertyDecorator(f);
+			if (pd != null) {
+				if (pd.isSetDesignTime()) {
+					if (!pd.isDesignTime())
 						continue;
 				}
-				return true;
+				if (pd.getField() != null)
+					continue;
 			}
+			return true;
 		}
 		return false;
 	}

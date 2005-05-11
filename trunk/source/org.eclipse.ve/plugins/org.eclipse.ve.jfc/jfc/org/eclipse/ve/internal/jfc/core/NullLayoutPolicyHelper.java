@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -79,7 +79,7 @@ public Command getCreateChildCommand(Object childComponent, Object constraint, O
 	EClass constraintComponentClass = (EClass) ((EObject) policy.getContainer()).eResource().getResourceSet().getEObject(JFCConstants.CLASS_CONTAINER_CONSTRAINTCOMPONENT, true);
 	EFactory visualFact = JFCConstants.getFactory(constraintComponentClass);
 	
-	EObject constraintComponent = (EObject) visualFact.create(constraintComponentClass);
+	EObject constraintComponent = visualFact.create(constraintComponentClass);
 	constraintComponent.eSet(JavaInstantiation.getSFeature((IJavaObjectInstance) policy.getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT),  null);	// Put the null into the constraint component so that nothing is added in the add
 	Command createContributionCmd = policy.getCreateCommand(constraintComponent, childComponent, position);
 	if (createContributionCmd == null || !createContributionCmd.canExecute())
@@ -97,7 +97,7 @@ public Command getAddChildrenCommand(List childrenComponents, List constraints, 
 	EFactory visualFact = JFCConstants.getFactory(constraintComponentClass);
 	ArrayList componentConstraints = new ArrayList(childrenComponents.size());
 	for (int i=0; i<childrenComponents.size(); i++) {
-		EObject constraintComponent = (EObject) visualFact.create(constraintComponentClass);
+		EObject constraintComponent = visualFact.create(constraintComponentClass);
 		constraintComponent.eSet(JavaInstantiation.getSFeature((IJavaObjectInstance) policy.getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT),  null);	// Put the null into the constraint component so that nothing is added in the add
 		componentConstraints.add(constraintComponent);
 	}

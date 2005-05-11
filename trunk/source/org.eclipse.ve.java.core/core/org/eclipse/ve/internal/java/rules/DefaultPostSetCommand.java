@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultPostSetCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -50,7 +50,7 @@ public class DefaultPostSetCommand extends CommandWrapper {
 	public void execute() {
 		CommandBuilder cbld = new CommandBuilder();
 		cbld.setExecuteAndAppend(true);	// So that if we revisit a child, it will be already marked and handled.
-		handleValue(cbld, oldValue, ((EObject) oldValue).eContainer() == null);	// If not now contained, treat as if was contained, otherwise let handle value calculate it.
+		handleValue(cbld, oldValue, oldValue.eContainer() == null);	// If not now contained, treat as if was contained, otherwise let handle value calculate it.
 		if (annotations != null)
 			cbld.append(AnnotationPolicy.getDeleteCommand(annotations, domain.getDiagramData()));
 		command = !cbld.isEmpty() ? cbld.getCommand() : NoOpCommand.INSTANCE;	// Because of bug in undo of CommandWrapper, we must have a command.

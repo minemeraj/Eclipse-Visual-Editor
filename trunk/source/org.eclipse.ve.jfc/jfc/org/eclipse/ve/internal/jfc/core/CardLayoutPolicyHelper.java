@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutPolicyHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -67,7 +67,7 @@ public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 	public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
 		CommandBuilder cb = new CommandBuilder(""); //$NON-NLS-1$
 		Command applyCmd = null;
-		EObject constraintComponent = (EObject) visualFact.create(classConstraintComponent);
+		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		if (constraint != NO_CONSTRAINT_VALUE)
 			constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), convertConstraint(constraint));	// Put the constraint into the constraint component.
 		else {
@@ -86,7 +86,7 @@ public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 		int i = 0;
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
-			EObject constraintComponent = (EObject) visualFact.create(classConstraintComponent);
+			EObject constraintComponent = visualFact.create(classConstraintComponent);
 			componentConstraints.add(constraintComponent);
 			Object constraint = itr.next();
 			if (constraint != NO_CONSTRAINT_VALUE)

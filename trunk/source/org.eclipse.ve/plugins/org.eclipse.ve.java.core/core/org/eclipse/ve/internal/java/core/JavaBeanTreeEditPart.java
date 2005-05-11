@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:20 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-05-11 22:41:32 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -451,7 +451,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			Iterator iter = eventInvocations.iterator();
 			while (iter.hasNext()) {
 				AbstractEventInvocation eventInvocation = (AbstractEventInvocation) iter.next();
-				Listener listener = (Listener) eventInvocation.getListener();
+				Listener listener = eventInvocation.getListener();
 				// See whether any of the existing EventInvocationListeners already use this listener
 				Iterator iter1 = result.iterator();
 				boolean foundExistingListener = false;

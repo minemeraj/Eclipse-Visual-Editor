@@ -13,7 +13,6 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.jem.internal.proxy.awt.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IPointBeanProxy;
 /**

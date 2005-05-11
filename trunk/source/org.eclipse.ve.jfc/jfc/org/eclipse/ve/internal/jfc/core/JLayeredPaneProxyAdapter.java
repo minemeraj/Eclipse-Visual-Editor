@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JLayeredPaneProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 22:41:21 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -91,7 +91,7 @@ public class JLayeredPaneProxyAdapter extends ContainerProxyAdapter {
 			for (int i = 0; i < constraintComponentsEMF.size(); ++i) {
 				IJavaInstance child = (IJavaInstance) ((EObject) constraintComponentsEMF.get(i)).eGet(sfConstraintComponent);
 				if (child != null)
-					childrenEMF[i] = (IBeanProxyHost) getSettingBeanProxyHost(child);
+					childrenEMF[i] = getSettingBeanProxyHost(child);
 			}
 
 			// The sort will be to go in reverse order through the array from the live bean, find the cooresponding bean in

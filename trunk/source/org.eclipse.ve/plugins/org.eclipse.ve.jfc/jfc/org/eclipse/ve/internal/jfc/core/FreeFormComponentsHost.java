@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -167,7 +166,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 	 * @since 1.1.0
 	 */
 	protected boolean isSwingType(IBeanProxyHost aProxy) {
-		return classJComponent.isInstance((EObject) aProxy.getTarget());
+		return classJComponent.isInstance(aProxy.getTarget());
 	}
 
 	/**

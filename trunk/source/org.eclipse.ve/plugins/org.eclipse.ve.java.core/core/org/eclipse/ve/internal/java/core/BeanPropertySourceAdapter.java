@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.6 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 22:41:32 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -118,7 +118,7 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 	 */
 	protected boolean includeFeature(EStructuralFeature aFeature) {
 		//first check if PropertyDecorator sets the feature to be hidden in property sheet
-		PropertyDecorator propDecor = Utilities.getPropertyDecorator((EModelElement) aFeature);
+		PropertyDecorator propDecor = Utilities.getPropertyDecorator(aFeature);
 		if (propDecor != null) {
 			boolean propDecorFlag = !propDecor.isHidden() && (!propDecor.isSetDesignTime() || propDecor.isDesignTime());
 			if (!propDecorFlag)

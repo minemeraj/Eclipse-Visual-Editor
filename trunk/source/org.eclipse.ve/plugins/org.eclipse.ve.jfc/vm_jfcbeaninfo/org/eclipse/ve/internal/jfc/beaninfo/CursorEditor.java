@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: CursorEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import java.awt.*;
@@ -115,7 +115,7 @@ public String getJavaInitializationString() {
 		return res;
 	}
 	public void setAsText(String text) throws java.lang.IllegalArgumentException {
-	if (text instanceof String) {
+	if (text != null) {
 		
 	    setValue(new Cursor(((Integer)realToType.get(dispToReal.get(text))).intValue()));
 	    return;

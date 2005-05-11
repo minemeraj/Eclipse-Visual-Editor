@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:37 $ 
  */
 
 import java.util.StringTokenizer;
@@ -155,7 +155,7 @@ public class ImageCellEditor extends DialogCellEditor
 		IJavaObjectInstance aValue = (IJavaObjectInstance) getValue();
 		if (aValue != null) {
 			iconDialog
-					.setValue(getPathFromInitializationAllocation(((IJavaObjectInstance) aValue)
+					.setValue(getPathFromInitializationAllocation(aValue
 							.getAllocation()));
 		}
 

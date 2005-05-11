@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractApplyAttributeCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.util.Iterator;
@@ -80,7 +80,7 @@ public abstract class AbstractApplyAttributeCommand extends AbstractAttributeCom
 				if (container != null) {
 					// It is contained.
 					if (container instanceof EObject) {
-						EReference containmentFeature = (EReference) eo.eContainmentFeature();
+						EReference containmentFeature = eo.eContainmentFeature();
 						if (container != getTarget() || containmentFeature != feature) {
 							// It won't be a touch. Don't bother canceling touch containment.
 							containers[i] = container;							

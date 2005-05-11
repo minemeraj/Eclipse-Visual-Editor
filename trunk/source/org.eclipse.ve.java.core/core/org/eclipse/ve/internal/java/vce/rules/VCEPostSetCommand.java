@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.*;
@@ -79,7 +79,7 @@ public class VCEPostSetCommand extends CommandWrapper {
 		// If not now contained, treat as if was contained, otherwise let handle value calculate it.
 		// We don't know our target, but that is ok, we can handle not knowing, it just helps if we know.
 		ArrayList removeValues = new ArrayList();
-		handleValue(cbld, oldValue, null, null, ((EObject) oldValue).eContainer() == null, childRule, removeValues, new HashSet(10));
+		handleValue(cbld, oldValue, null, null, oldValue.eContainer() == null, childRule, removeValues, new HashSet(10));
 		
 		// Now remove all of them. It is safe now since all connections within them have been handled. We can't actually
 		// delete them until we've processed everything, else there could be dangling problems or codegen problems with
@@ -234,7 +234,7 @@ public class VCEPostSetCommand extends CommandWrapper {
 							// So we will treat the back ref as a child link.
 							EObject kid = refs[j];
 							if (kid != null && !processed.contains(kid)) {
-								if (handleValue(cbld, (EObject) kid, null, null, false, true, removedValues, processed)) {
+								if (handleValue(cbld, kid, null, null, false, true, removedValues, processed)) {
 									// It will be going away, so don't bother breaking this backref.
 									cancelSetting = false;
 								}

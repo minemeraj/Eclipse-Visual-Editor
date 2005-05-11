@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.awt.*;
@@ -91,7 +91,7 @@ public int getWindowState(){
 void launchEditor(){
 	if ( fComponent instanceof JComponent) {
 		fDialog = new BeanPropertyEditorJFrame();
-	} else if ( fComponent instanceof Component ) { 
+	} else { 
 		fDialog = new BeanPropertyEditorFrame();
 	}
 	fDialog.setPropertyEditor(fComponent);

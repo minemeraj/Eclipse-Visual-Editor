@@ -161,7 +161,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 				setTypedKey((String)newValue);
 				return;
 			case CDMPackage.KEYED_DYNAMIC__VALUE:
-				setTypedValue((Object)newValue);
+				setTypedValue(newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -262,7 +262,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	 */
 	public Object setValue(Object value) {
 		Object oldValue = getValue();
-		setTypedValue((Object)value);
+		setTypedValue(value);
 		return oldValue;
 	}
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -289,7 +289,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)target).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(target.getModel());
 				if (ep != null)
 					target = ep;
 			}
@@ -481,8 +481,8 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	};
 	
 	protected int getIntValue(EditPart ep, EStructuralFeature sf) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridLayout = (IPropertySource) ps.getPropertyValue(sfCompositeLayout);
 			if (gridLayout != null) {
 				Object intPV = gridLayout.getPropertyValue(sf);
@@ -518,8 +518,8 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected boolean getBooleanValue(EditPart ep, EStructuralFeature sf) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridLayout = (IPropertySource) ps.getPropertyValue(sfCompositeLayout);
 			if (gridLayout != null) {
 				Object booleanPV = gridLayout.getPropertyValue(sf);

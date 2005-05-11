@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -561,7 +561,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * @since 1.1.0
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) feature);
+		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( feature);
 		if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
 			if ( origSettingProxies != null && origSettingProxies.containsKey(feature)){
 				try {
@@ -719,7 +719,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * @since 1.1.0
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {			
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) feature);
+		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( feature);
 		if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
 			try {
 				IJavaInstance javaValue = (IJavaInstance)value;
@@ -1363,7 +1363,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		// Don't query if this is a local attribute and we are the this part.	
 		if (isBeanProxyInstantiated() && (!isThisPart() || !isAttributeLocal(aBeanPropertyAttribute))) {
 			if (!isOverridePropertySet(aBeanPropertyAttribute)) {
-				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)aBeanPropertyAttribute);
+				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(aBeanPropertyAttribute);
 				// If we have a properyt decorator then it has a get method so just call it
 				if ( propertyDecorator != null && propertyDecorator.isReadable()) {
 					if ( propertyDecorator != null && propertyDecorator.isReadable()) {
@@ -1432,7 +1432,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost#applyBeanPropertyProxyValue(org.eclipse.emf.ecore.EStructuralFeature, org.eclipse.jem.internal.proxy.core.IBeanProxy)
 	 */
 	public void applyBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature, IBeanProxy aproxy) {
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( (EModelElement) aBeanPropertyFeature);
+		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( aBeanPropertyFeature);
 		if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
 			IExpression exp = getBeanProxyFactory().createExpression();
 			try {
@@ -1925,7 +1925,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		// Don't query if this is a local attribute and we are the this part.	
 		if (getProxy() != null && (!isThisPart() || !isAttributeLocal(aBeanPropertyFeature))) {
 			if (overrideSettings == null || !overrideSettings.containsKey(aBeanPropertyFeature)) {
-				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement) aBeanPropertyFeature);
+				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(aBeanPropertyFeature);
 				// If we have a property decorator then it has a get method so just call it
 				if (propertyDecorator != null && propertyDecorator.isReadable()) {
 					if (propertyDecorator.getReadMethod() != null) {

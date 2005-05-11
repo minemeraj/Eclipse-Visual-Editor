@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-11 22:41:32 $ 
  */
 
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		if (topLevel != null)
 			for (int i = 0; i < topLevel.length; i++)
 				if (topLevel[i] instanceof CategoryModel)
-					styleTreeViewer.setExpandedState((CategoryModel) topLevel[i], ((CategoryModel) topLevel[i]).getDefaultExpand());
+					styleTreeViewer.setExpandedState(topLevel[i], ((CategoryModel) topLevel[i]).getDefaultExpand());
 	}
 
 	protected void createTreeClassComposite(Composite composite, int nColumns) {

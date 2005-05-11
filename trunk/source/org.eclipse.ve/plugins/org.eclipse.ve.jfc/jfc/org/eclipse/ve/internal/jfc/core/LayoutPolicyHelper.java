@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 
@@ -66,7 +66,7 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 	}
 	
 	public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
-		EObject constraintComponent = (EObject) visualFact.create(classConstraintComponent);
+		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		if (constraint != NO_CONSTRAINT_VALUE)
 			constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), constraint != null ? convertConstraint(constraint) : null);	// Put the constraint into the constraint component.
 		return policy.getCreateCommand(constraintComponent, childComponent, position);
@@ -76,7 +76,7 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 		ArrayList componentConstraints = new ArrayList(childrenComponents.size());
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
-			EObject constraintComponent = (EObject) visualFact.create(classConstraintComponent);
+			EObject constraintComponent = visualFact.create(classConstraintComponent);
 			componentConstraints.add(constraintComponent);
 			Object constraint = itr.next();
 			if (constraint != NO_CONSTRAINT_VALUE)

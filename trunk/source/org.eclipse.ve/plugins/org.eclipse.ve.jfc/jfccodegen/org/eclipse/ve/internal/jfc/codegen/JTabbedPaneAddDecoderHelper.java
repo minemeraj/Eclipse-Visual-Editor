@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-11 22:41:22 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
@@ -111,7 +110,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 		}
 
 		EClass rootClass = getRootClass();
-		EObject root = (EObject) rootClass.getEPackage().getEFactoryInstance().create(rootClass);
+		EObject root = rootClass.getEPackage().getEFactoryInstance().create(rootClass);
 
 		//   root.eSet(root.eClass().getEStructuralFeature(COMPONENT_ATTR_NAME),
 		//                    toAdd.getRefObject()) ;
@@ -384,7 +383,7 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 
 		String AddedArg;
 		if (fAddedPart == null)
-			AddedArg = CodeGenUtil.getInitString((IJavaInstance) fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
+			AddedArg = CodeGenUtil.getInitString(fAddedInstance,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 		else if (fAddedPart.getInitMethod().equals(fbeanPart.getInitMethod())) // Added part is defined in the same method as the container
 			AddedArg = fAddedPart.getSimpleName();
 		else

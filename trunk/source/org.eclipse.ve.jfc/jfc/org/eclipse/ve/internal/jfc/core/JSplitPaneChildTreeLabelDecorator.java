@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public class JSplitPaneChildTreeLabelDecorator implements ILabelDecorator {
 			} else if (backrefs.contains(sf_constraintComponent)) {
 				EObject constraintComponent = ai.getFirstReferencedBy(sf_constraintComponent);
 				// See whether the component is in severe error.  If so then don't include it here
-				if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component).isBeanProxyInstantiated()) {
+				if (BeanProxyUtilities.getBeanProxyHost(component).isBeanProxyInstantiated()) {
 					IJavaObjectInstance constraintString = (IJavaObjectInstance) constraintComponent.eGet(sf_constraintConstraint);
 					if (constraintString != null) {
 						// We know the constraints value should be a bean so we can use its toString to get the string value

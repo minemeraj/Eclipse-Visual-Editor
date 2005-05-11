@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationEMFImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:16:26 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:15 $ 
  */
 import java.util.Collection;
 import java.util.List;
@@ -107,7 +107,7 @@ public final class AnnotationEMFImpl extends AnnotationImpl implements Annotatio
 	public EObject getAnnotates() {
 		if (annotates != null && annotates.eIsProxy()) {
 			EObject oldAnnotates = annotates;
-			annotates = (EObject)eResolveProxy((InternalEObject)annotates);
+			annotates = eResolveProxy((InternalEObject)annotates);
 			if (annotates != oldAnnotates) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CDMPackage.ANNOTATION_EMF__ANNOTATES, oldAnnotates, annotates));

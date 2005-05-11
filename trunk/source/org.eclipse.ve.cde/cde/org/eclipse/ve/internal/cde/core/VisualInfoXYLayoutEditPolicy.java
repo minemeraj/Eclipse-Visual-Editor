@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:15 $ 
  */
 
 import java.util.Iterator;
@@ -110,7 +110,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			primChangeConstraintCommand(
 				child,
 				constraintHandler,
-				(Rectangle) constraint,
+				constraint,
 				true,
 				isChildResizeable(constraintHandler) && (constraint.width != -1 || constraint.height != -1)));
 

@@ -278,7 +278,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 							});
 							// Send back all of the image data
 							for (int i = 0; i < data.length; i++) {
-								outputStream.write((int) data[i]);
+								outputStream.write(data[i]);
 							}
 
 							outputStream.close();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormJavaBeanComponentCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -100,7 +100,7 @@ public void setSources(Object[] sources, IPropertySource[] propertySources, IPro
 protected void processComponent(IJavaObjectInstance component, List javaObjects, List javaObjectLabels){
 	javaObjects.add(component);	
 	// The label used for the icon is the same one used by the JavaBeans tree view
-	ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider((JavaClass)component.getJavaType());
+	ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(component.getJavaType());
 	if ( labelProvider != null ) {
 		javaObjectLabels.add(labelProvider.getText(component));		
 	} else { 
@@ -114,7 +114,7 @@ protected void processComponent(IJavaObjectInstance component, List javaObjects,
 	if ( sf_container_components == null ) {
 
 	}
-	if ( componentClass.isAssignableFrom((JavaClass)component.getJavaType())) { 
+	if ( componentClass.isAssignableFrom(component.getJavaType())) { 
 		Iterator components = ((List)component.eGet(sf_container_components)).iterator();
 		while(components.hasNext()){
 			// The child is not a component in the JBCF model - it's a constraint component

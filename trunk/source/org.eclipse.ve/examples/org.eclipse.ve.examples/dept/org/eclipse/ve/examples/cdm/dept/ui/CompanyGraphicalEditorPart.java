@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: CompanyGraphicalEditorPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:13 $ 
  */
 
 import java.io.*;
@@ -202,7 +202,7 @@ public class CompanyGraphicalEditorPart extends GraphicalEditorWithPalette {
 
 		try {
 			PlatformUI.getWorkbench().getProgressService().run(false, true, op);
-			setInput(new FileEditorInput((IFile) file));
+			setInput(new FileEditorInput(file));
 			getCommandStack().flush();
 		} catch (Exception x) {
 			x.printStackTrace();

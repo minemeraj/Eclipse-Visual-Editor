@@ -212,7 +212,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
                     .eGet(sf_containerControls);
             Iterator iter = controls.iterator();
             while (iter.hasNext()) {
-                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                IBeanProxyHost value = BeanProxyUtilities
                         .getBeanProxyHost((IJavaInstance) iter.next());
                 if (value != null)
                     value.releaseBeanProxy();

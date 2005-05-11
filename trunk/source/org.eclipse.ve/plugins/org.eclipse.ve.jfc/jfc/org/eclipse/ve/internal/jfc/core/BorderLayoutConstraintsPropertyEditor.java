@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutConstraintsPropertyEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:22 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -81,7 +81,7 @@ protected Object doGetObject(int index){
 	String selectedConstraint = fTags[index];
 	return BeanUtilities.createJavaObject("java.lang.String", //$NON-NLS-1$
 		JavaEditDomainHelper.getResourceSet(fEditDomain),
-		(String)BorderLayoutPolicyHelper.CODEGEN_TAGS[BorderLayoutPolicyHelper.DISPLAY_TAGS.indexOf(selectedConstraint)]
+		BorderLayoutPolicyHelper.CODEGEN_TAGS[BorderLayoutPolicyHelper.DISPLAY_TAGS.indexOf(selectedConstraint)]
 	);
 }
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-05 23:43:00 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -58,7 +58,7 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 			// and its name, style and size and formatting these. To save lots of
 			// target VM traffic a single static helper method exists on the utility class
 			// org.eclipse.ve.internal.swt.targetvm.Environment.getFontLabel(Font aFont)
-			IBeanProxy fontBeanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) element);
+			IBeanProxy fontBeanProxy = BeanProxyUtilities.getBeanProxy(element);
 			if (fontBeanProxy == null) return ""; //$NON-NLS-1$ 
 			IBeanTypeProxy environmentBeanTypeProxy = fontBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
 					"org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$

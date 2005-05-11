@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -292,7 +292,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			for (int i = 0; i < fComponents.size(); i++) {
 				IJavaObjectInstance comp = (IJavaObjectInstance) fComponents.get(i);
 				IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(comp);
-				IRectangleBeanProxy rectangleProxy = (IRectangleBeanProxy) BeanAwtUtilities.invoke_getBounds(compProxy);
+				IRectangleBeanProxy rectangleProxy = BeanAwtUtilities.invoke_getBounds(compProxy);
 				Rectangle r =
 					new Rectangle(rectangleProxy.getX(), rectangleProxy.getY(), rectangleProxy.getWidth(), rectangleProxy.getHeight());
 				childrenXYBounds.add(i, r);
@@ -333,7 +333,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	 */
 	protected Rectangle getBounds(IJavaObjectInstance aBean) {
 		IBeanProxy beanProxy = BeanProxyUtilities.getBeanProxy(aBean);
-		IRectangleBeanProxy rectangleProxy = (IRectangleBeanProxy) BeanAwtUtilities.invoke_getBounds(beanProxy);
+		IRectangleBeanProxy rectangleProxy = BeanAwtUtilities.invoke_getBounds(beanProxy);
 		Rectangle r = new Rectangle(rectangleProxy.getX(), rectangleProxy.getY(), rectangleProxy.getWidth(), rectangleProxy.getHeight());
 		return r;
 	}
@@ -419,7 +419,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 
 		BeanDecorator bd =
 			(BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-				(EClassifier) component.getJavaType(),
+				component.getJavaType(),
 				BeanDecorator.class,
 				GRIDBAG_FILL_PREFERENCE_KEY);
 		if (bd != null) {
@@ -435,7 +435,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	protected Insets getContainerInsets() {
 		IBeanProxy aBeanProxy = BeanProxyUtilities.getBeanProxy(getContainer());
 		IMethodProxy getInsetsMethodProxy = aBeanProxy.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aBeanProxy.getTypeProxy().getTypeName(), "getInsets", null); //NON-NLS-1$ //$NON-NLS-1$
-		IBeanProxy insetsProxy = (IBeanProxy) getInsetsMethodProxy.invokeCatchThrowableExceptions(aBeanProxy);
+		IBeanProxy insetsProxy = getInsetsMethodProxy.invokeCatchThrowableExceptions(aBeanProxy);
 		int top = 0, left = 0, bottom = 0, right = 0;
 		if (insetsProxy != null) {
 			IIntegerBeanProxy intProxy = null;
@@ -539,7 +539,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			for (int i = 0; i < table.length; i++) {
 				for (int j = 0; j < table[0].length; j++) {
 					if (table[i][j] != null) {
-						EObject gridbagConstraintComponent = (EObject) table[i][j];
+						EObject gridbagConstraintComponent = table[i][j];
 						/* 
 						 * If this component at this location is the same as the component in the
 						 * cell location to its left or above, don't adjust because it's already
@@ -725,7 +725,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			boolean foundit = false;
 			for (i = 0; i < table.length && !foundit; i++) {
 				for (j = 0; j < table[0].length && !foundit; j++) {
-					if (table[i][j] != null && (EObject) table[i][j] == component) {
+					if (table[i][j] != null && table[i][j] == component) {
 						// Found the starting cell location for this component
 						foundit = true;
 						startx = i;
@@ -739,11 +739,11 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			if (foundit) {
 				int gridWidth = 1, gridHeight = 1;
 				for (i = startx + 1; i < table.length; i++) {
-					if (table[i][j] != null && (EObject) table[i][j] == component)
+					if (table[i][j] != null && table[i][j] == component)
 						gridWidth++;
 				}
 				for (i = startx, j = starty + 1; j < table[0].length; j++) {
-					if (table[i][j] != null && (EObject) table[i][j] == component)
+					if (table[i][j] != null && table[i][j] == component)
 						gridHeight++;
 				}
 				// Return the gridwidth and gridheight values in a draw2d Dimension object
@@ -803,7 +803,7 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		if (childrenComponents.isEmpty() || constraints.isEmpty() || (childrenComponents.size() > 1))
 			return UnexecutableCommand.INSTANCE;
 
-		EObject constraintComponent = (EObject) visualFact.create(classConstraintComponent);
+		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		List componentConstraints = Collections.singletonList(constraintComponent);
 		GridBagConstraint gridBagConstraint = (GridBagConstraint) constraints.get(0);
 		IJavaObjectInstance component = (IJavaObjectInstance) childrenComponents.get(0);

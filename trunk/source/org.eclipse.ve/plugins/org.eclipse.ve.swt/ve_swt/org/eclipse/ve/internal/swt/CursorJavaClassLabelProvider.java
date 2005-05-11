@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CursorJavaClassLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -39,14 +39,14 @@ public class CursorJavaClassLabelProvider extends LabelProvider {
 	public static String getText(IJavaInstance element) {
 		String initStr = ""; //$NON-NLS-1$
 		if (element.getAllocation() instanceof ParseTreeAllocation) {
-			PTExpression exp = ((ParseTreeAllocation) ((IJavaInstance) element).getAllocation()).getExpression();
+			PTExpression exp = ((ParseTreeAllocation) element.getAllocation()).getExpression();
 			if (exp instanceof PTClassInstanceCreation) {
 				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
 				exp.accept(flattener);
 				initStr = flattener.getResult();
 			}
 		} else if (element.getAllocation() instanceof InitStringAllocation) {
-			initStr = ((InitStringAllocation) ((IJavaInstance) element).getAllocation()).getInitString();
+			initStr = ((InitStringAllocation) element.getAllocation()).getInitString();
 		}
 		int begin_cursor = initStr.indexOf("SWT.CURSOR_"); //$NON-NLS-1$
 		if (begin_cursor != -1) {

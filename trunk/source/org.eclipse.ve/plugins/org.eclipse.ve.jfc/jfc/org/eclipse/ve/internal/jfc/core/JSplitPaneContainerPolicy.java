@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.*;
@@ -372,7 +372,7 @@ public class JSplitPaneContainerPolicy extends AbstractJavaContainerPolicy {
 		Iterator itr = children.iterator();
 		while(itr.hasNext()) {
 			EObject component = (EObject) itr.next();
-			EObject constraint = InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) sf_containerComponents, sf_constraintComponent, component);
+			EObject constraint = InverseMaintenanceAdapter.getIntermediateReference((EObject) container, sf_containerComponents, sf_constraintComponent, component);
 			if (constraint != null)
 				constraints.add(constraint);
 			else {

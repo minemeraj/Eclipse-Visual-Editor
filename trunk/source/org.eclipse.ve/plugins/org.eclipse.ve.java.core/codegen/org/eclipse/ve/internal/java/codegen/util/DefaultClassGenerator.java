@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.7 $
+*  $Revision: 1.8 $
 */
 
 
@@ -102,7 +102,7 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 
 						if (wc.getPackageDeclarations().length>0) {
 						 // The type template will generate the package header
-						 ISourceRange sr = (ISourceRange) wc.getPackageDeclarations()[0].getSourceRange() ;
+						 ISourceRange sr = wc.getPackageDeclarations()[0].getSourceRange() ;
 						 wc.getBuffer().replace(sr.getOffset(),sr.getLength(),""); //$NON-NLS-1$
 						}						
 						String content = CodeGeneration.getCompilationUnitContent(wc,comment,wc.getSource(), fNL );						

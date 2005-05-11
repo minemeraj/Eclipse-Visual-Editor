@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-11 22:41:31 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -107,9 +107,7 @@ public class EventMethodVisitor extends MethodVisitor {
 				JavaElementInfo cuMethods[] = TypeVisitor.getCUMethods(methods, CodeGenUtil.getMethodsInfo(fModel.getCompilationUnit()), fModel);
 				int idx;
 				for (idx = 0; idx < methods.length; idx++) {
-					if (!(methods[idx] instanceof MethodDeclaration))
-						continue;
-					MethodDeclaration md = (MethodDeclaration) methods[idx];
+					MethodDeclaration md = methods[idx];
 					if (md.parameters().size()>0)
 						continue;
 					if (method.equals(md.getName().getIdentifier())) {

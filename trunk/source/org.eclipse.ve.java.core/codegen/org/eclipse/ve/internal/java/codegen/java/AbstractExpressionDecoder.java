@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.util.logging.Level;
 
@@ -219,7 +219,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 	public void setExpression(CodeExpressionRef expr) {
 		fExprRef = expr;
-		fExpr = (Statement) expr.getExprStmt();
+		fExpr = expr.getExprStmt();
 		fExprRef.setDecoder(this);
 		if (fhelper != null)
 			fhelper.setDecodingContent(fExpr);

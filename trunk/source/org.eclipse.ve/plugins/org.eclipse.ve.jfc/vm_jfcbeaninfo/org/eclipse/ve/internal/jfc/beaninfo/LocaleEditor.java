@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LocaleEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:22 $ 
  */
 
 import java.util.Locale;
@@ -51,7 +51,7 @@ public String getJavaInitializationString(){
 
 public Object getValue(){
 	if (fCustomEditor != null){
-		return (Object)fCustomEditor.getLocaleValue();
+		return fCustomEditor.getLocaleValue();
 	}else{
 		return super.getValue();
 	}

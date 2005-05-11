@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-11 22:41:31 $ 
  */
 
 import java.text.MessageFormat;
@@ -189,7 +189,7 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
       // Handle an Expression          
       else if (stmt instanceof ExpressionStatement) {
       	ExpressionVisitor v = visitorFactory.getExpressionVisitor();
-		v.initialize(fMethod,(ExpressionStatement)stmt,fModel,fReTryLater);
+		v.initialize(fMethod,stmt,fModel,fReTryLater);
       	v.setProgressMonitor(getProgressMonitor());
       	v.visit();
       }else if (JavaVEPlugin.isLoggingLevel(Level.FINE))

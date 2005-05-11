@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -93,7 +93,7 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
                     .eGet(sf_columns);
             Iterator iter = columns.iterator();
             while (iter.hasNext()) {
-                IBeanProxyHost value = (IBeanProxyHost) BeanProxyUtilities
+                IBeanProxyHost value = BeanProxyUtilities
                         .getBeanProxyHost((IJavaInstance) iter.next());
                 if (value != null)
                     value.releaseBeanProxy();

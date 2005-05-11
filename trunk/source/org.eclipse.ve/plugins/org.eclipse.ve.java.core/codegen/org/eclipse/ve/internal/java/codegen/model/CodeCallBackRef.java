@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-16 21:12:28 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -52,7 +52,7 @@ public IJVEDecoder  getEventDecoder(){
     fDecoder.setBeanPart(fBean) ;
     fDecoder.setCompositionModel(fBean.getModel().getCompositionModel()) ;
     try {
-		fDecoder.setExpression((CodeExpressionRef)this) ;
+		fDecoder.setExpression(this) ;
 	}
 	catch (CodeGenException e) {
 		JavaVEPlugin.log(e) ;

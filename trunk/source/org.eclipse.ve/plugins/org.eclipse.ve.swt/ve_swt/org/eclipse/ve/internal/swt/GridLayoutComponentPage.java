@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:37 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -417,7 +417,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
@@ -464,7 +464,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
@@ -495,7 +495,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = (IJavaInstance) BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
@@ -882,8 +882,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected int getHorizontalAlignValue(EditPart ep) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
 			if (gridData != null) {
 				Object horizPV = gridData.getPropertyValue(sfHorizontalAlignment);
@@ -897,8 +897,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected int getVerticalAlignValue(EditPart ep) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
 			if (gridData != null) {
 				Object vertPV = gridData.getPropertyValue(sfVerticalAlignment);
@@ -912,8 +912,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected boolean getGrabValue(EditPart ep, int grabType) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
 			if (gridData != null) {
 				Object grabPV = gridData.getPropertyValue((grabType == HORIZONTAL) ? sfHorizontalGrab : sfVerticalGrab);
@@ -927,8 +927,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected int getSpanValue(EditPart ep, int orientation) {
-		if (getResourceSet(ep) != null && (IPropertySource) ep.getAdapter(IPropertySource.class) instanceof IPropertySource) {
-			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
 			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
 			if (gridData != null) {
 				Object spanPV = gridData.getPropertyValue((orientation == HORIZONTAL) ? sfHorizontalSpan : sfVerticalSpan);
@@ -986,7 +986,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
 			if (viewer != null) {
 				// Get the graphical editpart using the model that is common between the two viewers
-				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(((EditPart)parent).getModel());
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(parent.getModel());
 				if (ep != null)
 					parent = ep;
 			}

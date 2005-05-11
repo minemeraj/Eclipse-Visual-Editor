@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
@@ -222,7 +221,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 					IJavaInstance newBean =
 						BeanProxyUtilities.wrapperBeanProxy(currentValue, aBean.eResource().getResourceSet(), null, true);
 					// (1)
-					PropertyDecorator propDecor = Utilities.getPropertyDecorator((EModelElement) sf);
+					PropertyDecorator propDecor = Utilities.getPropertyDecorator(sf);
 					IPropertyDescriptor propertySheetDescriptor =
 						(IPropertyDescriptor) EcoreUtil.getRegisteredAdapter(
 							propDecor.getEModelElement(),

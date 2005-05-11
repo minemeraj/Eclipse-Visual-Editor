@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ protected Object doGetObject(int index) {
 	ResourceSet rset = JavaEditDomainHelper.getResourceSet(fEditDomain);
 	JavaHelpers javaClass = JavaRefFactory.eINSTANCE.reflectType(layoutManagerClassName, rset);
 	ILayoutPolicyFactory factory =
-		BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger((EClassifier) javaClass, fEditDomain);
+		BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(javaClass, fEditDomain);
 	return factory.getLayoutManagerInstance(container, javaClass, rset);
 }
 
@@ -75,7 +75,7 @@ protected int doGetIndex(Object anObject){
 		return 0;
 	} else if (anObject instanceof IJavaObjectInstance) {
 		String [] classNames = getLayoutManagerItems(fEditDomain)[CLASSNAMES_INDEX];
-		String className = LayoutManagerLabelProvider.getQualifiedName((IJavaObjectInstance)anObject);
+		String className = LayoutManagerLabelProvider.getQualifiedName(anObject);
 		// Look for this class name in our known list 
 		for(int i=1 ; i<classNames.length ; i++){
 			if (className.equals(classNames[i])){

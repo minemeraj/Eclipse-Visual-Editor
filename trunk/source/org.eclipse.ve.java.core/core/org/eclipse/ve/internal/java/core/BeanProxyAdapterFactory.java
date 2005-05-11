@@ -12,14 +12,12 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 22:41:32 $ 
  */
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClassifier;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanTypeProxy;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
@@ -98,7 +96,7 @@ public class BeanProxyAdapterFactory
 		// The class of adapter to use comes from the BeanDecorator.  Get the one that has the property set
 		BeanDecorator decr =
 			(BeanDecorator) ClassDecoratorFeatureAccess.getDecoratorWithFeature(
-				(EClassifier) bean.getJavaType(),
+				bean.getJavaType(),
 				BeanDecorator.class,
 				getBeanProxyClassNameFeature());
 		

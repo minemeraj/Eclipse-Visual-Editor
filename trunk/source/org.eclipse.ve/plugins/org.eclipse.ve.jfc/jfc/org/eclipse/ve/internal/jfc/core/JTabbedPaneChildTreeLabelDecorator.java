@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
  */
 
 import java.text.MessageFormat;
@@ -124,7 +124,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 		IJavaObjectInstance component = (IJavaObjectInstance) element;
 		if (tabComponent != null) {
 			// See whether the component is in severe error. If so then don't include it here
-			if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component).isBeanProxyInstantiated()) {
+			if (BeanProxyUtilities.getBeanProxyHost(component).isBeanProxyInstantiated()) {
 				IJavaObjectInstance tabTitle = (IJavaObjectInstance) tabComponent.eGet(sfTabTitle);
 				if (tabTitle != null) {
 					// We know the constraints value should be a bean so we can use its toString to get the string value
