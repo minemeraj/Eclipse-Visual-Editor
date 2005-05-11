@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-05-10 23:12:41 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-05-11 14:38:34 $
  */
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,7 +110,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	protected IFigure createFigure() {
 		ImageFigure fig = new ImageFigure();
 		if (border)
-			fig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_DOT));
+			fig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
 		fig.setOpaque(!transparent);
 		if (!transparent) {
 			imageFigureController = new ImageFigureController();			
