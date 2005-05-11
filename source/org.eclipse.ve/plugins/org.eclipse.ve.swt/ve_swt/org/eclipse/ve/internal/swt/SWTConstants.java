@@ -22,6 +22,7 @@ public class SWTConstants {
 		SF_DECORATIONS_TEXT,		
 		SF_COMPOSITE_LAYOUT,
 		SF_COMPOSITE_CONTROLS,
+		SF_SCROLLEDCOMPOSITE_CONTENT,
 		
 		SF_FILL_LAYOUT_MARGIN_HEIGHT,
 		SF_FILL_LAYOUT_MARGIN_WIDTH,
@@ -81,6 +82,7 @@ public class SWTConstants {
 		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$		
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
+		SF_SCROLLEDCOMPOSITE_CONTENT = URI.createURI("java:/org.eclipse.swt.custom#ScrolledComposite/content"); //$NON-NLS-1$
 		
 		SF_DECORATIONS_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/text");		 //$NON-NLS-1$
 		
