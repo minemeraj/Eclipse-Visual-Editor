@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: RootPaneContainerGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: RootPaneContainerGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-11 19:01:38 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -52,7 +52,7 @@ public class RootPaneContainerGraphicalEditPart extends ComponentGraphicalEditPa
 		
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_contentPane)
-				queueExec(RootPaneContainerGraphicalEditPart.this);
+				queueExec(RootPaneContainerGraphicalEditPart.this, "CONTENTPANE");
 		}
 	};
 
@@ -98,7 +98,7 @@ public class RootPaneContainerGraphicalEditPart extends ComponentGraphicalEditPa
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy());
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
 	}
 
@@ -110,21 +110,13 @@ public class RootPaneContainerGraphicalEditPart extends ComponentGraphicalEditPa
 		EditPart ep = super.createChild(model);
 		((ComponentGraphicalEditPart) ep).setTransparent(true);
 		((ComponentGraphicalEditPart) ep).setPropertySource(new NonBoundsBeanPropertySource((EObject) model));
-		// So that it doesn't create an image, we subsume it here.
-		// The component proxy host of the child needs to know that we are its parent
-		// otherwise it thinks that its immediate parent is ( which is a layout pane )
-		// and the positions get all wrong
-		IComponentProxyHost rootPaneContainerProxyAdapter = (IComponentProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
-		IComponentProxyHost childProxyAdapter = (IComponentProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) model);
-		childProxyAdapter.setParentComponentProxyHost(rootPaneContainerProxyAdapter);
-
 		return ep;
 	}
 
 	protected IFigure createFigure() {
-		IFigure fig = super.createFigure();
-		fig.setLayoutManager(new XYLayout());
-		return fig;
+		ContentPaneFigure cf = (ContentPaneFigure) super.createFigure();
+		cf.getContentPane().setLayoutManager(new XYLayout());
+		return cf;
 	}
 
 	/*

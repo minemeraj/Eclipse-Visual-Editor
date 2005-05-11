@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -66,7 +66,7 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(TabFolderTreeEditPart.this);
+				queueExec(TabFolderTreeEditPart.this, "ITEMS");
 		}
 	};
 

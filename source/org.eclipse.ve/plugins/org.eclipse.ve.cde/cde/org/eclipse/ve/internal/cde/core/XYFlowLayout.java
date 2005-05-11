@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: XYFlowLayout.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 
@@ -27,7 +27,7 @@ import java.util.Iterator;
  * those figures that don't have a specified location.
  * It will layout the figures that have a constraint in
  * their XY location. It will then go through the figures
- * without a constraint (identified by x,y == Integer.MIN_VALUE)
+ * without a constraint (identified by x,y == XYLayoutUtility.PREFERRED_LOC)
  * and find a spot for them.
  * Creation date: (5/25/00 3:20:21 PM)
  * @author: Administrator
@@ -50,7 +50,7 @@ protected void layoutIfRequired(IFigure f){
 		Rectangle constraint = (Rectangle)getConstraint(child);
 		if ( constraint == null ) continue;
 		// The width and height must be not set or the x/y must be unpositioned to require a layout
-		if ( constraint.width == -1 || constraint.height == -1 || (constraint.x == Integer.MIN_VALUE && constraint.y == Integer.MIN_VALUE )) {
+		if ( constraint.width == XYLayoutUtility.PREFERRED_SIZE || constraint.height == XYLayoutUtility.PREFERRED_SIZE || (constraint.x == XYLayoutUtility.PREFERRED_LOC && constraint.y == XYLayoutUtility.PREFERRED_LOC )) {
 			layout(f);
 			return;
 		}
@@ -62,7 +62,7 @@ protected void layoutIfRequired(IFigure f){
  */
 protected Dimension calculatePreferredSize(IFigure f, int wHint, int hHint){
 	// Under some circumstances we are asked to calculate preferred  size
-	// when our figures have no x and y ( it is still Integer.MIN_VALUE ) representing
+	// when our figures have no x and y ( it is still XYLayoutUtility.PREFERRED_LOC ) representing
 	// preferredSize
 	// An example is a free form that has a number of unannotated objects none of which
 	// have explicit bounds set on them
@@ -79,13 +79,13 @@ protected Dimension calculatePreferredSize(IFigure f, int wHint, int hHint){
 			continue;
 		// For a figure that has no annotation the preferredX and Y will be left as unset
 		// however the actual X and Y may be set.
-		workingRect.x = (r.x == Integer.MIN_VALUE) ? child.getBounds().x : r.x;
-		workingRect.y = (r.y == Integer.MIN_VALUE) ? child.getBounds().y : r.y;
+		workingRect.x = (r.x == XYLayoutUtility.PREFERRED_LOC) ? child.getBounds().x : r.x;
+		workingRect.y = (r.y == XYLayoutUtility.PREFERRED_LOC) ? child.getBounds().y : r.y;
 		
-		if (r.width == -1 || r.height == -1) {
+		if (r.width == XYLayoutUtility.PREFERRED_SIZE || r.height == XYLayoutUtility.PREFERRED_SIZE) {
 			Dimension prefSize = child.getPreferredSize();
-			workingRect.width = (r.width == -1) ? prefSize.width : r.width;
-			workingRect.height = (r.height == -1) ? prefSize.height : r.height;
+			workingRect.width = (r.width == XYLayoutUtility.PREFERRED_SIZE) ? prefSize.width : r.width;
+			workingRect.height = (r.height == XYLayoutUtility.PREFERRED_SIZE) ? prefSize.height : r.height;
 		}
 		rect.union(r);
 	}
@@ -127,7 +127,7 @@ protected void findWhiteSpaceFor(int rIndex, Rectangle[] rects, Rectangle boundi
 					Rectangle rect = rects[i];
 					if (rect == null)
 						continue;
-					if (rect.x != Integer.MIN_VALUE && rect.y != Integer.MIN_VALUE && rect.intersects(tryRect)) {
+					if (rect.x != XYLayoutUtility.PREFERRED_LOC && rect.y != XYLayoutUtility.PREFERRED_LOC && rect.intersects(tryRect)) {
 						intersects = true;
 						x = Math.max(x, rect.x + rect.width);
 						highestBottom = Math.min(highestBottom, rect.y + rect.height);
@@ -156,7 +156,7 @@ protected void findWhiteSpaceFor(int rIndex, Rectangle[] rects, Rectangle boundi
 				Rectangle rect = rects[i];
 				if (rect == null)
 					continue;
-				if (rect.x != Integer.MIN_VALUE && rect.y != Integer.MIN_VALUE && rect.intersects(tryRect)) {
+				if (rect.x != XYLayoutUtility.PREFERRED_LOC && rect.y != XYLayoutUtility.PREFERRED_LOC && rect.intersects(tryRect)) {
 					intersects = true;
 					y = Math.max(y, rect.y + rect.height);
 				}
@@ -190,14 +190,14 @@ public void layout(IFigure containerFigure) {
 		if (bounds == null)
 			continue;
 		bounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);	// So we don't modify the one still in the figure.
-		if (bounds.width == -1 || bounds.height == -1) {
+		if (bounds.width == XYLayoutUtility.PREFERRED_SIZE || bounds.height == XYLayoutUtility.PREFERRED_SIZE) {
 			Dimension prefSize = f.getPreferredSize();
-			if (bounds.width == -1)
+			if (bounds.width == XYLayoutUtility.PREFERRED_SIZE)
 				bounds.width = prefSize.width;
-			if (bounds.height == -1)
+			if (bounds.height == XYLayoutUtility.PREFERRED_SIZE)
 				bounds.height = prefSize.height;
 		}
-		if (bounds.x != Integer.MIN_VALUE && bounds.y != Integer.MIN_VALUE) {
+		if (bounds.x != XYLayoutUtility.PREFERRED_LOC && bounds.y != XYLayoutUtility.PREFERRED_LOC) {
 			bounds.translate(offset);	// Adjust from relative to absolute (including inset).
 			containerRectangle = containerRectangle != null ? containerRectangle.union(bounds) : bounds.getCopy().setLocation(Math.min(0, bounds.x), Math.min(0, bounds.y));	// Container area should hold all assigned figures.
 		}
@@ -212,7 +212,7 @@ public void layout(IFigure containerFigure) {
 	for (int i = 0; i < newBounds.length; i++) {
 		if (newBounds[i] == null)
 			continue;
-		if (newBounds[i].x == Integer.MIN_VALUE && newBounds[i].y == Integer.MIN_VALUE) {
+		if (newBounds[i].x == XYLayoutUtility.PREFERRED_LOC && newBounds[i].y == XYLayoutUtility.PREFERRED_LOC) {
 			// Find a spot for it.
 			findWhiteSpaceFor(i, newBounds, containerRectangle);
 		}

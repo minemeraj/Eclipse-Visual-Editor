@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:38 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -29,12 +29,10 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 
 /**
@@ -52,7 +50,7 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 			Object feature = msg.getFeature();
 			if (feature == sfLeftComponent || feature == sfRightComponent || feature == sfTopComponent || feature == sfBottomComponent
 					|| feature == sf_containerComponents)
-				queueExec(JSplitPaneGraphicalEditPart.this);
+				queueExec(JSplitPaneGraphicalEditPart.this, "COMPONENTS");
 		}
 	};
 
@@ -72,7 +70,7 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy());
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
 		// This is a special policy that just handles the size/position of visual components wrt/the figures. It does not handle changing
 		// size/position.
 		createLayoutEditPolicy();
@@ -83,9 +81,9 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 	}
 
 	protected IFigure createFigure() {
-		IFigure fig = super.createFigure();
-		fig.setLayoutManager(new XYLayout());
-		return fig;
+		ContentPaneFigure cf = (ContentPaneFigure) super.createFigure();
+		cf.getContentPane().setLayoutManager(new XYLayout());
+		return cf;
 	}
 
 	public void activate() {
@@ -146,7 +144,7 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 			EObject con = (EObject) itr.next();
 			IJavaInstance component = (IJavaInstance) con.eGet(sf_constraintComponent);
 			// See whether the component is in severe error. If so then exlude if from the list of children
-			if (BeanProxyUtilities.getBeanProxyHost(component).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+			if (BeanProxyUtilities.getBeanProxyHost(component).isBeanProxyInstantiated()) {
 				children.add(con.eGet(sf_constraintComponent)); // Get the component out of the constrain
 			}
 		}

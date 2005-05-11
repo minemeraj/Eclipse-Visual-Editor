@@ -11,20 +11,25 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: SizePropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
  */
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.*;
+import org.eclipse.ve.internal.java.visual.PointJavaClassCellEditor;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 /**
  * Provide some specific overrides for Size property.
  */
@@ -56,7 +61,23 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 				cb.applyAttributeSetting(comp, sfComponentLocation, newLoc);
 			}
 		}
-			
+	
+		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLauoutConstraintCommand instead to handle these.
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IBeanProxy dim = sh.instantiateBeanProxy();
+		if (dim instanceof IDimensionBeanProxy) {
+			IDimensionBeanProxy pointProxy = (IDimensionBeanProxy) dim;
+			int width = pointProxy.getWidth();
+			int height = pointProxy.getHeight();
+			if (XYLayoutUtility.constraintContainsPreferredSettings(0, 0, width, height, false, true)) {
+				ApplyNullLayoutConstraintCommand apply = new ApplyNullLayoutConstraintCommand();
+				apply.setTarget(comp);
+				apply.setDomain(h.getBeanProxyDomain().getEditDomain());
+				apply.setConstraint(new Rectangle(0, 0, width, height), false, true);
+				cb.append(apply);
+				return cb.getCommand();
+			}
+		}		
 		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
 		return cb.getCommand();
 	}

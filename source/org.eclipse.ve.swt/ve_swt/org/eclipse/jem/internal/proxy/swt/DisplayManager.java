@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -176,7 +176,7 @@ public class DisplayManager {
 	 * @since 1.0.0
 	 */
 	private static class Constants {
-		public static final String REGISTRY_KEY = "DISPLAYMANAGERPROXYSWTCONSTANTS:"; //$NON-NLS-1$
+		public static final Object REGISTRY_KEY = new Object();
 		
 		public static Constants getConstants(ProxyFactoryRegistry registry) {
 			Constants constants = (Constants) registry.getConstants(REGISTRY_KEY);

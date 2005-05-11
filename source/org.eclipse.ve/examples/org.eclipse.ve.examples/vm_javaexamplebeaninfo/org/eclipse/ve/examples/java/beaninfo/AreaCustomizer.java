@@ -150,9 +150,9 @@ protected void initialize(){
 	addTextBoxListener();
 	// Create a list with the available colors 
 	fColorList = new java.awt.List(fColors.size(),false);
-	Enumeration enum = fColors.keys();
-	while ( enum.hasMoreElements() ) {
-		fColorList.add( (String)enum.nextElement() );
+	Enumeration enumer = fColors.keys();
+	while ( enumer.hasMoreElements() ) {
+		fColorList.add( (String)enumer.nextElement() );
 	}
 	GridBagConstraints listConstraint = new GridBagConstraints();
 	listConstraint.gridy = 1;
@@ -209,10 +209,10 @@ public void setObject(Object anObject) {
 	fTxtFldBorderWidth.setText("" + fArea.getBorderWidth());
 	// Set the color list selection to be that of the bean
 	if ( fArea.getFillColor() != null ){
-		Enumeration enum = fColors.keys();
+		Enumeration enumer = fColors.keys();
 		int i=0;
-		while ( enum.hasMoreElements() ) {
-			String colorName = (String) enum.nextElement();
+		while ( enumer.hasMoreElements() ) {
+			String colorName = (String) enumer.nextElement();
 			Color color = (Color) fColors.get(colorName);
 			if ( color.equals(fArea.getFillColor()) ) {
 				fColorList.select(i);

@@ -19,7 +19,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
@@ -34,9 +33,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class ControlManager implements ICallback {
 	
-//	private IMethodProxy fLocationMethodProxy;
 	private IMethodProxy fClientBoxMethodProxy;	
-	private IMethodProxy fControlManagerBoundsMethodProxy;		
 	public static final int 
 			CO_RESIZED = 1,
 			CO_MOVED = 2,
@@ -265,6 +262,10 @@ public Dimension getSize(){
 public Point getLocation(){
 	return new Point(fX,fY);
 }
+
+public Point getAbsoluteLocation() {
+	return getLocation();	// TODO for now SWT is relative only.
+}
 public Rectangle getBounds(){
     
     return new Rectangle(fX,fY,fWidth,fHeight);
@@ -293,18 +294,7 @@ public void dispose(){
 		fControlManagerProxy = null;
 	}
 }
-//private IMethodProxy getComponentManagerLocationMethodProxy(){
-//	if(fLocationMethodProxy == null){
-//		fLocationMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getLocation");
-//	}
-//	return fLocationMethodProxy;	
-//}
-private IMethodProxy getControlManagerBoundsMethodProxy(){
-	if(fControlManagerBoundsMethodProxy == null){
-		fControlManagerBoundsMethodProxy = fControlManagerProxy.getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
-	}
-	return fControlManagerBoundsMethodProxy;	
-}
+
 /**
  * Return the rectangle for the clientArea as defined as a box within the bounds, so the top left corner
  * is inset by the trim

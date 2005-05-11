@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -28,9 +28,12 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
+
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * Null layout policy helper.
@@ -150,11 +153,9 @@ protected void cancelConstraints(CommandBuilder cb, List children) {
  */
 public List getDefaultConstraint(List children) {
 
-	// We are going to return a array of constraints that 
-	// have x and y values equal to Integer.MIN_VALUE and a width and height that are equal to -1.
-	// These are the place holders that mean that when the constraints are applied, the 
-	// preferred size will be used.
-	return Collections.nCopies(children.size(), new NullConstraint(new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1), true, true));
+	// We are going to return a array of constraints that is marked as everything is preferred, location, width, and height.
+	// It will turn those settings into the calculated preferred settings at execution time.
+	return Collections.nCopies(children.size(), new NullConstraint(XYLayoutUtility.modifyPreferredRectangle(new Rectangle(), true, true, true), true, true));
 }
 
 public Command getChangeConstraintCommand(List children, List constraints) {

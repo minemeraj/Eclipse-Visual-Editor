@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-04-25 16:09:11 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 

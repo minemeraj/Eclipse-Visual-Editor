@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolBarTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -78,7 +78,7 @@ public class ToolBarTreeEditPart extends ControlTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(ToolBarTreeEditPart.this);
+				queueExec(ToolBarTreeEditPart.this, "ITEMS");
 		}
 	};
 

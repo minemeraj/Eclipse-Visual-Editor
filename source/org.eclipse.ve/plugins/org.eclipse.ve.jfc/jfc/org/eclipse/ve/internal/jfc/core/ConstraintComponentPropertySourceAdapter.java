@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ConstraintComponentPropertySourceAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:39 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -73,7 +73,7 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 		if (containerProxyHost == null)
 			return new IPropertyDescriptor[0];	// We don't have a proxy host, really can't go on.
 			
-		boolean containerBad = !containerProxyHost.isBeanProxyInstantiated() || containerProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE; 
+		boolean containerBad = !containerProxyHost.isBeanProxyInstantiated(); 
 		IBeanProxy layoutManagerProxy =  !containerBad ? BeanAwtUtilities.invoke_getLayout(containerProxyHost.getBeanProxy()) : null;
 		
 		createComponentPS();		

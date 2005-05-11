@@ -1,112 +1,87 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/*****************************************************************************************************************************************************
+ * Copyright (c) 2001, 2004 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-package org.eclipse.ve.internal.jfc.core;
+ * Contributors: IBM Corporation - initial API and implementation
+ ****************************************************************************************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-25 16:09:11 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:39 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 
-public class TableColumnProxyAdapter extends BeanProxyAdapter {
+/**
+ * Proxy Adapter for swing TableColumn.
+ * 
+ * @since 1.0.0
+ */
+public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
 
-	
-	protected EStructuralFeature sfModelIndex, sfHeaderValue, sfPreferredWidth;
+	protected EStructuralFeature sfModelIndex, sfHeaderValue;
+
 	protected EReference sfTableColumns;
-	
+
 	public TableColumnProxyAdapter(IBeanProxyDomain aDomain) {
 		super(aDomain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-		sfModelIndex = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_MODELINDEX);		
+		sfModelIndex = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_MODELINDEX);
 		sfHeaderValue = JavaInstantiation.getSFeature(rset, JFCConstants.SF_TABLECOLUMN_HEADERVALUE);
-		sfPreferredWidth = JavaInstantiation.getReference(rset, JFCConstants.SF_TABLECOLUMN_PREFERREDWIDTH);
 		sfTableColumns = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABLE_COLUMNS);
-		
+
 	}
 	
-	/**
-	 * When we validate we need to revalidate the JTable as well to cause the image to
-	 * refresh.
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#invalidateBeanProxy()
 	 */
-	public void validateBeanProxy() {
-		EObject table = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(),sfTableColumns);
+	public void invalidateBeanProxy() {
+		//  When we invalidate we need to revalidate the JTable as well to cause the image to refresh.
+		EObject table = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(), sfTableColumns);
 		// If we are on the freeform then container will not be an instance of table
 		if (table != null) {
-			IBeanProxyHost tableProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) table);
+			IBeanProxyHost tableProxyHost = getSettingBeanProxyHost((IJavaInstance) table);
 			// The table is a Component so this should refresh the shell and the image
 			tableProxyHost.revalidateBeanProxy();
 		}
-	
-	}
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(EStructuralFeature, Object, int)
-	 */
-	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		super.applied(sf, newValue, position);	
-		if (sf == sfPreferredWidth) {
-			// The width of the column changed, so update the table's image
-			validateBeanProxy();
-		} else {
-			modelIndexChanged(sf);
-		}
+
 	}
 
-	protected void modelIndexChanged(EStructuralFeature sf) {
-		if (sf == sfModelIndex && getErrorStatus() != ERROR_SEVERE && !getEObject().eIsSet(sfHeaderValue)) {
-			IJavaObjectInstance table = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy((EObject) getTarget(), sfTableColumns);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator,
+	 *      org.eclipse.jem.internal.proxy.core.IProxy, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
+	 */
+	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
+			throws NoSuchMethodException, NoSuchFieldException {
+		IProxy result = super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
+		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfModelIndex && !getEObject().eIsSet(sfHeaderValue)) {
+			// We changed the model index, need to reset the header value to the default since we've changed the index and have no specific header
+			// value.
+			// If we don't do the reset it won't reflect the changed index in the headers.
+			IJavaObjectInstance table = (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(getEObject(), sfTableColumns);
 			// Not sure if this would occur - perhaps we could be on the free form although this
 			// is unlikely
 			if (table != null) {
-				IBeanProxyHost tableProxyHost = BeanProxyUtilities.getBeanProxyHost(table);
-				if (tableProxyHost.getErrorStatus() != ERROR_SEVERE) {		
-					// Ask the JTableManager to reset the header value to the default since we've changed the index and have no header value set.
-					getResetHeaderValueProxy().invokeCatchThrowableExceptions(null, new IBeanProxy[] {tableProxyHost.getBeanProxy(), getBeanProxy()});
-					tableProxyHost.revalidateBeanProxy();
+				IInternalBeanProxyHost2 tableProxyHost = (IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(table);
+				if (tableProxyHost.getProxy() != null) {
+					IProxyMethod resetHeader = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager", expression).getMethodProxy(expression, "resetHeaderValue",
+							new String[] { "javax.swing.JTable", "javax.swing.table.TableColumn"});
+					expression.createSimpleMethodInvoke(resetHeader, null, new IProxy[] { tableProxyHost.getProxy(), getProxy()}, false);
 				}
 			}
 		}
+		return result;
 	}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(EStructuralFeature, Object, int)
-	 */
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-		super.canceled(sf, oldValue, position);
-		
-		modelIndexChanged(sf);
-	}
-	
-	protected IMethodProxy getResetHeaderValueProxy() {
-		return getBeanProxy()
-				.getProxyFactoryRegistry()
-				.getBeanTypeProxyFactory()
-				.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager")	//$NON-NLS-1$
-				.getMethodProxy("resetHeaderValue", new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn"});	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}	
-
-	/**
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
-	 */
-	public void releaseBeanProxy() {
-		super.releaseBeanProxy();
-	}
-
 }

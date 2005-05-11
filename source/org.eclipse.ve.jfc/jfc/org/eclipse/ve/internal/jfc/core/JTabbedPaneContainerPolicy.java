@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.util.*;
@@ -41,6 +41,9 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 	}
 	protected EClass classJComponent;
 	protected EClass classJTabComponent;
+	protected EReference sfTabTitle;
+	protected EReference sfTabIcon;
+	protected EReference sfTabTooltip;
 	protected EReference sfComponent;
 	protected EFactory visualsFact;
 
@@ -49,6 +52,9 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		sfComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_COMPONENT);
+		sfTabTitle = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_TITLE);
+		sfTabIcon = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_ICON);
+		sfTabTooltip = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_TOOLTIP);
 		classJTabComponent = (EClass) rset.getEObject(JFCConstants.CLASS_JTABBEDPANE_JTABCOMPONENT, true);
 		classJComponent = (EClass) sfComponent.getEType();
 		visualsFact = JFCConstants.getFactory(classJTabComponent);
@@ -127,7 +133,7 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();
-			EObject jtabComponent = visualsFact.create(classJTabComponent);
+			EObject jtabComponent = createJTabComponent();
 			// Add the child to the component.
 			cb.applyAttributeSetting(jtabComponent, sfComponent, child);
 			jtabComponents.add(jtabComponent);
@@ -139,10 +145,27 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 	}
 		
 	/**
+	 * Create a jtabcomponent with the title/icon/tooltip set to null.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	private EObject createJTabComponent() {
+		EObject jtabComponent = visualsFact.create(classJTabComponent);
+		// Explicitly set the tabxxx to null. Needed so we know we are not using the "default" kind of
+		// tab component. We don't generate those, we only add those.
+		jtabComponent.eSet(sfTabTitle, null);
+		jtabComponent.eSet(sfTabIcon, null);
+		jtabComponent.eSet(sfTabTooltip, null);
+		return jtabComponent;
+	}
+
+	/**
 	 * Create a new child which in this case is part of a JTabComponent.
 	 */
 	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		EObject jtabComponent = visualsFact.create(classJTabComponent);
+		EObject jtabComponent = createJTabComponent();
+
 		// Add the child to the component.
 		CommandBuilder cb = new CommandBuilder();
 		cb.applyAttributeSetting((EObject) jtabComponent, sfComponent, child);	

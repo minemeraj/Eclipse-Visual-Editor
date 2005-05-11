@@ -9,220 +9,528 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.vm;
+
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.util.*;
+import java.util.List;
+
+import org.eclipse.jem.internal.proxy.common.*;
 
 import org.eclipse.ve.internal.jfc.common.Common;
-import org.eclipse.jem.internal.proxy.common.*;
-/**
- * This is the ComponentManager used by the JCF.
- * It it is a listener for the component changes and
- * it provides helper routines to quickly
- * access information.
- */
-public class ComponentManager implements ICallback, ComponentListener, HierarchyBoundsListener, HierarchyListener {
 
-	protected IVMServer fServer;
-	protected int fCallbackID;
+/**
+ * This is the ComponentManager. It it is a listener for the component changes and it provides helper routines to quickly access information.
+ * <p>
+ * It also handles the freeform settings for loc and bounds since those need to be saved and returned as default values when set by freeform override.
+ * 
+ * @since 1.1.0
+ */
+public class ComponentManager implements ComponentListener, HierarchyBoundsListener, HierarchyListener {
+
 	protected Component fComponent;
-	protected Container fParent;
+
+	protected ComponentManagerFeedbackController feedbackController;
 
 	/**
-	 * The listener initialize for callback server.
+	 * This class manages the feedback from the component managers. It tries to batch them all together so that it can be sent back as one transaction
+	 * There is only one per registry.
+	 * 
+	 * @since 1.1.0
 	 */
-	public void initializeCallback(IVMServer server, int callbackID){
-		fServer = server;
-		fCallbackID = callbackID;
+	public static class ComponentManagerFeedbackController implements ICallback, Runnable {
+
+		protected IVMServer fServer;
+
+		protected int fCallbackID;
+		
+		private boolean changesHeld;	// Changes are being queued.
+
+		private List transactions = new ArrayList(); // List of transactions to send.
+
+		private List queuedRefreshRequests;
+
+		private Set queuedInvalidImages; // The components that have invalid images will be stored in here.
+
+		private Set queuedInvalidWindows; // The awt.Windows (top-most component) that have been invalidated.
+
+		private Map componentToComponentManagers = new HashMap(); // Map of component's to component managers.
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jem.internal.proxy.common.ICallback#initializeCallback(org.eclipse.jem.internal.proxy.common.IVMServer, int)
+		 */
+		public void initializeCallback(IVMServer server, int callbackID) {
+			fServer = server;
+			fCallbackID = callbackID;
+		}
+
+		/**
+		 * Register that we have a component to manager relationship.
+		 * 
+		 * @param component
+		 * @param manager
+		 * 
+		 * @since 1.1.0
+		 */
+		public void registerComponentManager(Component component, ComponentManager manager) {
+			componentToComponentManagers.put(component, manager);
+		}
+
+		/**
+		 * Deregister the component to manager relationship.
+		 * 
+		 * @param component
+		 * 
+		 * @since 1.1.0
+		 */
+		public void deregisterComponentManager(Component component) {
+			componentToComponentManagers.remove(component);
+		}
+
+		/**
+		 * Queue up for this component and its parents that have registered component managers that their images are invalid. The client will
+		 * eventually call and have all queued up sent back.
+		 * 
+		 * @param component
+		 * 
+		 * @since 1.1.0
+		 */
+		public void invalidateImage(Component component) {
+			// We will gather the top-most windows from all of the intermediate components.
+			// This is so that when asked to send back all invalid images we can validate the
+			// awt.Windows that are invalid.
+			if (queuedInvalidImages == null) {
+				queuedInvalidImages = new HashSet();
+				queuedInvalidWindows = new HashSet();
+			}
+			for (; component != null; component = component.getParent()) {
+				queuedInvalidImages.add(component);
+				if (component instanceof Window) {
+					queuedInvalidWindows.add(component);
+					break;
+				}
+					
+			}
+		}
+
+		private Runnable validateImages = new Runnable() {
+
+			public void run() {
+				// Make sure we still have image to go.
+				if (queuedInvalidImages != null && !queuedInvalidImages.isEmpty()) {
+					// Send out invalidated notification to all of the invalid components.
+					for (Iterator itr = queuedInvalidImages.iterator(); itr.hasNext();) {
+						Component component = (Component) itr.next();
+						ComponentManager cmanager = (ComponentManager) componentToComponentManagers.get(component);
+						if (cmanager != null)
+							cmanager.invalidated();
+					}
+					// Validate the awt.Windows so that we can get the correct size/loc changes being sent.
+					for (Iterator itr = queuedInvalidWindows.iterator(); itr.hasNext();) {
+						Window window = (Window) itr.next();
+						window.validate();
+					}
+					queuedInvalidWindows.clear();
+					// Now send the component manager invalid images transactions.
+					synchronized (transactions) {
+						for (Iterator itr = queuedInvalidImages.iterator(); itr.hasNext();) {
+							Component component = (Component) itr.next();
+							ComponentManager cmanager = (ComponentManager) componentToComponentManagers.get(component);
+							if (cmanager != null) {
+								appendTransaction(cmanager, Common.CL_IMAGEINVALID, null);
+							}
+						}
+					}
+					queuedInvalidImages.clear();
+					ComponentManagerFeedbackController.this.run();
+				}
+			}
+		};
+
+		/**
+		 * Called from the client to post back all of the invalid images.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		public void postInvalidImages() {
+			if (queuedInvalidImages != null && !queuedInvalidImages.isEmpty()) {
+				// We have something to do, but queue it off to the AWT UI thread so that the validates are done on the UI thread.
+				// This will make sure most (but unforunately not all) size/location changes are grouped together and batched rather
+				// than happening sporadically.
+				EventQueue.invokeLater(validateImages);
+			}
+		}
+
+		/**
+		 * Add the transaction to the feedback controller and queue it up. These are to be called from ComponentManager and ComponentManager
+		 * subclasses only.
+		 * 
+		 * @param manager
+		 *            manager that this transaction is from.
+		 * @param callbackID
+		 *            the if of the callback.
+		 * @param parms
+		 *            array of parms for the callback. <code>null</code> if there are no parms.
+		 * 
+		 * @since 1.1.0
+		 */
+		public void addTransaction(ComponentManager manager, int callbackID, Object[] parms) {
+			appendTransaction(manager, callbackID, parms);
+			boolean queueNow;
+			synchronized (this) {
+				queueNow = !changesHeld;
+			}
+			if (queueNow)
+				EventQueue.invokeLater(this); // Queue up for later execution.
+		}
+
+		/*
+		 * Append the transaction to the transaction list. @param manager @param callbackID @param parms
+		 * 
+		 * @since 1.1.0
+		 */
+		private void appendTransaction(ComponentManager manager, int callbackID, Object[] parms) {
+			synchronized (transactions) {
+				transactions.add(manager);
+				transactions.add(new Integer(callbackID));
+				transactions.add(parms != null ? new ICallbackHandler.TransmitableArray(parms) : (Object) parms);
+			}
+		}
+
+		/**
+		 * Queue up the initial refresh request for a manager. The client will call postInitialRefresh when all of the components are initialized.
+		 * That will then take these queued requests and send them.
+		 * 
+		 * @param manager
+		 * 
+		 * @since 1.1.0
+		 */
+		void queueInitialRefresh(ComponentManager manager) {
+			if (queuedRefreshRequests == null)
+				queuedRefreshRequests = new ArrayList();
+			queuedRefreshRequests.add(manager);
+		}
+
+		/**
+		 * This is called by the client. It will take the queued up initial refresh requests and post them to be done.
+		 * 
+		 * @since 1.1.0
+		 */
+		public void postInitialRefresh() {
+			if (queuedRefreshRequests != null && !queuedRefreshRequests.isEmpty()) {
+				final List queued = queuedRefreshRequests;
+				EventQueue.invokeLater(new Runnable() {
+
+					public void run() {
+						synchronized (transactions) {
+							for (int i = 0; i < queued.size(); i++) {
+								ComponentManager manager = (ComponentManager) queued.get(i);
+								if (manager.fComponent != null) {
+									appendTransaction(manager, Common.CL_REFRESHED, manager.getRefreshParms());
+									manager.startComponentListening(); // Start the component listening now.
+								}
+							} 
+						}
+
+						ComponentManagerFeedbackController.this.run(); // Now send all of these back at one time.
+					}
+				});
+			}
+			;
+			queuedRefreshRequests = null;
+		}
+		
+		/**
+		 * Starting changes. When called by client, it will set the addTransaction request to not do an invokeLater but
+		 * instead just queue the transaction. Eventually a postChanges() request will be made and at
+		 * that time any queued up transaction will be sent. This allows the client to tell us that there
+		 * may be multiple changes coming other than new components or invalid images. Such as a size change.
+		 * This will allow all size changes to be queued up until the end.
+		 * 
+		 * @since 1.1.0
+		 */
+		public synchronized void startingChanges() {
+			changesHeld = true;
+		}
+		
+		/**
+		 * Stopping changes. Called by client to indicate all changes held should now be sent.
+		 * 
+		 * @since 1.1.0
+		 */
+		public void postChanges() {
+			synchronized (this) {
+				changesHeld = false;
+			}
+			EventQueue.invokeLater(this);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
+		public void run() {
+			// This should only be called through the event queue. It should not be called directly.
+			final Object[] trans;
+			synchronized (transactions) {
+				if (transactions.isEmpty())
+					return; // Nothing to do.
+				trans = transactions.toArray();
+				transactions.clear();
+			}
+			try {
+				fServer.doCallback(new ICallbackRunnable() {
+
+					public Object run(ICallbackHandler handler) throws CommandException {
+						return handler.callbackWithParms(fCallbackID, Common.CL_TRANSACTIONS, trans);
+					}
+				});
+			} catch (CommandException exp) {
+				exp.printStackTrace();
+			}
+		}
 	}
-	
-	public void setComponentAndParent(Component aComponent, Container aContainer){
-		setComponent(aComponent);
-		setRelativeParentComponent(aContainer);
+
+	/**
+	 * Called when component has been set. It allows subclasses to know this and do whatever they need. Subclasses should override. Default does
+	 * nothing.
+	 * 
+	 * @param newComponent
+	 *            the new component setting
+	 * @param oldComponent
+	 *            the old component setting
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentSet(Component newComponent, Component oldComponent) {
 	}
-	
-	public void setComponent(Component aComponent) {
+
+	/**
+	 * Set the component that this manager is managing.
+	 * 
+	 * @param aComponent
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setComponent(Component aComponent, ComponentManagerFeedbackController feedbackController) {
+		this.feedbackController = feedbackController;
 		if (fComponent != null) {
+			feedbackController.deregisterComponentManager(fComponent);
 			fComponent.removeComponentListener(this);
 			fComponent.removeHierarchyBoundsListener(this);
 			fComponent.removeHierarchyListener(this);
+			locOverridden = false; // Since changing components we should reset to not overridden.
 		}
+		Component oldComponent = fComponent;
 		fComponent = aComponent;
-		fParent = null;
 		if (fComponent != null) {
-			fComponent.addComponentListener(this);
-			// Add hierarchy listener so we know when it is showing because any bounds changes will not be sent
-			// until then. This is different than componentVisible because component can be set to "visible" even though
-			// not showing (i.e. the flag is visible, but one of the parents is not). In those case notifications
-			// may not necessarily be sent.			
-			fComponent.addHierarchyListener(this);
-			// Queue up a refresh to get the bounds, even if not yet showing, get something at least.
-			queueRefresh();	
+			feedbackController.registerComponentManager(fComponent, this);
+			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.
 		}
-	}
-	
-	public void setRelativeParentComponent(Container aContainer) {
-		fComponent.removeHierarchyBoundsListener(this);
-		fParent = aContainer;
-		
-		// Only add if container is not our direct parent. We don't care about ancestor movements if it is our direct parent.
-		if (aContainer != null && aContainer != fComponent.getParent())
-			fComponent.addHierarchyBoundsListener(this);		
-		queueRefresh();	// So now we can get bounds relative to our relative parent.
+		componentSet(fComponent, oldComponent); // Tell subclasses it has changed.
 	}
 	
 	/**
-	 * This will return the location relative to the relative parent.
-	 * This is necessary because sometimes (e.g add to JFrame actually
-	 * adds to the RootPanel) the parent that we add to is not the
-	 * the real parent. We expect the location to be relative to that
-	 * parent and not the real parent, which we don't know about.
+	 * Get the component.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected Component getComponent() {
+		return fComponent;
+	}
+
+	/**
+	 * Called from the client side to invalidate the component. It will also tell the feedback controller about this and the controller will remember
+	 * this for it and its parents for marking as an invalid image. The client side will then eventually ask for all invalid images at once.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void invalidate() {
+		fComponent.invalidate();
+		feedbackController.invalidateImage(fComponent);
+	}
+	
+	/**
+	 * Notification that the component is invalid.
+	 * <p>
+	 * This is called by the Feedback controller when it is about to validate all of the queued up windows. This will
+	 * only be called for invalidations done through the client call to {@link ComponentManager#invalidate() invalidate}
+	 * and to any parents of those components. It will not be called for any component that was invalidated through
+	 * some other means.
+	 * <p>
+	 * The default is to do nothing. Subclasses may do other things. But be aware that immediately after this call
+	 * the component will be validated.
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void invalidated() {
+	}
+	
+	/**
+	 * Called by Feedback controller. This says we've received the initial refresh request, so we can now turn on listening so that we don't miss
+	 * anything. This way until this point in time we don't send out extra notifications. Notifications between the setting of the component and the
+	 * initial refresh are extraneous and should not be sent since the initial refresh groups them all together.
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void startComponentListening() {
+		fComponent.addComponentListener(this);
+		// Add hierarchy listener so we know when it is showing because any bounds changes will not be sent
+		// until then. This is different than componentVisible because component can be set to "visible" even though
+		// not showing (i.e. the flag is visible, but one of the parents is not). In those case notifications
+		// may not necessarily be sent.
+		fComponent.addHierarchyListener(this);
+		// Add a hierarchy bounds listener so we know when any parent has changed.
+		fComponent.addHierarchyBoundsListener(this);
+	}
+
+	/**
+	 * This will return the location relative to "awt.Window" parent (such as Frame) (This is the "absolute" location for components).
+	 * If this is a awt.Window, then the absolute location will be (0,0).
+	 * <p>
+	 * This is necessary because sometimes (e.g add to JFrame actually adds to the RootPanel) the parent that we add to is not the the real parent. We
+	 * expect the location to be relative to that parent and not the real parent, which we don't know about. So instead we are reporting location
+	 * relative to the constant of the top parent. The other side will then use that and the appropriate parent windows location relative to top
+	 * parent to place this child window relative to it.
+	 * <p>
+	 * These coordinates can be compared only if they are from the root window. They don't make sense relative to each other otherwise.
+	 * 
+	 * @since 1.0.0
 	 */
 	public Object[] getLocation() {
-		int x = 0;
-		int y = 0;
-		Component c = fComponent;
-		x = c.getX();
-		y = c.getY();
-		if (fParent != null) {
-			for (Container cntr = c.getParent(); cntr != null && cntr != fParent; cntr = cntr.getParent()) {
-				x += cntr.getX();
-				y += cntr.getY();
+		if (fComponent != null) {
+			int x = 0;
+			int y = 0;
+			for (Component comp = fComponent; comp != null && !(comp instanceof Window); comp = comp.getParent()) {
+				x += comp.getX();
+				y += comp.getY();
 			}
-		}		
-		return new Object[] {new Integer(x), new Integer(y)};
+			return new Object[] { new Integer(x), new Integer(y)};
+		} else
+			return null;
 	}
+
 	/**
-	 * This will return the bounds relative to the relative parent.
-	 * The result is a four element array that is broken down into x,y,width and height
-	 */	
-	public Object[] getBounds(){
-		
-		Object[] location = getLocation();
-		Dimension size = fComponent.getSize();
-		return new Object[] { location[0] , location[1] , new Integer(size.width), new Integer(size.height) };
-		
+	 * This will return the bounds relative to the relative parent. The result is a four element array that is broken down into x,y,width and height.
+	 * <p>
+	 * The location has the same definition of (x,y) as getLocation().
+	 * 
+	 * @see ComponentManager#getLocation()
+	 * @since 1.0.0
+	 */
+	public Object[] getBounds() {
+
+		if (fComponent != null) {
+			Object[] location = getLocation();
+			Dimension size = fComponent.getSize();
+			return new Object[] { location[0], location[1], new Integer(size.width), new Integer(size.height)};
+		} else
+			return null;
+
 	}
-	
-	/**
-	 * java.awt.event.ComponentListener interface
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
 	 */
-	 
-	/**
-	 * Invoked when the component's size changes.
-	 */
-	public void componentResized(final ComponentEvent e) {
-		if (fServer != null) {
-			try {
-				fServer.doCallback(new ICallbackRunnable() {
-					public Object run(ICallbackHandler handler) throws CommandException {
-						Component c = e.getComponent();
-						return handler.callbackWithParms(fCallbackID, Common.CL_RESIZED, new Object[] {new Integer(c.getWidth()), new Integer(c.getHeight())});						
-					}
-				});
-			} catch (CommandException exp) {
-			}
-		}
+	public void componentResized(ComponentEvent e) {
+		Component c = e.getComponent();
+		feedbackController.addTransaction(this, Common.CL_RESIZED, new Object[] { new Integer(c.getWidth()), new Integer(c.getHeight())});
 	}
-	
-	/**
-	 * Invoked when the component's position changes.
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
 	 */
-	public void componentMoved(final ComponentEvent e) {
+	public void componentMoved(ComponentEvent e) {
 		fireMoved();
 	}
 
-	protected void fireMoved() {
-		if (fServer != null) {
-			try {
-				fServer.doCallback(new ICallbackRunnable() {
-					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackWithParms(fCallbackID, Common.CL_MOVED, getLocation());						
-					}
-				});
-			} catch (CommandException exp) {
-			}
-		}
-	}
-	
 	/**
-	 * Invoked when the component has been made visible.
+	 * Fire component moved.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void fireMoved() {
+		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
 	 */
 	public void componentShown(final ComponentEvent e) {
-		if (fServer != null) {
-			try {
-				fServer.doCallback(new ICallbackRunnable() {
-					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackAsConstants(fCallbackID, Common.CL_SHOWN, null);						
-					}
-				});
-			} catch (CommandException exp) {
-			}
-		}
-	}		
-	
-	/**
-	 * Invoked when the component has been made invisible.
+		feedbackController.addTransaction(this, Common.CL_SHOWN, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
 	 */
 	public void componentHidden(final ComponentEvent e) {
-		if (fServer != null) {
-			try {
-				fServer.doCallback(new ICallbackRunnable() {
-					public Object run(ICallbackHandler handler) throws CommandException {
-						return handler.callbackAsConstants(fCallbackID, Common.CL_HIDDEN, null);						
-					}
-				});
-			} catch (CommandException exp) {
-			}
-		}
+		feedbackController.addTransaction(this, Common.CL_HIDDEN, null);
 	}
-	
+
 	/**
-	 * Queue up onto the AWT event queue a refresh request. This gives the
-	 * component a chance to layout before the refresh request is sent back.
-	 * It is initiated from the client side and queued up here.
+	 * Get the refresh parms. This is used by both ComponentManager and ComponentManagerFeedbackController to get the refresh parms. This is because
+	 * either one can request a refresh but the manager want's to do them all at once.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	private Object[] getRefreshParms() {
+		return getBounds();
+	}
+
+	/**
+	 * Queue up onto the AWT event queue a refresh request. This gives the component a chance to layout before the refresh request is sent back. It
+	 * can be initiated from the client side and queued up here.
+	 * 
+	 * @since 1.1.0
 	 */
 	public void queueRefresh() {
+		feedbackController.addTransaction(this, Common.CL_REFRESHED, getRefreshParms());
+		// We are queueing up the request BEFORE queueing it up again so that if there are any layout's pending
+		// they will be processed before the transaction can be queued up and get the parms at that time
+		// instead of now.
 		EventQueue.invokeLater(new Runnable() {
+
 			public void run() {
-				if (fServer != null) {
-					try {
-						fServer.doCallback(new ICallbackRunnable() {
-							public Object run(ICallbackHandler handler) throws CommandException {
-								return handler.callbackAsConstants(fCallbackID, Common.CL_REFRESHED, getBounds());						
-							}
-						});
-					} catch (CommandException exp) {
-					}
-				}
+				feedbackController.addTransaction(ComponentManager.this, Common.CL_REFRESHED, getRefreshParms());
 			}
 		});
 	}
-	
-	/**
-	 * java.awt.event.HierarchyBoundsListener interface
-	 */
 
-	/**
-	 * @see java.awt.event.HierarchyBoundsListener#ancestorMoved(HierarchyEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.HierarchyBoundsListener#ancestorMoved(java.awt.event.HierarchyEvent)
 	 */
 	public void ancestorMoved(HierarchyEvent e) {
-		// One of our ancestors moved, and we are listening Which means are relative parent component is not our direct parent,
-		// so we need to know one of those in-between has changed so that we can say we moved. However, it could of been the
-		// parent component itself, in which case we don't care because he would also being listened to directly.
-		// Any above the parent should also be ignored because they are handled by other listeners.
-		Component cMoved = e.getChanged();	// The component that moved.
+		// One of our ancestors moved.
+		// So we need to know one of those in-between has changed so that we can say we moved.
+		Component cMoved = e.getChanged(); // The component that moved.
 		// If the component moved is us, no need to signal because we are listening to ourselves.
 		if (cMoved != fComponent) {
-			// It wasn't us, so see if it is one that is in-between us and the parent.
-			for (Container cntr = fComponent.getParent(); cntr != null && cntr != fParent; cntr = cntr.getParent()) {
-				if (cntr == cMoved) {										
+			// It wasn't us, so see if it is one that is in-between us and the root window.
+			for (Component cntr = fComponent.getParent(); cntr != null && !(cntr instanceof Window); cntr = cntr.getParent()) {
+				if (cntr == cMoved) {
 					fireMoved();
 					break;
 				}
@@ -230,26 +538,143 @@ public class ComponentManager implements ICallback, ComponentListener, Hierarchy
 		}
 	}
 
-	/**
-	 * @see java.awt.event.HierarchyBoundsListener#ancestorResized(HierarchyEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.HierarchyBoundsListener#ancestorResized(java.awt.event.HierarchyEvent)
 	 */
 	public void ancestorResized(HierarchyEvent e) {
 		// We don't care if a parent resized.
 	}
-	
-	/**
-	 * java.awt.event.HierarchyListener interface
-	 */	
 
-	/**
-	 * @see java.awt.event.HierarchyListener#hierarchyChanged(HierarchyEvent)
+	
+	private static int INTERESTED_HIERARCHYCHANGES = HierarchyEvent.PARENT_CHANGED | HierarchyEvent.SHOWING_CHANGED;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.HierarchyListener#hierarchyChanged(java.awt.event.HierarchyEvent)
 	 */
-	public void hierarchyChanged(HierarchyEvent e) {		
-		if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && fComponent.isShowing()) {
+	public void hierarchyChanged(HierarchyEvent e) {
+		if (e.getID() == HierarchyEvent.HIERARCHY_CHANGED && (e.getChangeFlags() & INTERESTED_HIERARCHYCHANGES) != 0 && fComponent.isShowing()) {
 			// We now became visible (or one of our parents), we weren't before, so queue a refresh so that IDE can get current
-			// bounds since those notifications probably didn't go out.					
+			// bounds since those notifications probably didn't go out. Or we changed parent. That would affect location too.
 			queueRefresh();
 		}
+	}
+
+	// ---------------- Part that handles the default loc when on freeform
+	protected Point overPoint; // The last applied location when we are in override mode.
+
+	protected boolean locOverridden;
+
+	/**
+	 * Apply bounds. If the loc was overridden, this will not apply bounds, just the size part of it. It will fill the oldRect, if not null, with the
+	 * before set value. If it was overridden, then the loc will be the previous override loc.
+	 * 
+	 * @param rect
+	 * @param oldRect
+	 *            if not null it will be set with the previous bounds.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void applyBounds(Rectangle rect, Rectangle oldRect) {
+		if (!locOverridden) {
+			if (oldRect != null)
+				fComponent.getBounds(oldRect);
+			fComponent.setBounds(rect);
+		} else {
+			if (oldRect != null) {
+				oldRect.setLocation(overPoint);
+				oldRect.setSize(fComponent.getWidth(), fComponent.getHeight());
+			}
+			fComponent.setSize(rect.width, rect.height); // Overriding, but we still need to set the size part.
+			// We are overriding, so save the rect's location so that it will look like this spot when queried.
+			overPoint.x = rect.x;
+			overPoint.y = rect.y;
+		}
+	}
+
+	/**
+	 * Apply location, and return previous value. If loc was overridden, this will not apply loc. It will fill the oldPoint, if not null, with the
+	 * before set value. If it was overridden, then the loc will be the previous override loc.
+	 * 
+	 * @param point
+	 * @param oldPoint
+	 *            if not null it will be set with the previous loc.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void applyLocation(Point point, Point oldPoint) {
+		if (!locOverridden) {
+			if (oldPoint != null)
+				fComponent.getLocation(oldPoint);
+			fComponent.setLocation(point);
+		} else {
+			if (oldPoint != null) {
+				oldPoint.setLocation(overPoint);
+			}
+			// We are overriding, so save the point's location so that it will look like this spot when queried.
+			overPoint.x = point.x;
+			overPoint.y = point.y;
+		}
+	}
+
+	/**
+	 * Force an override of loc so that it will go to specified loc but it will get the current loc and store it as the overridden value for later
+	 * retrieval.
+	 * 
+	 * @param x
+	 * @param y
+	 * 
+	 * @since 1.1.0
+	 */
+	public void overrideLoc(int x, int y) {
+		if (!locOverridden) {
+			overPoint = fComponent.getLocation(overPoint);
+			locOverridden = true;
+		}
+		fComponent.setLocation(x, y);
+	}
+
+	/**
+	 * Remove the override of the loc.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void removeOverrideLoc() {
+		if (locOverridden) {
+			locOverridden = false;
+			if (overPoint != null)
+				fComponent.setLocation(overPoint);
+		}
+	}
+
+	/**
+	 * Query the default loc. Which is the current loc if not override, or the last set loc if override applied.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Point getDefaultLocation() {
+		if (locOverridden)
+			return overPoint;
+		else
+			return fComponent.getLocation();
+	}
+
+	/**
+	 * Query the default bounds. Which is the current bounds if not override, or the last set loc with the current size if override applied.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Rectangle getDefaultBounds() {
+		if (locOverridden)
+			return new Rectangle(overPoint.x, overPoint.y, fComponent.getWidth(), fComponent.getHeight());
+		else
+			return fComponent.getBounds();
 	}
 
 }

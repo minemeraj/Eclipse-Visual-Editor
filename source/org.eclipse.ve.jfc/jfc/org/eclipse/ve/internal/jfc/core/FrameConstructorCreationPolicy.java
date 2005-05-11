@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FrameConstructorCreationPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -47,6 +47,11 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 			 * @see org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper#execute()
 			 */
 			public void execute() {
+				// TODO This is really bad code. We need to understand and create the
+				// init method as 
+				//   getDialog(Frame parent) or getDialog(Dialog parent) {
+				//     dialog1 = new Dialog(parent);
+				//
 				JavaClass javaClass = (JavaClass) aCreateRequest.getNewObjectType();
 				JavaClass frameClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("java.awt.Frame", javaClass); //$NON-NLS-1$
 				// Look at the constructors to see whether there is a null constructor or not

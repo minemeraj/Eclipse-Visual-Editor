@@ -9,217 +9,1109 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
+
 /*
- *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 19:01:38 $
  */
 
+import java.io.InputStream;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
+import org.eclipse.jface.util.ListenerList;
+import org.eclipse.swt.graphics.ImageData;
 
-import org.eclipse.jem.internal.proxy.awt.IDimensionBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
 
-import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
-import org.eclipse.ve.internal.cde.core.VisualComponentSupport;
+import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.jfc.common.Common;
+import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
+
 /**
- * This is the IDE class that is the callback listener for org.eclipse.ve.internal.jfc.vm.ComponentListener
- * that is running in the target VM
- * Implementors of IVisualComponentListeners can add themselves as listeners to this
- * and they will be notified when the component moves, resizes, or is hidden or shown
+ * Manager of awt.Component. It provides the functions of the IVisualComponent for interfacing to the live component, including the image support. It
+ * will notify back of any size/position changes. It will also handle validating and refreshing images of any parent components of this component that
+ * may of gone stale do to changes made in this component. That way you don't need to be aware of this in the parent components and so there is no
+ * need to tell them that their image is stale.
+ * <p>
+ * The callback locations/bounds will be absolute, relative to the awt.Window that the component is in. This doesn't return relative bounds. These are
+ * the VisualComponent bounds. This is different than the actual bounds/location that are set through here.
+ * <p>
+ * Since it doesn't care about IBeanProxyHost's, just component proxies, it can be used by non-component proxy hosts that use an awt.Component as the
+ * visual.
+ * <p>
+ * It uses IExpression's and IProxy's for many of the calls so that these can be built up all in one Expression. It is more efficient to do it this
+ * way. The ModelChangeController is used in many of the API so that at the end of current transaction clean-up transactions can be done. This way we
+ * can group many transaction together into one batch job at the end. These API should be called from within a transaction for this to be effective.
+ * Otherwise you will loose the batching because they will each be queued off to the UI thread and not grouped together.
+ * <p>
+ * The way to use it outside of ComponentProxyAdapter for when you want to use an AWT Component as the visual component of a non-visual is this. When
+ * you create your bean proxy for the component you will do a
+ * {@link ComponentManager#setComponentBeanProxy(IProxy, IExpression , ModelChangeController)}. This will tell it what component to monitor. When
+ * this component is disposed, {@link ComponentManager#dispose(IExpression)} should be called to release all of the resources this manager is using.
+ * Once disposed, the manager can be used again by just doing the setComponentBeanProxy.
+ * <p>
+ * Whenever changes are being made to a component, you should call {@link ComponentManager#invalidate(ModelChangeController)} so that we know this and
+ * can invalidate and revalidate this component and any parent component with a new image. You can all invalidate as often as needed during a
+ * transaction. It will use the ModelChangeController to batch it down one transaction at the end of the current transaction.
+ * 
+ * @since 1.0.0
  */
-public class ComponentManager implements ICallback {
-	
+public class ComponentManager {
+
+	public interface IComponentImageListener extends IImageListener {
+
+		/**
+		 * Called for any image status as a result of image collection. If the image was successfully collected you will receive first an imageStatus
+		 * and then an imageChanged. If the collection was not successful, you will receive only an imageStatus.
+		 * <p>
+		 * You can use this or ignore this notification. The ImageDataConstants contains the status that can be sent.
+		 * 
+		 * @param status
+		 * 
+		 * @see org.eclipse.ve.internal.jfc.common.ImageDataConstants#IMAGE_ABORTED
+		 * @since 1.1.0
+		 */
+		public void imageStatus(int status);
+
+		/**
+		 * An exception occured during image capture. This is the exception. No status or data will be sent.
+		 * 
+		 * @param exception
+		 * 
+		 * @since 1.1.0
+		 */
+		public void imageException(ThrowableProxy exception);
+	}
+
 	protected VisualComponentSupport vcSupport = new VisualComponentSupport();
-	protected IBeanProxy fComponentManagerProxy;
-	protected IBeanProxy fComponentBeanProxy;
+
+	protected IProxy fComponentManagerProxy;
+
+	protected IProxy fComponentBeanProxy;
+
 	private Point fLastSignalledLocation;
+
 	private Dimension fLastSignalledSize;
-	
-public void addComponentListener(IVisualComponentListener aListener){
-	vcSupport.addComponentListener(aListener);
-}
-public void removeComponentListener(IVisualComponentListener aListener){
-	vcSupport.removeComponentListener(aListener);
-}
-/**
- * Set the bean proxy of the component that we are listening to
- */
-public void setComponentBeanProxy(IBeanProxy aComponentBeanProxy){
-	// Deregister any listening from the previous non null component bean proxy
-	if ( fComponentBeanProxy != null )
-		BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, null);
-		
-	fComponentBeanProxy = aComponentBeanProxy;
-	if ( fComponentBeanProxy != null ) {
-		try {
+
+	private Point locationOverride;
+
+	private ImageNotifierSupport imSupport;
+
+	private final Object imageAccessorSemaphore = new Object(); // [73930] Semaphore for access to image stuff, can't use (this) because that is also
+
+	// used for instantiation and deadlock can occur.
+
+	private ImageDataCollector fImageDataCollector;
+
+	// Image validity flag it must be checked/changed only under synchronization on this.
+	private int fImageValid = INVALID;
+
+	private static final int INVALID = 1; // Image is invalid, even if currently collecting, that will be aborted and thrown away.
+
+	private static final int INVALID_COLLECTING = 2; // Image is invalid, but currently collecting to make it valid.
+
+	private static final int VALID = 3; // Image is valid.
+
+	private ListenerList componentImageListeners; // KLUDGE need an extra list because we want to signal status and ImageNotifier doesn't signal
+													// image
+
+	// status.
+
+	/**
+	 * Add a component listener.
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.1.0
+	 */
+	public void addComponentListener(IVisualComponentListener aListener) {
+		vcSupport.addComponentListener(aListener);
+	}
+
+	/**
+	 * Remove a component listener.
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.1.0
+	 */
+	public void removeComponentListener(IVisualComponentListener aListener) {
+		vcSupport.removeComponentListener(aListener);
+	}
+
+	/**
+	 * Get the actual resolved component manager proxy. If not yet resolved a ClassCastException will be thrown.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IBeanProxy getComponentManagerBeanProxy() {
+		return (IBeanProxy) fComponentManagerProxy;
+	}
+
+	/**
+	 * Get the actual resolved component proxy. If not yet resolved a ClassCaseException will be thrown.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IBeanProxy getComponentBeanProxy() {
+		return (IBeanProxy) fComponentBeanProxy;
+	}
+
+	/**
+	 * Return whether component manager has been disposed or not.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean isDisposed() {
+		return fComponentManagerProxy == null;
+	}
+
+	/**
+	 * Set the component bean proxy using the given expression.
+	 * 
+	 * @param componentProxy
+	 * @param expression
+	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setComponentBeanProxy(IProxy componentProxy, IExpression expression, ModelChangeController changeController) {
+		// Deregister any listening from the previous non null component bean proxy
+		final FeedbackController feedbackController = BeanAwtUtilities.getFeedbackController(expression);
+		if (fComponentBeanProxy != null)
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
+					fComponentBeanProxy, feedbackController.getProxy()}, false);
+		fComponentBeanProxy = null;
+		if (componentProxy != null) {
 			if (fComponentManagerProxy == null) {
-				IBeanTypeProxy componentManagerType = fComponentBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager"); //$NON-NLS-1$
-				fComponentManagerProxy = componentManagerType.newInstance();
-				aComponentBeanProxy.getProxyFactoryRegistry().getCallbackRegistry().registerCallback(fComponentManagerProxy,this);
+				ExpressionProxy newManager = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+				fComponentManagerProxy = newManager;
+				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
+						.getBeanTypeProxy(expression, getComponentManagerClassname()), 0);
+				newManager.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						fComponentManagerProxy = event.getProxy();
+						feedbackController.registerComponentManager(ComponentManager.this, (IBeanProxy) fComponentManagerProxy);
+					}
+
+					public void proxyNotResolved(ProxyEvent event) {
+						JavaVEPlugin.log("Component manager proxy not resolved on remote vm.", Level.INFO);
+						fComponentManagerProxy = null;
+					}
+				});
 			}
-			BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, fComponentBeanProxy);	
-		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, Level.WARNING);
+
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
+					componentProxy, feedbackController.getProxy()}, false);
+			if (componentProxy.isExpressionProxy()) {
+				((ExpressionProxy) componentProxy).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						fComponentBeanProxy = event.getProxy();
+					}
+				});
+			} else
+				fComponentBeanProxy = (IBeanProxy) componentProxy;
+			if (locationOverride != null) {
+				// Need to apply right away.
+				expression.createSimpleMethodInvoke(BeanAwtUtilities.getOverrideLocationMethodProxy(expression), fComponentManagerProxy,
+						new IProxy[] { expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(locationOverride.x),
+								expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(locationOverride.y)}, false);
+			}
+
+			feedbackController.queueInitialRefresh(changeController);
+			feedbackController.queueInvalidate(this, changeController); // Also queue up an invalidate and an image refresh to occur also.
 		}
 	}
-}
 
-/**
- * Set the relative parent of the component we are hosting.  This is the parent that 
- * we calculate positional offsets from
- */
-public void setRelativeParentComponentBeanProxy(IBeanProxy aContainerBeanProxy){
-		BeanAwtUtilities.invoke_set_RelativeParent_Manager(fComponentManagerProxy, aContainerBeanProxy);	
-}
-
-public Object calledBack(int msgID, Object parm){
-	switch ( msgID ) {		
-		case Common.CL_HIDDEN :
-			componentHidden();
-			break;
-		case Common.CL_SHOWN :
-			componentShown();
-			break;
-		case Common.CL_REFRESHED :
-			Object[] bounds = (Object[]) parm; 
-			fLastSignalledLocation = new Point(((Integer)bounds[0]).intValue(),((Integer)bounds[1]).intValue());
-			fLastSignalledSize = new Dimension(((Integer)bounds[2]).intValue(),((Integer)bounds[3]).intValue());
-			fireComponentRefresh();
-			break;
+	/**
+	 * Get the component manager classname. Subclasses should return there own if necessary.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected String getComponentManagerClassname() {
+		return "org.eclipse.ve.internal.jfc.vm.ComponentManager";
 	}
-	return null;
-}
 
-public Object calledBack(int msgID, IBeanProxy parm){
-	throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
-}
-public void calledBackStream(int msgID, java.io.InputStream is){
-	throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
-}
-public Object calledBack(int msgID, Object[] parms){
-	switch ( msgID ) {
-		case Common.CL_RESIZED : 
-			componentResized(
-				((IIntegerBeanProxy)parms[0]).intValue(),
-				((IIntegerBeanProxy)parms[1]).intValue()				
-			);
-			break;
-		case Common.CL_MOVED :
-			componentMoved(
-				((IIntegerBeanProxy)parms[0]).intValue(),
-				((IIntegerBeanProxy)parms[1]).intValue()
-			);
-			break;			
-	}
-	return null;
-}
-protected void componentResized(int width, int height){
-	fLastSignalledSize = new Dimension(width,height);
-	vcSupport.fireComponentResized(width, height);
-}
-protected void componentMoved(int x, int y){
-	fLastSignalledLocation = new Point(x,y);
-	vcSupport.fireComponentMoved(x, y);
-}
-protected void componentHidden(){
-	vcSupport.fireComponentHidden();
-}
-protected void componentShown(){
-	vcSupport.fireComponentShown();
-}
-/**
- * fireComponentRefresh. Send out a refresh notification.
- */
-public void fireComponentRefresh() {
-	vcSupport.fireComponentRefreshed();
-}
-
-public void dispose(){
-	if ( fComponentManagerProxy != null) {
-		if (fComponentManagerProxy.isValid()) {
-			// Created and not already released (could of been released due to registry shutdown and is now being GC'd.
-			BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, null);
-			fComponentManagerProxy.getProxyFactoryRegistry().getCallbackRegistry().deregisterCallback(fComponentManagerProxy);
-			fComponentManagerProxy.getProxyFactoryRegistry().releaseProxy(fComponentManagerProxy);
+	/**
+	 * This will be called from the feedback controller when there is more than one parm.
+	 * 
+	 * @param msgID
+	 * @param parms
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void calledBack(int msgID, Object[] parms) {
+		switch (msgID) {
+			case Common.CL_HIDDEN:
+				componentHidden();
+				break;
+			case Common.CL_SHOWN:
+				componentShown();
+				break;
+			case Common.CL_RESIZED:
+				componentResized(((IIntegerBeanProxy) parms[0]).intValue(), ((IIntegerBeanProxy) parms[1]).intValue());
+				break;
+			case Common.CL_MOVED:
+				componentMoved(((IIntegerBeanProxy) parms[0]).intValue(), ((IIntegerBeanProxy) parms[1]).intValue());
+				break;
+			case Common.CL_REFRESHED:
+				// The location is "absolute", i.e. location relative to awt.Window the component is in.
+				fLastSignalledLocation = new Point(((IIntegerBeanProxy) parms[0]).intValue(), ((IIntegerBeanProxy) parms[1]).intValue());
+				fLastSignalledSize = new Dimension(((IIntegerBeanProxy) parms[2]).intValue(), ((IIntegerBeanProxy) parms[3]).intValue());
+				printmoved("refreshed");
+				fireComponentRefresh();
+				break;
+			case Common.CL_IMAGEINVALID:
+				// The image for this component is invalid. Go do image refresh if we have any listeners.
+				if (imSupport != null && imSupport.hasImageListeners()) {
+					// Now we are finally ready for images, create the image data collector if needed.
+					getImageCollector();
+					invalidateImage();
+					refreshImage();
+				}
+				break;
 		}
-		fComponentManagerProxy = null;
 	}
-}
 
-public Rectangle getBounds() {
+	int movedCtr;
 
-	if(fLastSignalledLocation != null && fLastSignalledSize != null){
-		return new Rectangle(fLastSignalledLocation.x,fLastSignalledLocation.y,fLastSignalledSize.width,fLastSignalledSize.height);
+	/**
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	private void printmoved(String type) {
+		if (VisualComponentsLayoutPolicy.DO_VC_TRACING) {
+			movedCtr++;
+			if (fComponentBeanProxy.isBeanProxy())
+				System.out.println("Component " + ((IBeanProxy) fComponentBeanProxy).getTypeProxy().getTypeName() + "(" + hashCode() + ") cntr:"
+						+ movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')');
+			else
+				System.out.println("Component (" + hashCode() + ") cntr:" + movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')');
+		}
 	}
-	
-	try {
-		IArrayBeanProxy boundsProxy = BeanAwtUtilities.invoke_get_Bounds_Manager(fComponentManagerProxy);
-		return new Rectangle(
-				((IIntegerBeanProxy) boundsProxy.get(0)).intValue(), 
-				((IIntegerBeanProxy) boundsProxy.get(1)).intValue(),
-				((IIntegerBeanProxy) boundsProxy.get(2)).intValue(),
-				((IIntegerBeanProxy) boundsProxy.get(3)).intValue());
-	} catch (ThrowableProxy e) {
-		return new Rectangle();
-	}
-	
-}
 
-/**
- * Return the location relative to our parent component
- */
-public Point getLocation() {
-	
-	if(fLastSignalledLocation != null){
-		return fLastSignalledLocation;
+	/**
+	 * Component resized. Subclasses may override to know when resized occurred. Should call super.
+	 * 
+	 * @param width
+	 * @param height
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentResized(int width, int height) {
+		fLastSignalledSize = new Dimension(width, height);
+		vcSupport.fireComponentResized(width, height);
 	}
-	
-	try {
-		IArrayBeanProxy locProxy = BeanAwtUtilities.invoke_get_Location_Manager(fComponentManagerProxy);
-		return new Point(((IIntegerBeanProxy) locProxy.get(0)).intValue(), ((IIntegerBeanProxy) locProxy.get(1)).intValue());
-	} catch (ThrowableProxy e) {
-		return new Point();
-	}
-}
 
-public Dimension getSize() {
-	
-	if(fLastSignalledSize != null){
-		return fLastSignalledSize;
+	/**
+	 * Component moved. Subclasses may override to know when move occurred. Should call super.
+	 * 
+	 * @param x
+	 * @param y
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentMoved(int x, int y) {
+		// The location is "absolute" in that it is relative to the awt.Window that the component is in.
+		fLastSignalledLocation = new Point(x, y);
+		printmoved("moved");
+		vcSupport.fireComponentMoved(x, y);
 	}
-	
-	IDimensionBeanProxy sizeProxy = BeanAwtUtilities.invoke_getSize(fComponentBeanProxy);
-	return new Dimension(sizeProxy.getWidth(),sizeProxy.getHeight());
-}
-/**
- * @param visualComponentBeanProxy for the Component itself
- * @param parentContainerBeanProxy for the relative parent container
- */
-public void setComponentAndParent(IBeanProxy aComponentBeanProxy, IBeanProxy parentContainerBeanProxy) {
-	
-//	 Deregister any listening from the previous non null component bean proxy
-	if ( fComponentBeanProxy != null )
-		BeanAwtUtilities.invoke_set_ComponentBean_Manager(fComponentManagerProxy, null);
-		
-	fComponentBeanProxy = aComponentBeanProxy;
-	if ( fComponentBeanProxy != null ) {
-		try {
-			if (fComponentManagerProxy == null) {
-				IBeanTypeProxy componentManagerType = fComponentBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ComponentManager"); //$NON-NLS-1$
-				fComponentManagerProxy = componentManagerType.newInstance();
-				aComponentBeanProxy.getProxyFactoryRegistry().getCallbackRegistry().registerCallback(fComponentManagerProxy,this);
-				BeanAwtUtilities.invoke_set_ComponentAndParentBean_Manager(fComponentManagerProxy,aComponentBeanProxy,parentContainerBeanProxy);				
+
+	/**
+	 * Component hidden. Subclasses may override to know when hidden. Should call super.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentHidden() {
+		vcSupport.fireComponentHidden();
+	}
+
+	/**
+	 * Component shown. Subclasses may override to know when shown. Should call super.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentShown() {
+		vcSupport.fireComponentShown();
+	}
+
+	/**
+	 * fireComponentRefresh. Send out a refresh notification.
+	 */
+	protected void fireComponentRefresh() {
+		vcSupport.fireComponentRefreshed();
+	}
+
+	/**
+	 * Dispose the component manager.
+	 * 
+	 * @param expression
+	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void dispose(IExpression expression) {
+		if (fImageDataCollector != null) {
+			// Be on the safe so no spurious last minute notifications are sent out.
+			fImageDataCollector.release();
+			fImageDataCollector = null;
+		}
+
+		if (fComponentManagerProxy != null) {
+			FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
+			if (fComponentManagerProxy.isBeanProxy()) {
+				feedback.deregisterComponentManager((IBeanProxy) fComponentManagerProxy);
+				if (getComponentManagerBeanProxy().isValid()) {
+					expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy,
+							new IProxy[] { null, feedback.getProxy()}, false);
+					getComponentManagerBeanProxy().getProxyFactoryRegistry().releaseProxy(getComponentManagerBeanProxy());
+				}
 			}
-		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-		}		
+			locationOverride = null;
+			fComponentManagerProxy = null;
+			fComponentBeanProxy = null;
+			fLastSignalledLocation = null;
+			fLastSignalledSize = null;
+		}
 	}
-	
-}
+
+	/**
+	 * Get the visual component bounds. This is "absolute" by being relative to the awt.Window that the component is in. This is different than the
+	 * default bounds, and the applyBounds. Those are the true bounds used by the component. If the component has not yet sent the original refresh
+	 * this will return (0,0,0,0).
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Rectangle getBounds() {
+
+		if (fLastSignalledLocation != null && fLastSignalledSize != null) {
+			if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
+				System.out.println("Requested bounds (" + hashCode() + ") cntr:" + movedCtr + " loc: " + fLastSignalledLocation);
+			return new Rectangle(fLastSignalledLocation.x, fLastSignalledLocation.y, fLastSignalledSize.width, fLastSignalledSize.height);
+		} else
+			return new Rectangle();
+	}
+
+	/**
+	 * Get the visual component location. This is "absolute" by being relative to the awt.Window that the component is in. This is different than the
+	 * default location, and the applyLocation. Those are the true locations used by the component. If the component has not yet sent back the
+	 * location from the initial refresh it will return (0,0).
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Point getLocation() {
+
+		if (fLastSignalledLocation != null)
+			return fLastSignalledLocation;
+		else
+			return new Point();
+	}
+
+	/**
+	 * Get the size of the component. It will return an empty size until the component has signaled that it is up and ready.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Dimension getSize() {
+
+		if (fLastSignalledSize != null)
+			return fLastSignalledSize;
+		else
+			return new Dimension();
+	}
+
+	/**
+	 * Apply the bounds using the expression, and return the old value if the wantOldValue is true. This apply will honor location override.
+	 * 
+	 * @param bounds
+	 * @param wantOldValue
+	 *            <code>true</code> if want old value returned
+	 * @param expression
+	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression.
+	 * @param controller
+	 * @return oldValue if wantOldValue is true, or null if false.
+	 * 
+	 * @since 1.1.0
+	 */
+	public IProxy applyBounds(IProxy bounds, boolean wantOldValue, IExpression expression, ModelChangeController controller) {
+		FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
+		feedback.startChanges(controller, expression); // Let the server know that there is something that could cause multiple changes and that it
+														// should queue up.
+
+		IProxy oldValue;
+		if (!wantOldValue)
+			oldValue = null;
+		else {
+			oldValue = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
+					.getBeanTypeProxy(expression, "java.awt.Rectangle"), 0);
+		}
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getApplyBoundsMethodProxy(expression), fComponentManagerProxy, new IProxy[] { bounds,
+				oldValue}, false);
+		return oldValue;
+	}
+
+	/**
+	 * Apply the location using the expression, and return the old value if the wantOldValue is true. This apply will honor the location override.
+	 * 
+	 * @param location
+	 * @param wantOldValue
+	 *            <code>true</code> if want old value returned
+	 * @param expression
+	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression.
+	 * @param controller
+	 * @return oldValue if wantOldValue is true, or null if false.
+	 * 
+	 * @since 1.1.0
+	 */
+	public IProxy applyLocation(IProxy location, boolean wantOldValue, IExpression expression, ModelChangeController controller) {
+		FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
+		feedback.startChanges(controller, expression); // Let the server know that there is something that could cause multiple changes and that it
+														// should queue up.
+
+		IProxy oldValue;
+		if (!wantOldValue)
+			oldValue = null;
+		else {
+			oldValue = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
+					.getBeanTypeProxy(expression, "java.awt.Point"), 0);
+		}
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getApplyLocationMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
+				location, oldValue}, false);
+		return oldValue;
+	}
+
+	/**
+	 * Override the location with this location. If the manager has not yet been instantiated, this override will be queued up and applied at
+	 * instantiation time. This should not be called during instantiation of the manager because the expression is still in process. The override
+	 * can't be canceled once applied until the manager has been disposed. At that time the override will be canceled.
+	 * 
+	 * @param point
+	 * 
+	 * @since 1.1.0
+	 */
+	public void overrideLocation(Point point) {
+		if (fComponentManagerProxy != null && fComponentManagerProxy.isBeanProxy()) {
+			// Apply directly
+			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
+			BeanAwtUtilities.getOverrideLocationMethodProxy(registry).invokeCatchThrowableExceptions(
+					getComponentManagerBeanProxy(),
+					new IBeanProxy[] { registry.getBeanProxyFactory().createBeanProxyWith(point.x),
+							registry.getBeanProxyFactory().createBeanProxyWith(point.y)});
+		}
+		locationOverride = point; // Save for when instantiate occurs.
+	}
+
+	/**
+	 * Get the default location. If no override applied, it returns the current location, else it returns the location at the time before the override
+	 * was applied.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public IBeanProxy getDefaultLocation() {
+		if (fComponentManagerProxy != null) {
+			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
+			return BeanAwtUtilities.getDefaultLocationMethodProxy(registry).invokeCatchThrowableExceptions(getComponentManagerBeanProxy());
+		} else
+			return null;
+	}
+
+	/**
+	 * Get the default bounds. If no override applied, it returns the current bounds, else it returns the location at the time before the override was
+	 * applied, and current size as the bounds.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public IBeanProxy getDefaultBounds() {
+		if (fComponentManagerProxy != null && fComponentManagerProxy.isBeanProxy()) {
+			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
+			return BeanAwtUtilities.getDefaultBoundsMethodProxy(registry).invokeCatchThrowableExceptions(getComponentManagerBeanProxy());
+		} else
+			return null;
+	}
+
+	/**
+	 * Get component manager proxy.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IProxy getComponentManagerProxy() {
+		return fComponentManagerProxy;
+	}
+
+	/**
+	 * Invalidate the component. The controller is used so that the invalidation/validation is gathered up and only done once at the end.
+	 * 
+	 * @param controller
+	 * 
+	 * @since 1.1.0
+	 */
+	public void invalidate(ModelChangeController controller) {
+		FeedbackController feedback = BeanAwtUtilities.getFeedbackController(getRegistry());
+		feedback.queueInvalidate(this, controller);
+	}
+
+	/**
+	 * Get the registry that this manager is created under.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	private ProxyFactoryRegistry getRegistry() {
+		return fComponentManagerProxy.isBeanProxy() ? ((IBeanProxy) fComponentManagerProxy).getProxyFactoryRegistry()
+				: ((ExpressionProxy) fComponentManagerProxy).getExpression().getRegistry();
+	}
+
+	/*
+	 * Do actual invalidation. This is called only from the feedback controller.
+	 */
+	private void invalidate(IExpression expression) {
+		if (fComponentManagerProxy != null)
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getComponentInvalidate(expression), fComponentManagerProxy, null, false);
+	}
+
+	/**
+	 * Add image listener.
+	 * 
+	 * @param listener
+	 * 
+	 * @see IImageNotifier#addImageListener(IImageListener)
+	 * @since 1.1.0
+	 */
+	public void addImageListener(IImageListener listener) {
+		if (imSupport == null)
+			imSupport = new ImageNotifierSupport();
+		if (listener instanceof IComponentImageListener) {
+			if (componentImageListeners == null)
+				componentImageListeners = new ListenerList(1);
+			componentImageListeners.add(listener);
+		}
+		imSupport.addImageListener(listener);
+		if (fComponentBeanProxy != null && fComponentBeanProxy.isBeanProxy())
+			getImageCollector(); // Start up image collecting, we have listeners and we have a live bean. They go together that way.
+	}
+
+	/**
+	 * Remove image listener.
+	 * 
+	 * @param listener
+	 * 
+	 * @see IImageNotifier#removeImageListener(IImageListener)
+	 * @since 1.1.0
+	 */
+	public void removeImageListener(IImageListener listener) {
+		if (imSupport != null)
+			imSupport.removeImageListener(listener);
+		if (listener instanceof IComponentImageListener && componentImageListeners != null)
+			componentImageListeners.remove(listener);
+	}
+
+	/**
+	 * Has image listeners?
+	 * 
+	 * @return
+	 * 
+	 * @see IImageNotifier#hasImageListeners()
+	 * @since 1.1.0
+	 */
+	public boolean hasImageListeners() {
+		if (imSupport != null)
+			return imSupport.hasImageListeners();
+		else
+			return false;
+	}
+
+	/**
+	 * Invalidate the image. This just marks the current image as invalid. It causes no other action.
+	 * 
+	 * @see IImageNotifier#invalidateImage()
+	 * @since 1.1.0
+	 */
+	public void invalidateImage() {
+		synchronized (imageAccessorSemaphore) {
+			if (fImageDataCollector != null) {
+				if (fImageValid == INVALID_COLLECTING && fImageDataCollector.isCollectingData())
+					fImageDataCollector.abort(); // We're currently do a valid collection, so abort it.
+				fImageValid = INVALID; // Mark it as invalid.
+			}
+		}
+	}
+
+	private ImageDataCollector getImageCollector() {
+		if (fImageDataCollector == null) {
+			synchronized (imageAccessorSemaphore) {
+				if (fImageDataCollector == null) {
+					fImageDataCollector = new ImageDataCollector(getRegistry());
+				}
+			}
+		}
+		return fImageDataCollector;
+	}
+
+	/*
+	 * fire the image status to the component image listeners.
+	 */
+	private void fireImageStatus(int status) {
+		Object[] listeners = componentImageListeners.getListeners();
+		for (int i = 0; i < listeners.length; i++) {
+			((IComponentImageListener) listeners[i]).imageStatus(status);
+		}
+	}
+
+	/*
+	 * fire the image exception to the component image listeners.
+	 */
+	private void fireImageException(ThrowableProxy exception) {
+		Object[] listeners = componentImageListeners.getListeners();
+		for (int i = 0; i < listeners.length; i++) {
+			((IComponentImageListener) listeners[i]).imageException(exception);
+		}
+	}
+
+	/**
+	 * Refresh the image. This will not wait for the image complete refreshing. It will just start it. The image will notify when it is done through
+	 * the image notifier.
+	 * 
+	 * @see IImageNotifier#refreshImage()
+	 * @since 1.1.0
+	 */
+	public void refreshImage() {
+		// Don't do refresh if we have image support or listeners yet. Waste of time in that case.
+		// Don't do refresh if we don't have a valid component to get an image of.
+		if (imSupport != null && imSupport.hasImageListeners() && fComponentBeanProxy.isBeanProxy() && ((IBeanProxy) fComponentBeanProxy).isValid()) {
+			// Need to capture validity before going in and start because there would be a deadlock while
+			// waiting for completion because it would tie up "this" while DataCollectedRunnable would also
+			// try to synchronize on "this" and it couldn't because we had and are waiting in waitForCompletion.
+			boolean doRefresh = false;
+			synchronized (imageAccessorSemaphore) {
+				doRefresh = fImageValid == INVALID && fImageDataCollector != null;
+				if (doRefresh)
+					fImageValid = INVALID_COLLECTING;
+			}
+			if (doRefresh) {
+				try {
+					getImageCollector().waitForCompletion();
+					// Wait if running so that we don't start it while running. Must be outside of sync block because completion requires syncing on a
+					// separate thread. Would have a deadlock then.
+					// Sync back so that no one else can come in until the collection has been started
+					synchronized (imageAccessorSemaphore) {
+						getImageCollector().startComponent(getComponentBeanProxy(), new ImageDataCollector.DataCollectedRunnable() {
+
+							private int startedStatus = ImageDataConstants.IMAGE_NOT_STARTED;
+
+							public void imageStarted(int startStatus) {
+								startedStatus = startStatus;
+							}
+
+							public void imageData(ImageData data) {
+								synchronized (imageAccessorSemaphore) {
+									fImageValid = VALID;
+								}
+								if (startedStatus == ImageDataConstants.COMPONENT_IMAGE_CLIPPED)
+									fireImageStatus(startedStatus);
+								else if (data == null)
+									fireImageStatus(ImageDataConstants.IMAGE_EMPTY);
+								else
+									fireImageStatus(ImageDataConstants.IMAGE_COMPLETE);
+								imSupport.fireImageChanged(data);
+							}
+
+							public void imageNotCollected(int status) {
+								synchronized (imageAccessorSemaphore) {
+									fImageValid = INVALID; // Invalid, but no longer collecting.
+								}
+								fireImageStatus(status);
+							}
+
+							public void imageException(ThrowableProxy exception) {
+								synchronized (imageAccessorSemaphore) {
+									fImageValid = INVALID; // Invalid, but no longer collecting.
+								}
+								fireImageException(exception);
+							}
+						});
+					}
+				} catch (ThrowableProxy e) {
+					synchronized (imageAccessorSemaphore) {
+						fImageValid = INVALID;
+					}
+					JavaVEPlugin.log(e, Level.WARNING);
+					fireImageException(e);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * The feedback controller. There is one per Registry. It is retrieved from the BeanAwtUtilities. Once created it will stay around, even when all
+	 * components are released.
+	 * <p>
+	 * The purposes of this controller is to allow batching of requests when more than one component manager can be involved in a transaction so that
+	 * transactions can be minimized. It handles:
+	 * <ul>
+	 * <li>All callbacks from the proxy side are funneled through the proxy side's feedback controller and queued up to the most appropriate time and
+	 * will then send them back through this controller in one transaction. This controller will then distribute the callbacks to the appropriate
+	 * component managers.
+	 * <li>All {@link ComponentManager#setComponentBeanProxy(IProxy, IExpression, ModelChangeController) componentManagersetComponent}calls queue up
+	 * on the proxy side a request for an initial refresh (send back of initial bounds). This class will, through
+	 * {@link FeedbackController#queueInitialRefresh(ModelChangeController) queueInitialRefresh}, add to the change controller an end of transaction
+	 * request. This request at the end of the transaction will then ask the feedback controller on the proxy side to send all in one transaction all
+	 * of the pending refreshes.
+	 * <li>All {@link ComponentManager#invalidate(ModelChangeController) componentManager.invalidate}requests will be queued up through the change
+	 * controller. Then at end of transaction these pending invalidates (which there could be more than one per component, but they are compacted into
+	 * one request per component) will be sent in one transaction to the proxy component managers. Also in this transaction, the proxy feedback
+	 * controller is told to send back the invalid images that have been accumulated (see the next bullet).
+	 * <li>When the proxy component managers receive the invalidate requests, they queue up on the proxy feedback controller that the component now
+	 * has an invalid image. They also walk their parent chain to mark the parent as invalid image too. Then at the end of all of the invalidates, a
+	 * notification is sent back from the proxy feedback controller for each invalid image in one transaction. This is received and distributed to
+	 * each on the respective component managers.
+	 * </ul>
+	 * 
+	 * @since 1.1.0
+	 */
+	protected static class FeedbackController implements ICallback {
+
+		private Map managerProxyToManager = new HashMap(); // Map from proxy to manager.
+
+		private IProxy feedbackControllerProxy;
+
+		private IMethodProxy postInitialRefresh;
+
+		private IMethodProxy postInvalidImages;
+
+		// Note: This is an IProxyMethod because it actually can be called BEFORE the expression that created the
+		// feedback controller has been evaluated. So we need to be able to use it in that case.
+		private IProxyMethod startingChanges;
+
+		private IMethodProxy postChangesDone;
+
+		private boolean changesHeld; // Are we holding changes.
+
+		private Set pendingInvalidates = new HashSet(); // Set of componentManagers that have invalidates pending.
+
+		/**
+		 * Construct with the feedproxy.
+		 * 
+		 * @param feedbackControllerProxy
+		 * 
+		 * @since 1.1.0
+		 */
+		public FeedbackController(ExpressionProxy feedbackControllerProxy) {
+			this.feedbackControllerProxy = feedbackControllerProxy;
+			feedbackControllerProxy.addProxyListener(new ExpressionProxy.ProxyListener() {
+
+				public void proxyResolved(ProxyEvent event) {
+					FeedbackController.this.feedbackControllerProxy = event.getProxy();
+				}
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyListener#proxyNotResolved(org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent)
+				 */
+				public void proxyNotResolved(ProxyEvent event) {
+					FeedbackController.this.feedbackControllerProxy = null;
+				}
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyListener#proxyVoid(org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent)
+				 */
+				public void proxyVoid(ProxyEvent event) {
+					FeedbackController.this.feedbackControllerProxy = null;
+				}
+			});
+
+			IProxyMethod postInitial = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
+					"postInitialRefresh", null);
+			if (postInitial.isBeanProxy()) {
+				postInitialRefresh = (IMethodProxy) postInitial;
+			} else {
+				((ExpressionProxy) postInitial).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						postInitialRefresh = (IMethodProxy) event.getProxy();
+					}
+				});
+			}
+
+			IProxyMethod postImages = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
+					"postInvalidImages", null);
+			if (postImages.isBeanProxy()) {
+				postInvalidImages = (IMethodProxy) postImages;
+			} else {
+				((ExpressionProxy) postImages).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						postInvalidImages = (IMethodProxy) event.getProxy();
+					}
+				});
+			}
+
+			startingChanges = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
+					"startingChanges", null);
+			if (startingChanges.isExpressionProxy()) {
+				((ExpressionProxy) startingChanges).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						startingChanges = (IProxyMethod) event.getProxy();
+					}
+				});
+			}
+
+			IProxyMethod postChangesDone = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
+					"postChanges", null);
+			if (postChangesDone.isBeanProxy()) {
+				this.postChangesDone = (IMethodProxy) postChangesDone;
+			} else {
+				((ExpressionProxy) postChangesDone).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						FeedbackController.this.postChangesDone = (IMethodProxy) event.getProxy();
+					}
+				});
+			}
+
+		}
+
+		/**
+		 * Called to start changes being made. It will tell server to send all of the queued changes at end of transaction.
+		 * 
+		 * @param controller
+		 * @param expression
+		 * 
+		 * @since 1.1.0
+		 */
+		void startChanges(ModelChangeController controller, IExpression expression) {
+			if (!changesHeld) {
+				changesHeld = true;
+				expression.createSimpleMethodInvoke(startingChanges, feedbackControllerProxy, null, false);
+				controller.execAtEndOfTransaction(changesDoneRunnable, changesDoneRunnable);
+			}
+		}
+
+		private Runnable changesDoneRunnable = new Runnable() {
+
+			public void run() {
+				changesHeld = false;
+				// This shouldn't occur, but test that we have a valid proxy. We may not.
+				if (feedbackControllerProxy != null) {
+					if (feedbackControllerProxy.isBeanProxy()) {
+						if (postChangesDone != null) {
+							postChangesDone.invokeCatchThrowableExceptions((IBeanProxy) feedbackControllerProxy);
+						} else {
+							// Something was wrong, we didn't get the initial refresh proxy.
+							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postChanges method!", Level.WARNING);
+						}
+					} else {
+						// We're still not valid. This shouldn't of happened. We should of always been within a transaction. We should not be
+						// creating component manager's outside of a transaction.
+						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING);
+					}
+				}
+			}
+		};
+
+		/**
+		 * This is called by the component manager to queue up the request for initial refresh. It will put at the end of the current transaction to
+		 * tell the remote vm to gather all of the initial refreshes and send them back.
+		 * <p>
+		 * The vm side of the feedback controller is accumulating all new component sets waiting for this initial refresh request. Then when the
+		 * transaction is finished, it will take all of the pending refreshes and send them all back in one transaction.
+		 * 
+		 * @since 1.1.0
+		 */
+		void queueInitialRefresh(ModelChangeController controller) {
+			controller.execAtEndOfTransaction(initialRefreshRunnable, initialRefreshRunnable);
+		}
+
+		private Runnable initialRefreshRunnable = new Runnable() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
+			public void run() {
+				// This shouldn't occur, but test that we have a valid proxy. We may not.
+				if (feedbackControllerProxy != null) {
+					if (feedbackControllerProxy.isBeanProxy()) {
+						if (postInitialRefresh != null) {
+							postInitialRefresh.invokeCatchThrowableExceptions((IBeanProxy) feedbackControllerProxy);
+						} else {
+							// Something was wrong, we didn't get the initial refresh proxy.
+							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postInitialRefresh method!", Level.WARNING);
+						}
+					} else {
+						// We're still not valid. This shouldn't of happened. We should of always been within a transaction. We should not be
+						// creating component manager's outside of a transaction.
+						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING);
+					}
+				}
+			}
+		};
+
+		/**
+		 * Return the proxy for the feedback controller.
+		 * 
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		public IProxy getProxy() {
+			return feedbackControllerProxy;
+		}
+
+		/**
+		 * Register the proxy for the manager so that the controller knows who's who.
+		 * 
+		 * @param manager
+		 * @param managerProxy
+		 * 
+		 * @since 1.1.0
+		 */
+		void registerComponentManager(ComponentManager manager, IBeanProxy managerProxy) {
+			managerProxyToManager.put(managerProxy, manager);
+		}
+
+		/**
+		 * Deregister the manager.
+		 * 
+		 * @param managerProxy
+		 * 
+		 * @since 1.1.0
+		 */
+		void deregisterComponentManager(IBeanProxy managerProxy) {
+			managerProxyToManager.remove(managerProxy);
+		}
+
+		/**
+		 * Queue an invalidate for this component.
+		 * 
+		 * @param manager
+		 * @param controller
+		 * 
+		 * @since 1.1.0
+		 */
+		void queueInvalidate(ComponentManager manager, ModelChangeController controller) {
+			pendingInvalidates.add(manager);
+			controller.execAtEndOfTransaction(invalidateRunnable, invalidateRunnable);
+		}
+
+		private Runnable invalidateRunnable = new Runnable() {
+
+			public void run() {
+				if (feedbackControllerProxy != null) {
+					IExpression exp = ((IBeanProxy) feedbackControllerProxy).getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
+					try {
+						for (Iterator itr = pendingInvalidates.iterator(); itr.hasNext();) {
+							ComponentManager manager = (ComponentManager) itr.next();
+							manager.invalidate(exp);
+						}
+						pendingInvalidates.clear();
+						exp.createSimpleMethodInvoke(postInvalidImages, feedbackControllerProxy, null, false);
+						exp.invokeExpression();
+					} catch (IllegalStateException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (ThrowableProxy e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (NoExpressionValueException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} finally {
+						exp.close();
+					}
+				}
+			}
+		};
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, org.eclipse.jem.internal.proxy.core.IBeanProxy)
+		 */
+		public Object calledBack(int msgID, IBeanProxy parm) {
+			throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, java.lang.Object[])
+		 */
+		public Object calledBack(int msgID, Object[] parms) {
+			if (msgID == Common.CL_TRANSACTIONS) {
+				if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
+					System.out.println("Start feedback transaction. #trans=" + parms.length / 3);
+				// This will be called with parms. They will be 3-tuples of (ComponentManagerProxy, callbackID, parms);
+				for (int i = 0; i < parms.length;) {
+					ComponentManager compm = (ComponentManager) managerProxyToManager.get(parms[i++]);
+					if (compm != null) {
+						compm.calledBack(((IIntegerBeanProxy) parms[i++]).intValue(), (Object[]) parms[i++]);
+					}
+				}
+				if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
+					System.out.println("Stop feedback transaction.");
+			}
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, java.lang.Object)
+		 */
+		public Object calledBack(int msgID, Object parm) {
+			throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBackStream(int, java.io.InputStream)
+		 */
+		public void calledBackStream(int msgID, InputStream is) {
+			throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
+		}
+	}
 }

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JMenuBarTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JMenuBarTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:38 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -46,7 +46,7 @@ public class JMenuBarTreeEditPart extends ComponentTreeEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfMenus)
-				queueExec(JMenuBarTreeEditPart.this);
+				queueExec(JMenuBarTreeEditPart.this, "MENUS");
 		}
 	};
 

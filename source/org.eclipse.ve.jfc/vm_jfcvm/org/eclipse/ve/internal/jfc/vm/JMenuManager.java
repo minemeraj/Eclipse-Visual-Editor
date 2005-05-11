@@ -11,65 +11,113 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.awt.Component;
 import java.awt.Container;
 
 import javax.swing.*;
-import javax.swing.Action;
-import javax.swing.JMenuItem;
 
 /**
  * This is the manager for a javax.swing.JMenu and JPopupMenu.
- * It handles removing actions and strings.
+ * It handles removing actions and strings. It is static helper.
+ * Doesn't have any state.
  * 
- * Note: It is static. No need to have one for each menu... it will always be passed in.
  */
-public class JMenuManager extends Object {
+public class JMenuManager {
 
-	public static int componentIndexForString(Container menu, String s) {
-		Component[] components = null;
-		if (menu instanceof JMenu)
-			components = ((JMenu)menu).getMenuComponents();
-		else
-			components = menu.getComponents();
-		for (int i = 0; i < components.length; i++) {
-			if (components[i] instanceof JMenuItem) {
-				JMenuItem menuitem = (JMenuItem)components[i];
-				if (menuitem.getText().equals(s))
-					return i;
+	/**
+	 * Is the container a JMenu.
+	 * @param container
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected static boolean isJMenu(Container container) {
+		return container instanceof JMenu;
+	}
+	
+	
+	/**
+	 * Add the component before the component.
+	 * @param component component to add, can be Component, Action, or String
+	 * @param beforeComponent put before this component (component, action, or string) or <code>null</code> if add at end.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static void addComponent(Container container, Object component, Object beforeComponent) {
+		if (component instanceof Component)
+			ContainerManager.addComponentBefore(container, (Component) component, componentForComponent(container, beforeComponent), false);
+		else if (component instanceof String) {
+			// Need to find out where it should go, add to the end (since can't add string at position) and then move it.
+			int pos = ContainerManager.componentIndex(container, componentForComponent(container, beforeComponent), componentForComponent(container, component));
+			JMenuItem newItem = isJMenu(container) ? ((JMenu) container).add((String) component) : ((JPopupMenu) container).add((String) component);
+			if (pos != -1) {
+				// Need to add back again in correct index. 
+				container.add(newItem, pos);
+			}
+		} else if (component instanceof Action) {
+			// Need to find out where it should go, add to the end (since can't add action at position) and then move it.
+			int pos = ContainerManager.componentIndex(container, componentForComponent(container, beforeComponent), componentForComponent(container, component));
+			JMenuItem newItem = isJMenu(container) ? ((JMenu) container).add((Action) component) : ((JPopupMenu) container).add((Action) component);
+			if (pos != -1) {
+				// Need to add back again in correct index. 
+				container.add(newItem, pos);
 			}
 		}
-		return -1;
 	}
-
-	public static void removeMenuItemWithString(Container menu, String s) {
-		int index = componentIndexForString(menu, s);
-		if (index != -1)
-			menu.remove(index);
+	
+	/**
+	 * Remove the component
+	 * @param container container to remove from.
+	 * @param component component, string, or action to remove. 
+	 * 
+	 * @since 1.1.0
+	 */
+	public static void removeComponent(Container container, Object component) {
+		ContainerManager.removeComponent(container, componentForComponent(container, component));
 	}
-
-	public static int componentIndexForAction(Container menu, Action a) {
-		Component[] components = null;
-		if (menu instanceof JMenu)
-			components = ((JMenu)menu).getMenuComponents();
-		else
-			components = menu.getComponents();
-		for (int i = 0; i < components.length; i++) {
-			if (components[i] instanceof JMenuItem) {
-				JMenuItem menuitem = (JMenuItem)components[i];
-				if (menuitem.getAction() == a)
-					return i;
+	
+	
+	/**
+	 * Return the true awt.Component for the incoming component
+	 * @param container contaienr to look into.
+	 * @param component component to look for. Can be component, action, or string. <code>null</code> is valid and so will return null
+	 * @return <code>null</code> if component not found, or awt.Component for the component.
+	 * 
+	 * @since 1.1.0
+	 */
+	protected static Component componentForComponent(Container container, Object component) {
+		if (component == null)
+			return null;
+		if (component instanceof Component)
+			return (Component) component;
+		if (component instanceof String) {
+			Component[] components = isJMenu(container) ? ((JMenu) container).getMenuComponents() : ((JPopupMenu) container).getComponents();
+			String s = (String) component;
+			for (int i = 0; i < components.length; i++) {
+				if (components[i] instanceof JMenuItem) {
+					JMenuItem menuitem = (JMenuItem)components[i];
+					if (menuitem.getText().equals(s))
+						return menuitem;
+				}
 			}
+			return null;
 		}
-		return -1;
-	}
-
-	public static void removeMenuItemWithAction(Container menu, Action a) {
-		int index = componentIndexForAction(menu, a);
-		if (index != -1)
-			menu.remove(index);
-	}
+		if (component instanceof Action) {
+			Component[] components = isJMenu(container) ? ((JMenu) container).getMenuComponents() : ((JPopupMenu) container).getComponents();
+			Action a = (Action) component;
+			for (int i = 0; i < components.length; i++) {
+				if (components[i] instanceof JMenuItem) {
+					JMenuItem menuitem = (JMenuItem)components[i];
+					if (menuitem.getAction() == a)
+						return menuitem;
+				}
+			}
+			return null;			
+		}
+		
+		return null;
+	}	
 }

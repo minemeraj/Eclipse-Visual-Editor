@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LocationPropertyDescriptor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:30 $ 
  */
 
 import org.eclipse.emf.ecore.EReference;
@@ -20,7 +20,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;

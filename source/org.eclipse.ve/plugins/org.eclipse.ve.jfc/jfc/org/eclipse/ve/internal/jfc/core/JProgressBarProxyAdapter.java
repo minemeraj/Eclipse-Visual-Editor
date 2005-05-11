@@ -1,10 +1,3 @@
-/*
- * Created on Jun 12, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.jfc.core;
 /*******************************************************************************
  * Copyright (c)  2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -17,43 +10,53 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JProgressBarProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
  */
+package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 /**
- * @author sri
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * JProgressBar proxy adapter.
+ * 
+ * @since 1.1.0
  */
 public class JProgressBarProxyAdapter extends ComponentProxyAdapter {
 
 	protected EStructuralFeature sfString;
+
 	/**
+	 * Construct JProgressBarProxyAdapter
+	 * 
 	 * @param domain
+	 * 
+	 * @since 1.1.0
 	 */
 	public JProgressBarProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sfString = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JPROGRESSBAR_STRING);
 	}
-
+	
+	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected void canceled(EStructuralFeature as, Object oldValue, int position) {
-		// When 'restoring default' the 'string' sf, it sets an incorrect
-		//  value instead of setting to the value of the 'value' sf.
-		if (as == sfString && !inInstantiation())
-			throw new ReinstantiationNeeded();
-		super.canceled(as, oldValue, position);
+	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
+		// When 'restoring default' for the 'string' feature, it uses the "original setting" for the string.
+		// This isn't right because when in default mode, this feature value actually depends on the value feature.
+		// However, setting the feature to "null" will cause this default function to occur. See the setString()
+		// of JProgressBar to see this. So we just change the "original setting" to null, and let it proceed.
+		if (feature == sfString && isSettingInOriginalSettingsTable(feature))
+			getOriginalSettingsTable().put(feature, null);
+		super.cancelSetting(feature, oldValue, index, expression);
 	}
 
 }

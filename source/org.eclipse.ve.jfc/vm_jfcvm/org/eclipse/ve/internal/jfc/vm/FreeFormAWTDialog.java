@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.awt.*;
@@ -116,8 +116,10 @@ protected FreeFormAWTContainer findContainer(Component aComponent) {
  */
 public void setUseComponentSize(Component aComponent, boolean useComponentSize) {
 	FreeFormAWTContainer f = findContainer(aComponent);
-	if (f != null)
+	if (f != null) {
 		f.setUseComponentSize(useComponentSize);
+		invalidate();	// this could cause size changes.
+	}
 }
 
 /**

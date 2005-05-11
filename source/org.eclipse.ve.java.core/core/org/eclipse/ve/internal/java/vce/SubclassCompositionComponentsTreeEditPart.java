@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 19:01:20 $
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -54,7 +54,8 @@ public class SubclassCompositionComponentsTreeEditPart extends CompositionCompon
 		public void notifyChanged(Notification msg) {
 			switch (msg.getFeatureID(BeanSubclassComposition.class)) {
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
-				queueRefreshChildren();
+				if (!msg.isTouch())
+					queueRefreshChildren();
 				break;
 			}
 		}

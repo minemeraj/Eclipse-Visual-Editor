@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-25 16:09:11 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -118,7 +118,7 @@ public class TableProxyAdapter extends CompositeProxyAdapter {
 	 * Remove all of the columns from the Table.
 	 */
 	protected void removeColumns() {
-		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
+		if (!isBeanProxyInstantiated())
 			return;
 
 		List columns = (List) ((EObject) getTarget()).eGet(sf_columns);

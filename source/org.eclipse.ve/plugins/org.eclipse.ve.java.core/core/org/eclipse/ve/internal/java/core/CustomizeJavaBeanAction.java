@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -47,8 +47,8 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class CustomizeJavaBeanAction extends CustomizeAction {
 	// dbk cache IMG_CUSTOMIZE_BEAN image descriptors
-	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif");
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif");
 
 	protected EditDomain fEditDomain;
 	static final int NONE = 0;
@@ -155,6 +155,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		while (keys.hasNext()) {
 			EStructuralFeature sf = (EStructuralFeature) keys.next();
 			IBeanProxy oldValue = (IBeanProxy) oldValues.get(sf);
+			IInternalBeanProxyHost internalHost = (IInternalBeanProxyHost) aBeanProxyHost;
 			IBeanProxy currentValue = aBeanProxyHost.getBeanPropertyProxyValue(sf);
 			int changeType = NONE;
 			if (oldValue == currentValue) {
@@ -168,7 +169,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 			// that we detect have changed because their .equals doesn't match
 			switch (changeType) {
 				case CHANGED :
-					aBeanProxyHost.applyBeanPropertyProxyValue(sf, oldValue);
+					internalHost.applyBeanPropertyProxyValue(sf, oldValue);
 			}
 		}
 
@@ -185,7 +186,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 
 		org.eclipse.swt.widgets.Shell shell = new org.eclipse.swt.widgets.Shell();
 		// We need a shell for the cell editors we will create to get the init strings.	
-		Map originalSettings = aBeanProxyHost.getOriginalSettingsTable();
+		Map originalSettings = ((IInternalBeanProxyHost) aBeanProxyHost).getOriginalSettingsTable();
 
 		while (keys.hasNext()) {
 			EStructuralFeature sf = (EStructuralFeature) keys.next();

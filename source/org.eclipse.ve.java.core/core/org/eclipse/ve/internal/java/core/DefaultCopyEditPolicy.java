@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-10 23:12:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 19:01:20 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -104,7 +104,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		if(eObject instanceof FeatureValueProvider){
 			FeatureValueProvider obj = (FeatureValueProvider) eObject;
 			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
-				public void isSet(EStructuralFeature feature, Object value) {
+				public Object isSet(EStructuralFeature feature, Object value) {
 					if(shouldCopyFeature(feature)){
 						Object propertyValue = eObject.eGet(feature);						
 						if(propertyValue instanceof EObject){
@@ -113,6 +113,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 							copyList((List)propertyValue,objectsToCopy);
 						}
 					}
+					return null;
 				}
 			});
 		}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -77,7 +77,7 @@ public Command setValue(IPropertySource source, Object setValue){
 	// Same value, or had no switcher, so we just apply the new setting.
 	RuledCommandBuilder cbld = new RuledCommandBuilder(domain);
 	cbld.applyAttributeSetting(container, (EStructuralFeature) getTarget(), setValue);
-	return new HoldProcessingCommand(cbld.getCommand(), container);
+	return cbld.getCommand();
 }
 
 public Command resetValue(IPropertySource source){
@@ -92,7 +92,7 @@ public Command resetValue(IPropertySource source){
 	// layout property to the container and the constraint commands for each of the children.
 	IBeanProxyHost containerProxyHost = BeanProxyUtilities.getBeanProxyHost(container);
 	EditDomain domain = containerProxyHost.getBeanProxyDomain().getEditDomain();
-	IBeanProxy defaultLayoutManager = (IBeanProxy) containerProxyHost.getOriginalSettingsTable().get(getTarget());
+	IBeanProxy defaultLayoutManager = (IBeanProxy) ((IInternalBeanProxyHost) containerProxyHost).getOriginalSettingsTable().get(getTarget());
 	EClassifier layoutManagerClass = null;
 	if (defaultLayoutManager != null)
 		layoutManagerClass = (EClassifier) BeanProxyUtilities.getJavaType(defaultLayoutManager, container.eResource().getResourceSet());
@@ -109,7 +109,7 @@ public Command resetValue(IPropertySource source){
 	// No switcher, so we just cancel the setting.	The constraints of any children will probably be bad.
 	RuledCommandBuilder cbld = new RuledCommandBuilder(domain);
 	cbld.cancelAttributeSetting(container, (EStructuralFeature) getTarget());	
-	return new HoldProcessingCommand(cbld.getCommand(), container);
+	return cbld.getCommand();
 }
 
 }

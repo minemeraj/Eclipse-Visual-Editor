@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutSwitcher.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -28,7 +28,7 @@ import org.eclipse.ve.internal.java.vce.SubclassCompositionContainerPolicy;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.awt.IPointBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IPointBeanProxy;
 /**
  * This helper class is used when a container's layout is changed
  * to BorderLayout. Each of the constraints for the container's children 

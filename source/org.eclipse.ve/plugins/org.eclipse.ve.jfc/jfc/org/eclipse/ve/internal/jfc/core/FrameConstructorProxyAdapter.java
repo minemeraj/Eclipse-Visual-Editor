@@ -9,113 +9,107 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
+
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.List;
-import java.util.logging.Level;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
- * A Proxy adapter for classes that require a Frame to construct. E.G. awt.Dialog. Will use
- * a frame if no allocation is provided to get one.
+ * A Proxy adapter for classes that require a Frame as a parent to be able to be constructed. E.G. awt.Dialog. Will check the allocation to see if
+ * there is a "new Frame()" in it. If so, it will dispose that frame on release. It assumes that there will never be an invalid allocation (e.g. a new
+ * Dialog()). Since this is invalid as code, and we shouldn't create such code.
  * 
  * @since 1.0.0
  */
 public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
+
 	protected boolean disposeParentOnRelease;
 
-	/*
-	 * We need to create an awt Frame needed to construct the Dialog later on since
-	 * Dialog does not have a null ctor.
+	/**
+	 * Construct FrameConstructor proxy adapter.
+	 * 
+	 * @param domain
+	 * 
+	 * @since 1.1.0
 	 */
 	public FrameConstructorProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.jfc.core.WindowProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected IBeanProxy beanProxyAllocation(JavaAllocation allocation) throws AllocationException {
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		// Override to see if the allocation has a "new java.awt.Frame" in it. If it does, we need to
-		// grab that frame so that we can dispose it later. 
+		// grab that frame so that we can dispose it later.
 		// TODO This is really a bad way to do this. We should never have a temporary like this.
+		// The code shouldn't even generate something like this.
 		disposeParentOnRelease = false;
-		IBeanProxy result = super.beanProxyAllocation(allocation);
-		if (allocation instanceof ParseTreeAllocation) {
-			// Can only handle parse tree, and only if Frame is first argument.
-			PTExpression allocExp = ((ParseTreeAllocation) allocation).getExpression();
-			if (allocExp instanceof PTClassInstanceCreation) {
-				PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
-				List args = newClass.getArguments();
-				if (args.size() == 1) {
-					PTExpression arg1 = (PTExpression) args.get(0);
-					disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation && "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType());  //$NON-NLS-1$
+		if (!isThisPart()) {
+			if (getJavaObject().isSetAllocation()) {
+				JavaAllocation allocation = getJavaObject().getAllocation();
+				if (allocation instanceof ParseTreeAllocation) {
+					// Can only handle parse tree, and only if Frame is first argument.
+					PTExpression allocExp = ((ParseTreeAllocation) allocation).getExpression();
+					if (allocExp instanceof PTClassInstanceCreation) {
+						PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
+						List args = newClass.getArguments();
+						if (args.size() == 1) {
+							PTExpression arg1 = (PTExpression) args.get(0);
+							disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
+									&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType());
+						}
+					}
 				}
 			}
 		}
-		return result;
-	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#basicInitializationStringAllocation(java.lang.String, org.eclipse.jem.internal.proxy.core.IBeanTypeProxy)
-	 */
-	protected IBeanProxy basicInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException {
-		disposeParentOnRelease = false;
-
-		// If the aString is null, then we are creating using a default Ctor either the class or the superclass.
-		// Either way check if there is a default ctor, if so, then just go on up and let it go. Else we
-		// need to use a new passing in a frame as the first arg. If the string is not null, then that
-		// means this is an old way and we need to support it and let it go on.
-		if (aString != null)
-			return super.basicInitializationStringAllocation(aString, targetClass);
-		
-		// See if there is a default ctor for the targetclass. If there is, just go on, it will work.
-		if (targetClass.getConstructorProxy((String[]) null) != null)
-			return super.basicInitializationStringAllocation(aString, targetClass);
-		
-		// We need to create using one frame.
-		IBeanTypeProxy frameType = targetClass.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("java.awt.Frame");		 //$NON-NLS-1$
-		IConstructorProxy ctor = targetClass.getConstructorProxy(new IBeanTypeProxy[] {frameType});
-		if (ctor == null)
-			return super.basicInitializationStringAllocation(aString, targetClass);	// None that takes a frame, just go on and take the hit.
-		
-		disposeParentOnRelease = true;
-		try {
-			return ctor.newInstance(new IBeanProxy[] {frameType.newInstance()});
-		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-			disposeParentOnRelease = false;
-			return null;
-		}
+		return super.primInstantiateBeanProxy(expression);
 	}
 
 	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#primInstantiateThisPart(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	public void releaseBeanProxy() {
+	protected IProxy primInstantiateThisPart(IExpression expression) {
+		// We need to override so that we can generate the fake Frame that is required for Dialogs.
+		// We are assuming that we find a class that has a constructor with only Frame for a parent.
+		IProxyBeanType targetClass = getValidSuperClass(expression);
+
+		disposeParentOnRelease = true;
+		IProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 1);
+		expression.createClassInstanceCreation(ForExpression.CLASSINSTANCECREATION_ARGUMENT, "java.awt.Frame", 0);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	public void releaseBeanProxy(IExpression expression) {
 		if (disposeParentOnRelease && isBeanProxyInstantiated()) {
-			// Get the parent frame and invoke a method to dispose of the Frame.
-			IBeanProxy frameBeanProxy = BeanAwtUtilities.invoke_getParent(getBeanProxy());
-			if (frameBeanProxy != null) {
-				BeanAwtUtilities.invoke_dispose(frameBeanProxy);
-				frameBeanProxy.getProxyFactoryRegistry().releaseProxy(frameBeanProxy);
-			}
-		};
+			// Execute: dialog.getParent().dispose();
+			expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, BeanAwtUtilities.getWindowDisposeMethodProxy(expression), true, 0);
+			expression.createMethodInvocation(ForExpression.METHOD_RECEIVER, BeanAwtUtilities.getParentMethodProxy(expression), true, 0);
+			expression.createProxyExpression(ForExpression.METHOD_RECEIVER, getProxy());
+		}
+		;
 		disposeParentOnRelease = false;
-		super.releaseBeanProxy();
+		super.releaseBeanProxy(expression);
 	}
 }

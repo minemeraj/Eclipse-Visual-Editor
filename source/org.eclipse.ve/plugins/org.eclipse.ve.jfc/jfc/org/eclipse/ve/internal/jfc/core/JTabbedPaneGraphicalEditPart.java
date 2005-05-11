@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 19:01:38 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -93,7 +93,7 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 						}
 					}
 				}
-				// Now we need to run through the children and set the Property source correctly.
+				// Now we need to run through the children and set the Property source/error notifier correctly.
 				// This is needed because the child could of been removed and then added back in with
 				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
 				// doesn't see the child as being different so it doesn't create a new child editpart, and
@@ -103,15 +103,18 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 				int s = children.size();
 				for (int i = 0; i < s; i++) {
 					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ComponentGraphicalEditPart) 
-						setPropertySource((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+					try {
+						setupComponent((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+					} catch (ClassCastException e) {
+						// For the rare case it is not a component graphical editpart such as undefined class.
+					}
 				}				
 			}
 		}
 		
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sfTabs)
-				queueExec(JTabbedPaneGraphicalEditPart.this);
+				queueExec(JTabbedPaneGraphicalEditPart.this, "TABS");
 		}
 	};
 
@@ -342,16 +345,16 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		getRoot().getViewer().setSelection(new StructuredSelection(page));
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart#setPropertySource(ComponentGraphicalEditPart, EObject)
-	 */
-	protected void setPropertySource(ComponentGraphicalEditPart childEP, EObject child) {
+	protected void setupComponent(ComponentGraphicalEditPart childEP, EObject child) {
 		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sfTabs, sfComponent, child);
 		// This is the property source of the actual child, which is the tab.
-		if (tab != null)
+		if (tab != null) {
 			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
-		else
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));			
+		} else {
 			childEP.setPropertySource(null);
+			childEP.setErrorNotifier(null);
+		}
 	}
 
 	/**

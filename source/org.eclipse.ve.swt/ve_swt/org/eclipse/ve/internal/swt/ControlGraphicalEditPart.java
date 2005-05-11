@@ -9,60 +9,37 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-05-11 14:38:53 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-05-11 19:01:30 $
  */
 
 package org.eclipse.ve.internal.swt;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
+import org.eclipse.core.runtime.*;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.DefaultComponentEditPolicy;
-import org.eclipse.ve.internal.cde.core.IConstraintHandler;
-import org.eclipse.ve.internal.cde.core.IDirectEditableEditPart;
-import org.eclipse.ve.internal.cde.core.IVisualComponent;
-import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
-import org.eclipse.ve.internal.cde.core.ImageFigureController;
-import org.eclipse.ve.internal.cde.core.OutlineBorder;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
-import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.ErrorFigure;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.ve.internal.java.core.IErrorNotifier;
-import org.eclipse.ve.internal.java.core.IJavaBeanGraphicalContextMenuContributor;
-import org.eclipse.ve.internal.java.core.JavaBeanActionFilter;
-import org.eclipse.ve.internal.java.core.ToolTipAssistFactory;
-import org.eclipse.ve.internal.java.core.ToolTipContentHelper;
 
 public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor, IDirectEditableEditPart {
 	
@@ -90,23 +67,39 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			border = Boolean.valueOf((String) data).booleanValue();
 	}
 	
-	protected IFigure createFigure() {
-		ImageFigure fig = new ImageFigure();
-		if (border)
-			fig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
-		fig.setOpaque(!transparent);
-		if (!transparent) {
-			imageFigureController = new ImageFigureController();
-			imageFigureController.setImageFigure(fig);
-		}
-		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
-		fig.add(fErrorIndicator);
-		
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
-		fig.setToolTip(ToolTipFig);
-				
-		return fig;
+	/**
+	 * Get the main figure as a {@link ContentPaneFigure}.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ContentPaneFigure getContentPaneFigure() {
+		return (ContentPaneFigure)getFigure();
 	}
+	
+	public IFigure getContentPane() {
+		return getContentPaneFigure().getContentPane();
+	}
+	
+	
+	protected IFigure createFigure() {
+		ContentPaneFigure cfig = new ContentPaneFigure();
+		ImageFigure ifig = new ImageFigure();
+		if (border)
+			ifig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
+		ifig.setOpaque(!transparent);
+		if (!transparent) {
+			imageFigureController = new ImageFigureController();			
+			imageFigureController.setImageFigure(ifig);
+		}
+		cfig.setContentPane(ifig);
+		fErrorIndicator = new ErrorFigure();
+		cfig.add(fErrorIndicator);
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE)));
+		cfig.setToolTip(ToolTipFig);
+		return cfig;
+	}
+	
 	public void activate() {
 		super.activate();
 		
@@ -117,7 +110,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		// Listen to the IBeanProxyHost so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
 			public void errorStatusChanged(){
-				CDEUtilities.displayExec(ControlGraphicalEditPart.this,  new Runnable() {
+				CDEUtilities.displayExec(ControlGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() {
 					public void run() {
 						setSeverity(getControlProxy().getErrorStatus());
 					}
@@ -173,8 +166,8 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	}		
 
 	protected void setSeverity(int severity) {
-		fErrorIndicator.sevSeverity(severity);
-		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
+		fErrorIndicator.setSeverity(severity);
+		getFigure().setVisible(!(severity == IErrorHolder.ERROR_SEVERE));
 	}
 	protected void createEditPolicies() {
 		// Default component role allows delete and basic behavior of a component within a parent edit part that contains it

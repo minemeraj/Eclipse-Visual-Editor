@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JFCConstants.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import org.eclipse.emf.common.util.URI;
@@ -89,7 +89,11 @@ public class JFCConstants {
 		SF_JMENUBAR_MENUS,
 		SF_JMENU_ITEMS,
 		
+		SF_JTOOLBAR_ITEMS,
+		
 		SF_FRAME_TITLE,
+		
+		SF_JFRAME_DEFAULTCLOSEPERATION,
 		
 		CLASS_CONTAINER_CONSTRAINTCOMPONENT,	// containerVisuals/ConstraintComponent
 		CLASS_JTABBEDPANE_JTABCOMPONENT;	// jtabbedPaneVisuals/JTabComponent	
@@ -171,6 +175,10 @@ public class JFCConstants {
 
 		SF_JMENUBAR_MENUS = URI.createURI("java:/javax.swing#JMenuBar/menus"); //$NON-NLS-1$
 		SF_JMENU_ITEMS = URI.createURI("java:/javax.swing#JMenu/items"); //$NON-NLS-1$
+		
+		SF_JTOOLBAR_ITEMS = URI.createURI("java:/javax.swing#JToolBar/items"); //$NON-NLS-1$
+		
+		SF_JFRAME_DEFAULTCLOSEPERATION = URI.createURI("java:/javax.swing#JFrame/defaultCloseOperation"); //$NON-NLS-1$
 		
 		CLASS_CONTAINER_CONSTRAINTCOMPONENT = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/containerVisuals.ecore#//ConstraintComponent");				 //$NON-NLS-1$
 		CLASS_JTABBEDPANE_JTABCOMPONENT = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/javax/swing/jtabbedPaneVisuals.ecore#//JTabComponent");						 //$NON-NLS-1$

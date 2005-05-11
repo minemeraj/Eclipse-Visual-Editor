@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,53 +10,58 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IImageNotifier.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
-
-
+package org.eclipse.ve.internal.cde.core;
 
 /**
- * Image Changed Notifier.
- * Creation date: (3/3/00 5:14:19 PM)
- * @author: Administrator
+ * Image Changed Notifier. It notifies of changes to the image. These can happen because someone requests a new image or because it has been
+ * determined by implementers that the image has changed, and so it will request one and the notification will go out that there is a new image.
+ * 
+ * @since 1.0.0
  */
 public interface IImageNotifier {
+
 	/**
-	 * Add the image listener.
-	 * Creation date: (3/3/00 5:15:47 PM)
-	 * @param listener IImageListener
+	 * Add an image listener.
+	 * 
+	 * @param listener
+	 * 
+	 * @since 1.0.0
 	 */
 	public void addImageListener(IImageListener listener);
-	
+
 	/**
-	 * Answer if anyone is listening.
-	 * Creation date: (3/15/00 5:57:45 PM)
-	 * @return boolean
+	 * Is anyone listening?
+	 * 
+	 * @return
+	 * 
+	 * @since 1.0.0
 	 */
 	public boolean hasImageListeners();
-	
+
 	/**
-	 * Invalidate the image. The next time
-	 * refreshImage is called, if still invalid,
-	 * it will send out a new image.
-	 * Creation date: (3/6/00 5:39:58 PM)
-	 * @return com.ibm.swt.image.ImageData
+	 * Invalidate the image. The next time refreshImage is called, if still invalid, it will send out a new image. It will not trigger a new image at
+	 * this time.
+	 * 
+	 * @since 1.0.0
 	 */
 	public void invalidateImage();
-	
+
 	/**
-	 * Refresh the image, get a new one and
-	 * send notification if image was validated
-	 * with this request.
-	 * Creation date: (3/6/00 5:39:58 PM)
-	 * @return com.ibm.swt.image.ImageData
+	 * Refresh the image, get a new one and send notification if image was validated with this request. If the image was already valid, nothing will
+	 * happen due to this call.
+	 * 
+	 * @since 1.1.0
 	 */
 	public void refreshImage();
-	
+
 	/**
 	 * Remove the image listener.
-	 * Creation date: (3/3/00 5:15:47 PM)
-	 * @param listener com.ibm.vce.java.awt.IImageListener
+	 * 
+	 * @param listener
+	 * 
+	 * @since 1.1.0
 	 */
 	public void removeImageListener(IImageListener listener);
 }

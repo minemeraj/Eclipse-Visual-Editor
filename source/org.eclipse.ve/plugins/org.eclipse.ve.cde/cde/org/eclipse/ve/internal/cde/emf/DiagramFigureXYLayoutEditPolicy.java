@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DiagramFigureXYLayoutEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import java.util.Iterator;
@@ -199,7 +199,7 @@ public class DiagramFigureXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		org.eclipse.draw2d.geometry.Rectangle rect = null;
 		Rectangle constraint = (constraintValue instanceof Rectangle) ? (Rectangle) constraintValue : null;
 		if (constraint == null)
-			rect = new org.eclipse.draw2d.geometry.Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+			rect = XYLayoutUtility.modifyPreferredRectangle(new org.eclipse.draw2d.geometry.Rectangle(), true, true, true);
 		// No constraint, so set to complete default.
 		else
 			rect = (org.eclipse.draw2d.geometry.Rectangle) modelToFigureConstraint(constraint);
@@ -237,9 +237,9 @@ public class DiagramFigureXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			new org.eclipse.draw2d.geometry.Rectangle(r.x, r.y, r.width, r.height);
 		ZoomController zoomController = getZoomController();
 		if (zoomController != null) {
-			if (figureConstraint.x != Integer.MIN_VALUE)
+			if (figureConstraint.x != XYLayoutUtility.PREFERRED_LOC)
 				figureConstraint.x = zoomController.zoomCoordinate(figureConstraint.x);
-			if (figureConstraint.y != Integer.MIN_VALUE)
+			if (figureConstraint.y != XYLayoutUtility.PREFERRED_LOC)
 				figureConstraint.y = zoomController.zoomCoordinate(figureConstraint.y);
 		}
 		return figureConstraint;
@@ -260,7 +260,7 @@ public class DiagramFigureXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	}
 
 	protected Object getChildConstraint(EditPart child, Object kv) {
-		return kv instanceof Rectangle ? new Rectangle((Rectangle) kv) : new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+		return kv instanceof Rectangle ? new Rectangle((Rectangle) kv) : XYLayoutUtility.modifyPreferredCDMRectangle(new Rectangle(), true, true, true);
 	}
 
 	/**

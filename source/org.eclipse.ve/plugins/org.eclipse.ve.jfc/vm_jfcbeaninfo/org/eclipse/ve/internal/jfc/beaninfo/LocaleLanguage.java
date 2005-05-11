@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LocaleLanguage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.util.*;
@@ -33,9 +33,9 @@ public LocaleCountry[] getCountries(){
 	int fSize = fCountries.size();
 	countries = new LocaleCountry[fSize];
 	
-	Enumeration enum = fCountries.elements();
-	for (int i = 0; i < fSize && enum.hasMoreElements(); i++){
-		countries[i] = (LocaleCountry)enum.nextElement();
+	Enumeration enumer = fCountries.elements();
+	for (int i = 0; i < fSize && enumer.hasMoreElements(); i++){
+		countries[i] = (LocaleCountry)enumer.nextElement();
 	}
 	
 	//sort the countries into ascending order

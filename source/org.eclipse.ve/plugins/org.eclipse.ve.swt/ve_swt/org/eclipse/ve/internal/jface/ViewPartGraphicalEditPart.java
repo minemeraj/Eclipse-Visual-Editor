@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-11 19:01:30 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -22,6 +22,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.IConstraintHandler;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -66,14 +68,14 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 	}
 	
 	protected IFigure createFigure() {
-		IFigure fig = super.createFigure();
-		fig.setLayoutManager(new XYLayout());
-		return fig;
+		ContentPaneFigure cf = (ContentPaneFigure) super.createFigure();
+		cf.getContentPane().setLayoutManager(new XYLayout());
+		return cf;
 	}	
 	
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy());		
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(true));		
 	}
 		
 	public List getModelChildren() {

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-04-12 14:06:34 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-05-11 19:01:30 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -28,6 +28,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
@@ -51,9 +53,9 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	}
 
 	protected IFigure createFigure() {
-		IFigure fig = super.createFigure();
-		fig.setLayoutManager(new XYLayout());
-		return fig;
+		ContentPaneFigure cf = (ContentPaneFigure) super.createFigure();
+		cf.getContentPane().setLayoutManager(new XYLayout());
+		return cf;
 	}
 
 	protected void createEditPolicies() {
@@ -62,7 +64,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		// This must be done before the layout edit policy because the implicit parent can be created by the implicit edit policy 
 //		createImplicitEditPolicy();
 		
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy()); 
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(true)); 
 		// This is a special policy that just
 		// handles the size/position of visual
 		// components wrt/the figures. It does not
@@ -127,9 +129,9 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_compositeControls)
-				queueExec(CompositeGraphicalEditPart.this);
+				queueExec(CompositeGraphicalEditPart.this, "CONTROLS");
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeGraphicalEditPart.this, new Runnable() {
+				queueExec(CompositeGraphicalEditPart.this, "LAYOUT", new Runnable() {
 					public void run() {
 						if (isActive())
 							createLayoutEditPolicy();

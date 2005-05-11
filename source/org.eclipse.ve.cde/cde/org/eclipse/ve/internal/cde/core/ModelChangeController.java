@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.3 $  $Date: 2005-03-09 22:27:00 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:26 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -51,13 +51,20 @@ public abstract class ModelChangeController {
      */
     public static final String MODEL_CHANGES_PHASE = "MODEL_CHANGES_PHASE".intern();
 
-    // Access to compoundChangeCount should be synchronized so that access from
+    // Access to compoundChangeCount, uniqueRunnables, inRunnables should be synchronized so that access from
     // codegen side in inTransaction() won't collide with changes from the UI
     // thread.
     protected int compoundChangeCount = 0;
 
     private Map uniqueRunnables; // Runnables to be run only once per key when
                                  // all transactions are complete
+	
+	// We are running the runnables (at end). If so then any new runnables are queued up in to the
+	// unique runnables, and then at the end of the exec runnables, if not in a transaction, we will
+	// run those runnables that have been queued up since the start of the running runnables. If we are
+	// in a transaction by the end of the exec runnables we will not do those runnables queued because
+	// they are set to go into the next transaction.
+	private boolean inRunnables = false;	
 
     private List phases = new ArrayList();
 
@@ -291,7 +298,7 @@ public abstract class ModelChangeController {
         	// UI thread is trying to do something with the model controller at the same time, 
         	// and so it would be locked. That would prevent the executeAsyncRunnables from running.
         	if (display != null)
-        		display.syncExec(new Runnable() {
+        		display.asyncExec(new Runnable() {
 					public void run() {
 						executeAsyncRunnables();
 					}
@@ -302,7 +309,6 @@ public abstract class ModelChangeController {
     }
 
     protected void executeAsyncRunnables() {
-        Iterator iter = getUniqueRunnables().values().iterator();
         // Create a safe runnable so that we can run the at End's and not worry about exceptions stopping other important ones from running.
         class SafeRunnable implements ISafeRunnable {
 
@@ -322,14 +328,32 @@ public abstract class ModelChangeController {
 				runnable.run();
 			}
         }
-        SafeRunnable sr = new SafeRunnable();
-        while (iter.hasNext()) {
-        	sr.runnable = (Runnable) iter.next();
-        	Platform.run(sr);
-        }
-        
-        if (uniqueRunnables != null)
-        	uniqueRunnables.clear();
+		SafeRunnable sr = new SafeRunnable();
+		
+        while (true) {
+			Runnable[] runnables;
+			synchronized (this) {
+				// Make a copy so that we can clear the list.
+				Collection ur = getUniqueRunnables().values();
+				runnables = (Runnable[]) ur.toArray(new Runnable[ur.size()]);
+				ur.clear();
+				inRunnables = true;
+			}
+			
+			for (int i = 0; i < runnables.length; i++) {
+				sr.runnable = runnables[i];
+				Platform.run(sr);
+			}
+
+			synchronized (this) {
+				if (inTransaction() || getUniqueRunnables().isEmpty()) {
+					inRunnables = false;
+					break;
+				}
+				// Not in transaction and we have more runnables queued up since we last grabbed them at the top
+				// we will go again and send these.
+			}
+		}
     }
 
     protected Map getUniqueRunnables() {
@@ -360,7 +384,7 @@ public abstract class ModelChangeController {
      */
     public synchronized void execAtEndOfTransaction(Runnable aRunnable, Object once) {
 
-        if (inTransaction()) {
+        if (inTransaction() || inRunnables) {
             if (!getUniqueRunnables().containsKey(once)) {
                 getUniqueRunnables().put(once, aRunnable);
             }
@@ -381,15 +405,18 @@ public abstract class ModelChangeController {
      *            to omit Run the runnable, once and only once for the 2nd
      *            argument key, and do not run it if the currently executing
      *            phase is occuring
+     * @return <code>true</code> if not within excluding phase, <code>false</code> if excluding due to excluding phase.
      * 
      * @since 1.0.2
      */
-    public synchronized void execAtEndOfTransaction(Runnable aRunnable, Object once,
+    public synchronized boolean execAtEndOfTransaction(Runnable aRunnable, Object once,
             Object excludingPhase) {
 
         if (!phases.contains(excludingPhase)) {
             execAtEndOfTransaction(aRunnable, once);
-        }
+            return true;
+        } else
+        	return false;
     }
 
     /**
@@ -399,19 +426,20 @@ public abstract class ModelChangeController {
      * @param runnable
      * @param once
      * @param excludingPhases run except if any these phases are in progress. May be <code>null</code> if no excluding phases.
-     *            
+     * @return <code>true</code> if it was not within excluding phases, <code>false</code> if it was excluded due to excluding phases.           
      * 
      * @since 1.0.2
      */
-    public synchronized void execAtEndOfTransaction(Runnable aRunnable, Object once,
+    public synchronized boolean execAtEndOfTransaction(Runnable aRunnable, Object once,
             Object[] excludingPhases) {
 
         if (excludingPhases != null) {
 			for (int i = 0; i < excludingPhases.length; i++) {
-				if (phases.contains(excludingPhases[i])) { return; }
+				if (phases.contains(excludingPhases[i])) { return false; }
 			}
 		}
         execAtEndOfTransaction(aRunnable, once);
+        return true;
     }
 
     /**

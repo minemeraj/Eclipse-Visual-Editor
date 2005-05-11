@@ -4,6 +4,7 @@
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+      treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerTreeEditPart"
       graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JLayeredPaneGraphicalEditPart:true"/>
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JLayeredPaneProxyAdapter"/>
 </event:AddMany>

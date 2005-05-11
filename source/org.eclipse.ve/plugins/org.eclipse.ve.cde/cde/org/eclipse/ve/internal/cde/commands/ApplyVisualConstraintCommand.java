@@ -11,12 +11,15 @@ package org.eclipse.ve.internal.cde.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyVisualConstraintCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
  */
 
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
 import org.eclipse.ve.internal.cdm.model.*;
+
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 
 /**
@@ -28,7 +31,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 public class ApplyVisualConstraintCommand extends CommandWrapper {
 	protected Object fNewConstraint;
 	protected KeyedValueHolder fTarget;
-	protected static final Rectangle SDEFAULT_RECT = new Rectangle(Integer.MIN_VALUE, Integer.MIN_VALUE, -1, -1);
+	protected static final Rectangle SDEFAULT_RECT = XYLayoutUtility.modifyPreferredCDMRectangle(new Rectangle(), true, true, true); 
 	/**
 	 * ApplyVisualLocationCommand constructor comment.
 	 * @param desc java.lang.String

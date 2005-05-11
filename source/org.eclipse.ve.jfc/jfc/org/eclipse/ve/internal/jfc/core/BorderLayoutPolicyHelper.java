@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 21:53:36 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -29,7 +29,6 @@ import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 
 /**
  * Border Layout Policy Helper.

@@ -1,4 +1,3 @@
-package org.eclipse.ve.internal.cde.core;
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,44 +10,80 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualComponent.java,v $
- *  $Revision: 1.3 $  $Date: 2005-03-29 02:41:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:26 $ 
  */
-
-
+package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.geometry.*;
+
 /**
- * VisualComponent interface. A visual component is an interface
- * to visual components. It notifies if the image has changed,
- * and if the size and position have changed.
+ * VisualComponent interface. A visual component is an interface to visual components. It notifies if the image has changed, and if the size and
+ * position have changed.
  */
 public interface IVisualComponent extends IImageNotifier {
+
 	/**
 	 * Return the bounds of the live object.
+	 * <p>
+	 * The origin that the bounds is relative to is IVisualComponent implementation specific. Users will need to know who they are listening to. For
+	 * example, the point may be relative to the direct parent, or may be relative to some absolute coordinate.
+	 * <p>
+	 * <b>Note:</b> This is called often, so it must be cached in the component.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
 	public Rectangle getBounds();
-	
+
 	/**
 	 * Return the position of the live object.
+	 * <p>
+	 * The origin that the point is relative to is IVisualComponent implementation specific. Users will need to know who they are listening to. For
+	 * example, the point may be relative to the direct parent, or may be relative to some absolute coordinate.
+	 * <p>
+	 * <b>Note:</b> This is called often, so it must be cached in the component.
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
 	public Point getLocation();
 	
 	/**
+	 * Return the absolute location of the live object.
+	 * <p>
+	 * <b>Note:</b> This is called often, so it must be cached in the component.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Point getAbsoluteLocation();
+
+	/**
 	 * Return the size of the live object.
+	 * <p>
+	 * <b>Note:</b> This is called often, so it must be cached in the component.
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
 	public Dimension getSize();
-	
+
 	/**
-	 * Add the argument as a listener for when the component
-	 * moves, resized or is shown
+	 * Add the argument as a listener for when the component moves, resized or is shown
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.1.0
 	 */
 	public void addComponentListener(IVisualComponentListener aListener);
-	
+
 	/**
-	 * Remove the argument as a listener
-	 * for component changes.
+	 * Remove the argument as a listener for when the component moves, resized or is shown
+	 * 
+	 * @param aListener
+	 * 
+	 * @since 1.1.0
 	 */
 	public void removeComponentListener(IVisualComponentListener aListener);
-	
-	public boolean hasImageListeners();	
 }

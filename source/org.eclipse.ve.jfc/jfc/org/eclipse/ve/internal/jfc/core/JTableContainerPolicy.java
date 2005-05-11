@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 
@@ -48,9 +48,9 @@ public class JTableContainerPolicy extends VisualContainerPolicy {
 		// We'll add in the check that the table has autoCreateColumns false. Don't want to add columns if it is true.
 		if (super.isValidChild(child, containmentSF)) {
 			IBeanProxyHost jtable = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getContainer());
-			if (jtable.getErrorStatus() == IErrorNotifier.ERROR_SEVERE)
+			if (!jtable.isBeanProxyInstantiated())
 				return false;	// It can't be instantiated, so don't allow adds, we just don't know anything.
-			IBeanProxy proxy = BeanProxyUtilities.getBeanProxy(jtable.getBeanPropertyValue(sfAutoCreateColumns));
+			IBeanProxy proxy = jtable.getBeanPropertyProxyValue(sfAutoCreateColumns);
 			// In case there was an instantiation error, proxy will be null.
 			return (proxy instanceof IBooleanBeanProxy) ? !((IBooleanBeanProxy) proxy).booleanValue() : false;
 		}

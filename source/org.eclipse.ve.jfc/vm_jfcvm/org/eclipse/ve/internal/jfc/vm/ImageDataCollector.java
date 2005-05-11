@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.awt.*;
@@ -86,102 +86,124 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 	 * It is possible that collection didn't start but this is not
 	 * an error. For example the component has a width or height of 0.
 	 */
-	public boolean start(final Component component, int maxWidth, int maxHeight) throws IllegalAccessException, IllegalArgumentException, CommandException {
-		// Now validate the component so that we have a good image to capture.
-		// We need to go to top level component so that all validations are done,
-		// if on a component, validate only validates that component, so it won't
-		// get relayed out. We have to check for Window because we don't want to 
-		// go higher than a Window. A Window can have a parent, but that is another
-		// window, and validating that window will not validate child windows (this
-		// relationship downward is ownership and not child containment).
-		Container parent = component.getParent();
-		while (parent != null && !(parent instanceof Window) && parent.getParent() != null)
-			parent = parent.getParent();
-			
-		if (parent == null)
-			component.validate();	// There is no parent at all, so validate this one only.
-		else
-			parent.validate();
-
-		// Get the AWT image of the component
-		if (component.getWidth() == 0 || component.getHeight() == 0)
-			return false;
-
-		boolean clipped = false;
-		int w = component.getWidth();
-		int h = component.getHeight();
-		if (w > maxWidth) {
-			w = maxWidth;
-			clipped = true;
+	public boolean start(final Component component, final int maxWidth, final int maxHeight) throws IllegalAccessException, IllegalArgumentException, CommandException {
+		// Need to queue the printall off to the UI thread because there could be problems in some
+		// versions of the JDK if paint and print are done at the same time.
+		// Also we now want (as of 1.1.0) the validate() to be done in UI thread too so that any
+		// bounds changes will be batched together and sent in one transaction instead of each
+		// individually.
+		synchronized (this) {
+			if (fStatus != ImageDataConstants.NOT_IN_PROGRESS)
+				return false;	// Already in progress. We only got this far because two requests were submitted before we got this far to mark one as started.
+			fStatus = ImageDataConstants.IN_PROGRESS;	// Need to mark in progress because we have started
 		}
-		if (h > maxHeight) {
-			h = maxHeight;
-			clipped = true;
-		}		
-		final int iWidth = w;
-		final int iHeight = h;			
-		final Image componentImage = component.createImage(iWidth, iHeight);
-		final int startStatus = !clipped ? ImageDataConstants.IMAGE_NOT_STARTED : ImageDataConstants.COMPONENT_IMAGE_CLIPPED;
-		if (componentImage != null) {
-			// Need to queue the printall off to the UI thread because there could be problems in some
-			// versions of the JDK if paint and print are done at the same time.
-			synchronized (this) {
-				if (fStatus != ImageDataConstants.NOT_IN_PROGRESS)
-					return false;	// Already in progress. We only got this far because two requests were submitted before we got this far to mark one as started.
-				fStatus = ImageDataConstants.IN_PROGRESS;	// Need to mark in progress because we have started
-			}
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					// We have a component image. We may not if it wasn't yet visible.
-					Graphics graphics = null;			
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				// Now validate the component so that we have a good image to capture.
+				// We need to go to top level component so that all validations are done,
+				// if on a component, validate only validates that component, so it won't
+				// get relayed out. We have to check for Window because we don't want to 
+				// go higher than a Window. A Window can have a parent, but that is another
+				// window, and validating that window will not validate child windows (this
+				// relationship downward is ownership and not child containment).
+				Container parent = component.getParent();
+				while (parent != null && !(parent instanceof Window) && parent.getParent() != null)
+					parent = parent.getParent();
+				if (parent == null)
+					component.validate();	// There is no parent at all, so validate this one only.
+				else
+					parent.validate();
+				
+
+				// Get the AWT image of the component
+				if (component.getWidth() == 0 || component.getHeight() == 0) {
+					imageComplete(ImageDataConstants.IMAGE_EMPTY);
+					synchronized(ImageDataCollector.this) {
+						fProducer = null;
+						fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
+						ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
+						return;
+					}								
+				}
+
+				boolean clipped = false;
+				int w = component.getWidth();
+				int h = component.getHeight();
+				if (w > maxWidth) {
+					w = maxWidth;
+					clipped = true;
+				}
+				if (h > maxHeight) {
+					h = maxHeight;
+					clipped = true;
+				}		
+				final int iWidth = w;
+				final int iHeight = h;			
+				final Image componentImage = component.createImage(iWidth, iHeight);
+				if (componentImage == null) {
+					// This could happen if we asked for an image of component not attached to a window, it was
+					// attached to a window when requested but it was detached by the time the event queue got to process this request.
+					imageComplete(IMAGEERROR);
+					synchronized(ImageDataCollector.this) {
+						fProducer = null;
+						fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
+						ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
+						return;
+					}
+				}
+				final int startStatus = !clipped ? ImageDataConstants.IMAGE_NOT_STARTED : ImageDataConstants.COMPONENT_IMAGE_CLIPPED;
+				
+				// We have a component image. We may not if it wasn't yet visible.
+				Graphics graphics = null;			
+				try {
 					try {
-						try {
-							graphics = componentImage.getGraphics();
-							graphics.setClip(0, 0, iWidth, iHeight);
-							component.printAll(graphics);
-						} finally {
-							if (graphics != null)
-								graphics.dispose(); // Clear out the resources.
-							synchronized(ImageDataCollector.this) {
-								if (fEndProductionRequested) {
-									// End requested while retrieving image, means don't bother producing.
-									fProducer = null;
-									fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
-									ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
-									return;
-								}
-							}								
-						}
-						if (!start(componentImage, startStatus)) {
-							imageComplete(IMAGEERROR);
-							synchronized(ImageDataCollector.this) {
+						graphics = componentImage.getGraphics();
+						graphics.setClip(0, 0, iWidth, iHeight);
+						component.printAll(graphics);
+					} finally {
+						if (graphics != null)
+							graphics.dispose(); // Clear out the resources.
+						synchronized(ImageDataCollector.this) {
+							if (fEndProductionRequested) {
+								// End requested while retrieving image, means don't bother producing.
 								fProducer = null;
 								fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
 								ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
-							}								
-						}
-					} catch(final Throwable e) {
-						e.printStackTrace();
-						try {
-							fVMServer.doCallback(new ICallbackRunnable() {
-								public Object run(ICallbackHandler handler) throws CommandException {
-									return handler.callbackWithParms(fCallbackID, ImageDataConstants.IMAGE_HAS_EXCEPTION, new Object[] {e});
-								}
-							});
-						} catch (CommandException e1) {
-							e1.printStackTrace();
-						}						
+								return;
+							}
+						}								
+					}
+					if (!start(componentImage, startStatus)) {
 						imageComplete(IMAGEERROR);
 						synchronized(ImageDataCollector.this) {
 							fProducer = null;
 							fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
 							ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
+							return;
 						}								
-						
 					}
+				} catch(final Throwable e) {
+					e.printStackTrace();
+					try {
+						fVMServer.doCallback(new ICallbackRunnable() {
+							public Object run(ICallbackHandler handler) throws CommandException {
+								return handler.callbackWithParms(fCallbackID, ImageDataConstants.IMAGE_HAS_EXCEPTION, new Object[] {e});
+							}
+						});
+					} catch (CommandException e1) {
+						e1.printStackTrace();
+					}						
+					imageComplete(IMAGEERROR);
+					synchronized(ImageDataCollector.this) {
+						fProducer = null;
+						fStatus = ImageDataConstants.NOT_IN_PROGRESS;			
+						ImageDataCollector.this.notifyAll();	// Let anyone waiting know we are really done.
+						return;
+					}								
+					
 				}
-			});
-		}
+			}
+		});
 		return true;
 	}		
 	
@@ -797,6 +819,9 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 							break;
 						case IMAGEABORTED:
 							fStatus = ImageDataConstants.IMAGE_ABORTED;
+							break;
+						case ImageDataConstants.IMAGE_EMPTY:
+							fStatus = ImageDataConstants.IMAGE_EMPTY;
 							break;
 						default:
 							fStatus = ImageDataConstants.UNKNOWN_STATUS;

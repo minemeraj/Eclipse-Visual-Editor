@@ -10,39 +10,33 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IExpression;
 
-import org.eclipse.ve.internal.cdm.Annotation;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
-import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
-import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
- 
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
 /**
  * Frame Proxy Adapter.
  * <p>
- * TODO This shouldn't be necessary. The only reason we have it is to put a default title on the 
- * frame. But there are two problems with doing it here. One is that it is done outside of the drop
- * so it adds it outside of the undo of the create. So after dropping a frame, if someone then did an undo, 
- * it would simply undo the change title and not undo the drop of the frame. The second problem is that 
- * if someone removed the title, the next time it comes up it will put the title back and the class will
- * be marked as changed and save would be needed. This means you can never "not" have a title.
- * The better way is to have it done in the creation policy when dropped, but allow it to be unset later.
+ * This is here so that if no title on a frame a default title is shown. This is because people get confused when they see an untitled frame on the
+ * Windows(TM) taskbar. The better way is if we could figure out how to not show it on the taskbar, but that requires non-java code. Maybe in the
+ * future we can figure that out.
+ * 
  * @since 1.0.0
  */
 public class FrameProxyAdapter extends WindowProxyAdapter {
+
+	private EStructuralFeature sfTitle;
 
 	/**
 	 * @param domain
@@ -51,40 +45,54 @@ public class FrameProxyAdapter extends WindowProxyAdapter {
 	 */
 	public FrameProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
+		sfTitle = JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_FRAME_TITLE);
 	}
-	
+
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#primInstantiateBeanProxy()
+	 * @see org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
-	protected void primInstantiateBeanProxy() {
-		super.primInstantiateBeanProxy();
-		if (isBeanProxyInstantiated()) {
-			IJavaObjectInstance frame = getJavaObject();
-			EReference sf = JavaInstantiation.getReference(frame,JFCConstants.SF_FRAME_TITLE);
-			if (!frame.eIsSet(sf)) {
-				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-				AnnotationLinkagePolicy policy = getBeanProxyDomain().getEditDomain().getAnnotationLinkagePolicy();
-				Annotation ann = policy.getAnnotation(frame);
-				String name = null;
-				if (ann != null) {
-					name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-				}
-				if(name!=null){
-					IJavaInstance titleInstance = BeanUtilities.createString(rset, name);
-					final RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
-					cbld.applyAttributeSetting((EObject) target, sf, titleInstance);
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							// Check to see if still active since this was spawned off.
-							if (isBeanProxyInstantiated())
-								getBeanProxyDomain().getEditDomain().getCommandStack().execute(cbld.getCommand());
-						}
-					});
-				}
-			}
+	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
+		// If title, and override for title set, and valid to set, we will remove the override.
+		// Note: use false for honorOverrides because we know override is set and we want to ignore the override for the test.
+		// We are doing this in applied because we need to get rid of the override right away. If we didn't, it wouldn't
+		// get past the applied and actually be applied.
+		if (feature == sfTitle && isOverridePropertySet(feature) && testApplyValidity(expression, testValidity, feature, value, false)) {
+			// We are now applying a title and it was previously overridden. So we can remove the override property.
+			removeOverrideProperty(feature, expression);
+		}
+		super.applied(feature, value, index, isTouch, expression, testValidity);
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected void canceled(EStructuralFeature feature, Object value, int index, IExpression expression) {
+		if (feature == sfTitle && !isOverridePropertySet(feature)) {
+			// We are canceling title and we are not currently overridding, so we need to override now to default.
+			overrideTitle(expression);
+		}
+		super.canceled(feature, value, index, expression);
+	}
+
+	private void overrideTitle(IExpression expression) {
+		overrideProperty(sfTitle, getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
+				JFCMessages.getString("FrameDefaultTitle")), expression);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#setTarget(org.eclipse.emf.common.notify.Notifier)
+	 */
+	public void setTarget(Notifier newTarget) {
+		if (newTarget != null && !((EObject) newTarget).eIsSet(sfTitle)) {
+			// No title has been set, so put in the default title.
+			overrideTitle(null);
 		}
 
+		super.setTarget(newTarget);
 	}
 
 }

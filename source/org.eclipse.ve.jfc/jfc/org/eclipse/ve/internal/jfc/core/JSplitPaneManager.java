@@ -11,98 +11,34 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneManager.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
-import java.io.InputStream;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.jfc.common.Common;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.ICallback;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+import org.eclipse.jem.internal.proxy.core.IProxy;
 
 /**
- * This is the IDE class that interfaces to the JSplitPaneManager on the remote vm
- * @author richkulp
+ * JSplitPane Manager, client (IDE) side.
+ * 
+ * @since 1.1.0
  */
-public class JSplitPaneManager implements ICallback {
+public class JSplitPaneManager extends ComponentManager {
 
-	protected IBeanProxy splitpaneManager;
-	protected JSplitPaneProxyAdapter proxyAdapter;
-
-	/**
-	 * Set the bean proxy of the splitpane that we are manageing 
-	 */
-	public void setJSplitPaneBeanProxy(JSplitPaneProxyAdapter proxyAdapter, IBeanProxy splitpaneProxy) {
-		this.proxyAdapter = proxyAdapter;
-		try {
-			if (splitpaneProxy != null && splitpaneManager == null) {
-				IBeanTypeProxy splitpaneManagerType = splitpaneProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JSplitPaneManager"); //$NON-NLS-1$
-				splitpaneManager = splitpaneManagerType.newInstance();
-				splitpaneManager.getProxyFactoryRegistry().getCallbackRegistry().registerCallback(splitpaneManager, this);
-			}
-
-			if (splitpaneManager != null)
-				BeanAwtUtilities.invoke_set_JSplitPaneBean_Manager(splitpaneManager, splitpaneProxy);
-		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e);
-		}
-	}
-
-	public void dispose() {
-		if (splitpaneManager != null && splitpaneManager.isValid()) {
-			BeanAwtUtilities.invoke_set_JSplitPaneBean_Manager(splitpaneManager, null);
-			splitpaneManager.getProxyFactoryRegistry().getCallbackRegistry().deregisterCallback(splitpaneManager);
-			splitpaneManager.getProxyFactoryRegistry().releaseProxy(splitpaneManager);
-		}
-		splitpaneManager = null;
-		proxyAdapter = null;		
+	protected String getComponentManagerClassname() {
+		return "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager";
 	}
 	
 	/**
 	 * Set the divider location.
+	 * @param dividerLocation
+	 * @param returnOldLocation
+	 * @param expression
+	 * 
+	 * 
+	 * @return old location, if requested.
+	 * @since 1.1.0
 	 */
-	public void setDividerLocation(IBeanProxy dividerLocation) {
-		BeanAwtUtilities.invoke_set_JSplitPane_DividerLocation_Manager(splitpaneManager, dividerLocation);		
+	public IProxy setDividerLocation(IProxy dividerLocation, boolean returnOldLocation, IExpression expression) {
+		return BeanAwtUtilities.invoke_JSplitPane_setDividerLocation(getComponentManagerProxy(), dividerLocation, returnOldLocation, expression);		
 	}
-	
-	/**
-	 * Reset to preferred sizes
-	 */
-	public void resetToPreferredSizes() {
-		BeanAwtUtilities.invoke_reset_JSplitPane_PreferredSizes_Manager(splitpaneManager);			
-	}
-	
-	/*
-	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, IBeanProxy)
-	 */
-	public Object calledBack(int msgID, IBeanProxy parm) {
-		if (msgID == Common.JSP_INVALIDATE) {
-			proxyAdapter.revalidateBeanProxy();	// Cause it to get a new image.
-		}
-		return null;
-	}
-
-	/*
-	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, Object[])
-	 */
-	public Object calledBack(int msgID, Object[] parms) {
-		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$	
-	}
-
-	/*
-	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBackStream(int, InputStream)
-	 */
-	public void calledBackStream(int msgID, InputStream is) {
-		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, java.lang.Object)
-	 */
-	public Object calledBack(int msgID, Object parm) {
-		throw new RuntimeException("A jsplitpane manager has been called back incorrectly"); //$NON-NLS-1$
-	}
-
 }

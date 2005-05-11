@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.*;
@@ -92,7 +92,7 @@ public class JSplitPaneContainerPolicy extends AbstractJavaContainerPolicy {
 			EObject constraintComponent = (EObject) itr.next();
 			EObject component = (EObject) constraintComponent.eGet(sf_constraintComponent);
 			// See whether the component is in severe error.  If so then don't include it here
-			if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance)component).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+			if (BeanProxyUtilities.getBeanProxyHost((IJavaInstance)component).isBeanProxyInstantiated()) {
 				IJavaObjectInstance constraintString = (IJavaObjectInstance) constraintComponent.eGet(sf_constraintConstraint);
 				// We know the constraints value should be a bean so we can use its toString to get the string value
 				String constraint = BeanProxyUtilities.getBeanProxy(constraintString).toBeanString();

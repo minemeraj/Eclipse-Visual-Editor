@@ -9,15 +9,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-16 00:59:17 $
+ * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -27,14 +29,14 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.*;
 
-public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
+public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension {
 
 
 	protected ImageFigureController imageFigureController;
@@ -51,7 +53,7 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
 				return;
 			// Else assume a refresh is needed.
-			queueExec(ToolItemGraphicalEditPart.this);
+			queueExec(ToolItemGraphicalEditPart.this, "REFRESH");
 		}
 
 		public void run() {
@@ -71,7 +73,7 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(ToolItemGraphicalEditPart.this, new Runnable() {
+				CDEUtilities.displayExec(ToolItemGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() {
 
 					public void run() {
 						setSeverity(getControlProxy().getErrorStatus());
@@ -107,8 +109,8 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	protected void setSeverity(int severity) {
-		fErrorIndicator.sevSeverity(severity);
-		getFigure().setVisible(!(severity == IBeanProxyHost.ERROR_SEVERE));
+		fErrorIndicator.setSeverity(severity);
+		getFigure().setVisible(!(severity == IErrorHolder.ERROR_SEVERE));
 	}
 
 	protected ToolItemProxyAdapter getControlProxy() {
@@ -153,17 +155,40 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart {
 		return null;
 	}
 
-	protected IFigure createFigure() {
-		ImageFigure figure = new ImageFigure();
-		imageFigureController = new ImageFigureController();
-		imageFigureController.setImageFigure(figure);
-		figure.setOpaque(false);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean()));
-		figure.setToolTip(ToolTipFig);
-		fErrorIndicator = new ErrorFigure(IBeanProxyHost.ERROR_NONE);
-		figure.add(fErrorIndicator);
-		return figure;
+	protected boolean border;
+	
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data instanceof String)
+			border = Boolean.valueOf((String) data).booleanValue();
 	}
+	
+	/**
+	 * Get the main figure as a {@link ContentPaneFigure}.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ContentPaneFigure getContentPaneFigure() {
+		return (ContentPaneFigure)getFigure();
+	}
+	
+	public IFigure getContentPane() {
+		return getContentPaneFigure().getContentPane();
+	}
+	
+	protected IFigure createFigure() {
+		ContentPaneFigure cfig = new ContentPaneFigure();
+		ImageFigure ifig = new ImageFigure();
+		if (border)
+			ifig.setBorder(new OutlineBorder());
+		cfig.setContentPane(ifig);
+		fErrorIndicator = new ErrorFigure();
+		cfig.add(fErrorIndicator);
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE)));
+		cfig.setToolTip(ToolTipFig);
+		return cfig;
+	}
+
 
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());

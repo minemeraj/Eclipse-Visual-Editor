@@ -11,16 +11,15 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JPopupMenuProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
+import org.eclipse.ve.internal.java.core.CompositionProxyAdapter;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 /**
- * @author pwalker
- *
- * Proxy adapter for JPopupMenu. The correct structural feature is
+ * Proxy adapter for JPopupMenu.
+ * <p> The correct structural feature is
  * retrieved based on "items" SF for the specific type. see getSFItems().
  *
  */
@@ -33,37 +32,20 @@ public class JPopupMenuProxyAdapter extends JMenuProxyAdapter {
 	public JPopupMenuProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
-
-	/**
-	 * Windows need to be positioned off screen and also made visible
-	 * even when the MOF model says they are mot
-	 */
-	public IBeanProxy instantiateOnFreeForm(IBeanProxy aFreeFormDialogHost) {
-
-		// Need to make sure location/visibility are good before we instantiate so that it won't flash on the screen.
-		applyLocation(false, BeanAwtUtilities.getOffScreenLocation());
-		applyVisibility(false, Boolean.TRUE);
 	
-		if (!isBeanProxyInstantiated() && getErrorStatus() != ERROR_SEVERE)
-			instantiateBeanProxy();	// If not already instantiated, and not errors, try again. If already instantiated w/severe, don't waste time
-
-		if (getErrorStatus() == ERROR_SEVERE)
-			return null; // It is bad, don't go on.
-
-		// Having done this the frame on the target VM will now possibly be visible
-		// We should attempt to restore focus to the IDE
-		// TODO: Check to see if a window really causes a loss of focus in other systems (Ex:linux)
-//		if (Display.getCurrent().getActiveShell() != null)
-//			Display.getCurrent().getActiveShell().setFocus();
-
-		return super.instantiateBeanProxy();
-
-	}
-	/**
-	 * revalidate - hide and show the popup menu so it will resize correctly to show its components
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#addToFreeForm(org.eclipse.ve.internal.java.core.CompositionProxyAdapter)
 	 */
-	public void revalidateBeanProxy() {
-//		BeanAwtUtilities.invoke_jpopup_revalidate(getBeanProxy());
-		super.revalidateBeanProxy();
+	public void addToFreeForm(CompositionProxyAdapter compositionAdapter) {
+		// JPopupMenu must always be on freeform, but there is no visual for it. So we nned to prevent the normal ComponentProxy freeform stuff.
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#removeFromFreeForm()
+	 */
+	public void removeFromFreeForm() {
+		// JPopupMenu must always be on freeform, but there is no visual for it. So we need to prevent the normal ComponentProxy freeform stuff.
+	}
+
 }

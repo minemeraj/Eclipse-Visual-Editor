@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-02-15 23:51:48 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:30 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -60,9 +60,9 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_compositeControls)
-				queueExec(CompositeTreeEditPart.this);
+				queueExec(CompositeTreeEditPart.this, "CONTROLS");
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeTreeEditPart.this, new Runnable() {
+				queueExec(CompositeTreeEditPart.this, "LAYOUT", new Runnable() {
 					public void run() {
 						if (isActive())
 							createLayoutPolicyHelper();
@@ -107,7 +107,7 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 			IJavaInstance container = (IJavaInstance) getModel();
 			// It is possible the live JavaBean failed to create
 			ILayoutPolicyHelper lpHelper = null;
-			if (BeanProxyUtilities.getBeanProxyHost(container).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+			if (BeanProxyUtilities.getBeanProxyHost(container).isBeanProxyInstantiated()) {
 				CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getModel());
 				// Get the type of the layout proxy from the composite
 				IBeanProxy layoutProxy = BeanSWTUtilities.invoke_getLayout(compositeProxyAdapter.getBeanProxy());

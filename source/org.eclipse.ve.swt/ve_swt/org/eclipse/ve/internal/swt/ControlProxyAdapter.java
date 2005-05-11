@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.awt.IRectangleBeanProxy;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
@@ -424,5 +423,15 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public IBeanProxy getVisualControlBeanProxy() {
 		return getBeanProxy();
+	}
+
+	public Point getAbsoluteLocation() {
+		if (fControlManager != null) {
+			return fControlManager.getAbsoluteLocation();
+		} else {
+			// No proxy. Either called too soon, or there was an instantiation error and we can't get
+			// a live component. So return just a default.
+		return new Point(0, 0);
+		}		
 	}
 }

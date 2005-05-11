@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JLayeredPaneGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
  
 import java.util.List;
@@ -43,7 +43,7 @@ public class JLayeredPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		// that they will draw in the correct order and any overlaying bounds will be clipped
 		// correctly.
 		EditPart ep = super.createChild(model);
-		((ImageFigure) ((ComponentGraphicalEditPart) ep).getFigure()).setUseParentImageFigure(true);
+		((ImageFigure) ((ComponentGraphicalEditPart) ep).getContentPane()).setUseParentImageFigure(true);
 		return ep;
 	}
 

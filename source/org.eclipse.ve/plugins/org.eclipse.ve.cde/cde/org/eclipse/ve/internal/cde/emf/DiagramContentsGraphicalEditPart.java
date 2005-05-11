@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: DiagramContentsGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2005-02-15 23:17:58 $
+ * $RCSfile: DiagramContentsGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-05-11 19:01:26 $
  */
 package org.eclipse.ve.internal.cde.emf;
 
@@ -56,7 +56,7 @@ public abstract class DiagramContentsGraphicalEditPart extends ContentsGraphical
 		 */
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeatureID(Diagram.class) == CDMPackage.DIAGRAM__FIGURES)
-				queueExec(DiagramContentsGraphicalEditPart.this);
+				queueExec(DiagramContentsGraphicalEditPart.this, "FIGURES");
 		}
 	}
 

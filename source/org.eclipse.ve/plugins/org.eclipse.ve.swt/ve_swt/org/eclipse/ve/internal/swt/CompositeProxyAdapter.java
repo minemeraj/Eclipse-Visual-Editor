@@ -101,7 +101,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 		IBeanProxyHost layoutProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance)newLayout);
 		if(layoutProxyHost != null){
 			layoutProxyHost.instantiateBeanProxy();
-			if(layoutProxyHost.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE) return;
+			if(!layoutProxyHost.isBeanProxyInstantiated()) return;
 		}
 		// Some layouts physically set the layoutData of their child controls, for example
 		// GridLayout sets its composite's children to have a layoutData of GridData

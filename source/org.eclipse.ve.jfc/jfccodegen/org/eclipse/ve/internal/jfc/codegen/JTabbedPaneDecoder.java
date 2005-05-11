@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.util.Iterator;
@@ -34,13 +34,13 @@ import org.eclipse.ve.internal.java.codegen.model.*;
  */
 public class JTabbedPaneDecoder extends AbstractCompositionalDecoder {
 
-	public static final String JTABBED_PANE_METHOD = "addTab"; //$NON-NLS-1$
-	public static final String JTABBED_PANE_METHOD2 = "add"; //$NON-NLS-1$
+	public static final String JTABBED_PANE_METHOD_ADDTAB = "addTab"; //$NON-NLS-1$
+	public static final String JTABBED_PANE_METHOD_ADD = "add"; //$NON-NLS-1$
 	public static final String JTABBED_PANE_INDEX_METHOD = "insertTab"; //$NON-NLS-1$
 	public static final String JTABBED_PANE_FEATURE_NAME = "tabs"; //$NON-NLS-1$
 	protected static String[] structualFeatures =
 		new String[] { JTABBED_PANE_FEATURE_NAME, JTABBED_PANE_FEATURE_NAME, JTABBED_PANE_FEATURE_NAME };
-	protected static String[] writeMethodNames = new String[] { JTABBED_PANE_METHOD, JTABBED_PANE_METHOD2, JTABBED_PANE_INDEX_METHOD };
+	protected static String[] writeMethodNames = new String[] { JTABBED_PANE_METHOD_ADDTAB, JTABBED_PANE_METHOD_ADD, JTABBED_PANE_INDEX_METHOD };
 
 	/*
 	 * @see AbstractCompositionalDecoder#getAppropriateDecoderHelper(String)

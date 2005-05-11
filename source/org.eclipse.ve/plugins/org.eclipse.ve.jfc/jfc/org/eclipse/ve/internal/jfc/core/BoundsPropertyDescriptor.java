@@ -11,15 +11,22 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: BoundsPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
  */
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
+
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
+
 import org.eclipse.ve.internal.java.core.*;
 
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
@@ -47,7 +54,25 @@ public class BoundsPropertyDescriptor extends BeanPropertyDescriptorAdapter impl
 			cb.cancelAttributeSetting(comp, sfComponentSize);
 		if (comp.eIsSet(sfComponentLocation))
 			cb.cancelAttributeSetting(comp, sfComponentLocation);
-			
+
+		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLauoutConstraintCommand instead to handle these.
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IBeanProxy rect = sh.instantiateBeanProxy();
+		if (rect instanceof IRectangleBeanProxy) {
+			IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) rect;
+			int x = rectProxy.getX();
+			int y = rectProxy.getY();
+			int width = rectProxy.getWidth();
+			int height = rectProxy.getHeight();
+			if (XYLayoutUtility.constraintContainsPreferredSettings(x, y, width, height, true, true)) {
+				ApplyNullLayoutConstraintCommand apply = new ApplyNullLayoutConstraintCommand();
+				apply.setTarget(comp);
+				apply.setDomain(h.getBeanProxyDomain().getEditDomain());
+				apply.setConstraint(new Rectangle(x, y, width, height), true, true);
+				cb.append(apply);
+				return cb.getCommand();
+			}
+		}
 		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
 		return cb.getCommand();
 	}

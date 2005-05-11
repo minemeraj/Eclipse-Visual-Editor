@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-27 06:43:08 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.*;
@@ -67,7 +67,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	
 	protected Adapter compositionAdapter = new AdapterImpl() {
 		public void notifyChanged(Notification msg) {
-			if (msg.getFeatureID(BeanComposition.class) == JCMPackage.BEAN_COMPOSITION__COMPONENTS)
+			if (!msg.isTouch() && msg.getFeatureID(BeanComposition.class) == JCMPackage.BEAN_COMPOSITION__COMPONENTS)
 				queueRefreshChildren();
 		}
 	};
@@ -78,7 +78,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(getViewer().getControl().getDisplay(), new Runnable() {
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() {
 			public void run() {
 				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
 				if (isActive())
@@ -107,10 +107,10 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 			// We must NOT use the one defined on the class as for some classes, e.g. Component it
 			// has a lot of behavior that relies on the live JavaBean being present
 			IJavaInstance javaModel = (IJavaInstance)model;
-			JavaHelpers awtComponentClass = Utilities.getJavaType("java.awt.Component",javaModel.eResource().getResourceSet()); //$NON-NLS-1$
+			JavaHelpers awtComponentClass = Utilities.getJavaType("java.awt.Component",javaModel.eResource().getResourceSet());
 			// This is a hack because the trap to no use the defined edit part for Component must not be generalized
 			// A better fix would be that the edit part is more robust and can deal with no bean proxy there
-			if(modelBeanProxy == null || (awtComponentClass.isAssignableFrom(javaModel.eClass()) && modelBeanProxy.getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)){
+			if(modelBeanProxy == null || (awtComponentClass.isAssignableFrom(javaModel.eClass()) && !modelBeanProxy.isBeanProxyInstantiated())){
 				// The DefaultGraphicalEditPart will show the icon and its label provider will indicate to the
 				// user that the JavaBean failed to be created
 				JavaBeanGraphicalEditPart result = new JavaBeanGraphicalEditPart(model);

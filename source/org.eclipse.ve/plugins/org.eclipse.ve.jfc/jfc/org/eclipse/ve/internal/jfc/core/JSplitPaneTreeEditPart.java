@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:42:05 $
+ * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:38 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -30,7 +30,6 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 
 /**
  * Tree edit part for handling JSplitPane in the Beans viewer
@@ -45,7 +44,7 @@ public class JSplitPaneTreeEditPart extends ComponentTreeEditPart {
 		public void notifyChanged(Notification msg) {
 			Object feature = msg.getFeature();
 			if (feature == sfLeftComponent || feature == sfRightComponent || feature == sfTopComponent || feature == sfBottomComponent || feature == sf_containerComponents)
-				queueExec(JSplitPaneTreeEditPart.this);
+				queueExec(JSplitPaneTreeEditPart.this, "SPLITCOMPONENT");
 		}
 	};
 
@@ -130,7 +129,7 @@ public class JSplitPaneTreeEditPart extends ComponentTreeEditPart {
 			EObject con = (EObject) itr.next();
 			IJavaInstance component = (IJavaInstance) con.eGet(sf_constraintComponent);
 			// See whether the component is in severe error. If so then exlude if from the list of children
-			if (BeanProxyUtilities.getBeanProxyHost(component).getErrorStatus() != IBeanProxyHost.ERROR_SEVERE) {
+			if (BeanProxyUtilities.getBeanProxyHost(component).isBeanProxyInstantiated()) {
 				children.add(con.eGet(sf_constraintComponent)); // Get the component out of the constrain
 			}
 		}

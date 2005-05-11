@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.*;
@@ -25,6 +25,11 @@ import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.java.JavaHelpers;
+
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Proxy Host for Primitives (e.g. int, char, etc.).
@@ -33,16 +38,16 @@ import org.eclipse.jem.internal.proxy.core.*;
  * @version 	1.0
  * @author
  */
-public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost {
+public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost2, IInternalBeanProxyHost2 {
 
-	private IBeanProxy beanProxy; // It should be accessed only through accessors, even subclasses.
+	private IProxy beanProxy; // It should be accessed only through accessors, even subclasses.
 	private boolean ownsProxy;
 
 	// The domain must be given to us so we can create instances
 	protected IBeanProxyDomain domain;
 	
 	// Hold any exception that occurs when we try to create the BeanProxy
-	protected Throwable instantiationError;
+	protected ErrorType instantiationError;
 	protected ListenerList errorListeners;		
 
 	public PrimitiveProxyAdapter(IBeanProxyDomain domain) {
@@ -59,6 +64,14 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 		}
 		beanProxy = null; // Now throw it away			
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	public void releaseBeanProxy(IExpression expression) {
+		releaseBeanProxy();	// Being in an expression is not of much use to primitives for releasing.
+	}
 
 	public void reinstantiateChild(IBeanProxyHost aChildHost) {
 	}
@@ -74,6 +87,14 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	 * @see IBeanProxyHost#getBeanProxy()
 	 */
 	public IBeanProxy getBeanProxy() {
+		return (IBeanProxy) (beanProxy != null && beanProxy.isBeanProxy() ? beanProxy : null);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#getProxy()
+	 */
+	public IProxy getProxy() {
 		return beanProxy;
 	}
 
@@ -89,6 +110,8 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	 */
 	public IBeanProxy instantiateBeanProxy() {
 		if (beanProxy == null) {
+			instantiationError = null;
+			fireSeverityError(ERROR_NONE);
 			IJavaDataTypeInstance jTarget = (IJavaDataTypeInstance) target;
 
 			if (jTarget.isSetAllocation()) {
@@ -97,9 +120,9 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 				try {
 					beanProxy = getBeanProxyDomain().getAllocationProcesser().allocate(allocation);
 				} catch (IAllocationProcesser.AllocationException e) {
-					processInstantiationError(e);
+					processInstantiationError(new ExceptionError(e.getCause(), ERROR_INFO));
 				}
-				return beanProxy;
+				return (IBeanProxy) beanProxy;
 			}
 			
 			String qualifiedClassName = jTarget.getJavaType().getQualifiedNameForReflection();
@@ -108,20 +131,26 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 				beanProxy = targetClass.newInstance();
 				ownsProxy = true;
 			} catch (ThrowableProxy exc) {
-				processInstantiationError(exc);
+				processInstantiationError(new BeanExceptionError(exc, ERROR_SEVERE));
 				if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
 					JavaVEPlugin.log("Could not instantiate " + qualifiedClassName, Level.WARNING); //$NON-NLS-1$
 					JavaVEPlugin.log(exc, Level.WARNING);
 				}
 			}
-		}
-
-		return beanProxy;
+			return (IBeanProxy) beanProxy;
+		} else if (beanProxy.isExpressionProxy())
+			return null;	// We are evaluating, can't return anything while doing that.
+		else
+			return (IBeanProxy) beanProxy;
 	}
 	
-	protected void processInstantiationError(Throwable exc){
-		instantiationError = exc;
-		fireSeverityError(IBeanProxyHost.ERROR_SEVERE);
+	protected void processInstantiationError(ErrorType error){
+		instantiationError = error;
+		fireSeverityError(error.getSeverity());
+	}
+	
+	public boolean hasInstantiationErrors() {
+		return instantiationError != null;
 	}
 	
 	protected void fireSeverityError(int severity){
@@ -139,14 +168,16 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	public IBeanProxy instantiateBeanProxy(IBeanProxy proxy) {
 		ownsProxy = false;
 		beanProxy = proxy;
-		return beanProxy;
+		instantiationError = null;
+		fireSeverityError(ERROR_NONE);
+		return (IBeanProxy) beanProxy;
 	}
 
 	/*
 	 * @see IBeanProxyHost#isBeanProxyInstantiated()
 	 */
 	public boolean isBeanProxyInstantiated() {
-		return beanProxy != null;
+		return beanProxy != null && beanProxy.isBeanProxy();
 	}
 
 	/*
@@ -187,16 +218,24 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	public int getErrorStatus(){
 		
 		if (instantiationError != null)
-			return ERROR_SEVERE;
+			return instantiationError.getSeverity();
 		else
 			return ERROR_NONE;
 	}
 	
 	public List getErrors() {
 		if (instantiationError != null)
-			return Collections.singletonList(new IErrorNotifier.ExceptionError(instantiationError,ERROR_SEVERE));
+			return Collections.singletonList(instantiationError);
 		else
 			return Collections.EMPTY_LIST;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost#getInstantiationError()
+	 */
+	public List getInstantiationError() {
+		return getErrors();
 	}
 
 	public void addErrorListener(ErrorListener aListener) {
@@ -234,6 +273,97 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost
 	 */
 	public void applyBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature, IBeanProxy aproxy) {
 		// There are no properties of a primitive.		
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#instantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	public IProxy instantiateBeanProxy(IExpression expression) {
+		IJavaDataTypeInstance jTarget = (IJavaDataTypeInstance) target;
+		instantiationError = null;
+		ownsProxy = true;
+		fireSeverityError(ERROR_NONE);
+		if (jTarget.isSetAllocation()) {
+			JavaAllocation allocation = jTarget.getAllocation();
+			try {
+				beanProxy = getBeanProxyDomain().getAllocationProcesser().allocate(allocation, expression);
+			} catch (AllocationException e) {
+				processInstantiationError(new ExceptionError(e.getCause(), ERROR_INFO));
+				JavaVEPlugin.log(e, Level.WARNING);
+				return null;
+			}
+		} else {
+			// otherwise just create it using the default value for it.
+			beanProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			switch (jTarget.getJavaType().getPrimitiveID()) {
+				case JavaHelpers.PRIM_BOOLEAN_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, false);
+					break;
+				case JavaHelpers.PRIM_BYTE_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, (byte) 0);
+					break;
+				case JavaHelpers.PRIM_CHARACTER_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, (char) 0);
+					break;
+				case JavaHelpers.PRIM_SHORT_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, (short) 0);
+					break;
+				case JavaHelpers.PRIM_INTEGER_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, 0);
+					break;
+				case JavaHelpers.PRIM_LONG_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, 0l);
+					break;
+				case JavaHelpers.PRIM_FLOAT_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, 0f);
+					break;
+				case JavaHelpers.PRIM_DOUBLE_ID:
+					expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, 0d);
+					break;
+			}
+		}
+		if (beanProxy.isExpressionProxy()) {
+			((ExpressionProxy) beanProxy).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+				public void proxyResolved(ProxyEvent event) {
+					beanProxy = event.getProxy();	// We have it! So save it.
+				}
+			});
+		}
+
+		return beanProxy;
+	
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#getBeanPropertyProxyValue(org.eclipse.emf.ecore.EStructuralFeature, org.eclipse.jem.internal.proxy.core.IExpression, org.eclipse.jem.internal.proxy.initParser.tree.ForExpression)
+	 */
+	public IProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyFeature, IExpression expression, ForExpression forExpression) {
+		return null;
+	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#addToFreeForm(org.eclipse.ve.internal.java.core.CompositionProxyAdapter)
+	 */
+	public void addToFreeForm(CompositionProxyAdapter compositionAdapter) {
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#removeFromFreeForm()
+	 */
+	public void removeFromFreeForm() {
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost#isSettingInOriginalSettingsTable(org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	public boolean isSettingInOriginalSettingsTable(EStructuralFeature feature) {
+		return false;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#inInstantiation()
+	 */
+	public boolean inInstantiation() {
+		return beanProxy != null && beanProxy.isExpressionProxy();
 	}
 
 }

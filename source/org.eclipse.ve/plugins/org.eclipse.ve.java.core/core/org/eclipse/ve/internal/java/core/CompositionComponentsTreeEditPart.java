@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:20 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -48,7 +48,7 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 
 	protected Adapter compositionAdapter = new AdapterImpl() {
 		public void notifyChanged(Notification msg) {
-			if (msg.getFeatureID(BeanComposition.class) == JCMPackage.BEAN_COMPOSITION__COMPONENTS) {
+			if (!msg.isTouch() && msg.getFeatureID(BeanComposition.class) == JCMPackage.BEAN_COMPOSITION__COMPONENTS) {
 				queueRefreshChildren();
 			}
 		}
@@ -60,7 +60,7 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(getViewer().getControl().getDisplay(), new Runnable() {
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() {
 			public void run() {
 				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
 				if (isActive())

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.16 $ $Date: 2005-02-23 23:19:40 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.17 $ $Date: 2005-05-11 19:01:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -171,15 +171,12 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 	 */
 	protected void setupBeanProxy(IBeanProxy beanProxy) {
 		super.setupBeanProxy(beanProxy);
-		IMethodProxy addShellListenerMethodProxy = 	fControlManager
-					.fControlManagerProxy
-					.getTypeProxy()
-					.getMethodProxy(
-						"addShellListener", new String[] { "org.eclipse.swt.widgets.Shell" }); //$NON-NLS-1$  //$NON-NLS-2$
-		if(addShellListenerMethodProxy != null) {
-			addShellListenerMethodProxy.invokeCatchThrowableExceptions(
-					fControlManager.fControlManagerProxy,
-					new IBeanProxy[] { beanProxy });
+		if (beanProxy != null) {
+			IMethodProxy addShellListenerMethodProxy = fControlManager.fControlManagerProxy.getTypeProxy().getMethodProxy(
+					"addShellListener", new String[] { "org.eclipse.swt.widgets.Shell"}); //$NON-NLS-1$  //$NON-NLS-2$
+			if (addShellListenerMethodProxy != null) {
+				addShellListenerMethodProxy.invokeCatchThrowableExceptions(fControlManager.fControlManagerProxy, new IBeanProxy[] { beanProxy});
+			}
 		}
 	}
 

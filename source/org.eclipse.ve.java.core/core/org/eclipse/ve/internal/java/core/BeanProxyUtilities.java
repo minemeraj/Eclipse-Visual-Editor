@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.13 $  $Date: 2005-02-16 00:38:26 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import java.util.List;
@@ -110,7 +110,7 @@ public class BeanProxyUtilities {
 		IJavaInstance javaInstance = (IJavaInstance) javaType.getEPackage().getEFactoryInstance().create(javaType);
 		javaInstance.setAllocation(alloc);
 		// 3 - The adaptor factory should be installed so just asking for the adaptor will create it
-		IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
+		IInternalBeanProxyHost beanProxyHost = (IInternalBeanProxyHost) getBeanProxyHost(javaInstance, aResourceSet);
 		// 4 - Pass the bean proxy that we got in the argument to the proxy host
 		beanProxyHost.setBeanProxy(aBeanProxy);
 		beanProxyHost.setOwnsProxy(ownsProxy);
@@ -171,7 +171,7 @@ public class BeanProxyUtilities {
 		}
 		IJavaInstance javaInstance = (IJavaInstance) aType.getEPackage().getEFactoryInstance().create(aType);
 		javaInstance.setAllocation(alloc);
-		IBeanProxyHost beanProxyHost = getBeanProxyHost(javaInstance, aResourceSet);
+		IInternalBeanProxyHost beanProxyHost = (IInternalBeanProxyHost) getBeanProxyHost(javaInstance, aResourceSet);
 		beanProxyHost.setBeanProxy(primitiveProxy);
 		beanProxyHost.setOwnsProxy(true);
 		return javaInstance;
@@ -194,8 +194,10 @@ public class BeanProxyUtilities {
 	}
 	/** 
 	 * Helper to apply the value to the source
+	 * @throws NoSuchMethodException
+	 * @deprecated This should not be used. Alway go through the IBeanProxyHost.
 	 */
-	public static void writeBeanFeature(PropertyDecorator aPropertyDecorator, IBeanProxy aSource, IBeanProxy aValue) throws ThrowableProxy {
+	public static void writeBeanFeature(PropertyDecorator aPropertyDecorator, IBeanProxy aSource, IBeanProxy aValue) throws ThrowableProxy, NoSuchMethodException {
 
 		if(aPropertyDecorator.getWriteMethod() != null){
 			Method method = aPropertyDecorator.getWriteMethod();
@@ -241,8 +243,10 @@ public class BeanProxyUtilities {
 	/**
 	 * Get a method proxy for the getMethod on the property and invoke it on the source bean
 	 * returning the result
+	 * @throws NoSuchMethodException
+	 * @deprecated This should not be used. Alway go through the IBeanProxyHost.
 	 */
-	public static IBeanProxy readBeanFeature(PropertyDecorator aPropertyDecorator, IBeanProxy aSource) throws ThrowableProxy {
+	public static IBeanProxy readBeanFeature(PropertyDecorator aPropertyDecorator, IBeanProxy aSource) throws ThrowableProxy, NoSuchMethodException {
 
 		if (!aSource.isValid())
 			return null;	// Not valid to read.
@@ -261,11 +265,17 @@ public class BeanProxyUtilities {
 		}
 		return null;
 	}
+	
 	/**
-	 *	Return the method proxy from the method in the same registry as the source
+	 * Return the method proxy from the given Method.
+	 * @param aMethod the method to find the proxy for.
+	 * @param aRegistry
+	 * @return the method proxy.
+	 * @throws NoSuchMethodException if method proxy could not be found.
+	 * 
+	 * @since 1.1.0
 	 */
-	public static IMethodProxy getMethodProxy(Method aMethod, ProxyFactoryRegistry aRegistry) {
-
+	public static IMethodProxy getMethodProxy(Method aMethod, ProxyFactoryRegistry aRegistry) throws NoSuchMethodException {
 		// Get the name of the method and the arguments
 		String methodName = aMethod.getName();
 		List inputMethods = aMethod.getParameters();
@@ -277,8 +287,80 @@ public class BeanProxyUtilities {
 		}
 		String className = aMethod.getContainingJavaClass().getQualifiedNameForReflection();
 		// Now get the method proxy on the same VM as the source
-		return aRegistry.getMethodProxyFactory().getMethodProxy(className, methodName, methodParms);
+		IMethodProxy result = aRegistry.getMethodProxyFactory().getMethodProxy(className, methodName, methodParms);
+		if (result != null)
+			return result;
+		else
+			throw new NoSuchMethodException(aMethod.getContainingJavaClass().getJavaName()+'.'+aMethod.getMethodElementSignature());
+	}
 
+	public static IProxyMethod getMethodProxy(IExpression expression, Method aMethod) throws NoSuchMethodException {
+		// Get the name of the method and the arguments
+		String methodName = aMethod.getName();
+		List inputMethods = aMethod.getParameters();
+		String[] methodParms;
+		if (inputMethods.isEmpty())
+			methodParms = null;
+		else {
+			methodParms = new String[inputMethods.size()];
+			for (int i = 0; i < inputMethods.size(); i++) {
+				JavaParameter parm = (JavaParameter) inputMethods.get(i);
+				JavaHelpers jh = parm.getJavaType();
+				methodParms[i] = jh.getQualifiedNameForReflection();
+			}
+		}
+		String className = aMethod.getContainingJavaClass().getQualifiedNameForReflection();
+		// Now get the method proxy from the expression.
+		ProxyFactoryRegistry registry = expression.getRegistry();
+		IProxyMethod result = registry.getMethodProxyFactory().getMethodProxy(expression, className, methodName, methodParms);
+		if (result != null)
+			return result;
+		else
+			throw new NoSuchMethodException(aMethod.getContainingJavaClass().getJavaName()+'.'+aMethod.getMethodElementSignature());
+	}
+
+	/**
+	 * Get the field proxy from the given field.
+	 * @param aField
+	 * @param aRegistry
+	 * @return the field proxy or <code>null</code> if not found.
+	 * @throws NoSuchFieldException
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IFieldProxy getFieldProxy(Field aField, ProxyFactoryRegistry aRegistry) throws NoSuchFieldException {
+
+		// Get the name of the method and the arguments
+		String fieldName = aField.getName();
+		String className = aField.getContainingJavaClass().getQualifiedNameForReflection();
+		// Now get the method proxy on the same VM as the source
+		IFieldProxy result = aRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(className).getFieldProxy(fieldName);
+		if (result != null)
+			return result;
+		else
+			throw new NoSuchFieldException(aField.getContainingJavaClass().getJavaName()+'.'+aField.getName());
+	}
+	
+	/**
+	 * Get proxy field for the given field and expression.
+	 * @param expression
+	 * @param aField
+	 * @return
+	 * @throws NoSuchFieldException
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IProxyField getFieldProxy(IExpression expression, Field aField) throws NoSuchFieldException {
+		// Get the name of the method and the arguments
+		String fieldName = aField.getName();
+		String className = aField.getContainingJavaClass().getQualifiedNameForReflection();
+		// Now get the method proxy from the expression.
+		ProxyFactoryRegistry registry = expression.getRegistry();
+		IProxyField result = registry.getMethodProxyFactory().getFieldProxy(expression, className, fieldName);
+		if (result != null)
+			return result;
+		else
+			throw new NoSuchFieldException(aField.getContainingJavaClass().getJavaName()+'.'+fieldName);
 	}
 	
 	public static IInvokable getInvokable(Method aMethod, ProxyFactoryRegistry aRegistry) {
@@ -327,8 +409,9 @@ public class BeanProxyUtilities {
 	public static IBeanProxy getBeanProxy(IJavaInstance aBean, boolean noInstantiateOnError) {
 		if (aBean == null)
 			return null;
-		IBeanProxyHost aBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(aBean);
-		if (aBeanProxyHost.getErrorStatus() == IErrorHolder.ERROR_SEVERE)
+		IInternalBeanProxyHost aBeanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(aBean);
+		// TODO Change to use hasInstantiationError when proxy host stuff collapsed back.
+		if (!aBeanProxyHost.getInstantiationError().isEmpty() && !noInstantiateOnError)
 			return null;
 		aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
@@ -344,8 +427,9 @@ public class BeanProxyUtilities {
 	public static IBeanProxy getBeanProxy(IJavaInstance aBean, ResourceSet aResourceSet) {
 		if (aBean == null)
 			return null;
-		IBeanProxyHost aBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(aBean, aResourceSet);
-		aBeanProxyHost.instantiateBeanProxy();
+		IInternalBeanProxyHost2 aBeanProxyHost = (IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(aBean, aResourceSet);
+		if (!aBeanProxyHost.hasInstantiationErrors())
+			aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
 	}
 

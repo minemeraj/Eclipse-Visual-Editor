@@ -11,20 +11,29 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-25 16:09:11 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:38 $ 
  */
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+/**
+ * JTable proxy adapter.
+ * 
+ * @since 1.1.0
+ */
 public class JTableProxyAdapter extends ComponentProxyAdapter {
 
 	protected EStructuralFeature sfColumns, sfAutoCreateColumns;
@@ -35,150 +44,171 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 		sfColumns = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_JTABLE_COLUMNS);
 		sfAutoCreateColumns = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_JTABLE_AUTOCREATECOLUMNSFROMMODEL);		
 	}
-	/*
-	 * Create the bean proxy. We override because we put a table model there
-	 * if not is not present so that preview data can be shown in the columns
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#instantiateAndInitialize(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected void primInstantiateBeanProxy() {
-		super.primInstantiateBeanProxy();
-		if (isBeanProxyInstantiated()) {
-			// Creating proxy worked.
-			// Query the current table model - If it is the Default then replace it with our one
-			// That has preview data
-			IBeanProxy tableModelProxy = getBeanProxy().getTypeProxy().getMethodProxy("getModel").invokeCatchThrowableExceptions(getBeanProxy()); //$NON-NLS-1$
-			if (tableModelProxy.getTypeProxy().getTypeName().equals("javax.swing.table.DefaultTableModel")) { //$NON-NLS-1$
-				// Set the table model to be a special one we have on the target VM
-				IBeanTypeProxy previewTypeProxy =
-					getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.PreviewTableModel");	//$NON-NLS-1$
-				try {
-					getBeanProxy().getTypeProxy().getMethodProxy("setModel", "javax.swing.table.TableModel").invoke(getBeanProxy(), previewTypeProxy.newInstance()); //$NON-NLS-1$ //$NON-NLS-2$
-				} catch (ThrowableProxy exc) {
-					JavaVEPlugin.log(exc, Level.WARNING);
-				}
+	protected void instantiateAndInitialize(IExpression expression) throws IllegalStateException, AllocationException {
+		super.instantiateAndInitialize(expression);
+		// Now call the JTable manager to complete the initialization. This guy handles the default model and puts our preview
+		// model in instead.
+		if (getProxy() != null && expression.isValid()) {
+			//   try {
+			//     JTableManager.initializeTableModel(jtable);
+			expression.createTry();
+			try {
+				expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTableInitializeTableModel(expression), null, new IProxy[] { getProxy()},
+						false);
+				//   } catch (Exception e) {
+				//     ... send back thru ExpressionProxy to mark an instantiation error ...
+				//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.
+				//   }				
+				ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+				expProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+					public void proxyResolved(ProxyEvent event) {
+						ThrowableProxy throwableProxy = (ThrowableProxy) event.getProxy();
+						JavaVEPlugin.log(throwableProxy, Level.INFO);
+						processInstantiationError(new BeanExceptionError(throwableProxy, ERROR_SEVERE));
+					}
+				});
+				expression.createThrow();
+				expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanTypeProxy(
+						"org.eclipse.ve.internal.java.remotevm.BeanInstantiationException", expression), 0);
+			} finally {
+				if (expression.isValid())
+					expression.createTryEnd();
 			}
 		}
 	}
-	protected void applied(EStructuralFeature as, Object newValue, int position) {
-
-		if (!isBeanProxyInstantiated())
-			return;
-		else if (as == sfColumns) {
-			reapplyColumns();
-		} else {
-			super.applied(as, newValue, position);
-			if (getErrorStatus() != ERROR_SEVERE && as == sfAutoCreateColumns) {
-				IBeanProxy newProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) newValue);
-				if (newProxy instanceof IBooleanBeanProxy) {
-					if (!((IBooleanBeanProxy) newProxy).booleanValue()) {
-						// It has gone false, need to revamp the columns.
-						reapplyColumns();
-					} else {
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected void applySetting(EStructuralFeature feature, final Object value, final int index, IExpression expression) {
+		if (feature == sfColumns)
+			addColumn((IJavaInstance) value, index, expression);
+		else if (feature == sfAutoCreateColumns) {
+			super.applySetting(feature, value, index, expression);
+			// Now need to do some other stuff to handle autocreate, in case explicit columns too.
+			IInternalBeanProxyHost2 autocreate = (IInternalBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) value);
+			if (autocreate.getProxy() != null) {
+				IProxy autocreateProxy = autocreate.getProxy();
+				expression.createIfElse(!inInstantiation());
+				expression.createProxyExpression(ForExpression.IF_CONDITION, autocreateProxy);
+				ExpressionProxy inTrue = expression.createProxyAssignmentExpression(ForExpression.IF_TRUE);
+				// Bit of kludge but we want to know it is True, but we want to execute on the IDE. We need an expression proxy as a handle to know this.
+				expression.createPrimitiveLiteral(ForExpression.ASSIGNMENT_RIGHT, true);
+				inTrue.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+					public void proxyResolved(ProxyEvent event) {
 						// It has gone true, see if there are columns. Allowed it to be applied, but create a warning.
 						if (!((List) getEObject().eGet(sfColumns)).isEmpty()) {
-							processError(sfAutoCreateColumns, new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_"))); //$NON-NLS-1$
-						}
-						revalidateBeanProxy();						
+							processPropertyError(new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_")), sfAutoCreateColumns, value); //$NON-NLS-1$
+						}						
 					}
+				});
+				if (!inInstantiation()) {
+					// Now the false condition. We went false, so we need to reapply the columns to clean up what was there and put the correct set back.
+					// This only needs to be done when not in instantiation.
+					expression.createBlockBegin();
+					reapplyColumns(expression);
+					expression.createBlockEnd();
 				}
-			}			
-		}
-
+			}
+		} else
+			super.applySetting(feature, value, index, expression);
 	}
-	public void reapplyColumns() {
-		removeColumns();
-		applyColumns();
+	
+	/**
+	 * Add the colunm at the given index.
+	 * @param value
+	 * @param index
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void addColumn(IJavaInstance column, int index, IExpression expression) {
+		IBeanProxyHost2 columnProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(column);
+		IProxy columnProxy = instantiateSettingBean(columnProxyHost, expression, sfColumns, column);
+		if (columnProxy == null)
+			return; // It failed creation, don't go any further.
+
+		IProxy beforeBeanProxy; // The beanproxy to go before, if any.
+		if (index != Notification.NO_INDEX) {
+			// Need to do +1 because we (columnBeanProxy) are already at that position in the EMF list. So we want to go before next guy.
+			beforeBeanProxy = getProxyAt(index + 1, sfColumns); 
+		} else
+			beforeBeanProxy = null;
+
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTableAddColumnBefore(expression), null,
+				new IProxy[] { getProxy(), columnProxy, beforeBeanProxy}, false);
 		revalidateBeanProxy();
 	}
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-
-		if (!isBeanProxyInstantiated())
-			return;
-		else if (sf == sfColumns) {
-			if (!isValidFeature(sfAutoCreateColumns) && ((List) getEObject().eGet(sfColumns)).isEmpty()) {
-				// We had made it true, but now that we've removed all columns, we should reinstantiate to see if it goes good.
-				clearError(sfAutoCreateColumns);	// Clear it so we retry to apply it.
-				reinstantiateBeanProxy();
-			} else
-				reapplyColumns();
-			IBeanProxyHost oldHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) oldValue);
-			if (oldHost != null)
-				oldHost.releaseBeanProxy();
-		} else {
-			super.canceled(sf, oldValue, position);
-			if (getErrorStatus() != ERROR_SEVERE && sf == sfAutoCreateColumns) {	
-				if (!((List) getEObject().eGet(sfColumns)).isEmpty()) {
-					processError(sfAutoCreateColumns, new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_"))); //$NON-NLS-1$
-				}				
-				revalidateBeanProxy();	// Because table size/position has changed						
-			}
-		}
-
-	}
-	protected void appliedList(EStructuralFeature as, List newValues, int position, boolean testValidity) {
-		if (as == sfColumns)
-			reapplyColumns();		
-		else {
-			super.appliedList(as, newValues, position, testValidity);
-		}
-	}
-	protected void canceledList(EStructuralFeature as, List oldValues, int position) {
-		if (as == sfColumns) {
-			// This is overridden so that we only need to do remove/apply once for this entire list.
-			reapplyColumns();
-			Iterator itr = oldValues.iterator();
-			while (itr.hasNext()) {
-				IBeanProxyHost oldHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) itr.next());
-				if (oldHost != null)
-					oldHost.releaseBeanProxy();
-			}
-
-		} else {
-			super.canceledList(as, oldValues, position);
-		}
-	}
-
-	/** 
-	 * Iterate over the table columns.  These are added to the live bean with the
-	 * method addColumn(javax.swing.TableColumn)
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
-	protected void applyColumns() {
+	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
+		if ((feature == sfColumns || feature == sfAutoCreateColumns) && isTouch)
+			return;	// Don't need to apply if touch on columns or autocreate columns. It didn't change.
+		
+		super.applied(feature, value, index, isTouch, expression, testValidity);
+	}
+		
+	private void reapplyColumns(IExpression expression) {
+		if (inInstantiation())
+			return;	// Can't do this while instantiating. May not yet have columns.
+		removeColumns(expression);
+		applyColumns(expression);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
+		if (feature == sfColumns) {
+			IInternalBeanProxyHost2 columnHost = (IInternalBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) oldValue);
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTableRemoveColumn(expression), getProxy(), new IProxy[] {columnHost.getProxy()}, false);
+			if (hasErrorsOfKey(sfAutoCreateColumns) && ((List) getEObject().eGet(sfColumns)).isEmpty()) {
+				// We had autocreate as true and we had columns. Now we do not, so we can clear the error and reapply the autocreate columns.
+				clearError(sfAutoCreateColumns);
+				applySetting(sfAutoCreateColumns, getEObject().eGet(sfAutoCreateColumns), Notification.NO_INDEX, expression);
+			}
+		} else if (feature == sfAutoCreateColumns) {
+			super.cancelSetting(feature, oldValue, index, expression);
+			// We canceled auto create. That puts is back to the default of true. So we need to create an warning if we have columns.
+			if (!((List) getEObject().eGet(sfColumns)).isEmpty()) {
+				processPropertyError(new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_")), sfAutoCreateColumns, null); //$NON-NLS-1$
+			}							
+		} else
+			super.cancelSetting(feature, oldValue, index, expression);
+	}
 
-		boolean apply = getErrorStatus() != IBeanProxyHost.ERROR_SEVERE;
-			
+	private void applyColumns(IExpression expression) {
 		List columns = (List) ((EObject) getTarget()).eGet(sfColumns);
 		Iterator iter = columns.iterator();
+		int index = -1;
 		while (iter.hasNext()) {
 			IJavaObjectInstance column = (IJavaObjectInstance) iter.next();
-			IBeanProxyHost columnBeanProxyHost = BeanProxyUtilities.getBeanProxyHost(column);
-			columnBeanProxyHost.instantiateBeanProxy();
-			if (apply && columnBeanProxyHost.getErrorStatus() != IBeanProxyHost.ERROR_SEVERE)
-				getAddColumnMethodProxy().invokeCatchThrowableExceptions(getBeanProxy(), columnBeanProxyHost.getBeanProxy());
+			IInternalBeanProxyHost2 columnBeanProxyHost = (IInternalBeanProxyHost2) getSettingBeanProxyHost(column);
+			if (columnBeanProxyHost.getProxy() == null)
+				continue;	// Don't apply. It has an error already.
+			addColumn(column, ++index, expression);
 		}
 	}
-	/* 
-	 * Go to the JTableManager and remove all of the columns. 
-	 */
-	protected void removeColumns() {
-		if (getErrorStatus() == IBeanProxyHost.ERROR_SEVERE)
-			return;
-					
-		getRemoveAllColumnsMethodProxy().invokeCatchThrowableExceptions(null, getBeanProxy());
-	}
-	protected IMethodProxy getAddColumnMethodProxy() {
-		return getBeanProxy().getTypeProxy().getMethodProxy("addColumn", "javax.swing.table.TableColumn");	//$NON-NLS-1$ //$NON-NLS-2$
-	}
-	protected IMethodProxy getRemoveAllColumnsMethodProxy() {
-		return getBeanProxy()
-					.getProxyFactoryRegistry()
-					.getBeanTypeProxyFactory()
-					.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager")	//$NON-NLS-1$
-					.getMethodProxy("removeAllColumns", "javax.swing.JTable");	//$NON-NLS-1$ //$NON-NLS-2$
-	}
+	
 	/**
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#releaseBeanProxy()
+	 * Remove all columns
+	 * @param expression
+	 * 
+	 * @since 1.1.0
 	 */
-	public void releaseBeanProxy() {
-		super.releaseBeanProxy();
+	private void removeColumns(IExpression expression) {
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTableRemoveAllColumns(expression), null, new IProxy[] {getProxy()}, false);
 	}
-
+	
 }

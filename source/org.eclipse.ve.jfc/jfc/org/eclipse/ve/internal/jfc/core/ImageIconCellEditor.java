@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:39 $ 
  */
 
 import java.util.StringTokenizer;
@@ -72,7 +72,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 	 */
 	public JavaAllocation getJavaAllocation() {
 
-		ASTParser parser = ASTParser.newParser(AST.JLS2);
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		String initString = getJavaInitializationString(); 
 		parser.setSource(initString.toCharArray());
 		parser.setSourceRange(0,initString.length());

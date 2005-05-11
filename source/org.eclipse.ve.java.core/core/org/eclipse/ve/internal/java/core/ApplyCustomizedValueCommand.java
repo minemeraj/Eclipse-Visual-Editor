@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ApplyCustomizedValueCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:20 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,7 +44,7 @@ public void execute(){
 	else {
 		// It wasn't previously set, but we've already changed the value before this command was executed, so the origSettings table is wrong
 		// So we will now force in our old setting that was passed in.
-		IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(fBean);
+		IInternalBeanProxyHost beanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(fBean);
 		beanProxyHost.getOriginalSettingsTable().put(fFeature, oldBeanProxy);
 	}
 	fBean.eSet(fFeature,newSetting);
