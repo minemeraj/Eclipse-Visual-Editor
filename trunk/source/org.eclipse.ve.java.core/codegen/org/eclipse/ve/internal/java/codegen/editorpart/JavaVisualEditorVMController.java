@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-12 20:38:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -25,6 +25,8 @@ import org.eclipse.ui.*;
 import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
 import org.eclipse.jem.internal.proxy.remote.ProxyRemoteUtil;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -88,6 +90,23 @@ public class JavaVisualEditorVMController {
 		public RegistryResult(ProxyFactoryRegistry registry, IConfigurationContributionInfo configInfo) {
 			this.registry = registry;
 			this.configInfo = configInfo;
+			
+			try {
+				// Try to prime the communication pump. This sends about 36,000 bytes of data.
+				// Doing it here means later when needed the communications costs are drastically reduced.
+				IExpression exp = registry.getBeanProxyFactory().createExpression();
+				int i =1000;
+				while (i-->0) {
+					exp.createArrayCreation(ForExpression.ROOTEXPRESSION, registry.getBeanTypeProxyFactory()
+							.getBeanTypeProxy(exp, "java.lang.Object"), 0);
+					exp.createArrayInitializer(0);
+				}
+				exp.invokeExpression();
+			} catch (ThrowableProxy e) {
+			} catch (IllegalStateException e) {
+			} catch (NoExpressionValueException e) {
+			}
+			
 		}
 	}
 
