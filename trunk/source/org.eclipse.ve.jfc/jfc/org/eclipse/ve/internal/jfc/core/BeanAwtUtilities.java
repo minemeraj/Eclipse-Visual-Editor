@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.26 $  $Date: 2005-05-11 22:41:20 $ 
+ *  $Revision: 1.27 $  $Date: 2005-05-12 21:03:55 $ 
  */
 
 import java.util.List;
@@ -513,7 +513,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the window dispose method proxy.
+	 * Get the window dispose method proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManager#disposeWindow(Window)}.
 	 * 
 	 * @param expression
 	 * @return
@@ -525,9 +525,10 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[WINDOW_DISPOSE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "java.awt.Window").getMethodProxy( //$NON-NLS-1$
-					expression, "dispose", //$NON-NLS-1$
-					(IProxyBeanType[]) null);
+			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
+			method = beanTypeProxyFactory.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManager").getMethodProxy( //$NON-NLS-1$
+					expression, "disposeWindow", //$NON-NLS-1$
+					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")});
 			processExpressionProxy(method, constants.methods, WINDOW_DISPOSE);
 		}
 		return method;

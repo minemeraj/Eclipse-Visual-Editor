@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WindowManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 21:03:55 $ 
  */
 package org.eclipse.ve.internal.jfc.vm;
 
+import java.awt.EventQueue;
 import java.awt.Window;
  
 
@@ -23,6 +24,29 @@ import java.awt.Window;
  * @since 1.1.0
  */
 public class WindowManager extends ComponentManager {
+	
+	/**
+	 * Some bug in window component peer (for a Dialog) throws an exception
+	 * when disposing of the second dialog when we had more than one up. 
+	 * Can't narrow it down to more than this. So this will try to handle it.
+	 * @param window
+	 * 
+	 * @since 1.1.0
+	 */
+	public static void disposeWindow(final Window window) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					window.dispose();
+				} catch (NullPointerException e) {
+					// Second dialog often get's NPE on dispose. Don't know why.
+					// It isn't anything we are doing that we can tell.
+					// So we just catch it and ignore it. 
+					window.dispose();	// Try it again to try to complete the cleanup/dispose. The second one usually works.
+				}
+			}
+		});
+	}
 	
 	/**
 	 * Pack window on any change flag.
