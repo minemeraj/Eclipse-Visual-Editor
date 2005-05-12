@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-12 11:40:55 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-12 23:08:23 $ 
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
@@ -29,16 +31,16 @@ import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	
-	protected void normalize(IJavaInstance javaBean) {
+	protected void normalize(IJavaInstance javaBean,EcoreUtil.Copier aCopier) {
 		super.normalize(javaBean);
-		
 		// Only normalize our host otherwise we end up turning children to point to the {parentComposite}
 		// when they should still point to use
 		if(!(javaBean == getHost().getModel())) return;
 		
+		IJavaInstance copiedJavaBean = (IJavaInstance) aCopier.get(javaBean);
 		// The allocation may contain references to the parent Composite
 		// These should be replaced with the {parentComposite} for when it is pasted into the new target
-		JavaAllocation allocation = javaBean.getAllocation();
+		JavaAllocation allocation = copiedJavaBean.getAllocation();
 		if(allocation instanceof ParseTreeAllocation){
 			// An SWT Constructor contains a constructor with two arguments, the first of which is the parent
 			PTExpression expression = ((ParseTreeAllocation)allocation).getExpression();

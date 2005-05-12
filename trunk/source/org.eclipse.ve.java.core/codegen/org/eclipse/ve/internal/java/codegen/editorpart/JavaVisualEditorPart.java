@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.108 $  $Date: 2005-05-12 16:08:34 $ 
+ *  $Revision: 1.109 $  $Date: 2005-05-12 23:08:19 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -49,6 +49,7 @@ import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
@@ -2184,9 +2185,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				Iterator itr = commonActionRegistry.getActions();
 				while (itr.hasNext()) {
 					RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
-					Object replacedJavaEditorAction = replacedJavaEditorActions.get(action.getId());				
-					if(replacedJavaEditorAction != null){
-						action.setAction((IAction)replacedJavaEditorAction);
+					ClipboardOperationAction replacedJavaEditorAction = (ClipboardOperationAction)replacedJavaEditorActions.get(action.getId());				
+					if(replacedJavaEditorAction != null){		
+						// Popup comes directly
+						JavaVisualEditorPart.super.setAction(action.getId(),replacedJavaEditorAction);
+						// Edit menu comes from the RetargetAction
+						action.setAction(replacedJavaEditorAction);						
 					} else {
 						action.setAction(JavaVisualEditorPart.this.superGetAction(action.getId()));
 					}
@@ -2199,11 +2203,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					RetargetTextEditorAction action = (RetargetTextEditorAction) commonActionRegistry.getAction(ActionFactory.COPY.getId());
 					action.setAction(copyXMLAction);	
 				} else {
+					// Need to set the actions on the superclass to get the key bindings correct
+					JavaVisualEditorPart.super.setAction(cutAction.getId(),cutAction);					
+					JavaVisualEditorPart.super.setAction(copyAction.getId(),copyAction);
+					JavaVisualEditorPart.super.setAction(pasteAction.getId(),pasteAction);					
 					// 	Set the common actions up from the graph editor.
 					Iterator itr = commonActionRegistry.getActions();
 					while (itr.hasNext()) {
 						RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
-						action.setAction(graphicalActionRegistry.getAction(action.getId()));
+						action.setAction(graphicalActionRegistry.getAction(action.getId()));						
 					}
 				}
 			}				

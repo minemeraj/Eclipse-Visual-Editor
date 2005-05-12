@@ -10,40 +10,34 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlCopyEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:40:55 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 23:08:23 $ 
  */
 
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.JavaClass;
 
 public class ControlCopyEditPolicy extends WidgetCopyEditPolicy {
 	
-	private JavaClass javaClass;
-	private Copier copier;
-
+	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject) {
+		if(feature != null && "allocation".equals(feature.getName())){
+			return false;
+		} else {
+			return super.shouldCopyFeature(feature, eObject);
+		}
+	}
+	
 	protected void cleanup(IJavaInstance javaBeanToCopy, Copier aCopier) {
 
-		super.cleanup(javaBeanToCopy, copier);
+		super.cleanup(javaBeanToCopy, aCopier);
 		// Strip the bounds, size, location and layoutData from the primary object being copied
-		javaClass = (JavaClass)javaBeanToCopy.getJavaType();
-		copier = aCopier;
-		removeReferenceTo(javaBeanToCopy,"bounds");
-		removeReferenceTo(javaBeanToCopy,"size");
-		removeReferenceTo(javaBeanToCopy,"location");
-		removeReferenceTo(javaBeanToCopy,"layoutData");		
-	}
-
-	private void removeReferenceTo(EObject javaBeanToCopy, String featureName) {
-
-		Object propertyValue = javaBeanToCopy.eGet(javaClass.getEStructuralFeature(featureName));
-		if(propertyValue != null){
-			copier.remove(propertyValue);
-		}
-		
+		IJavaInstance copiedObject = (IJavaInstance) aCopier.get(javaBeanToCopy);
+		removeReferenceTo(copiedObject,"bounds",aCopier);
+		removeReferenceTo(copiedObject,"size",aCopier);
+		removeReferenceTo(copiedObject,"location",aCopier);
+		removeReferenceTo(copiedObject,"layoutData",aCopier);		
 	}
 	
 }
