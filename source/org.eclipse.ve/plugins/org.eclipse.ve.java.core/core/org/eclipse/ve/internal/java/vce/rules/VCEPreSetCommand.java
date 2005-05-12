@@ -11,15 +11,14 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-12 22:17:02 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.*;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -282,7 +281,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 		return InstanceLocation.PROPERTY_LITERAL;
 	}
 	
-	protected void handleValue(CommandBuilder cbld, JCMMethod m, EObject value, EStructuralFeature feature, boolean containment, Set processed) {
+	protected void handleValue(final CommandBuilder cbld, final JCMMethod incomingMethod, final EObject value, EStructuralFeature feature, final boolean containment, final Set processed) {
 		processed.add(value);
 		
 		// We will only walk into and handle non-IJavaInstance values that are contained.
@@ -304,47 +303,59 @@ public class VCEPreSetCommand extends CommandWrapper {
 		// will create the method first, assign membership of all settings, then assign membership of value can be
 		// done. That is what mBldr is for. It contains the membership assignment (if any) of value and holds it
 		// to be applied at the end.
-		boolean hadChildren = false;	// During walking children, did it have children.		
-		CommandBuilder mBldr = null;	
-		Iterator refs = value.eClass().getEAllReferences().iterator();
-		while (refs.hasNext()) {
-			EReference ref = (EReference) refs.next();
-			if (ref.isChangeable() && value.eIsSet(ref)) {
-				if (ref.isMany()) {
-					Iterator kids = ((List) value.eGet(ref)).iterator();
-					while (kids.hasNext()) {
-						Object kid = kids.next();
-						if (!hadChildren) {
-							if (!containment) {
-								mBldr = new CommandBuilder();
-								m = getMethod(cbld, mBldr, value, ref, m);
+		// Visit all of the set references. Here is the visitor we will use.
+		final EReference allocationFeature = value instanceof IJavaInstance ? JavaInstantiation.getAllocationFeature((IJavaInstance) value) : null;
+		class FeatureVisitor implements FeatureValueProvider.Visitor {
+			public boolean hadChildren;		// During walking children, did it have children.
+			public CommandBuilder mBldr;
+			public JCMMethod visitMethod = incomingMethod;
+			
+			public Object isSet(EStructuralFeature feature, Object featureValue) {
+				if (feature instanceof EReference) {
+					EReference ref = (EReference) feature;
+					if (ref.isChangeable()) {
+						if (ref.isMany()) {
+							Iterator kids = ((List) featureValue).iterator();
+							while (kids.hasNext()) {
+								Object kid = kids.next();
+								if (!hadChildren) {
+									if (!containment) {
+										mBldr = new CommandBuilder();
+										visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+									}
+									hadChildren = true;
+								}
+								if (kid != null && !processed.contains(kid))
+									handleValue(cbld, visitMethod, (EObject) kid, ref, ref.isContainment(), processed);
 							}
-							hadChildren = true;
-						}
-						if (kid != null && !processed.contains(kid))
-							handleValue(cbld, m, (EObject) kid, ref, ref.isContainment(), processed);
-					}
-				} else {
-					// Don't want to process the allocation feature. That would not have any java instances in it
-					// and we don't want to force promotion of this value just for it.					
-					if (!(value instanceof IJavaInstance) || !ref.equals(JavaInstantiation.getAllocationFeature((IJavaInstance) value))) {
-						Object kid = value.eGet(ref);
-						if (!hadChildren) {
-							if (!containment) {
-								mBldr = new CommandBuilder();
-								m = getMethod(cbld, mBldr, value, ref, m);
+						} else {
+							// Don't want to process the allocation feature. That would not have any java instances in it
+							// and we don't want to force promotion of this value just for it.					
+							if (ref != allocationFeature) {
+								Object kid = featureValue;
+								if (!hadChildren) {
+									if (!containment) {
+										mBldr = new CommandBuilder();
+										visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+									}
+									hadChildren = true;
+								}
+								if (kid != null && !processed.contains(kid))
+									handleValue(cbld, visitMethod, (EObject) kid, ref, ref.isContainment(), processed);
 							}
-							hadChildren = true;
 						}
-						if (kid != null && !processed.contains(kid))
-							handleValue(cbld, m, (EObject) kid, ref, ref.isContainment(), processed);
 					}
 				}
+				return null;
 			}
-		}
 		
-		if (!hadChildren && !containment && value.eContainer() == null) {
-			InstanceLocation promoteType = m != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL;	// no current JCMMethod, then can only be global. 
+		};
+
+		FeatureVisitor visitor = new FeatureVisitor();
+		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(value, visitor);
+		
+		if (!visitor.hadChildren && !containment && value.eContainer() == null) {
+			InstanceLocation promoteType = incomingMethod != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL;	// no current JCMMethod, then can only be global. 
 			// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
 			handleAnnotation(value, cbld);	// Need to handle annotation first.			
 			switch (promoteType.getValue()) {
@@ -352,20 +363,20 @@ public class VCEPreSetCommand extends CommandWrapper {
 					promoteGlobal(cbld, cbld, value);
 					break;
 				case InstanceLocation.LOCAL:
-					promoteLocal(cbld, cbld, value, m);
+					promoteLocal(cbld, cbld, value, incomingMethod);
 					break;
 				case InstanceLocation.GLOBAL_LOCAL:
-					promoteGlobalLocal(cbld, cbld ,value,m);
+					promoteGlobalLocal(cbld, cbld ,value,incomingMethod);
 					break;
 				case InstanceLocation.PROPERTY:
 					// Make sure it is a <properties> of the requested member container.
-					cbld.applyAttributeSetting(m, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
+					cbld.applyAttributeSetting(incomingMethod, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
 					break;
 			}				
 		} else if (containment)
 			handleAnnotation(value, cbld);	// Need to handle annotation before actual setting is done.
-		else if (mBldr != null)
-			cbld.append(mBldr.getCommand());	// We had an mbldr created, append the command, if any so now we can assign membership.
+		else if (visitor.mBldr != null)
+			cbld.append(visitor.mBldr.getCommand());	// We had an mbldr created, append the command, if any so now we can assign membership.
 	}
 	
 	/*
