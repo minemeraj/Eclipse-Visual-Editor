@@ -12,7 +12,7 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-12 18:17:11 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-12 19:56:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,8 +40,7 @@ public class SWTContainerWizardContent extends Composite {
 	private Button customRadio = null;
 	private Text customDir = null;
 	private Label platformVersion = null;
-	private Label pdeVersion = null;
-	private Label customVersion = null;
+	private Label pdeVersion = null;	
 	private Button browseButton = null;
 	private WizardPage  wizard = null;
 	
@@ -79,7 +78,7 @@ public class SWTContainerWizardContent extends Composite {
 		customRadio = new Button(group, SWT.RADIO);
 		customRadio.setText(SWTMessages.getString("SWTContainerWizardContent.5")); //$NON-NLS-1$
 		customRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.6")); //$NON-NLS-1$
-		customVersion = new Label(group, SWT.NONE);
+		new Label(group, SWT.NONE);
 		customDir = new Text(group, SWT.BORDER);
 		customDir.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.7")); //$NON-NLS-1$
 		customDir.setEditable(false);
