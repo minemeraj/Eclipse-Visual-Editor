@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: CopyJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-12 15:28:46 $ 
+ *  $Revision: 1.1 $  $Date: 2005-05-12 20:11:46 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -20,10 +20,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
-import org.eclipse.ve.internal.java.codegen.editorpart.*;
-import org.eclipse.ve.internal.java.codegen.editorpart.BeansList;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorOutlinePage;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
 
 /**
  * ObjectActionDelegate for the CopyJavaBeanAction.
