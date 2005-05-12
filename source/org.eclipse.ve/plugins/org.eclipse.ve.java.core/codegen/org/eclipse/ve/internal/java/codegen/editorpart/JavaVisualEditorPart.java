@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.107 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.108 $  $Date: 2005-05-12 16:08:34 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -199,6 +200,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 	private static int uiThreadPriority = -1;
 	private static Thread uiThread = null;
+	private Map replacedJavaEditorActions = new HashMap(3);
+	private RetargetTextEditorAction cutAction;	
 	private RetargetTextEditorAction copyAction;
 	private RetargetTextEditorAction pasteAction;
 	private void bumpUIPriority(boolean up, Thread ui) {
@@ -270,13 +273,21 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
 		
+		cutAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Cut."); //$NON-NLS-1$
+		cutAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
+		cutAction.setId(ActionFactory.CUT.getId());
+		commonActionRegistry.registerAction(cutAction);		
+		
 		copyAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
 		copyAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 		copyAction.setId(ActionFactory.COPY.getId());
 		commonActionRegistry.registerAction(copyAction);
 		
 		pasteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
 		pasteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 		pasteAction.setId(ActionFactory.PASTE.getId());
 		commonActionRegistry.registerAction(pasteAction);
 		
@@ -555,12 +566,26 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Let the super java text editor fill it in.			
 		super.createPartControl(editorParent);
+		
+		// We must register the retarget actions to ensure the key bindings are directed correctly
+		replaceJavaEditorAction(cutAction);
+		replaceJavaEditorAction(copyAction);
+		replaceJavaEditorAction(pasteAction);		
+		
 		editorParent.setSashBorders(new boolean[] { true, true });
 		paletteSplitter.setGraphicalControl(editorParent);
 		if (palettePage != null) {
 			paletteSplitter.setExternalViewer(palettePage.getPaletteViewer());
 			palettePage = null;
 		}
+	}
+	
+	private void replaceJavaEditorAction(IAction action){
+		
+		IAction existingAction = super.getAction(action.getId());
+		replacedJavaEditorActions.put(action.getId(),existingAction);		
+		setAction(action.getId(),action);
+		
 	}
 	
 	protected FlyoutPaletteComposite.FlyoutPreferences getPalettePreferences() {
@@ -810,7 +835,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);
 		pasteBeanAction.setSelectionProvider(primaryViewer);
-		graphicalActionRegistry.registerAction(pasteAction);
+		graphicalActionRegistry.registerAction(pasteBeanAction);
 		
 		copyBeanAction = new CopyJavaBeanAction(this){
 			public void run(){
@@ -848,11 +873,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		});	
 		KeyHandler keyHandler = new KeyHandler();				
 		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);	
-		keyHandler.put(KeyStroke.getPressed('c',SWT.CTRL),copyAction);
-		keyHandler.put(KeyStroke.getPressed('v',SWT.CTRL),pasteAction);
 		primaryViewer.setKeyHandler(new GraphicalViewerKeyHandler(primaryViewer).setParent(keyHandler));
 		
-		paletteSplitter.hookDropTargetListener(primaryViewer);
 		return gviewer;
 	}
 
@@ -2162,7 +2184,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				Iterator itr = commonActionRegistry.getActions();
 				while (itr.hasNext()) {
 					RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
-					action.setAction(JavaVisualEditorPart.this.superGetAction(action.getId()));
+					Object replacedJavaEditorAction = replacedJavaEditorActions.get(action.getId());				
+					if(replacedJavaEditorAction != null){
+						action.setAction((IAction)replacedJavaEditorAction);
+					} else {
+						action.setAction(JavaVisualEditorPart.this.superGetAction(action.getId()));
+					}
 				}
 			} else {
 				// See if the GUI or the XMLTextArea is active

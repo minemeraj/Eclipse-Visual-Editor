@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-12 16:08:34 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -64,7 +64,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				// A copy set is built up with everything to be copied
 				List objectsToCopy = new ArrayList();
 				
-				copyProperty(javaBeanToCopy,objectsToCopy);				
+				copyProperty(null, javaBeanToCopy,objectsToCopy);				
 				
 				// Use the ECore.Copier to put everything from the copy set into the resource set
 				EcoreUtil.Copier copier = new EcoreUtil.Copier();
@@ -99,7 +99,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				}
 				// Append the string "{*** VE TRANSFER ***} to the front to make sure that paste only takes object that are valid VE objects
 				// We don't use a custom transfer type as it is nice to actually work with the clipboard contents as a String 
-				template = PasteActionTool.TRANSFER_HEADER + os.toString();
+				template = JavaVEPlugin.TRANSFER_HEADER + os.toString();
 				// Paste the string of the object to copy to the clipboard
 				Clipboard cb = new Clipboard(Display.getCurrent());
 				cb.setContents(new Object[] {template}, new Transfer[] {TextTransfer.getInstance()});				
@@ -135,48 +135,49 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 	
 	protected void copyFeature(EStructuralFeature feature, Object object,List objectsToCopy){
-	
-		if(shouldCopyFeature(feature, object)){						
-			if(object instanceof EObject){
-				copyProperty((EObject)object,objectsToCopy);
-			} else if (object instanceof List){
-				copyList((List)object,objectsToCopy);
-			}
+
+		if(object instanceof EObject){
+			copyProperty(feature,(EObject)object,objectsToCopy);
+		} else if (object instanceof List){
+			copyList(feature,(List)object,objectsToCopy);
 		}
 	}
 	
 	
 	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject){
+		if(feature == null)return true;
 		// By default copy references that are not containment and are not on the free form
-		return 
+		return  
 			feature instanceof EReference
 		&& !((EReference)feature).isContainment();
 	}
 	
-	private void copyList(List list, List objectsToCopy){
+	private void copyList(EStructuralFeature feature, List list, List objectsToCopy){
 		
 		Iterator iter = list.iterator();
 		while(iter.hasNext()){
 			Object propertyValue = iter.next();
 			if(propertyValue instanceof EObject){
-				copyProperty((EObject)propertyValue,objectsToCopy);
+				copyProperty(feature, (EObject)propertyValue,objectsToCopy);
 			} else if (propertyValue instanceof List){
-				copyList((List)propertyValue,objectsToCopy);
+				copyList(feature, (List)propertyValue,objectsToCopy);
 			}
 		}		
 	}
 	
-	private void copyProperty(EObject ePropertyValue, List objectsToCopy){
+	private void copyProperty(EStructuralFeature feature, EObject ePropertyValue, List objectsToCopy){
 		
 		if(ePropertyValue instanceof IJavaInstance){
 			// This method allows additional work to be done to clean up a particular JavaBean
 			normalize((IJavaInstance)ePropertyValue);
 		}
-		// Add the property value to the set of objects being copied
-		if(objectsToCopy.indexOf(ePropertyValue) == -1){
+		// Add the property value to the set of objects being copied		
+		if(shouldCopyFeature(feature, ePropertyValue) && objectsToCopy.indexOf(ePropertyValue) == -1){
 			objectsToCopy.add(ePropertyValue);
-			expandCopySet(ePropertyValue,objectsToCopy);
 		}
+		// Keep walking because the object being copied might not have been added to the copy set
+		// but it might have children that are
+		expandCopySet(ePropertyValue,objectsToCopy);
 	}
 	
 	protected void removeReferenceTo(EObject javaBeanToCopy, String featureName, final EcoreUtil.Copier aCopier) {
