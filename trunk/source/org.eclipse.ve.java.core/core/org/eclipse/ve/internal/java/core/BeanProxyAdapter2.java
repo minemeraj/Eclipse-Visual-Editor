@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-12 21:12:24 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-12 22:17:02 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1308,9 +1308,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				// Default is to release any settings that are contained as "property" settings, since these are not set in anybody else,
 				// and throw the bean proxy away. 
 				// Other subclasses may actually do something else first.
-				JavaObjectInstance eTarget = (JavaObjectInstance) getTarget();
-
-				eTarget.visitSetFeatures(new FeatureValueProvider.Visitor() {
+				getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
 
 					public Object isSet(EStructuralFeature feature, Object value) {
 						if (value instanceof List) {

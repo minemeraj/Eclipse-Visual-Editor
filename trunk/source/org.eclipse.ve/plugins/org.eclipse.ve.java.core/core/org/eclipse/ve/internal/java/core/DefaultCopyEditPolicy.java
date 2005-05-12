@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-12 16:08:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-12 22:17:02 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -112,26 +112,12 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
 	protected void expandCopySet(final EObject eObject, final List objectsToCopy) {
 		
-		// All properties should be collapsed
-		if(eObject instanceof FeatureValueProvider){
-			FeatureValueProvider obj = (FeatureValueProvider) eObject;
-			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
-				public Object isSet(EStructuralFeature feature, Object value) {
-					copyFeature(feature,value,objectsToCopy);
-					return null;
-				}
-			});
-		} else {
-			// VE has objects like ConstraintComponent that are EObject but are not FeatureValueProviders so we need to iterate differently to get the set features
-			Iterator features = eObject.eClass().getEStructuralFeatures().iterator();
-			while(features.hasNext()){
-				EStructuralFeature sf = (EStructuralFeature)features.next();
-				if(eObject.eIsSet(sf)){
-					Object value = eObject.eGet(sf);
-					copyFeature(sf,value,objectsToCopy);
-				}
+		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(eObject, new FeatureValueProvider.Visitor(){
+			public Object isSet(EStructuralFeature feature, Object value) {
+				copyFeature(feature,value,objectsToCopy);
+				return null;
 			}
-		}		
+		});
 	}
 	
 	protected void copyFeature(EStructuralFeature feature, Object object,List objectsToCopy){
@@ -199,9 +185,8 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		if(propertyValue != null){
 			aCopier.remove(propertyValue);
 			// Remove all properties from the copier that are contained by the object just removed
-			if(propertyValue instanceof FeatureValueProvider){
-				FeatureValueProvider obj = (FeatureValueProvider) propertyValue;
-				obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
+			if(propertyValue instanceof EObject){
+				FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures((EObject) propertyValue, new FeatureValueProvider.Visitor(){
 					public Object isSet(EStructuralFeature feature, Object value) {
 						if(feature instanceof EReference && ((EReference)feature).isContainment()){
 							removeReferenceBetween((EObject)propertyValue,value,aCopier);

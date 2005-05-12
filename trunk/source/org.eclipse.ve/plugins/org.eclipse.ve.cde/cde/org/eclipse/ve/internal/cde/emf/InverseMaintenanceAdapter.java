@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-12 22:17:02 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -639,55 +639,22 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		setPropagated(true);
 		
 		
-		// 	Need to setup all of the backpointers.
-		// 	Most of the EMF model implements FeatureValueProvider so we expect this
-		if(getTarget() instanceof FeatureValueProvider){
-			FeatureValueProvider obj = (FeatureValueProvider) getTarget();
-			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
-				public Object isSet(EStructuralFeature feature, Object value) {
-					if(feature instanceof EReference){
-						EReference ref = (EReference)feature;
-						if(ref.isMany()){
-							Iterator bitr = ((InternalEList)value).basicIterator();
-							while(bitr.hasNext()){
-								handleAddRef( ref , (EObject) bitr.next());
-							}								
-						} else {
-							handleAddRef(ref, (EObject) value);
-						}
+		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures((EObject) getTarget(), new FeatureValueProvider.Visitor(){
+			public Object isSet(EStructuralFeature feature, Object value) {
+				if(feature instanceof EReference){
+					EReference ref = (EReference)feature;
+					if(ref.isMany()){
+						Iterator bitr = ((InternalEList)value).basicIterator();
+						while(bitr.hasNext()){
+							handleAddRef( ref , (EObject) bitr.next());
+						}								
+					} else {
+						handleAddRef(ref, (EObject) value);
 					}
-					return null;
 				}
-			});
-		} else {
-			eObjectPropagate();
-		}				
-	}
-	
-	/*
-	 * Propagate on an EObject instead of a FeatureValueProvider. The FeatureValueProvider gives a more efficient mechanism
-	 * to walk set features.
-	 */
-	private void eObjectPropagate(){
-		
-		EObject obj = (EObject)getTarget();
-		List allSFs = obj.eClass().getEAllStructuralFeatures();
-		Iterator itr = allSFs.iterator();
-		while (itr.hasNext()) {
-			EStructuralFeature sf = (EStructuralFeature) itr.next();
-			if (sf instanceof EReference) {
-				EReference ref = (EReference) sf;
-				if (obj.eIsSet(ref)) {
-					if (ref.isMany()) {
-						Iterator bitr = ((InternalEList) obj.eGet(ref)).basicIterator();
-						while (bitr.hasNext()) {
-							handleAddRef(ref, (EObject) bitr.next());
-						}
-					} else
-						handleAddRef(ref, (EObject) obj.eGet(ref, false));
-				}
+				return null;
 			}
-		}		
+		});
 	}
 	
 }
