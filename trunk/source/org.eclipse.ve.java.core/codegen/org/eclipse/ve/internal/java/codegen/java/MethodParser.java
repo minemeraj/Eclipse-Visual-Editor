@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodParser.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:28:34 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-12 16:10:50 $ 
  */
 
 import java.util.logging.Level;
@@ -108,7 +108,7 @@ public class MethodParser {
 		if (!result[0]) {  // methodName was not found, need to add it.
 			int insertOffset = -1; 
 			if (SuperBlock[0] != null)   // We found a super() call
-				insertOffset= SuperBlock[0].getStartPosition()+SuperBlock[0].getLength()+fSeperator.length() ; // for LF
+				insertOffset= SuperBlock[0].getStartPosition()+SuperBlock[0].getLength() ; // for LF
 		    else if (SuperBlock[1] != null)
 		        insertOffset = SuperBlock[1].getStartPosition()+SuperBlock[1].getLength() ;
 		        
@@ -118,7 +118,7 @@ public class MethodParser {
 					fMethod.getCompilationUnit().getBuffer().replace(
 					  fMethod.getSourceRange().getOffset()+insertOffset-fSrcOffset,
 					  0,
-					  "\t\t"+methodName+"();"+fSeperator //$NON-NLS-1$ //$NON-NLS-2$
+					  fSeperator+"\t\t"+methodName+"();" //$NON-NLS-1$ //$NON-NLS-2$
 					) ;
 				}
 				catch (JavaModelException e) {}
