@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 19:01:20 $
+ * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-12 12:09:56 $
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.core.CompositionComponentsTreeEditPart;
 /**
  * Composition Graphical Edit Part that instantiates and disposes bean proxies
  */
-public class SubclassCompositionComponentsTreeEditPart extends CompositionComponentsTreeEditPart {
+public class SubclassCompositionComponentsTreeEditPart extends CompositionComponentsTreeEditPart implements IFreeFormRoot {
 
 	public SubclassCompositionComponentsTreeEditPart(Object model) {
 		super(model);

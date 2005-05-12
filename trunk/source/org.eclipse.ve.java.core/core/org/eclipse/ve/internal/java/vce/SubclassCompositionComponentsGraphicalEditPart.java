@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-05-11 19:01:20 $
+ * 1.1 $ $Date: 2005-05-12 12:09:56 $
  */
 import java.util.*;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -31,7 +32,8 @@ import org.eclipse.ve.internal.java.core.CompositionComponentsGraphicalEditPart;
  */
 public class SubclassCompositionComponentsGraphicalEditPart
 		extends
-			CompositionComponentsGraphicalEditPart {
+			CompositionComponentsGraphicalEditPart
+		implements IFreeFormRoot {
 	public SubclassCompositionComponentsGraphicalEditPart(Object model) {
 		super(model);
 	}

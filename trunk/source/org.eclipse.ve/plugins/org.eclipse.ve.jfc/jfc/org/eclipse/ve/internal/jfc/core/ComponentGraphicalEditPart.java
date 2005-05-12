@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-05-11 22:41:21 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-05-12 12:10:00 $
  */
 import java.util.*;
 
@@ -342,6 +342,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		if (sfDirectEditProperty != null) {
 			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
+		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy());		
 	}
 
 	private EStructuralFeature getDirectEditTargetProperty() {
