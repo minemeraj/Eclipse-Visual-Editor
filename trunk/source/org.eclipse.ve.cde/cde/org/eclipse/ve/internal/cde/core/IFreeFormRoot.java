@@ -11,11 +11,13 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: IFreeFormRoot.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:40:53 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 21:14:31 $ 
  */
 
 /**
- * Marker interface for edit parts that are free form roots
+ * Marker interface for edit parts that are free form roots.
+ * This is used for plugin.xml action contributions to know
+ * know if the selected object is a freeform root.
  */
 public interface IFreeFormRoot {
 
