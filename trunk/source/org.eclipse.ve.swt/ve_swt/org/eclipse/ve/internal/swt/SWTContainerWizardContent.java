@@ -12,10 +12,18 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-12 18:17:11 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -33,7 +41,9 @@ public class SWTContainerWizardContent extends Composite {
 	private Text customDir = null;
 	private Label platformVersion = null;
 	private Label pdeVersion = null;
+	private Label customVersion = null;
 	private Button browseButton = null;
+	private WizardPage  wizard = null;
 	
 	private SWTContainer.ContainerType containerType = null;
 		
@@ -55,27 +65,27 @@ public class SWTContainerWizardContent extends Composite {
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData1.horizontalIndent = 20;
 		group = new Group(this, SWT.NONE);		   
-		group.setText("Jar and Library Source Location");
+		group.setText(SWTMessages.getString("SWTContainerWizardContent.0")); //$NON-NLS-1$
 		group.setLayoutData(gridData2);
 		group.setLayout(gridLayout4);
 		ideRadio = new Button(group, SWT.RADIO);
-		ideRadio.setText("IDE Platform");
-		ideRadio.setToolTipText("Use the IDE's jars and libraries");		
+		ideRadio.setText(SWTMessages.getString("SWTContainerWizardContent.1")); //$NON-NLS-1$
+		ideRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.2"));		 //$NON-NLS-1$
 		platformVersion = new Label(group, SWT.NONE);
 		pdeRadio = new Button(group, SWT.RADIO);
-		pdeRadio.setText("PDE Target ");
-		pdeRadio.setToolTipText("Use the PDE Target's jars and libraries");
+		pdeRadio.setText(SWTMessages.getString("SWTContainerWizardContent.3")); //$NON-NLS-1$
+		pdeRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.4")); //$NON-NLS-1$
 		pdeVersion = new Label(group, SWT.NONE);
 		customRadio = new Button(group, SWT.RADIO);
-		customRadio.setText("Custom location");
-		customRadio.setToolTipText("Specify a directory for jars and libraries");
-		new Label(group, SWT.NONE);
+		customRadio.setText(SWTMessages.getString("SWTContainerWizardContent.5")); //$NON-NLS-1$
+		customRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.6")); //$NON-NLS-1$
+		customVersion = new Label(group, SWT.NONE);
 		customDir = new Text(group, SWT.BORDER);
-		customDir.setToolTipText("Specify  a root directory where all jars/libraries are located");
+		customDir.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.7")); //$NON-NLS-1$
 		customDir.setEditable(false);
 		customDir.setLayoutData(gridData1);
 		browseButton = new Button(group, SWT.NONE);
-		browseButton.setText("Browse");
+		browseButton.setText(SWTMessages.getString("SWTContainerWizardContent.8")); //$NON-NLS-1$
 		browseButton.setEnabled(false);
 		
 		pdeRadio.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
@@ -95,8 +105,7 @@ public class SWTContainerWizardContent extends Composite {
 			}
 		});
 		customRadio.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    				
-					customDir.setEditable(customRadio.getSelection());
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    									
 					browseButton.setEnabled(customRadio.getSelection());
 					if (customRadio.getSelection()) {
 						setCustom(false);
@@ -105,14 +114,12 @@ public class SWTContainerWizardContent extends Composite {
 			}
 		});
 		browseButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    
-				DirectoryDialog dialog = new DirectoryDialog(getShell(),SWT.SINGLE);
-				dialog.setFilterPath(customDir.getText());				
-				String result = dialog.open();
-				if (result!=null) {
-					customDir.setText(result);
-					customDir.setToolTipText(result);
-					containerType.setCustomPath(result);
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				IPath[] current = new Path[] { new Path(containerType.getCustomPath()) };
+				IPath[] paths= BuildPathDialogAccess.chooseVariableEntries(getShell(), current);		
+				if (paths!=null && paths.length>0) {									
+					containerType.setCustomPath(paths[0].toPortableString());
+					setCustom(false);					
 				}
 			}
 		});
@@ -127,8 +134,9 @@ public class SWTContainerWizardContent extends Composite {
 	}
 
 
-	public SWTContainerWizardContent(Composite parent, int style) {
+	public SWTContainerWizardContent(Composite parent, int style, WizardPage page) {
 		super(parent, style);
+		this.wizard = page;
 		initialize();
 	}
 
@@ -141,7 +149,7 @@ public class SWTContainerWizardContent extends Composite {
 		setSize(new Point(300, 200));
 		jFaceCheckButton = new Button(this, SWT.CHECK);
 		jFaceCheckButton.setText(SWTMessages.getString("SWTContainerWizardPage.includeJFaceCheck")); //$NON-NLS-1$
-		jFaceCheckButton.setToolTipText("Contribute the JFace jars from the location above");
+		jFaceCheckButton.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.9")); //$NON-NLS-1$
 		jFaceCheckButton.setLayoutData(gridData3);
 		
 		jFaceCheckButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
@@ -161,6 +169,10 @@ public class SWTContainerWizardContent extends Composite {
 		platformVersion.setText(containerType.getPlatformVersion());
 		customDir.setText((containerType.getPlatformPath()));
 		customDir.setToolTipText((containerType.getPlatformPath()));
+		jFaceCheckButton.setSelection(containerType.includeJFace());
+		jFaceCheckButton.setEnabled(true);
+		setError(null);
+		wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.10"), IMessageProvider.INFORMATION); //$NON-NLS-1$
 		group.layout();
 	}
 	protected void setPDE(boolean setSelection) {
@@ -169,14 +181,45 @@ public class SWTContainerWizardContent extends Composite {
 		pdeVersion.setText(containerType.getPdeVersion());
 		customDir.setText(containerType.getPdePath());
 		customDir.setToolTipText(containerType.getPdePath());
+		jFaceCheckButton.setSelection(containerType.includeJFace());
+		jFaceCheckButton.setEnabled(true);
+		setError(null);		
+		wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.11"), IMessageProvider.INFORMATION); //$NON-NLS-1$
 		group.layout();
 	}
+	
+	protected void setError (String err) {
+		if (err==null) {
+			wizard.setPageComplete(true);
+			wizard.setErrorMessage(null);
+		}
+		else {
+			wizard.setPageComplete(false);
+			wizard.setErrorMessage(err);
+		}
+	}
+	
 	
 	protected void setCustom (boolean setSelection) {
 		if (setSelection)
 		   customRadio.setSelection(true);
-		customDir.setText(containerType.getCustomPath());
-		customDir.setToolTipText(containerType.getCustomPath());
+		IPath resolvedPath= JavaCore.getResolvedVariablePath(new Path(containerType.getCustomPath()));
+		if (resolvedPath==null)
+			resolvedPath = new Path(""); //$NON-NLS-1$
+		
+		File f = resolvedPath.toFile();
+		if (f.exists()&& f.isDirectory()) { 
+			setError(null);
+			wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.13"), IMessageProvider.INFORMATION); //$NON-NLS-1$
+		}
+		else
+			setError(SWTMessages.getString("SWTContainerWizardContent.14")); //$NON-NLS-1$
+		//TODO: current limitation
+		jFaceCheckButton.setSelection(false);
+		jFaceCheckButton.setEnabled(false);
+	    customDir.setText(resolvedPath.toOSString());		
+		customDir.setToolTipText(resolvedPath.toOSString());
+		browseButton.setEnabled(true);
 		group.layout();
 	}
 	

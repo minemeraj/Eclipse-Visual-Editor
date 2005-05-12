@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.24 $  $Date: 2005-05-11 17:52:27 $ 
+ *  $Revision: 1.25 $  $Date: 2005-05-12 18:16:57 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -66,21 +66,35 @@ public class SWTConfigurationContributor extends ConfigurationContributorAdapter
 		this.javaProject = info.getJavaProject();
 		this.fConfigContributionInfo = info;
 	}
-	
+
+/**
+ * 
+ * @param name
+ * @return Should this file be extractef from a jar
+ * 
+ * @since 1.1.0
+ */	
 protected static boolean isInterestingLibFile(String name) {
-	return name.endsWith(".dll")
-			|| name.endsWith(".jnilib")
-			|| name.endsWith(".sl")
-			|| name.endsWith(".a")
-			|| name.indexOf(".so") != -1;
+	return name.endsWith(".dll") //$NON-NLS-1$
+			|| name.endsWith(".jnilib") //$NON-NLS-1$
+			|| name.endsWith(".sl") //$NON-NLS-1$
+			|| name.endsWith(".a") //$NON-NLS-1$
+			|| name.indexOf(".so") != -1; //$NON-NLS-1$
 }
+
+
+
+static private Set libraryCaches = new HashSet();  // Store the configured caches in this session
+static final private String argSeperator = "|"; //$NON-NLS-1$
 
 static public URL generateLibCacheIfNeeded (IFragmentModel frag, String relativePath) {
 	return generateLibCacheIfNeeded(frag.getInstallLocation(), relativePath);
 }
 
-static private Set libraryCaches = new HashSet();  // Store the configured caches in this session
-static final private String argSeperator = "|";
+/*
+ * If a cache is not there already, create a cache location from the jar 
+ * and return a URL to the cache.
+ */
 static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePath) {		
 		if (srcJarFile == null)
 			return null;
@@ -117,7 +131,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 									File dest = new File (root.toFile(), entry.getName());
 									AbstractFrameworkAdaptor.readFile(in, dest);
 									if (!Platform.getOS().equals(Constants.OS_WIN32))
-										Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor();
+										Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor(); //$NON-NLS-1$ //$NON-NLS-2$
 								}
 							} catch (IOException e) {
 								JavaVEPlugin.log(e);
@@ -160,7 +174,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				public void run(IProgressMonitor monitor) throws CoreException {
 					final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
 					if (swtModel!=null && swtModel.isEnabled()) {			
-						final URL librarylocation = generateLibCacheIfNeeded(swtModel.getBundleDescription().getLocation(),"");			
+						final URL librarylocation = generateLibCacheIfNeeded(swtModel.getBundleDescription().getLocation(),"");			 //$NON-NLS-1$
 						if (librarylocation!=null) {						
 							controller.contributeClasspath(librarylocation, IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH);
 							removeMarker(msg);
@@ -220,7 +234,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			result = getFilePath(getResourceURL(plugin, srcPath));
 		else
 			for (int i = 0; i < rel.length; i++) {
-				result = getFilePath(getResourceURL(plugin, rel[i]+"/"+srcPath));
+				result = getFilePath(getResourceURL(plugin, rel[i]+"/"+srcPath)); //$NON-NLS-1$
 				if (result!=null) break;					
 			}
 		if (result!=null) {			   
@@ -228,8 +242,8 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			return result;
 		}
 			
-		if (pkgName.endsWith(".jar")) {
-			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar"));
+		if (pkgName.endsWith(".jar")) { //$NON-NLS-1$
+			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar")); //$NON-NLS-1$
 		}
 		
 		if (srcPluginID!=null) {
@@ -245,7 +259,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				IPluginModelBase p = (IPluginModelBase)plugins.get(i);
 				rel = getSrcConfig(p);					
 				if (rel.length==0)
-					result = getFilePath(getResourceURL(p, pkgName+"/"+srcPath));
+					result = getFilePath(getResourceURL(p, pkgName+"/"+srcPath)); //$NON-NLS-1$
 				else
 					for (int j= 0; j < rel.length; j++) {
 						Path pre = new Path(rel[j]);
@@ -267,7 +281,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPath baseLocation = new Path (base.getInstallLocation());
 		IPath location = baseLocation.append(jarPath);
 		IPath libLocation = libPath!=null ? new Path (base.getInstallLocation()).append(libPath): null;		
-		String srcPath = jarPath.substring(0,jarPath.lastIndexOf('.'))+"src.zip";
+		String srcPath = jarPath.substring(0,jarPath.lastIndexOf('.'))+"src.zip"; //$NON-NLS-1$
 		IPath srcLocation = getPDESrceLocationFor(base, baseLocation.lastSegment(), srcPath, srcPluginID);
 		
 		IClasspathAttribute[] attr = new IClasspathAttribute[0];
@@ -280,13 +294,13 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPluginModelBase base = PDECore.getDefault().getModelManager().findModel(pluginID);
 		IPath baseLocation = new Path (base.getInstallLocation());
 		IPath location = baseLocation;
-		IPath libLocation = lib? getFilePath(generateLibCacheIfNeeded(base.getBundleDescription().getLocation(),"")): null;		
-		String srcPath = "src.zip";
+		IPath libLocation = lib? getFilePath(generateLibCacheIfNeeded(base.getBundleDescription().getLocation(),"")): null;		 //$NON-NLS-1$
+		String srcPath = "src.zip"; //$NON-NLS-1$
 		IPath srcLocation = getPDESrceLocationFor(base, baseLocation.lastSegment(), srcPath, srcPluginID);
 		
 		IClasspathAttribute[] attr = new IClasspathAttribute[0];
 		if (libLocation!=null)			
-		attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
+			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
     }
 		
@@ -296,7 +310,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		URL	os = getSWTLegacyOSPath();
 		if (os!=null){	
 			// if our DLL is inside a .jar extract it out to out private cache.
-		   if (os.toString().startsWith("jar"))
+		   if (os.toString().startsWith("jar")) //$NON-NLS-1$
 				os = generateLibCacheIfNeeded(getFilePath(os).toPortableString(), SWTContainer.SWT_CONTAINER_OS.toPortableString());
 		}
 
@@ -342,13 +356,13 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				if (st.countTokens()>1)
 					generateLibCacheIfNeeded(st.nextToken(),st.nextToken());
 				else
-					generateLibCacheIfNeeded(st.nextToken(),"");
+					generateLibCacheIfNeeded(st.nextToken(),""); //$NON-NLS-1$
 			}
 		}
 		else {
 			// This is only to suppor the SWT's Libraries
 			PluginModelManager pm = PDECore.getDefault().getModelManager();
-			IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt");
+			IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt"); //$NON-NLS-1$
 			Version version = swtEntry.getBundleDescription().getVersion();
 			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController			
 			if (version.getMajor() < 3 || version.getMinor() < 1)
@@ -503,9 +517,9 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 	
 	public static IPath getFilePath(URL l) {
 		if (l != null) {
-			if (l.getProtocol().equals("file"))
+			if (l.getProtocol().equals("file")) //$NON-NLS-1$
 			     return  new Path (l.getFile());
-			else if (l.getProtocol().equals("jar")) {
+			else if (l.getProtocol().equals("jar")) { //$NON-NLS-1$
 				String f = l.getFile();
 				int idx = f.lastIndexOf('!');
 				if (idx>=0)
@@ -530,11 +544,11 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		List fragNames = Arrays.asList(names);
 		
 		ArrayList result = new ArrayList();
-		IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.pde.core.source");
+		IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.pde.core.source"); //$NON-NLS-1$
 		for (int i = 0; i < ces.length; i++) {	
             if (!fragNames.contains((ces[i].getDeclaringExtension().getNamespace()))) 
 				continue;
-			String p = ces[i].getAttributeAsIs("path");
+			String p = ces[i].getAttributeAsIs("path"); //$NON-NLS-1$
 			if (!result.contains(p))
 			result.add(p);
 		}
@@ -564,7 +578,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPath result = (IPath) platformSrcPath.get(bundle);
 		if (result != null) return result;
 		
-		String srcFile = "src.zip";		
+		String srcFile = "src.zip";		 //$NON-NLS-1$
 		try {						
 			String rel[] = getSrcConfig(bundle);
 			URL u=null;
@@ -572,7 +586,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			   u = bundle.getEntry(srcFile);
 			else
 				for (int i = 0; i < rel.length; i++) {
-					u = bundle.getEntry(rel[i]+"/"+srcFile);
+					u = bundle.getEntry(rel[i]+"/"+srcFile); //$NON-NLS-1$
 					if (u!=null) break;					
 				}
 			if (u!=null) {
@@ -582,8 +596,8 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			}
 		} catch (IOException e) {}
 		
-		if (pkgName.endsWith(".jar")) {
-			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar"));
+		if (pkgName.endsWith(".jar")) { //$NON-NLS-1$
+			pkgName = pkgName.substring(0,pkgName.lastIndexOf(".jar")); //$NON-NLS-1$
 		}
 		
 		if (srcPluginID!=null) {
@@ -629,17 +643,17 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IPath location = null;
 		try {				
 			// .jared fragment
-			URL l = Platform.resolve(bundle.getEntry("/"));	
-			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench... 			
+			URL l = Platform.resolve(bundle.getEntry("/"));	 //$NON-NLS-1$
+			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench... 			 //$NON-NLS-1$
 			location = getFilePath(l).removeTrailingSeparator();
 			// not supporting a worbench project at this time ... .jar only
-			if (location !=null && location.lastSegment().endsWith(".jar")) {
+			if (location !=null && location.lastSegment().endsWith(".jar")) { //$NON-NLS-1$
 				IPath src = getPlatformSrcLocationFor(bundle, location.lastSegment(), srcPluginID);
 				IClasspathAttribute[] attr = new IClasspathAttribute[0];
 				if (libPath) { // Create a lib path attribute to this entry						
 					// jar may be imported into the workbench, use it; if not cache it
 					URL libURL = project ? location.toFile().toURL() : 
-						         generateLibCacheIfNeeded(location.toPortableString(), "");
+						         generateLibCacheIfNeeded(location.toPortableString(), ""); //$NON-NLS-1$
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
 							                                                getFilePath(libURL).toPortableString())};
 				}										
