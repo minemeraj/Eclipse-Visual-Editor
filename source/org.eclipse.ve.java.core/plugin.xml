@@ -171,7 +171,6 @@
                class="org.eclipse.ve.internal.java.core.PasteJavaBeanObjectActionDelegate"
                menubarPath="org.eclipse.gef.group.edit"              
                icon="icons/full/ctool16/paste_edit.gif"   
-               enablesFor="*"                            
                id="org.eclipse.ve.internal.java.core.pasteaction">
          </action>
       </objectContribution>         
@@ -183,7 +182,7 @@
                class="org.eclipse.ve.internal.java.core.CopyJavaBeanObjectActionDelegate"
                menubarPath="org.eclipse.gef.group.edit"               
                icon="icons/full/ctool16/copy_edit.gif"
-               enablesFor="*"
+               enablesFor="1"
                id="org.eclipse.ve.internal.java.core.copyaction">
          </action>
       </objectContribution>                   
@@ -195,7 +194,7 @@
                class="org.eclipse.ve.internal.java.core.CutJavaBeanObjectActionDelegate"
                menubarPath="org.eclipse.gef.group.edit"               
                icon="icons/full/ctool16/cut_edit.gif"               
-               enablesFor="*"
+               enablesFor="1"
                id="org.eclipse.ve.internal.java.core.cutaction">
          </action>
       </objectContribution>      

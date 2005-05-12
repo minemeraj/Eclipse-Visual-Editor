@@ -11,23 +11,23 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentTreeEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-12 12:10:00 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPartViewer;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.*;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.ve.internal.java.core.CopyAction;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
 /**
  * Tree EditPart for an awt component.
@@ -142,6 +142,7 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 				ed.setViewerData(viewer, TreeDirectEditManager.VIEWER_DATA_KEY, manager);
 			}
 		}
+		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy());		
 	}
 	
 	private void performDirectEdit(){

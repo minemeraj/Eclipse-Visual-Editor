@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-12 12:09:58 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -25,6 +25,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.core.CopyAction;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
  
 /**
@@ -64,7 +65,7 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 				ed.setViewerData(viewer, TreeDirectEditManager.VIEWER_DATA_KEY, manager);
 			}
 		}
-		
+		installEditPolicy(CopyAction.REQ_COPY,new ControlCopyEditPolicy());		
 	}
 	
 	/**
