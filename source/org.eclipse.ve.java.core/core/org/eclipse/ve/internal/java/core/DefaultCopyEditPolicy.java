@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-12 22:17:02 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-12 23:08:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -41,6 +41,8 @@ import org.eclipse.swt.widgets.Display;
 public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
 	public static int nextID = 0;
+	protected List objectsToCopy = new ArrayList(100);
+	protected List visitedObjects = new ArrayList(100);
 	
 	public Command getCommand(Request request) {
 		if(CopyAction.REQ_COPY.equals(request.getType())){
@@ -60,11 +62,8 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				IJavaInstance javaBeanToCopy = (IJavaInstance) getHost().getModel();
 				// Create a new EMF Resource for the copied object		
 				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				
-
-				// A copy set is built up with everything to be copied
-				List objectsToCopy = new ArrayList();
 				
-				copyProperty(null, javaBeanToCopy,objectsToCopy);				
+				copyProperty(null, javaBeanToCopy);				
 				
 				// Use the ECore.Copier to put everything from the copy set into the resource set
 				EcoreUtil.Copier copier = new EcoreUtil.Copier();
@@ -110,22 +109,23 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		};
 	}
 	
-	protected void expandCopySet(final EObject eObject, final List objectsToCopy) {
+	protected void expandCopySet(final EObject eObject) {
 		
+		visitedObjects.add(eObject);
 		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(eObject, new FeatureValueProvider.Visitor(){
 			public Object isSet(EStructuralFeature feature, Object value) {
 				copyFeature(feature,value,objectsToCopy);
 				return null;
 			}
-		});
+		}		
 	}
 	
 	protected void copyFeature(EStructuralFeature feature, Object object,List objectsToCopy){
 
 		if(object instanceof EObject){
-			copyProperty(feature,(EObject)object,objectsToCopy);
+			copyProperty(feature,(EObject)object);
 		} else if (object instanceof List){
-			copyList(feature,(List)object,objectsToCopy);
+			copyList(feature,(List)object);
 		}
 	}
 	
@@ -138,32 +138,38 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		&& !((EReference)feature).isContainment();
 	}
 	
-	private void copyList(EStructuralFeature feature, List list, List objectsToCopy){
+	protected boolean shouldExpandFeature(EStructuralFeature feature, Object eObject){
+		return true;
+	}
+	
+	private void copyList(EStructuralFeature feature, List list){
 		
 		Iterator iter = list.iterator();
 		while(iter.hasNext()){
 			Object propertyValue = iter.next();
 			if(propertyValue instanceof EObject){
-				copyProperty(feature, (EObject)propertyValue,objectsToCopy);
+				copyProperty(feature, (EObject)propertyValue);
 			} else if (propertyValue instanceof List){
-				copyList(feature, (List)propertyValue,objectsToCopy);
+				copyList(feature, (List)propertyValue);
 			}
 		}		
 	}
 	
-	private void copyProperty(EStructuralFeature feature, EObject ePropertyValue, List objectsToCopy){
+	private void copyProperty(EStructuralFeature feature, EObject ePropertyValue){
 		
 		if(ePropertyValue instanceof IJavaInstance){
 			// This method allows additional work to be done to clean up a particular JavaBean
 			normalize((IJavaInstance)ePropertyValue);
 		}
 		// Add the property value to the set of objects being copied		
-		if(shouldCopyFeature(feature, ePropertyValue) && objectsToCopy.indexOf(ePropertyValue) == -1){
+		if(objectsToCopy.indexOf(ePropertyValue) == -1 && shouldCopyFeature(feature, ePropertyValue)){
 			objectsToCopy.add(ePropertyValue);
 		}
 		// Keep walking because the object being copied might not have been added to the copy set
 		// but it might have children that are
-		expandCopySet(ePropertyValue,objectsToCopy);
+		if(visitedObjects.indexOf(ePropertyValue) == -1 && shouldExpandFeature(feature,ePropertyValue)){
+			expandCopySet(ePropertyValue);			
+		}
 	}
 	
 	protected void removeReferenceTo(EObject javaBeanToCopy, String featureName, final EcoreUtil.Copier aCopier) {
