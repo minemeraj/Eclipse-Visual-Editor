@@ -35,7 +35,7 @@ public  class SWTContainerWizardPage extends WizardPage implements IClasspathCon
 	
 	public void createControl(Composite parent) {
 		
-		SWTContainerWizardContent c = new SWTContainerWizardContent(parent,SWT.NONE);
+		SWTContainerWizardContent c = new SWTContainerWizardContent(parent,SWT.NONE, this);
 		c.setLayout(new GridLayout());		
 		setControl(c);
 		
