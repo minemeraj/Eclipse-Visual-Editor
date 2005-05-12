@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: CopyJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 20:11:46 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 21:43:30 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -20,6 +20,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
+
+import org.eclipse.ve.internal.java.core.CopyJavaBeanAction;
 
 /**
  * ObjectActionDelegate for the CopyJavaBeanAction.
