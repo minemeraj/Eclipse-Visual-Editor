@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
- *  $RCSfile: PasteJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
+ *  $RCSfile: CutJavaBeanObjectActionDelegate.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-12 15:28:46 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -21,35 +21,35 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
 
-import org.eclipse.ve.internal.java.codegen.editorpart.*;
+import org.eclipse.ve.internal.java.core.CutJavaBeanAction;
 
 /**
- * ObjectActionDelegate for the PasteJavaBeanAction.
+ * ObjectActionDelegate for the CutJavaBeanAction.
  */
-public class PasteJavaBeanObjectActionDelegate implements IObjectActionDelegate {
+public class CutJavaBeanObjectActionDelegate implements IObjectActionDelegate {
 
-	private PasteJavaBeanAction pasteCopyJavaBeanAction;
+	private CutJavaBeanAction cutCopyJavaBeanAction;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 
 		if (targetPart instanceof JavaVisualEditorPart){
-			pasteCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).pasteBeanAction;
+			cutCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).cutBeanAction;
 		} else if (targetPart instanceof BeansList){
 			IPage beansListPage = ((BeansList)targetPart).getCurrentPage();			
-			pasteCopyJavaBeanAction = ((JavaVisualEditorOutlinePage)beansListPage).getPasteAction();
-		}
-		action.setEnabled(pasteCopyJavaBeanAction != null);
-	}
+			cutCopyJavaBeanAction = ((JavaVisualEditorOutlinePage)beansListPage).jve.cutBeanAction;
 
+		}
+		action.setEnabled(cutCopyJavaBeanAction != null);
+	}
 
 	public void run(IAction action) {
 
-		pasteCopyJavaBeanAction.run();
+		cutCopyJavaBeanAction.run();
 		
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+
 	}
 
 

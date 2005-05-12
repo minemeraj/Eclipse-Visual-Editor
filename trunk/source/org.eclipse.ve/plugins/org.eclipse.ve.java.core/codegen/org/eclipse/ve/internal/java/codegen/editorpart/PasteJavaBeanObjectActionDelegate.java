@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.java.core;
+package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
- *  $RCSfile: CutJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
+ *  $RCSfile: PasteJavaBeanObjectActionDelegate.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-12 15:28:46 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -20,37 +20,36 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
-import org.eclipse.ve.internal.java.codegen.editorpart.BeansList;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorOutlinePage;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
+
+import org.eclipse.ve.internal.java.core.PasteJavaBeanAction;
 
 /**
- * ObjectActionDelegate for the CutJavaBeanAction.
+ * ObjectActionDelegate for the PasteJavaBeanAction.
  */
-public class CutJavaBeanObjectActionDelegate implements IObjectActionDelegate {
+public class PasteJavaBeanObjectActionDelegate implements IObjectActionDelegate {
 
-	private CutJavaBeanAction cutCopyJavaBeanAction;
+	private PasteJavaBeanAction pasteCopyJavaBeanAction;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 
 		if (targetPart instanceof JavaVisualEditorPart){
-			cutCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).cutBeanAction;
+			pasteCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).pasteBeanAction;
 		} else if (targetPart instanceof BeansList){
 			IPage beansListPage = ((BeansList)targetPart).getCurrentPage();			
-			cutCopyJavaBeanAction = ((JavaVisualEditorOutlinePage)beansListPage).jve.cutBeanAction;
-
+			pasteCopyJavaBeanAction = ((JavaVisualEditorOutlinePage)beansListPage).getPasteAction();
 		}
-		action.setEnabled(cutCopyJavaBeanAction != null);
+		action.setEnabled(pasteCopyJavaBeanAction != null);
 	}
+
 
 	public void run(IAction action) {
 
-		cutCopyJavaBeanAction.run();
+		pasteCopyJavaBeanAction.run();
 		
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-
+		
 	}
 
 
