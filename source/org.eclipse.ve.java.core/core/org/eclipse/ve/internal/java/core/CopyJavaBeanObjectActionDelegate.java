@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CopyJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 15:28:46 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
+import org.eclipse.ve.internal.java.codegen.editorpart.*;
 import org.eclipse.ve.internal.java.codegen.editorpart.BeansList;
 import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorOutlinePage;
 import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;

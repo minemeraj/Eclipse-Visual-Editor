@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CutJavaBeanAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 15:28:46 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -26,6 +26,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.codegen.editorpart.CopyJavaBeanAction;
 
 public class CutJavaBeanAction extends SelectionAction {
 	
