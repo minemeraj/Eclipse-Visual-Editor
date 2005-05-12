@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 21:12:24 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -388,7 +388,8 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 					 */
 					public void proxyNotResolved(ProxyEvent event) {
 						if (!hasErrorsOfKey(INSTANTIATION_ERROR_KEY)) {
-							JavaVEPlugin.log("Bean Proxy for " + getTarget() + " not resolved.", Level.INFO);
+							if (JavaVEPlugin.isLoggingLevel(Level.INFO))
+								JavaVEPlugin.log("Bean Proxy for " + getTarget() + " not resolved.", Level.INFO);
 							processInstantiationError(NO_BEAN_DUE_TO_PREVIOUS_ERROR);
 						}
 						beanProxy = null; // Reset back to not set.
