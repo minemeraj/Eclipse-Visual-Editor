@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-12 11:39:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -44,15 +44,17 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
+import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.CopyJavaBeanAction;
 import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.PasteJavaBeanAction;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
  
 /*
@@ -62,12 +64,12 @@ import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPar
  * 
  * @since 1.0.0
  */
-class JavaVisualEditorOutlinePage extends ContentOutlinePage {
+public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
 	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif"); //$NON-NLS-1$
 	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif"); //$NON-NLS-1$
-	private static final String TITLE = CodegenEditorPartMessages.getString("CollapseAllAction.label"); //$NON-NLS-1$
-	private static final String TOOL_TIP = CodegenEditorPartMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
+	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title"); //$NON-NLS-1$
+	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
 	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
@@ -99,8 +101,6 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	}
 	
 	private class CollapseAllAction extends Action {
-
-
 
 		public CollapseAllAction() {
 			super(TITLE, IAction.AS_PUSH_BUTTON);
@@ -153,7 +153,7 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	}
 	
 
-	protected JavaVisualEditorPart jve;
+	public JavaVisualEditorPart jve;
 	private PageBook pageBook;
 	private Control outline;
 	private Canvas overview;
@@ -161,8 +161,8 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	private ShowOverviewAction showOverviewAction;
 	private CollapseAllAction collapseAllAction;
 	private DeleteAction deleteAction;
-	private CopyAction copyAction;
-	private PasteActionImmediate pasteAction;
+	private CopyJavaBeanAction copyAction;
+	private PasteJavaBeanAction pasteAction;
 	
 	// The jve status field for when property sheet is in focus. It will be kept up to date through
 	// updateStatusField method in JavaVisualEditorPart. 
@@ -190,8 +190,9 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		// with the content outline without having to separately contribute these
 		// to the outline page's toolbar
 		deleteAction = new DeleteAction((IWorkbenchPart)jve);
-		copyAction = new CopyAction(jve);
-		pasteAction = new PasteActionImmediate(jve);
+		copyAction = new CopyJavaBeanAction(jve);
+		pasteAction = new PasteJavaBeanAction(jve,jve.editDomain);
+		pasteAction.executeImmediately = true;
 		
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);		
@@ -319,6 +320,10 @@ class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 			thumbnail.setVisible(true);
 			pageBook.showPage(overview);
 		}
+	}
+
+	public PasteJavaBeanAction getPasteAction() {
+		return pasteAction;
 	}
 }
 

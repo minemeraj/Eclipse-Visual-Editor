@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.20 $  $Date: 2005-05-12 11:39:56 $ 
  */
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import javax.swing.UIManager;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -67,6 +68,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	
 	protected Button showWindowCheckBox;
 	protected Button showXMLTextCheckBox;
+	protected Button showClipboardCheckBox;
 		
 	protected Button splitRadioButton;
 	protected Button notebookRadioButton;
@@ -93,7 +95,6 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	private TableItem currentLookAndFeelItem;
 
 	private String fStyleID = null;
-
 
 	protected Label createLabel(Composite group, String aLabelString, Image aLabelImage) {
 		Label label = new Label(group, SWT.LEFT);
@@ -327,11 +328,14 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowXMLText"), 15); //$NON-NLS-1$
+		showClipboardCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowClipboardText"), 15); //$NON-NLS-1$
 				
 		if (!VCEPreferences.isLiveWindow())
 			showWindowCheckBox.setVisible(false);
 		if (!VCEPreferences.isXMLText())
 			showXMLTextCheckBox.setVisible(false);
+		if (!VCEPreferences.isClipboardText())
+			showClipboardCheckBox.setVisible(false);		
 	}
 	protected int getButtonWidthHint(Button aButton) {
 		GC fGC = new GC(aButton);
@@ -686,6 +690,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
+		showClipboardCheckBox.setSelection(fStore.getBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 
 		boolean showAsNotebook = fStore.getBoolean(VCEPreferences.NOTEBOOK_PAGE);
 		splitRadioButton.setSelection(!showAsNotebook);
@@ -775,6 +780,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		}
 		// Save whether or not to show the live window
 		fStore.setValue(VCEPreferences.SHOW_LIVE_WINDOW, showWindowCheckBox.getSelection());
+		fStore.setValue(VCEPreferences.USE_TEXT_FOR_CLIPBOARD, showClipboardCheckBox.getSelection());
 		// Save whether to show the VCE and Source as a split pane or notebook
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
 		
@@ -824,6 +830,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
 		showXMLTextCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SELECT_SOURCE));
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
+		showClipboardCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID));
 		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes

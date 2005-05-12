@@ -112,9 +112,9 @@
          </override>
       </registration>
    </extension>
-<!-- 
-     Events popup on a JavaBean in the Java Beans view or GEF viewer
-     -->
+<!-- ========================================================================== -->
+<!-- Events popup on a JavaBean in the Java Beans view or GEF viewer            -->
+<!-- ========================================================================== -->
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -147,6 +147,7 @@
       </objectContribution>
 <!-- ======================================================================== -->
 <!-- Extend the popup menu on Edit parts                                      -->
+<!-- Rename                                                                   -->
 <!-- ======================================================================== -->
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
@@ -158,8 +159,63 @@
                enablesFor="+"
                id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
          </action>
-      </objectContribution>
-<!-- Add a popup to open the Customize Layout window -->
+      </objectContribution>    
+<!-- ======================================================================== -->
+<!-- Copy and Cut                                                             -->
+<!-- ======================================================================== -->          
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.pasteAction.popup.object">
+         <action
+               label="%PopupMenus.PasteAction.Label  Paste"
+               class="org.eclipse.ve.internal.java.core.PasteJavaBeanObjectActionDelegate"
+               menubarPath="org.eclipse.gef.group.edit"              
+               icon="icons/full/ctool16/paste_edit.gif"   
+               enablesFor="*"                            
+               id="org.eclipse.ve.internal.java.core.pasteaction">
+         </action>
+      </objectContribution>         
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.copyAction.popup.object">
+         <action
+               label="%PopupMenus.CopyAction.Label  Copy"
+               class="org.eclipse.ve.internal.java.core.CopyJavaBeanObjectActionDelegate"
+               menubarPath="org.eclipse.gef.group.edit"               
+               icon="icons/full/ctool16/copy_edit.gif"
+               enablesFor="*"
+               id="org.eclipse.ve.internal.java.core.copyaction">
+         </action>
+      </objectContribution>                   
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.cutAction.popup.object">
+         <action
+               label="%PopupMenus.CutAction.Label  Cut"
+               class="org.eclipse.ve.internal.java.core.CutJavaBeanObjectActionDelegate"
+               menubarPath="org.eclipse.gef.group.edit"               
+               icon="icons/full/ctool16/cut_edit.gif"               
+               enablesFor="*"
+               id="org.eclipse.ve.internal.java.core.cutaction">
+         </action>
+      </objectContribution>      
+<!-- ============================================================== -->      
+<!-- Paste goes on all edit parts including free form and tree root -->      
+<!-- ============================================================== -->            
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.cde.core.IFreeFormRoot"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.pasteAction.popup.object">
+         <action
+               label="%PopupMenus.PasteAction.Label  Paste"
+               class="org.eclipse.ve.internal.java.core.PasteJavaBeanObjectActionDelegate"
+               menubarPath="org.eclipse.ve.group.edit"              
+               icon="icons/full/ctool16/paste_edit.gif"                               
+               id="org.eclipse.ve.internal.java.core.pasteaction">
+         </action>
+      </objectContribution>            
+<!-- ==================================================== -->                  
+<!-- Add a popup to open the Customize Layout window      -->
+<!-- ==================================================== -->      
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
             id="org.eclipse.ve.internal.java.core.editorpart.customizelayout.popup.object">

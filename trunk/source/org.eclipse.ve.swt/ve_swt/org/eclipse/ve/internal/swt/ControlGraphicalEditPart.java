@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-05-11 19:01:30 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-05-12 11:40:55 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -177,7 +177,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		if (sfDirectEditProperty != null) {
 		    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new BeanDirectEditPolicy());
 		}
-		installEditPolicy(CopyAction.REQ_COPY,new WidgetCopyEditPolicy());
+		installEditPolicy(CopyAction.REQ_COPY,new ControlCopyEditPolicy());
 	}
 	protected IVisualComponent getVisualComponent() {
 		return (IVisualComponent) BeanProxyUtilities.getBeanProxyHost(getBean());
