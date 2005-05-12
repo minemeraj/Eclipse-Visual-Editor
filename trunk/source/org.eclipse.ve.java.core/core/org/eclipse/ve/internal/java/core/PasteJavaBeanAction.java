@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteJavaBeanAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 16:08:34 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -28,18 +28,16 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFPrototypeCreationFactory;
 
 public class PasteJavaBeanAction extends SelectionAction {
 
-	public static final String TRANSFER_HEADER = "{ *** VE HEADER ***}";
 	private CreationTool creationTool;
 	private EditDomain editDomain;
 	public boolean executeImmediately = false;
@@ -118,8 +116,8 @@ public class PasteJavaBeanAction extends SelectionAction {
 		// If the clipboard is a String then make sure it begins with a VE header to distinguish it from 
 		// other strings that might be there but aren't actually valid for the VE
 		String clipboardContents = (String)result;
-		if (clipboardContents != null && clipboardContents.startsWith(TRANSFER_HEADER)){
-			clipboardContents = clipboardContents.substring(TRANSFER_HEADER.length());
+		if (clipboardContents != null && clipboardContents.startsWith(JavaVEPlugin.TRANSFER_HEADER)){
+			clipboardContents = clipboardContents.substring(JavaVEPlugin.TRANSFER_HEADER.length());
 			return clipboardContents;
 		} else {
 			return null;

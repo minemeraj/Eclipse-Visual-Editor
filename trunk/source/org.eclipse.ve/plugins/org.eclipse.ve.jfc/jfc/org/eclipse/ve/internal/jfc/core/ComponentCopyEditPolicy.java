@@ -10,13 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentCopyEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:40:57 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 16:08:42 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -45,16 +44,6 @@ public class ComponentCopyEditPolicy extends DefaultCopyEditPolicy {
 		removeReferenceTo(javaBeanToCopy,"bounds",aCopier);
 		removeReferenceTo(javaBeanToCopy,"size",aCopier);
 		removeReferenceTo(javaBeanToCopy,"location",aCopier);		
-	}
-	
-	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject) {
-		// The "components" relationship is a containment that points to instances of ConstraintComponent
-		// we need to copy this to get the children and the default rules exclude containment relationships
-		if("components".equals(feature.getName())){
-			return true;
-		} else {
-			return super.shouldCopyFeature(feature, eObject);
-		}
 	}
 	
 }
