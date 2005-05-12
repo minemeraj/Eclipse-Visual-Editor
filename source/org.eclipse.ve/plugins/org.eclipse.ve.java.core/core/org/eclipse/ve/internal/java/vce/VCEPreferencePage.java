@@ -11,16 +11,16 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-12 11:58:19 $ 
  */
 
 import java.util.ArrayList;
 
 import javax.swing.UIManager;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;

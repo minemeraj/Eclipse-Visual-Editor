@@ -12,21 +12,16 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: PasteJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
  */
 
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.TreeEditPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
-import org.eclipse.ve.internal.java.codegen.editorpart.BeansList;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorOutlinePage;
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorPart;
+
+import org.eclipse.ve.internal.java.codegen.editorpart.*;
 
 /**
  * ObjectActionDelegate for the PasteJavaBeanAction.
@@ -37,7 +32,6 @@ public class PasteJavaBeanObjectActionDelegate implements IObjectActionDelegate 
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 
-		IAction copyJavaBeanAction = null;
 		if (targetPart instanceof JavaVisualEditorPart){
 			pasteCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).pasteBeanAction;
 		} else if (targetPart instanceof BeansList){

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CutJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
  */
 
 import org.eclipse.jface.action.IAction;
@@ -33,7 +33,6 @@ public class CutJavaBeanObjectActionDelegate implements IObjectActionDelegate {
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 
-		IAction copyJavaBeanAction = null;
 		if (targetPart instanceof JavaVisualEditorPart){
 			cutCopyJavaBeanAction = ((JavaVisualEditorPart)targetPart).cutBeanAction;
 		} else if (targetPart instanceof BeansList){
