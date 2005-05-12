@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ContentsGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-12 11:40:53 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -26,7 +26,7 @@ import org.eclipse.gef.tools.DeselectAllTracker;
  * freeform surface, such as positioning, zooming, ...
  */
 
-public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart  {
+public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPart implements IFreeFormRoot {
 		
 /**
  * Set the figure's layout manager to be an XYFlowLayout.

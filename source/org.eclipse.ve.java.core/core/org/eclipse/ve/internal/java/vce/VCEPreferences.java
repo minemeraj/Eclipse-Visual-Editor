@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-05 22:34:27 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-12 11:39:56 $ 
  */
 
 
@@ -29,6 +29,7 @@ public class VCEPreferences {
 	public static final String SWING_LOOKANDFEEL = "SWING_LOOKANDFEEL"; //$NON-NLS-1$
 	public static final String USER_DEFINED_LOOKANDFEEL = "USER_DEFINED_LOOKANDFEEL"; //$NON-NLS-1$	
 	public static final String SHOW_LIVE_WINDOW = "SHOW_LIVE_WINDOW"; //$NON-NLS-1$
+	public static final String USE_TEXT_FOR_CLIPBOARD = "USE_TEXT_FOR_CLIPBOARD"; //$NON-NLS-1$	
 	public static final String OPEN_PROPERTIES_VIEW = "OPEN_PROPERTIES_VIEW"; //$NON-NLS-1$
 	public static final String OPEN_JAVABEANS_VIEW = "OPEN_JAVABEANS_VIEW"; //$NON-NLS-1$		
 	public static final String NOTEBOOK_PAGE = "NOTEBOOK_PAGE"; //$NON-NLS-1$
@@ -56,6 +57,7 @@ public class VCEPreferences {
     // The following are run time options
     public static final String DEBUG_CONSOLE_ECHO   = "/debug/logtrace" ; // Dump all logs to console //$NON-NLS-1$
     public static final String DEBUG_XMITEXT_OPTION = "/debug/xmltext" ;    // Provide the XMI text option  //$NON-NLS-1$
+	public static final String DEBUG_CLIPBOARDTEXT_OPTION = "/debug/clipboardtext"; // Put text in the clipboard to help debugging //$NON-NLS-1$ 	
     public static final String DEBUG_LIVEWINDOW_OPTION = "/debug/livewindow" ; // Provide the Live Window option  //$NON-NLS-1$
     
 	public static final String JVE_PATTERN_STYLE_ID = "JVA_PATTERN_STYLE_ID" ; // The current Style (pattern) style ID //$NON-NLS-1$
@@ -172,6 +174,10 @@ protected static boolean isXMLText ()
 public static boolean isXMLTextOn() {
 	// Is the debug option on AND is the setting actually set.
 	return VCEPreferences.isXMLText() && CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML);
+}
+
+protected static boolean isClipboardText(){
+   return isOptionSet(VCEPreferences.DEBUG_CLIPBOARDTEXT_OPTION);
 }
 
 /**

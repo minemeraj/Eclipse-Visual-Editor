@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.106 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.107 $  $Date: 2005-05-12 11:39:56 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -99,7 +99,8 @@ import org.eclipse.ve.internal.cde.properties.*;
 
 import org.eclipse.ve.internal.jcm.*;
 
-import org.eclipse.ve.internal.java.codegen.core.*;
+import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
+import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
@@ -517,7 +518,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		});
 	}
-	
 
 	private PaletteViewerProvider provider;
 	protected PaletteViewerProvider getPaletteViewerProvider() {
@@ -637,6 +637,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private List paletteCategories = new ArrayList(5);
+	public CutJavaBeanAction cutBeanAction;	
+	public CopyJavaBeanAction copyBeanAction;
+	public PasteJavaBeanAction pasteBeanAction;
 	/*
 	 * Rebuild the palette.
 	 * NOTE: This must be run in the display thread.
@@ -805,20 +808,32 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(deleteAction);
 		
-		final PasteActionTool pasteAction = new PasteActionTool(this,editDomain);
-		pasteAction.setSelectionProvider(primaryViewer);
+		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);
+		pasteBeanAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(pasteAction);
 		
-		final CopyAction copyBeanAction = new CopyAction(this){
+		copyBeanAction = new CopyJavaBeanAction(this){
 			public void run(){
 				super.run();
 				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
 				// whether it should or shouldn't be enabled
-				pasteAction.update();
+				pasteBeanAction.update();
 			}
 		};
 		copyBeanAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(copyBeanAction);
+		
+		
+		cutBeanAction = new CutJavaBeanAction(this){
+			public void run(){
+				super.run();
+				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
+				// whether it should or shouldn't be enabled
+				pasteBeanAction.update();
+			}
+		};		
+		cutBeanAction.setSelectionProvider(primaryViewer);
+		graphicalActionRegistry.registerAction(cutBeanAction);		
 		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 		customizeAction.setSelectionProvider(primaryViewer);
@@ -826,8 +841,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
 				copyBeanAction.update();
-				copyAction.setEnabled(copyBeanAction.isEnabled());
-				pasteAction.update();
+				cutBeanAction.update();
+				pasteBeanAction.update();
 				customizeAction.update();
 			}
 		});	
@@ -2260,8 +2275,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// force the removal of the cache... may be an overkill, but
 		// better no cache than stale cache.  It is possible that reverse parse
 		// built a bad model, and generated a cache
-		if (parseError)
-		   modelBuilder.doSave(null);
+		modelBuilder.doSave(null);
 	}
 	
 	/* (non-Javadoc)
@@ -2562,5 +2576,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		super.doSave(new SubProgressMonitor(progressMonitor, 50));
 		modelBuilder.doSave(new SubProgressMonitor(progressMonitor,50));
 		progressMonitor.done();		
+	}
+
+	public PasteJavaBeanAction getPasteImmediateBeanAction() {
+		return beansListPage.getPasteAction();
 	}
 }

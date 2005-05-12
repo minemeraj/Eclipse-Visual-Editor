@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 11:39:56 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -39,6 +40,8 @@ import org.eclipse.swt.widgets.Display;
 
 public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
+	public static int nextID = 0;
+	
 	public Command getCommand(Request request) {
 		if(CopyAction.REQ_COPY.equals(request.getType())){
 			return getCopyCommand(request);
@@ -51,6 +54,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		
 		return new Command(){
 			public void execute(){
+				nextID = 0;
 				Object template = null;
 				// Get the host, copy it and serialize to a stream
 				IJavaInstance javaBeanToCopy = (IJavaInstance) getHost().getModel();
@@ -67,17 +71,24 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				copier.copyAll(objectsToCopy);
 				copier.copyReferences();
 				
+				cleanup(javaBeanToCopy,copier);
+				
 				// Add copies of all the objects we want to copy to the new resource set
 				Iterator iter = objectsToCopy.iterator();
+				XMIResource xmiResource = (XMIResource)newEMFResource;
 				while(iter.hasNext()){
-					newEMFResource.getContents().add(copier.get(iter.next()));
+					Object objectToClone = copier.get(iter.next());
+					if(objectToClone != null){
+						if(xmiResource.getID((EObject)objectToClone) == null){
+							xmiResource.setID((EObject)objectToClone,"ID_" + nextID++);
+						}
+						newEMFResource.getContents().add(objectToClone);
+					}
 				}
 		
 				// Save to a stream
 				HashMap XML_TEXT_OPTIONS = new HashMap(2);
-				XML_TEXT_OPTIONS.put(
-						XMLResource.OPTION_PROCESS_DANGLING_HREF, 
-						XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+				XML_TEXT_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF,XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 				XML_TEXT_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
 				XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));		
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -91,43 +102,59 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				template = PasteActionTool.TRANSFER_HEADER + os.toString();
 				// Paste the string of the object to copy to the clipboard
 				Clipboard cb = new Clipboard(Display.getCurrent());
-				cb.setContents(new Object[] {template}, new Transfer[] {TextTransfer.getInstance()});
+				cb.setContents(new Object[] {template}, new Transfer[] {TextTransfer.getInstance()});				
+				
 				cb.dispose();				
 			}
 
 		};
 	}
 	
-	private void expandCopySet(final EObject eObject, final List objectsToCopy) {
+	protected void expandCopySet(final EObject eObject, final List objectsToCopy) {
 		
 		// All properties should be collapsed
 		if(eObject instanceof FeatureValueProvider){
 			FeatureValueProvider obj = (FeatureValueProvider) eObject;
 			obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
 				public Object isSet(EStructuralFeature feature, Object value) {
-					if(shouldCopyFeature(feature)){
-						Object propertyValue = eObject.eGet(feature);						
-						if(propertyValue instanceof EObject){
-							copyProperty((EObject)propertyValue,objectsToCopy);
-						} else if (propertyValue instanceof List){
-							copyList((List)propertyValue,objectsToCopy);
-						}
-					}
+					copyFeature(feature,value,objectsToCopy);
 					return null;
 				}
 			});
-		}
-		
+		} else {
+			// VE has objects like ConstraintComponent that are EObject but are not FeatureValueProviders so we need to iterate differently to get the set features
+			Iterator features = eObject.eClass().getEStructuralFeatures().iterator();
+			while(features.hasNext()){
+				EStructuralFeature sf = (EStructuralFeature)features.next();
+				if(eObject.eIsSet(sf)){
+					Object value = eObject.eGet(sf);
+					copyFeature(sf,value,objectsToCopy);
+				}
+			}
+		}		
 	}
 	
-	private boolean shouldCopyFeature(EStructuralFeature feature){
+	protected void copyFeature(EStructuralFeature feature, Object object,List objectsToCopy){
+	
+		if(shouldCopyFeature(feature, object)){						
+			if(object instanceof EObject){
+				copyProperty((EObject)object,objectsToCopy);
+			} else if (object instanceof List){
+				copyList((List)object,objectsToCopy);
+			}
+		}
+	}
+	
+	
+	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject){
 		// By default copy references that are not containment and are not on the free form
 		return 
-			feature instanceof EReference && 
-			!((EReference)feature).isContainment();
+			feature instanceof EReference
+		&& !((EReference)feature).isContainment();
 	}
 	
 	private void copyList(List list, List objectsToCopy){
+		
 		Iterator iter = list.iterator();
 		while(iter.hasNext()){
 			Object propertyValue = iter.next();
@@ -152,8 +179,43 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		}
 	}
 	
+	protected void removeReferenceTo(EObject javaBeanToCopy, String featureName, final EcoreUtil.Copier aCopier) {
 	
-	protected void normalize(final IJavaInstance javaBean){
+		EStructuralFeature structuralFeature = javaBeanToCopy.eClass().getEStructuralFeature(featureName);
+		removeReferenceTo(javaBeanToCopy,structuralFeature,aCopier);
 
 	}
+
+	protected void removeReferenceTo(EObject javaBeanToCopy, EStructuralFeature feature, final EcoreUtil.Copier aCopier){
+		
+		Object propertyValue = javaBeanToCopy.eGet(feature);
+		removeReferenceBetween(javaBeanToCopy,propertyValue,aCopier);
+		
+	}
+	
+	protected void removeReferenceBetween(EObject javaBeanToCopy, final Object propertyValue, final EcoreUtil.Copier aCopier){
+	
+		if(propertyValue != null){
+			aCopier.remove(propertyValue);
+			// Remove all properties from the copier that are contained by the object just removed
+			if(propertyValue instanceof FeatureValueProvider){
+				FeatureValueProvider obj = (FeatureValueProvider) propertyValue;
+				obj.visitSetFeatures(new FeatureValueProvider.Visitor(){
+					public Object isSet(EStructuralFeature feature, Object value) {
+						if(feature instanceof EReference && ((EReference)feature).isContainment()){
+							removeReferenceBetween((EObject)propertyValue,value,aCopier);
+						}
+						return null;
+					}
+				});
+			}			
+		}
+	}	
+	
+	protected void cleanup(IJavaInstance javaBeanToCopy, EcoreUtil.Copier copier){
+	}	
+	
+	protected void normalize(final IJavaInstance javaBean){
+	}
+
 }
