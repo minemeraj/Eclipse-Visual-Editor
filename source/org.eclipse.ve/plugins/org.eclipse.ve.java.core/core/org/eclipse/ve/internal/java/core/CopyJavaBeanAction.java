@@ -10,9 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CopyJavaBeanAction.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 15:28:46 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-12 21:43:30 $ 
  */
-package org.eclipse.ve.internal.java.codegen.editorpart;
+package org.eclipse.ve.internal.java.core;
 
 import java.util.Iterator;
 
