@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteJavaBeanAction.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-12 11:58:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -28,7 +28,6 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -89,7 +88,7 @@ public class PasteJavaBeanAction extends SelectionAction {
 
 	private CreationFactory getFactory(Object template) {
 		// Load the contents of the clipboard and assume they are well formed XMI
-		EObject root = (EObject)editDomain.getDiagramData();
+		EObject root = editDomain.getDiagramData();
 		ResourceSet targetResourceSet = root.eResource().getResourceSet();
 		// Use a dummy URI for the resource that is unique
 		Resource clipboardResource = targetResourceSet.createResource(root.eResource().getURI().appendSegment(":" + System.currentTimeMillis()));
