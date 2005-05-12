@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-12 21:03:55 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
@@ -127,7 +127,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		protected void dispose(IExpression expression) {
 			if (dialogProxy != null && dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
 				IProxyMethod dispose = BeanAwtUtilities.getWindowDisposeMethodProxy(expression);
-				expression.createSimpleMethodInvoke(dispose, dialogProxy, null, false);
+				expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {dialogProxy},false);
 			}
 		}
 	}

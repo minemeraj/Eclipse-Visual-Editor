@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-12 21:03:55 $ 
  */
 
 import java.util.logging.Level;
@@ -118,7 +118,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		if (isOwnsProxy() && isBeanProxyInstantiated()) {
 			// If we own the proxy and are instantiated we need to do an actual "dispose". We can't just release it.
 			IProxyMethod dispose = BeanAwtUtilities.getWindowDisposeMethodProxy(expression);
-			expression.createSimpleMethodInvoke(dispose, getProxy(), null, false);
+			expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {getProxy()}, false);
 		}
 		;
 		super.releaseBeanProxy(expression);
