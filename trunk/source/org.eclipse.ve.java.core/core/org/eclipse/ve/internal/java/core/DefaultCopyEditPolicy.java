@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-12 23:08:19 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-13 13:15:14 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -117,7 +117,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				copyFeature(feature,value,objectsToCopy);
 				return null;
 			}
-		}		
+		});		
 	}
 	
 	protected void copyFeature(EStructuralFeature feature, Object object,List objectsToCopy){
