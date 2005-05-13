@@ -9,17 +9,16 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.swt.targetvm.win32;
-import org.eclipse.swt.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.internal.win32.*;
+import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.ole.win32.OleFrame;
+import org.eclipse.swt.widgets.*;
 
 import org.eclipse.ve.internal.swt.targetvm.IImageCapture;
 
@@ -85,10 +84,10 @@ public class ImageCapture implements IImageCapture{
 		// dealt with separately, however Table's TableColumn widgets are children so much be handled differently
 		boolean specialClass = aControl instanceof Table ||
 		   						aControl instanceof Browser ||
-		   						aControl instanceof OleFrame;
+		   						aControl instanceof OleFrame ||
+		   						aControl instanceof CCombo;
 		try {
 			specialClass |= aControl instanceof Spinner;
-			specialClass |= aControl instanceof Link;
 		}
 		catch (NoClassDefFoundError e) {} // might not be on 3.1 of SWT
 		if(specialClass){
