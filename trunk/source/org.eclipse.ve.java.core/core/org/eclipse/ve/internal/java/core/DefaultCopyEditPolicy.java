@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-13 13:15:14 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-13 15:18:52 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
