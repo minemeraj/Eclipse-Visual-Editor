@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-13 21:28:16 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-13 21:54:02 $ 
  */
 
 
@@ -138,19 +138,13 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	
 	// Now add in ours.
 	
-	// TODO: remove SWT hack
+//	// TODO: remove SWT hack
 	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
 		// Add in the SWT lib if the user hasn't added it already
-		if (!args.toString().matches(".*java.library.path=.*swt.*os.*")) { //$NON-NLS-1$
-			String swtLib = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(Platform.getBundle("org.eclipse.swt"), "$os$"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (swtLib != null) {
-				// chop off the beginning / if there is one on Windows
-				if (Platform.getOS().equals(Platform.OS_WIN32) && swtLib.charAt(0) == '/') {
-					swtLib = swtLib.substring(1);
-				}
-				args.append(" -Djava.library.path=\"" + swtLib + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-				launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
-			}
+		launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
+		if (!args.toString().matches(".*java.library.path=")) { //$NON-NLS-1$
+			
+		
 		}
 	}
 	
