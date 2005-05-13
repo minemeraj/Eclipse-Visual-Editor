@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.25 $  $Date: 2005-05-12 18:16:57 $ 
+ *  $Revision: 1.26 $  $Date: 2005-05-13 11:55:54 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -343,6 +343,9 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		// Add the jar file with the supporting classes required for the JVE into the classpath
 		// In development model the file proxy.jars redirects this to the plugin development project
 		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "vm/jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
+		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
+		if(SWTContainer.isGTK)
+			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
 			// SWT container would have contributed all the proper jars, and DLLs... if it is
