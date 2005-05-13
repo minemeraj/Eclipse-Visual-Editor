@@ -1,2 +1,3 @@
-vm/jfcbeaninfo.jar=/org.eclipse.ve.jfc/bin/
-vm/jfcvm.jar=/org.eclipse.ve.jfc/bin/
+vm/jfcbeaninfo.jar=/org.eclipse.ve.jfc/vm_bin/
+vm/jfcvm.jar=/org.eclipse.ve.jfc/vm_bin/
+jfccommon.jar=/org.eclipse.ve.jfc/common_bin/
