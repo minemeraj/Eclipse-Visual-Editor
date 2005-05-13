@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.27 $  $Date: 2005-05-12 16:08:34 $ 
+ *  $Revision: 1.28 $  $Date: 2005-05-13 15:22:12 $ 
  */
 
 import java.util.Map;
@@ -63,7 +63,6 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static Image fJavaBeanImage;
 	public static Image fAppletImage;
 	public static Image CHECK_IMAGE;
-
 	private static ImageDescriptor WIZARD_TITLE_DESC;
 
 	public static final String SHOW_EVENTS = "SHOW_EVENTS"; // Plugin preferences key //$NON-NLS-1$

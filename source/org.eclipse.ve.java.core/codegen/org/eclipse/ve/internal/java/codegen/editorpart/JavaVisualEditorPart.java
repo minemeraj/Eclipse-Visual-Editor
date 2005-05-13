@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.110 $  $Date: 2005-05-13 14:16:39 $ 
+ *  $Revision: 1.111 $  $Date: 2005-05-13 15:20:58 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -814,8 +814,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				openActionGroup.fillContextMenu(menuMgr);
 				openActionGroup.setContext(null);					
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.UNDO.getId()));
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));														
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, graphicalActionRegistry.getAction(ActionFactory.DELETE.getId()));
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, cutBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, copyBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, pasteBeanAction);					
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, graphicalActionRegistry.getAction(ActionFactory.DELETE.getId()));			
 				IAction customize = graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 				if (customize.isEnabled()) 
 					menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, customize);
@@ -832,8 +835,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		deleteAction.setSelectionProvider(primaryViewer);
 		graphicalActionRegistry.registerAction(deleteAction);
 		
-		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);
+		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();		
+		
+		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);		
 		pasteBeanAction.setSelectionProvider(primaryViewer);
+		pasteBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));				
 		graphicalActionRegistry.registerAction(pasteBeanAction);
 		
 		copyBeanAction = new CopyJavaBeanAction(this){
@@ -845,6 +852,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		};
 		copyBeanAction.setSelectionProvider(primaryViewer);
+		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));						
 		graphicalActionRegistry.registerAction(copyBeanAction);
 		
 		
@@ -857,6 +866,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		};		
 		cutBeanAction.setSelectionProvider(primaryViewer);
+		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
+		cutAction.setId(ActionFactory.CUT.getId());
+		cutBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		
 		graphicalActionRegistry.registerAction(cutBeanAction);		
 		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
