@@ -53,7 +53,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	// see FindSupport.findXXX for more info ... may need to use the Internal TargetPlatform
 	public final static IPath  SWT_CONTAINER_WS  = new Path("ws").append(Platform.getWS()); //$NON-NLS-1$
 	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch()); //$NON-NLS-1$
-	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getOS()+"."+Platform.getWS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public final static String SWT_CONTAINER_WS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	public final static String SWT_CONTAINER_SRC_PLUGIN = SWTMessages.getString("SWTContainer.10");	 //$NON-NLS-1$
 	
 	
@@ -349,24 +350,13 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	/**
 	 * The following path info. provides both pre and post 3.1 locations
 	 * so that we can work with pre leveled 3.1 targets
-	 * [ <pluginID>,  
-	 *        <pre 3.1 jar name>, <pre 3.1 lib path>,
-	 *        <post 3.1 fragment name> <post 3.1 lib Path> ]
-	 * 0  <pluginID> required
-	 * 1  <pre 3.1 fragment name> optional fragment plugin name, if not in the plugin itself
-	 * 2  <pre 3.1 jar name> .jar inside the plugin	    
-	 * 3  <pre 3.1 lib Path> optional library that is required by this jar
-	 * 
-	 * 4  <post 3.1 fragment name> optional jared fragment name, if not the plugin itself  
-	 * 5  <post 3.1 lib Path> optional required library. path is within the jared fragement
 	 *   
 	 */
-	
-	 			
+		 			
 	public final static JarInfo[] swtLibraries = new JarInfo[] {
-			 new JarInfo(	"org.eclipse.swt"+SWT_CONTAINER_OS_PLUGIN_EXT, //$NON-NLS-1$
+			 new JarInfo(	"org.eclipse.swt"+SWT_CONTAINER_WS_PLUGIN_EXT, //$NON-NLS-1$
 					 		true,
-							"org.eclipse.swt"+"."+Platform.getOS(), //$NON-NLS-1$ //$NON-NLS-2$
+							"org.eclipse.swt"+"."+Platform.getWS(), //$NON-NLS-1$ //$NON-NLS-2$
 							SWT_CONTAINER_WS.append("swt.jar").toPortableString(),  //$NON-NLS-1$
 							SWT_CONTAINER_OS.toPortableString(),
 							SWT_CONTAINER_SRC_PLUGIN,
