@@ -302,6 +302,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						new IJavaProject[] {project},
 						new IClasspathContainer[] { SWTContainer.this },
 						null);
+				project.setRawClasspath(project.getRawClasspath(),null);
 			} catch (JavaModelException e) {
 				JavaVEPlugin.log(e);
 			}
@@ -615,13 +616,13 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				IClasspathAttribute[] attr=null;
 				if (swtLibraries[i].isIncludesLibraries()) {				
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
-                        resolvedPath.toPortableString())};
+                        resolvedPath.toFile().toURI().getRawPath())};
 					if (!resolvedPath.toFile().exists())						
 							addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.60"), new Object[] {resolvedPath.toPortableString()})); //$NON-NLS-1$
 				}
 				
 				IPath jarPath = resolvedPath.append(jarName);
-				if (jarPath.toFile().exists())
+				if (!jarPath.toFile().exists())
 					addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.61"), new Object[] {jarPath.toPortableString()})); //$NON-NLS-1$
 				IClasspathEntry entry = JavaCore.newLibraryEntry(resolvedPath.append(jarName), resolvedPath.append(jarSrc), null, new IAccessRule [0], attr, false);
 				entries.add(entry);

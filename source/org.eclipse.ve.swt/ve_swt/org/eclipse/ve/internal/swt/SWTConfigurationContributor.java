@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.26 $  $Date: 2005-05-13 11:55:54 $ 
+ *  $Revision: 1.27 $  $Date: 2005-05-13 21:11:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -286,7 +286,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		
 		IClasspathAttribute[] attr = new IClasspathAttribute[0];
 		if (libLocation!=null)			
-		    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
+		    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toFile().toURI().getRawPath())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
 	}
 	
@@ -300,7 +300,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		
 		IClasspathAttribute[] attr = new IClasspathAttribute[0];
 		if (libLocation!=null)			
-			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
+			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toFile().toURI().getRawPath())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
     }
 		
@@ -658,7 +658,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 					URL libURL = project ? location.toFile().toURL() : 
 						         generateLibCacheIfNeeded(location.toPortableString(), ""); //$NON-NLS-1$
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
-							                                                getFilePath(libURL).toPortableString())};
+									getFilePath(libURL).toFile().toURI().getRawPath())};
 				}										
 				return JavaCore.newLibraryEntry(location, src, null, new IAccessRule [0], attr, false);
 			}
