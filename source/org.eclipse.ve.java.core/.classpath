@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="core/"/>
-    <classpathentry kind="src" path="codegen/"/>
-    <classpathentry kind="src" path="common/"/>
-    <classpathentry kind="src" path="vm_javaremotevm"/>
-    <classpathentry kind="src" path="vm_vcelauncher"/>
-    <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="output" path="bin"/>
+	<classpathentry output="common_bin" kind="src" path="common">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry output="vm_bin" kind="src" path="vm_javaremotevm">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry output="vm_bin" kind="src" path="vm_vcelauncher">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="core">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="codegen">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

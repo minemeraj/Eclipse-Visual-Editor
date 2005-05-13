@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="ve_swt"/>
-	<classpathentry kind="src" path="vm_swt"/>
-	<classpathentry kind="src" path="swtcodegen/"/>
-	<classpathentry kind="src" path="vm_swtbeaninfo"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry output="vm_bin" kind="src" path="vm_swtbeaninfo">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry output="vm_bin" kind="src" path="vm_swt">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="ve_swt">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="swtcodegen">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<attributes>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
