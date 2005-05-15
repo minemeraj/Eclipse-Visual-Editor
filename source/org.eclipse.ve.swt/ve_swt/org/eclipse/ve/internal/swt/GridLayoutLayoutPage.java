@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-15 00:18:35 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,26 +21,25 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  
 
 /**
@@ -49,14 +48,16 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  */
 public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
+	public final static int SHOW_GRID_CHANGED = 1;
+	public final static int NUM_COLUMNS_CHANGED = 2;
+	public final static int HORIZONTAL_SPACING_CHANGED = 3;
+	public final static int VERTICAL_SPACING_CHANGED = 4;
+	public final static int MARGIN_HEIGHT_CHANGED = 5;
+	public final static int MARGIN_WIDTH_CHANGED = 6;
+	public final static int MAKE_COLS_EQUAL_WIDTH_CHANGED = 7;
+
 	EditPart fEditPart = null;
-	
-	Spinner numColumnsSpinner;
-	Button equalWidthCheck;
-	Spinner horizontalSpinner;
-	Spinner verticalSpinner;
-	Spinner heightSpinner;
-	Spinner widthSpinner;
+	protected GridController gridController;
 	
 	ResourceSet rset;
 	
@@ -66,6 +67,17 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		sfHorizontalSpacing, sfVerticalSpacing, sfMarginHeight, sfMarginWidth;
 	
 	boolean initialized = false;
+	
+	private GridLayoutLayoutComposite gridComposite = null;
+//	private IGridListener gridListener = new IGridListener() {
+//		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
+//		public void gridVisibilityChanged(boolean isShowing) {
+//			if (gridComposite != null)
+//				gridComposite.setShowGrid(isShowing);
+//		};
+//		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
+//		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
+//	};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionProviderInitialization(org.eclipse.jface.viewers.ISelectionProvider)
@@ -78,84 +90,42 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public Control getControl(Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
-		GridLayout g1 = new GridLayout();
-		g1.numColumns = 2;
-		c.setLayout(g1);
-		
-		Listener spinnerModify = new Listener() {
-			public void handleEvent(Event event) {
-				spinnerModified((Spinner)event.widget);
-			}
-		};
-		
-		Group colGroup = new Group(c, SWT.NONE);
-		GridData gd0 = new GridData();
-		gd0.verticalAlignment = GridData.BEGINNING;
-		colGroup.setLayoutData(gd0);
-		GridLayout g2 = new GridLayout();
-		g2.numColumns = 2;
-		colGroup.setLayout(g2);
-		colGroup.setText(SWTMessages.getString("GridLayoutLayoutPage.columnsTitle")); //$NON-NLS-1$
-		Label l1 = new Label(colGroup, SWT.NONE);
-		l1.setText(SWTMessages.getString("GridLayoutLayoutPage.numColumns")); //$NON-NLS-1$
-		GridData gd4 = new GridData();
-		gd4.grabExcessHorizontalSpace = true;
-		l1.setLayoutData(gd4);
-		numColumnsSpinner = new Spinner(colGroup, SWT.NONE, 1);
-		numColumnsSpinner.setMinimum(1);
-		numColumnsSpinner.addModifyListener(spinnerModify);
-		
-		equalWidthCheck = new Button(colGroup, SWT.CHECK);
-		equalWidthCheck.setText(SWTMessages.getString("GridLayoutLayoutPage.columnsEqualWidth")); //$NON-NLS-1$
-		GridData gd1 = new GridData();
-		gd1.horizontalSpan = 2;
-		equalWidthCheck.setLayoutData(gd1);
-		equalWidthCheck.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				checkModified();
-			}
-		});
-		
-		Group spaceGroup = new Group(c, SWT.NONE);
-		GridData gd2 = new GridData();
-		gd2.horizontalAlignment = GridData.FILL;
-		spaceGroup.setLayoutData(gd2);
-		
-		GridLayout g3 = new GridLayout();
-		g3.numColumns = 2;
-		spaceGroup.setLayout(g3);
-		spaceGroup.setText(SWTMessages.getString("GridLayoutLayoutPage.spacingTitle")); //$NON-NLS-1$
-		
-		Label l2 = new Label(spaceGroup, SWT.NONE);
-		l2.setText(SWTMessages.getString("GridLayoutLayoutPage.horizontalSpacing")); //$NON-NLS-1$
-		horizontalSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
-		horizontalSpinner.addModifyListener(spinnerModify);
-		GridData gd3 = new GridData();
-		gd3.grabExcessHorizontalSpace = true;
-		l2.setLayoutData(gd3);
-		
-		Label l3 = new Label(spaceGroup, SWT.NONE);
-		l3.setText(SWTMessages.getString("GridLayoutLayoutPage.verticalSpacing")); //$NON-NLS-1$
-		verticalSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
-		verticalSpinner.addModifyListener(spinnerModify);
-		
-		Label l4 = new Label(spaceGroup, SWT.NONE);
-		l4.setText(SWTMessages.getString("GridLayoutLayoutPage.marginWidth")); //$NON-NLS-1$
-		widthSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
-		widthSpinner.addModifyListener(spinnerModify);
-		
-		Label l5 = new Label(spaceGroup, SWT.NONE);
-		l5.setText(SWTMessages.getString("GridLayoutLayoutPage.marginHeight")); //$NON-NLS-1$
-		heightSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
-		heightSpinner.addModifyListener(spinnerModify);
-		
-		if (fEditPart != null) {
-			initialized = false;
-			initializeValues();
+		gridComposite = new GridLayoutLayoutComposite(this, parent, SWT.NONE);
+		initializeValues();
+//		gridComposite.addDisposeListener(new DisposeListener() {
+//			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+//				if (gridController != null)
+//					gridController.removeGridListener(gridListener);
+//			};
+//		});
+		return gridComposite;
+	}
+
+	/*
+	 * Handle property changes from the GridLayoutLayoutComposite
+	 */
+	protected void propertyChanged (int type, Object value) {
+		switch (type) {
+			case SHOW_GRID_CHANGED:
+				boolean isShowing = ((Boolean)value).booleanValue();
+				gridController = GridController.getGridController(fEditPart);
+				if (gridController != null && isShowing != gridController.isGridShowing())
+					gridController.setGridShowing(isShowing);
+				break;
+			case NUM_COLUMNS_CHANGED:
+			case HORIZONTAL_SPACING_CHANGED:
+			case VERTICAL_SPACING_CHANGED:
+			case MARGIN_HEIGHT_CHANGED:
+			case MARGIN_WIDTH_CHANGED:
+				execute(createSpinnerCommand(fEditPart, getSFForType(type), (String)value));
+				break;
+			case MAKE_COLS_EQUAL_WIDTH_CHANGED:
+				execute(createBooleanCommand(fEditPart, sfMakeColumnsEqualWidth, ((Boolean)value).booleanValue()));
+				break;
+
+			default:
+				break;
 		}
-		
-		return c;
 	}
 
 	/* (non-Javadoc)
@@ -175,8 +145,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
 					initialized = false;
-					initializeValues();
-					return true;
+					gridController = GridController.getGridController(fEditPart);
+					if (gridController != null) {
+						initializeValues();
+//						gridController.addGridListener(gridListener);
+						return true;
+					}
 				}
 			}
 			
@@ -209,13 +183,17 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 					if (enableAll) {
 						fEditPart = firstParent;
 						initialized = false;
-						initializeValues();
-						return true;
+						gridController = GridController.getGridController(fEditPart);
+						if (gridController != null) {
+							initializeValues();
+							return true;
+						}
 					}
 				}
 			}
 		}
 		fEditPart = null;
+		gridController = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
 	}
@@ -269,65 +247,49 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void initializeValues() {
-		if (!initialized) {
-			getResourceSet(fEditPart);
-			// break out early if getControl() hasn't been called yet.
-			if (numColumnsSpinner == null) {
-				return;
-			}
-			numColumnsSpinner.setValue(getIntValue(fEditPart, sfNumColumns));
-			numColumnsSpinner.setEnabled(true);
-			horizontalSpinner.setValue(getIntValue(fEditPart, sfHorizontalSpacing));
-			horizontalSpinner.setEnabled(true);
-			verticalSpinner.setValue(getIntValue(fEditPart, sfVerticalSpacing));
-			verticalSpinner.setEnabled(true);
-			heightSpinner.setValue(getIntValue(fEditPart, sfMarginHeight));
-			heightSpinner.setEnabled(true);
-			widthSpinner.setValue(getIntValue(fEditPart, sfMarginWidth));
-			widthSpinner.setEnabled(true);
-			equalWidthCheck.setSelection(getBooleanValue(fEditPart, sfMakeColumnsEqualWidth));
-			initialized = true;
+		getResourceSet(fEditPart);
+		// break out early if getControl() hasn't been called yet.
+		gridController = GridController.getGridController(fEditPart);
+		if (gridComposite == null || gridController == null) { return; }
+		Object[] values = new Object[7];
+		values[0] = new Boolean(gridController.isGridShowing());
+		values[1] = new Integer(getIntValue(fEditPart, sfNumColumns));
+		values[2] = new Integer(getIntValue(fEditPart, sfHorizontalSpacing));
+		values[3] = new Integer(getIntValue(fEditPart, sfVerticalSpacing));
+		values[4] = new Integer(getIntValue(fEditPart, sfMarginHeight));
+		values[5] = new Integer(getIntValue(fEditPart, sfMarginWidth));
+		values[6] = new Boolean(getBooleanValue(fEditPart, sfMakeColumnsEqualWidth));
+		gridComposite.setInitialValues(values);
+	}
+	
+	private EStructuralFeature getSFForType(int type) {
+		switch (type) {
+			case NUM_COLUMNS_CHANGED:
+				return sfNumColumns;
+			case HORIZONTAL_SPACING_CHANGED:
+				return sfHorizontalSpacing;
+			case VERTICAL_SPACING_CHANGED:
+				return sfVerticalSpacing;
+			case MARGIN_HEIGHT_CHANGED:
+				return sfMarginHeight;
+			case MARGIN_WIDTH_CHANGED:
+				return sfMarginWidth;
+			default:
+				return null;
 		}
 	}
 	
-	private EStructuralFeature getSFForSpinner(Spinner s) {
-		if (s == numColumnsSpinner)
-			return sfNumColumns;
-		else if (s == horizontalSpinner)
-			return sfHorizontalSpacing;
-		else if (s == verticalSpinner)
-			return sfVerticalSpacing;
-		else if (s == heightSpinner)
-			return sfMarginHeight;
-		else if (s == widthSpinner)
-			return sfMarginWidth;
-		else 
-			return null;
-	}
-	
-	private void checkModified() {
-		if (initialized)
-			execute(createBooleanCommand(fEditPart, sfMakeColumnsEqualWidth, equalWidthCheck.getSelection()));
-	}
-	
-	private void spinnerModified(Spinner s) {
-		if (initialized)
-			execute(createSpinnerCommand(fEditPart, getSFForSpinner(s), s));				
-	}
-	
 	/*
-	 * Return the commands to set the anchor value for the selected editpart
-	 * The alignment value is based on the type of action.
+	 * Return the commands to set the GridLayout value of a Spinner for the selected editpart
 	 */
-	protected Command createSpinnerCommand(EditPart editpart, EStructuralFeature sf, Spinner spinner) {
+	protected Command createSpinnerCommand(EditPart editpart, EStructuralFeature sf, String spinnerValue) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject control = (EObject)editpart.getModel();
 		if (control != null) {
 			IJavaInstance gridLayout = (IJavaInstance) control.eGet(sfCompositeLayout);
 			if (gridLayout != null) {
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-				String init = String.valueOf(spinner.getValue());
-				Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+				Object intObject = BeanUtilities.createJavaObject("int", rset, spinnerValue); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(gridLayout, sf, intObject);
 				componentCB.applyAttributeSetting(control, sfCompositeLayout, gridLayout);
 				cb.append(componentCB.getCommand());
@@ -335,45 +297,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				// this shouldn't happen
 				return UnexecutableCommand.INSTANCE;
 			}
-			cb.append(new EnableSpinnerCommand(spinner));
 			return cb.getCommand();
 		} else {
 			return UnexecutableCommand.INSTANCE;
 		}
 	}
 
-	/*
-	 * Command that is used to re-enable the spinner since we don't want the user
-	 * changing the span while the span is being updated. This prevents a ConcurrentModificationException
-	 * that is caused when the span is being read from the spinner side while the apply attribute setting
-	 * command is being executed in a separate thread.
-	 * 
-	 * This command should be the last command executed after all the insets commands are complete
-	 */
-	protected class EnableSpinnerCommand extends AbstractCommand {
-		protected Spinner spinner;
-		public EnableSpinnerCommand(Spinner spinner) {
-			super();
-			this.spinner = spinner;
-		}
-
-		/* 
-		 * Enable the spinner
-		 */
-		public void execute() {
-			if (spinner != null)
-				spinner.setEnabled(true);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.commands.Command#canExecute()
-		 */
-		public boolean canExecute() {
-			return true;
-		}
-
-	};
-	
 	protected int getIntValue(EditPart ep, EStructuralFeature sf) {
 		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
 		if (ps != null && getResourceSet(ep) != null) {
