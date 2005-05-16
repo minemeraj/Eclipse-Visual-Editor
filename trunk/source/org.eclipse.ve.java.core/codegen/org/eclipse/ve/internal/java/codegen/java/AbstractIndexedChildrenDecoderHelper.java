@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractIndexedChildrenDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-16 22:12:50 $ 
  */
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 				}	
 			}
 			index++;
-			result[0]= new Integer(Integer.MAX_VALUE-index);
+			result[0]= new Integer(index);
 			return result;
 		}
 		result[0]= new Integer(0);
