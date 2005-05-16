@@ -92,7 +92,10 @@ public class Spinner extends Composite {
 				resize();
 			}
 		});
-		setMinimum(0);
+		if (initialValue < 0)
+			setMinimum(initialValue);
+		else
+			setMinimum(0);
 		setMaximum(999);
 		text.setFont(getFont());
 		fValue = initialValue;
