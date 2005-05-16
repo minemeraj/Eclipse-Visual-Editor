@@ -42,6 +42,9 @@ public class SWTConstants {
 		SF_GRID_DATA_VERTICAL_GRAB,
 		SF_GRID_DATA_HORIZONTAL_SPAN,
 		SF_GRID_DATA_VERTICAL_SPAN,
+		SF_GRID_DATA_HEIGHT_HINT,
+		SF_GRID_DATA_WIDTH_HINT,
+		SF_GRID_DATA_HORIZONTAL_INDENT,
 		
 		SF_ROW_LAYOUT_FILL,
 		SF_ROW_LAYOUT_JUSTIFY,
@@ -104,6 +107,9 @@ public class SWTConstants {
 		SF_GRID_DATA_VERTICAL_GRAB = URI.createURI("java:/org.eclipse.swt.layout#GridData/grabExcessVerticalSpace");    //$NON-NLS-1$
 		SF_GRID_DATA_HORIZONTAL_SPAN = URI.createURI("java:/org.eclipse.swt.layout#GridData/horizontalSpan");    //$NON-NLS-1$
 		SF_GRID_DATA_VERTICAL_SPAN = URI.createURI("java:/org.eclipse.swt.layout#GridData/verticalSpan");    //$NON-NLS-1$
+		SF_GRID_DATA_HEIGHT_HINT = URI.createURI("java:/org.eclipse.swt.layout#GridData/heightHint");    //$NON-NLS-1$
+		SF_GRID_DATA_WIDTH_HINT = URI.createURI("java:/org.eclipse.swt.layout#GridData/widthHint");    //$NON-NLS-1$
+		SF_GRID_DATA_HORIZONTAL_INDENT = URI.createURI("java:/org.eclipse.swt.layout#GridData/horizontalIndent");    //$NON-NLS-1$
 		
 		SF_ROW_LAYOUT_FILL = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/fill");    //$NON-NLS-1$
 		SF_ROW_LAYOUT_JUSTIFY = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/justify");    //$NON-NLS-1$

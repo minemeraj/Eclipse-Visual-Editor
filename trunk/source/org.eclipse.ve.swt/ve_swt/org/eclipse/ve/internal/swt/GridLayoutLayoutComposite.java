@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutComposite.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-15 00:18:35 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-16 23:03:39 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -26,11 +26,11 @@ public class GridLayoutLayoutComposite extends Composite {
 	private boolean showGrid = false;
 	private GridLayoutLayoutPage parentPage;
 
-	private org.eclipse.swt.widgets.Spinner numColumnsSpinner;
-	private org.eclipse.swt.widgets.Spinner horizontalSpinner;
-	private org.eclipse.swt.widgets.Spinner verticalSpinner;
-	private org.eclipse.swt.widgets.Spinner heightSpinner;
-	private org.eclipse.swt.widgets.Spinner widthSpinner;
+	private Spinner numColumnsSpinner;
+	private Spinner horizontalSpinner;
+	private Spinner verticalSpinner;
+	private Spinner heightSpinner;
+	private Spinner widthSpinner;
 
 	private boolean initialized = false;
 
@@ -76,7 +76,7 @@ public class GridLayoutLayoutComposite extends Composite {
 
 		Label l2 = new Label(spaceGroup, SWT.NONE);
 		l2.setText(SWTMessages.getString("GridLayoutLayoutPage.horizontalSpacing")); //$NON-NLS-1$
-		horizontalSpinner = new org.eclipse.swt.widgets.Spinner(spaceGroup, SWT.NONE);
+		horizontalSpinner = new Spinner(spaceGroup, SWT.NONE);
 		horizontalSpinner.addModifyListener(spinnerModify);
 		GridData gd3 = new GridData();
 		gd3.grabExcessHorizontalSpace = true;
@@ -84,17 +84,17 @@ public class GridLayoutLayoutComposite extends Composite {
 
 		Label l3 = new Label(spaceGroup, SWT.NONE);
 		l3.setText(SWTMessages.getString("GridLayoutLayoutPage.verticalSpacing")); //$NON-NLS-1$
-		verticalSpinner = new org.eclipse.swt.widgets.Spinner(spaceGroup, SWT.NONE);
+		verticalSpinner = new Spinner(spaceGroup, SWT.NONE);
 		verticalSpinner.addModifyListener(spinnerModify);
 
 		Label l4 = new Label(spaceGroup, SWT.NONE);
 		l4.setText(SWTMessages.getString("GridLayoutLayoutPage.marginWidth")); //$NON-NLS-1$
-		widthSpinner = new org.eclipse.swt.widgets.Spinner(spaceGroup, SWT.NONE);
+		widthSpinner = new Spinner(spaceGroup, SWT.NONE);
 		widthSpinner.addModifyListener(spinnerModify);
 
 		Label l5 = new Label(spaceGroup, SWT.NONE);
 		l5.setText(SWTMessages.getString("GridLayoutLayoutPage.marginHeight")); //$NON-NLS-1$
-		heightSpinner = new org.eclipse.swt.widgets.Spinner(spaceGroup, SWT.NONE);
+		heightSpinner = new Spinner(spaceGroup, SWT.NONE);
 		heightSpinner.addModifyListener(spinnerModify);
 		this.setSize(new org.eclipse.swt.graphics.Point(344,147));
 
@@ -130,7 +130,7 @@ public class GridLayoutLayoutComposite extends Composite {
 		GridData gd4 = new GridData();
 		gd4.grabExcessHorizontalSpace = true;
 		l1.setLayoutData(gd4);
-		numColumnsSpinner = new org.eclipse.swt.widgets.Spinner(colGroup, SWT.NONE);
+		numColumnsSpinner = new Spinner(colGroup, SWT.NONE);
 		numColumnsSpinner.setMinimum(1);
 		numColumnsSpinner.addModifyListener(spinnerModify);
 
